@@ -2,8 +2,9 @@ import {Profile} from "./profile";
 import {CommandId} from "../../Command";
 import {ViewEvent} from "../../const";
 // import {CommandId} from "../../../../event/Command";
-var $ = require('jquery');
+// var $ = require('jquery');
 declare var jQurey;
+declare var $;  
 export var PlayerView = {
     template: require('./player.html'),
     components: {Profile},

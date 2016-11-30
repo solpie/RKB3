@@ -4,7 +4,9 @@
 import { ViewEvent} from "../../const";
 declare var Cropper;
 var _this_ = Profile;
-var $ = require('jquery');
+// var $ = require('jquery');
+declare var $;
+
 export var  Profile =  {
     template: require('./profile.html'),
     props: {

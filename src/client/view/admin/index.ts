@@ -2,11 +2,13 @@
  * Created by toramisu on 2016/10/22.
  */
 
-require('../../../resources/app/static/css/bulma.min.css');
-require(`script!./../../../clientLibs/jquery.min.js`);
-require(`script!./../../../clientLibs/qrcode.min.js`);
-require(`script!./../../../clientLibs/vue/vue.min.js`);
-require(`script!./../../../clientLibs/vue/vue-router.min.js`);
+// require('../../../resources/app/static/css/bulma.min.css');
+
+
+require(`script!./../../libs/jquery.min.js`);
+require(`script!./../../libs/qrcode.min.js`);
+require(`script!./../../libs/vue/vue.min.js`);
+require(`script!./../../libs/vue/vue-router.min.js`);
 
 import {Navbar} from "./navbar/Navbar";
 import {homeView} from "./home/home";
