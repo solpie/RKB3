@@ -41,19 +41,15 @@ class HomeView extends VueBase {
     }
 
     mounted() {
-        this.updateLinks(78);
-        // this.selected = 78
+        this.updateLinks(79);
     }
 
     updateLinks(gameId) {
         this.links = [
             { title: "战团排行", url: `/panel/#/ol/auto/${gameId}?score=0` },
-            { title: "八强对阵", url: `/panel/#!/bracket/auto/${gameId}` },
             { title: "比分面板", url: `/panel/#/rkb/ob/${gameId}` },
             { title: "比分面板 操作", url: `/panel/#/rkb/op/${gameId}` },
             { title: "战团排行 操作", url: `/panel/#/ol/op/${gameId}` },
-            // {title: "bracket1v1 ob", url: "/panel/#/bracket/ob"},
-            // {title: "stage1v1 auto", url: "/panel/#/stage1v1/auto"},
             { title: "screen1v1 ob", url: "/panel/#/screen1v1/ob" },
         ];
     }

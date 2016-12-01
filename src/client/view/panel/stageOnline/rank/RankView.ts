@@ -29,11 +29,9 @@ export class RankView extends BasePanelView {
         let game_id = gameId;
         console.log('get /api/passerbyking/game/players/', game_id);
         let api1 = 'http://api.liangle.com/api/passerbyking/game/rank/' + game_id;
-        // api1 = 'http://api.liangle.com/api/passerbyking/game/list'
-        $.get('http://' + window.location.host + '/get?url=' + api1, (respone) => {
-            let data = JSON.parse(respone.entity);
-            let mixRankData = data.data;
-
+        $.get('/proxy?url=' + api1, (res) => {
+            console.log(res)
+            let mixRankData = res.data;
             let rankPlayerDocArr = [];
             for (let i = 0; i < mixRankData.player_rank.length; i++) {
                 let player_rank = mixRankData.player_rank[i];
@@ -179,7 +177,7 @@ export class RankView extends BasePanelView {
         let itemBg = newBitmap({url: '/img/panel/stage1v1/ft/ftRankTeam.jpg'});
         ctn.addChild(itemBg);
 
-        let logo = newBitmap({url: ftDoc.logo, isCrossOrigin: true});
+        let logo = newBitmap({url: ftDoc.logo, isCrossOrigin:true});
         logo.x = 18;
         logo.y = 18;
         ctn.addChild(logo);

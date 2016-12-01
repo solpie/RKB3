@@ -53,15 +53,12 @@ def view(viewname):
     if viewname in serverConf["views"]:
         return render_template(viewname + '.html')
     return viewname
-# ui img
 
 
-@app.route('/img/<path:path>')
-def img(path):
-    print(path)
-    return ''
 # proxy
 import requests
+
+import base64
 
 
 @app.route('/proxy', methods=['GET', 'POST'])
@@ -80,13 +77,29 @@ def proxy():
         res_headers = dict()
         for h in serverConf["resHeaders"]:
             res_headers[h] = r.headers[h]
+
+        if 'image' in res_headers["Content-Type"]:
+            encoded_string = b"data:image/png;base64," + \
+                base64.b64encode(r.content)
+            return encoded_string
+
         res.headers = res_headers
         return res
-        
+
     if request.method == "POST":
         url = request.values.get("url")
         r = requests.post(url, headers=req_headers)
         return 'ok'
+# panel router
+
+
+@app.route('/panel/online/<cmd>', methods=['POST'])
+def on_panel_cmd(cmd):
+    print(cmd, request.data, request.json)
+    if '_' in request.values:
+        emit(cmd.replace('cs_', 'sc_'), request.json,
+             broadcast=True, namespace=namespace_rkb)
+    return 'ok'
 
 namespace_rkb = '/rkb'
 
@@ -106,12 +119,17 @@ def test_broadcast_message(message):
          broadcast=True)
 
 
-@socketio.on('disconnect_request', namespace=namespace_rkb)
-def disconnect_request():
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': 'Disconnected!', 'count': session['receive_count']})
-    disconnect()
+# @socketio.on('disconnect_request', namespace=namespace_rkb)
+# def disconnect_request():
+#     session['receive_count'] = session.get('receive_count', 0) + 1
+#     emit('my_response',
+#          {'data': 'Disconnected!', 'count': session['receive_count']})
+#     disconnect()
+
+
+# @socketio.on('opUrl', namespace=namespace_rkb)
+# def rkb_event():
+#     emit('sc_showRank')
 
 
 @socketio.on('connect', namespace=namespace_rkb)

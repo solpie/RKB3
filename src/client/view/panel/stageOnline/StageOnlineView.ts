@@ -1,10 +1,10 @@
-import {RankView} from "./rank/RankView";
-import {BasePanelView} from "../BasePanelView";
-import {Bracket} from "./bracket/Bracket";
-import {dynamicLoading} from "../../utils/WebJsFunc";
-import {VueBase} from "../../utils/VueBase";
-import {PanelId} from "../../const";
-import {CommandId} from "../../Command";
+import { RankView } from "./rank/RankView";
+import { BasePanelView } from "../BasePanelView";
+import { Bracket } from "./bracket/Bracket";
+import { dynamicLoading } from "../../utils/WebJsFunc";
+import { VueBase } from "../../utils/VueBase";
+import { PanelId } from "../../const";
+import { CommandId } from "../../Command";
 
 declare let $;
 declare let io;
@@ -17,9 +17,18 @@ class StageOnlineView extends VueBase {
     gameId = VueBase.String;
     isOp = VueBase.PROP;
     opReq = (cmdId: string, param: any, callback: any) => {
-        $.post(`/panel/${PanelId.onlinePanel}/${cmdId}`,
-            param,
-            callback);
+        console.log("ajax")
+        $.ajax({
+            url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
+            type: 'post',
+            data: JSON.stringify(param),
+            headers:{"Content-Type": "application/json"},
+            dataType: 'json',
+            success:callback
+        });
+        // $.post(`/panel/${PanelId.onlinePanel}/${cmdId}`,
+        //     param,
+        //     callback);
     };
 
     constructor() {
@@ -53,20 +62,21 @@ class StageOnlineView extends VueBase {
     }
 
     initIO() {
-        let localWs = io.connect(`http://${window.location.host}/${PanelId.rkbPanel}`);
-        localWs.on('connect', function (msg) {
+        var localWs = io.connect(location.protocol + '//' + document.domain + ':' + location.port + '/rkb');
+        // let localWs = io.connect(`/${PanelId.rkbPanel}`);
+        localWs.on('connect', function () {
             console.log('connect', window.location.host);
-            localWs.emit("opUrl", {opUrl: window.location.host});
+            localWs.emit("opUrl", { opUrl: window.location.host });
         })
-            .on(`${CommandId.sc_showRank}`, (data)=> {
+            .on(`${CommandId.sc_showRank}`, (data) => {
                 console.log("CommandId.sc_showRank", data);
-                this.showRank();
+                // this.showRank();
             })
-            .on(`${CommandId.sc_showBracket}`, (data)=> {
+            .on(`${CommandId.sc_showBracket}`, (data) => {
                 console.log("CommandId.sc_showBracket", data);
                 this.showBracket();
             })
-            .on(`${CommandId.sc_hideOnlinePanel}`, (data)=> {
+            .on(`${CommandId.sc_hideOnlinePanel}`, (data) => {
                 this.showOnly("");
             })
     }
@@ -104,16 +114,16 @@ class StageOnlineView extends VueBase {
     }
 
     methods = {
-        onClkHide(){
+        onClkHide() {
             console.log('onClkHide');
-            this.opReq(`${CommandId.cs_hideOnlinePanel}`, {_: null})
+            this.opReq(`${CommandId.cs_hideOnlinePanel}`, { _: null })
         },
-        onClkRank(){
+        onClkRank() {
             console.log('onClkRank');
-            this.opReq(`${CommandId.cs_showRank}`, {_: null})
+            this.opReq(`${CommandId.cs_showRank}`, { _: null })
         },
-        onClkBracket (){
-            this.opReq(`${CommandId.cs_showBracket}`, {_: null});
+        onClkBracket() {
+            this.opReq(`${CommandId.cs_showBracket}`, { _: null });
         }
     }
 }

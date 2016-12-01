@@ -2726,7 +2726,15 @@
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.opReq = function (cmdId, param, callback) {
-	            $.post("/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId, param, callback);
+	            console.log("ajax");
+	            $.ajax({
+	                url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
+	                type: 'post',
+	                data: JSON.stringify(param),
+	                headers: { "Content-Type": "application/json" },
+	                dataType: 'json',
+	                success: callback
+	            });
 	        };
 	        this.methods = {
 	            onClkHide: function () {
@@ -2765,14 +2773,13 @@
 	    };
 	    StageOnlineView.prototype.initIO = function () {
 	        var _this = this;
-	        var localWs = io.connect("http://" + window.location.host + "/" + const_1.PanelId.rkbPanel);
-	        localWs.on('connect', function (msg) {
+	        var localWs = io.connect(location.protocol + '//' + document.domain + ':' + location.port + '/rkb');
+	        localWs.on('connect', function () {
 	            console.log('connect', window.location.host);
 	            localWs.emit("opUrl", { opUrl: window.location.host });
 	        })
 	            .on("" + Command_1.CommandId.sc_showRank, function (data) {
 	            console.log("CommandId.sc_showRank", data);
-	            _this.showRank();
 	        })
 	            .on("" + Command_1.CommandId.sc_showBracket, function (data) {
 	            console.log("CommandId.sc_showBracket", data);
@@ -2848,9 +2855,9 @@
 	        var game_id = gameId;
 	        console.log('get /api/passerbyking/game/players/', game_id);
 	        var api1 = 'http://api.liangle.com/api/passerbyking/game/rank/' + game_id;
-	        $.get('http://' + window.location.host + '/get?url=' + api1, function (respone) {
-	            var data = JSON.parse(respone.entity);
-	            var mixRankData = data.data;
+	        $.get('/proxy?url=' + api1, function (res) {
+	            console.log(res);
+	            var mixRankData = res.data;
 	            var rankPlayerDocArr = [];
 	            for (var i = 0; i < mixRankData.player_rank.length; i++) {
 	                var player_rank = mixRankData.player_rank[i];

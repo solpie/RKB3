@@ -24,6 +24,7 @@ function loadRes(url: string, callback, isCrossOrigin?: boolean) {
         req.open('GET', proxy(url), true);
         req.onload = function (res) {
             loadImg(req.responseText, callback);
+            // callback(res)
         };
         req.send();
     }
