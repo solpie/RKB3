@@ -232,7 +232,11 @@
 	    };
 	    HomeView.prototype.genQRCode = function () {
 	        this.iosParam = { "rtmp": this.rmtpUrl, gameId: this.selected + "" };
-	        new QRCode(document.getElementById("qrcode"), {
+	        if (this.qrcode) {
+	            $('#qrcode').empty();
+	            console.log('clear');
+	        }
+	        this.qrcode = new QRCode(document.getElementById("qrcode"), {
 	            text: JSON.stringify(this.iosParam),
 	            width: 256,
 	            height: 256,

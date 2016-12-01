@@ -15,7 +15,7 @@ class HomeView extends VueBase {
     iosParam = VueBase.Dict;
     rmtpUrl = VueBase.String;
     playUrl = VueBase.String;
-
+    qrcode;
     constructor() {
         super();
         VueBase.initProps(this);
@@ -64,7 +64,11 @@ class HomeView extends VueBase {
 
     genQRCode() {
         this.iosParam = { "rtmp": this.rmtpUrl, gameId: this.selected + "" };
-        new QRCode(document.getElementById("qrcode"), {
+        if (this.qrcode) {
+            $('#qrcode').empty()
+            console.log('clear')
+        }
+        this.qrcode = new QRCode(document.getElementById("qrcode"), {
             text: JSON.stringify(this.iosParam),
             width: 256,
             height: 256,
