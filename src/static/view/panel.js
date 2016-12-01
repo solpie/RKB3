@@ -2726,7 +2726,6 @@
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.opReq = function (cmdId, param, callback) {
-	            console.log("ajax");
 	            $.ajax({
 	                url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
 	                type: 'post',
@@ -2780,6 +2779,7 @@
 	        })
 	            .on("" + Command_1.CommandId.sc_showRank, function (data) {
 	            console.log("CommandId.sc_showRank", data);
+	            _this.showRank();
 	        })
 	            .on("" + Command_1.CommandId.sc_showBracket, function (data) {
 	            console.log("CommandId.sc_showBracket", data);

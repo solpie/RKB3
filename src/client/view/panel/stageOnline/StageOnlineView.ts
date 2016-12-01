@@ -17,7 +17,6 @@ class StageOnlineView extends VueBase {
     gameId = VueBase.String;
     isOp = VueBase.PROP;
     opReq = (cmdId: string, param: any, callback: any) => {
-        console.log("ajax")
         $.ajax({
             url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
             type: 'post',
@@ -26,9 +25,6 @@ class StageOnlineView extends VueBase {
             dataType: 'json',
             success:callback
         });
-        // $.post(`/panel/${PanelId.onlinePanel}/${cmdId}`,
-        //     param,
-        //     callback);
     };
 
     constructor() {
@@ -70,7 +66,7 @@ class StageOnlineView extends VueBase {
         })
             .on(`${CommandId.sc_showRank}`, (data) => {
                 console.log("CommandId.sc_showRank", data);
-                // this.showRank();
+                this.showRank();
             })
             .on(`${CommandId.sc_showBracket}`, (data) => {
                 console.log("CommandId.sc_showBracket", data);

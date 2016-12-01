@@ -95,8 +95,8 @@ def proxy():
 
 @app.route('/panel/online/<cmd>', methods=['POST'])
 def on_panel_cmd(cmd):
-    print(cmd, request.data, request.json)
-    if '_' in request.values:
+    print(cmd, request.json)
+    if '_' in request.json:
         emit(cmd.replace('cs_', 'sc_'), request.json,
              broadcast=True, namespace=namespace_rkb)
     return 'ok'
