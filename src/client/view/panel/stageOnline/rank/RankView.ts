@@ -30,10 +30,8 @@ export class RankView extends BasePanelView {
         console.log('get /api/passerbyking/game/players/', game_id);
         let api1 = 'http://api.liangle.com/api/passerbyking/game/rank/' + game_id;
         // api1 = 'http://api.liangle.com/api/passerbyking/game/list'
-        $.get('http://' + window.location.host + '/get?url=' + api1, (respone) => {
-            let data = JSON.parse(respone.entity);
-            let mixRankData = data.data;
-
+        $.get('/proxy?url=' + api1, (respone) => {
+            let mixRankData = respone.data;
             let rankPlayerDocArr = [];
             for (let i = 0; i < mixRankData.player_rank.length; i++) {
                 let player_rank = mixRankData.player_rank[i];
@@ -57,12 +55,14 @@ export class RankView extends BasePanelView {
                 ftDoc.score = group_rank.total_score;
                 rankFtDocArr.push(ftDoc);
             }
+
             this.fadeInMixRank({
                 totalFtDocArr: rankFtDocArr,
                 totalPlayerDocArr: rankPlayerDocArr,
                 gameId: game_id,
                 auto: true
             });
+
         });
     }
 

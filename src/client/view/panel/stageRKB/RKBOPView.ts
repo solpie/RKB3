@@ -66,7 +66,7 @@ export class RKBView extends VueBase {
                 opReq(`${CommandId.cs_setDelayTime}`, {delayTimeMS: this.delayTimeMS, _: null}, ()=> {
 
                 })
-            }
+         }
         },
         onClkStartTimer()
         {

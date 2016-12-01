@@ -19,9 +19,14 @@ class StageOnlineView extends VueBase {
     gameId = VueBase.String
     isOp = VueBase.PROP
     opReq = (cmdId: string, param: any, callback: any) => {
-        $.post(`/panel/${PanelId.onlinePanel}/${cmdId}`,
-            param,
-            callback)
+            $.ajax({
+                url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
+                type: 'post',
+                data: JSON.stringify(param),
+                headers:{"Content-Type": "application/json"},
+                dataType: 'json',
+                success:callback
+            });
     }
 
     constructor() {
