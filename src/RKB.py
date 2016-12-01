@@ -82,6 +82,7 @@ def proxy():
             res_headers[h] = r.headers[h]
         res.headers = res_headers
         return res
+        
     if request.method == "POST":
         url = request.values.get("url")
         r = requests.post(url, headers=req_headers)

@@ -15,14 +15,14 @@
                 <span class="panel-icon">
             <i class="fa fa-book"></i>
             </span> {{link.url}}
-                <br>
-                {{link.title}}
+                <br> {{link.title}}
             </a>
         </vue>
     </nav>
-    推流地址:<input type="text" v-model="rmtpUrl" style="width: 1000px">
+    播放地址:<input type="text" v-model="playUrl" style="width: 1000px">
     <p>
-    <button class="button is-primary" @click="onClkQRCode">生成IOS二维码</button>
-    {{iosParam | json}}
-    <div id="qrcode"></div>
+        推流地址:<input type="text" v-model="rmtpUrl" style="width: 1000px">
+        <p>
+            <button class="button is-primary" @click="onClkQRCode">生成IOS二维码</button> {{iosParam | json}}
+            <div id="qrcode"></div>
 </div>

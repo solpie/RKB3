@@ -74,44 +74,44 @@ export var  Profile =  {
         },
 
         onSubmitInfo(event) {
-            event.stopPropagation();
-            console.log('onSubmitInfo');
-            $(".cropper-container").hide();
-            var playerDoc: any = {};
-            this.setProp(this, playerDoc);
-            if (this.isEdit) {
-                var postUpdate = () => {
-                    this.post('/admin/player/update', {playerDoc: playerDoc}, (res) => {
-                        console.log(res);
-                        this.isEdit = false;
-                        if (res) {
-                            window.location.reload();
-                        }
-                    })
-                };
+            // event.stopPropagation();
+            // console.log('onSubmitInfo');
+            // $(".cropper-container").hide();
+            // var playerDoc: any = {};
+            // this.setProp(this, playerDoc);
+            // if (this.isEdit) {
+            //     var postUpdate = () => {
+            //         this.post('/admin/player/update', {playerDoc: playerDoc}, (res) => {
+            //             console.log(res);
+            //             this.isEdit = false;
+            //             if (res) {
+            //                 window.location.reload();
+            //             }
+            //         })
+            //     };
 
-                playerDoc.id = this.editPlayerId;
-                if (this.isChangeAvatar) {
-                    playerDoc.avatar = this.cropper.getCroppedCanvas().toDataURL();
-                    postUpdate();
-                    console.log('isChangeAvatar');
-                }
-                else {
-                    postUpdate();
-                }
+            //     playerDoc.id = this.editPlayerId;
+            //     if (this.isChangeAvatar) {
+            //         playerDoc.avatar = this.cropper.getCroppedCanvas().toDataURL();
+            //         postUpdate();
+            //         console.log('isChangeAvatar');
+            //     }
+            //     else {
+            //         postUpdate();
+            //     }
 
-            }
-            else {
-                if (this.isChangeAvatar) {
-                    playerDoc.avatar = this.cropper.getCroppedCanvas().toDataURL();
-                }
-                this.$http.post('/admin/player/add', {playerData: playerDoc}, (res) => {
-                    console.log(res);
-                    if (res) {
-                        window.location.reload();
-                    }
-                })
-            }
+            // }
+            // else {
+            //     if (this.isChangeAvatar) {
+            //         playerDoc.avatar = this.cropper.getCroppedCanvas().toDataURL();
+            //     }
+            //     this.$http.post('/admin/player/add', {playerData: playerDoc}, (res) => {
+            //         console.log(res);
+            //         if (res) {
+            //             window.location.reload();
+            //         }
+            //     })
+            // }
 
         },
 

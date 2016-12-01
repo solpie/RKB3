@@ -2,8 +2,7 @@
  * Created by toramisu on 2016/10/22.
  */
 
-// require('../../../resources/app/static/css/bulma.min.css');
-
+require('../../../static/css/bulma.min.css');
 
 require(`script!./../../libs/jquery.min.js`);
 require(`script!./../../libs/qrcode.min.js`);
@@ -12,27 +11,27 @@ require(`script!./../../libs/vue/vue-router.min.js`);
 
 import { Navbar } from "./navbar/Navbar";
 import { homeView } from "./home/home";
-import { PlayerView } from "./player/player";
-import { RankView } from "./rank/rank";
-import { PanelView } from "./panel/panel";
+// import { PlayerView } from "./player/player";
+// import { RankView } from "./rank/rank";
+// import { PanelView } from "./panel/panel";
 //////////////
 var routes = [
     {
         path: '/', name: 'home',
         components: { content: homeView, Navbar: Navbar }
     },
-    {
-        path: '/player', name: 'player',
-        components: { content: PlayerView, Navbar: Navbar },
-    },
-    {
-        path: '/panel', name: 'panel',
-        components: { content: PanelView, Navbar: Navbar },
-    },
-    {
-        path: '/rank', name: 'rank',
-        components: { content: RankView, Navbar: Navbar },
-    }
+    // {
+    //     path: '/player', name: 'player',
+    //     components: { content: PlayerView, Navbar: Navbar },
+    // },
+    // {
+    //     path: '/panel', name: 'panel',
+    //     components: { content: PanelView, Navbar: Navbar },
+    // },
+    // {
+    //     path: '/rank', name: 'rank',
+    //     components: { content: RankView, Navbar: Navbar },
+    // }
 ];
 
 declare let VueRouter;

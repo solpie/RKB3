@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>RKB 路人王 ver {{version }} </title>
-    <link rel="stylesheet" type="text/css" href="/css/bulma.min.css">
+    <!--<link rel="stylesheet" type="text/css" href="/css/bulma.min.css">-->
     <!--<link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css">-->
     <style>
         body {
@@ -20,14 +20,10 @@
             <router-view name="content"></router-view>
         </div>
     </div>
-
-    <!--<script src="/js/jquery.min.js"></script>-->
-    <!--<script src="/js/vue/vue.min.js"></script>-->
-    <!--<script src="/js/vue/vue-router.min.js"></script>-->
-    <!--<script src="/js/vue/vue-resource.min.js"></script>-->
     <script>
         var opUrlArr = '<%= opUrlArr %>'.split(',')
     </script>
+    <!--<script src="/js/jquery.min.js"></script>-->
     <script src="/view/admin.js"></script>
 </body>
 

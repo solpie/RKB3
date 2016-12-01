@@ -1,4 +1,4 @@
-import {VueBase} from "../../utils/VueBase";
+import { VueBase } from "../../utils/VueBase";
 /**
  * Created by toramisu on 2016/10/24.
  */
@@ -14,6 +14,7 @@ class HomeView extends VueBase {
     gameDataArr = VueBase.PROP;
     iosParam = VueBase.Dict;
     rmtpUrl = VueBase.String;
+    playUrl = VueBase.String;
 
     constructor() {
         super();
@@ -22,11 +23,11 @@ class HomeView extends VueBase {
 
     created() {
         console.log('post /admin/');
-        var apiGame = 'http://api.liangle.com/api/passerbyking/game/list';
-        $.get(`http://${window.location.host}/get?url=${apiGame}`, (res1)=> {
-            var data = JSON.parse(res1.entity);
-            console.log(data);
-            var gameDataArr = data.data;
+        var url = 'http://api.liangle.com/api/passerbyking/game/list';
+        $.get(`/proxy?url=${url}`, (res1) => {
+            console.log(res1);
+            // var data = JSON.parse(res1.entity);
+            var gameDataArr = res1.data;
             this.gameDataArr = [];
             for (var i = 0; i < gameDataArr.length; i++) {
                 // var gameData = gameDataArr[i];
@@ -37,47 +38,6 @@ class HomeView extends VueBase {
             }
             this.options = gameDataArr;
         });
-        // try {
-        //     $.ajax({
-        //         type: "GET",
-        //         url: "http://www.liangle.com/passerbyking/game/info/84",
-        //         dataType: 'jsonp',
-        //         success: function (res) {
-        //             console.log(res);
-        //         }
-        //     });
-        // }
-        // catch (e) {
-        //     console.log(e);
-        // }
-        // $.ajax({
-        //     type: "get",
-        //     async: false,
-        //     url: "http://www.liangle.com/passerbyking/game/info/84?callbackparam=success_jsonpCallback",
-        //     dataType: "jsonp",
-        //     jsonp: "callbackparam",//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(默认为:callback)
-        //     jsonpCallback: "success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
-        //     success: function (json) {
-        //         alert(json);
-        //         alert(json[0].name);
-        //     },
-        //     error: function (e) {
-        //         console.log(e, this)
-        //     }
-        // });
-        // dynamicLoading.js("http://www.liangle.com/passerbyking/game/info/84");
-        // $.ajax({
-        //     type: 'GET',
-        //     url: "http://www.liangle.com/passerbyking/game/info/84",
-        //     contentType: "application/json",
-        //     dataType: 'jsonp',
-        //     success: function (json) {
-        //         alert(json);
-        //     },
-        //     error: function (e) {
-        //         console.log(e.message);
-        //     }
-        // });
     }
 
     mounted() {
@@ -87,14 +47,14 @@ class HomeView extends VueBase {
 
     updateLinks(gameId) {
         this.links = [
-            {title: "战团排行", url: `/panel/#/ol/auto/${gameId}?score=0`},
-            {title: "八强对阵", url: `/panel/#!/bracket/auto/${gameId}`},
-            {title: "比分面板", url: `/panel/#/rkb/ob/${gameId}`},
-            {title: "比分面板 操作", url: `/panel/#/rkb/op/${gameId}`},
-            {title: "战团排行 操作", url: `/panel/#/ol/op/${gameId}`},
+            { title: "战团排行", url: `/panel/#/ol/auto/${gameId}?score=0` },
+            { title: "八强对阵", url: `/panel/#!/bracket/auto/${gameId}` },
+            { title: "比分面板", url: `/panel/#/rkb/ob/${gameId}` },
+            { title: "比分面板 操作", url: `/panel/#/rkb/op/${gameId}` },
+            { title: "战团排行 操作", url: `/panel/#/ol/op/${gameId}` },
             // {title: "bracket1v1 ob", url: "/panel/#/bracket/ob"},
             // {title: "stage1v1 auto", url: "/panel/#/stage1v1/auto"},
-            {title: "screen1v1 ob", url: "/panel/#/screen1v1/ob"},
+            { title: "screen1v1 ob", url: "/panel/#/screen1v1/ob" },
         ];
     }
 
@@ -103,7 +63,7 @@ class HomeView extends VueBase {
     };
 
     genQRCode() {
-        this.iosParam = {"rtmp": this.rmtpUrl, gameId: this.selected + ""};
+        this.iosParam = { "rtmp": this.rmtpUrl, gameId: this.selected + "" };
         new QRCode(document.getElementById("qrcode"), {
             text: JSON.stringify(this.iosParam),
             width: 256,
@@ -115,17 +75,20 @@ class HomeView extends VueBase {
     }
 
     methods = {
-        onSelGameID(gameId){
+        onSelGameID(gameId) {
             this.updateLinks(gameId);
-            $.get(`http://${window.location.host}/admin/sync/${this.selected}`, (res)=> {
-                console.log(res)
+            var url = 'http://api.liangle.com/api/passerbyking/game/info/' + gameId;
+            $.get(`/proxy?url=${url}`, (res1) => {
+                console.log(res1);
+                let p = res1.data.stream.publish
+                this.rmtpUrl = p.url + "/" + p.stream
+                this.playUrl = res1.data.stream.play
+                this.genQRCode()
             });
         },
-        onClkQRCode(){
+        onClkQRCode() {
             // var $s = $($('script')[0])
             // console.log($s);
-
-
             this.genQRCode()
         }
     };
