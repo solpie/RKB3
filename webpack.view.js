@@ -3,7 +3,7 @@ var webpack = require('webpack');
 module.exports = {
     entry: {
         "admin": "./src/client/view/admin/index.ts",
-        // "panel": "./src/client/view/panel/index.ts"
+        "panel": "./src/client/view/panel/index.ts"
     },
     output: {
         path: './src/static/view',
@@ -11,16 +11,14 @@ module.exports = {
     },
     devtool: 'source-map',
     module: {
-        preLoaders: [
-            {
-                test: /\.js$/,
-                loader: 'source-map-loader'
-            }
-        ],
+        preLoaders: [{
+            test: /\.js$/,
+            loader: 'source-map-loader'
+        }],
         loaders: [
-            {test: /\.tsx?$/, loader: "ts-loader"},
-            {test: /\.html$/, loader: "html-loader?minimize=false"},
-            {test: /\.css$/, loader: "style-loader!css-loader?root=."}
+            { test: /\.tsx?$/, loader: "ts-loader" },
+            { test: /\.html$/, loader: "html-loader?minimize=false" },
+            { test: /\.css$/, loader: "style-loader!css-loader?root=." }
         ]
     },
     resolve: {

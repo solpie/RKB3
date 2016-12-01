@@ -1,8 +1,8 @@
 import {PanelId, ScParam} from "../view/const";
 import {CommandId} from "../view/Command";
-import {ServerConf} from "../Env";
+// import {ServerConf} from "../Env";
 import {GameRkbInfo} from "./GameRkbInfo";
-import {panelRouter} from "../router/PanelRouter";
+// import {panelRouter} from "../router/PanelRouter";
 declare var rest;
 declare var io;
 export class RkbModel {
@@ -22,7 +22,7 @@ export class RkbModel {
         io
             .on("connect", (socket) => {
                 console.log('connect');
-                socket.emit(`${CommandId.initPanel}`, ScParam({gameInfo: this.gameInfo, isDev: ServerConf.isDev}));
+                socket.emit(`${CommandId.initPanel}`, ScParam({gameInfo: this.gameInfo}));
             })
             .on('disconnect', function (socket) {
                 console.log('disconnect');
@@ -31,45 +31,46 @@ export class RkbModel {
             io.emit(cmd, param);
         };
         this.initHupuAuto();
-        this.initOp();
+        // this.initOp();
     }
 
     private initHupuAuto() {
-        rest('http://test.jrstvapi.hupu.com/zhubo/getNodeServer').then(function (response) {
-            // console.log(response);
-            var a = JSON.parse(response.entity);
-            if (a && a.length) {
-                ServerConf.hupuWsUrl = a[0];
-            }
-        });
+        // rest('http://test.jrstvapi.hupu.com/zhubo/getNodeServer').then(function (response) {
+        //     // console.log(response);
+        //     var a = JSON.parse(response.entity);
+        //     if (a && a.length) {
+        //         ServerConf.hupuWsUrl = a[0];
+        //     }
+        // });
     }
 
     syncGame(gameId) {
-        var remoteIO;
-        if (!this.panelWsMap[gameId]) {
-            remoteIO = this.panelWsMap[gameId] = io.connect(ServerConf.hupuWsUrl);
-            remoteIO.on('connect', ()=> {
-                console.log('hupuAuto socket connected');
-                remoteIO.emit('passerbyking', {
-                    game_id: gameId,
-                    page: 'score'
-                })
-            });
-            remoteIO.on('wall', (data: any)=> {
-                var event = data.et;
-                var eventMap = {};
-                console.log('event:', event, data);
-            });
-        }
-        remoteIO = this.panelWsMap[gameId];
-        remoteIO.emit('passerbyking', {
-            game_id: gameId,
-            page: "tsync"
-        });
+        // var remoteIO;
+        // if (!this.panelWsMap[gameId]) {
+        //     remoteIO = this.panelWsMap[gameId] = io.connect(ServerConf.hupuWsUrl);
+        //     remoteIO.on('connect', ()=> {
+        //         console.log('hupuAuto socket connected');
+        //         remoteIO.emit('passerbyking', {
+        //             game_id: gameId,
+        //             page: 'score'
+        //         })
+        //     });
+        //     remoteIO.on('wall', (data: any)=> {
+        //         var event = data.et;
+        //         var eventMap = {};
+        //         console.log('event:', event, data);
+        //     });
+        // }
+        // remoteIO = this.panelWsMap[gameId];
+        // remoteIO.emit('passerbyking', {
+        //     game_id: gameId,
+        //     page: "tsync"
+        // });
     }
 
     initOp() {
         //post /panel/rkb/:cmdId
+        var panelRouter
         panelRouter.post(`/rkb/:cmdId`, (req, res) => {
             if (!req.body) return res.sendStatus(400);
             var cmdId = req.params.cmdId;
@@ -242,9 +243,6 @@ export class RkbModel {
                 else
                     playerDoc = this.gameInfo.getPlayerDocArr()[1];
 
-                if (playerDoc.id == ServerConf.king) {
-                    playerDoc.isKing = true;
-                }
                 this.emit(`${CommandId.fadeInWinPanel}`, ScParam({
                     isBlue: isBlueWin,
                     playerDoc: playerDoc

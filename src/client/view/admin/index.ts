@@ -10,28 +10,28 @@ require(`script!./../../libs/qrcode.min.js`);
 require(`script!./../../libs/vue/vue.min.js`);
 require(`script!./../../libs/vue/vue-router.min.js`);
 
-import {Navbar} from "./navbar/Navbar";
-import {homeView} from "./home/home";
-import {PlayerView} from "./player/player";
-import {RankView} from "./rank/rank";
-import {PanelView} from "./panel/panel";
+import { Navbar } from "./navbar/Navbar";
+import { homeView } from "./home/home";
+import { PlayerView } from "./player/player";
+import { RankView } from "./rank/rank";
+import { PanelView } from "./panel/panel";
 //////////////
 var routes = [
     {
         path: '/', name: 'home',
-        components: {content: homeView, Navbar: Navbar}
+        components: { content: homeView, Navbar: Navbar }
     },
     {
         path: '/player', name: 'player',
-        components: {content: PlayerView, Navbar: Navbar},
+        components: { content: PlayerView, Navbar: Navbar },
     },
     {
         path: '/panel', name: 'panel',
-        components: {content: PanelView, Navbar: Navbar},
+        components: { content: PanelView, Navbar: Navbar },
     },
     {
         path: '/rank', name: 'rank',
-        components: {content: RankView, Navbar: Navbar},
+        components: { content: RankView, Navbar: Navbar },
     }
 ];
 

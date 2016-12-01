@@ -233,7 +233,7 @@ declare var Buffer: {
 ************************************************/
 declare namespace NodeJS {
     export interface ErrnoException extends Error {
-        errno?: number;
+        errno?: string;
         code?: string;
         path?: string;
         syscall?: string;
@@ -259,7 +259,6 @@ declare namespace NodeJS {
 
     export interface ReadableStream extends EventEmitter {
         readable: boolean;
-        isTTY?: boolean;
         read(size?: number): string | Buffer;
         setEncoding(encoding: string): void;
         pause(): ReadableStream;
@@ -273,7 +272,6 @@ declare namespace NodeJS {
 
     export interface WritableStream extends EventEmitter {
         writable: boolean;
-        isTTY?: boolean;
         write(buffer: Buffer | string, cb?: Function): boolean;
         write(str: string, encoding?: string, cb?: Function): boolean;
         end(): void;
@@ -1524,7 +1522,7 @@ declare module "child_process" {
         disconnect(): void;
         unref(): void;
         ref(): void;
-
+    
         /**
          * events.EventEmitter
          * 1. close
@@ -1935,9 +1933,9 @@ declare module "net" {
         listen(port: number, listeningListener?: Function): Server;
         listen(path: string, backlog?: number, listeningListener?: Function): Server;
         listen(path: string, listeningListener?: Function): Server;
-        listen(options: ListenOptions, listeningListener?: Function): Server;
         listen(handle: any, backlog?: number, listeningListener?: Function): Server;
         listen(handle: any, listeningListener?: Function): Server;
+        listen(options: ListenOptions, listeningListener?: Function): Server;
         close(callback?: Function): Server;
         address(): { port: number; family: string; address: string; };
         getConnections(cb: (error: Error, count: number) => void): void;
@@ -2152,8 +2150,6 @@ declare module "fs" {
     export interface ReadStream extends stream.Readable {
         close(): void;
         destroy(): void;
-        bytesRead: number;
-        path: string | Buffer;
 
         /**
          * events.EventEmitter
