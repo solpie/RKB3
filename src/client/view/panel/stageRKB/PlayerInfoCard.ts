@@ -6,8 +6,8 @@ import {ViewConst} from "../../const";
 import {fadeOutCtn} from "../../utils/Fx";
 import Text = createjs.Text;
 import Bitmap = createjs.Bitmap;
-declare let $;
 // var $ = require('jquery');
+declare let $;
 export class PlayerInfoCard {
     ctn: Container;
 
