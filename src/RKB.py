@@ -17,13 +17,12 @@ config = configparser.RawConfigParser()
 def loadConf():
     config.read(os.path.join(serverConf["path"], '.cfg'))
     serverConf["port"] = config.get('server', 'port')
-    serverConf["views"] = config.get('server', 'views')
     serverConf["reqHeaders"] = str(
         config.get('server', 'reqHeaders')).split(",")
     serverConf["resHeaders"] = str(
         config.get('server', 'resHeaders')).split(",")
     print("serverConf:", serverConf)
-
+    serverConf["views"] = ["admin", "panel"]
 loadConf()
 
 # web server

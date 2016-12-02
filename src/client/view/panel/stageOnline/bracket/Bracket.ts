@@ -1,3 +1,4 @@
+import { getHupuWS } from '../../../utils/HupuAPI';
 import { BasePanelView } from "../../BasePanelView";
 import { PanelId, ViewConst, FontName } from "../../../const";
 import { groupPosMap, PlayerSvg } from "./BracketGroup";
@@ -55,10 +56,12 @@ export class Bracket extends BasePanelView {
             ctn.addChild(groupCtn);
 
             let winHint = new PIXI.Graphics()
-            winHint.beginFill(0xff0000)
-                .drawRoundedRect(0, 0, 45, 45, 5)
-            winHint.x = 160
-            winHint.y = 3
+            winHint.beginFill(0xf8a300)
+                .drawRoundedRect(0, 0, 46, 45, 0)
+            winHint.x = 158
+            winHint.y =2
+            winHint["y1"] = 2
+            winHint["y2"] = 51
             winHint.visible = false;
             group2.winHint = winHint;
 
@@ -153,37 +156,39 @@ export class Bracket extends BasePanelView {
     }
 
     initAuto(gameId) {
-        let remoteIO = io.connect(hupuWsUrl);
-        remoteIO.on('connect', () => {
-            console.log('hupuAuto socket connected GameId', gameId);
-            remoteIO.emit('passerbyking', {
-                game_id: gameId,
-                page: 'top8Map'
-            })
-        });
+        getHupuWS((hupuWsUrl) => {
+            let remoteIO = io.connect(hupuWsUrl);
+            remoteIO.on('connect', () => {
+                console.log('hupuAuto socket connected GameId', gameId);
+                remoteIO.emit('passerbyking', {
+                    game_id: gameId,
+                    page: 'top8Map'
+                })
+            });
 
-        remoteIO.on('wall', (data: any) => {
-            let event = data.et;
-            let eventMap = {};
-            console.log('event:', event, data);
+            remoteIO.on('wall', (data: any) => {
+                let event = data.et;
+                let eventMap = {};
+                console.log('event:', event, data);
 
-            eventMap['top8Match'] = () => {
-                console.log('top8Match', data);
-                data.data = data.list;
-                this.onBracketData(data);
-            };
+                eventMap['top8Match'] = () => {
+                    console.log('top8Match', data);
+                    data.data = data.list;
+                    this.onBracketData(data);
+                };
 
-            eventMap['startGame'] = () => {
-                this.hideComing();
-            };
+                eventMap['startGame'] = () => {
+                    this.hideComing();
+                };
 
-            eventMap['updateScore'] = () => {
-                this.hideComing();
-            };
+                eventMap['updateScore'] = () => {
+                    this.hideComing();
+                };
 
-            if (eventMap[event])
-                eventMap[event]();
-        });
+                if (eventMap[event])
+                    eventMap[event]();
+            });
+        })
     }
 
     onBracketData(res) {
@@ -236,9 +241,9 @@ export class Bracket extends BasePanelView {
                 groupPosMap[i + 1].ctn.alpha = 1;
                 groupPosMap[i + 1].winHint.visible = true;
                 if (groupPosMap[i + 1].playerArr[0].isWin)
-                    groupPosMap[i + 1].winHint.y = 3;
+                    groupPosMap[i + 1].winHint.y = groupPosMap[i + 1].winHint["y1"];
                 else
-                    groupPosMap[i + 1].winHint.y = 51;
+                    groupPosMap[i + 1].winHint.y = groupPosMap[i + 1].winHint["y2"];
             }
         }
     }
