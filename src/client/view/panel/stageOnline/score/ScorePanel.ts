@@ -3,7 +3,9 @@ import { BitmapText, imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx'
 import { ViewConst } from '../../../const';
 export class ScorePanel {
     timeText: PIXI.Text
-
+    leftScoreNum:BitmapText;
+    rightScoreNum:BitmapText
+    
     constructor(parent: PIXI.Container) {
         let ctn = new PIXI.Container()
         ctn.y = ViewConst.STAGE_HEIGHT - 132
@@ -41,12 +43,14 @@ export class ScorePanel {
             }
 
             let leftScoreNum = new BitmapText(sheet)
+            this.leftScoreNum = leftScoreNum
             leftScoreNum.x = px
             leftScoreNum.y = 60
             leftScoreNum.align = 'center'
             ctn.addChild(leftScoreNum)
 
             let rightScoreNum = new BitmapText(sheet)
+            this.rightScoreNum = rightScoreNum
             rightScoreNum.x = px + 175
             rightScoreNum.y = leftScoreNum.y
             rightScoreNum.align = 'center'
@@ -61,6 +65,35 @@ export class ScorePanel {
 
     }
     resetTimer() {
+
+    }
+
+    set35ScoreLight(winScore){
+
+    }
+
+    setGameIdx(gameIdx){
+
+    }
+
+    resetScore(){
+        this.leftScoreNum.text = "0"        
+        this.rightScoreNum.text = "0"        
+    }
+
+    setLeftScore(leftScore){
+        this.leftScoreNum.text = String(leftScore)
+    }
+
+    setRightScore(rightScore){
+        this.rightScoreNum.text = String(rightScore)
+    }
+
+    setLeftFoul(leftFoul){
+
+    }
+
+    setRightFoul(rightFoul){
 
     }
 
