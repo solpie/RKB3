@@ -134,6 +134,7 @@ export class Bracket extends BasePanelView {
     }
 
     showComingIdx(idx) {
+        //todo：加上延时
         let g = groupPosMap[idx];
         if (g) {
             this.comingTitle.visible = true;

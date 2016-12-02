@@ -2974,6 +2974,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var Fx_1 = __webpack_require__(38);
 	var PixiEx_1 = __webpack_require__(53);
 	var const_1 = __webpack_require__(34);
 	var ScorePanel = (function () {
@@ -2982,6 +2983,7 @@
 	        var ctn = new PIXI.Container();
 	        ctn.y = const_1.ViewConst.STAGE_HEIGHT - 132;
 	        parent.addChild(ctn);
+	        this.ctn = ctn;
 	        ctn.addChild(PixiEx_1.newBitmap({ url: '/img/panel/score/bg.png' }));
 	        var timeText = this.timeText = new PIXI.Text("99:99", { fill: "#ffffffff" });
 	        timeText.x = const_1.ViewConst.STAGE_WIDTH * .5 - 28;
@@ -3022,6 +3024,36 @@
 	            ctn.addChild(rightScoreNum);
 	        });
 	    }
+	    ScorePanel.prototype.initFoulCircle = function () {
+	        var circle;
+	        this.leftFoulCircleArr = [];
+	        this.rightFoulCircleArr = [];
+	        for (var i = 0; i < 4; i++) {
+	            circle = PixiEx_1.newBitmap({ url: '/img/panel/score/foul.png' });
+	            circle.x = 604 + i * 9;
+	            circle.y = 120 - i * 15;
+	            circle.alpha = 0;
+	            this.ctn.addChild(circle);
+	            this.leftFoulCircleArr.push(circle);
+	            circle = PixiEx_1.newBitmap({ url: '/img/panel/score/foul.png' });
+	            circle.x = 1318 - i * 9;
+	            circle.scaleX = -1;
+	            circle.y = 120 - i * 15;
+	            circle.alpha = 0;
+	            this.ctn.addChild(circle);
+	            this.rightFoulCircleArr.push(circle);
+	        }
+	        this.leftFoulHint = PixiEx_1.newBitmap({ url: '/img/panel/score/foulHint.png' });
+	        this.leftFoulHint.x = 590;
+	        this.leftFoulHint.y = 62;
+	        this.ctn.addChild(this.leftFoulHint);
+	        this.rightFoulHint = PixiEx_1.newBitmap({ url: '/img/panel/score/foulHint.png' });
+	        this.rightFoulHint.scale.x = -1;
+	        this.rightFoulHint.x = 1332;
+	        this.rightFoulHint.y = 62;
+	        this.ctn.addChild(this.rightFoulHint);
+	        this.rightFoulHint.alpha = this.leftFoulHint.alpha = 0;
+	    };
 	    ScorePanel.prototype.toggleTimer1 = function (state) {
 	    };
 	    ScorePanel.prototype.resetTimer = function () {
@@ -3031,8 +3063,10 @@
 	    ScorePanel.prototype.setGameIdx = function (gameIdx) {
 	    };
 	    ScorePanel.prototype.resetScore = function () {
-	        this.leftScoreNum.text = "0";
-	        this.rightScoreNum.text = "0";
+	        this.setLeftScore(0);
+	        this.setRightScore(0);
+	        this.setLeftFoul(0);
+	        this.setRightFoul(0);
 	    };
 	    ScorePanel.prototype.setLeftScore = function (leftScore) {
 	        this.leftScoreNum.text = String(leftScore);
@@ -3041,6 +3075,25 @@
 	        this.rightScoreNum.text = String(rightScore);
 	    };
 	    ScorePanel.prototype.setLeftFoul = function (leftFoul) {
+	    };
+	    ScorePanel.prototype._setFoul = function (foul, circleArr, hint) {
+	        foul = Number(foul);
+	        if (foul > 4)
+	            foul = 4;
+	        for (var i = 0; i < circleArr.length; i++) {
+	            if (i < foul) {
+	                if (circleArr[i].alpha == 0)
+	                    Fx_1.blink2(circleArr[i]);
+	            }
+	            else {
+	                TweenLite.to(circleArr[0], 0.2, { alpha: 0 });
+	            }
+	        }
+	        if (foul > 3) {
+	        }
+	        else {
+	            TweenLite.to(circleArr[0], 0.2, { alpha: 0 });
+	        }
 	    };
 	    ScorePanel.prototype.setRightFoul = function (rightFoul) {
 	    };
