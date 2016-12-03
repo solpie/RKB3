@@ -1,12 +1,12 @@
 import { getHupuWS } from '../../../utils/HupuAPI';
-import { ScorePanel } from './ScorePanel';
+import { ScorePanel2 } from './ScorePanel2';
 import { CommandId } from '../../../Command';
 // import { initIO } from '../../../../router/PanelRouter';
 import { PanelId, TimerState } from '../../../const';
 import { BasePanelView } from '../../BasePanelView';
 declare let io;
 export class ScoreView extends BasePanelView {
-    scorePanel: ScorePanel
+    scorePanel: ScorePanel2
     delayTimeMS = 0
     constructor(stage: PIXI.Container) {
         super(PanelId.onlinePanel)
@@ -14,7 +14,7 @@ export class ScoreView extends BasePanelView {
         this.ctn = new PIXI.Container()
         stage.addChild(this.ctn)
 
-        this.scorePanel = new ScorePanel(this.ctn)
+        this.scorePanel = new ScorePanel2(this.ctn)
 
         console.log('new ScoreView')
 
@@ -97,6 +97,8 @@ export class ScoreView extends BasePanelView {
                 // Tween.get(this).wait(3000).call(()=> {
                 //     this.scorePanel.toggleTimer1(TimerState.PAUSE);
                 // });
+                // this.scorePanel.setRightFoul(3)
+                this.scorePanel.setLeftFoul(4)
             };
 
             eventMap['updateScore'] = ()=> {

@@ -1,8 +1,9 @@
-import { blink2 } from '../../../utils/Fx';
+import { blink, blink2 } from '../../../utils/Fx';
 import { BitmapText, imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
 
 import { ViewConst } from '../../../const';
-export class ScorePanel {
+declare let TWEEN;
+export class ScorePanel2 {
     ctn;
     timeText: PIXI.Text
     leftScoreNum:BitmapText;
@@ -69,6 +70,23 @@ export class ScorePanel {
 
 
         // let rightScoreNum = new BitmapText()
+        // var pos =  { x: 50, y: 0 }
+        // var tween = new TWEEN.Tween(pos )
+		// 			.to( { x: 400 }, 2000 )
+		// 			.easing( TWEEN.Easing.Elastic.InOut )
+		// 			.onUpdate( function () {
+        //                 console.log("tween22:",pos.x);
+		// 			} )
+		// 			.start();
+
+        // new TWEEN.Tween(ctn)
+        // .to({x:500},5000)
+        // .onUpdate(()=>{
+
+        // })
+        // .start()
+
+    this.initFoulCircle()
     }
 
     initFoulCircle() {
@@ -141,48 +159,67 @@ export class ScorePanel {
     }
 
     setLeftFoul(leftFoul){
-
+        this._setFoul(leftFoul, this.leftFoulCircleArr, this.leftFoulHint);
     }
      _setFoul(foul, circleArr, hint) {
         foul = Number(foul);
         if (foul > 4)
             foul = 4;
-        // var circleArr = this.leftFoulCircleArr;
         for (var i = 0; i < circleArr.length; i++) {
             if (i < foul) {
                 if (circleArr[i].alpha == 0)
                     blink2(circleArr[i]);
             }
             else {
-                  TweenLite.to(circleArr[0], 0.2, {alpha: 0})
-                // .eventCallback('onComplete', () => {
-                //     to1(a ? 0 : 1);
-                // })
-                // createjs.Tween.get(circleArr[i]).to({alpha: 0}, 200);
+                 var a2 = {alpha:circleArr[i].alpha}
+                new TWEEN.Tween(a2)
+						.to( { alpha: 0.0 }, 200 )
+                        .onUpdate(()=>{
+                            circleArr[i].alpha = a2.alpha
+                        })
+                        .start()
             }
         }
 
         if (foul > 3) {
-            // createjs.Tween.get(hint, {loop: true})
-            // // .to({alpha: 1}, 100,Ease.backIn)
-            // // .to({alpha: 0}, 100,Ease.backOut)
-            // // .to({alpha: 1}, 100,Ease.bounceIn)
-            // // .to({alpha: 0}, 100,Ease.bounceOut)
-            //     .to({alpha: 1}, 150, Ease.circIn)
-            //     .to({alpha: 0}, 150, Ease.circOut);
+                            console.log("foul: 4");
+                var pos =  { x: 50, y: 0 }
+        var tween = new TWEEN.Tween(pos )
+					.to( { x: 400 }, 2000 )
+					.easing( TWEEN.Easing.Elastic.InOut )
+					.onUpdate( function () {
+                        console.log("tween99:",pos.x);
+					} )
+					.start();
+                var a2 = {alpha:hint.alpha}
+           var t2 = new TWEEN.Tween(a2)
+				        .to( { alpha: 1.0 }, 1500 )    
+						.to( { alpha: 0.0 }, 1500 )    
+                        .repeat(10)
+                        .onUpdate(function(){
+                            console.log(a2.alpha);
+                            
+                            hint.alpha = a2.alpha;
+                        })
+                        .start()
+            
         }
         else
         {
-                  TweenLite.to(circleArr[0], 0.2, {alpha: 0})
-            
-            // Tween.get(hint, {loop: false}, null, true).to({alpha: 0});
+                var a = {alpha:hint.alpha}
+               new TWEEN.Tween( a)
+						.to( { alpha: 0.0 }, 200 )
+                        .onUpdate(()=>{
+                              hint.alpha = a.alpha;  
+                        })
+                        .start()
 
         }
 
     }
 
     setRightFoul(rightFoul){
-
+        this._setFoul(rightFoul, this.rightFoulCircleArr, this.rightFoulHint);
     }
 
 }
