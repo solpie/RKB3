@@ -59,7 +59,7 @@ export class Bracket extends BasePanelView {
             winHint.beginFill(0xf8a300)
                 .drawRoundedRect(0, 0, 46, 45, 0)
             winHint.x = 158
-            winHint.y =2
+            winHint.y = 2
             winHint["y1"] = 2
             winHint["y2"] = 51
             winHint.visible = false;
@@ -140,7 +140,7 @@ export class Bracket extends BasePanelView {
             this.comingTitle.visible = true;
             this.comingTitle.x = g.x - 4;
             this.comingTitle.y = g.y - 36;
-            blink2(this.comingTitle, .6);
+            blink2({ target: this.comingTitle, time: 600 });
         }
     }
 

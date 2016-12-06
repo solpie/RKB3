@@ -570,7 +570,7 @@
 	    };
 	    HomeView.prototype.updateLinks = function (gameId) {
 	        this.links = [
-	            { title: "战团排行", url: "/panel/#/ol/auto/" + gameId + "?score=0" },
+	            { title: "战团排行", url: "/panel/#/ol/ob/" + gameId + "?panel=score" },
 	            { title: "比分面板", url: "/panel/#/rkb/ob/" + gameId },
 	            { title: "比分面板 操作", url: "/panel/#/rkb/op/" + gameId },
 	            { title: "战团排行 操作", url: "/panel/#/ol/op/" + gameId },
