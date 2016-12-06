@@ -1,5 +1,7 @@
+import { TeamScene } from './TeamScene';
 import { BasePanelView } from '../BasePanelView';
 import { VueBase } from '../../utils/VueBase';
+let teamScene:TeamScene;
 class KOA extends VueBase {
     template = require('./koa.html')
     constructor() {
@@ -8,7 +10,7 @@ class KOA extends VueBase {
     }
     protected mounted() {
         let canvasStage = BasePanelView.initPixi()
-        
+        teamScene = new TeamScene(canvasStage)
     }
 }
 
