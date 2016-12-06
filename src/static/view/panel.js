@@ -55,8 +55,9 @@
 	__webpack_require__(31);
 	__webpack_require__(10);
 	__webpack_require__(12);
-	var RKBOPView_1 = __webpack_require__(33);
-	var StageOnlineView_1 = __webpack_require__(51);
+	var KOA_1 = __webpack_require__(33);
+	var RKBOPView_1 = __webpack_require__(35);
+	var StageOnlineView_1 = __webpack_require__(53);
 	var routes = [
 	    {
 	        path: '/', name: 'panel',
@@ -65,6 +66,10 @@
 	    {
 	        path: '/rkb/:op/:game_id',
 	        components: { default: RKBOPView_1.rkbView }
+	    },
+	    {
+	        path: '/koa/:op/:game_id',
+	        components: { default: KOA_1.koa }
 	    },
 	    {
 	        path: '/ol/:op/:game_id',
@@ -279,12 +284,45 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var StageRKBView_1 = __webpack_require__(34);
-	var WebJsFunc_1 = __webpack_require__(49);
+	var BasePanelView_1 = __webpack_require__(37);
 	var VueBase_1 = __webpack_require__(17);
-	var JsFunc_1 = __webpack_require__(41);
-	var const_1 = __webpack_require__(36);
-	var Command_1 = __webpack_require__(48);
+	var KOA = (function (_super) {
+	    __extends(KOA, _super);
+	    function KOA() {
+	        _super.call(this);
+	        this.template = __webpack_require__(34);
+	        VueBase_1.VueBase.initProps(this);
+	    }
+	    KOA.prototype.mounted = function () {
+	        var canvasStage = BasePanelView_1.BasePanelView.initPixi();
+	    };
+	    return KOA;
+	}(VueBase_1.VueBase));
+	exports.koa = new KOA();
+
+
+/***/ },
+/* 34 */
+/***/ function(module, exports) {
+
+	module.exports = "<div>\r\n    K.O.A\r\n</div>";
+
+/***/ },
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var StageRKBView_1 = __webpack_require__(36);
+	var WebJsFunc_1 = __webpack_require__(51);
+	var VueBase_1 = __webpack_require__(17);
+	var JsFunc_1 = __webpack_require__(43);
+	var const_1 = __webpack_require__(38);
+	var Command_1 = __webpack_require__(50);
 	var stageRKBView;
 	var opReq = function (cmdId, param, callback) {
 	    $.post("/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId, param, callback);
@@ -293,7 +331,7 @@
 	    __extends(RKBView, _super);
 	    function RKBView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(50);
+	        this.template = __webpack_require__(52);
 	        this.links = VueBase_1.VueBase.PROP;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.gameId = VueBase_1.VueBase.PROP;
@@ -370,7 +408,7 @@
 
 
 /***/ },
-/* 34 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -379,15 +417,15 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var BasePanelView_1 = __webpack_require__(35);
-	var const_1 = __webpack_require__(36);
-	var PlayerInfo_1 = __webpack_require__(37);
-	var ScorePanel_1 = __webpack_require__(39);
-	var PlayerPanel_1 = __webpack_require__(42);
-	var EventPanel_1 = __webpack_require__(46);
-	var CountDownPanel_1 = __webpack_require__(47);
-	var Fx_1 = __webpack_require__(40);
-	var Command_1 = __webpack_require__(48);
+	var BasePanelView_1 = __webpack_require__(37);
+	var const_1 = __webpack_require__(38);
+	var PlayerInfo_1 = __webpack_require__(39);
+	var ScorePanel_1 = __webpack_require__(41);
+	var PlayerPanel_1 = __webpack_require__(44);
+	var EventPanel_1 = __webpack_require__(48);
+	var CountDownPanel_1 = __webpack_require__(49);
+	var Fx_1 = __webpack_require__(42);
+	var Command_1 = __webpack_require__(50);
 	var StageRKBView = (function (_super) {
 	    __extends(StageRKBView, _super);
 	    function StageRKBView($opView) {
@@ -539,11 +577,11 @@
 
 
 /***/ },
-/* 35 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var const_1 = __webpack_require__(36);
+	var const_1 = __webpack_require__(38);
 	var BasePanelView = (function () {
 	    function BasePanelView(pid) {
 	        this.opReq = function (cmdId, param, callback) {
@@ -557,7 +595,6 @@
 	        renderer.backgroundColor = 0x00000000;
 	        renderer.renderStage = function () {
 	            requestAnimationFrame(renderer.renderStage);
-	            TWEEN.update();
 	            renderer.render(renderer.stage);
 	        };
 	        renderer.renderStage();
@@ -609,7 +646,7 @@
 
 
 /***/ },
-/* 36 */
+/* 38 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -656,7 +693,7 @@
 
 
 /***/ },
-/* 37 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -665,7 +702,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var BaseInfo_1 = __webpack_require__(38);
+	var BaseInfo_1 = __webpack_require__(40);
 	var PlayerDoc = (function () {
 	    function PlayerDoc() {
 	        this.id = 0;
@@ -853,7 +890,7 @@
 
 
 /***/ },
-/* 38 */
+/* 40 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -898,15 +935,15 @@
 
 
 /***/ },
-/* 39 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var Ease = createjs.Ease;
 	var Tween = createjs.Tween;
-	var Fx_1 = __webpack_require__(40);
-	var const_1 = __webpack_require__(36);
-	var JsFunc_1 = __webpack_require__(41);
+	var Fx_1 = __webpack_require__(42);
+	var const_1 = __webpack_require__(38);
+	var JsFunc_1 = __webpack_require__(43);
 	var ScorePanel = (function () {
 	    function ScorePanel(parent, is2v2) {
 	        if (is2v2 === void 0) { is2v2 = false; }
@@ -1222,7 +1259,7 @@
 
 
 /***/ },
-/* 40 */
+/* 42 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1283,7 +1320,7 @@
 
 
 /***/ },
-/* 41 */
+/* 43 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1465,12 +1502,12 @@
 
 
 /***/ },
-/* 42 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var PlayerInfo_1 = __webpack_require__(37);
-	var PlayerRender_1 = __webpack_require__(43);
+	var PlayerInfo_1 = __webpack_require__(39);
+	var PlayerRender_1 = __webpack_require__(45);
 	var PlayerPanel = (function () {
 	    function PlayerPanel(parent, is2v2) {
 	        if (is2v2 === void 0) { is2v2 = false; }
@@ -1527,7 +1564,7 @@
 
 
 /***/ },
-/* 43 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1538,8 +1575,8 @@
 	};
 	var Text = createjs.Text;
 	var Container = createjs.Container;
-	var Fx_1 = __webpack_require__(40);
-	var PlayerInfoCard_1 = __webpack_require__(44);
+	var Fx_1 = __webpack_require__(42);
+	var PlayerInfoCard_1 = __webpack_require__(46);
 	var StagePlayerCard = (function (_super) {
 	    __extends(StagePlayerCard, _super);
 	    function StagePlayerCard(playerInfo, scale, isBlue, isDelayShow) {
@@ -1727,16 +1764,16 @@
 
 
 /***/ },
-/* 44 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var Container = createjs.Container;
-	var PlayerInfo_1 = __webpack_require__(37);
-	var CreateJsEx_1 = __webpack_require__(45);
-	var JsFunc_1 = __webpack_require__(41);
-	var const_1 = __webpack_require__(36);
-	var Fx_1 = __webpack_require__(40);
+	var PlayerInfo_1 = __webpack_require__(39);
+	var CreateJsEx_1 = __webpack_require__(47);
+	var JsFunc_1 = __webpack_require__(43);
+	var const_1 = __webpack_require__(38);
+	var Fx_1 = __webpack_require__(42);
 	var Text = createjs.Text;
 	var Bitmap = createjs.Bitmap;
 	var PlayerInfoCard = (function () {
@@ -1987,11 +2024,11 @@
 
 
 /***/ },
-/* 45 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var const_1 = __webpack_require__(36);
+	var const_1 = __webpack_require__(38);
 	var CreateJsEx = (function () {
 	    function CreateJsEx() {
 	    }
@@ -2026,19 +2063,19 @@
 
 
 /***/ },
-/* 46 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var PlayerInfo_1 = __webpack_require__(37);
-	var CreateJsEx_1 = __webpack_require__(45);
-	var PlayerInfoCard_1 = __webpack_require__(44);
+	var PlayerInfo_1 = __webpack_require__(39);
+	var CreateJsEx_1 = __webpack_require__(47);
+	var PlayerInfoCard_1 = __webpack_require__(46);
 	var Container = createjs.Container;
 	var Text = createjs.Text;
 	var Bitmap = createjs.Bitmap;
 	var Ease = createjs.Ease;
 	var Shape = createjs.Shape;
-	var JsFunc_1 = __webpack_require__(41);
+	var JsFunc_1 = __webpack_require__(43);
 	var EventPanel = (function () {
 	    function EventPanel(parent) {
 	        this.curPage = 0;
@@ -2462,13 +2499,13 @@
 
 
 /***/ },
-/* 47 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var Container = createjs.Container;
-	var const_1 = __webpack_require__(36);
-	var JsFunc_1 = __webpack_require__(41);
+	var const_1 = __webpack_require__(38);
+	var JsFunc_1 = __webpack_require__(43);
 	var CountDownPanel = (function () {
 	    function CountDownPanel(parent) {
 	        this.ctn = new Container();
@@ -2520,7 +2557,7 @@
 
 
 /***/ },
-/* 48 */
+/* 50 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2689,7 +2726,7 @@
 
 
 /***/ },
-/* 49 */
+/* 51 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2722,13 +2759,13 @@
 
 
 /***/ },
-/* 50 */
+/* 52 */
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <h1>game id:{{gameId}}</h1>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\"\r\n                   onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46'\r\n                   placeholder=\"\" style=\"width: 50px;\"\r\n                   v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n    </div>\r\n</div>\r\n";
 
 /***/ },
-/* 51 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2737,14 +2774,14 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var ScoreView_1 = __webpack_require__(52);
-	var RankView_1 = __webpack_require__(56);
-	var BasePanelView_1 = __webpack_require__(35);
-	var Bracket_1 = __webpack_require__(58);
-	var WebJsFunc_1 = __webpack_require__(49);
+	var ScoreView_1 = __webpack_require__(54);
+	var RankView_1 = __webpack_require__(58);
+	var BasePanelView_1 = __webpack_require__(37);
+	var Bracket_1 = __webpack_require__(60);
+	var WebJsFunc_1 = __webpack_require__(51);
 	var VueBase_1 = __webpack_require__(17);
-	var const_1 = __webpack_require__(36);
-	var Command_1 = __webpack_require__(48);
+	var const_1 = __webpack_require__(38);
+	var Command_1 = __webpack_require__(50);
 	var rankView;
 	var bracketView;
 	var scoreView;
@@ -2753,7 +2790,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(61);
+	        this.template = __webpack_require__(63);
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.opReq = function (cmdId, param, callback) {
@@ -2866,7 +2903,7 @@
 
 
 /***/ },
-/* 52 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2875,11 +2912,11 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var HupuAPI_1 = __webpack_require__(53);
-	var ScorePanel2_1 = __webpack_require__(54);
-	var Command_1 = __webpack_require__(48);
-	var const_1 = __webpack_require__(36);
-	var BasePanelView_1 = __webpack_require__(35);
+	var HupuAPI_1 = __webpack_require__(55);
+	var ScorePanel2_1 = __webpack_require__(56);
+	var Command_1 = __webpack_require__(50);
+	var const_1 = __webpack_require__(38);
+	var BasePanelView_1 = __webpack_require__(37);
 	var ScoreView = (function (_super) {
 	    __extends(ScoreView, _super);
 	    function ScoreView(stage) {
@@ -2982,11 +3019,11 @@
 
 
 /***/ },
-/* 53 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var WebJsFunc_1 = __webpack_require__(49);
+	var WebJsFunc_1 = __webpack_require__(51);
 	exports.getHupuWS = function (callback) {
 	    var url = 'http://test.jrstvapi.hupu.com/zhubo/getNodeServer';
 	    $.get(WebJsFunc_1.proxy('http://test.jrstvapi.hupu.com/zhubo/getNodeServer'), function (res) {
@@ -3001,13 +3038,13 @@
 
 
 /***/ },
-/* 54 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var Fx_1 = __webpack_require__(40);
-	var PixiEx_1 = __webpack_require__(55);
-	var const_1 = __webpack_require__(36);
+	var Fx_1 = __webpack_require__(42);
+	var PixiEx_1 = __webpack_require__(57);
+	var const_1 = __webpack_require__(38);
 	var ScorePanel2 = (function () {
 	    function ScorePanel2(parent) {
 	        var _this = this;
@@ -3142,7 +3179,7 @@
 
 
 /***/ },
-/* 55 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3151,8 +3188,8 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var JsFunc_1 = __webpack_require__(41);
-	var WebJsFunc_1 = __webpack_require__(49);
+	var JsFunc_1 = __webpack_require__(43);
+	var WebJsFunc_1 = __webpack_require__(51);
 	function imgToTex(img) {
 	    return new PIXI.Texture(new PIXI.BaseTexture(img));
 	}
@@ -3309,7 +3346,7 @@
 
 
 /***/ },
-/* 56 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3318,12 +3355,12 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var PlayerInfo_1 = __webpack_require__(37);
-	var BasePanelView_1 = __webpack_require__(35);
-	var const_1 = __webpack_require__(36);
-	var FTInfo_1 = __webpack_require__(57);
-	var PixiEx_1 = __webpack_require__(55);
-	var JsFunc_1 = __webpack_require__(41);
+	var PlayerInfo_1 = __webpack_require__(39);
+	var BasePanelView_1 = __webpack_require__(37);
+	var const_1 = __webpack_require__(38);
+	var FTInfo_1 = __webpack_require__(59);
+	var PixiEx_1 = __webpack_require__(57);
+	var JsFunc_1 = __webpack_require__(43);
 	var RankView = (function (_super) {
 	    __extends(RankView, _super);
 	    function RankView($opView, stage) {
@@ -3525,7 +3562,7 @@
 
 
 /***/ },
-/* 57 */
+/* 59 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -3554,7 +3591,7 @@
 
 
 /***/ },
-/* 58 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3563,13 +3600,13 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var HupuAPI_1 = __webpack_require__(53);
-	var BasePanelView_1 = __webpack_require__(35);
-	var const_1 = __webpack_require__(36);
-	var BracketGroup_1 = __webpack_require__(59);
-	var PixiEx_1 = __webpack_require__(55);
-	var GroupLine_1 = __webpack_require__(60);
-	var Fx_1 = __webpack_require__(40);
+	var HupuAPI_1 = __webpack_require__(55);
+	var BasePanelView_1 = __webpack_require__(37);
+	var const_1 = __webpack_require__(38);
+	var BracketGroup_1 = __webpack_require__(61);
+	var PixiEx_1 = __webpack_require__(57);
+	var GroupLine_1 = __webpack_require__(62);
+	var Fx_1 = __webpack_require__(42);
 	var Bracket = (function (_super) {
 	    __extends(Bracket, _super);
 	    function Bracket(stage, gameId) {
@@ -3773,7 +3810,7 @@
 
 
 /***/ },
-/* 59 */
+/* 61 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -3828,7 +3865,7 @@
 
 
 /***/ },
-/* 60 */
+/* 62 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -3892,7 +3929,7 @@
 
 
 /***/ },
-/* 61 */
+/* 63 */
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        game id:{{gameId}}\r\n        <a class=\"button\" @click=\"onClkRank\">个人战团排行</a>\r\n        <a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>\r\n    </div>\r\n</div>\r\n";

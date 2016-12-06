@@ -12,29 +12,27 @@ require(`script!./../../libs/socket.io-1.4.5.min.js`);
 require(`script!./../../libs/vue/vue.min.js`);
 require(`script!./../../libs/vue/vue-router.min.js`);
 
-
-// declare let WebFont;
-// WebFont.load({
-//     google: {
-//         families: ['Droid Sans', 'Droid Serif']
-//     }
-// });
-import {rkbView} from "./stageRKB/RKBOPView";
-import {stageOnlineView} from "./stageOnline/StageOnlineView";
+import { koa } from './koa/KOA';
+import { rkbView } from "./stageRKB/RKBOPView";
+import { stageOnlineView } from "./stageOnline/StageOnlineView";
 //////////////
 
 let routes = [
     {
         path: '/', name: 'panel',
-        components: {default: rkbView}
+        components: { default: rkbView }
     },
     {
         path: '/rkb/:op/:game_id',
-        components: {default: rkbView}
+        components: { default: rkbView }
+    },
+    {
+        path: '/koa/:op/:game_id',
+        components: { default: koa }
     },
     {
         path: '/ol/:op/:game_id',
-        components: {default: stageOnlineView}
+        components: { default: stageOnlineView }
     }
 ];
 

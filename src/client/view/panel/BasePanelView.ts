@@ -5,7 +5,6 @@ import Container = createjs.Container;
 import Bitmap = createjs.Bitmap;
 declare var $;
 declare var PIXI;
-declare var TWEEN;
 export class BasePanelView {
     name: string;
     stageWidth;
@@ -31,7 +30,7 @@ export class BasePanelView {
         //Loop this function 60 times per second
         renderer.renderStage = ()=> {
             requestAnimationFrame(renderer.renderStage);
-            TWEEN.update()
+            // TWEEN.update()
             renderer.render(renderer.stage);
         };
         renderer.renderStage();
