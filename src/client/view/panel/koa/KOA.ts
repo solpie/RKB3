@@ -1,7 +1,7 @@
-import { TeamScene } from './TeamScene';
+import { PickupScene } from './Pickup';
 import { BasePanelView } from '../BasePanelView';
 import { VueBase } from '../../utils/VueBase';
-let teamScene:TeamScene;
+let pickupScene:PickupScene;
 class KOA extends VueBase {
     template = require('./koa.html')
     constructor() {
@@ -10,7 +10,7 @@ class KOA extends VueBase {
     }
     protected mounted() {
         let canvasStage = BasePanelView.initPixi()
-        teamScene = new TeamScene(canvasStage)
+        pickupScene = new PickupScene(canvasStage)
     }
 }
 
