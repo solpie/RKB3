@@ -13,6 +13,7 @@ class PickupPlayerInfo {
         this.y = options.y
     }
 }
+declare let $;
 export class PickupScene extends PIXI.Container {
     pickupFrame1p: PIXI.Sprite
     pickupFrame2p: PIXI.Sprite
@@ -22,6 +23,15 @@ export class PickupScene extends PIXI.Container {
     constructor(stage: PIXI.Container) {
         super()
         stage.addChild(this)
+        $.get('/db/player.json',(res)=>{
+            let playerJson = JSON.parse(res)
+            console.log(playerJson);
+            //test
+            for(let p of playerJson){
+                p.name = "player"+p.id
+            }
+            // this.initPlayer(playerJson)
+        })
         let bg = newBitmap({ url: '/img/panel/koa/pickup/bg.jpg' })
         this.addChild(bg);
         this.addChild(newBitmap({ x: 300, y: 444, url: '/img/panel/koa/pickup/blueBg.png' }));
@@ -81,6 +91,8 @@ export class PickupScene extends PIXI.Container {
         this.pickupTeam(1, this.pickupFrame1p)
         this.pickupTeam(5, this.pickupFrame2p)
     }
+    
+
     initName() {
         this.pickupName1pArr = []
         this.pickupName2pArr = []
