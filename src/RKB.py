@@ -139,7 +139,7 @@ def test_connect():
 @socketio.on('disconnect', namespace=namespace_rkb)
 def test_disconnect():
     print('Client disconnected', request.sid)
-
+#write db
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=int(serverConf["port"]), debug=True)
