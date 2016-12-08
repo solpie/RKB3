@@ -10,3 +10,9 @@ export let getHupuWS = (callback) => {
         else console.error(url);
     })
 }
+
+export let getPlayerDoc = (callback) => {
+    $.get('/game/player', (res) => {
+        callback(res)
+    })
+}

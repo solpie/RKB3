@@ -852,7 +852,39 @@
 
 
 /***/ },
-/* 39 */,
+/* 39 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.dynamicLoading = {
+	    css: function (path) {
+	        if (!path || path.length === 0) {
+	            throw new Error('argument "path" is required !');
+	        }
+	        var head = document.getElementsByTagName('head')[0];
+	        var link = document.createElement('link');
+	        link.href = path;
+	        link.rel = 'stylesheet';
+	        link.type = 'text/css';
+	        head.appendChild(link);
+	    },
+	    js: function (path) {
+	        if (!path || path.length === 0) {
+	            throw new Error('argument "path" is required !');
+	        }
+	        var head = document.getElementsByTagName('head')[0];
+	        var script = document.createElement('script');
+	        script.src = path;
+	        script.type = 'text/javascript';
+	        head.appendChild(script);
+	    }
+	};
+	exports.proxy = function (url) {
+	    return "/proxy?url=" + url;
+	};
+
+
+/***/ },
 /* 40 */,
 /* 41 */,
 /* 42 */,
@@ -870,7 +902,30 @@
 /* 54 */,
 /* 55 */,
 /* 56 */,
-/* 57 */,
+/* 57 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var WebJsFunc_1 = __webpack_require__(39);
+	exports.getHupuWS = function (callback) {
+	    var url = 'http://test.jrstvapi.hupu.com/zhubo/getNodeServer';
+	    $.get(WebJsFunc_1.proxy('http://test.jrstvapi.hupu.com/zhubo/getNodeServer'), function (res) {
+	        var a = JSON.parse(res);
+	        if (a && a.length) {
+	            callback(a[0]);
+	        }
+	        else
+	            console.error(url);
+	    });
+	};
+	exports.getPlayerDoc = function (callback) {
+	    $.get('/game/player', function (res) {
+	        callback(res);
+	    });
+	};
+
+
+/***/ },
 /* 58 */,
 /* 59 */,
 /* 60 */,
@@ -887,6 +942,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var HupuAPI_1 = __webpack_require__(57);
 	var JsFunc_1 = __webpack_require__(38);
 	var VueBase_1 = __webpack_require__(17);
 	var PlayerView = (function (_super) {
@@ -899,8 +955,9 @@
 	    }
 	    PlayerView.prototype.created = function () {
 	        var _this = this;
-	        $.get('/game/player', function (res) {
+	        HupuAPI_1.getPlayerDoc(function (res) {
 	            _this.playerArr = res.sort(JsFunc_1.ascendingProp('id'));
+	            console.log(_this.playerArr);
 	        });
 	    };
 	    return PlayerView;
@@ -912,7 +969,7 @@
 /* 66 */
 /***/ function(module, exports) {
 
-	module.exports = "<aside class=\"menu\">\r\n    <p class=\"menu-label\">\r\n        Player\r\n    </p>\r\n    <ul class=\"menu-list\">\r\n        <ul>\r\n            <li><a href=\"#\">添加Player</a></li>\r\n            <li><a href=\"#\">同步数据</a></li>\r\n        </ul>\r\n    </ul>\r\n    <!--<div class=\"ui bulleted list col s2\" style=\"position: absolute;left: 30px\">-->\r\n        <!--<div class=\"item\">-->\r\n            <!--<div>Player</div>-->\r\n            <!--<div class=\"list\">-->\r\n                <!--<a class=\"item\" href=\"#\">添加Player</a>-->\r\n                <!--<a class=\"item\" href=\"#\">同步数据</a>-->\r\n            <!--</div>-->\r\n        <!--</div>-->\r\n        <!--<div class=\"item\">Inviting Friends</div>-->\r\n        <!--<div class=\"item\">-->\r\n            <!--<div>Benefits</div>-->\r\n            <!--<div class=\"list\">-->\r\n                <!--<a class=\"item\" href=\"#\">Link to somewhere</a>-->\r\n                <!--<div class=\"item\">Rebates</div>-->\r\n                <!--<div class=\"item\">Discounts</div>-->\r\n            <!--</div>-->\r\n        <!--</div>-->\r\n    <!--</div>-->\r\n    <div id=\"player-grid\" class=\"col s10\" style=\"position: relative;left: 290px\">\r\n        <div class=\"row\" v-for=\"player in playerArr\" style=\"display: inline-block;margin: 0\">\r\n            <div class=\"col s12\">\r\n                <div class=\"ui small fade reveal image\">\r\n                    <img class=\"visible content\" src=\"{{player.avatar}}\" style=\"width: 300px;height: 300px;\">\r\n                    <div class=\"hidden content\">\r\n                         <span class=\"card-title activator grey-text text-darken-4\">{{player.name}}\r\n                                <i class=\"material-icons right\" @click=\"onEdit(player.id,$event)\">mode_edit</i></span>\r\n                        本轮得分:{{player.curFtScore}}\r\n                        总分:{{player.ftScore}}\r\n                        id:{{player.id}}\r\n                    </div>\r\n                </div>\r\n                <!--<div class=\"card small\" style=\"width:300px;height: 300px\">-->\r\n                <!--<i class=\"material-icons left waves-effect waves-block waves-light\"-->\r\n                <!--@click=\"onPickPlayer(player.id)\">playlist_add</i>-->\r\n                <!--<div class=\"card-image waves-effect waves-block waves-light\">-->\r\n                <!--<img class=\"activator\" src=\"{{player.avatar}}\">-->\r\n                <!--</div>-->\r\n                <!--<div class=\"card-content\">-->\r\n                <!--<span class=\"card-title activator grey-text text-darken-4\">{{player.name}}-->\r\n                <!--<i class=\"material-icons right\" @click=\"onEdit(player.id,$event)\">mode_edit</i></span>-->\r\n                <!--本轮得分:{{player.curFtScore}}-->\r\n                <!--总分:{{player.ftScore}}-->\r\n                <!--id:{{player.id}}-->\r\n                <!--</div>-->\r\n                <!--<div class=\"card-reveal\">-->\r\n                <!--<span class=\"card-title grey-text text-darken-4\">战绩<i-->\r\n                <!--class=\"material-icons right\">close</i></span>-->\r\n                <!--<p></p>-->\r\n                <!--</div>-->\r\n                <!--</div>-->\r\n            </div>\r\n        </div>\r\n    </div>\r\n</aside>\r\n\r\n\r\n";
+	module.exports = "<aside class=\"menu\">\r\n    <p class=\"menu-label\">\r\n        Player\r\n    </p>\r\n    <ul class=\"menu-list\">\r\n        <ul>\r\n            <li><a href=\"#\">添加Player</a></li>\r\n            <li><a href=\"#\">同步数据</a></li>\r\n        </ul>\r\n    </ul>\r\n    <div id=\"player-grid\" class=\"col s10\" style=\"position: relative;left: 290px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width: 400px;height: 300px;\">\r\n            <div class=\"col s12\">\r\n                <div class=\"content\">\r\n                    <img v-bind:src=\"player.portrait||''\">\r\n                    <div class=\"hidden content\">\r\n                        <span class=\"card-title activator grey-text text-darken-4\">{{player.name}}\r\n                                <i class=\"material-icons right\" @click=\"onEdit(player.id,$event)\">mode_edit</i></span> 本轮得分:{{player.curFtScore}} 总分:{{player.ftScore}} id:{{player.id}}\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</aside>";
 
 /***/ }
 /******/ ]);

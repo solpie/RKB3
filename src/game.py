@@ -5,7 +5,7 @@ class PlayerDoc:
     id = None
     name = None
     avatar = None
-    portrait = None
+    portrait = None  # 400 x300
     team = None
     height = None
     weight = None
@@ -18,15 +18,16 @@ class PlayerModel(object):
 
     def __init__(self):
         self.db = BaseDB('./db/player.db')
-        # self.make32Player()
+        self.make32Player()
+
     def all(self):
         return self.db.findAll()
 
     def make32Player(self):
         for i in range(32):
-            id = str(i+1)
-            self.db.insert({"id": i+1, 'name': "player" + id})
-
+            id = str(i + 1)
+            # self.db.insert({"id": i + 1, 'name': "player" + id})
+            self.db.update({"id":i+1},{"portrait":'/img/player/portrait/'+id+'.png'})
 
 class GameDoc:
     id = None
@@ -49,7 +50,7 @@ class ActivityModel:
 
 actModel = ActivityModel()
 
-from flask import Blueprint,jsonify
+from flask import Blueprint, jsonify
 gameView = Blueprint('gameView', __name__)
 #/game/
 
@@ -62,6 +63,7 @@ def gameIndex():
 @gameView.route('/player')
 def findAllPlayer():
     return jsonify(actModel.playerModel.all())
+
 
 @gameView.route('/start')
 def startGame():

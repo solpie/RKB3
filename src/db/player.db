@@ -1,32 +1,32 @@
-{"id": 16, "name": "player16", "_id": "HWU9YQH"}
-{"id": 8, "name": "player8", "_id": "6OC1FKE"}
-{"id": 25, "name": "player25", "_id": "0JS4DIE"}
-{"id": 19, "name": "player19", "_id": "2BWKUY6"}
-{"id": 26, "name": "player26", "_id": "H1UHJUJ"}
-{"id": 28, "name": "player28", "_id": "85M9O0H"}
-{"id": 31, "name": "player31", "_id": "768N9WE"}
-{"id": 11, "name": "player11", "_id": "NMP8DYF"}
-{"id": 18, "name": "player18", "_id": "FQ9EADX"}
-{"id": 20, "name": "player20", "_id": "VRVAB25"}
-{"id": 7, "name": "player7", "_id": "KMPXMZ9"}
-{"id": 23, "name": "player23", "_id": "QG42Y9U"}
-{"id": 12, "name": "player12", "_id": "N1LBWCF"}
-{"id": 27, "name": "player27", "_id": "8RIXWMD"}
-{"id": 3, "name": "player3", "_id": "0EFAJ36"}
-{"id": 2, "name": "player2", "_id": "VZ04A84"}
-{"id": 21, "name": "player21", "_id": "N853SAN"}
-{"id": 22, "name": "player22", "_id": "QSZP1FU"}
-{"id": 4, "name": "player4", "_id": "K479X3T"}
-{"id": 24, "name": "player24", "_id": "FAWF71X"}
-{"id": 9, "name": "player9", "_id": "38T76WQ"}
-{"id": 30, "name": "player30", "_id": "O2WSL5W"}
-{"id": 10, "name": "player10", "_id": "N0565N1"}
-{"id": 5, "name": "player5", "_id": "ZFFECIK"}
-{"id": 15, "name": "player15", "_id": "IV0CIUT"}
-{"id": 14, "name": "player14", "_id": "71F2KXY"}
-{"id": 1, "name": "player1", "_id": "BBX2RRB"}
-{"id": 13, "name": "player13", "_id": "Z7I5PJG"}
-{"id": 17, "name": "player17", "_id": "MSV2WJ3"}
-{"id": 6, "name": "player6", "_id": "4UM77WQ"}
-{"id": 32, "name": "player32", "_id": "IO9B9MV"}
-{"id": 29, "name": "player29", "_id": "9BPGSN5"}
+{"portrait": "/img/player/portrait/5.png", "_id": "ZFFECIK", "name": "player5", "id": 5}
+{"portrait": "/img/player/portrait/8.png", "_id": "6OC1FKE", "name": "player8", "id": 8}
+{"portrait": "/img/player/portrait/6.png", "_id": "4UM77WQ", "name": "player6", "id": 6}
+{"portrait": "/img/player/portrait/3.png", "_id": "0EFAJ36", "name": "player3", "id": 3}
+{"portrait": "/img/player/portrait/17.png", "_id": "MSV2WJ3", "name": "player17", "id": 17}
+{"portrait": "/img/player/portrait/29.png", "_id": "9BPGSN5", "name": "player29", "id": 29}
+{"portrait": "/img/player/portrait/10.png", "_id": "N0565N1", "name": "player10", "id": 10}
+{"portrait": "/img/player/portrait/9.png", "_id": "38T76WQ", "name": "player9", "id": 9}
+{"portrait": "/img/player/portrait/19.png", "_id": "2BWKUY6", "name": "player19", "id": 19}
+{"portrait": "/img/player/portrait/23.png", "_id": "QG42Y9U", "name": "player23", "id": 23}
+{"portrait": "/img/player/portrait/11.png", "_id": "NMP8DYF", "name": "player11", "id": 11}
+{"portrait": "/img/player/portrait/32.png", "_id": "IO9B9MV", "name": "player32", "id": 32}
+{"portrait": "/img/player/portrait/30.png", "_id": "O2WSL5W", "name": "player30", "id": 30}
+{"portrait": "/img/player/portrait/2.png", "_id": "VZ04A84", "name": "player2", "id": 2}
+{"portrait": "/img/player/portrait/4.png", "_id": "K479X3T", "name": "player4", "id": 4}
+{"portrait": "/img/player/portrait/14.png", "_id": "71F2KXY", "name": "player14", "id": 14}
+{"portrait": "/img/player/portrait/18.png", "_id": "FQ9EADX", "name": "player18", "id": 18}
+{"portrait": "/img/player/portrait/20.png", "_id": "VRVAB25", "name": "player20", "id": 20}
+{"portrait": "/img/player/portrait/22.png", "_id": "QSZP1FU", "name": "player22", "id": 22}
+{"portrait": "/img/player/portrait/12.png", "_id": "N1LBWCF", "name": "player12", "id": 12}
+{"portrait": "/img/player/portrait/16.png", "_id": "HWU9YQH", "name": "player16", "id": 16}
+{"portrait": "/img/player/portrait/7.png", "_id": "KMPXMZ9", "name": "player7", "id": 7}
+{"portrait": "/img/player/portrait/31.png", "_id": "768N9WE", "name": "player31", "id": 31}
+{"portrait": "/img/player/portrait/28.png", "_id": "85M9O0H", "name": "player28", "id": 28}
+{"portrait": "/img/player/portrait/26.png", "_id": "H1UHJUJ", "name": "player26", "id": 26}
+{"portrait": "/img/player/portrait/13.png", "_id": "Z7I5PJG", "name": "player13", "id": 13}
+{"portrait": "/img/player/portrait/24.png", "_id": "FAWF71X", "name": "player24", "id": 24}
+{"portrait": "/img/player/portrait/1.png", "_id": "BBX2RRB", "name": "player1", "id": 1}
+{"portrait": "/img/player/portrait/25.png", "_id": "0JS4DIE", "name": "player25", "id": 25}
+{"portrait": "/img/player/portrait/27.png", "_id": "8RIXWMD", "name": "player27", "id": 27}
+{"portrait": "/img/player/portrait/21.png", "_id": "N853SAN", "name": "player21", "id": 21}
+{"portrait": "/img/player/portrait/15.png", "_id": "IV0CIUT", "name": "player15", "id": 15}

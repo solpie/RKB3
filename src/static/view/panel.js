@@ -314,6 +314,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var HupuAPI_1 = __webpack_require__(57);
 	var const_1 = __webpack_require__(35);
 	var Fx_1 = __webpack_require__(36);
 	var PixiEx_1 = __webpack_require__(37);
@@ -327,21 +328,29 @@
 	var PickupScene = (function (_super) {
 	    __extends(PickupScene, _super);
 	    function PickupScene(stage) {
+	        var _this = this;
 	        _super.call(this);
 	        this.playerIdMap = {};
 	        stage.addChild(this);
-	        $.get('/db/player.json', function (res) {
-	            var playerJson = JSON.parse(res);
-	            console.log(playerJson);
-	            for (var _i = 0, playerJson_1 = playerJson; _i < playerJson_1.length; _i++) {
-	                var p = playerJson_1[_i];
-	                p.name = "player" + p.id;
-	            }
-	        });
 	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/koa/pickup/bg.jpg' });
 	        this.addChild(bg);
 	        this.addChild(PixiEx_1.newBitmap({ x: 300, y: 444, url: '/img/panel/koa/pickup/blueBg.png' }));
 	        this.addChild(PixiEx_1.newBitmap({ x: 1200, y: 444, url: '/img/panel/koa/pickup/redBg.png' }));
+	        this.initName();
+	        HupuAPI_1.getPlayerDoc(function (playerDocArr) {
+	            var playerMap = {};
+	            for (var _i = 0, playerDocArr_1 = playerDocArr; _i < playerDocArr_1.length; _i++) {
+	                var player = playerDocArr_1[_i];
+	                playerMap[player.id] = player;
+	            }
+	            _this.initPlayerData(playerMap);
+	        });
+	    }
+	    PickupScene.prototype.test = function () {
+	        this.pickupTeam(1, this.pickupFrame1p);
+	        this.pickupTeam(2, this.pickupFrame2p);
+	    };
+	    PickupScene.prototype.initPlayerData = function (playerMap) {
 	        var teamPos = [
 	            { x: 245, y: 13 },
 	            { x: 1300, y: 13 },
@@ -358,6 +367,10 @@
 	            var tp = teamPos_1[_i];
 	            for (var i = 0; i < 4; i++) {
 	                var p = new PickupPlayerInfo({ x: tp.x + i * 95, y: tp.y });
+	                var pDoc = playerMap[pickupIdx];
+	                p.name = pDoc.name;
+	                p.portrait = pDoc.portrait;
+	                p.avatar = pDoc.avatar;
 	                this.playerIdMap[pickupIdx] = p;
 	                p.pickupIdx = pickupIdx;
 	                var a = PixiEx_1.newBitmap({ url: '/img/panel/koa/pickup/avatar.png' });
@@ -380,13 +393,33 @@
 	        this.addChild(_2p);
 	        this.pickupFrame2p = _2p;
 	        Fx_1.blink2({ target: _2p, time: 0.05 });
-	        for (var playerIdx in this.playerIdMap) {
-	            var teamPlayerInfo = this.playerIdMap[playerIdx];
-	        }
-	        this.initName();
-	        this.pickupTeam(1, this.pickupFrame1p);
-	        this.pickupTeam(5, this.pickupFrame2p);
-	    }
+	        var ptt1p = new PIXI.Sprite();
+	        this.portrait1p = ptt1p;
+	        this.addChild(ptt1p);
+	        var ptt2p = new PIXI.Sprite();
+	        this.portrait2p = ptt2p;
+	        this.addChild(ptt2p);
+	        this.test();
+	    };
+	    PickupScene.prototype.setPortrait = function (url, is1p) {
+	        var _this = this;
+	        PixiEx_1.loadRes(url, function (img) {
+	            var tex = PixiEx_1.imgToTex(img);
+	            var x, y = 687, p;
+	            if (is1p) {
+	                x = 310;
+	                p = _this.portrait1p;
+	            }
+	            else {
+	                x = 1210;
+	                p = _this.portrait2p;
+	            }
+	            p.x = x + (400 - tex.width) * .5;
+	            p.y = y - tex.height;
+	            p.texture = tex;
+	            Fx_1.blink2({ target: p, time: 0.06, loop: 5 });
+	        });
+	    };
 	    PickupScene.prototype.initName = function () {
 	        this.pickupName1pArr = [];
 	        this.pickupName2pArr = [];
@@ -410,14 +443,14 @@
 	        for (var i = 0; i < 4; i++) {
 	            this.addChild(PixiEx_1.newBitmap({ x: 300, y: 710 + i * ivt, url: '/img/panel/koa/pickup/blueName.png' }));
 	            style.align = 'left';
-	            var name1p = new PIXI.Text('史蒂芬库里', style);
+	            var name1p = new PIXI.Text('', style);
 	            name1p.x = 315;
 	            name1p.y = 718 + i * ivt;
 	            this.addChild(name1p);
 	            this.pickupName1pArr.push(name1p);
 	            this.addChild(PixiEx_1.newBitmap({ x: 1200, y: 710 + i * ivt, url: '/img/panel/koa/pickup/redName.png' }));
 	            style.align = 'right';
-	            var name2p = new PIXI.Text('史蒂芬库里2', style);
+	            var name2p = new PIXI.Text('', style);
 	            name2p.x = 1595 - name2p.width;
 	            name2p.y = name1p.y;
 	            this.addChild(name2p);
@@ -440,9 +473,10 @@
 	    };
 	    PickupScene.prototype.selectPlayer = function (playerId, pickupFrame) {
 	        var playerInfo = this.playerIdMap[playerId];
-	        console.log('pickupIdx:', playerInfo.pickupIdx);
 	        pickupFrame.x = playerInfo.x - 9;
 	        pickupFrame.y = playerInfo.y - 9;
+	        var is1p = pickupFrame == this.pickupFrame1p;
+	        this.setPortrait(playerInfo.portrait, is1p);
 	    };
 	    return PickupScene;
 	}(PIXI.Container));
@@ -521,10 +555,12 @@
 	    var target = options.target;
 	    var time = options.time || 0.08;
 	    var callback = options.callback;
+	    var loop = options.loop || Infinity;
 	    function to1(a) {
-	        if (target.visible)
+	        if (target.visible && loop > 0)
 	            TweenLite.to(target, time, { alpha: a })
 	                .eventCallback('onComplete', function () {
+	                loop -= 1;
 	                if (callback)
 	                    callback();
 	                to1(a ? 0 : 1);
@@ -3348,6 +3384,11 @@
 	        }
 	        else
 	            console.error(url);
+	    });
+	};
+	exports.getPlayerDoc = function (callback) {
+	    $.get('/game/player', function (res) {
+	        callback(res);
 	    });
 	};
 

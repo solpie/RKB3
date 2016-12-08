@@ -22,10 +22,12 @@ export function blink2(options: { target: any, time?: number, loop?: number, cal
     let target = options.target
     let time = options.time || 0.08
     let callback = options.callback
+    let loop = options.loop || Infinity
     function to1(a) {
-        if (target.visible)
+        if (target.visible && loop > 0)
             TweenLite.to(target, time, { alpha: a })
                 .eventCallback('onComplete', () => {
+                    loop -= 1
                     if (callback)
                         callback()
                     to1(a ? 0 : 1);
