@@ -11,19 +11,17 @@ require(`script!./../../libs/vue/vue-router.min.js`);
 
 import { Navbar } from "./navbar/Navbar";
 import { homeView } from "./home/home";
-// import { PlayerView } from "./player/player";
-// import { RankView } from "./rank/rank";
-// import { PanelView } from "./panel/panel";
+import { playerView } from './player/player';
 //////////////
 var routes = [
     {
         path: '/', name: 'home',
         components: { content: homeView, Navbar: Navbar }
     },
-    // {
-    //     path: '/player', name: 'player',
-    //     components: { content: PlayerView, Navbar: Navbar },
-    // },
+    {
+        path: '/player', name: 'player',
+        components: { content: playerView, Navbar: Navbar },
+    },
     // {
     //     path: '/panel', name: 'panel',
     //     components: { content: PanelView, Navbar: Navbar },

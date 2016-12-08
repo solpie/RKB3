@@ -285,7 +285,7 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var Pickup_1 = __webpack_require__(34);
-	var BasePanelView_1 = __webpack_require__(39);
+	var BasePanelView_1 = __webpack_require__(40);
 	var VueBase_1 = __webpack_require__(17);
 	var pickupScene;
 	var KOA = (function (_super) {
@@ -314,9 +314,9 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var const_1 = __webpack_require__(40);
-	var Fx_1 = __webpack_require__(35);
-	var PixiEx_1 = __webpack_require__(36);
+	var const_1 = __webpack_require__(35);
+	var Fx_1 = __webpack_require__(36);
+	var PixiEx_1 = __webpack_require__(37);
 	var PickupPlayerInfo = (function () {
 	    function PickupPlayerInfo(options) {
 	        this.x = options.x;
@@ -454,6 +454,53 @@
 /***/ function(module, exports) {
 
 	"use strict";
+	exports.PanelId = {
+	    stagePanel: 'stage',
+	    stage1v1Panel: 'stage1v1',
+	    rkbPanel: 'rkb',
+	    scorePanel: 'score',
+	    bracketPanel: 'bracket',
+	    rankPanel: 'rankPanel',
+	    onlinePanel: 'online',
+	    winPanel: 'win',
+	    actPanel: 'act',
+	    screenPanel: 'screen',
+	    playerPanel: 'player'
+	};
+	exports.FontName = {
+	    MicrosoftYahei: "Microsoft Yahei"
+	};
+	exports.ServerConst = {
+	    SEND_ASYNC: true,
+	    DEF_AVATAR: '/img/panel/stage1v1/blue.png'
+	};
+	exports.ViewConst = {
+	    STAGE_WIDTH: 1920,
+	    STAGE_HEIGHT: 1080
+	};
+	exports.TimerState = {
+	    START_STR: 'start',
+	    PAUSE_STR: 'pause',
+	    PAUSE: 0,
+	    RUNNING: 1
+	};
+	exports.ViewEvent = {
+	    PLAYER_EDIT: 'edit player',
+	    PLAYER_ADD: 'add player',
+	    STRAIGHT3_LEFT: 'STRAIGHT3_LEFT',
+	    STRAIGHT3_RIGHT: 'STRAIGHT3_RIGHT'
+	};
+	function ScParam(param) {
+	    return param;
+	}
+	exports.ScParam = ScParam;
+
+
+/***/ },
+/* 36 */
+/***/ function(module, exports) {
+
+	"use strict";
 	function delayCall(delay, callback) {
 	    createjs.Tween.get(this).wait(delay).call(callback);
 	}
@@ -511,7 +558,7 @@
 
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -520,8 +567,8 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var JsFunc_1 = __webpack_require__(37);
-	var WebJsFunc_1 = __webpack_require__(38);
+	var JsFunc_1 = __webpack_require__(38);
+	var WebJsFunc_1 = __webpack_require__(39);
 	function imgToTex(img) {
 	    return new PIXI.Texture(new PIXI.BaseTexture(img));
 	}
@@ -678,7 +725,7 @@
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -860,7 +907,7 @@
 
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -893,11 +940,11 @@
 
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var const_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(35);
 	var BasePanelView = (function () {
 	    function BasePanelView(pid) {
 	        this.opReq = function (cmdId, param, callback) {
@@ -962,53 +1009,6 @@
 
 
 /***/ },
-/* 40 */
-/***/ function(module, exports) {
-
-	"use strict";
-	exports.PanelId = {
-	    stagePanel: 'stage',
-	    stage1v1Panel: 'stage1v1',
-	    rkbPanel: 'rkb',
-	    scorePanel: 'score',
-	    bracketPanel: 'bracket',
-	    rankPanel: 'rankPanel',
-	    onlinePanel: 'online',
-	    winPanel: 'win',
-	    actPanel: 'act',
-	    screenPanel: 'screen',
-	    playerPanel: 'player'
-	};
-	exports.FontName = {
-	    MicrosoftYahei: "Microsoft Yahei"
-	};
-	exports.ServerConst = {
-	    SEND_ASYNC: true,
-	    DEF_AVATAR: '/img/panel/stage1v1/blue.png'
-	};
-	exports.ViewConst = {
-	    STAGE_WIDTH: 1920,
-	    STAGE_HEIGHT: 1080
-	};
-	exports.TimerState = {
-	    START_STR: 'start',
-	    PAUSE_STR: 'pause',
-	    PAUSE: 0,
-	    RUNNING: 1
-	};
-	exports.ViewEvent = {
-	    PLAYER_EDIT: 'edit player',
-	    PLAYER_ADD: 'add player',
-	    STRAIGHT3_LEFT: 'STRAIGHT3_LEFT',
-	    STRAIGHT3_RIGHT: 'STRAIGHT3_RIGHT'
-	};
-	function ScParam(param) {
-	    return param;
-	}
-	exports.ScParam = ScParam;
-
-
-/***/ },
 /* 41 */
 /***/ function(module, exports) {
 
@@ -1025,10 +1025,10 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var StageRKBView_1 = __webpack_require__(43);
-	var WebJsFunc_1 = __webpack_require__(38);
+	var WebJsFunc_1 = __webpack_require__(39);
 	var VueBase_1 = __webpack_require__(17);
-	var JsFunc_1 = __webpack_require__(37);
-	var const_1 = __webpack_require__(40);
+	var JsFunc_1 = __webpack_require__(38);
+	var const_1 = __webpack_require__(35);
 	var Command_1 = __webpack_require__(53);
 	var stageRKBView;
 	var opReq = function (cmdId, param, callback) {
@@ -1124,14 +1124,14 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var BasePanelView_1 = __webpack_require__(39);
-	var const_1 = __webpack_require__(40);
+	var BasePanelView_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(35);
 	var PlayerInfo_1 = __webpack_require__(44);
 	var ScorePanel_1 = __webpack_require__(46);
 	var PlayerPanel_1 = __webpack_require__(47);
 	var EventPanel_1 = __webpack_require__(51);
 	var CountDownPanel_1 = __webpack_require__(52);
-	var Fx_1 = __webpack_require__(35);
+	var Fx_1 = __webpack_require__(36);
 	var Command_1 = __webpack_require__(53);
 	var StageRKBView = (function (_super) {
 	    __extends(StageRKBView, _super);
@@ -1532,9 +1532,9 @@
 	"use strict";
 	var Ease = createjs.Ease;
 	var Tween = createjs.Tween;
-	var Fx_1 = __webpack_require__(35);
-	var const_1 = __webpack_require__(40);
-	var JsFunc_1 = __webpack_require__(37);
+	var Fx_1 = __webpack_require__(36);
+	var const_1 = __webpack_require__(35);
+	var JsFunc_1 = __webpack_require__(38);
 	var ScorePanel = (function () {
 	    function ScorePanel(parent, is2v2) {
 	        if (is2v2 === void 0) { is2v2 = false; }
@@ -1923,7 +1923,7 @@
 	};
 	var Text = createjs.Text;
 	var Container = createjs.Container;
-	var Fx_1 = __webpack_require__(35);
+	var Fx_1 = __webpack_require__(36);
 	var PlayerInfoCard_1 = __webpack_require__(49);
 	var StagePlayerCard = (function (_super) {
 	    __extends(StagePlayerCard, _super);
@@ -2119,9 +2119,9 @@
 	var Container = createjs.Container;
 	var PlayerInfo_1 = __webpack_require__(44);
 	var CreateJsEx_1 = __webpack_require__(50);
-	var JsFunc_1 = __webpack_require__(37);
-	var const_1 = __webpack_require__(40);
-	var Fx_1 = __webpack_require__(35);
+	var JsFunc_1 = __webpack_require__(38);
+	var const_1 = __webpack_require__(35);
+	var Fx_1 = __webpack_require__(36);
 	var Text = createjs.Text;
 	var Bitmap = createjs.Bitmap;
 	var PlayerInfoCard = (function () {
@@ -2376,7 +2376,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var const_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(35);
 	var CreateJsEx = (function () {
 	    function CreateJsEx() {
 	    }
@@ -2423,7 +2423,7 @@
 	var Bitmap = createjs.Bitmap;
 	var Ease = createjs.Ease;
 	var Shape = createjs.Shape;
-	var JsFunc_1 = __webpack_require__(37);
+	var JsFunc_1 = __webpack_require__(38);
 	var EventPanel = (function () {
 	    function EventPanel(parent) {
 	        this.curPage = 0;
@@ -2852,8 +2852,8 @@
 
 	"use strict";
 	var Container = createjs.Container;
-	var const_1 = __webpack_require__(40);
-	var JsFunc_1 = __webpack_require__(37);
+	var const_1 = __webpack_require__(35);
+	var JsFunc_1 = __webpack_require__(38);
 	var CountDownPanel = (function () {
 	    function CountDownPanel(parent) {
 	        this.ctn = new Container();
@@ -3091,11 +3091,11 @@
 	};
 	var ScoreView_1 = __webpack_require__(56);
 	var RankView_1 = __webpack_require__(59);
-	var BasePanelView_1 = __webpack_require__(39);
+	var BasePanelView_1 = __webpack_require__(40);
 	var Bracket_1 = __webpack_require__(61);
-	var WebJsFunc_1 = __webpack_require__(38);
+	var WebJsFunc_1 = __webpack_require__(39);
 	var VueBase_1 = __webpack_require__(17);
-	var const_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(35);
 	var Command_1 = __webpack_require__(53);
 	var rankView;
 	var bracketView;
@@ -3230,8 +3230,8 @@
 	var HupuAPI_1 = __webpack_require__(57);
 	var ScorePanel2_1 = __webpack_require__(58);
 	var Command_1 = __webpack_require__(53);
-	var const_1 = __webpack_require__(40);
-	var BasePanelView_1 = __webpack_require__(39);
+	var const_1 = __webpack_require__(35);
+	var BasePanelView_1 = __webpack_require__(40);
 	var ScoreView = (function (_super) {
 	    __extends(ScoreView, _super);
 	    function ScoreView(stage) {
@@ -3338,7 +3338,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var WebJsFunc_1 = __webpack_require__(38);
+	var WebJsFunc_1 = __webpack_require__(39);
 	exports.getHupuWS = function (callback) {
 	    var url = 'http://test.jrstvapi.hupu.com/zhubo/getNodeServer';
 	    $.get(WebJsFunc_1.proxy('http://test.jrstvapi.hupu.com/zhubo/getNodeServer'), function (res) {
@@ -3357,9 +3357,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var Fx_1 = __webpack_require__(35);
-	var PixiEx_1 = __webpack_require__(36);
-	var const_1 = __webpack_require__(40);
+	var Fx_1 = __webpack_require__(36);
+	var PixiEx_1 = __webpack_require__(37);
+	var const_1 = __webpack_require__(35);
 	var ScorePanel2 = (function () {
 	    function ScorePanel2(parent) {
 	        var _this = this;
@@ -3504,11 +3504,11 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var PlayerInfo_1 = __webpack_require__(44);
-	var BasePanelView_1 = __webpack_require__(39);
-	var const_1 = __webpack_require__(40);
+	var BasePanelView_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(35);
 	var FTInfo_1 = __webpack_require__(60);
-	var PixiEx_1 = __webpack_require__(36);
-	var JsFunc_1 = __webpack_require__(37);
+	var PixiEx_1 = __webpack_require__(37);
+	var JsFunc_1 = __webpack_require__(38);
 	var RankView = (function (_super) {
 	    __extends(RankView, _super);
 	    function RankView($opView, stage) {
@@ -3749,12 +3749,12 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var HupuAPI_1 = __webpack_require__(57);
-	var BasePanelView_1 = __webpack_require__(39);
-	var const_1 = __webpack_require__(40);
+	var BasePanelView_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(35);
 	var BracketGroup_1 = __webpack_require__(62);
-	var PixiEx_1 = __webpack_require__(36);
+	var PixiEx_1 = __webpack_require__(37);
 	var GroupLine_1 = __webpack_require__(63);
-	var Fx_1 = __webpack_require__(35);
+	var Fx_1 = __webpack_require__(36);
 	var Bracket = (function (_super) {
 	    __extends(Bracket, _super);
 	    function Bracket(stage, gameId) {

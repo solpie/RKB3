@@ -52,10 +52,15 @@
 	__webpack_require__(12);
 	var Navbar_1 = __webpack_require__(14);
 	var home_1 = __webpack_require__(16);
+	var player_1 = __webpack_require__(65);
 	var routes = [
 	    {
 	        path: '/', name: 'home',
 	        components: { content: home_1.homeView, Navbar: Navbar_1.Navbar }
+	    },
+	    {
+	        path: '/player', name: 'player',
+	        components: { content: player_1.playerView, Navbar: Navbar_1.Navbar },
 	    },
 	];
 	var router = new VueRouter({
@@ -500,7 +505,7 @@
 /* 15 */
 /***/ function(module, exports) {
 
-	module.exports = "<nav class=\"nav has-shadow\">\r\n    <div class=\"container\">\r\n        <div class=\"nav-left\">\r\n            <a class=\"nav-item\" :class=\"{active: active === ''}\">\r\n                <i class=\"home icon\"></i>\r\n                <router-link :to=\"{ name: 'home'}\">Home</router-link>\r\n            </a>\r\n            <!--<a class=\"nav-item\" :class=\"{active: active === 'player'}\">\r\n                <i class=\"grid layout icon\"></i>\r\n                <router-link :to=\"{ name: 'player'}\">玩家管理</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'panel'}\">\r\n                <router-link :to=\"{ name: 'panel'}\">比赛管理</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'rank'}\">\r\n                <router-link :to=\"{ name: 'rank'}\">天梯排名</router-link>\r\n            </a>-->\r\n        </div>\r\n\r\n        <!--<div class=\"nav-right\">\r\n            <a class=\"nav-item\" :class=\"{active: active === 'setting'}\">\r\n                <router-link :to=\"{ name: 'setting'}\">setting</router-link>\r\n            </a>\r\n        </div>-->\r\n    </div>\r\n\r\n\r\n</nav>";
+	module.exports = "<nav class=\"nav has-shadow\">\r\n    <div class=\"container\">\r\n        <div class=\"nav-left\">\r\n            <a class=\"nav-item\" :class=\"{active: active === ''}\">\r\n                <i class=\"home icon\"></i>\r\n                <router-link :to=\"{ name: 'home'}\">Home</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'player'}\">\r\n                <i class=\"grid layout icon\"></i>\r\n                <router-link :to=\"{ name: 'player'}\">玩家管理</router-link>\r\n            </a>\r\n            <!--<a class=\"nav-item\" :class=\"{active: active === 'panel'}\">\r\n                <router-link :to=\"{ name: 'panel'}\">比赛管理</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'rank'}\">\r\n                <router-link :to=\"{ name: 'rank'}\">天梯排名</router-link>\r\n            </a>-->\r\n        </div>\r\n\r\n        <!--<div class=\"nav-right\">\r\n            <a class=\"nav-item\" :class=\"{active: active === 'setting'}\">\r\n                <router-link :to=\"{ name: 'setting'}\">setting</router-link>\r\n            </a>\r\n        </div>-->\r\n    </div>\r\n\r\n\r\n</nav>";
 
 /***/ },
 /* 16 */
@@ -644,6 +649,270 @@
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"container\">\r\n    <nav class=\"panel\">\r\n        <p class=\"panel-heading\">\r\n            直播面板op入口 Game ID: {{ selected }}\r\n            <span class=\"select\">\r\n                <select v-model=\"selected\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n        </p>\r\n        <vue v-for=\"link in links\">\r\n            <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                <span class=\"panel-icon\">\r\n            <i class=\"fa fa-book\"></i>\r\n            </span> {{link.url}}\r\n                <br> {{link.title}}\r\n            </a>\r\n            <button class=\"button\">复制地址</button>\r\n        </vue>\r\n    </nav>\r\n    播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n    <p>\r\n        推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n            <div id=\"qrcode\"></div>\r\n</div>";
+
+/***/ },
+/* 19 */,
+/* 20 */,
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */,
+/* 36 */,
+/* 37 */,
+/* 38 */
+/***/ function(module, exports) {
+
+	"use strict";
+	function ascendingProp(prop) {
+	    return function (a, b) {
+	        return a[prop] - b[prop];
+	    };
+	}
+	exports.ascendingProp = ascendingProp;
+	function descendingProp(prop) {
+	    return function (a, b) {
+	        return b[prop] - a[prop];
+	    };
+	}
+	exports.descendingProp = descendingProp;
+	function mapToSortArray(map, prop, sortFunc) {
+	    var arr = [];
+	    for (var k in map) {
+	        arr.push(map[k]);
+	    }
+	    arr.sort(sortFunc(prop));
+	    return arr;
+	}
+	exports.mapToSortArray = mapToSortArray;
+	function mapToArr(map, clone) {
+	    var a = [];
+	    for (var k in map) {
+	        a.push(map[k]);
+	    }
+	    if (clone)
+	        a = JSON.parse(JSON.stringify(a));
+	    return a;
+	}
+	exports.mapToArr = mapToArr;
+	function arrCountSame(arrA, arrB) {
+	    var n = 0;
+	    for (var i = 0; i < arrB.length; i++) {
+	        var obj = arrB[i];
+	        if (arrA.indexOf(obj) > -1) {
+	            n++;
+	        }
+	    }
+	    return n;
+	}
+	exports.arrCountSame = arrCountSame;
+	function arrUniqueFilter(el, i, a) {
+	    return i == a.indexOf(el);
+	}
+	exports.arrUniqueFilter = arrUniqueFilter;
+	function loadImg(path1, callback) {
+	    var img = new Image();
+	    img.onload = function () {
+	        callback(img);
+	    };
+	    img.src = path1;
+	}
+	exports.loadImg = loadImg;
+	function loadImgArr(pathArr, callback) {
+	    var count = pathArr.length;
+	    var imgCollection;
+	    var isArr;
+	    function onLoadImg() {
+	        count--;
+	        if (count === 0) {
+	            count = -1;
+	            callback(imgCollection);
+	        }
+	    }
+	    if (count && pathArr[0].hasOwnProperty('name') && pathArr[0].hasOwnProperty('url')) {
+	        isArr = false;
+	        imgCollection = {};
+	    }
+	    else {
+	        isArr = true;
+	        imgCollection = [];
+	    }
+	    var img;
+	    var url;
+	    for (var i = 0; i < pathArr.length; i++) {
+	        var p = pathArr[i];
+	        img = new Image();
+	        if (isArr) {
+	            imgCollection.push(img);
+	            url = p;
+	        }
+	        else {
+	            imgCollection[p.name] = img;
+	            url = p.url;
+	        }
+	        img.onload = onLoadImg;
+	        img.src = url;
+	    }
+	}
+	exports.loadImgArr = loadImgArr;
+	function combineArr(arr, num) {
+	    var r = [];
+	    (function f(t, a, n) {
+	        if (n == 0) {
+	            return r.push(t);
+	        }
+	        for (var i = 0, l = a.length; i <= l - n; i++) {
+	            f(t.concat(a[i]), a.slice(i + 1), n - 1);
+	        }
+	    })([], arr, num);
+	    return r;
+	}
+	exports.combineArr = combineArr;
+	function formatSecond(sec, minStr, secStr) {
+	    if (minStr === void 0) { minStr = ":"; }
+	    if (secStr === void 0) { secStr = ""; }
+	    var min = Math.floor(sec / 60);
+	    var s = sec % 60;
+	    var strMin = min + "";
+	    var strSec = s + "";
+	    if (min < 10)
+	        strMin = "0" + strMin;
+	    if (s < 10)
+	        strSec = "0" + strSec;
+	    return strMin + minStr + strSec + secStr;
+	}
+	exports.formatSecond = formatSecond;
+	function getLength(str) {
+	    var realLength = 0, len = str.length, charCode = -1;
+	    for (var i = 0; i < len; i++) {
+	        charCode = str.charCodeAt(i);
+	        if (charCode >= 0 && charCode <= 128)
+	            realLength += 1;
+	        else
+	            realLength += 2;
+	    }
+	    return realLength;
+	}
+	exports.getLength = getLength;
+	function cnWrap(str, len, start) {
+	    if (start === void 0) { start = 0; }
+	    var str_line_length = 0;
+	    var str_len = str.length;
+	    var str_cut = new String();
+	    var str_out = '';
+	    for (var i = start; i < str_len; i++) {
+	        var a = str.charAt(i);
+	        str_line_length++;
+	        if (escape(a).length > 4) {
+	            str_line_length++;
+	        }
+	        str_cut = str_cut.concat(a);
+	        if (str_line_length >= len) {
+	            str_out += str_cut.concat('\n');
+	            str_cut = new String();
+	            str_line_length = 0;
+	        }
+	    }
+	    str_out += str_cut;
+	    return str_out;
+	}
+	exports.cnWrap = cnWrap;
+	exports.getUrlFilename = function (url) {
+	    var a = url.split('/');
+	    var filename = a[a.length - 1];
+	    return filename;
+	};
+	exports.DateFormat = function (date, fmt) {
+	    var o = {
+	        "M+": date.getMonth() + 1,
+	        "d+": date.getDate(),
+	        "h+": date.getHours(),
+	        "m+": date.getMinutes(),
+	        "s+": date.getSeconds(),
+	        "q+": Math.floor((date.getMonth() + 3) / 3),
+	        "S": date.getMilliseconds()
+	    };
+	    if (/(y+)/.test(fmt))
+	        fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+	    for (var k in o)
+	        if (new RegExp("(" + k + ")").test(fmt))
+	            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+	    return fmt;
+	};
+
+
+/***/ },
+/* 39 */,
+/* 40 */,
+/* 41 */,
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var JsFunc_1 = __webpack_require__(38);
+	var VueBase_1 = __webpack_require__(17);
+	var PlayerView = (function (_super) {
+	    __extends(PlayerView, _super);
+	    function PlayerView() {
+	        _super.call(this);
+	        this.template = __webpack_require__(66);
+	        this.playerArr = VueBase_1.VueBase.PROP;
+	        VueBase_1.VueBase.initProps(this);
+	    }
+	    PlayerView.prototype.created = function () {
+	        var _this = this;
+	        $.get('/game/player', function (res) {
+	            _this.playerArr = res.sort(JsFunc_1.ascendingProp('id'));
+	        });
+	    };
+	    return PlayerView;
+	}(VueBase_1.VueBase));
+	exports.playerView = new PlayerView();
+
+
+/***/ },
+/* 66 */
+/***/ function(module, exports) {
+
+	module.exports = "<aside class=\"menu\">\r\n    <p class=\"menu-label\">\r\n        Player\r\n    </p>\r\n    <ul class=\"menu-list\">\r\n        <ul>\r\n            <li><a href=\"#\">添加Player</a></li>\r\n            <li><a href=\"#\">同步数据</a></li>\r\n        </ul>\r\n    </ul>\r\n    <!--<div class=\"ui bulleted list col s2\" style=\"position: absolute;left: 30px\">-->\r\n        <!--<div class=\"item\">-->\r\n            <!--<div>Player</div>-->\r\n            <!--<div class=\"list\">-->\r\n                <!--<a class=\"item\" href=\"#\">添加Player</a>-->\r\n                <!--<a class=\"item\" href=\"#\">同步数据</a>-->\r\n            <!--</div>-->\r\n        <!--</div>-->\r\n        <!--<div class=\"item\">Inviting Friends</div>-->\r\n        <!--<div class=\"item\">-->\r\n            <!--<div>Benefits</div>-->\r\n            <!--<div class=\"list\">-->\r\n                <!--<a class=\"item\" href=\"#\">Link to somewhere</a>-->\r\n                <!--<div class=\"item\">Rebates</div>-->\r\n                <!--<div class=\"item\">Discounts</div>-->\r\n            <!--</div>-->\r\n        <!--</div>-->\r\n    <!--</div>-->\r\n    <div id=\"player-grid\" class=\"col s10\" style=\"position: relative;left: 290px\">\r\n        <div class=\"row\" v-for=\"player in playerArr\" style=\"display: inline-block;margin: 0\">\r\n            <div class=\"col s12\">\r\n                <div class=\"ui small fade reveal image\">\r\n                    <img class=\"visible content\" src=\"{{player.avatar}}\" style=\"width: 300px;height: 300px;\">\r\n                    <div class=\"hidden content\">\r\n                         <span class=\"card-title activator grey-text text-darken-4\">{{player.name}}\r\n                                <i class=\"material-icons right\" @click=\"onEdit(player.id,$event)\">mode_edit</i></span>\r\n                        本轮得分:{{player.curFtScore}}\r\n                        总分:{{player.ftScore}}\r\n                        id:{{player.id}}\r\n                    </div>\r\n                </div>\r\n                <!--<div class=\"card small\" style=\"width:300px;height: 300px\">-->\r\n                <!--<i class=\"material-icons left waves-effect waves-block waves-light\"-->\r\n                <!--@click=\"onPickPlayer(player.id)\">playlist_add</i>-->\r\n                <!--<div class=\"card-image waves-effect waves-block waves-light\">-->\r\n                <!--<img class=\"activator\" src=\"{{player.avatar}}\">-->\r\n                <!--</div>-->\r\n                <!--<div class=\"card-content\">-->\r\n                <!--<span class=\"card-title activator grey-text text-darken-4\">{{player.name}}-->\r\n                <!--<i class=\"material-icons right\" @click=\"onEdit(player.id,$event)\">mode_edit</i></span>-->\r\n                <!--本轮得分:{{player.curFtScore}}-->\r\n                <!--总分:{{player.ftScore}}-->\r\n                <!--id:{{player.id}}-->\r\n                <!--</div>-->\r\n                <!--<div class=\"card-reveal\">-->\r\n                <!--<span class=\"card-title grey-text text-darken-4\">战绩<i-->\r\n                <!--class=\"material-icons right\">close</i></span>-->\r\n                <!--<p></p>-->\r\n                <!--</div>-->\r\n                <!--</div>-->\r\n            </div>\r\n        </div>\r\n    </div>\r\n</aside>\r\n\r\n\r\n";
 
 /***/ }
 /******/ ]);
