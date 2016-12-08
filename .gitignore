@@ -16,6 +16,7 @@ images
 coverage
 *.exe
 *.map
+*.pyc
 *win32*
 
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
@@ -29,7 +30,9 @@ build/Release
 
 # Dependency directories
 node_modules
+images
 jspm_packages
+.vscode
 
 # Optional npm cache directory
 .npm

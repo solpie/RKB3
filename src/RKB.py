@@ -2,7 +2,7 @@ import os
 # print(os.path.realpath(__file__))
 # server_path = os.path.realpath(__file__)
 serverConf = {"port": 80, "path": '.',
-              "views": [], "reqHeaders": [], "resHeaders": []}
+              "views": [], "reqHeaders": [], "resHeaders": [], "db": []}
 
 serverConf["path"] = os.path.dirname(__file__)
 if serverConf["path"] == "":
@@ -21,9 +21,12 @@ def loadConf():
         config.get('server', 'reqHeaders')).split(",")
     serverConf["resHeaders"] = str(
         config.get('server', 'resHeaders')).split(",")
+    serverConf["db"] = str(
+        config.get('db', 'path')).split(",")
     print("serverConf:", serverConf)
     serverConf["views"] = ["admin", "panel"]
 loadConf()
+
 
 # web server
 from flask import Flask, render_template, session, request, make_response
@@ -118,19 +121,6 @@ def test_broadcast_message(message):
          broadcast=True)
 
 
-# @socketio.on('disconnect_request', namespace=namespace_rkb)
-# def disconnect_request():
-#     session['receive_count'] = session.get('receive_count', 0) + 1
-#     emit('my_response',
-#          {'data': 'Disconnected!', 'count': session['receive_count']})
-#     disconnect()
-
-
-# @socketio.on('opUrl', namespace=namespace_rkb)
-# def rkb_event():
-#     emit('sc_showRank')
-
-
 @socketio.on('connect', namespace=namespace_rkb)
 def test_connect():
     emit('my_response', {'data': 'Connected', 'count': 0})
@@ -139,7 +129,11 @@ def test_connect():
 @socketio.on('disconnect', namespace=namespace_rkb)
 def test_disconnect():
     print('Client disconnected', request.sid)
-#write db
+    
+# gameView
+from game import gameView
+
+app.register_blueprint(gameView,url_prefix='/game')
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=int(serverConf["port"]), debug=True)
