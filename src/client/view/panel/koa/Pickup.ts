@@ -79,6 +79,7 @@ export class PickupScene extends PIXI.Container {
         ]
         let invert = 95
         var pickupIdx = 1;
+        let r = 13
         for (let tp of teamPos) {
             for (var i = 0; i < 4; i++) {
                 let p: PickupPlayerInfo = new PickupPlayerInfo({ x: tp.x + i * 95, y: tp.y })
@@ -90,10 +91,28 @@ export class PickupScene extends PIXI.Container {
                 this.playerIdMap[pickupIdx] = p
                 p.pickupIdx = pickupIdx;
 
+
                 let a = newBitmap({ url: '/img/panel/koa/pickup/avatar.png' })
                 a.x = p.x - this.title.x
                 a.y = p.y
                 this.title.addChild(a)
+
+                let msk = new PIXI.Graphics()
+                msk.beginFill(0xff0000, 0.5)
+                msk.moveTo(17, 4)
+                msk.lineTo(72, 4)
+                msk.lineTo(72 + r, 4 + r)
+                msk.lineTo(72 + r, 72)
+                msk.lineTo(72, 72 + r)
+                msk.lineTo(17, 72 + r)
+                msk.lineTo(17 - r, 72)
+                msk.lineTo(17 - r, 4 + r)
+
+                msk.x = a.x
+                msk.y = a.y
+
+                this.title.addChild(msk)
+
                 pickupIdx++
             }
         }

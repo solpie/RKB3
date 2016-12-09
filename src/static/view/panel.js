@@ -606,6 +606,7 @@
 	        ];
 	        var invert = 95;
 	        var pickupIdx = 1;
+	        var r = 13;
 	        for (var _i = 0, teamPos_1 = teamPos; _i < teamPos_1.length; _i++) {
 	            var tp = teamPos_1[_i];
 	            for (var i = 0; i < 4; i++) {
@@ -620,6 +621,19 @@
 	                a.x = p.x - this.title.x;
 	                a.y = p.y;
 	                this.title.addChild(a);
+	                var msk = new PIXI.Graphics();
+	                msk.beginFill(0xff0000, 0.5);
+	                msk.moveTo(17, 4);
+	                msk.lineTo(72, 4);
+	                msk.lineTo(72 + r, 4 + r);
+	                msk.lineTo(72 + r, 72);
+	                msk.lineTo(72, 72 + r);
+	                msk.lineTo(17, 72 + r);
+	                msk.lineTo(17 - r, 72);
+	                msk.lineTo(17 - r, 4 + r);
+	                msk.x = a.x;
+	                msk.y = a.y;
+	                this.title.addChild(msk);
 	                pickupIdx++;
 	            }
 	        }
@@ -4282,6 +4296,30 @@
 	        stage.addChild(this);
 	        this.bg = PixiEx_1.newBitmap({ url: '/img/panel/koa/order/bg.png' });
 	        this.addChild(this.bg);
+	        this.portraitArr1p = [];
+	        this.portraitArr2p = [];
+	        for (var i = 0; i < 4; i++) {
+	            var ctn1p = new PIXI.Container();
+	            ctn1p.x = 300;
+	            ctn1p.y = 48 + i * 240;
+	            this.addChild(ctn1p);
+	            ctn1p['sp'] = PixiEx_1.newBitmap({ url: '/img/player/portrait/1.png' });
+	            ctn1p.addChild(ctn1p['sp']);
+	            var bw = PixiEx_1.newBitmap({ url: '/img/panel/koa/order/blueWave.png' });
+	            bw.x = -39;
+	            bw.y = 262;
+	            ctn1p.addChild(bw);
+	            var ctn2p = new PIXI.Container();
+	            ctn2p.x = 1200;
+	            ctn2p.y = 48 + i * 240;
+	            this.addChild(ctn2p);
+	            ctn2p['sp'] = PixiEx_1.newBitmap({ url: '/img/player/portrait/2.png' });
+	            ctn2p.addChild(ctn2p['sp']);
+	            var rw = PixiEx_1.newBitmap({ url: '/img/panel/koa/order/redWave.png' });
+	            rw.x = -39;
+	            rw.y = 262;
+	            ctn2p.addChild(rw);
+	        }
 	    }
 	    return OrderScene;
 	}(PIXI.Container));
