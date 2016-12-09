@@ -52,7 +52,7 @@
 	__webpack_require__(12);
 	var Navbar_1 = __webpack_require__(14);
 	var home_1 = __webpack_require__(16);
-	var player_1 = __webpack_require__(65);
+	var player_1 = __webpack_require__(19);
 	var routes = [
 	    {
 	        path: '/', name: 'home',
@@ -651,26 +651,97 @@
 	module.exports = "<div class=\"container\">\r\n    <nav class=\"panel\">\r\n        <p class=\"panel-heading\">\r\n            直播面板op入口 Game ID: {{ selected }}\r\n            <span class=\"select\">\r\n                <select v-model=\"selected\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n        </p>\r\n        <vue v-for=\"link in links\">\r\n            <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                <span class=\"panel-icon\">\r\n            <i class=\"fa fa-book\"></i>\r\n            </span> {{link.url}}\r\n                <br> {{link.title}}\r\n            </a>\r\n            <button class=\"button\">复制地址</button>\r\n        </vue>\r\n    </nav>\r\n    播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n    <p>\r\n        推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n            <div id=\"qrcode\"></div>\r\n</div>";
 
 /***/ },
-/* 19 */,
-/* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */,
-/* 36 */,
-/* 37 */,
-/* 38 */
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var HupuAPI_1 = __webpack_require__(20);
+	var JsFunc_1 = __webpack_require__(22);
+	var VueBase_1 = __webpack_require__(17);
+	var PlayerView = (function (_super) {
+	    __extends(PlayerView, _super);
+	    function PlayerView() {
+	        _super.call(this);
+	        this.template = __webpack_require__(23);
+	        this.playerArr = VueBase_1.VueBase.PROP;
+	        VueBase_1.VueBase.initProps(this);
+	    }
+	    PlayerView.prototype.created = function () {
+	        var _this = this;
+	        HupuAPI_1.getPlayerDoc(function (res) {
+	            _this.playerArr = res.sort(JsFunc_1.ascendingProp('id'));
+	            console.log(_this.playerArr);
+	        });
+	    };
+	    return PlayerView;
+	}(VueBase_1.VueBase));
+	exports.playerView = new PlayerView();
+
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var WebJsFunc_1 = __webpack_require__(21);
+	exports.getHupuWS = function (callback) {
+	    var url = 'http://test.jrstvapi.hupu.com/zhubo/getNodeServer';
+	    $.get(WebJsFunc_1.proxy('http://test.jrstvapi.hupu.com/zhubo/getNodeServer'), function (res) {
+	        var a = JSON.parse(res);
+	        if (a && a.length) {
+	            callback(a[0]);
+	        }
+	        else
+	            console.error(url);
+	    });
+	};
+	exports.getPlayerDoc = function (callback) {
+	    $.get('/game/player', function (res) {
+	        callback(res);
+	    });
+	};
+
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.dynamicLoading = {
+	    css: function (path) {
+	        if (!path || path.length === 0) {
+	            throw new Error('argument "path" is required !');
+	        }
+	        var head = document.getElementsByTagName('head')[0];
+	        var link = document.createElement('link');
+	        link.href = path;
+	        link.rel = 'stylesheet';
+	        link.type = 'text/css';
+	        head.appendChild(link);
+	    },
+	    js: function (path) {
+	        if (!path || path.length === 0) {
+	            throw new Error('argument "path" is required !');
+	        }
+	        var head = document.getElementsByTagName('head')[0];
+	        var script = document.createElement('script');
+	        script.src = path;
+	        script.type = 'text/javascript';
+	        head.appendChild(script);
+	    }
+	};
+	exports.proxy = function (url) {
+	    return "/proxy?url=" + url;
+	};
+
+
+/***/ },
+/* 22 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -852,121 +923,7 @@
 
 
 /***/ },
-/* 39 */
-/***/ function(module, exports) {
-
-	"use strict";
-	exports.dynamicLoading = {
-	    css: function (path) {
-	        if (!path || path.length === 0) {
-	            throw new Error('argument "path" is required !');
-	        }
-	        var head = document.getElementsByTagName('head')[0];
-	        var link = document.createElement('link');
-	        link.href = path;
-	        link.rel = 'stylesheet';
-	        link.type = 'text/css';
-	        head.appendChild(link);
-	    },
-	    js: function (path) {
-	        if (!path || path.length === 0) {
-	            throw new Error('argument "path" is required !');
-	        }
-	        var head = document.getElementsByTagName('head')[0];
-	        var script = document.createElement('script');
-	        script.src = path;
-	        script.type = 'text/javascript';
-	        head.appendChild(script);
-	    }
-	};
-	exports.proxy = function (url) {
-	    return "/proxy?url=" + url;
-	};
-
-
-/***/ },
-/* 40 */,
-/* 41 */,
-/* 42 */,
-/* 43 */,
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var WebJsFunc_1 = __webpack_require__(39);
-	exports.getHupuWS = function (callback) {
-	    var url = 'http://test.jrstvapi.hupu.com/zhubo/getNodeServer';
-	    $.get(WebJsFunc_1.proxy('http://test.jrstvapi.hupu.com/zhubo/getNodeServer'), function (res) {
-	        var a = JSON.parse(res);
-	        if (a && a.length) {
-	            callback(a[0]);
-	        }
-	        else
-	            console.error(url);
-	    });
-	};
-	exports.getPlayerDoc = function (callback) {
-	    $.get('/game/player', function (res) {
-	        callback(res);
-	    });
-	};
-
-
-/***/ },
-/* 58 */,
-/* 59 */,
-/* 60 */,
-/* 61 */,
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var HupuAPI_1 = __webpack_require__(57);
-	var JsFunc_1 = __webpack_require__(38);
-	var VueBase_1 = __webpack_require__(17);
-	var PlayerView = (function (_super) {
-	    __extends(PlayerView, _super);
-	    function PlayerView() {
-	        _super.call(this);
-	        this.template = __webpack_require__(66);
-	        this.playerArr = VueBase_1.VueBase.PROP;
-	        VueBase_1.VueBase.initProps(this);
-	    }
-	    PlayerView.prototype.created = function () {
-	        var _this = this;
-	        HupuAPI_1.getPlayerDoc(function (res) {
-	            _this.playerArr = res.sort(JsFunc_1.ascendingProp('id'));
-	            console.log(_this.playerArr);
-	        });
-	    };
-	    return PlayerView;
-	}(VueBase_1.VueBase));
-	exports.playerView = new PlayerView();
-
-
-/***/ },
-/* 66 */
+/* 23 */
 /***/ function(module, exports) {
 
 	module.exports = "<aside class=\"menu\">\r\n    <p class=\"menu-label\">\r\n        Player\r\n    </p>\r\n    <ul class=\"menu-list\">\r\n        <ul>\r\n            <li><a href=\"#\">添加Player</a></li>\r\n            <li><a href=\"#\">同步数据</a></li>\r\n        </ul>\r\n    </ul>\r\n    <div id=\"player-grid\" class=\"col s10\" style=\"position: relative;left: 290px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width: 400px;height: 300px;\">\r\n            <div class=\"col s12\">\r\n                <div class=\"content\">\r\n                    <img v-bind:src=\"player.portrait||''\">\r\n                    <div class=\"hidden content\">\r\n                        <span class=\"card-title activator grey-text text-darken-4\">{{player.name}}\r\n                                <i class=\"material-icons right\" @click=\"onEdit(player.id,$event)\">mode_edit</i></span> 本轮得分:{{player.curFtScore}} 总分:{{player.ftScore}} id:{{player.id}}\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</aside>";

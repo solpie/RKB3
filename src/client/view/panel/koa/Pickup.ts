@@ -1,9 +1,10 @@
+import { PickupAnimation } from './PickupAnimation';
 import { mapToArr } from '../../utils/JsFunc';
 import { getPlayerDoc } from '../../utils/HupuAPI';
-import { FontName } from '../../const';
+import { FontName, ViewConst } from '../../const';
 import { blink2 } from '../../utils/Fx';
 import { imgToTex, loadRes, newBitmap } from '../../utils/PixiEx';
-class PickupPlayerInfo {
+export class PickupPlayerInfo {
     pickupIdx: number;
     x: number
     y: number
@@ -22,18 +23,32 @@ export class PickupScene extends PIXI.Container {
 
     portrait1p: PIXI.Sprite
     portrait2p: PIXI.Sprite
+    portraitBg1p: PIXI.Sprite
+    portraitBg2p: PIXI.Sprite
+
+    title: PIXI.Sprite
+    bg: PIXI.Sprite
 
     pickupName1pArr: Array<PIXI.Text>
+    nameBg1pArr: Array<PIXI.Sprite>
     pickupName2pArr: Array<PIXI.Text>
+    nameBg2pArr: Array<PIXI.Sprite>
+
     playerIdMap = {}
     constructor(stage: PIXI.Container) {
         super()
         stage.addChild(this)
 
-        let bg = newBitmap({ url: '/img/panel/koa/pickup/bg.jpg' })
-        this.addChild(bg);
-        this.addChild(newBitmap({ x: 300, y: 444, url: '/img/panel/koa/pickup/blueBg.png' }));
-        this.addChild(newBitmap({ x: 1200, y: 444, url: '/img/panel/koa/pickup/redBg.png' }));
+        this.bg = newBitmap({ url: '/img/panel/koa/pickup/bg.png' })
+        this.addChild(this.bg);
+
+        this.title = newBitmap({ url: '/img/panel/koa/pickup/title.png', x: 96 })
+        this.addChild(this.title)
+
+        this.portraitBg1p = newBitmap({ x: 300, y: 444, url: '/img/panel/koa/pickup/blueBg.png' })
+        this.addChild(this.portraitBg1p);
+        this.portraitBg2p = newBitmap({ x: 1200, y: 444, url: '/img/panel/koa/pickup/redBg.png' })
+        this.addChild(this.portraitBg2p);
         //todo map scene: sh  gz zoom in
         // let b = newBitmap({ url: '' })
         // this.addChild(b)
@@ -41,15 +56,6 @@ export class PickupScene extends PIXI.Container {
         //pickup name
         this.initName()
 
-        // $.get('/game/player', (res) => {
-        //     let playerJson = JSON.parse(res)
-        //     console.log(playerJson);
-        //     //test
-        //     for (let p of playerJson) {
-        //         p.name = "player" + p.id
-        //     }
-        //     // this.initPlayer(playerJson)
-        // })
         getPlayerDoc((playerDocArr) => {
             let playerMap = {}
             for (let player of playerDocArr) {
@@ -59,11 +65,7 @@ export class PickupScene extends PIXI.Container {
         })
 
     }
-    test() {
-        //test
-        this.pickupTeam(1, this.pickupFrame1p)
-        this.pickupTeam(2, this.pickupFrame2p)
-    }
+
     initPlayerData(playerMap) {
         let teamPos = [
             { x: 245, y: 13 },
@@ -89,9 +91,9 @@ export class PickupScene extends PIXI.Container {
                 p.pickupIdx = pickupIdx;
 
                 let a = newBitmap({ url: '/img/panel/koa/pickup/avatar.png' })
-                a.x = p.x
+                a.x = p.x - this.title.x
                 a.y = p.y
-                this.addChild(a)
+                this.title.addChild(a)
                 pickupIdx++
             }
         }
@@ -119,30 +121,15 @@ export class PickupScene extends PIXI.Container {
         this.addChild(ptt2p)
 
 
-        this.test()
+        new PickupAnimation(this)
     }
-    
-    setPortrait(url, is1p) {
-        loadRes(url, (img) => {
-            var tex: PIXI.Texture = imgToTex(img)
-            var x, y = 687, p: PIXI.Sprite
-            if (is1p) {
-                x = 310
-                p = this.portrait1p
-            }
-            else {
-                x = 1210
-                p = this.portrait2p
-            }
-            p.x = x + (400 - tex.width) * .5
-            p.y = y - tex.height
-            p.texture = tex
-            blink2({ target: p, time: 0.06, loop: 5 })
-        })
-    }
+
+
     initName() {
         this.pickupName1pArr = []
         this.pickupName2pArr = []
+        this.nameBg1pArr = []
+        this.nameBg2pArr = []
 
         let style = {
             fontFamily: FontName.MicrosoftYahei,
@@ -164,45 +151,35 @@ export class PickupScene extends PIXI.Container {
         let ivt = 90
 
         for (var i = 0; i < 4; i++) {
-            this.addChild(newBitmap({ x: 300, y: 710 + i * ivt, url: '/img/panel/koa/pickup/blueName.png' }));
+            let blueNameBg = newBitmap({ x: -400, y: 710 + i * ivt, url: '/img/panel/koa/pickup/blueName.png' })
+            this.addChild(blueNameBg);
 
             style.align = 'left'
             let name1p = new PIXI.Text('', style);
-            name1p.x = 315;
+            name1p.x = 330;
             name1p.y = 718 + i * ivt;
             this.addChild(name1p);
             this.pickupName1pArr.push(name1p)
 
-            this.addChild(newBitmap({ x: 1200, y: 710 + i * ivt, url: '/img/panel/koa/pickup/redName.png' }));
+            let redNameBg = newBitmap({ x: ViewConst.STAGE_WIDTH, y: 710 + i * ivt, url: '/img/panel/koa/pickup/redName.png' })
+            this.addChild(redNameBg);
+            this.nameBg1pArr.push(blueNameBg)
+            this.nameBg2pArr.push(redNameBg)
+            this.fadeInNameBg(blueNameBg, 0.02 + i * .07, { x: 300 })
+            this.fadeInNameBg(redNameBg, 0.02 + i * .07, { x: 1200 })
+
             style.align = 'right'
             let name2p = new PIXI.Text('', style);
-            name2p.x = 1595 - name2p.width;
             name2p.y = name1p.y;
             this.addChild(name2p);
             this.pickupName2pArr.push(name2p)
         }
     }
 
-    pickupTeam(teamIdx, pickupFrame) {
-        var i = 0
-        var delaySel = () => {
-            TweenLite.delayedCall(.6, () => {
-                if (i < 4) {
-                    this.selectPlayer(teamIdx * 4 + i - 3, pickupFrame)
-                    i++
-                    delaySel()
-                }
-            })
-        }
-        delaySel()
+    fadeInNameBg(target, delay, pos: { x: number }) {
+        TweenLite.delayedCall(delay, () => {
+            TweenLite.to(target, .08, pos)
+        })
     }
-    
-    selectPlayer(playerId, pickupFrame: PIXI.Sprite) {
-        let playerInfo: PickupPlayerInfo = this.playerIdMap[playerId]
-        // console.log('pickupIdx:', playerInfo);
-        pickupFrame.x = playerInfo.x - 9
-        pickupFrame.y = playerInfo.y - 9
-        let is1p = pickupFrame == this.pickupFrame1p
-        this.setPortrait(playerInfo.portrait, is1p)
-    }
+
 }
