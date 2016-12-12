@@ -496,8 +496,7 @@
 	    props: {
 	        active: {},
 	    },
-	    template: __webpack_require__(15),
-	    methods: {}
+	    template: __webpack_require__(15)
 	};
 
 
@@ -660,15 +659,22 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var HupuAPI_1 = __webpack_require__(20);
-	var JsFunc_1 = __webpack_require__(22);
+	var editForm_1 = __webpack_require__(20);
+	var HupuAPI_1 = __webpack_require__(22);
+	var JsFunc_1 = __webpack_require__(24);
 	var VueBase_1 = __webpack_require__(17);
 	var PlayerView = (function (_super) {
 	    __extends(PlayerView, _super);
 	    function PlayerView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(23);
+	        this.template = __webpack_require__(25);
 	        this.playerArr = VueBase_1.VueBase.PROP;
+	        this.components = { "editForm": editForm_1.editForm };
+	        this.methods = {
+	            onEdit: function (id) {
+	                console.log('onEdit player id:', id);
+	            }
+	        };
 	        VueBase_1.VueBase.initProps(this);
 	    }
 	    PlayerView.prototype.created = function () {
@@ -688,7 +694,40 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var WebJsFunc_1 = __webpack_require__(21);
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var VueBase_1 = __webpack_require__(17);
+	var EditForm = (function (_super) {
+	    __extends(EditForm, _super);
+	    function EditForm() {
+	        _super.call(this);
+	        this.playerInfo = VueBase_1.VueBase.PROP;
+	        this.template = __webpack_require__(21);
+	        VueBase_1.VueBase.initProps(this);
+	    }
+	    EditForm.prototype.created = function () {
+	        this.playerInfo = { "name": "233" };
+	    };
+	    return EditForm;
+	}(VueBase_1.VueBase));
+	exports.editForm = new EditForm();
+
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"box\" style=\"position:absolute;left=200px;top=0;width:500px\">\r\n    <label class=\"label\">Name</label>\r\n    <p class=\"control\">\r\n        <input class=\"input\" type=\"text\"/>\r\n    </p>\r\n    <div class=\"columns\">\r\n        <div class=\"column is-one-quarter\">\r\n            <label class=\"label\">身高</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\"/>\r\n            </p>\r\n        </div>\r\n\r\n        <div class=\"column is-one-quarter\">\r\n            <label class=\"label\">體重</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\"/>\r\n            </p>\r\n        </div>\r\n    </div>\r\n</div>";
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var WebJsFunc_1 = __webpack_require__(23);
 	exports.getHupuWS = function (callback) {
 	    var url = 'http://test.jrstvapi.hupu.com/zhubo/getNodeServer';
 	    $.get(WebJsFunc_1.proxy('http://test.jrstvapi.hupu.com/zhubo/getNodeServer'), function (res) {
@@ -708,7 +747,7 @@
 
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -741,7 +780,7 @@
 
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -923,10 +962,10 @@
 
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports) {
 
-	module.exports = "<aside class=\"menu\">\r\n    <p class=\"menu-label\">\r\n        Player\r\n    </p>\r\n    <ul class=\"menu-list\">\r\n        <ul>\r\n            <li><a href=\"#\">添加Player</a></li>\r\n            <li><a href=\"#\">同步数据</a></li>\r\n        </ul>\r\n    </ul>\r\n    <div id=\"player-grid\" class=\"col s10\" style=\"position: relative;left: 290px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width: 400px;height: 300px;\">\r\n            <div class=\"col s12\">\r\n                <div class=\"content\">\r\n                    <img v-bind:src=\"player.portrait||''\">\r\n                    <div class=\"hidden content\">\r\n                        <span class=\"card-title activator grey-text text-darken-4\">{{player.name}}\r\n                                <i class=\"material-icons right\" @click=\"onEdit(player.id,$event)\">mode_edit</i></span> 本轮得分:{{player.curFtScore}} 总分:{{player.ftScore}} id:{{player.id}}\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</aside>";
+	module.exports = "<div>\r\n    <aside class=\"menu\" style=\"width:250px\">\r\n        <p class=\"menu-label\">\r\n            Player\r\n        </p>\r\n        <ul class=\"menu-list\">\r\n            <ul>\r\n                <li><a href=\"#\">添加Player</a></li>\r\n                <li><a href=\"#\">同步数据</a></li>\r\n            </ul>\r\n        </ul>\r\n    </aside>\r\n\r\n    <div id=\"player-grid\"  style=\"position: relative;left: 290px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width: 400px;height: 300px;\">\r\n            <img v-bind:src=\"player.portrait\">\r\n            <div class=\"content\">\r\n                {{player.name}}\r\n                <i class=\"icon edit\" @click=\"onEdit(player.id)\">edit</i>\r\n                id:{{player.id}}\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <editForm></editform>\r\n</div>";
 
 /***/ }
 /******/ ]);

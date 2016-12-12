@@ -56,7 +56,6 @@ def view(viewname):
         return render_template(viewname + '.html')
     return viewname
 
-
 # proxy
 import requests
 

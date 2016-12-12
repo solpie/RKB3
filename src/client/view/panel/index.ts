@@ -5,7 +5,7 @@ require(`script!./../../libs/createjs/tweenjs.min.js`);
 //http://www.pixijs.com/
 require(`script!./../../libs/pixi.min.js`);
 require(`script!./../../libs/TweenLite.min.js`);
-require(`script!./../../libs/Tween.min.js`);
+// require(`script!./../../libs/Tween.min.js`);
 require(`script!./../../libs/jquery.min.js`);
 
 require(`script!./../../libs/socket.io-1.4.5.min.js`);

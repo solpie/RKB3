@@ -20,11 +20,10 @@ class BaseDB(object):
         self.__path = path
         if not os.path.exists(path):
             open(path, mode='w').close()
-            pass
         else:
-            with open(path) as f:
+            with open(path, mode='r', encoding="utf-8") as f:
                 for line in f:
-                    doc = json.loads(line)
+                    doc = json.loads(line, encoding="utf-8")
                     self.__docMap[doc['_id']] = doc
                     # pprint(doc)
             f.close()
@@ -36,7 +35,7 @@ class BaseDB(object):
             _id = _id_gen()
         doc['_id'] = _id
         self.__docMap[_id] = doc
-        with open(self.__path, 'a') as f:
+        with open(self.__path, 'a', encoding="utf-8") as f:
             f.writelines(json.dumps(doc) + '\n')
         f.close()
 
@@ -50,7 +49,7 @@ class BaseDB(object):
             data += docLine + '\n'
             docNum += 1
         if data != "":
-            with open(self.__path, mode='w') as f:
+            with open(self.__path, mode='w', encoding="utf-8") as f:
                 f.write(data)
             f.close()
 

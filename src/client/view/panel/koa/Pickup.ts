@@ -17,6 +17,21 @@ export class PickupPlayerInfo {
     }
 }
 declare let $;
+export let pickNameStyle = {
+    fontFamily: FontName.MicrosoftYahei,
+    fontSize: '40px',
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    fill: '#fff',
+    stroke: '#4a1850',
+    strokeThickness: 5,
+    dropShadow: false,
+    dropShadowColor: '#000000',
+    dropShadowAngle: Math.PI / 6,
+    dropShadowDistance: 6,
+    wordWrap: true,
+    wordWrapWidth: 500
+};
 export class PickupScene extends PIXI.Container {
     pickupFrame1p: PIXI.Sprite
     pickupFrame2p: PIXI.Sprite
@@ -150,22 +165,7 @@ export class PickupScene extends PIXI.Container {
         this.nameBg1pArr = []
         this.nameBg2pArr = []
 
-        let style = {
-            fontFamily: FontName.MicrosoftYahei,
-            fontSize: '40px',
-            fontStyle: 'normal',
-            fontWeight: 'bold',
-            fill: '#fff',
-            stroke: '#4a1850',
-            strokeThickness: 5,
-            dropShadow: false,
-            dropShadowColor: '#000000',
-            dropShadowAngle: Math.PI / 6,
-            align: 'right',
-            dropShadowDistance: 6,
-            wordWrap: true,
-            wordWrapWidth: 500
-        };
+
 
         let ivt = 90
 
@@ -173,8 +173,7 @@ export class PickupScene extends PIXI.Container {
             let blueNameBg = newBitmap({ x: -400, y: 710 + i * ivt, url: '/img/panel/koa/pickup/blueName.png' })
             this.addChild(blueNameBg);
 
-            style.align = 'left'
-            let name1p = new PIXI.Text('', style);
+            let name1p = new PIXI.Text('', pickNameStyle);
             name1p.x = 330;
             name1p.y = 718 + i * ivt;
             this.addChild(name1p);
@@ -187,8 +186,7 @@ export class PickupScene extends PIXI.Container {
             this.fadeInNameBg(blueNameBg, 0.02 + i * .07, { x: 300 })
             this.fadeInNameBg(redNameBg, 0.02 + i * .07, { x: 1200 })
 
-            style.align = 'right'
-            let name2p = new PIXI.Text('', style);
+            let name2p = new PIXI.Text('', pickNameStyle);
             name2p.y = name1p.y;
             this.addChild(name2p);
             this.pickupName2pArr.push(name2p)
