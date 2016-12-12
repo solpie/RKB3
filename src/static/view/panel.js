@@ -516,6 +516,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var HupuAPI_1 = __webpack_require__(22);
 	var PickupAnimation_1 = __webpack_require__(42);
 	var Command_1 = __webpack_require__(60);
 	var const_1 = __webpack_require__(44);
@@ -566,11 +567,20 @@
 	        VueBase_1.VueBase.initProps(this);
 	    }
 	    KOA.prototype.created = function () {
+	        var _this = this;
 	        this.isOp = this.$route.params['op'] == 'op';
 	        if (this.isOp) {
 	            WebJsFunc_1.dynamicLoading.css('/css/bulma.min.css');
 	        }
 	        console.log('route:', this.$route['op']);
+	        HupuAPI_1.getPlayerDoc(function (playerDocArr) {
+	            var playerMap = {};
+	            for (var _i = 0, playerDocArr_1 = playerDocArr; _i < playerDocArr_1.length; _i++) {
+	                var player = playerDocArr_1[_i];
+	                playerMap[player.id] = player;
+	            }
+	            _this.playerIdMap = playerMap;
+	        });
 	        this.initIO();
 	    };
 	    KOA.prototype.mounted = function () {
@@ -580,7 +590,7 @@
 	        this.orderArr2pStr = '6 5 7 8';
 	    };
 	    KOA.prototype.showPickup = function (data) {
-	        pickupScene = new Pickup_1.PickupScene(canvasStage);
+	        pickupScene = new Pickup_1.PickupScene(canvasStage, this.playerIdMap);
 	        new PickupAnimation_1.PickupAnimation(pickupScene).startPick(data.teamId1p, data.teamId2p, data.orderArr1p, data.orderArr2p);
 	    };
 	    KOA.prototype.initIO = function () {
@@ -610,7 +620,6 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var HupuAPI_1 = __webpack_require__(22);
 	var const_1 = __webpack_require__(44);
 	var Fx_1 = __webpack_require__(46);
 	var PixiEx_1 = __webpack_require__(45);
@@ -639,8 +648,7 @@
 	};
 	var PickupScene = (function (_super) {
 	    __extends(PickupScene, _super);
-	    function PickupScene(stage) {
-	        var _this = this;
+	    function PickupScene(stage, playerMap) {
 	        _super.call(this);
 	        this.playerIdMap = {};
 	        stage.addChild(this);
@@ -653,14 +661,7 @@
 	        this.portraitBg2p = PixiEx_1.newBitmap({ x: 1200, y: 444, url: '/img/panel/koa/pickup/redBg.png' });
 	        this.addChild(this.portraitBg2p);
 	        this.initName();
-	        HupuAPI_1.getPlayerDoc(function (playerDocArr) {
-	            var playerMap = {};
-	            for (var _i = 0, playerDocArr_1 = playerDocArr; _i < playerDocArr_1.length; _i++) {
-	                var player = playerDocArr_1[_i];
-	                playerMap[player.id] = player;
-	            }
-	            _this.initPlayerData(playerMap);
-	        });
+	        this.initPlayerData(playerMap);
 	    }
 	    PickupScene.prototype.initPlayerData = function (playerMap) {
 	        var teamPos = [
@@ -708,12 +709,14 @@
 	        }
 	        console.log('playerIdMap', this.playerIdMap);
 	        var _1p = PixiEx_1.newBitmap({ url: '/img/panel/koa/pickup/pickupFrame.png' });
+	        _1p.alpha = 0;
 	        _1p.x = 0;
 	        _1p.y = 0;
 	        this.addChild(_1p);
 	        this.pickupFrame1p = _1p;
 	        Fx_1.blink2({ target: _1p, time: 0.05 });
 	        var _2p = PixiEx_1.newBitmap({ url: '/img/panel/koa/pickup/pickupFrame.png' });
+	        _2p.alpha = 0;
 	        _2p.x = 0;
 	        _2p.y = 0;
 	        this.addChild(_2p);
@@ -868,8 +871,14 @@
 	    };
 	    PickupAnimation.prototype.movePickupFrame = function (playerId, pickupFrame) {
 	        var playerInfo = this.scene.playerIdMap[playerId];
-	        pickupFrame.x = playerInfo.x - 9;
-	        pickupFrame.y = playerInfo.y - 9;
+	        if (playerInfo) {
+	            pickupFrame.x = playerInfo.x - 9;
+	            pickupFrame.y = playerInfo.y - 9;
+	            pickupFrame.alpha = 1;
+	        }
+	        else {
+	            console.log('no playerId:', playerId);
+	        }
 	        return playerInfo;
 	    };
 	    PickupAnimation.prototype.selectPlayer = function (playerId, pickupFrame) {
@@ -979,10 +988,17 @@
 	        var _this = this;
 	        if (portraitArr[0] && pickupIdxArr[0] == portraitArr[0]['pickupIdx']) {
 	            this.orderDown(portraitArr);
-	            var p0 = portraitArr.pop();
+	            var p0_1 = portraitArr.pop();
 	            pickupIdxArr.shift();
 	            var numSp = selectSP['numArr'].shift();
-	            p0.addChild(numSp);
+	            p0_1.addChild(numSp);
+	            TweenLite.to(p0_1['white'], 0.1, {
+	                alpha: 1, onComplete: function () {
+	                    TweenLite.to(p0_1['white'], 0.1, {
+	                        alpha: 0
+	                    });
+	                }
+	            });
 	            var sp_1 = selectSP['spArr'].shift();
 	            TweenLite.to(selectSP.scale, 0.08, {
 	                y: 0,
@@ -1074,6 +1090,9 @@
 	            name1p.y = 215;
 	            ctn1p.addChild(name1p);
 	            ctn1p['sp'] = PixiEx_1.newBitmap({ url: pickInfo.portrait });
+	            ctn1p['white'] = PixiEx_1.newWhiteMask(pickInfo.portrait);
+	            ctn1p['white'].alpha = 0;
+	            ctn1p['sp'].addChild(ctn1p['white']);
 	            ctn1p['pickupIdx'] = pickInfo.pickupIdx;
 	            ctn1p.addChild(ctn1p['sp']);
 	            var bw = PixiEx_1.newBitmap({ url: '/img/panel/koa/order/blueWave.png' });
@@ -1096,6 +1115,9 @@
 	            name2p.y = 215;
 	            ctn2p.addChild(name2p);
 	            ctn2p['sp'] = PixiEx_1.newBitmap({ url: pickInfo.portrait });
+	            ctn2p['white'] = PixiEx_1.newWhiteMask(pickInfo.portrait);
+	            ctn2p['white'].alpha = 0;
+	            ctn2p['sp'].addChild(ctn2p['white']);
 	            ctn2p['pickupIdx'] = pickInfo.pickupIdx;
 	            ctn2p.addChild(ctn2p['sp']);
 	            var rw = PixiEx_1.newBitmap({ url: '/img/panel/koa/order/redWave.png' });
@@ -1356,6 +1378,17 @@
 	    return BitmapText;
 	}(PIXI.Container));
 	exports.BitmapText = BitmapText;
+	exports.newWhiteMask = function (url) {
+	    var sp = newBitmap({
+	        url: url, callback: function () {
+	            var filter = new PIXI.filters.ColorMatrixFilter();
+	            filter.brightness(100);
+	            sp.filters = [filter];
+	            sp.cacheAsBitmap = true;
+	        }
+	    });
+	    return sp;
+	};
 
 
 /***/ },

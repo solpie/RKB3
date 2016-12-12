@@ -50,7 +50,7 @@ export class PickupScene extends PIXI.Container {
     nameBg2pArr: Array<PIXI.Sprite>
 
     playerIdMap = {}
-    constructor(stage: PIXI.Container) {
+    constructor(stage: PIXI.Container,playerMap) {
         super()
         stage.addChild(this)
 
@@ -71,14 +71,7 @@ export class PickupScene extends PIXI.Container {
         //pickup name
         this.initName()
 
-        getPlayerDoc((playerDocArr) => {
-            let playerMap = {}
-            for (let player of playerDocArr) {
-                playerMap[player.id] = player
-            }
-            this.initPlayerData(playerMap)
-        })
-
+        this.initPlayerData(playerMap)
     }
 
     initPlayerData(playerMap) {
@@ -134,6 +127,7 @@ export class PickupScene extends PIXI.Container {
         console.log('playerIdMap', this.playerIdMap);
 
         let _1p = newBitmap({ url: '/img/panel/koa/pickup/pickupFrame.png' })
+        _1p.alpha = 0
         _1p.x = 0
         _1p.y = 0
         this.addChild(_1p)
@@ -141,6 +135,7 @@ export class PickupScene extends PIXI.Container {
         blink2({ target: _1p, time: 0.05 })
 
         let _2p = newBitmap({ url: '/img/panel/koa/pickup/pickupFrame.png' })
+        _2p.alpha  = 0
         _2p.x = 0
         _2p.y = 0
         this.addChild(_2p)

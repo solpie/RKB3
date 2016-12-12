@@ -1,8 +1,9 @@
+import { getPlayerDoc } from '../../utils/HupuAPI';
 import { PickupAnimation } from './PickupAnimation';
 import { CommandId } from '../../Command';
 import { PanelId } from '../../const';
 import { dynamicLoading } from '../../utils/WebJsFunc';
-import { PickupScene } from './Pickup';
+import { PickupPlayerInfo, PickupScene } from './Pickup';
 import { BasePanelView } from '../BasePanelView';
 import { VueBase } from '../../utils/VueBase';
 declare let io;
@@ -21,7 +22,7 @@ class KOA extends VueBase {
 
     orderArr1pStr = VueBase.PROP
     orderArr2pStr = VueBase.PROP
-
+    playerIdMap
     opReq = (cmdId: string, param: any, callback: any) => {
         $.ajax({
             url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
@@ -42,9 +43,16 @@ class KOA extends VueBase {
             dynamicLoading.css('/css/bulma.min.css')
         }
         console.log('route:', this.$route['op']);
+        getPlayerDoc((playerDocArr) => {
+            let playerMap = {}
+            for (let player of playerDocArr) {
+                playerMap[player.id] = player
+            }
+            this.playerIdMap = playerMap
+            // this.initPlayerData(playerMap)
+        })
         this.initIO()
     }
-
     protected mounted() {
         this.teamId1p = '1'
         this.teamId2p = '2'
@@ -76,7 +84,7 @@ class KOA extends VueBase {
         }
     }
     showPickup(data) {
-        pickupScene = new PickupScene(canvasStage)
+        pickupScene = new PickupScene(canvasStage, this.playerIdMap)
         new PickupAnimation(pickupScene).startPick(data.teamId1p, data.teamId2p, data.orderArr1p, data.orderArr2p)
     }
 

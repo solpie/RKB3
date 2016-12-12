@@ -168,3 +168,15 @@ export class BitmapText extends PIXI.Container {
         return ctn
     }
 }
+
+export let newWhiteMask = (url) => {
+    let sp = newBitmap({
+        url: url, callback: () => {
+            var filter = new PIXI.filters.ColorMatrixFilter();
+            filter.brightness(100)
+            sp.filters = [filter]
+            sp.cacheAsBitmap = true
+        }
+    })
+    return sp
+}

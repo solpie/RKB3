@@ -1,6 +1,6 @@
 import { pickNameStyle, PickupPlayerInfo } from './Pickup';
 import { ViewConst } from '../../const';
-import { newBitmap } from '../../utils/PixiEx';
+import { newBitmap, newWhiteMask } from '../../utils/PixiEx';
 /**
  * OrderScene
  */
@@ -42,6 +42,9 @@ export class OrderScene extends PIXI.Container {
             ctn1p.addChild(name1p)
 
             ctn1p['sp'] = newBitmap({ url: pickInfo.portrait })
+            ctn1p['white'] = newWhiteMask(pickInfo.portrait)
+            ctn1p['white'].alpha = 0
+            ctn1p['sp'].addChild(ctn1p['white'])
 
             ctn1p['pickupIdx'] = pickInfo.pickupIdx
             ctn1p.addChild(ctn1p['sp'])
@@ -69,6 +72,10 @@ export class OrderScene extends PIXI.Container {
             name2p.y = 215
             ctn2p.addChild(name2p)
             ctn2p['sp'] = newBitmap({ url: pickInfo.portrait })
+            ctn2p['white'] = newWhiteMask(pickInfo.portrait)
+            ctn2p['white'].alpha = 0
+            ctn2p['sp'].addChild(ctn2p['white'])
+            
             ctn2p['pickupIdx'] = pickInfo.pickupIdx
             // ctn1p['sp'].mask = msk
             ctn2p.addChild(ctn2p['sp'])
@@ -128,7 +135,7 @@ export class OrderScene extends PIXI.Container {
         //white
         this.white = new PIXI.Graphics()
         this.white.beginFill(0xffffff)
-        this.white.drawRect(0,0,ViewConst.STAGE_WIDTH,ViewConst.STAGE_HEIGHT)
+        this.white.drawRect(0, 0, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT)
         this.white.alpha = 0
         this.addChild(this.white)
 

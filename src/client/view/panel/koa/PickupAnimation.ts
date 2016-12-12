@@ -107,8 +107,14 @@ export class PickupAnimation {
 
     movePickupFrame(playerId, pickupFrame: PIXI.Sprite) {
         let playerInfo: PickupPlayerInfo = this.scene.playerIdMap[playerId]
-        pickupFrame.x = playerInfo.x - 9
-        pickupFrame.y = playerInfo.y - 9
+        if (playerInfo) {
+            pickupFrame.x = playerInfo.x - 9
+            pickupFrame.y = playerInfo.y - 9
+            pickupFrame.alpha = 1
+        }
+        else {
+            console.log('no playerId:', playerId);
+        }
         return playerInfo
     }
 
@@ -232,6 +238,14 @@ export class PickupAnimation {
             pickupIdxArr.shift()
             let numSp = selectSP['numArr'].shift()
             p0.addChild(numSp)
+            TweenLite.to(p0['white'], 0.1, {
+                alpha: 1, onComplete: () => {
+                    TweenLite.to(p0['white'], 0.1, {
+                        alpha: 0
+                    })
+                }
+            })
+
             let sp = selectSP['spArr'].shift()
             TweenLite.to(selectSP.scale, 0.08, {
                 y: 0,
