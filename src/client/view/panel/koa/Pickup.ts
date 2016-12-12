@@ -153,9 +153,6 @@ export class PickupScene extends PIXI.Container {
         let ptt2p = new PIXI.Sprite()
         this.portrait2p = ptt2p
         this.addChild(ptt2p)
-
-
-        new PickupAnimation(this)
     }
 
 

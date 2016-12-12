@@ -11,41 +11,54 @@ export class PickupAnimation {
     pickupDone = 0;
     pickPlayerInfoArr1p: Array<PickupPlayerInfo>;
     pickPlayerInfoArr2p: Array<PickupPlayerInfo>;
+
+    orderArr1p: Array<number>
+    orderArr2p: Array<number>
     constructor(pickupScene: PickupScene) {
         this.scene = pickupScene;
         this.pickPlayerInfoArr1p = []
         this.pickPlayerInfoArr2p = []
-        this.test()
     }
 
-    test() {
+    startPick(teamIdx1p, teamIdx2p, orderArr1p: Array<number>, orderArr2p: Array<number>) {
+        this.orderArr1p = orderArr1p
+        this.orderArr2p = orderArr2p
         //test
-        let preview1p = [1, 10, 9]
-        let preview2p = [8, 7, 6, 21]
-
-        for (var i = 0; i < preview1p.length; i++) {
+        let previewMap = {
+            "1": [1],
+            "2": [8, 7, 6, 5],
+            "3": [1, 10, 9],
+            "4": [1, 2, 11, 12],
+            "5": [1, 2, 3, 12, 13, 14, 15, 16],
+            "6": [8, 7, 6, 21],
+            "7": [1, 2, 3, 4, 13, 25],
+            "8": [8, 7, 6, 5, 20, 19, 18]
+        }
+        let preview1p = previewMap[teamIdx1p]
+        let preview2p = previewMap[teamIdx2p]
+        var i = 0
+        for (i = 0; i < preview1p.length; i++) {
             var pickupIdx = preview1p[i];
             this.previewPlayer(pickupIdx, 0.2 * i, true)
         }
         TweenLite.delayedCall(0.2 * i, () => {
-            this.pickupTeam(3, this.scene.pickupFrame1p, () => {
+            this.pickupTeam(Number(teamIdx1p), this.scene.pickupFrame1p, () => {
                 this.transToOrder()
             })
         })
 
         TweenLite.delayedCall(0.1, () => {
-            for (var i = 0; i < preview2p.length; i++) {
-                var pickupIdx = preview2p[i];
-                this.previewPlayer(pickupIdx, 0.12 * i, false)
+            var j = 0
+            for (; j < preview2p.length; j++) {
+                var pickupIdx = preview2p[j];
+                this.previewPlayer(pickupIdx, 0.12 * j, false)
             }
-            TweenLite.delayedCall(0.12 * i, () => {
-                this.pickupTeam(6, this.scene.pickupFrame2p, () => {
+            TweenLite.delayedCall(0.12 * j, () => {
+                this.pickupTeam(Number(teamIdx2p), this.scene.pickupFrame2p, () => {
                     this.transToOrder()
                 })
             })
         })
-        // this.pickupTeam(1, this.pickupFrame1p)
-        // this.pickupTeam(2, this.pickupFrame2p)
     }
 
     previewPlayer(playerId, delay, is1p) {
@@ -191,8 +204,8 @@ export class PickupAnimation {
         TweenLite.to(this.order.select2p, .3, { x: 1275 + 210 })
         TweenLite.delayedCall(0.8, () => {
             // this.orderDown(this.order.portraitArr1p)
-            this.pin([12, 9, 10, 11], this.order.portraitArr1p, this.order.select1p)
-            this.pin([22, 23, 21, 24], this.order.portraitArr2p, this.order.select2p)
+            this.pin(this.orderArr1p, this.order.portraitArr1p, this.order.select1p)
+            this.pin(this.orderArr2p, this.order.portraitArr2p, this.order.select2p)
         })
     }
 
@@ -253,18 +266,31 @@ export class PickupAnimation {
     }
 
     fadeOut() {
-        TweenLite.to(this.order.blackTop, .2, {
-            y: 0, onComplete: () => {
-                while (this.order.children.length > 2) {
-                    this.order.removeChildAt(0)
-                }
-                this.scene.removeChildren()
-
-                TweenLite.to(this.order.blackTop, .2, { y: -ViewConst.STAGE_HEIGHT * .5 })
-                TweenLite.to(this.order.blackBottom, .2, { y: ViewConst.STAGE_HEIGHT })
+        let removeScene = () => {
+            while (this.order.children.length > 1) {
+                this.order.removeChildAt(0)
+            }
+            this.scene.removeChildren()
+        }
+        TweenLite.to(this.order.white, .2, {
+            alpha: 1, onComplete: () => {
+                removeScene()
+                TweenLite.to(this.order.white, .2, {
+                    alpha: 0
+                })
             }
         })
-        // TweenLite.to(this.order.blackBottom, .2, { y: ViewConst.STAGE_HEIGHT -20 })
-        TweenLite.to(this.order.blackBottom, .2, { y: ViewConst.STAGE_HEIGHT * .5 })
+
+        // this.order.blackBottom.y = ViewConst.STAGE_HEIGHT
+        // TweenLite.to(this.order.blackTop, .2, {
+        //     y: 0, onComplete: () => {
+        //         removeScene()
+
+        //         TweenLite.to(this.order.blackTop, .2, { y: -ViewConst.STAGE_HEIGHT * .5 })
+        //         TweenLite.to(this.order.blackBottom, .2, { y: ViewConst.STAGE_HEIGHT })
+        //     }
+        // })
+        // // TweenLite.to(this.order.blackBottom, .2, { y: ViewConst.STAGE_HEIGHT -20 })
+        // TweenLite.to(this.order.blackBottom, .2, { y: ViewConst.STAGE_HEIGHT * .5 })
     }
 }

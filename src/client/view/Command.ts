@@ -1,9 +1,9 @@
-enum cmdEnum{
+enum cmdEnum {
     dmkPush,
-        //
+    //
     toggleTracker,
     toggleBallRolling,
-        //stage panel
+    //stage panel
     toggleTimer,
     cs_toggleTimer,
     resetTimer,
@@ -33,7 +33,7 @@ enum cmdEnum{
     updateRightFoul,
     cs_addRightFoul,
     cs_minRightFoul,
-// skill        
+    // skill        
     cs_updateLeftSkill,
     updateLeftSkill,
     cs_updateRightSkill,
@@ -67,7 +67,7 @@ enum cmdEnum{
 
     cs_setGameIdx,//设置比赛场次
     setGameIdx,
-        //-----------------win panel
+    //-----------------win panel
     fadeInWinPanel,
     cs_fadeInWinPanel,
     fadeOutWinPanel,
@@ -78,7 +78,7 @@ enum cmdEnum{
     fadeInFinalPlayer,
     cs_fadeOutFinalPlayer,
     fadeOutFinalPlayer,
-//-----------------1v1
+    //-----------------1v1
     cs_setActPlayer,//参赛名单
     cs_setBracketPlayer,//八强名单
     cs_clearActPlayerGameRec,//清除act 20人战绩
@@ -97,21 +97,24 @@ enum cmdEnum{
     cs_autoSaveGameRec,//hupu 记录比赛
     cs_setDelayTime,//
     sc_setDelayTime,//
-        //onlinePanel
+    //onlinePanel
     cs_showRank,//
     sc_showRank,//
     cs_showBracket,//
     sc_showBracket,//
     cs_hideOnlinePanel,//
     sc_hideOnlinePanel,//
-        // rkb panel
-        cs_resetTimer,
-        sc_resetTimer,
-        cs_startTimer,
-        sc_startTimer,
-        cs_pauseTimer,
-        sc_pauseTimer,
-        //---------------- player panel
+    // rkb panel
+    cs_resetTimer,
+    sc_resetTimer,
+    cs_startTimer,
+    sc_startTimer,
+    cs_pauseTimer,
+    sc_pauseTimer,
+    //koa panel
+    cs_showPickup,//
+    sc_showPickup,//
+    //---------------- player panel
 
     cs_startingLine,
     startingLine,
@@ -126,20 +129,20 @@ enum cmdEnum{
     cs_fadeOutPlayerPanel,
     movePlayerPanel,
     cs_movePlayerPanel,
-        //自动三杀事件
+    //自动三杀事件
     straightScore3,
     straightScore5,
 
     initPanel,
-        /////activity panel
+    /////activity panel
 
     cs_fadeInActivityPanel,
     fadeInActivityPanel,
 
-        // cs_fadeInActivityPanelNext,
-        // fadeInActivityPanelNext,
-        // cs_fadeInActivityPanelPre,
-        // fadeInActivityPanelPre,
+    // cs_fadeInActivityPanelNext,
+    // fadeInActivityPanelNext,
+    // cs_fadeInActivityPanelPre,
+    // fadeInActivityPanelPre,
 
 
     cs_fadeInNextActivity,
@@ -164,10 +167,10 @@ enum cmdEnum{
 
     cs_fadeOutCountDown,
     fadeOutCountDown,
-        ///screen
+    ///screen
     cs_inScreenScore,
     inScreenScore,
-        //FT
+    //FT
     cs_fadeInFTShow,
     fadeInFTShow,
     cs_fadeOutFTShow,
@@ -178,11 +181,11 @@ enum cmdEnum{
     fadeInFtRank,
     cs_fadeInMixRank,
     fadeInMixRank,
-        // cs_fadeInComingActivity,
-        // fadeInComingActivity,
-        //db op
+    // cs_fadeInComingActivity,
+    // fadeInComingActivity,
+    //db op
     cs_findPlayerData,
-        //// RKB
+    //// RKB
     cs_attack,
     attack,
     cs_addHealth,
@@ -191,7 +194,7 @@ enum cmdEnum{
     cs_combo,
     combo
 }
-export var CommandId:any = {};
+export var CommandId: any = {};
 for (var k in cmdEnum) {
     CommandId[k] = k;
 }

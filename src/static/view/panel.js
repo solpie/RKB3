@@ -67,7 +67,7 @@
 	        components: { default: RKBOPView_1.rkbView }
 	    },
 	    {
-	        path: '/koa',
+	        path: '/koa/:op',
 	        components: { default: KOA_1.koa }
 	    },
 	    {
@@ -516,20 +516,84 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var PickupAnimation_1 = __webpack_require__(42);
+	var Command_1 = __webpack_require__(60);
+	var const_1 = __webpack_require__(44);
+	var WebJsFunc_1 = __webpack_require__(23);
 	var Pickup_1 = __webpack_require__(41);
 	var BasePanelView_1 = __webpack_require__(47);
 	var VueBase_1 = __webpack_require__(17);
+	var canvasStage = BasePanelView_1.BasePanelView.initPixi();
 	var pickupScene;
 	var KOA = (function (_super) {
 	    __extends(KOA, _super);
 	    function KOA() {
 	        _super.call(this);
 	        this.template = __webpack_require__(48);
+	        this.isOp = VueBase_1.VueBase.PROP;
+	        this.teamId1p = VueBase_1.VueBase.PROP;
+	        this.teamId2p = VueBase_1.VueBase.PROP;
+	        this.orderArr1pStr = VueBase_1.VueBase.PROP;
+	        this.orderArr2pStr = VueBase_1.VueBase.PROP;
+	        this.opReq = function (cmdId, param, callback) {
+	            $.ajax({
+	                url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
+	                type: 'post',
+	                data: JSON.stringify(param),
+	                headers: { "Content-Type": "application/json" },
+	                dataType: 'json',
+	                success: callback
+	            });
+	        };
+	        this.methods = {
+	            onShowPickup: function () {
+	                var getNumberArr = function (str) {
+	                    var a = str.split(' ');
+	                    for (var i = 0; i < a.length; i++) {
+	                        a[i] = Number(a[i]);
+	                    }
+	                    return a;
+	                };
+	                this.opReq("" + Command_1.CommandId.cs_showPickup, {
+	                    _: null,
+	                    teamId1p: this.teamId1p,
+	                    orderArr1p: getNumberArr(this.orderArr1pStr),
+	                    orderArr2p: getNumberArr(this.orderArr2pStr),
+	                    teamId2p: this.teamId2p
+	                });
+	            }
+	        };
 	        VueBase_1.VueBase.initProps(this);
 	    }
+	    KOA.prototype.created = function () {
+	        this.isOp = this.$route.params['op'] == 'op';
+	        if (this.isOp) {
+	            WebJsFunc_1.dynamicLoading.css('/css/bulma.min.css');
+	        }
+	        console.log('route:', this.$route['op']);
+	        this.initIO();
+	    };
 	    KOA.prototype.mounted = function () {
-	        var canvasStage = BasePanelView_1.BasePanelView.initPixi();
+	        this.teamId1p = '1';
+	        this.teamId2p = '2';
+	        this.orderArr1pStr = '1 2 3 4';
+	        this.orderArr2pStr = '6 5 7 8';
+	    };
+	    KOA.prototype.showPickup = function (data) {
 	        pickupScene = new Pickup_1.PickupScene(canvasStage);
+	        new PickupAnimation_1.PickupAnimation(pickupScene).startPick(data.teamId1p, data.teamId2p, data.orderArr1p, data.orderArr2p);
+	    };
+	    KOA.prototype.initIO = function () {
+	        var _this = this;
+	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
+	        localWs.on('connect', function (msg) {
+	            console.log('connect', window.location.host);
+	            localWs.emit("opUrl", { opUrl: window.location.host });
+	        })
+	            .on("" + Command_1.CommandId.sc_showPickup, function (data) {
+	            console.log("CommandId.sc_showPickup", data);
+	            _this.showPickup(data);
+	        });
 	    };
 	    return KOA;
 	}(VueBase_1.VueBase));
@@ -546,7 +610,6 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var PickupAnimation_1 = __webpack_require__(42);
 	var HupuAPI_1 = __webpack_require__(22);
 	var const_1 = __webpack_require__(44);
 	var Fx_1 = __webpack_require__(46);
@@ -662,7 +725,6 @@
 	        var ptt2p = new PIXI.Sprite();
 	        this.portrait2p = ptt2p;
 	        this.addChild(ptt2p);
-	        new PickupAnimation_1.PickupAnimation(this);
 	    };
 	    PickupScene.prototype.initName = function () {
 	        this.pickupName1pArr = [];
@@ -720,28 +782,41 @@
 	        this.scene = pickupScene;
 	        this.pickPlayerInfoArr1p = [];
 	        this.pickPlayerInfoArr2p = [];
-	        this.test();
 	    }
-	    PickupAnimation.prototype.test = function () {
+	    PickupAnimation.prototype.startPick = function (teamIdx1p, teamIdx2p, orderArr1p, orderArr2p) {
 	        var _this = this;
-	        var preview1p = [1, 10, 9];
-	        var preview2p = [8, 7, 6, 21];
-	        for (var i = 0; i < preview1p.length; i++) {
+	        this.orderArr1p = orderArr1p;
+	        this.orderArr2p = orderArr2p;
+	        var previewMap = {
+	            "1": [1],
+	            "2": [8, 7, 6, 5],
+	            "3": [1, 10, 9],
+	            "4": [1, 2, 11, 12],
+	            "5": [1, 2, 3, 12, 13, 14, 15, 16],
+	            "6": [8, 7, 6, 21],
+	            "7": [1, 2, 3, 4, 13, 25],
+	            "8": [8, 7, 6, 5, 20, 19, 18]
+	        };
+	        var preview1p = previewMap[teamIdx1p];
+	        var preview2p = previewMap[teamIdx2p];
+	        var i = 0;
+	        for (i = 0; i < preview1p.length; i++) {
 	            var pickupIdx = preview1p[i];
 	            this.previewPlayer(pickupIdx, 0.2 * i, true);
 	        }
 	        TweenLite.delayedCall(0.2 * i, function () {
-	            _this.pickupTeam(3, _this.scene.pickupFrame1p, function () {
+	            _this.pickupTeam(Number(teamIdx1p), _this.scene.pickupFrame1p, function () {
 	                _this.transToOrder();
 	            });
 	        });
 	        TweenLite.delayedCall(0.1, function () {
-	            for (var i = 0; i < preview2p.length; i++) {
-	                var pickupIdx = preview2p[i];
-	                _this.previewPlayer(pickupIdx, 0.12 * i, false);
+	            var j = 0;
+	            for (; j < preview2p.length; j++) {
+	                var pickupIdx = preview2p[j];
+	                _this.previewPlayer(pickupIdx, 0.12 * j, false);
 	            }
-	            TweenLite.delayedCall(0.12 * i, function () {
-	                _this.pickupTeam(6, _this.scene.pickupFrame2p, function () {
+	            TweenLite.delayedCall(0.12 * j, function () {
+	                _this.pickupTeam(Number(teamIdx2p), _this.scene.pickupFrame2p, function () {
 	                    _this.transToOrder();
 	                });
 	            });
@@ -882,8 +957,8 @@
 	        TweenLite.to(this.order.select1p, .3, { x: 375 + 210 });
 	        TweenLite.to(this.order.select2p, .3, { x: 1275 + 210 });
 	        TweenLite.delayedCall(0.8, function () {
-	            _this.pin([12, 9, 10, 11], _this.order.portraitArr1p, _this.order.select1p);
-	            _this.pin([22, 23, 21, 24], _this.order.portraitArr2p, _this.order.select2p);
+	            _this.pin(_this.orderArr1p, _this.order.portraitArr1p, _this.order.select1p);
+	            _this.pin(_this.orderArr2p, _this.order.portraitArr2p, _this.order.select2p);
 	        });
 	    };
 	    PickupAnimation.prototype.orderDown = function (portraitArr) {
@@ -941,17 +1016,20 @@
 	    };
 	    PickupAnimation.prototype.fadeOut = function () {
 	        var _this = this;
-	        TweenLite.to(this.order.blackTop, .2, {
-	            y: 0, onComplete: function () {
-	                while (_this.order.children.length > 2) {
-	                    _this.order.removeChildAt(0);
-	                }
-	                _this.scene.removeChildren();
-	                TweenLite.to(_this.order.blackTop, .2, { y: -const_1.ViewConst.STAGE_HEIGHT * .5 });
-	                TweenLite.to(_this.order.blackBottom, .2, { y: const_1.ViewConst.STAGE_HEIGHT });
+	        var removeScene = function () {
+	            while (_this.order.children.length > 1) {
+	                _this.order.removeChildAt(0);
+	            }
+	            _this.scene.removeChildren();
+	        };
+	        TweenLite.to(this.order.white, .2, {
+	            alpha: 1, onComplete: function () {
+	                removeScene();
+	                TweenLite.to(_this.order.white, .2, {
+	                    alpha: 0
+	                });
 	            }
 	        });
-	        TweenLite.to(this.order.blackBottom, .2, { y: const_1.ViewConst.STAGE_HEIGHT * .5 });
 	    };
 	    return PickupAnimation;
 	}());
@@ -1055,15 +1133,11 @@
 	        red1st.x = const_1.ViewConst.STAGE_WIDTH;
 	        red1st.y = blue1st.y;
 	        this.addChild(red1st);
-	        this.blackTop = new PIXI.Graphics();
-	        this.blackTop.beginFill(0x000000);
-	        this.blackTop.drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT * .5);
-	        this.blackTop.y = -const_1.ViewConst.STAGE_HEIGHT * .5;
-	        this.addChild(this.blackTop);
-	        this.blackBottom = new PIXI.Graphics();
-	        this.blackBottom.drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT * .5);
-	        this.blackBottom.y = const_1.ViewConst.STAGE_HEIGHT;
-	        this.addChild(this.blackBottom);
+	        this.white = new PIXI.Graphics();
+	        this.white.beginFill(0xffffff);
+	        this.white.drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT);
+	        this.white.alpha = 0;
+	        this.addChild(this.white);
 	    }
 	    return OrderScene;
 	}(PIXI.Container));
@@ -1420,7 +1494,7 @@
 /* 48 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    K.O.A\r\n</div>";
+	module.exports = "<div class=\"box\" v-if='isOp'>\r\n    K.O.A\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <label class=\"label\">1p</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" v-model='teamId1p' />\r\n            </p>\r\n        </div>\r\n        <div class=\"column\">\r\n            <label class=\"label\">2p</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" v-model='teamId2p' />\r\n            </p>\r\n        </div>\r\n    </div>\r\n\r\n    <label class=\"label\">出场顺序</label>\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" v-model='orderArr1pStr' />\r\n            </p>\r\n        </div>\r\n        <div class=\"column\">\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" v-model='orderArr2pStr' />\r\n            </p>\r\n        </div>\r\n    </div>\r\n\r\n\r\n    <button class=\"button is-primary\" @click=\"onShowPickup\">出阵</button>\r\n\r\n</div>";
 
 /***/ },
 /* 49 */
@@ -3418,62 +3492,64 @@
 	    cmdEnum[cmdEnum["sc_startTimer"] = 96] = "sc_startTimer";
 	    cmdEnum[cmdEnum["cs_pauseTimer"] = 97] = "cs_pauseTimer";
 	    cmdEnum[cmdEnum["sc_pauseTimer"] = 98] = "sc_pauseTimer";
-	    cmdEnum[cmdEnum["cs_startingLine"] = 99] = "cs_startingLine";
-	    cmdEnum[cmdEnum["startingLine"] = 100] = "startingLine";
-	    cmdEnum[cmdEnum["cs_hideStartingLine"] = 101] = "cs_hideStartingLine";
-	    cmdEnum[cmdEnum["hideStartingLine"] = 102] = "hideStartingLine";
-	    cmdEnum[cmdEnum["cs_queryPlayerByPos"] = 103] = "cs_queryPlayerByPos";
-	    cmdEnum[cmdEnum["fadeInPlayerPanel"] = 104] = "fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeInPlayerPanel"] = 105] = "cs_fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["fadeOutPlayerPanel"] = 106] = "fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeOutPlayerPanel"] = 107] = "cs_fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["movePlayerPanel"] = 108] = "movePlayerPanel";
-	    cmdEnum[cmdEnum["cs_movePlayerPanel"] = 109] = "cs_movePlayerPanel";
-	    cmdEnum[cmdEnum["straightScore3"] = 110] = "straightScore3";
-	    cmdEnum[cmdEnum["straightScore5"] = 111] = "straightScore5";
-	    cmdEnum[cmdEnum["initPanel"] = 112] = "initPanel";
-	    cmdEnum[cmdEnum["cs_fadeInActivityPanel"] = 113] = "cs_fadeInActivityPanel";
-	    cmdEnum[cmdEnum["fadeInActivityPanel"] = 114] = "fadeInActivityPanel";
-	    cmdEnum[cmdEnum["cs_fadeInNextActivity"] = 115] = "cs_fadeInNextActivity";
-	    cmdEnum[cmdEnum["fadeInNextActivity"] = 116] = "fadeInNextActivity";
-	    cmdEnum[cmdEnum["cs_fadeInActivityExGame"] = 117] = "cs_fadeInActivityExGame";
-	    cmdEnum[cmdEnum["fadeInActivityExGame"] = 118] = "fadeInActivityExGame";
-	    cmdEnum[cmdEnum["cs_fadeOutActivityPanel"] = 119] = "cs_fadeOutActivityPanel";
-	    cmdEnum[cmdEnum["fadeOutActivityPanel"] = 120] = "fadeOutActivityPanel";
-	    cmdEnum[cmdEnum["cs_startGame"] = 121] = "cs_startGame";
-	    cmdEnum[cmdEnum["cs_restartGame"] = 122] = "cs_restartGame";
-	    cmdEnum[cmdEnum["cs_fadeInRankPanel"] = 123] = "cs_fadeInRankPanel";
-	    cmdEnum[cmdEnum["fadeInRankPanel"] = 124] = "fadeInRankPanel";
-	    cmdEnum[cmdEnum["cs_fadeInNextRank"] = 125] = "cs_fadeInNextRank";
-	    cmdEnum[cmdEnum["fadeInNextRank"] = 126] = "fadeInNextRank";
-	    cmdEnum[cmdEnum["cs_setGameComing"] = 127] = "cs_setGameComing";
-	    cmdEnum[cmdEnum["setGameComing"] = 128] = "setGameComing";
-	    cmdEnum[cmdEnum["cs_fadeOutRankPanel"] = 129] = "cs_fadeOutRankPanel";
-	    cmdEnum[cmdEnum["fadeOutRankPanel"] = 130] = "fadeOutRankPanel";
-	    cmdEnum[cmdEnum["cs_fadeInCountDown"] = 131] = "cs_fadeInCountDown";
-	    cmdEnum[cmdEnum["fadeInCountDown"] = 132] = "fadeInCountDown";
-	    cmdEnum[cmdEnum["cs_fadeOutCountDown"] = 133] = "cs_fadeOutCountDown";
-	    cmdEnum[cmdEnum["fadeOutCountDown"] = 134] = "fadeOutCountDown";
-	    cmdEnum[cmdEnum["cs_inScreenScore"] = 135] = "cs_inScreenScore";
-	    cmdEnum[cmdEnum["inScreenScore"] = 136] = "inScreenScore";
-	    cmdEnum[cmdEnum["cs_fadeInFTShow"] = 137] = "cs_fadeInFTShow";
-	    cmdEnum[cmdEnum["fadeInFTShow"] = 138] = "fadeInFTShow";
-	    cmdEnum[cmdEnum["cs_fadeOutFTShow"] = 139] = "cs_fadeOutFTShow";
-	    cmdEnum[cmdEnum["fadeOutFTShow"] = 140] = "fadeOutFTShow";
-	    cmdEnum[cmdEnum["cs_fadeInPlayerRank"] = 141] = "cs_fadeInPlayerRank";
-	    cmdEnum[cmdEnum["fadeInPlayerRank"] = 142] = "fadeInPlayerRank";
-	    cmdEnum[cmdEnum["cs_fadeInFtRank"] = 143] = "cs_fadeInFtRank";
-	    cmdEnum[cmdEnum["fadeInFtRank"] = 144] = "fadeInFtRank";
-	    cmdEnum[cmdEnum["cs_fadeInMixRank"] = 145] = "cs_fadeInMixRank";
-	    cmdEnum[cmdEnum["fadeInMixRank"] = 146] = "fadeInMixRank";
-	    cmdEnum[cmdEnum["cs_findPlayerData"] = 147] = "cs_findPlayerData";
-	    cmdEnum[cmdEnum["cs_attack"] = 148] = "cs_attack";
-	    cmdEnum[cmdEnum["attack"] = 149] = "attack";
-	    cmdEnum[cmdEnum["cs_addHealth"] = 150] = "cs_addHealth";
-	    cmdEnum[cmdEnum["addHealth"] = 151] = "addHealth";
-	    cmdEnum[cmdEnum["fadeInOK"] = 152] = "fadeInOK";
-	    cmdEnum[cmdEnum["cs_combo"] = 153] = "cs_combo";
-	    cmdEnum[cmdEnum["combo"] = 154] = "combo";
+	    cmdEnum[cmdEnum["cs_showPickup"] = 99] = "cs_showPickup";
+	    cmdEnum[cmdEnum["sc_showPickup"] = 100] = "sc_showPickup";
+	    cmdEnum[cmdEnum["cs_startingLine"] = 101] = "cs_startingLine";
+	    cmdEnum[cmdEnum["startingLine"] = 102] = "startingLine";
+	    cmdEnum[cmdEnum["cs_hideStartingLine"] = 103] = "cs_hideStartingLine";
+	    cmdEnum[cmdEnum["hideStartingLine"] = 104] = "hideStartingLine";
+	    cmdEnum[cmdEnum["cs_queryPlayerByPos"] = 105] = "cs_queryPlayerByPos";
+	    cmdEnum[cmdEnum["fadeInPlayerPanel"] = 106] = "fadeInPlayerPanel";
+	    cmdEnum[cmdEnum["cs_fadeInPlayerPanel"] = 107] = "cs_fadeInPlayerPanel";
+	    cmdEnum[cmdEnum["fadeOutPlayerPanel"] = 108] = "fadeOutPlayerPanel";
+	    cmdEnum[cmdEnum["cs_fadeOutPlayerPanel"] = 109] = "cs_fadeOutPlayerPanel";
+	    cmdEnum[cmdEnum["movePlayerPanel"] = 110] = "movePlayerPanel";
+	    cmdEnum[cmdEnum["cs_movePlayerPanel"] = 111] = "cs_movePlayerPanel";
+	    cmdEnum[cmdEnum["straightScore3"] = 112] = "straightScore3";
+	    cmdEnum[cmdEnum["straightScore5"] = 113] = "straightScore5";
+	    cmdEnum[cmdEnum["initPanel"] = 114] = "initPanel";
+	    cmdEnum[cmdEnum["cs_fadeInActivityPanel"] = 115] = "cs_fadeInActivityPanel";
+	    cmdEnum[cmdEnum["fadeInActivityPanel"] = 116] = "fadeInActivityPanel";
+	    cmdEnum[cmdEnum["cs_fadeInNextActivity"] = 117] = "cs_fadeInNextActivity";
+	    cmdEnum[cmdEnum["fadeInNextActivity"] = 118] = "fadeInNextActivity";
+	    cmdEnum[cmdEnum["cs_fadeInActivityExGame"] = 119] = "cs_fadeInActivityExGame";
+	    cmdEnum[cmdEnum["fadeInActivityExGame"] = 120] = "fadeInActivityExGame";
+	    cmdEnum[cmdEnum["cs_fadeOutActivityPanel"] = 121] = "cs_fadeOutActivityPanel";
+	    cmdEnum[cmdEnum["fadeOutActivityPanel"] = 122] = "fadeOutActivityPanel";
+	    cmdEnum[cmdEnum["cs_startGame"] = 123] = "cs_startGame";
+	    cmdEnum[cmdEnum["cs_restartGame"] = 124] = "cs_restartGame";
+	    cmdEnum[cmdEnum["cs_fadeInRankPanel"] = 125] = "cs_fadeInRankPanel";
+	    cmdEnum[cmdEnum["fadeInRankPanel"] = 126] = "fadeInRankPanel";
+	    cmdEnum[cmdEnum["cs_fadeInNextRank"] = 127] = "cs_fadeInNextRank";
+	    cmdEnum[cmdEnum["fadeInNextRank"] = 128] = "fadeInNextRank";
+	    cmdEnum[cmdEnum["cs_setGameComing"] = 129] = "cs_setGameComing";
+	    cmdEnum[cmdEnum["setGameComing"] = 130] = "setGameComing";
+	    cmdEnum[cmdEnum["cs_fadeOutRankPanel"] = 131] = "cs_fadeOutRankPanel";
+	    cmdEnum[cmdEnum["fadeOutRankPanel"] = 132] = "fadeOutRankPanel";
+	    cmdEnum[cmdEnum["cs_fadeInCountDown"] = 133] = "cs_fadeInCountDown";
+	    cmdEnum[cmdEnum["fadeInCountDown"] = 134] = "fadeInCountDown";
+	    cmdEnum[cmdEnum["cs_fadeOutCountDown"] = 135] = "cs_fadeOutCountDown";
+	    cmdEnum[cmdEnum["fadeOutCountDown"] = 136] = "fadeOutCountDown";
+	    cmdEnum[cmdEnum["cs_inScreenScore"] = 137] = "cs_inScreenScore";
+	    cmdEnum[cmdEnum["inScreenScore"] = 138] = "inScreenScore";
+	    cmdEnum[cmdEnum["cs_fadeInFTShow"] = 139] = "cs_fadeInFTShow";
+	    cmdEnum[cmdEnum["fadeInFTShow"] = 140] = "fadeInFTShow";
+	    cmdEnum[cmdEnum["cs_fadeOutFTShow"] = 141] = "cs_fadeOutFTShow";
+	    cmdEnum[cmdEnum["fadeOutFTShow"] = 142] = "fadeOutFTShow";
+	    cmdEnum[cmdEnum["cs_fadeInPlayerRank"] = 143] = "cs_fadeInPlayerRank";
+	    cmdEnum[cmdEnum["fadeInPlayerRank"] = 144] = "fadeInPlayerRank";
+	    cmdEnum[cmdEnum["cs_fadeInFtRank"] = 145] = "cs_fadeInFtRank";
+	    cmdEnum[cmdEnum["fadeInFtRank"] = 146] = "fadeInFtRank";
+	    cmdEnum[cmdEnum["cs_fadeInMixRank"] = 147] = "cs_fadeInMixRank";
+	    cmdEnum[cmdEnum["fadeInMixRank"] = 148] = "fadeInMixRank";
+	    cmdEnum[cmdEnum["cs_findPlayerData"] = 149] = "cs_findPlayerData";
+	    cmdEnum[cmdEnum["cs_attack"] = 150] = "cs_attack";
+	    cmdEnum[cmdEnum["attack"] = 151] = "attack";
+	    cmdEnum[cmdEnum["cs_addHealth"] = 152] = "cs_addHealth";
+	    cmdEnum[cmdEnum["addHealth"] = 153] = "addHealth";
+	    cmdEnum[cmdEnum["fadeInOK"] = 154] = "fadeInOK";
+	    cmdEnum[cmdEnum["cs_combo"] = 155] = "cs_combo";
+	    cmdEnum[cmdEnum["combo"] = 156] = "combo";
 	})(cmdEnum || (cmdEnum = {}));
 	exports.CommandId = {};
 	for (var k in cmdEnum) {

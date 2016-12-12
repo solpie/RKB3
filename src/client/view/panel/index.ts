@@ -27,7 +27,7 @@ let routes = [
         components: { default: rkbView }
     },
     {
-        path: '/koa',
+        path: '/koa/:op',
         components: { default: koa }
     },
     {

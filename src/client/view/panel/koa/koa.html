@@ -1,3 +1,35 @@
-<div>
+<div class="box" v-if='isOp'>
     K.O.A
+    <div class="columns">
+        <div class="column">
+            <label class="label">1p</label>
+            <p class="control">
+                <input class="input" type="text" v-model='teamId1p' />
+            </p>
+        </div>
+        <div class="column">
+            <label class="label">2p</label>
+            <p class="control">
+                <input class="input" type="text" v-model='teamId2p' />
+            </p>
+        </div>
+    </div>
+
+    <label class="label">出场顺序</label>
+    <div class="columns">
+        <div class="column">
+            <p class="control">
+                <input class="input" type="text" v-model='orderArr1pStr' />
+            </p>
+        </div>
+        <div class="column">
+            <p class="control">
+                <input class="input" type="text" v-model='orderArr2pStr' />
+            </p>
+        </div>
+    </div>
+
+
+    <button class="button is-primary" @click="onShowPickup">出阵</button>
+
 </div>
