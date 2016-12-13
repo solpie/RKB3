@@ -224,9 +224,11 @@ export class PickupAnimation {
             TweenLite.to(p0, .2, { y: p0.y - (len - 1) * this.orderPortraitY })
             for (var i = 0; i < portraitArr.length; i++) {
                 var p = portraitArr[i];
+                p.filters = [p['filter']]
                 TweenLite.to(portraitArr[i], .2, { y: portraitArr[i].y + this.orderPortraitY })
             }
             portraitArr.push(p0)
+            portraitArr[0].filters = null
         }
     }
 
@@ -241,7 +243,9 @@ export class PickupAnimation {
             TweenLite.to(p0['white'], 0.1, {
                 alpha: 1, onComplete: () => {
                     TweenLite.to(p0['white'], 0.1, {
-                        alpha: 0
+                        alpha: 0, onComplete: () => {
+                            p0.filters = [p0['filter']]
+                        }
                     })
                 }
             })
@@ -265,7 +269,7 @@ export class PickupAnimation {
             else {
                 this.orderDone++
                 if (this.orderDone > 1)
-                    TweenLite.delayedCall(0.5, () => {
+                    TweenLite.delayedCall(1.5, () => {
                         this.fadeOut()
                     })
             }

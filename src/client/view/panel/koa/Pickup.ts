@@ -50,7 +50,8 @@ export class PickupScene extends PIXI.Container {
     nameBg2pArr: Array<PIXI.Sprite>
 
     playerIdMap = {}
-    constructor(stage: PIXI.Container,playerMap) {
+    titleText: PIXI.Text
+    constructor(stage: PIXI.Container, playerMap) {
         super()
         stage.addChild(this)
 
@@ -59,6 +60,12 @@ export class PickupScene extends PIXI.Container {
 
         this.title = newBitmap({ url: '/img/panel/koa/pickup/title.png', x: 96 })
         this.addChild(this.title)
+
+        this.titleText = new PIXI.Text('KING OF AMATEUR', pickNameStyle)
+        this.titleText.x = 670
+        this.titleText.y = 35
+        this.title.addChild(this.titleText)
+
 
         this.portraitBg1p = newBitmap({ x: 300, y: 444, url: '/img/panel/koa/pickup/blueBg.png' })
         this.addChild(this.portraitBg1p);
@@ -99,11 +106,8 @@ export class PickupScene extends PIXI.Container {
                 this.playerIdMap[pickupIdx] = p
                 p.pickupIdx = pickupIdx;
 
-
-                let a = newBitmap({ url: '/img/panel/koa/pickup/avatar.png' })
-                a.x = p.x - this.title.x
-                a.y = p.y
-                this.title.addChild(a)
+                let ax = p.x - this.title.x
+                let ay = p.y
 
                 let msk = new PIXI.Graphics()
                 msk.beginFill(0xff0000, 0.5)
@@ -115,11 +119,16 @@ export class PickupScene extends PIXI.Container {
                 msk.lineTo(17, 72 + r)
                 msk.lineTo(17 - r, 72)
                 msk.lineTo(17 - r, 4 + r)
-
-                msk.x = a.x
-                msk.y = a.y
-
+                msk.x = ax
+                msk.y = ay
                 this.title.addChild(msk)
+
+                let avt = newBitmap({ x: ax, y: ay, url: '/img/player/avatar/' + pDoc.avatar })
+                avt.scale.x = avt.scale.y = 88 / 120
+                avt.mask = msk
+                this.title.addChild(avt)
+
+                this.title.addChild(newBitmap({ x: ax, y: ay, url: '/img/panel/koa/pickup/avatar.png' }))
 
                 pickupIdx++
             }
@@ -135,7 +144,7 @@ export class PickupScene extends PIXI.Container {
         blink2({ target: _1p, time: 0.05 })
 
         let _2p = newBitmap({ url: '/img/panel/koa/pickup/pickupFrame.png' })
-        _2p.alpha  = 0
+        _2p.alpha = 0
         _2p.x = 0
         _2p.y = 0
         this.addChild(_2p)

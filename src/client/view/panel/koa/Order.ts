@@ -25,11 +25,15 @@ export class OrderScene extends PIXI.Container {
         let style = JSON.parse(JSON.stringify(pickNameStyle))
         style['fontSize'] = '30px'
 
-
+        let f = new PIXI.filters.ColorMatrixFilter()
+        f.brightness(0.4)
         let ctn = new PIXI.Container()
         this.addChildAt(ctn, 1)
         for (var i = 0; i < 4; i++) {
             let ctn1p = new PIXI.Container()
+            if (i > 0)
+                ctn1p.filters = [f]
+
             ctn1p.x = 300
             ctn1p.y = -300
             ctn.addChildAt(ctn1p, 0)
@@ -45,6 +49,7 @@ export class OrderScene extends PIXI.Container {
             ctn1p['white'] = newWhiteMask(pickInfo.portrait)
             ctn1p['white'].alpha = 0
             ctn1p['sp'].addChild(ctn1p['white'])
+            ctn1p['filter'] = f
 
             ctn1p['pickupIdx'] = pickInfo.pickupIdx
             ctn1p.addChild(ctn1p['sp'])
@@ -60,6 +65,9 @@ export class OrderScene extends PIXI.Container {
 
         for (var i = 0; i < 4; i++) {
             let ctn2p = new PIXI.Container()
+            if (i > 0)
+                ctn2p.filters = [f]
+
             ctn2p.x = 1200
             ctn2p.y = -300
 
@@ -75,7 +83,8 @@ export class OrderScene extends PIXI.Container {
             ctn2p['white'] = newWhiteMask(pickInfo.portrait)
             ctn2p['white'].alpha = 0
             ctn2p['sp'].addChild(ctn2p['white'])
-            
+            ctn2p['filter'] = f
+
             ctn2p['pickupIdx'] = pickInfo.pickupIdx
             // ctn1p['sp'].mask = msk
             ctn2p.addChild(ctn2p['sp'])

@@ -27,7 +27,8 @@ class PlayerModel(object):
         for i in range(32):
             id = str(i + 1)
             # self.db.insert({"id": i + 1, 'name': "player" + id})
-            self.db.update({"id":i+1},{"portrait":'/img/player/portrait/'+id+'.png'})
+            # self.db.update({"id":i+1},{"portrait":'/img/player/portrait/'+id+'.png'})
+            # self.db.update({"id":i+1},{"avatar":''+id+'.jpg'})
 
 class GameDoc:
     id = None

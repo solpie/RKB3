@@ -30,6 +30,9 @@ jspm_packages
 
 # Optional npm cache directory
 .npm
+*portrait*
+*avatar*
+*avatar*
 
 # Optional REPL history
 .node_repl_history
