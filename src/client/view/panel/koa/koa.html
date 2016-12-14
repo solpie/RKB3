@@ -1,35 +1,32 @@
-<div class="box" v-if='isOp'>
-    K.O.A
-    <div class="columns">
-        <div class="column">
-            <label class="label">1p</label>
-            <p class="control">
-                <input class="input" type="text" v-model='teamId1p' />
-            </p>
-        </div>
-        <div class="column">
-            <label class="label">2p</label>
-            <p class="control">
-                <input class="input" type="text" v-model='teamId2p' />
-            </p>
-        </div>
-    </div>
-
+<div class="box" v-if='isOp' style="opacity:0.8">
+    <button class="button is-primary is-large" @click="onPickup(true)">1P</button>
+    <button class="button is-primary is-large" @click="onPickup(false)">2P</button>
+    <button class="button is-primary is-large" @click="onShowPickup">出阵</button>
     <label class="label">出场顺序</label>
     <div class="columns">
         <div class="column">
-            <p class="control">
-                <input class="input" type="text" v-model='orderArr1pStr' />
-            </p>
+            <label class="label">1p</label> {{orderArr1p|json}}
+            <div style="font-size:20px" v-for="player in orderPlayerDocArr1p">
+                <img :src="player.portrait" style="width:40px"> {{player.id +' ' +player.name}}
+            </div>
         </div>
         <div class="column">
-            <p class="control">
-                <input class="input" type="text" v-model='orderArr2pStr' />
-            </p>
+            <label class="label">2p</label> {{orderArr2p|json}}
+            <div style="font-size:20px" v-for="player in orderPlayerDocArr2p">
+                <img :src="player.portrait" style="width:40px"> {{player.id +' ' +player.name}}
+            </div>
         </div>
     </div>
 
 
-    <button class="button is-primary" @click="onShowPickup">出阵</button>
-
+    <p>
+        <div class="tabs is-boxed">
+            <ul>
+                <li v-for="teamIdx in 8"><a @click="onTabTeam($event,teamIdx)">Team{{teamIdx}}</a></li>
+            </ul>
+        </div>
+        <div v-for="player in playerDocArr">
+            <a class="box" style="font-size:30px" @click='onPickupPlayer(player)'> <img :src="player.portrait" style="width:80px"> {{player.id +' ' +player.name}}</a>
+            <p>
+        </div>
 </div>

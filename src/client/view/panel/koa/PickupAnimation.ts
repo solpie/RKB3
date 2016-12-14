@@ -1,3 +1,4 @@
+import { TweenEx } from '../../utils/TweenEx';
 import { OrderScene } from './Order';
 import { ViewConst } from '../../const';
 import { blink2 } from '../../utils/Fx';
@@ -221,11 +222,14 @@ export class PickupAnimation {
         if (p0) {
             console.log('curIdx:', p0['pickupIdx']);
             p0.parent.addChildAt(p0, 3 - portraitArr.length)
+
             TweenLite.to(p0, .2, { y: p0.y - (len - 1) * this.orderPortraitY })
             for (var i = 0; i < portraitArr.length; i++) {
                 var p = portraitArr[i];
                 p.filters = [p['filter']]
-                TweenLite.to(portraitArr[i], .2, { y: portraitArr[i].y + this.orderPortraitY })
+                var py = p.y + this.orderPortraitY
+                // TweenEx.to(p, 200, { y: py })
+                TweenLite.to(p, .2, { y:py })
             }
             portraitArr.push(p0)
             portraitArr[0].filters = null
@@ -240,6 +244,15 @@ export class PickupAnimation {
             pickupIdxArr.shift()
             let numSp = selectSP['numArr'].shift()
             p0.addChild(numSp)
+
+            // let t = TweenEx.tween(p0['white'], { alpha: 0 })
+            //     .to({ alpha: 1 }, 100)
+            //     .onComplete(() => {
+            //         t.to({ alpha: 0 }, 100)
+            //             .onComplete(() => {
+            //                 p0.filters = [p0['filter']]
+            //             }).start()
+            //     }).start()
             TweenLite.to(p0['white'], 0.1, {
                 alpha: 1, onComplete: () => {
                     TweenLite.to(p0['white'], 0.1, {

@@ -28,9 +28,9 @@ export class BasePanelView {
         renderer.stage = new PIXI.Container();
         renderer.backgroundColor = 0x00000000;
         //Loop this function 60 times per second
-        renderer.renderStage = ()=> {
+        renderer.renderStage = (time)=> {
             requestAnimationFrame(renderer.renderStage);
-            // TWEEN.update()
+            TWEEN.update(time)
             renderer.render(renderer.stage);
         };
         renderer.renderStage();

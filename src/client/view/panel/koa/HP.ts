@@ -76,9 +76,10 @@ export class HP extends PIXI.Container {
             avt.mask = msk1
         }
 
+
         initAvatar(true)
         initAvatar(false)
-
+     
         // let avt2 = newBitmap({ url: '/img/player/avatar/1.jpg' })
         // avt2.x = 1420
         // this.addChild(avt2)

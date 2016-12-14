@@ -1,3 +1,4 @@
+import { mapToArr } from '../../utils/JsFunc';
 import { HP } from './HP';
 import { getPlayerDoc } from '../../utils/HupuAPI';
 import { PickupAnimation } from './PickupAnimation';
@@ -15,14 +16,17 @@ let pickupScene: PickupScene;
 class KOA extends VueBase {
     template = require('./koa.html')
     isOp = VueBase.PROP
+    playerDocArr = VueBase.PROP
+    isPickup1p = VueBase.PROP
+
     teamId1p = VueBase.PROP
     teamId2p = VueBase.PROP
+    orderArr1p = VueBase.PROP
+    orderPlayerDocArr1p = VueBase.PROP
+    orderPlayerDocArr2p = VueBase.PROP
+    orderArr2p = VueBase.PROP
 
-    orderArr1p: Array<number>
-    orderArr2p: Array<number>
-
-    orderArr1pStr = VueBase.PROP
-    orderArr2pStr = VueBase.PROP
+    $actTab
     playerIdMap
     hp: HP
     opReq = (cmdId: string, param: any, callback: any) => {
@@ -62,14 +66,7 @@ class KOA extends VueBase {
     }
 
     protected mounted() {
-        this.teamId1p = '1'
-        this.teamId2p = '2'
-        this.orderArr1pStr = '1 2 3 4'
-        this.orderArr2pStr = '6 5 7 8'
-        // this.teamId1p = '3'
-        // this.teamId2p = '6'
-        // this.orderArr1pStr = '12 9 10 11'
-        // this.orderArr2pStr = '22 23 21 24'
+        this.isPickup1p = true
     }
 
     methods = {
@@ -85,10 +82,52 @@ class KOA extends VueBase {
             this.opReq(`${CommandId.cs_showPickup}`, {
                 _: null,
                 teamId1p: this.teamId1p,
-                orderArr1p: getNumberArr(this.orderArr1pStr),
-                orderArr2p: getNumberArr(this.orderArr2pStr),
+                orderArr1p: this.orderArr1p,
+                orderArr2p: this.orderArr2p,
                 teamId2p: this.teamId2p
             })
+        },
+        onTabTeam(e, teamIdx) {
+            console.log('onTabTeam:', e, teamIdx);
+            if (this.$actTab) {
+                this.$actTab.removeClass('is-active')
+            }
+            this.$actTab = $(e.target.parentElement)
+            this.$actTab.addClass('is-active')
+
+            let a = []
+            for (var i = 1; i < 5; i++) {
+                a.push(this.playerIdMap[(teamIdx - 1) * 4 + i])
+            }
+            console.log('playerDocArr', a);
+
+            this.playerDocArr = a
+            if (this.isPickup1p)
+                this.teamId1p = teamIdx
+            else
+                this.teamId2p = teamIdx
+        },
+        onPickup(is1p) {
+            this.isPickup1p = is1p
+            if (is1p) {
+                this.orderPlayerDocArr1p = []
+                this.orderArr1p = []
+
+            }
+            else {
+                this.orderPlayerDocArr2p = []
+                this.orderArr2p = []
+            }
+        },
+        onPickupPlayer(player) {
+            if (this.isPickup1p) {
+                this.orderPlayerDocArr1p.push(player)
+                this.orderArr1p.push(player.id)
+            }
+            else {
+                this.orderPlayerDocArr2p.push(player)
+                this.orderArr2p.push(player.id)
+            }
         }
     }
 
