@@ -1,3 +1,4 @@
+import { TweenEx } from './TweenEx';
 //delay in ms
 export function delayCall(delay, callback) {
     createjs.Tween.get(this).wait(delay).call(callback);
@@ -25,13 +26,22 @@ export function blink2(options: { target: any, time?: number, loop?: number, cal
     let loop = options.loop || Infinity
     function to1(a) {
         if (target.visible && loop > 0)
-            TweenLite.to(target, time, { alpha: a })
-                .eventCallback('onComplete', () => {
+            new TweenEx(target)
+                .to({ alpha: a }, time)
+                .call(() => {
                     loop -= 1
                     if (callback)
                         callback()
                     to1(a ? 0 : 1);
                 })
+                .start()
+        // TweenEx.to(target, time, { alpha: a })
+        //     .eventCallback('onComplete', () => {
+        //         loop -= 1
+        //         if (callback)
+        //             callback()
+        //         to1(a ? 0 : 1);
+        //     })
     }
     to1(1);
 }

@@ -1,3 +1,4 @@
+import { TweenEx } from '../../utils/TweenEx';
 import { PickupAnimation } from './PickupAnimation';
 import { mapToArr } from '../../utils/JsFunc';
 import { getPlayerDoc } from '../../utils/HupuAPI';
@@ -195,8 +196,8 @@ export class PickupScene extends PIXI.Container {
     }
 
     fadeInNameBg(target, delay, pos: { x: number }) {
-        TweenLite.delayedCall(delay, () => {
-            TweenLite.to(target, .08, pos)
+        TweenEx.delayedCall(delay, () => {
+            TweenEx.to(target, .08, pos)
         })
     }
 
