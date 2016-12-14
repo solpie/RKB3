@@ -51,10 +51,18 @@ class GameModel(object):
     def setBlood(self,data):
         if data['is1p']:
             self.gameDoc.blood1p+=data['dt']
+            if self.gameDoc.blood1p >5:
+                self.gameDoc.blood1p = 5
+            if self.gameDoc.blood1p <0:
+                self.gameDoc.blood1p = 0
             data['blood'] = self.gameDoc.blood1p
             emit('sc_setBlood',data,broadcast=True,namespace='/rkb')
         else:
             self.gameDoc.blood2p+=data['dt']
+            if self.gameDoc.blood2p >5:
+                self.gameDoc.blood2p = 5
+            if self.gameDoc.blood2p <0:
+                self.gameDoc.blood2p = 0
             data['blood'] = self.gameDoc.blood2p
             emit('sc_setBlood',data,broadcast=True,namespace='/rkb')
 

@@ -202,7 +202,6 @@ class KOA extends VueBase {
                 this.hp.resetTimer()
             })
             .on(`${CommandId.sc_setBlood}`, (data) => {
-                console.log('sc_setBlood',data)
                 this.hp.setBlood(data.is1p,data.blood)
             })
     }

@@ -477,11 +477,11 @@
 	};
 	var HP_1 = __webpack_require__(33);
 	var HupuAPI_1 = __webpack_require__(22);
-	var PickupAnimation_1 = __webpack_require__(37);
+	var PickupAnimation_1 = __webpack_require__(38);
 	var Command_1 = __webpack_require__(41);
-	var const_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(34);
 	var WebJsFunc_1 = __webpack_require__(23);
-	var Pickup_1 = __webpack_require__(39);
+	var Pickup_1 = __webpack_require__(40);
 	var BasePanelView_1 = __webpack_require__(42);
 	var VueBase_1 = __webpack_require__(17);
 	var canvasStage = BasePanelView_1.BasePanelView.initPixi();
@@ -659,7 +659,6 @@
 	            _this.hp.resetTimer();
 	        })
 	            .on("" + Command_1.CommandId.sc_setBlood, function (data) {
-	            console.log('sc_setBlood', data);
 	            _this.hp.setBlood(data.is1p, data.blood);
 	        });
 	    };
@@ -679,10 +678,10 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var JsFunc_1 = __webpack_require__(24);
-	var const_1 = __webpack_require__(40);
-	var TweenEx_1 = __webpack_require__(34);
-	var Fx_1 = __webpack_require__(35);
-	var PixiEx_1 = __webpack_require__(36);
+	var const_1 = __webpack_require__(34);
+	var TweenEx_1 = __webpack_require__(35);
+	var Fx_1 = __webpack_require__(36);
+	var PixiEx_1 = __webpack_require__(37);
 	var HP = (function (_super) {
 	    __extends(HP, _super);
 	    function HP(stage) {
@@ -928,6 +927,53 @@
 /***/ function(module, exports) {
 
 	"use strict";
+	exports.PanelId = {
+	    stagePanel: 'stage',
+	    stage1v1Panel: 'stage1v1',
+	    rkbPanel: 'rkb',
+	    scorePanel: 'score',
+	    bracketPanel: 'bracket',
+	    rankPanel: 'rankPanel',
+	    onlinePanel: 'online',
+	    winPanel: 'win',
+	    actPanel: 'act',
+	    screenPanel: 'screen',
+	    playerPanel: 'player'
+	};
+	exports.FontName = {
+	    MicrosoftYahei: "Microsoft Yahei"
+	};
+	exports.ServerConst = {
+	    SEND_ASYNC: true,
+	    DEF_AVATAR: '/img/panel/stage1v1/blue.png'
+	};
+	exports.ViewConst = {
+	    STAGE_WIDTH: 1920,
+	    STAGE_HEIGHT: 1080
+	};
+	exports.TimerState = {
+	    START_STR: 'start',
+	    PAUSE_STR: 'pause',
+	    PAUSE: 0,
+	    RUNNING: 1
+	};
+	exports.ViewEvent = {
+	    PLAYER_EDIT: 'edit player',
+	    PLAYER_ADD: 'add player',
+	    STRAIGHT3_LEFT: 'STRAIGHT3_LEFT',
+	    STRAIGHT3_RIGHT: 'STRAIGHT3_RIGHT'
+	};
+	function ScParam(param) {
+	    return param;
+	}
+	exports.ScParam = ScParam;
+
+
+/***/ },
+/* 35 */
+/***/ function(module, exports) {
+
+	"use strict";
 	var TweenEx = (function () {
 	    function TweenEx(target) {
 	        this.target = target;
@@ -1000,11 +1046,11 @@
 
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var TweenEx_1 = __webpack_require__(34);
+	var TweenEx_1 = __webpack_require__(35);
 	function delayCall(delay, callback) {
 	    createjs.Tween.get(this).wait(delay).call(callback);
 	}
@@ -1066,7 +1112,7 @@
 
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1244,15 +1290,15 @@
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var TweenEx_1 = __webpack_require__(34);
-	var Order_1 = __webpack_require__(38);
-	var const_1 = __webpack_require__(40);
-	var Fx_1 = __webpack_require__(35);
-	var PixiEx_1 = __webpack_require__(36);
+	var TweenEx_1 = __webpack_require__(35);
+	var Order_1 = __webpack_require__(39);
+	var const_1 = __webpack_require__(34);
+	var Fx_1 = __webpack_require__(36);
+	var PixiEx_1 = __webpack_require__(37);
 	var PickupAnimation = (function () {
 	    function PickupAnimation(pickupScene) {
 	        this.curIdx1p = 0;
@@ -1534,7 +1580,7 @@
 
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1543,9 +1589,9 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Pickup_1 = __webpack_require__(39);
-	var const_1 = __webpack_require__(40);
-	var PixiEx_1 = __webpack_require__(36);
+	var Pickup_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(34);
+	var PixiEx_1 = __webpack_require__(37);
 	var OrderScene = (function (_super) {
 	    __extends(OrderScene, _super);
 	    function OrderScene(stage, playerPortraitArr) {
@@ -1656,7 +1702,7 @@
 
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1665,10 +1711,10 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var TweenEx_1 = __webpack_require__(34);
-	var const_1 = __webpack_require__(40);
-	var Fx_1 = __webpack_require__(35);
-	var PixiEx_1 = __webpack_require__(36);
+	var TweenEx_1 = __webpack_require__(35);
+	var const_1 = __webpack_require__(34);
+	var Fx_1 = __webpack_require__(36);
+	var PixiEx_1 = __webpack_require__(37);
 	var PickupPlayerInfo = (function () {
 	    function PickupPlayerInfo(options) {
 	        this.x = options.x;
@@ -1816,53 +1862,6 @@
 	    return PickupScene;
 	}(PIXI.Container));
 	exports.PickupScene = PickupScene;
-
-
-/***/ },
-/* 40 */
-/***/ function(module, exports) {
-
-	"use strict";
-	exports.PanelId = {
-	    stagePanel: 'stage',
-	    stage1v1Panel: 'stage1v1',
-	    rkbPanel: 'rkb',
-	    scorePanel: 'score',
-	    bracketPanel: 'bracket',
-	    rankPanel: 'rankPanel',
-	    onlinePanel: 'online',
-	    winPanel: 'win',
-	    actPanel: 'act',
-	    screenPanel: 'screen',
-	    playerPanel: 'player'
-	};
-	exports.FontName = {
-	    MicrosoftYahei: "Microsoft Yahei"
-	};
-	exports.ServerConst = {
-	    SEND_ASYNC: true,
-	    DEF_AVATAR: '/img/panel/stage1v1/blue.png'
-	};
-	exports.ViewConst = {
-	    STAGE_WIDTH: 1920,
-	    STAGE_HEIGHT: 1080
-	};
-	exports.TimerState = {
-	    START_STR: 'start',
-	    PAUSE_STR: 'pause',
-	    PAUSE: 0,
-	    RUNNING: 1
-	};
-	exports.ViewEvent = {
-	    PLAYER_EDIT: 'edit player',
-	    PLAYER_ADD: 'add player',
-	    STRAIGHT3_LEFT: 'STRAIGHT3_LEFT',
-	    STRAIGHT3_RIGHT: 'STRAIGHT3_RIGHT'
-	};
-	function ScParam(param) {
-	    return param;
-	}
-	exports.ScParam = ScParam;
 
 
 /***/ },
@@ -2020,7 +2019,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var const_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(34);
 	var BasePanelView = (function () {
 	    function BasePanelView(pid) {
 	        this.opReq = function (cmdId, param, callback) {
@@ -2089,7 +2088,7 @@
 /* 43 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <button class=\"button is-large\" @click=\"onPickup(true)\">1P</button>\r\n            <button class=\"button is-large\" @click=\"onPickup(false)\">2P</button>\r\n            <button class=\"button is-large\" @click=\"onShowPickup\">出阵</button>\r\n            <label class=\"label\">出场顺序</label>\r\n            <div class=\"columns\">\r\n                <div class=\"column\">\r\n                    <label class=\"label\">1p</label> {{orderArr1p|json}}\r\n                    <p v-for=\"player in orderPlayerDocArr1p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(0,player)\"> {{player.id +' ' +player.name}} </a>\r\n                    </p>\r\n                </div>\r\n                <div class=\"column\">\r\n                    <label class=\"label\">2p</label> {{orderArr2p|json}}\r\n                    <br>\r\n                    <p v-for=\"player in orderPlayerDocArr2p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(1,player)\"> {{player.id +' ' +player.name}} </a>\r\n                    </p>\r\n                </div>\r\n            </div>\r\n\r\n            <p>\r\n                <div class=\"tabs is-boxed\">\r\n                    <ul>\r\n                        <li v-for=\"teamIdx in 8\"><a @click=\"onTabTeam($event,teamIdx)\">Team{{teamIdx}}</a></li>\r\n                    </ul>\r\n                </div>\r\n                <div v-for=\"player in playerDocArr\">\r\n                    <a class=\"box\" style=\"font-size:30px\" @click='onPickupPlayer(player)'> <img :src=\"player.portrait\" style=\"width:80px\"> {{player.id +' ' +player.name}}</a>\r\n                    <p>\r\n                </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            <label style=\"font-size:20px\">\r\n            {{gamePlayer1p.name+' vs '+gamePlayer2p.name}}\r\n            </label>\r\n            <p>\r\n                <button class=\"button is-large\" @click=\"onStartGame()\">开始</button>\r\n                <button class=\"button is-large\" @click=\"onToggleTimer()\">Toggle</button>\r\n                <button class=\"button is-large\" @click=\"onResetTimer()\">Reset</button>\r\n                <p>\r\n                <button class=\"button is-large\" @click=\"onSetBlood(true,-1)\">1P -1</button>\r\n                <button class=\"button is-large\" @click=\"onSetBlood(true,1)\">1P +1</button>\r\n                <button class=\"button is-large\" @click=\"onSetBlood(false,-1)\">2P -1</button>\r\n                <button class=\"button is-large\" @click=\"onSetBlood(false,1)\">2P +1</button>\r\n                <button class=\"button is-large\" @click=\"onStartGame()\">提交</button>\r\n        </div>\r\n    </div>\r\n\r\n</div>";
+	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <label class=\"label\">出场顺序</label>\r\n            <div class=\"columns\">\r\n                <div class=\"column\">\r\n                    <button class=\"button is-large\" @click=\"onPickup(true)\">1P</button>      \r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer1p.name}}]</label> {{orderArr1p|json}}\r\n                    <br>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(true,-1)\"> -1</button>\r\n                <button class=\"button is-large\" @click=\"onSetBlood(true,1)\">+1</button>\r\n                    <p v-for=\"player in orderPlayerDocArr1p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(0,player)\"> {{player.id +' ' +player.name}} </a>\r\n                    </p>\r\n                </div>\r\n                <div class=\"column\">\r\n            <button class=\"button is-large\" @click=\"onPickup(false)\">2P</button>\r\n                    \r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer2p.name}}]</label> {{orderArr2p|json}}\r\n                    <br>\r\n                    \r\n                <button class=\"button is-large\" @click=\"onSetBlood(false,-1)\"> -1</button>\r\n                <button class=\"button is-large\" @click=\"onSetBlood(false,1)\"> +1</button>\r\n                    <p v-for=\"player in orderPlayerDocArr2p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(1,player)\"> {{player.id +' ' +player.name}} </a>\r\n                    </p>\r\n                </div>\r\n            </div>\r\n\r\n            <p>\r\n                <div class=\"tabs is-boxed\">\r\n                    <ul>\r\n                        <li v-for=\"teamIdx in 8\"><a @click=\"onTabTeam($event,teamIdx)\">Team{{teamIdx}}</a></li>\r\n                    </ul>\r\n                </div>\r\n                <div v-for=\"player in playerDocArr\">\r\n                    <a class=\"box\" style=\"font-size:30px\" @click='onPickupPlayer(player)'> <img :src=\"player.portrait\" style=\"width:80px\"> {{player.id +' ' +player.name}}</a>\r\n                    <p>\r\n                </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            <button class=\"button is-large\" @click=\"onShowPickup\">出阵</button>\r\n            \r\n            <p>\r\n                <button class=\"button is-large\" @click=\"onStartGame()\">开始</button>\r\n                <button class=\"button is-large\" @click=\"onToggleTimer()\">Toggle</button>\r\n                <button class=\"button is-large\" @click=\"onResetTimer()\">Reset</button>\r\n                \r\n                <p>\r\n                <button class=\"button is-large\" @click=\"onStartGame()\">提交</button>\r\n        </div>\r\n    </div>\r\n\r\n</div>";
 
 /***/ },
 /* 44 */
@@ -2104,7 +2103,7 @@
 	var WebJsFunc_1 = __webpack_require__(23);
 	var VueBase_1 = __webpack_require__(17);
 	var JsFunc_1 = __webpack_require__(24);
-	var const_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(34);
 	var Command_1 = __webpack_require__(41);
 	var opReq = function (cmdId, param, callback) {
 	    $.post("/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId, param, callback);
@@ -2208,7 +2207,7 @@
 	var Bracket_1 = __webpack_require__(53);
 	var WebJsFunc_1 = __webpack_require__(23);
 	var VueBase_1 = __webpack_require__(17);
-	var const_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(34);
 	var Command_1 = __webpack_require__(41);
 	var rankView;
 	var bracketView;
@@ -2343,7 +2342,7 @@
 	var HupuAPI_1 = __webpack_require__(22);
 	var ScorePanel2_1 = __webpack_require__(48);
 	var Command_1 = __webpack_require__(41);
-	var const_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(34);
 	var BasePanelView_1 = __webpack_require__(42);
 	var ScoreView = (function (_super) {
 	    __extends(ScoreView, _super);
@@ -2451,9 +2450,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var Fx_1 = __webpack_require__(35);
-	var PixiEx_1 = __webpack_require__(36);
-	var const_1 = __webpack_require__(40);
+	var Fx_1 = __webpack_require__(36);
+	var PixiEx_1 = __webpack_require__(37);
+	var const_1 = __webpack_require__(34);
 	var ScorePanel2 = (function () {
 	    function ScorePanel2(parent) {
 	        var _this = this;
@@ -2599,9 +2598,9 @@
 	};
 	var PlayerInfo_1 = __webpack_require__(50);
 	var BasePanelView_1 = __webpack_require__(42);
-	var const_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(34);
 	var FTInfo_1 = __webpack_require__(52);
-	var PixiEx_1 = __webpack_require__(36);
+	var PixiEx_1 = __webpack_require__(37);
 	var JsFunc_1 = __webpack_require__(24);
 	var RankView = (function (_super) {
 	    __extends(RankView, _super);
@@ -3086,11 +3085,11 @@
 	};
 	var HupuAPI_1 = __webpack_require__(22);
 	var BasePanelView_1 = __webpack_require__(42);
-	var const_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(34);
 	var BracketGroup_1 = __webpack_require__(54);
-	var PixiEx_1 = __webpack_require__(36);
+	var PixiEx_1 = __webpack_require__(37);
 	var GroupLine_1 = __webpack_require__(55);
-	var Fx_1 = __webpack_require__(35);
+	var Fx_1 = __webpack_require__(36);
 	var Bracket = (function (_super) {
 	    __extends(Bracket, _super);
 	    function Bracket(stage, gameId) {

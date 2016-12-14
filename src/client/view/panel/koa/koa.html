@@ -1,21 +1,27 @@
 <div class="box" v-if='isOp' style="opacity:0.8;width:1000px;left:100px;top:50px">
     <div class="columns">
         <div class="column">
-            <button class="button is-large" @click="onPickup(true)">1P</button>
-            <button class="button is-large" @click="onPickup(false)">2P</button>
-            <button class="button is-large" @click="onShowPickup">出阵</button>
             <label class="label">出场顺序</label>
             <div class="columns">
                 <div class="column">
-                    <label class="label">1p</label> {{orderArr1p|json}}
+                    <button class="button is-large" @click="onPickup(true)">1P</button>      
+                    <label class="label" style="font-size:20px">[{{gamePlayer1p.name}}]</label> {{orderArr1p|json}}
+                    <br>
+                    <button class="button is-large" @click="onSetBlood(true,-1)"> -1</button>
+                <button class="button is-large" @click="onSetBlood(true,1)">+1</button>
                     <p v-for="player in orderPlayerDocArr1p">
                         <img :src="player.portrait" style="width:40px">
                         <a style="font-size:20px" @click="onStartPlayer(0,player)"> {{player.id +' ' +player.name}} </a>
                     </p>
                 </div>
                 <div class="column">
-                    <label class="label">2p</label> {{orderArr2p|json}}
+            <button class="button is-large" @click="onPickup(false)">2P</button>
+                    
+                    <label class="label" style="font-size:20px">[{{gamePlayer2p.name}}]</label> {{orderArr2p|json}}
                     <br>
+                    
+                <button class="button is-large" @click="onSetBlood(false,-1)"> -1</button>
+                <button class="button is-large" @click="onSetBlood(false,1)"> +1</button>
                     <p v-for="player in orderPlayerDocArr2p">
                         <img :src="player.portrait" style="width:40px">
                         <a style="font-size:20px" @click="onStartPlayer(1,player)"> {{player.id +' ' +player.name}} </a>
@@ -35,18 +41,14 @@
                 </div>
         </div>
         <div class="column">
-            <label style="font-size:20px">
-            {{gamePlayer1p.name+' vs '+gamePlayer2p.name}}
-            </label>
+            <button class="button is-large" @click="onShowPickup">出阵</button>
+            
             <p>
                 <button class="button is-large" @click="onStartGame()">开始</button>
                 <button class="button is-large" @click="onToggleTimer()">Toggle</button>
                 <button class="button is-large" @click="onResetTimer()">Reset</button>
+                
                 <p>
-                <button class="button is-large" @click="onSetBlood(true,-1)">1P -1</button>
-                <button class="button is-large" @click="onSetBlood(true,1)">1P +1</button>
-                <button class="button is-large" @click="onSetBlood(false,-1)">2P -1</button>
-                <button class="button is-large" @click="onSetBlood(false,1)">2P +1</button>
                 <button class="button is-large" @click="onStartGame()">提交</button>
         </div>
     </div>
