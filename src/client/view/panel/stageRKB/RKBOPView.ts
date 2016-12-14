@@ -1,4 +1,4 @@
-import {StageRKBView} from "./StageRKBView";
+// import {StageRKBView} from "./StageRKBView";
 import {dynamicLoading} from "../../utils/WebJsFunc";
 import {VueBase} from "../../utils/VueBase";
 import {DateFormat} from "../../utils/JsFunc";
@@ -7,7 +7,7 @@ import {CommandId} from "../../Command";
 /**
  * Created by toramisu on 2016/10/31.
  */
-let stageRKBView: StageRKBView;
+// let stageRKBView: StageRKBView;
 declare let $;
 
 let opReq = (cmdId: string, param: any, callback: any)=> {
@@ -50,9 +50,9 @@ export class RKBView extends VueBase {
     }
 
     mounted() {
-        if (!stageRKBView)
-            stageRKBView = new StageRKBView(this);
-        console.log('op mounted!');
+        // if (!stageRKBView)
+        //     stageRKBView = new StageRKBView(this);
+        // console.log('op mounted!');
     }
 
     //methods:

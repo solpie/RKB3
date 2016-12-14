@@ -4,7 +4,7 @@ export class TweenEx {
     target
     vars
     eventArr
-    //duration sec
+    //duration ms
     constructor(target) {
         this.target = target
         this.eventArr = []
@@ -30,7 +30,7 @@ export class TweenEx {
                         fromVars[k] = this.target[k]
                     }
                     new TWEEN.Tween(fromVars)
-                        .to(e.data.vars, e.data.duration * 1000)
+                        .to(e.data.vars, e.data.duration)
                         .onUpdate(() => {
                             for (let k in e.data.vars) {
                                 this.target[k] = fromVars[k]
@@ -46,7 +46,7 @@ export class TweenEx {
                     //     run()
                     // })
                     new TWEEN.Tween({ _: 0 })
-                        .to({ _: 0 }, e.data.duration * 1000)
+                        .to({ _: 0 }, e.data.duration)
                         .onComplete(() => {
                             run()
                         })

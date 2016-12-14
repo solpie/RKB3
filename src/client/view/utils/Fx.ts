@@ -5,9 +5,6 @@ export function delayCall(delay, callback) {
     // setTimeout(callback, delay/1000);
 }
 
-// export function delayFor(start,len,func) {
-//     createjs.Tween.get(this).wait(delay, callback);
-// }
 export function blink(target, time = 80, loop = false) {
     var blink = time;
     createjs.Tween.get(target, { loop: loop })
@@ -21,7 +18,7 @@ export function blink(target, time = 80, loop = false) {
 export function blink2(options: { target: any, time?: number, loop?: number, callback?: any }) {
     // target, time = 0.08, loop = 0, callback = null
     let target = options.target
-    let time = options.time || 0.08
+    let time = options.time || 80
     let callback = options.callback
     let loop = options.loop || Infinity
     function to1(a) {
@@ -35,20 +32,13 @@ export function blink2(options: { target: any, time?: number, loop?: number, cal
                     to1(a ? 0 : 1);
                 })
                 .start()
-        // TweenEx.to(target, time, { alpha: a })
-        //     .eventCallback('onComplete', () => {
-        //         loop -= 1
-        //         if (callback)
-        //             callback()
-        //         to1(a ? 0 : 1);
-        //     })
     }
     to1(1);
 }
 //time ms
 export function blink3(target, time = 80, loop = false) {
     var blink = time;
-    new TWEEN.Tween(target)
+    new TweenEx(target)
         .to({ alpha: 1 }, blink)
         .to({ alpha: 0 }, blink)
         .to({ alpha: 1 }, blink)

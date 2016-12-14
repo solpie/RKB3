@@ -1,3 +1,4 @@
+import { fdatasync } from 'fs';
 import { mapToArr } from '../../utils/JsFunc';
 import { HP } from './HP';
 import { getPlayerDoc } from '../../utils/HupuAPI';
@@ -8,6 +9,7 @@ import { dynamicLoading } from '../../utils/WebJsFunc';
 import { PickupPlayerInfo, PickupScene } from './Pickup';
 import { BasePanelView } from '../BasePanelView';
 import { VueBase } from '../../utils/VueBase';
+declare let Vue;
 declare let io;
 declare let $;
 let canvasStage = BasePanelView.initPixi()
@@ -25,6 +27,8 @@ class KOA extends VueBase {
     orderPlayerDocArr1p = VueBase.PROP
     orderPlayerDocArr2p = VueBase.PROP
     orderArr2p = VueBase.PROP
+    gamePlayer1p = VueBase.PROP
+    gamePlayer2p = VueBase.PROP
 
     $actTab
     playerIdMap
@@ -45,6 +49,8 @@ class KOA extends VueBase {
     }
     protected created() {
         this.initCanvas()
+        this.gamePlayer1p = { name: '1p' }
+        this.gamePlayer2p = { name: '2p' }
         this.isOp = this.$route.params['op'] == 'op'
         if (this.isOp) {
             dynamicLoading.css('/css/bulma.min.css')
@@ -112,7 +118,6 @@ class KOA extends VueBase {
             if (is1p) {
                 this.orderPlayerDocArr1p = []
                 this.orderArr1p = []
-
             }
             else {
                 this.orderPlayerDocArr2p = []
@@ -128,12 +133,35 @@ class KOA extends VueBase {
                 this.orderPlayerDocArr2p.push(player)
                 this.orderArr2p.push(player.id)
             }
+        },
+        onStartPlayer(is1p, playerDoc) {
+            if (is1p > 0) {
+                this.gamePlayer2p = playerDoc
+            }
+            else
+                this.gamePlayer1p = playerDoc
+
+        },
+        onStartGame() {
+            if (this.gamePlayer1p.id && this.gamePlayer2p.id)
+                this.opReq(`${CommandId.cs_startGame}`, {
+                    _: null,
+                    playerDocArr: [this.gamePlayer1p, this.gamePlayer2p],
+                })
+            else {
+                alert('没选人！')
+            }
         }
     }
 
     showPickup(data) {
         pickupScene = new PickupScene(canvasStage, this.playerIdMap)
         new PickupAnimation(pickupScene).startPick(data.teamId1p, data.teamId2p, data.orderArr1p, data.orderArr2p)
+    }
+
+    startGame(data) {
+        let playerDocArr = data.playerDocArr
+         this.hp.setPlayer(data.playerDocArr)
     }
 
     initIO() {
@@ -145,6 +173,9 @@ class KOA extends VueBase {
             .on(`${CommandId.sc_showPickup}`, (data) => {
                 console.log("CommandId.sc_showPickup", data)
                 this.showPickup(data)
+            })
+            .on(`${CommandId.sc_startGame}`, (data) => {
+                this.startGame(data)
             })
     }
 }

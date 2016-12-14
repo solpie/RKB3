@@ -178,7 +178,7 @@ export class ScorePanel2 {
         if (foul > 3) {
             console.log("foul: 4");
             // var a2 = { alpha: hint.alpha }
-            blink2({ target: hint, time: 0.150 })
+            blink2({ target: hint, time: 150 })
             // var t2 = new TWEEN.Tween(hint)
             //     .to({ alpha: 1.0 }, 150)
             //     .to({ alpha: 0.0 }, 150)

@@ -142,7 +142,7 @@ export class PickupScene extends PIXI.Container {
         _1p.y = 0
         this.addChild(_1p)
         this.pickupFrame1p = _1p
-        blink2({ target: _1p, time: 0.05 })
+        blink2({ target: _1p, time: 50 })
 
         let _2p = newBitmap({ url: '/img/panel/koa/pickup/pickupFrame.png' })
         _2p.alpha = 0
@@ -150,7 +150,7 @@ export class PickupScene extends PIXI.Container {
         _2p.y = 0
         this.addChild(_2p)
         this.pickupFrame2p = _2p
-        blink2({ target: _2p, time: 0.05 })
+        blink2({ target: _2p, time: 50 })
 
         let ptt1p = new PIXI.Sprite()
         this.portrait1p = ptt1p
@@ -197,7 +197,7 @@ export class PickupScene extends PIXI.Container {
 
     fadeInNameBg(target, delay, pos: { x: number }) {
         TweenEx.delayedCall(delay, () => {
-            TweenEx.to(target, .08, pos)
+            TweenEx.to(target, 80, pos)
         })
     }
 

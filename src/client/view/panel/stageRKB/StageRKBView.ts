@@ -1,7 +1,7 @@
 import {BasePanelView} from "../BasePanelView";
 import {PanelId, TimerState} from "../../const";
 import {PlayerInfo} from "../../../model/PlayerInfo";
-import {ScorePanel} from "./ScorePanel";
+// import {ScorePanel} from "./ScorePanel";
 import {PlayerPanel} from "./PlayerPanel";
 import {EventPanel} from "./EventPanel";
 import {CountDownPanel} from "./CountDownPanel";
@@ -16,7 +16,7 @@ declare let io;
 declare let hupuWsUrl;
 export class StageRKBView extends BasePanelView {
     $opView: RKBView;
-    scorePanel:ScorePanel;
+    scorePanel:any;
     playerPanel;
     eventPanel;
     countDownRender;
@@ -32,15 +32,15 @@ export class StageRKBView extends BasePanelView {
 
         this.isScorePanelVisible = true;
 
-        this.scorePanel = new ScorePanel(this, true);
+        // this.scorePanel = new ScorePanel(this, true);
         // this.scorePanel.init(gameDoc);
-        this.playerPanel = new PlayerPanel(this, true);
+        // this.playerPanel = new PlayerPanel(this, true);
         // this.playerPanel.init(gameDoc);
         // this.gameId = gameDoc.id;
-        this.eventPanel = new EventPanel(this);
+        // this.eventPanel = new EventPanel(this);
         // this.$parent['eventPanel'] = this.eventPanel;
         // this.$parent['gameId'] = Number(this.$route.params.game_id);
-        this.countDownRender = new CountDownPanel(this.stage);
+        // this.countDownRender = new CountDownPanel(this.stage);
 
 
         // $opView.test = "test";

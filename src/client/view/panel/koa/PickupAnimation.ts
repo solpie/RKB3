@@ -40,21 +40,21 @@ export class PickupAnimation {
         var i = 0
         for (i = 0; i < preview1p.length; i++) {
             var pickupIdx = preview1p[i];
-            this.previewPlayer(pickupIdx, 0.2 * i, true)
+            this.previewPlayer(pickupIdx, 200 * i, true)
         }
-        TweenEx.delayedCall(0.2 * i, () => {
+        TweenEx.delayedCall(200 * i, () => {
             this.pickupTeam(Number(teamIdx1p), this.scene.pickupFrame1p, () => {
                 this.transToOrder()
             })
         })
 
-        TweenEx.delayedCall(0.1, () => {
+        TweenEx.delayedCall(100, () => {
             var j = 0
             for (; j < preview2p.length; j++) {
                 var pickupIdx = preview2p[j];
                 this.previewPlayer(pickupIdx, 0.12 * j, false)
             }
-            TweenEx.delayedCall(0.12 * j, () => {
+            TweenEx.delayedCall(120 * j, () => {
                 this.pickupTeam(Number(teamIdx2p), this.scene.pickupFrame2p, () => {
                     this.transToOrder()
                 })
@@ -91,7 +91,7 @@ export class PickupAnimation {
     pickupTeam(teamIdx, pickupFrame: PIXI.Sprite, callback) {
         var i = 0
         var delaySel = () => {
-            TweenEx.delayedCall(.2 + Math.random() * .3, () => {
+            TweenEx.delayedCall(200 + Math.random() * 300, () => {
                 if (i < 4) {
                     this.selectPlayer(teamIdx * 4 + i - 3, pickupFrame)
                     i++
@@ -146,7 +146,7 @@ export class PickupAnimation {
             p.y = y - tex.height
             p.texture = tex
             if (isBlink)
-                blink2({ target: p, time: 0.06, loop: 5 })
+                blink2({ target: p, time: 60, loop: 5 })
         }
         if (!this.texMap[url])
             loadRes(url, (img) => {
@@ -161,28 +161,28 @@ export class PickupAnimation {
     transToOrder() {
         console.log('transToOrder');
         if (this.pickupDone > 0) {
-            TweenEx.delayedCall(0.5, () => {
-                TweenEx.to(this.scene.portrait1p, 0.05, { alpha: 0 })
-                TweenEx.to(this.scene.portrait2p, 0.05, { alpha: 0 })
+            TweenEx.delayedCall(500, () => {
+                TweenEx.to(this.scene.portrait1p, 50, { alpha: 0 })
+                TweenEx.to(this.scene.portrait2p, 50, { alpha: 0 })
 
-                TweenEx.to(this.scene.portraitBg1p, 0.08, { x: -this.scene.portraitBg1p.width })
-                TweenEx.to(this.scene.portraitBg2p, 0.08, { x: ViewConst.STAGE_WIDTH })
+                TweenEx.to(this.scene.portraitBg1p, 80, { x: -this.scene.portraitBg1p.width })
+                TweenEx.to(this.scene.portraitBg2p, 80, { x: ViewConst.STAGE_WIDTH })
                 for (var i = 0; i < this.scene.nameBg1pArr.length; i++) {
                     let name1p = this.scene.pickupName1pArr[i]
                     let name2p = this.scene.pickupName2pArr[i]
-                    TweenEx.to(name1p, 0.05, { alpha: 0 })
-                    TweenEx.to(name2p, 0.05, { alpha: 0 })
+                    TweenEx.to(name1p, 50, { alpha: 0 })
+                    TweenEx.to(name2p, 50, { alpha: 0 })
 
                     var nameBg = this.scene.nameBg1pArr[i];
-                    TweenEx.to(nameBg, 0.1 + 0.08 * i, { x: -nameBg.width })
+                    TweenEx.to(nameBg, 100 + 80 * i, { x: -nameBg.width })
 
                     var nameBg2p = this.scene.nameBg2pArr[i];
-                    TweenEx.to(nameBg2p, 0.1 + 0.08 * i, { x: ViewConst.STAGE_WIDTH })
+                    TweenEx.to(nameBg2p, 100 + 80 * i, { x: ViewConst.STAGE_WIDTH })
                 }
-                TweenEx.to(this.scene.title, 0.3, { y: -380 })
-                TweenEx.to(this.scene.bg, 0.5, { y: -132 })
+                TweenEx.to(this.scene.title, 300, { y: -380 })
+                TweenEx.to(this.scene.bg, 500, { y: -132 })
 
-                TweenEx.delayedCall(0.2, () => {
+                TweenEx.delayedCall(200, () => {
                     this.fadeInOrder()
                 })
             })
@@ -194,22 +194,22 @@ export class PickupAnimation {
     fadeInOrder() {
         this.order = new OrderScene(this.scene.parent, this.pickPlayerInfoArr1p.concat(this.pickPlayerInfoArr2p))
         this.order.bg.alpha = 0
-        TweenEx.to(this.order.bg, .8, { alpha: 1 })
-        TweenEx.delayedCall(0.2, () => {
+        TweenEx.to(this.order.bg, 800, { alpha: 1 })
+        TweenEx.delayedCall(200, () => {
             for (var i = 0; i < this.order.portraitArr1p.length; i++) {
                 var ctn1p = this.order.portraitArr1p[i];
                 var ctn2p = this.order.portraitArr2p[i];
                 console.log('tween to y');
 
-                TweenEx.to(ctn1p, 0.1 + i * .08, { y: 40 + (3 - i) * this.orderPortraitY })
-                TweenEx.to(ctn2p, 0.1 + i * .08, { y: 40 + (3 - i) * this.orderPortraitY })
+                TweenEx.to(ctn1p, 100 + i * 80, { y: 40 + (3 - i) * this.orderPortraitY })
+                TweenEx.to(ctn2p, 100 + i * 80, { y: 40 + (3 - i) * this.orderPortraitY })
             }
         })
         this.order.select1p.pivot = new PIXI.Point(210, 39)
         this.order.select2p.pivot = new PIXI.Point(210, 39)
-        TweenEx.to(this.order.select1p, .3, { x: 375 + 210 })
-        TweenEx.to(this.order.select2p, .3, { x: 1275 + 210 })
-        TweenEx.delayedCall(0.8, () => {
+        TweenEx.to(this.order.select1p, 300, { x: 375 + 210 })
+        TweenEx.to(this.order.select2p, 300, { x: 1275 + 210 })
+        TweenEx.delayedCall(800, () => {
             // this.orderDown(this.order.portraitArr1p)
             this.pin(this.orderArr1p, this.order.portraitArr1p, this.order.select1p)
             this.pin(this.orderArr2p, this.order.portraitArr2p, this.order.select2p)
@@ -223,12 +223,12 @@ export class PickupAnimation {
             console.log('curIdx:', p0['pickupIdx']);
             p0.parent.addChildAt(p0, 3 - portraitArr.length)
 
-            TweenEx.to(p0, .2, { y: p0.y - (len - 1) * this.orderPortraitY })
+            TweenEx.to(p0, 200, { y: p0.y - (len - 1) * this.orderPortraitY })
             for (var i = 0; i < portraitArr.length; i++) {
                 var p = portraitArr[i];
                 p.filters = [p['filter']]
                 var py = p.y + this.orderPortraitY
-                TweenEx.to(p, .2, { y: py })
+                TweenEx.to(p, 200, { y: py })
             }
             portraitArr.push(p0)
             portraitArr[0].filters = null
@@ -245,8 +245,8 @@ export class PickupAnimation {
             p0.addChild(numSp)
 
             new TweenEx(p0['white'])
-                .to({ alpha: 1 }, 0.1)
-                .to({ alpha: 0 }, 0.1)
+                .to({ alpha: 1 }, 100)
+                .to({ alpha: 0 }, 100)
                 .call(() => {
                     p0.filters = [p0['filter']]
                 })
@@ -255,7 +255,7 @@ export class PickupAnimation {
 
             let sp = selectSP['spArr'].shift()
             new TweenEx(selectSP.scale)
-                .to({ y: 0 }, 0.08)
+                .to({ y: 0 }, 80)
                 .call(() => {
                     if (sp) {
                         selectSP.addChild(sp)
@@ -263,16 +263,16 @@ export class PickupAnimation {
                     else
                         selectSP.visible = false
                 })
-                .to({ y: 1 }, 0.08)
+                .to({ y: 1 }, 80)
                 .start()
             if (pickupIdxArr.length)
-                TweenEx.delayedCall(0.4 - Math.random() * .2, () => {
+                TweenEx.delayedCall(400 - Math.random() * 200, () => {
                     this.pin(pickupIdxArr, portraitArr, selectSP)
                 })
             else {
                 this.orderDone++
                 if (this.orderDone > 1)
-                    TweenEx.delayedCall(1.5, () => {
+                    TweenEx.delayedCall(1500, () => {
                         this.fadeOut()
                     })
             }
@@ -280,7 +280,7 @@ export class PickupAnimation {
         }
         else {
             this.orderDown(portraitArr)
-            TweenEx.delayedCall(0.4 - Math.random() * .2, () => {
+            TweenEx.delayedCall(400 - Math.random() * 200, () => {
                 this.pin(pickupIdxArr, portraitArr, selectSP)
             })
         }
@@ -294,11 +294,11 @@ export class PickupAnimation {
             this.scene.removeChildren()
         }
         new TweenEx(this.order.white)
-            .to({ alpha: 1 }, .2)
+            .to({ alpha: 1 },200)
             .call(() => {
                 removeScene()
             })
-            .to({ alpha: 0 }, .2)
+            .to({ alpha: 0 }, 200)
             .start()
 
         // this.order.blackBottom.y = ViewConst.STAGE_HEIGHT

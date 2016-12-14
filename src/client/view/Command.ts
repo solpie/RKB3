@@ -1,8 +1,5 @@
 enum cmdEnum {
-    dmkPush,
     //
-    toggleTracker,
-    toggleBallRolling,
     //stage panel
     toggleTimer,
     cs_toggleTimer,
@@ -114,6 +111,9 @@ enum cmdEnum {
     //koa panel
     cs_showPickup,//
     sc_showPickup,//
+    //hp
+    cs_startGame,
+    sc_startGame,
     //---------------- player panel
 
     cs_startingLine,
@@ -134,39 +134,6 @@ enum cmdEnum {
     straightScore5,
 
     initPanel,
-    /////activity panel
-
-    cs_fadeInActivityPanel,
-    fadeInActivityPanel,
-
-    // cs_fadeInActivityPanelNext,
-    // fadeInActivityPanelNext,
-    // cs_fadeInActivityPanelPre,
-    // fadeInActivityPanelPre,
-
-
-    cs_fadeInNextActivity,
-    fadeInNextActivity,
-    cs_fadeInActivityExGame,
-    fadeInActivityExGame,
-    cs_fadeOutActivityPanel,
-    fadeOutActivityPanel,
-    cs_startGame,
-    cs_restartGame,
-    cs_fadeInRankPanel,
-    fadeInRankPanel,
-    cs_fadeInNextRank,
-    fadeInNextRank,
-    cs_setGameComing,
-    setGameComing,
-    cs_fadeOutRankPanel,
-    fadeOutRankPanel,
-
-    cs_fadeInCountDown,
-    fadeInCountDown,
-
-    cs_fadeOutCountDown,
-    fadeOutCountDown,
     ///screen
     cs_inScreenScore,
     inScreenScore,

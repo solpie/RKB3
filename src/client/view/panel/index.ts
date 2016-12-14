@@ -1,10 +1,9 @@
-require(`script!./../../libs/createjs/createjs.min.js`);
-require(`script!./../../libs/createjs/easeljs.min.js`);
-require(`script!./../../libs/createjs/tweenjs.min.js`);
+// require(`script!./../../libs/createjs/createjs.min.js`);
+// require(`script!./../../libs/createjs/easeljs.min.js`);
+// require(`script!./../../libs/createjs/tweenjs.min.js`);
 
 //http://www.pixijs.com/
 require(`script!./../../libs/pixi.min.js`);
-// require(`script!./../../libs/TweenLite.min.js`);
 require(`script!./../../libs/Tween.min.js`);
 require(`script!./../../libs/jquery.min.js`);
 

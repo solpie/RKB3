@@ -30,6 +30,7 @@ class PlayerModel(object):
             # self.db.update({"id":i+1},{"portrait":'/img/player/portrait/'+id+'.png'})
             # self.db.update({"id":i+1},{"avatar":''+id+'.jpg'})
 
+
 class GameDoc:
     id = None
     start = None
@@ -55,6 +56,9 @@ from flask import Blueprint, jsonify
 gameView = Blueprint('gameView', __name__)
 #/game/
 
+from flask_socketio import emit
+from flask import Flask, render_template, session, request, make_response
+
 
 @gameView.route('/')
 def gameIndex():
@@ -66,6 +70,10 @@ def findAllPlayer():
     return jsonify(actModel.playerModel.all())
 
 
-@gameView.route('/start')
+@gameView.route('/start',methods=['POST'])
 def startGame():
+    data = request.json
+    print(data)
+    # emit(cmd.replace('cs_', 'sc_'), request.json,
+            #  broadcast=True, namespace=namespace_rkb)
     return 'gameView'

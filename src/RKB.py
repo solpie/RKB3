@@ -27,7 +27,6 @@ def loadConf():
     serverConf["views"] = ["admin", "panel"]
 loadConf()
 
-
 # web server
 from flask import Flask, render_template, session, request, make_response
 from flask_socketio import SocketIO, emit, disconnect
