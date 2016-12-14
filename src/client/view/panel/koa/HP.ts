@@ -1,3 +1,6 @@
+import { formatSecond } from '../../utils/JsFunc';
+import { FontName, TimerState } from '../../const';
+// import { TextStyle } from 'PIXI';
 import { TweenEx } from '../../utils/TweenEx';
 import { blink2, blink3 } from '../../utils/Fx';
 import { PlayerDoc } from '../../../model/PlayerInfo';
@@ -11,8 +14,16 @@ export class HP extends PIXI.Container {
     avatar2p: PIXI.Sprite
     name1p: PIXI.Text
     name2p: PIXI.Text
+    nameArr1p:Array<PIXI.Text> = []
+    nameArr2p:Array<PIXI.Text> = []
     bloodFx1p: PIXI.Container
     bloodFx2p: PIXI.Container
+
+    timeText:PIXI.Text
+    timeOnSec = 0
+    timerId = null
+    timerState
+
     constructor(stage: PIXI.Container) {
         super()
         stage.addChild(this)
@@ -134,15 +145,53 @@ export class HP extends PIXI.Container {
         n2.y = n1.y
         this.addChild(n2)
 
+
+ 
+        for(var i=0;i<3;i++){
+            var n1p = new PIXI.Text('player123')
+            n1p['x0'] = 360
+            n1p.x = n1p['x0'] - n1p.width
+            n1p.y = 10+i*26
+            this.addChild(n1p)
+            this.nameArr1p.push(n1p)
+
+            var n2p = new PIXI.Text('player123')
+            n2p.x = 1560
+            n2p.y = n1p.y
+            this.addChild(n2p)
+            this.nameArr2p.push(n2p)
+        }
+        // console.log('n1p')
+        //
+        let ts =  {
+    fontFamily: FontName.MicrosoftYahei,
+    fontSize: '50px',
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    fill: '#fff',
+    stroke: '#222',
+    strokeThickness: 3,
+}
+        let t = new PIXI.Text("00:00",ts)
+        this.timeText = t
+        t.x = 889
+        t.y = 35
+        this.addChild(t)
+
         this.test()
+       
     }
 
     test() {
         TweenEx.delayedCall(200, () => {
             this.setBlood(true, 3)
             this.setBlood(false, 1)
+            this.setFoul(true, 1)
+            this.setFoul(false, 3)
+
             TweenEx.delayedCall(1000, () => {
                 this.setBlood(false, 0)
+                this.toggleTimer()
             })
         })
     }
@@ -159,8 +208,7 @@ export class HP extends PIXI.Container {
         this.name2p.x = this.name2p['x0'] - this.name2p.width
     }
 
-    setBlood(is1p, num) {
-        let _f = (bloodArr: Array<PIXI.Sprite>) => {
+    _pFx(bloodArr: Array<PIXI.Sprite>,num) {
             for (var i = 0; i < bloodArr.length; i++) {
                 var b = bloodArr[i];
                 if (i < num) {
@@ -171,8 +219,10 @@ export class HP extends PIXI.Container {
                     b.visible = false
                 }
             }
-        }
-        is1p ? _f(this.pointArr1p) : _f(this.pointArr2p)
+    }
+
+    setBlood(is1p, num) {
+        is1p ? this._pFx(this.pointArr1p,num) : this._pFx(this.pointArr2p,num)
         var bFx
         is1p ? bFx = this.bloodFx1p : bFx = this.bloodFx2p
         TweenEx.to(bFx['msk'], 140 * (5 - num), { x: (5 - num) * 67 })
@@ -188,6 +238,51 @@ export class HP extends PIXI.Container {
         }
         else
             bFx['blink'].visible = false
+    }
+
+    setFoul(is1p,foul){
+        is1p ? this._pFx(this.foulArr1p,foul) : this._pFx(this.foulArr2p,foul)
+    }
+
+    
+    toggleTimer(state?) {
+        var pauseTimer = ()=> {
+            if (this.timerId) {
+                clearInterval(this.timerId);
+                this.timerId = 0;
+                this.timerState = TimerState.PAUSE;
+            }
+        };
+
+        var playTimer = ()=> {
+            if (this.timerId)
+                clearInterval(this.timerId);
+            this.timerId = setInterval(()=> {
+                this.timeOnSec++;
+                this.timeText.text = formatSecond(this.timeOnSec);
+            }, 1000);
+            this.timerState = TimerState.RUNNING;
+        };
+
+        if (state != null) {
+            if (state == TimerState.PAUSE) {
+                pauseTimer();
+            }
+            else if (state == TimerState.RUNNING) {
+                playTimer();
+            }
+        }
+        else {
+            this.timerId?pauseTimer():playTimer()
+        }
+
+    }
+
+
+    resetTimer() {
+        this.timeOnSec = 0;
+        this.timerState = TimerState.PAUSE;
+        this.timeText.text = formatSecond(this.timeOnSec);
     }
 
 }

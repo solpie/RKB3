@@ -36,12 +36,27 @@ class GameDoc:
     start = None
     blueTeam = None
     redTeam = None
-
+    blood1p = 5
+    blood2p = 5
 
 class GameModel(object):
 
     def __init__(self):
         BaseDB('./db/game.db')
+        self.gameDoc = GameDoc()
+
+    def startGame(self,data):
+        self.gameDoc = GameDoc()
+
+    def setBlood(self,data):
+        if data['is1p']:
+            self.gameDoc.blood1p+=data['dt']
+            data['blood'] = self.gameDoc.blood1p
+            emit('sc_setBlood',data,broadcast=True,namespace='/rkb')
+        else:
+            self.gameDoc.blood2p+=data['dt']
+            data['blood'] = self.gameDoc.blood2p
+            emit('sc_setBlood',data,broadcast=True,namespace='/rkb')
 
 
 class ActivityModel:
@@ -49,6 +64,14 @@ class ActivityModel:
     def __init__(self):
         self.gameModel = GameModel()
         self.playerModel = PlayerModel()
+
+        self.eventMap = dict()
+        self.eventMap['cs_setBlood'] = self.gameModel.setBlood
+
+    def onCmd(self,cmd,data):
+        print(cmd,data)
+        self.eventMap[cmd](data)
+        pass
 
 actModel = ActivityModel()
 

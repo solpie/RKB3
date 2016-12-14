@@ -1,8 +1,8 @@
 enum cmdEnum {
     //
     //stage panel
-    toggleTimer,
-    cs_toggleTimer,
+    // toggleTimer,
+    // cs_toggleTimer,
     resetTimer,
     // cs_resetTimer,
     disableTracker,
@@ -104,16 +104,20 @@ enum cmdEnum {
     // rkb panel
     cs_resetTimer,
     sc_resetTimer,
+    //koa panel
     cs_startTimer,
     sc_startTimer,
     cs_pauseTimer,
     sc_pauseTimer,
-    //koa panel
     cs_showPickup,//
     sc_showPickup,//
     //hp
     cs_startGame,
     sc_startGame,
+    cs_toggleTimer,
+    sc_toggleTimer,
+    cs_setBlood,
+    sc_setBlood,
     //---------------- player panel
 
     cs_startingLine,

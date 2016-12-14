@@ -92,31 +92,19 @@ def proxy():
         return 'ok'
 # panel router
 
-
+from game import actModel
 @app.route('/panel/online/<cmd>', methods=['POST'])
 def on_panel_cmd(cmd):
     print(cmd, request.json)
     if '_' in request.json:
         emit(cmd.replace('cs_', 'sc_'), request.json,
              broadcast=True, namespace=namespace_rkb)
+    else:
+        actModel.onCmd(cmd,request.json)
     return 'ok'
 
 namespace_rkb = '/rkb'
 
-
-@socketio.on('my_event', namespace=namespace_rkb)
-def test_message(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': message['data'], 'count': session['receive_count']})
-
-
-@socketio.on('my_broadcast_event', namespace=namespace_rkb)
-def test_broadcast_message(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': message['data'], 'count': session['receive_count']},
-         broadcast=True)
 
 
 @socketio.on('connect', namespace=namespace_rkb)

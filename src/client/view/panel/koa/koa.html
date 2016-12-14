@@ -40,6 +40,13 @@
             </label>
             <p>
                 <button class="button is-large" @click="onStartGame()">开始</button>
+                <button class="button is-large" @click="onToggleTimer()">Toggle</button>
+                <button class="button is-large" @click="onResetTimer()">Reset</button>
+                <p>
+                <button class="button is-large" @click="onSetBlood(true,-1)">1P -1</button>
+                <button class="button is-large" @click="onSetBlood(true,1)">1P +1</button>
+                <button class="button is-large" @click="onSetBlood(false,-1)">2P -1</button>
+                <button class="button is-large" @click="onSetBlood(false,1)">2P +1</button>
                 <button class="button is-large" @click="onStartGame()">提交</button>
         </div>
     </div>

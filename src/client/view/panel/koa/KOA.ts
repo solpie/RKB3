@@ -151,8 +151,26 @@ class KOA extends VueBase {
             else {
                 alert('没选人！')
             }
+        },
+        onToggleTimer(){
+             this.opReq(`${CommandId.cs_toggleTimer}`, {
+                    _: null
+                })
+        },
+        onResetTimer(){
+            this.opReq(`${CommandId.cs_resetTimer}`, {
+                    _: null
+                })
+        },
+        onSetBlood(is1p:boolean,dt){
+            this.opReq(`${CommandId.cs_setBlood}`, {
+                    // _: null,
+                    is1p:is1p,
+                    dt:dt
+                })
         }
     }
+
 
     showPickup(data) {
         pickupScene = new PickupScene(canvasStage, this.playerIdMap)
@@ -176,6 +194,16 @@ class KOA extends VueBase {
             })
             .on(`${CommandId.sc_startGame}`, (data) => {
                 this.startGame(data)
+            })
+            .on(`${CommandId.sc_toggleTimer}`, (data) => {
+                this.hp.toggleTimer() 
+            })
+            .on(`${CommandId.sc_resetTimer}`, (data) => {
+                this.hp.resetTimer()
+            })
+            .on(`${CommandId.sc_setBlood}`, (data) => {
+                console.log('sc_setBlood',data)
+                this.hp.setBlood(data.is1p,data.blood)
             })
     }
 }
