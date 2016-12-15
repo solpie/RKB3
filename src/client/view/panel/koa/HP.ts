@@ -14,12 +14,14 @@ export class HP extends PIXI.Container {
     avatar2p: PIXI.Sprite
     name1p: PIXI.Text
     name2p: PIXI.Text
-    nameArr1p:Array<PIXI.Text> = []
-    nameArr2p:Array<PIXI.Text> = []
+    beatByNum1p: PIXI.Text
+    beatByNum2p: PIXI.Text
+    nameArr1p: Array<PIXI.Text> = []
+    nameArr2p: Array<PIXI.Text> = []
     bloodFx1p: PIXI.Container
     bloodFx2p: PIXI.Container
 
-    timeText:PIXI.Text
+    timeText: PIXI.Text
     timeOnSec = 0
     timerId = null
     timerState
@@ -28,6 +30,7 @@ export class HP extends PIXI.Container {
         super()
         stage.addChild(this)
         this.addChild(newBitmap({ url: '/img/panel/koa/hp/bg.png' }))
+
 
         let _b = () => {
             let bFx = new PIXI.Container()
@@ -132,26 +135,51 @@ export class HP extends PIXI.Container {
 
         this.addChild(newBitmap({ url: '/img/panel/koa/hp/deco.png' }))
         // init name
-        let n1 = new PIXI.Text("1234567")
+        //         两遍暗的 dc6b17
+        // 亮的 debc1d
+        let ns = {
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '25px',
+            fontStyle: 'normal',
+            fontWeight: 'bold',
+            fill: ['#dc6b17', '#debc1d', '#debc1d', '#dc6b17'],
+            // fill: ['#dc6b17', '#debc1d', '#debc1d', '#debc1d', '#dc6b17'],
+            fillGradientType: PIXI['TEXT_GRADIENT'].LINEAR_VERTICAL,
+        }
+
+
+        let n1 = new PIXI.Text("1234567", ns)
         this.name1p = n1
         n1.x = 495
         n1.y = 93
         this.addChild(n1)
 
-        let n2 = new PIXI.Text("12345678")
+        let n2 = new PIXI.Text("12345678", ns)
         this.name2p = n2
         n2['x0'] = 1420
         n2.x = n2['x0'] - n2.width
         n2.y = n1.y
         this.addChild(n2)
 
+        //beat by 01
+        ns.fontSize = '23px'
+        let bb = new PIXI.Text('BEAT BY 01', ns)
+        bb.x = 540
+        bb.y = 2
+        this.addChild(bb)
+        this.beatByNum1p = bb
+        let bb2 = new PIXI.Text('BEAT BY 01', ns)
+        bb2.x = 1240
+        bb2.y = bb.y
+        this.addChild(bb2)
+        this.beatByNum2p = bb2
 
- 
-        for(var i=0;i<3;i++){
+
+        for (var i = 0; i < 3; i++) {
             var n1p = new PIXI.Text('player123')
             n1p['x0'] = 360
             n1p.x = n1p['x0'] - n1p.width
-            n1p.y = 10+i*26
+            n1p.y = 10 + i * 26
             this.addChild(n1p)
             this.nameArr1p.push(n1p)
 
@@ -163,23 +191,23 @@ export class HP extends PIXI.Container {
         }
         // console.log('n1p')
         //
-        let ts =  {
-    fontFamily: FontName.MicrosoftYahei,
-    fontSize: '50px',
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fill: '#fff',
-    stroke: '#222',
-    strokeThickness: 3,
-}
-        let t = new PIXI.Text("00:00",ts)
+        let ts = {
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '50px',
+            fontStyle: 'normal',
+            fontWeight: 'bold',
+            fill: '#fff',
+            stroke: '#222',
+            strokeThickness: 3,
+        }
+        let t = new PIXI.Text("00:00", ts)
         this.timeText = t
         t.x = 889
         t.y = 35
         this.addChild(t)
 
         this.test()
-       
+
     }
 
     test() {
@@ -208,21 +236,21 @@ export class HP extends PIXI.Container {
         this.name2p.x = this.name2p['x0'] - this.name2p.width
     }
 
-    _pFx(bloodArr: Array<PIXI.Sprite>,num) {
-            for (var i = 0; i < bloodArr.length; i++) {
-                var b = bloodArr[i];
-                if (i < num) {
-                    b.visible = true
-                    blink3(b)
-                }
-                else {
-                    b.visible = false
-                }
+    _pFx(bloodArr: Array<PIXI.Sprite>, num) {
+        for (var i = 0; i < bloodArr.length; i++) {
+            var b = bloodArr[i];
+            if (i < num) {
+                b.visible = true
+                blink3(b)
             }
+            else {
+                b.visible = false
+            }
+        }
     }
 
     setBlood(is1p, num) {
-        is1p ? this._pFx(this.pointArr1p,num) : this._pFx(this.pointArr2p,num)
+        is1p ? this._pFx(this.pointArr1p, num) : this._pFx(this.pointArr2p, num)
         var bFx
         is1p ? bFx = this.bloodFx1p : bFx = this.bloodFx2p
         TweenEx.to(bFx['msk'], 140 * (5 - num), { x: (5 - num) * 67 })
@@ -240,13 +268,12 @@ export class HP extends PIXI.Container {
             bFx['blink'].visible = false
     }
 
-    setFoul(is1p,foul){
-        is1p ? this._pFx(this.foulArr1p,foul) : this._pFx(this.foulArr2p,foul)
+    setFoul(is1p, foul) {
+        is1p ? this._pFx(this.foulArr1p, foul) : this._pFx(this.foulArr2p, foul)
     }
 
-    
     toggleTimer(state?) {
-        var pauseTimer = ()=> {
+        var pauseTimer = () => {
             if (this.timerId) {
                 clearInterval(this.timerId);
                 this.timerId = 0;
@@ -254,10 +281,10 @@ export class HP extends PIXI.Container {
             }
         };
 
-        var playTimer = ()=> {
+        var playTimer = () => {
             if (this.timerId)
                 clearInterval(this.timerId);
-            this.timerId = setInterval(()=> {
+            this.timerId = setInterval(() => {
                 this.timeOnSec++;
                 this.timeText.text = formatSecond(this.timeOnSec);
             }, 1000);
@@ -273,16 +300,19 @@ export class HP extends PIXI.Container {
             }
         }
         else {
-            this.timerId?pauseTimer():playTimer()
+            this.timerId ? pauseTimer() : playTimer()
         }
 
     }
-
 
     resetTimer() {
         this.timeOnSec = 0;
         this.timerState = TimerState.PAUSE;
         this.timeText.text = formatSecond(this.timeOnSec);
+    }
+
+    setBeatBy(is1p, num) {
+
     }
 
 }

@@ -69,7 +69,7 @@ class BaseDB(object):
                             doc[uKey] = update[uKey]
                     docs.append(self.__clone(doc))
         return docs
-
+        
     def __clone(self, doc):
         return json.loads(json.dumps(doc))
 

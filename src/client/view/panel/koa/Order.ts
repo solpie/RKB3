@@ -131,23 +131,22 @@ export class OrderScene extends PIXI.Container {
 
         ///black top bottom
 
-        // this.blackTop = new PIXI.Graphics()
-        // this.blackTop.beginFill(0x000000)
-        // this.blackTop.drawRect(0, 0, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT * .5)
-        // this.blackTop.y = -ViewConst.STAGE_HEIGHT * .5
-        // this.addChild(this.blackTop)
+        this.blackTop = new PIXI.Graphics()
+        this.blackTop.drawRect(0, 0, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT * .5)
+        this.blackTop.y = -ViewConst.STAGE_HEIGHT * .5
+        this.addChild(this.blackTop)
 
-        // this.blackBottom = new PIXI.Graphics()
-        // this.blackBottom.drawRect(0, 0, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT * .5)
-        // // this.blackBottom.y = ViewConst.STAGE_HEIGHT
-        // this.addChild(this.blackBottom)
-        //white
-        this.white = new PIXI.Graphics()
-        this.white.beginFill(0xffffff)
-        this.white.drawRect(0, 0, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT)
-        this.white.alpha = 0
-        this.addChild(this.white)
-
+        this.blackBottom = new PIXI.Graphics()
+        this.blackBottom.drawRect(0, 0, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT * .5)
+        this.blackBottom.y = ViewConst.STAGE_HEIGHT
+        this.addChild(this.blackBottom)
+        // //white
+        // this.white = new PIXI.Graphics()
+        // this.white.beginFill(0xffffff)
+        // this.white.drawRect(0, 0, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT)
+        // this.white.alpha = 0
+        // this.white.visible = false
+        // this.addChild(this.white)
     }
 
 }

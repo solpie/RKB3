@@ -47,12 +47,13 @@ socketio = SocketIO(app, async_mode=async_mode)
 def index():
     return render_template('index.html')
 
-
+import time
 @app.route('/<viewname>')
 @app.route('/<viewname>/')
 def view(viewname):
     if viewname in serverConf["views"]:
-        return render_template(viewname + '.html')
+        print(time.time())
+        return render_template(viewname + '.html',time=time.time())
     return viewname
 
 # proxy

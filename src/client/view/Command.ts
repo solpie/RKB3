@@ -114,6 +114,8 @@ enum cmdEnum {
     //hp
     cs_startGame,
     sc_startGame,
+    cs_commitGame,
+    sc_commitGame,
     cs_toggleTimer,
     sc_toggleTimer,
     cs_setBlood,

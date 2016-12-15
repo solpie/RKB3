@@ -4,7 +4,7 @@ import { HP } from './HP';
 import { getPlayerDoc } from '../../utils/HupuAPI';
 import { PickupAnimation } from './PickupAnimation';
 import { CommandId } from '../../Command';
-import { PanelId } from '../../const';
+import { PanelId, TimerState } from '../../const';
 import { dynamicLoading } from '../../utils/WebJsFunc';
 import { PickupPlayerInfo, PickupScene } from './Pickup';
 import { BasePanelView } from '../BasePanelView';
@@ -145,29 +145,32 @@ class KOA extends VueBase {
         onStartGame() {
             if (this.gamePlayer1p.id && this.gamePlayer2p.id)
                 this.opReq(`${CommandId.cs_startGame}`, {
-                    _: null,
+                    // _: null,
                     playerDocArr: [this.gamePlayer1p, this.gamePlayer2p],
                 })
             else {
                 alert('没选人！')
             }
         },
-        onToggleTimer(){
-             this.opReq(`${CommandId.cs_toggleTimer}`, {
-                    _: null
-                })
+        onToggleTimer() {
+            this.opReq(`${CommandId.cs_toggleTimer}`, {
+                _: null
+            })
         },
-        onResetTimer(){
+        onResetTimer() {
             this.opReq(`${CommandId.cs_resetTimer}`, {
-                    _: null
-                })
+                _: null
+            })
         },
-        onSetBlood(is1p:boolean,dt){
+        onSetBlood(is1p: boolean, dt) {
             this.opReq(`${CommandId.cs_setBlood}`, {
-                    // _: null,
-                    is1p:is1p,
-                    dt:dt
-                })
+                is1p: is1p,
+                dt: dt
+            })
+        },
+        onCommitGame() {
+            this.opReq(`${CommandId.cs_commitGame}`, {
+            })
         }
     }
 
@@ -179,7 +182,7 @@ class KOA extends VueBase {
 
     startGame(data) {
         let playerDocArr = data.playerDocArr
-         this.hp.setPlayer(data.playerDocArr)
+        this.hp.setPlayer(data.playerDocArr)
     }
 
     initIO() {
@@ -193,16 +196,21 @@ class KOA extends VueBase {
                 this.showPickup(data)
             })
             .on(`${CommandId.sc_startGame}`, (data) => {
+                console.log('sc_startGame',data);
                 this.startGame(data)
             })
             .on(`${CommandId.sc_toggleTimer}`, (data) => {
-                this.hp.toggleTimer() 
+                this.hp.toggleTimer()
             })
             .on(`${CommandId.sc_resetTimer}`, (data) => {
                 this.hp.resetTimer()
             })
             .on(`${CommandId.sc_setBlood}`, (data) => {
-                this.hp.setBlood(data.is1p,data.blood)
+                this.hp.setBlood(data.is1p, data.blood)
+            })
+            .on(`${CommandId.sc_commitGame}`, (data) => {
+                this.hp.toggleTimer(TimerState.PAUSE)
+                console.log('cs_commitGame',data);
             })
     }
 }

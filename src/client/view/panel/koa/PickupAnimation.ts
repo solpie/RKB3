@@ -288,29 +288,33 @@ export class PickupAnimation {
 
     fadeOut() {
         let removeScene = () => {
-            while (this.order.children.length > 1) {
+            while (this.order.children.length > 2) {
                 this.order.removeChildAt(0)
             }
             this.scene.removeChildren()
         }
-        new TweenEx(this.order.white)
-            .to({ alpha: 1 },200)
+        // new TweenEx(this.order.white)
+        //     .to({ alpha: 1 }, 200)
+        //     .call(() => {
+        //         removeScene()
+        //     })
+        //     .to({ alpha: 0 }, 200)
+        //     .start()
+
+        let t1 = 200
+        new TweenEx(this.order.blackTop)
+            .to({ y: 0 }, t1)
             .call(() => {
                 removeScene()
             })
-            .to({ alpha: 0 }, 200)
+            .to({ y: -ViewConst.STAGE_HEIGHT * .5 }, t1)
             .start()
-
-        // this.order.blackBottom.y = ViewConst.STAGE_HEIGHT
-        // TweenLite.to(this.order.blackTop, .2, {
-        //     y: 0, onComplete: () => {
-        //         removeScene()
-
-        //         TweenLite.to(this.order.blackTop, .2, { y: -ViewConst.STAGE_HEIGHT * .5 })
-        //         TweenLite.to(this.order.blackBottom, .2, { y: ViewConst.STAGE_HEIGHT })
-        //     }
-        // })
-        // // TweenLite.to(this.order.blackBottom, .2, { y: ViewConst.STAGE_HEIGHT -20 })
-        // TweenLite.to(this.order.blackBottom, .2, { y: ViewConst.STAGE_HEIGHT * .5 })
+        new TweenEx(this.order.blackBottom)
+            .to({ y: ViewConst.STAGE_HEIGHT * .5 }, t1)
+            .call(() => {
+                removeScene()
+            })
+            .to({ y: ViewConst.STAGE_HEIGHT }, t1)
+            .start()
     }
 }
