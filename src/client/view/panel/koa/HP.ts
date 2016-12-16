@@ -1,3 +1,4 @@
+import { Direction, SpriteGroup } from '../../utils/SpriteGroup';
 import { formatSecond } from '../../utils/JsFunc';
 import { FontName, TimerState } from '../../const';
 // import { TextStyle } from 'PIXI';
@@ -10,6 +11,8 @@ export class HP extends PIXI.Container {
     pointArr2p: Array<PIXI.Sprite> = []
     foulArr1p: Array<PIXI.Sprite> = []
     foulArr2p: Array<PIXI.Sprite> = []
+    foulPG1p: SpriteGroup
+    foulPG2p: SpriteGroup
     foulGlow1p: PIXI.Sprite
     foulGlow2p: PIXI.Sprite
     avatar1p: PIXI.Sprite
@@ -97,6 +100,20 @@ export class HP extends PIXI.Container {
         }
         initFoul(true)
         initFoul(false)
+
+        let fpg = { dir: Direction.w, invert: 38, img: '/img/panel/koa/hp/foul.png', count: 4, flip: 1 }
+        this.foulPG1p = new SpriteGroup(fpg)
+        this.foulPG1p.x = 710
+        this.foulPG1p.y = 130
+        this.addChild(this.foulPG1p)
+        fpg.flip = -1
+        fpg.dir = Direction.e
+        this.foulPG2p = new SpriteGroup(fpg)
+        this.foulPG2p.x = 1098
+        this.foulPG2p.y = this.foulPG1p.y
+        this.addChild(this.foulPG2p)
+
+
         var fg = newBitmap({ x: 692, y: 75, url: '/img/panel/koa/hp/foulGlow.png' })
         this.foulGlow1p = fg
         fg.visible = false
@@ -239,7 +256,8 @@ export class HP extends PIXI.Container {
             this.setBlood(false, 1)
             this.setFoul(true, 1)
             this.setFoul(false, 4)
-
+            this.foulPG1p.setNum(1)
+            this.foulPG2p.setNum(4)
             TweenEx.delayedCall(1000, () => {
                 this.setBlood(false, 0)
                 this.toggleTimer()
