@@ -48,12 +48,14 @@ def index():
     return render_template('index.html')
 
 import time
+
+
 @app.route('/<viewname>')
 @app.route('/<viewname>/')
 def view(viewname):
     if viewname in serverConf["views"]:
         print(time.time())
-        return render_template(viewname + '.html',time=time.time())
+        return render_template(viewname + '.html', time=time.time())
     return viewname
 
 # proxy
@@ -94,6 +96,8 @@ def proxy():
 # panel router
 
 from game import actModel
+
+
 @app.route('/panel/online/<cmd>', methods=['POST'])
 def on_panel_cmd(cmd):
     print(cmd, request.json)
@@ -101,26 +105,25 @@ def on_panel_cmd(cmd):
         emit(cmd.replace('cs_', 'sc_'), request.json,
              broadcast=True, namespace=namespace_rkb)
     else:
-        actModel.onCmd(cmd,request.json)
+        actModel.onCmd(cmd, request.json)
     return 'ok'
 
 namespace_rkb = '/rkb'
 
 
-
 @socketio.on('connect', namespace=namespace_rkb)
-def test_connect():
-    emit('my_response', {'data': 'Connected', 'count': 0})
+def client_connect():
+    print('client con')
 
 
 @socketio.on('disconnect', namespace=namespace_rkb)
 def test_disconnect():
     print('Client disconnected', request.sid)
-    
+
 # gameView
 from game import gameView
 
-app.register_blueprint(gameView,url_prefix='/game')
+app.register_blueprint(gameView, url_prefix='/game')
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=int(serverConf["port"]), debug=True)

@@ -484,8 +484,8 @@
 	var Pickup_1 = __webpack_require__(40);
 	var BasePanelView_1 = __webpack_require__(42);
 	var VueBase_1 = __webpack_require__(17);
-	var canvasStage = BasePanelView_1.BasePanelView.initPixi();
 	var pickupScene;
+	var canvasStage;
 	var KOA = (function (_super) {
 	    __extends(KOA, _super);
 	    function KOA() {
@@ -646,6 +646,7 @@
 	        this.initIO();
 	    };
 	    KOA.prototype.initCanvas = function () {
+	        canvasStage = BasePanelView_1.BasePanelView.initPixi();
 	        this.hp = new HP_1.HP(canvasStage);
 	    };
 	    KOA.prototype.mounted = function () {
@@ -663,7 +664,6 @@
 	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
 	        localWs.on('connect', function (msg) {
 	            console.log('connect', window.location.host);
-	            localWs.emit("opUrl", { opUrl: window.location.host });
 	        })
 	            .on("" + Command_1.CommandId.sc_showPickup, function (data) {
 	            console.log("CommandId.sc_showPickup", data);
@@ -1407,6 +1407,16 @@
 	    });
 	    return sp;
 	};
+	exports.makeColorRatio = function (colorArr, ratioArr) {
+	    var a = [];
+	    for (var i = 0; i < colorArr.length; i++) {
+	        var col = colorArr[i];
+	        for (var j = 0; j < ratioArr[i]; j++) {
+	            a.push(col);
+	        }
+	    }
+	    return a;
+	};
 
 
 /***/ },
@@ -2108,40 +2118,42 @@
 	    cmdEnum[cmdEnum["sc_setBlood"] = 103] = "sc_setBlood";
 	    cmdEnum[cmdEnum["cs_setFoul"] = 104] = "cs_setFoul";
 	    cmdEnum[cmdEnum["sc_setFoul"] = 105] = "sc_setFoul";
-	    cmdEnum[cmdEnum["cs_startingLine"] = 106] = "cs_startingLine";
-	    cmdEnum[cmdEnum["startingLine"] = 107] = "startingLine";
-	    cmdEnum[cmdEnum["cs_hideStartingLine"] = 108] = "cs_hideStartingLine";
-	    cmdEnum[cmdEnum["hideStartingLine"] = 109] = "hideStartingLine";
-	    cmdEnum[cmdEnum["cs_queryPlayerByPos"] = 110] = "cs_queryPlayerByPos";
-	    cmdEnum[cmdEnum["fadeInPlayerPanel"] = 111] = "fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeInPlayerPanel"] = 112] = "cs_fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["fadeOutPlayerPanel"] = 113] = "fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeOutPlayerPanel"] = 114] = "cs_fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["movePlayerPanel"] = 115] = "movePlayerPanel";
-	    cmdEnum[cmdEnum["cs_movePlayerPanel"] = 116] = "cs_movePlayerPanel";
-	    cmdEnum[cmdEnum["straightScore3"] = 117] = "straightScore3";
-	    cmdEnum[cmdEnum["straightScore5"] = 118] = "straightScore5";
-	    cmdEnum[cmdEnum["initPanel"] = 119] = "initPanel";
-	    cmdEnum[cmdEnum["cs_inScreenScore"] = 120] = "cs_inScreenScore";
-	    cmdEnum[cmdEnum["inScreenScore"] = 121] = "inScreenScore";
-	    cmdEnum[cmdEnum["cs_fadeInFTShow"] = 122] = "cs_fadeInFTShow";
-	    cmdEnum[cmdEnum["fadeInFTShow"] = 123] = "fadeInFTShow";
-	    cmdEnum[cmdEnum["cs_fadeOutFTShow"] = 124] = "cs_fadeOutFTShow";
-	    cmdEnum[cmdEnum["fadeOutFTShow"] = 125] = "fadeOutFTShow";
-	    cmdEnum[cmdEnum["cs_fadeInPlayerRank"] = 126] = "cs_fadeInPlayerRank";
-	    cmdEnum[cmdEnum["fadeInPlayerRank"] = 127] = "fadeInPlayerRank";
-	    cmdEnum[cmdEnum["cs_fadeInFtRank"] = 128] = "cs_fadeInFtRank";
-	    cmdEnum[cmdEnum["fadeInFtRank"] = 129] = "fadeInFtRank";
-	    cmdEnum[cmdEnum["cs_fadeInMixRank"] = 130] = "cs_fadeInMixRank";
-	    cmdEnum[cmdEnum["fadeInMixRank"] = 131] = "fadeInMixRank";
-	    cmdEnum[cmdEnum["cs_findPlayerData"] = 132] = "cs_findPlayerData";
-	    cmdEnum[cmdEnum["cs_attack"] = 133] = "cs_attack";
-	    cmdEnum[cmdEnum["attack"] = 134] = "attack";
-	    cmdEnum[cmdEnum["cs_addHealth"] = 135] = "cs_addHealth";
-	    cmdEnum[cmdEnum["addHealth"] = 136] = "addHealth";
-	    cmdEnum[cmdEnum["fadeInOK"] = 137] = "fadeInOK";
-	    cmdEnum[cmdEnum["cs_combo"] = 138] = "cs_combo";
-	    cmdEnum[cmdEnum["combo"] = 139] = "combo";
+	    cmdEnum[cmdEnum["cs_ftBracketInfo"] = 106] = "cs_ftBracketInfo";
+	    cmdEnum[cmdEnum["sc_ftBracketInfo"] = 107] = "sc_ftBracketInfo";
+	    cmdEnum[cmdEnum["cs_startingLine"] = 108] = "cs_startingLine";
+	    cmdEnum[cmdEnum["startingLine"] = 109] = "startingLine";
+	    cmdEnum[cmdEnum["cs_hideStartingLine"] = 110] = "cs_hideStartingLine";
+	    cmdEnum[cmdEnum["hideStartingLine"] = 111] = "hideStartingLine";
+	    cmdEnum[cmdEnum["cs_queryPlayerByPos"] = 112] = "cs_queryPlayerByPos";
+	    cmdEnum[cmdEnum["fadeInPlayerPanel"] = 113] = "fadeInPlayerPanel";
+	    cmdEnum[cmdEnum["cs_fadeInPlayerPanel"] = 114] = "cs_fadeInPlayerPanel";
+	    cmdEnum[cmdEnum["fadeOutPlayerPanel"] = 115] = "fadeOutPlayerPanel";
+	    cmdEnum[cmdEnum["cs_fadeOutPlayerPanel"] = 116] = "cs_fadeOutPlayerPanel";
+	    cmdEnum[cmdEnum["movePlayerPanel"] = 117] = "movePlayerPanel";
+	    cmdEnum[cmdEnum["cs_movePlayerPanel"] = 118] = "cs_movePlayerPanel";
+	    cmdEnum[cmdEnum["straightScore3"] = 119] = "straightScore3";
+	    cmdEnum[cmdEnum["straightScore5"] = 120] = "straightScore5";
+	    cmdEnum[cmdEnum["initPanel"] = 121] = "initPanel";
+	    cmdEnum[cmdEnum["cs_inScreenScore"] = 122] = "cs_inScreenScore";
+	    cmdEnum[cmdEnum["inScreenScore"] = 123] = "inScreenScore";
+	    cmdEnum[cmdEnum["cs_fadeInFTShow"] = 124] = "cs_fadeInFTShow";
+	    cmdEnum[cmdEnum["fadeInFTShow"] = 125] = "fadeInFTShow";
+	    cmdEnum[cmdEnum["cs_fadeOutFTShow"] = 126] = "cs_fadeOutFTShow";
+	    cmdEnum[cmdEnum["fadeOutFTShow"] = 127] = "fadeOutFTShow";
+	    cmdEnum[cmdEnum["cs_fadeInPlayerRank"] = 128] = "cs_fadeInPlayerRank";
+	    cmdEnum[cmdEnum["fadeInPlayerRank"] = 129] = "fadeInPlayerRank";
+	    cmdEnum[cmdEnum["cs_fadeInFtRank"] = 130] = "cs_fadeInFtRank";
+	    cmdEnum[cmdEnum["fadeInFtRank"] = 131] = "fadeInFtRank";
+	    cmdEnum[cmdEnum["cs_fadeInMixRank"] = 132] = "cs_fadeInMixRank";
+	    cmdEnum[cmdEnum["fadeInMixRank"] = 133] = "fadeInMixRank";
+	    cmdEnum[cmdEnum["cs_findPlayerData"] = 134] = "cs_findPlayerData";
+	    cmdEnum[cmdEnum["cs_attack"] = 135] = "cs_attack";
+	    cmdEnum[cmdEnum["attack"] = 136] = "attack";
+	    cmdEnum[cmdEnum["cs_addHealth"] = 137] = "cs_addHealth";
+	    cmdEnum[cmdEnum["addHealth"] = 138] = "addHealth";
+	    cmdEnum[cmdEnum["fadeInOK"] = 139] = "fadeInOK";
+	    cmdEnum[cmdEnum["cs_combo"] = 140] = "cs_combo";
+	    cmdEnum[cmdEnum["combo"] = 141] = "combo";
 	})(cmdEnum || (cmdEnum = {}));
 	exports.CommandId = {};
 	for (var k in cmdEnum) {
@@ -2175,40 +2187,8 @@
 	        return renderer.stage;
 	    };
 	    BasePanelView.initStage = function () {
-	        var canvas = document.getElementById("stage");
-	        if (canvas) {
-	            canvas.setAttribute("width", const_1.ViewConst.STAGE_WIDTH + "");
-	            canvas.setAttribute("height", const_1.ViewConst.STAGE_HEIGHT + "");
-	            var stage = new createjs.Stage(canvas);
-	            stage.autoClear = true;
-	            createjs.Ticker.framerate = 60;
-	            createjs.Ticker.addEventListener("tick", function () {
-	                stage.update();
-	            });
-	            console.log("initStage");
-	            return stage;
-	        }
-	        else
-	            throw "no elem id; 'stage'";
 	    };
 	    BasePanelView.prototype.initCanvas = function () {
-	        this.stageWidth = const_1.ViewConst.STAGE_WIDTH;
-	        this.stageHeight = const_1.ViewConst.STAGE_HEIGHT;
-	        var canvas = document.getElementById("stage");
-	        if (canvas) {
-	            canvas.setAttribute("width", this.stageWidth + "");
-	            canvas.setAttribute("height", this.stageHeight + "");
-	            var stage = new createjs.Stage(canvas);
-	            stage.autoClear = true;
-	            createjs.Ticker.framerate = 60;
-	            createjs.Ticker.addEventListener("tick", function () {
-	                stage.update();
-	            });
-	            this.ctn = new createjs.Container();
-	            stage.addChild(this.ctn);
-	            this.stage = stage;
-	            console.log('initCanvas');
-	        }
 	    };
 	    BasePanelView.prototype.show = function () {
 	    };
@@ -3218,6 +3198,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var Command_1 = __webpack_require__(41);
 	var HupuAPI_1 = __webpack_require__(22);
 	var BasePanelView_1 = __webpack_require__(42);
 	var const_1 = __webpack_require__(34);
@@ -3234,7 +3215,7 @@
 	        this.ctn = new PIXI.Container();
 	        stage.addChild(this.ctn);
 	        this.stage = stage;
-	        this.initAuto(gameId);
+	        this.initAuto(Number(gameId));
 	        this.initBg();
 	    }
 	    Bracket.prototype.initBg = function () {
@@ -3338,37 +3319,67 @@
 	    };
 	    Bracket.prototype.show = function () {
 	        this.ctn.visible = true;
+	        this.getFtBracketInfo();
+	    };
+	    Bracket.prototype.getFtBracketInfo = function () {
+	        $.ajax({
+	            url: "/panel/" + const_1.PanelId.onlinePanel + "/cs_ftBracketInfo",
+	            type: 'post',
+	            data: JSON.stringify({}),
+	            headers: { "Content-Type": "application/json" },
+	            dataType: 'json',
+	        });
+	        console.log('connected local /rkb');
 	    };
 	    Bracket.prototype.initAuto = function (gameId) {
 	        var _this = this;
-	        HupuAPI_1.getHupuWS(function (hupuWsUrl) {
-	            var remoteIO = io.connect(hupuWsUrl);
+	        var conWs = function (url) {
+	            var remoteIO = io.connect(url);
 	            remoteIO.on('connect', function () {
-	                console.log('hupuAuto socket connected GameId', gameId);
-	                remoteIO.emit('passerbyking', {
-	                    game_id: gameId,
-	                    page: 'top8Map'
-	                });
+	                if (gameId) {
+	                    console.log('hupuAuto socket connected GameId', gameId);
+	                    remoteIO.emit('passerbyking', {
+	                        game_id: gameId,
+	                        page: 'top8Map'
+	                    });
+	                }
+	                else {
+	                    _this.getFtBracketInfo();
+	                    console.log('connected local /rkb');
+	                }
 	            });
+	            var eventMap = {};
+	            eventMap['top8Match'] = function (data) {
+	                console.log('top8Match', data);
+	                data.data = data.list;
+	                _this.onBracketData(data);
+	            };
+	            eventMap['startGame'] = function (data) {
+	                _this.hideComing();
+	            };
+	            eventMap['updateScore'] = function (data) {
+	                _this.hideComing();
+	            };
 	            remoteIO.on('wall', function (data) {
 	                var event = data.et;
-	                var eventMap = {};
 	                console.log('event:', event, data);
-	                eventMap['top8Match'] = function () {
-	                    console.log('top8Match', data);
-	                    data.data = data.list;
-	                    _this.onBracketData(data);
-	                };
-	                eventMap['startGame'] = function () {
-	                    _this.hideComing();
-	                };
-	                eventMap['updateScore'] = function () {
-	                    _this.hideComing();
-	                };
 	                if (eventMap[event])
-	                    eventMap[event]();
+	                    eventMap[event](data);
 	            });
-	        });
+	            remoteIO.on("" + Command_1.CommandId.sc_ftBracketInfo, function (data) {
+	                console.log('sc_ftBracketInfo', data);
+	                var event = data.et;
+	                if (eventMap[event])
+	                    eventMap[event](data);
+	            });
+	        };
+	        if (gameId)
+	            HupuAPI_1.getHupuWS(function (hupuWsUrl) {
+	                conWs(hupuWsUrl);
+	            });
+	        else {
+	            conWs('/rkb');
+	        }
 	    };
 	    Bracket.prototype.onBracketData = function (res) {
 	        var closeGame = {};

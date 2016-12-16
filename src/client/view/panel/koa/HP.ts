@@ -4,7 +4,7 @@ import { FontName, TimerState } from '../../const';
 import { TweenEx } from '../../utils/TweenEx';
 import { blink2, blink3 } from '../../utils/Fx';
 import { PlayerDoc } from '../../../model/PlayerInfo';
-import { imgToTex, loadRes, newBitmap } from '../../utils/PixiEx';
+import { imgToTex, loadRes, makeColorRatio, newBitmap } from '../../utils/PixiEx';
 export class HP extends PIXI.Container {
     pointArr1p: Array<PIXI.Sprite> = []
     pointArr2p: Array<PIXI.Sprite> = []
@@ -158,6 +158,7 @@ export class HP extends PIXI.Container {
         this.name1p = n1
         n1.x = 495
         n1.y = 93
+        // n1.style.fill = makeColorRatio(['#dc6b17', '#debc1d', '#dc6b17'], [2, 7, 2])
         this.addChild(n1)
 
         let n2 = new PIXI.Text("12345678", ns)
@@ -165,6 +166,7 @@ export class HP extends PIXI.Container {
         n2['x0'] = 1420
         n2.x = n2['x0'] - n2.width
         n2.y = n1.y
+        // n2.style.fill = makeColorRatio(['#dc6b17', '#debc1d', '#dc6b17'], [2, 7, 2])
         this.addChild(n2)
 
         //beat by 01

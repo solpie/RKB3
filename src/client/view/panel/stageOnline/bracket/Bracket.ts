@@ -1,3 +1,4 @@
+import { CommandId } from '../../../Command';
 import { getHupuWS } from '../../../utils/HupuAPI';
 import { BasePanelView } from "../../BasePanelView";
 import { PanelId, ViewConst, FontName } from "../../../const";
@@ -9,11 +10,9 @@ import Container = createjs.Container;
 import Bitmap = createjs.Bitmap;
 declare let $;
 declare let io;
-declare let hupuWsUrl;
-
 export class Bracket extends BasePanelView {
     comingTitle: PIXI.Sprite;
-
+    isFt
     constructor(stage, gameId) {
         super(PanelId.onlinePanel);
         this.name = PanelId.bracketPanel;
@@ -21,8 +20,7 @@ export class Bracket extends BasePanelView {
         this.ctn = new PIXI.Container();
         stage.addChild(this.ctn);
         this.stage = stage;
-        this.initAuto(gameId);
-
+        this.initAuto(Number(gameId));
         this.initBg()
     }
 
@@ -154,42 +152,70 @@ export class Bracket extends BasePanelView {
 
     show() {
         this.ctn.visible = true;
+        this.getFtBracketInfo()
     }
-
+    getFtBracketInfo() {
+        $.ajax({
+            url: `/panel/${PanelId.onlinePanel}/cs_ftBracketInfo`,
+            type: 'post',
+            data: JSON.stringify({}),
+            headers: { "Content-Type": "application/json" },
+            dataType: 'json',
+        });
+        console.log('connected local /rkb');
+    }
     initAuto(gameId) {
-        getHupuWS((hupuWsUrl) => {
-            let remoteIO = io.connect(hupuWsUrl);
+        let conWs = (url) => {
+            let remoteIO = io.connect(url);
             remoteIO.on('connect', () => {
-                console.log('hupuAuto socket connected GameId', gameId);
-                remoteIO.emit('passerbyking', {
-                    game_id: gameId,
-                    page: 'top8Map'
-                })
+                if (gameId) {
+                    console.log('hupuAuto socket connected GameId', gameId);
+                    remoteIO.emit('passerbyking', {
+                        game_id: gameId,
+                        page: 'top8Map'
+                    })
+                }
+                else {
+                    this.getFtBracketInfo()
+                    console.log('connected local /rkb');
+                }
             });
+            let eventMap = {};
+            eventMap['top8Match'] = (data) => {
+                console.log('top8Match', data);
+                data.data = data.list;
+                this.onBracketData(data);
+            };
+            eventMap['startGame'] = (data) => {
+                this.hideComing();
+            };
+
+            eventMap['updateScore'] = (data) => {
+                this.hideComing();
+            };
 
             remoteIO.on('wall', (data: any) => {
                 let event = data.et;
-                let eventMap = {};
                 console.log('event:', event, data);
-
-                eventMap['top8Match'] = () => {
-                    console.log('top8Match', data);
-                    data.data = data.list;
-                    this.onBracketData(data);
-                };
-
-                eventMap['startGame'] = () => {
-                    this.hideComing();
-                };
-
-                eventMap['updateScore'] = () => {
-                    this.hideComing();
-                };
-
                 if (eventMap[event])
-                    eventMap[event]();
+                    eventMap[event](data);
             });
-        })
+
+            remoteIO.on(`${CommandId.sc_ftBracketInfo}`, (data) => {
+                console.log('sc_ftBracketInfo', data);
+                let event = data.et;
+                if (eventMap[event])
+                    eventMap[event](data);
+            })
+        }
+
+        if (gameId)
+            getHupuWS((hupuWsUrl) => {
+                conWs(hupuWsUrl)
+            })
+        else {
+            conWs('/rkb')
+        }
     }
 
     onBracketData(res) {

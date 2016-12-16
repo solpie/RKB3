@@ -29,6 +29,8 @@ class PlayerModel(object):
             # self.db.insert({"id": i + 1, 'name': "player" + id})
             # self.db.update({"id":i+1},{"portrait":'/img/player/portrait/'+id+'.png'})
             # self.db.update({"id":i+1},{"avatar":''+id+'.jpg'})
+            # self.db.update({"id":i+1},{"ft":'FTG'})
+            # self.db.update({"id":i+1},{"team":'FTG t1'})
 
 
 class GameDoc:
@@ -57,6 +59,20 @@ class GameDoc:
         return doc
 
 
+class BracketModel(object):
+
+    def __init__(self):
+        self.db = BaseDB('./db/bracket.db')
+
+    def onFtBracketInfo(self, data):
+        print('onFtBracketInfo')
+        data['et'] = 'top8Match'
+        l = dict()
+        for i in range(14):
+            l[i + 1] = {"left": {"score": 1, "name": "FTG t1"},
+                        "right": {"score": 3, "name": "FTG t2"}}
+        data['list'] = l
+
 class GameModel(object):
     playerModel = None
     lastWinner = None
@@ -76,9 +92,6 @@ class GameModel(object):
                 'blood'] = self.lastWinnerBlood['blood']
         print(self.gameDoc.playerDocArr)
 
-    def commitTeamGame(self, data):
-        pass
-
     def commitGame(self, data):
         if not self.gameDoc:
             data['sus'] = False
@@ -94,7 +107,7 @@ class GameModel(object):
             self.lastWinnerBlood = {"idx": 0, "blood": self.gameDoc.blood1p}
             self.lastWinner = self.gameDoc.playerDocArr[0]
             isFinish = True
-            
+
         if isFinish:
             doc = self.gameDoc.toDict()
             self.db.insert(doc)
@@ -134,12 +147,15 @@ class ActivityModel:
     def __init__(self):
         self.playerModel = PlayerModel()
         self.gameModel = GameModel(self.playerModel)
+        self.bracketModel = BracketModel()
 
         self.eventMap = dict()
         self.eventMap['cs_startGame'] = self.gameModel.startGame
         self.eventMap['cs_setBlood'] = self.gameModel.setBlood
         self.eventMap['cs_setFoul'] = self.gameModel.setFoul
         self.eventMap['cs_commitGame'] = self.gameModel.commitGame
+        # ft bracket
+        self.eventMap['cs_ftBracketInfo'] = self.bracketModel.onFtBracketInfo
 
     def onCmd(self, cmd, data):
         print(cmd, data)

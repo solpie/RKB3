@@ -122,6 +122,9 @@ enum cmdEnum {
     sc_setBlood,
     cs_setFoul,
     sc_setFoul,
+    //ft bracket
+    cs_ftBracketInfo,
+    sc_ftBracketInfo,
     //---------------- player panel
 
     cs_startingLine,

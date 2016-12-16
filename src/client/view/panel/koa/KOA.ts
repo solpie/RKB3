@@ -12,9 +12,8 @@ import { VueBase } from '../../utils/VueBase';
 declare let Vue;
 declare let io;
 declare let $;
-let canvasStage = BasePanelView.initPixi()
 let pickupScene: PickupScene;
-
+var canvasStage
 class KOA extends VueBase {
     template = require('./koa.html')
     isOp = VueBase.PROP
@@ -68,6 +67,7 @@ class KOA extends VueBase {
     }
 
     initCanvas() {
+        canvasStage = BasePanelView.initPixi()
         this.hp = new HP(canvasStage)
     }
 
@@ -205,7 +205,7 @@ class KOA extends VueBase {
         let localWs = io.connect(`/${PanelId.rkbPanel}`)
         localWs.on('connect', (msg) => {
             console.log('connect', window.location.host)
-            localWs.emit("opUrl", { opUrl: window.location.host })
+            // localWs.emit("opUrl", { opUrl: window.location.host })
         })
             .on(`${CommandId.sc_showPickup}`, (data) => {
                 console.log("CommandId.sc_showPickup", data)

@@ -180,3 +180,14 @@ export let newWhiteMask = (url) => {
     })
     return sp
 }
+
+export let makeColorRatio = (colorArr: Array<string>, ratioArr: Array<number>) => {
+    var a = []
+    for (var i = 0; i < colorArr.length; i++) {
+        var col = colorArr[i];
+        for (var j = 0; j < ratioArr[i]; j++) {
+            a.push(col)
+        }
+    }
+    return a
+}
