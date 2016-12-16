@@ -1,4 +1,4 @@
-from baseDB import BaseDB
+from jsonDB import BaseDB
 
 
 class PlayerDoc:
@@ -63,6 +63,21 @@ class BracketModel(object):
 
     def __init__(self):
         self.db = BaseDB('./db/bracket.db')
+        docs = self.db.find({"id": -1})
+        if len(docs) < 1:
+            self.db.insert({"id": -1})
+        # self.makeBracket()
+
+    def makeBracket(self):
+        l = dict()
+        for i in range(14):
+            l[i + 1] = {"left": {"score": 1, "name": "FTG t1"},
+                        "right": {"score": 3, "name": "FTG t2"}}
+        docs = self.db.find({"id": -1})
+        docs[0]["comingIdx"] = -1
+        docs[0]["group"] = l
+        self.db.insert(docs[0])
+
 
     def onFtBracketInfo(self, data):
         print('onFtBracketInfo')
@@ -72,6 +87,11 @@ class BracketModel(object):
             l[i + 1] = {"left": {"score": 1, "name": "FTG t1"},
                         "right": {"score": 3, "name": "FTG t2"}}
         data['list'] = l
+
+    def onCommitGame(self, data):
+        # data['left']
+        pass
+
 
 class GameModel(object):
     playerModel = None

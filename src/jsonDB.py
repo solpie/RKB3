@@ -35,6 +35,12 @@ class BaseDB(object):
             _id = _id_gen()
         doc['_id'] = _id
         self.__docMap[_id] = doc
+        self.__w(doc)
+        # with open(self.__path, 'a', encoding="utf-8") as f:
+        #     f.writelines(json.dumps(doc) + '\n')
+        # f.close()
+
+    def __w(self, doc):
         with open(self.__path, 'a', encoding="utf-8") as f:
             f.writelines(json.dumps(doc) + '\n')
         f.close()
@@ -53,9 +59,13 @@ class BaseDB(object):
                 f.write(data)
             f.close()
 
-    def update(self, doc, update):
-        self.find(doc, update)
-        self.__flush()
+    def update(self, doc):
+        if doc['_id']:
+            self.__docMap[doc['_id']] = doc
+            self.__w(doc)
+            self.__flush()
+        else:
+            print('update doc no _id', doc)
 
     def find(self, query, update=None):
         docs = []
@@ -69,7 +79,7 @@ class BaseDB(object):
                             doc[uKey] = update[uKey]
                     docs.append(self.__clone(doc))
         return docs
-        
+
     def __clone(self, doc):
         return json.loads(json.dumps(doc))
 
