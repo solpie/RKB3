@@ -10,6 +10,8 @@ export class HP extends PIXI.Container {
     pointArr2p: Array<PIXI.Sprite> = []
     foulArr1p: Array<PIXI.Sprite> = []
     foulArr2p: Array<PIXI.Sprite> = []
+    foulGlow1p: PIXI.Sprite
+    foulGlow2p: PIXI.Sprite
     avatar1p: PIXI.Sprite
     avatar2p: PIXI.Sprite
     name1p: PIXI.Text
@@ -95,6 +97,14 @@ export class HP extends PIXI.Container {
         }
         initFoul(true)
         initFoul(false)
+        var fg = newBitmap({ x: 692, y: 75, url: '/img/panel/koa/hp/foulGlow.png' })
+        this.foulGlow1p = fg
+        fg.visible = false
+        this.addChild(fg)
+        fg = newBitmap({ x: 1045, y: fg.y, url: '/img/panel/koa/hp/foulGlow.png' })
+        this.foulGlow2p = fg
+        fg.visible = false
+        this.addChild(fg)
 
         //120 x 120
         let initAvatar = (is1p: boolean) => {
@@ -128,10 +138,6 @@ export class HP extends PIXI.Container {
 
         initAvatar(true)
         initAvatar(false)
-
-        // let avt2 = newBitmap({ url: '/img/player/avatar/1.jpg' })
-        // avt2.x = 1420
-        // this.addChild(avt2)
 
         this.addChild(newBitmap({ url: '/img/panel/koa/hp/deco.png' }))
         // init name
@@ -174,18 +180,33 @@ export class HP extends PIXI.Container {
         this.addChild(bb2)
         this.beatByNum2p = bb2
 
-
+        let ns2 = {
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '20px',
+            fontStyle: 'normal',
+            fill: '#fff',
+        }
         for (var i = 0; i < 3; i++) {
-            var n1p = new PIXI.Text('player123')
+            var bg1p = newBitmap({ url: '/img/panel/koa/hp/blueBg.png' })
+            this.addChild(bg1p)
+            var n1p = new PIXI.Text('player123', ns2)
+            n1p['bg'] = bg1p
             n1p['x0'] = 360
             n1p.x = n1p['x0'] - n1p.width
             n1p.y = 10 + i * 26
+            bg1p.x = n1p['x0'] - 120
+            bg1p.y = n1p.y + 2
             this.addChild(n1p)
             this.nameArr1p.push(n1p)
 
-            var n2p = new PIXI.Text('player123')
+            var bg2p = newBitmap({ url: '/img/panel/koa/hp/redBg.png' })
+            this.addChild(bg2p)
+            var n2p = new PIXI.Text('player123', ns2)
+            n2p['bg'] = bg2p
             n2p.x = 1560
             n2p.y = n1p.y
+            bg2p.x = n2p.x - 5
+            bg2p.y = bg1p.y
             this.addChild(n2p)
             this.nameArr2p.push(n2p)
         }
@@ -215,7 +236,7 @@ export class HP extends PIXI.Container {
             this.setBlood(true, 3)
             this.setBlood(false, 1)
             this.setFoul(true, 1)
-            this.setFoul(false, 3)
+            this.setFoul(false, 4)
 
             TweenEx.delayedCall(1000, () => {
                 this.setBlood(false, 0)
@@ -224,7 +245,7 @@ export class HP extends PIXI.Container {
         })
     }
 
-    setPlayer(playerDocArr) {
+    setPlayer(playerDocArr, partnerArr) {
         loadRes('/img/player/avatar/' + playerDocArr[0].avatar, (img) => {
             this.avatar1p.texture = imgToTex(img);
         });
@@ -234,6 +255,46 @@ export class HP extends PIXI.Container {
         this.name1p.text = playerDocArr[0].name
         this.name2p.text = playerDocArr[1].name
         this.name2p.x = this.name2p['x0'] - this.name2p.width
+        let ns2 = {
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '20px',
+            fontStyle: 'normal',
+            fill: '#ddd',
+        }
+        let setPartner = (idx, nameArr: Array<PIXI.Text>) => {
+            var isAfter = false;
+            var j = 0
+            var head = []
+            var tail = []
+            for (var i = 0; i < partnerArr[idx].length; i++) {
+                var pn = partnerArr[idx][i];
+                if (pn.id != playerDocArr[idx].id) {
+                    isAfter ? head.push(pn) : tail.push(pn)
+                }
+                else {
+                    isAfter = true
+                }
+            }
+            var f = new PIXI.filters.ColorMatrixFilter()
+            f.greyscale(1)
+            var reOrder = head.concat(tail)
+            for (var j = 0; j < reOrder.length; j++) {
+                var pn = reOrder[j];
+                var nt = nameArr[j]
+                nt.text = pn.name
+                idx == 0 ? nt.x = nt['x0'] - nt.width : nt;
+                if (pn.isDead) {
+                    nt['bg'].filters = [f]
+                    nt.style.fill = '#ddd'
+                }
+                else {
+                    nt.style.fill = '#fff'
+                    nt['bg'].filters = null
+                }
+            }
+        }
+        setPartner(0, this.nameArr1p)
+        setPartner(1, this.nameArr2p)
     }
 
     _pFx(bloodArr: Array<PIXI.Sprite>, num) {
@@ -269,7 +330,15 @@ export class HP extends PIXI.Container {
     }
 
     setFoul(is1p, foul) {
-        is1p ? this._pFx(this.foulArr1p, foul) : this._pFx(this.foulArr2p, foul)
+        is1p ? this._pFx(this.foulArr1p, foul)
+            : this._pFx(this.foulArr2p, foul)
+        if (foul > 3) {
+            var fg;
+            is1p ? fg = this.foulGlow1p
+                : fg = this.foulGlow2p
+            fg.visible = true
+            blink2({ target: fg, loop: Infinity })
+        }
     }
 
     toggleTimer(state?) {

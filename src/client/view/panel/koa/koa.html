@@ -11,7 +11,7 @@
                     <br>
                     <p v-for="player in orderPlayerDocArr1p">
                         <img :src="player.portrait" style="width:40px">
-                        <a style="font-size:20px" @click="onStartPlayer(0,player)"> {{player.id +' ' +player.name}} </a>
+                        <a style="font-size:20px" @click="onStartPlayer(0,player)"> {{player.id +' ' +player.name}} {{player.isDead?"败":""}}</a>
                     </p>
                 </div>
                 <div class="column">
@@ -22,7 +22,7 @@
                     <br>
                     <p v-for="player in orderPlayerDocArr2p">
                         <img :src="player.portrait" style="width:40px">
-                        <a style="font-size:20px" @click="onStartPlayer(1,player)"> {{player.id +' ' +player.name}} </a>
+                        <a style="font-size:20px" @click="onStartPlayer(1,player)"> {{player.id +' ' +player.name}} {{player.isDead?"败":""}} </a>
                     </p>
                 </div>
             </div>

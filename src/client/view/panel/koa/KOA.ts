@@ -135,18 +135,30 @@ class KOA extends VueBase {
             }
         },
         onStartPlayer(is1p, playerDoc) {
-            if (is1p > 0) {
-                this.gamePlayer2p = playerDoc
+            is1p > 0 ? this.gamePlayer2p = playerDoc : this.gamePlayer1p = playerDoc
+            var a;
+            is1p > 0 ? a = this.orderPlayerDocArr2p : a = this.orderPlayerDocArr1p
+            var isAfterPlayer = false
+            for (var i = 0; i < a.length; i++) {
+                var pdc = a[i];
+                if (pdc.id != playerDoc.id) {
+                    pdc.isPlay = false
+                    isAfterPlayer ? pdc.isDead = false
+                        : pdc.isDead = true
+                }
+                else {
+                    pdc.isDead = false
+                    pdc.isPlay = true
+                    isAfterPlayer = true
+                }
             }
-            else
-                this.gamePlayer1p = playerDoc
-
         },
         onStartGame() {
             if (this.gamePlayer1p.id && this.gamePlayer2p.id)
                 this.opReq(`${CommandId.cs_startGame}`, {
                     // _: null,
                     playerDocArr: [this.gamePlayer1p, this.gamePlayer2p],
+                    partnerArr: [this.orderPlayerDocArr1p, this.orderPlayerDocArr2p],
                 })
             else {
                 alert('没选人！')
@@ -169,8 +181,7 @@ class KOA extends VueBase {
             })
         },
         onCommitGame() {
-            this.opReq(`${CommandId.cs_commitGame}`, {
-            })
+            this.opReq(`${CommandId.cs_commitGame}`, { duration: this.hp.timeOnSec })
         }
     }
 
@@ -181,8 +192,7 @@ class KOA extends VueBase {
     }
 
     startGame(data) {
-        let playerDocArr = data.playerDocArr
-        this.hp.setPlayer(data.playerDocArr)
+        this.hp.setPlayer(data.playerDocArr, data.partnerArr)
     }
 
     initIO() {
@@ -196,7 +206,7 @@ class KOA extends VueBase {
                 this.showPickup(data)
             })
             .on(`${CommandId.sc_startGame}`, (data) => {
-                console.log('sc_startGame',data);
+                console.log('sc_startGame', data);
                 this.startGame(data)
             })
             .on(`${CommandId.sc_toggleTimer}`, (data) => {
@@ -210,7 +220,7 @@ class KOA extends VueBase {
             })
             .on(`${CommandId.sc_commitGame}`, (data) => {
                 this.hp.toggleTimer(TimerState.PAUSE)
-                console.log('cs_commitGame',data);
+                console.log('cs_commitGame', data);
             })
     }
 }
