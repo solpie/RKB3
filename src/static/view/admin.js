@@ -671,10 +671,12 @@
 	        _super.call(this);
 	        this.template = __webpack_require__(25);
 	        this.playerArr = VueBase_1.VueBase.PROP;
+	        this.editPlayerDoc = VueBase_1.VueBase.PROP;
 	        this.components = { "editForm": editForm_1.editForm };
 	        this.methods = {
-	            onEdit: function (id) {
-	                console.log('onEdit player id:', id);
+	            onEdit: function (playerDoc) {
+	                console.log('onEdit player id:', playerDoc.id);
+	                this.editPlayerDoc = playerDoc;
 	            }
 	        };
 	        VueBase_1.VueBase.initProps(this);
@@ -708,10 +710,21 @@
 	        _super.call(this);
 	        this.playerInfo = VueBase_1.VueBase.PROP;
 	        this.template = __webpack_require__(21);
+	        this.watch = { "playerInfo": "onPlayerInfo" };
+	        this.methods = {
+	            onPlayerInfo: function (v) {
+	                console.log(v);
+	                this.editor.set(v);
+	            }
+	        };
 	        VueBase_1.VueBase.initProps(this);
 	    }
 	    EditForm.prototype.created = function () {
 	        this.playerInfo = { "name": "233" };
+	    };
+	    EditForm.prototype.mounted = function () {
+	        var container = document.getElementById("jsoneditor");
+	        this.editor = new JSONEditor(container);
 	    };
 	    return EditForm;
 	}(VueBase_1.VueBase));
@@ -722,7 +735,7 @@
 /* 21 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"box\" style=\"position:absolute;left=200px;top=0;width:500px\">\r\n    <label class=\"label\">Name</label>\r\n    <p class=\"control\">\r\n        <input class=\"input\" type=\"text\"/>\r\n    </p>\r\n    <div class=\"columns\">\r\n        <div class=\"column is-one-quarter\">\r\n            <label class=\"label\">身高</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\"/>\r\n            </p>\r\n        </div>\r\n\r\n        <div class=\"column is-one-quarter\">\r\n            <label class=\"label\">體重</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\"/>\r\n            </p>\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"box\" style=\"position:absolute;left:200px;top:0;width:500px\">\r\n    <label class=\"label\">Name</label>\r\n    <p class=\"control\">\r\n        <input class=\"input\" type=\"text\"/>\r\n    </p>\r\n    <div class=\"columns\">\r\n        <div class=\"column is-one-quarter\">\r\n            <label class=\"label\">身高</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\"/>\r\n            </p>\r\n        </div>\r\n\r\n        <div class=\"column is-one-quarter\">\r\n            <label class=\"label\">體重</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\"/>\r\n            </p>\r\n        </div>\r\n    </div>\r\n\r\n    <div id=\"jsoneditor\" style=\"width: 400px; height: 400px;\"></div>\r\n\r\n</div>";
 
 /***/ },
 /* 22 */
@@ -967,7 +980,7 @@
 /* 25 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <aside class=\"menu\" style=\"width:250px\">\r\n        <p class=\"menu-label\">\r\n            Player\r\n        </p>\r\n        <ul class=\"menu-list\">\r\n            <ul>\r\n                <li><a href=\"#\">添加Player</a></li>\r\n                <li><a href=\"#\">同步数据</a></li>\r\n            </ul>\r\n        </ul>\r\n    </aside>\r\n\r\n    <div id=\"player-grid\"  style=\"position: relative;left: 290px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width: 400px;height: 300px;\">\r\n            <img v-bind:src=\"player.portrait\">\r\n            <div class=\"content\">\r\n                {{player.name}}\r\n                <i class=\"icon edit\" @click=\"onEdit(player.id)\">edit</i>\r\n                id:{{player.id}}\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <editForm></editform>\r\n</div>";
+	module.exports = "<div>\r\n    <aside class=\"menu\" style=\"width:250px\">\r\n        <p class=\"menu-label\">\r\n            Player\r\n        </p>\r\n        <ul class=\"menu-list\">\r\n            <ul>\r\n                <li><a href=\"#\">添加Player</a></li>\r\n                <li><a href=\"#\">同步数据</a></li>\r\n            </ul>\r\n        </ul>\r\n    </aside>\r\n\r\n    <div id=\"player-grid\"  style=\"position: relative;left: 290px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width: 400px;height: 300px;\">\r\n            <img v-bind:src=\"player.portrait\">\r\n            <div class=\"content\">\r\n                {{player.name}}\r\n                <i class=\"icon edit\" @click=\"onEdit(player)\">edit</i>\r\n                id:{{player.id}}\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <editForm :playerInfo='editPlayerDoc'></editform>\r\n</div>";
 
 /***/ }
 /******/ ]);

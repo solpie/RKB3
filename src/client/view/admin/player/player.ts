@@ -5,6 +5,7 @@ import { VueBase } from '../../utils/VueBase';
 class PlayerView extends VueBase {
     template = require('./player.html')
     playerArr = VueBase.PROP
+    editPlayerDoc = VueBase.PROP
     components = {"editForm":editForm}
     
     constructor() {
@@ -20,8 +21,9 @@ class PlayerView extends VueBase {
     }
     
      methods = {
-        onEdit(id){
-            console.log('onEdit player id:',id)
+        onEdit(playerDoc){
+            console.log('onEdit player id:',playerDoc.id)
+            this.editPlayerDoc = playerDoc
         }
     }
 }

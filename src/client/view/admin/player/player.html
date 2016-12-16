@@ -16,11 +16,11 @@
             <img v-bind:src="player.portrait">
             <div class="content">
                 {{player.name}}
-                <i class="icon edit" @click="onEdit(player.id)">edit</i>
+                <i class="icon edit" @click="onEdit(player)">edit</i>
                 id:{{player.id}}
             </div>
         </div>
     </div>
 
-    <editForm></editform>
+    <editForm :playerInfo='editPlayerDoc'></editform>
 </div>
