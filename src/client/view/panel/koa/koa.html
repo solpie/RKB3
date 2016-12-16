@@ -9,6 +9,9 @@
                     <button class="button is-large" @click="onSetBlood(true,-1)"> -1</button>
                     <button class="button is-large" @click="onSetBlood(true,1)">+1</button> {{orderArr1p|json}}
                     <br>
+                    <button class="button is-medium" @click="onSetFoul(true,-1)">犯规 -1</button>
+                    <button class="button is-medium" @click="onSetFoul(true,1)">犯规 +1</button>
+                    <br>
                     <p v-for="player in orderPlayerDocArr1p">
                         <img :src="player.portrait" style="width:40px">
                         <a style="font-size:20px" @click="onStartPlayer(0,player)"> {{player.id +' ' +player.name}} {{player.isDead?"败":""}}</a>
@@ -18,7 +21,10 @@
                     <button class="button is-medium" @click="onPickup(false)">2P</button>
                     <label class="label" style="font-size:20px">[{{gamePlayer2p.name}}]</label>
                     <button class="button is-large" @click="onSetBlood(false,-1)"> -1</button>
-                    <button class="button is-large" @click="onSetBlood(false,1)"> +1</button> {{orderArr2p|json}}
+                    <button class="button is-large" @click="onSetBlood(false,1)"> +1</button>{{orderArr2p|json}}
+                    <br>
+                    <button class="button is-medium" @click="onSetFoul(false,-1)">犯规 -1</button>
+                    <button class="button is-medium" @click="onSetFoul(false,1)">犯规 +1</button>
                     <br>
                     <p v-for="player in orderPlayerDocArr2p">
                         <img :src="player.portrait" style="width:40px">

@@ -180,6 +180,12 @@ class KOA extends VueBase {
                 dt: dt
             })
         },
+        onSetFoul(is1p: boolean, dt) {
+            this.opReq(`${CommandId.cs_setFoul}`, {
+                is1p: is1p,
+                dt: dt
+            })
+        },
         onCommitGame() {
             this.opReq(`${CommandId.cs_commitGame}`, { duration: this.hp.timeOnSec })
         }
@@ -217,6 +223,9 @@ class KOA extends VueBase {
             })
             .on(`${CommandId.sc_setBlood}`, (data) => {
                 this.hp.setBlood(data.is1p, data.blood)
+            })
+            .on(`${CommandId.sc_setFoul}`, (data) => {
+                this.hp.setFoul(data.is1p, data.foul)
             })
             .on(`${CommandId.sc_commitGame}`, (data) => {
                 this.hp.toggleTimer(TimerState.PAUSE)

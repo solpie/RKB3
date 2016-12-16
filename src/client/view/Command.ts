@@ -120,6 +120,8 @@ enum cmdEnum {
     sc_toggleTimer,
     cs_setBlood,
     sc_setBlood,
+    cs_setFoul,
+    sc_setFoul,
     //---------------- player panel
 
     cs_startingLine,

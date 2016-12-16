@@ -304,9 +304,8 @@ export class HP extends PIXI.Container {
                 b.visible = true
                 blink3(b)
             }
-            else {
+            else
                 b.visible = false
-            }
         }
     }
 
@@ -332,13 +331,15 @@ export class HP extends PIXI.Container {
     setFoul(is1p, foul) {
         is1p ? this._pFx(this.foulArr1p, foul)
             : this._pFx(this.foulArr2p, foul)
+        var fg;
+        is1p ? fg = this.foulGlow1p
+            : fg = this.foulGlow2p
         if (foul > 3) {
-            var fg;
-            is1p ? fg = this.foulGlow1p
-                : fg = this.foulGlow2p
             fg.visible = true
             blink2({ target: fg, loop: Infinity })
         }
+        else
+            fg.visible = true
     }
 
     toggleTimer(state?) {
@@ -361,12 +362,10 @@ export class HP extends PIXI.Container {
         };
 
         if (state != null) {
-            if (state == TimerState.PAUSE) {
+            if (state == TimerState.PAUSE)
                 pauseTimer();
-            }
-            else if (state == TimerState.RUNNING) {
+            else if (state == TimerState.RUNNING)
                 playTimer();
-            }
         }
         else {
             this.timerId ? pauseTimer() : playTimer()

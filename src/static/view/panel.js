@@ -613,6 +613,12 @@
 	                    dt: dt
 	                });
 	            },
+	            onSetFoul: function (is1p, dt) {
+	                this.opReq("" + Command_1.CommandId.cs_setFoul, {
+	                    is1p: is1p,
+	                    dt: dt
+	                });
+	            },
 	            onCommitGame: function () {
 	                this.opReq("" + Command_1.CommandId.cs_commitGame, { duration: this.hp.timeOnSec });
 	            }
@@ -675,6 +681,9 @@
 	        })
 	            .on("" + Command_1.CommandId.sc_setBlood, function (data) {
 	            _this.hp.setBlood(data.is1p, data.blood);
+	        })
+	            .on("" + Command_1.CommandId.sc_setFoul, function (data) {
+	            _this.hp.setFoul(data.is1p, data.foul);
 	        })
 	            .on("" + Command_1.CommandId.sc_commitGame, function (data) {
 	            _this.hp.toggleTimer(const_1.TimerState.PAUSE);
@@ -958,9 +967,8 @@
 	                b.visible = true;
 	                Fx_1.blink3(b);
 	            }
-	            else {
+	            else
 	                b.visible = false;
-	            }
 	        }
 	    };
 	    HP.prototype.setBlood = function (is1p, num) {
@@ -984,13 +992,15 @@
 	    HP.prototype.setFoul = function (is1p, foul) {
 	        is1p ? this._pFx(this.foulArr1p, foul)
 	            : this._pFx(this.foulArr2p, foul);
+	        var fg;
+	        is1p ? fg = this.foulGlow1p
+	            : fg = this.foulGlow2p;
 	        if (foul > 3) {
-	            var fg;
-	            is1p ? fg = this.foulGlow1p
-	                : fg = this.foulGlow2p;
 	            fg.visible = true;
 	            Fx_1.blink2({ target: fg, loop: Infinity });
 	        }
+	        else
+	            fg.visible = true;
 	    };
 	    HP.prototype.toggleTimer = function (state) {
 	        var _this = this;
@@ -1011,12 +1021,10 @@
 	            _this.timerState = const_1.TimerState.RUNNING;
 	        };
 	        if (state != null) {
-	            if (state == const_1.TimerState.PAUSE) {
+	            if (state == const_1.TimerState.PAUSE)
 	                pauseTimer();
-	            }
-	            else if (state == const_1.TimerState.RUNNING) {
+	            else if (state == const_1.TimerState.RUNNING)
 	                playTimer();
-	            }
 	        }
 	        else {
 	            this.timerId ? pauseTimer() : playTimer();
@@ -2098,40 +2106,42 @@
 	    cmdEnum[cmdEnum["sc_toggleTimer"] = 101] = "sc_toggleTimer";
 	    cmdEnum[cmdEnum["cs_setBlood"] = 102] = "cs_setBlood";
 	    cmdEnum[cmdEnum["sc_setBlood"] = 103] = "sc_setBlood";
-	    cmdEnum[cmdEnum["cs_startingLine"] = 104] = "cs_startingLine";
-	    cmdEnum[cmdEnum["startingLine"] = 105] = "startingLine";
-	    cmdEnum[cmdEnum["cs_hideStartingLine"] = 106] = "cs_hideStartingLine";
-	    cmdEnum[cmdEnum["hideStartingLine"] = 107] = "hideStartingLine";
-	    cmdEnum[cmdEnum["cs_queryPlayerByPos"] = 108] = "cs_queryPlayerByPos";
-	    cmdEnum[cmdEnum["fadeInPlayerPanel"] = 109] = "fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeInPlayerPanel"] = 110] = "cs_fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["fadeOutPlayerPanel"] = 111] = "fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeOutPlayerPanel"] = 112] = "cs_fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["movePlayerPanel"] = 113] = "movePlayerPanel";
-	    cmdEnum[cmdEnum["cs_movePlayerPanel"] = 114] = "cs_movePlayerPanel";
-	    cmdEnum[cmdEnum["straightScore3"] = 115] = "straightScore3";
-	    cmdEnum[cmdEnum["straightScore5"] = 116] = "straightScore5";
-	    cmdEnum[cmdEnum["initPanel"] = 117] = "initPanel";
-	    cmdEnum[cmdEnum["cs_inScreenScore"] = 118] = "cs_inScreenScore";
-	    cmdEnum[cmdEnum["inScreenScore"] = 119] = "inScreenScore";
-	    cmdEnum[cmdEnum["cs_fadeInFTShow"] = 120] = "cs_fadeInFTShow";
-	    cmdEnum[cmdEnum["fadeInFTShow"] = 121] = "fadeInFTShow";
-	    cmdEnum[cmdEnum["cs_fadeOutFTShow"] = 122] = "cs_fadeOutFTShow";
-	    cmdEnum[cmdEnum["fadeOutFTShow"] = 123] = "fadeOutFTShow";
-	    cmdEnum[cmdEnum["cs_fadeInPlayerRank"] = 124] = "cs_fadeInPlayerRank";
-	    cmdEnum[cmdEnum["fadeInPlayerRank"] = 125] = "fadeInPlayerRank";
-	    cmdEnum[cmdEnum["cs_fadeInFtRank"] = 126] = "cs_fadeInFtRank";
-	    cmdEnum[cmdEnum["fadeInFtRank"] = 127] = "fadeInFtRank";
-	    cmdEnum[cmdEnum["cs_fadeInMixRank"] = 128] = "cs_fadeInMixRank";
-	    cmdEnum[cmdEnum["fadeInMixRank"] = 129] = "fadeInMixRank";
-	    cmdEnum[cmdEnum["cs_findPlayerData"] = 130] = "cs_findPlayerData";
-	    cmdEnum[cmdEnum["cs_attack"] = 131] = "cs_attack";
-	    cmdEnum[cmdEnum["attack"] = 132] = "attack";
-	    cmdEnum[cmdEnum["cs_addHealth"] = 133] = "cs_addHealth";
-	    cmdEnum[cmdEnum["addHealth"] = 134] = "addHealth";
-	    cmdEnum[cmdEnum["fadeInOK"] = 135] = "fadeInOK";
-	    cmdEnum[cmdEnum["cs_combo"] = 136] = "cs_combo";
-	    cmdEnum[cmdEnum["combo"] = 137] = "combo";
+	    cmdEnum[cmdEnum["cs_setFoul"] = 104] = "cs_setFoul";
+	    cmdEnum[cmdEnum["sc_setFoul"] = 105] = "sc_setFoul";
+	    cmdEnum[cmdEnum["cs_startingLine"] = 106] = "cs_startingLine";
+	    cmdEnum[cmdEnum["startingLine"] = 107] = "startingLine";
+	    cmdEnum[cmdEnum["cs_hideStartingLine"] = 108] = "cs_hideStartingLine";
+	    cmdEnum[cmdEnum["hideStartingLine"] = 109] = "hideStartingLine";
+	    cmdEnum[cmdEnum["cs_queryPlayerByPos"] = 110] = "cs_queryPlayerByPos";
+	    cmdEnum[cmdEnum["fadeInPlayerPanel"] = 111] = "fadeInPlayerPanel";
+	    cmdEnum[cmdEnum["cs_fadeInPlayerPanel"] = 112] = "cs_fadeInPlayerPanel";
+	    cmdEnum[cmdEnum["fadeOutPlayerPanel"] = 113] = "fadeOutPlayerPanel";
+	    cmdEnum[cmdEnum["cs_fadeOutPlayerPanel"] = 114] = "cs_fadeOutPlayerPanel";
+	    cmdEnum[cmdEnum["movePlayerPanel"] = 115] = "movePlayerPanel";
+	    cmdEnum[cmdEnum["cs_movePlayerPanel"] = 116] = "cs_movePlayerPanel";
+	    cmdEnum[cmdEnum["straightScore3"] = 117] = "straightScore3";
+	    cmdEnum[cmdEnum["straightScore5"] = 118] = "straightScore5";
+	    cmdEnum[cmdEnum["initPanel"] = 119] = "initPanel";
+	    cmdEnum[cmdEnum["cs_inScreenScore"] = 120] = "cs_inScreenScore";
+	    cmdEnum[cmdEnum["inScreenScore"] = 121] = "inScreenScore";
+	    cmdEnum[cmdEnum["cs_fadeInFTShow"] = 122] = "cs_fadeInFTShow";
+	    cmdEnum[cmdEnum["fadeInFTShow"] = 123] = "fadeInFTShow";
+	    cmdEnum[cmdEnum["cs_fadeOutFTShow"] = 124] = "cs_fadeOutFTShow";
+	    cmdEnum[cmdEnum["fadeOutFTShow"] = 125] = "fadeOutFTShow";
+	    cmdEnum[cmdEnum["cs_fadeInPlayerRank"] = 126] = "cs_fadeInPlayerRank";
+	    cmdEnum[cmdEnum["fadeInPlayerRank"] = 127] = "fadeInPlayerRank";
+	    cmdEnum[cmdEnum["cs_fadeInFtRank"] = 128] = "cs_fadeInFtRank";
+	    cmdEnum[cmdEnum["fadeInFtRank"] = 129] = "fadeInFtRank";
+	    cmdEnum[cmdEnum["cs_fadeInMixRank"] = 130] = "cs_fadeInMixRank";
+	    cmdEnum[cmdEnum["fadeInMixRank"] = 131] = "fadeInMixRank";
+	    cmdEnum[cmdEnum["cs_findPlayerData"] = 132] = "cs_findPlayerData";
+	    cmdEnum[cmdEnum["cs_attack"] = 133] = "cs_attack";
+	    cmdEnum[cmdEnum["attack"] = 134] = "attack";
+	    cmdEnum[cmdEnum["cs_addHealth"] = 135] = "cs_addHealth";
+	    cmdEnum[cmdEnum["addHealth"] = 136] = "addHealth";
+	    cmdEnum[cmdEnum["fadeInOK"] = 137] = "fadeInOK";
+	    cmdEnum[cmdEnum["cs_combo"] = 138] = "cs_combo";
+	    cmdEnum[cmdEnum["combo"] = 139] = "combo";
 	})(cmdEnum || (cmdEnum = {}));
 	exports.CommandId = {};
 	for (var k in cmdEnum) {
@@ -2213,7 +2223,7 @@
 /* 43 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <label class=\"label\">出场顺序</label>\r\n            <div class=\"columns\">\r\n                <div class=\"column\">\r\n                    <button class=\"button is-medium\" @click=\"onPickup(true)\">1P</button>\r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer1p.name}}]</label>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(true,-1)\"> -1</button>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(true,1)\">+1</button> {{orderArr1p|json}}\r\n                    <br>\r\n                    <p v-for=\"player in orderPlayerDocArr1p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(0,player)\"> {{player.id +' ' +player.name}} {{player.isDead?\"败\":\"\"}}</a>\r\n                    </p>\r\n                </div>\r\n                <div class=\"column\">\r\n                    <button class=\"button is-medium\" @click=\"onPickup(false)\">2P</button>\r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer2p.name}}]</label>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(false,-1)\"> -1</button>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(false,1)\"> +1</button> {{orderArr2p|json}}\r\n                    <br>\r\n                    <p v-for=\"player in orderPlayerDocArr2p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(1,player)\"> {{player.id +' ' +player.name}} {{player.isDead?\"败\":\"\"}} </a>\r\n                    </p>\r\n                </div>\r\n            </div>\r\n\r\n            <p>\r\n                <div class=\"tabs is-boxed\">\r\n                    <ul>\r\n                        <li v-for=\"teamIdx in 8\"><a @click=\"onTabTeam($event,teamIdx)\">Team{{teamIdx}}</a></li>\r\n                    </ul>\r\n                </div>\r\n                <div v-for=\"player in playerDocArr\">\r\n                    <a class=\"box\" style=\"font-size:30px\" @click='onPickupPlayer(player)'> <img :src=\"player.portrait\" style=\"width:80px\"> {{player.id +' ' +player.name}}</a>\r\n                    <p>\r\n                </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            <button class=\"button is-large\" @click=\"onShowPickup\">出阵</button>\r\n            <button class=\"button is-large\" @click=\"onStartGame()\">开始</button>\r\n            <p>\r\n                <button class=\"button is-large\" @click=\"onToggleTimer()\">Toggle</button>\r\n                <button class=\"button is-large\" @click=\"onResetTimer()\">Reset</button>\r\n                <p>\r\n                    <button class=\"button is-large\" @click=\"onCommitGame()\">提交</button>\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <label class=\"label\">出场顺序</label>\r\n            <div class=\"columns\">\r\n                <div class=\"column\">\r\n                    <button class=\"button is-medium\" @click=\"onPickup(true)\">1P</button>\r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer1p.name}}]</label>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(true,-1)\"> -1</button>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(true,1)\">+1</button> {{orderArr1p|json}}\r\n                    <br>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(true,-1)\">犯规 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(true,1)\">犯规 +1</button>\r\n                    <br>\r\n                    <p v-for=\"player in orderPlayerDocArr1p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(0,player)\"> {{player.id +' ' +player.name}} {{player.isDead?\"败\":\"\"}}</a>\r\n                    </p>\r\n                </div>\r\n                <div class=\"column\">\r\n                    <button class=\"button is-medium\" @click=\"onPickup(false)\">2P</button>\r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer2p.name}}]</label>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(false,-1)\"> -1</button>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(false,1)\"> +1</button>{{orderArr2p|json}}\r\n                    <br>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(false,-1)\">犯规 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(false,1)\">犯规 +1</button>\r\n                    <br>\r\n                    <p v-for=\"player in orderPlayerDocArr2p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(1,player)\"> {{player.id +' ' +player.name}} {{player.isDead?\"败\":\"\"}} </a>\r\n                    </p>\r\n                </div>\r\n            </div>\r\n\r\n            <p>\r\n                <div class=\"tabs is-boxed\">\r\n                    <ul>\r\n                        <li v-for=\"teamIdx in 8\"><a @click=\"onTabTeam($event,teamIdx)\">Team{{teamIdx}}</a></li>\r\n                    </ul>\r\n                </div>\r\n                <div v-for=\"player in playerDocArr\">\r\n                    <a class=\"box\" style=\"font-size:30px\" @click='onPickupPlayer(player)'> <img :src=\"player.portrait\" style=\"width:80px\"> {{player.id +' ' +player.name}}</a>\r\n                    <p>\r\n                </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            <button class=\"button is-large\" @click=\"onShowPickup\">出阵</button>\r\n            <button class=\"button is-large\" @click=\"onStartGame()\">开始</button>\r\n            <p>\r\n                <button class=\"button is-large\" @click=\"onToggleTimer()\">Toggle</button>\r\n                <button class=\"button is-large\" @click=\"onResetTimer()\">Reset</button>\r\n                <p>\r\n                    <button class=\"button is-large\" @click=\"onCommitGame()\">提交</button>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 44 */

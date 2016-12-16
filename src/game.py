@@ -36,6 +36,8 @@ class GameDoc:
     start = None
     blueTeam = None
     redTeam = None
+    foul1p = 0
+    foul2p = 0
     blood1p = 5
     blood2p = 5
     playerDocArr = []
@@ -101,6 +103,15 @@ class GameModel(object):
             self.gameDoc = None
             return data
 
+    def setFoul(self, data):
+        dt = data['dt']
+        if data['is1p']:
+            self.gameDoc.foul1p += dt
+            data['foul'] = self.gameDoc.foul1p
+        else:
+            self.gameDoc.foul2p += dt
+            data['foul'] = self.gameDoc.foul2p
+
     def setBlood(self, data):
         if data['is1p']:
             self.gameDoc.blood1p += data['dt']
@@ -127,6 +138,7 @@ class ActivityModel:
         self.eventMap = dict()
         self.eventMap['cs_startGame'] = self.gameModel.startGame
         self.eventMap['cs_setBlood'] = self.gameModel.setBlood
+        self.eventMap['cs_setFoul'] = self.gameModel.setFoul
         self.eventMap['cs_commitGame'] = self.gameModel.commitGame
 
     def onCmd(self, cmd, data):
