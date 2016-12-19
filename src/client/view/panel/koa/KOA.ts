@@ -32,6 +32,8 @@ class KOA extends VueBase {
     $actTab
     playerIdMap
     hp: HP
+    stPlayer1p
+    stPlayer2p
     opReq = (cmdId: string, param: any, callback: any) => {
         $.ajax({
             url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
@@ -159,6 +161,7 @@ class KOA extends VueBase {
                     // _: null,
                     playerDocArr: [this.gamePlayer1p, this.gamePlayer2p],
                     partnerArr: [this.orderPlayerDocArr1p, this.orderPlayerDocArr2p],
+                    stArr: [this.orderPlayerDocArr1p[3], this.orderPlayerDocArr2p[3]],
                 })
             else {
                 alert('没选人！')
@@ -186,6 +189,12 @@ class KOA extends VueBase {
                 dt: dt
             })
         },
+        onSetSt(is1p: boolean, dt) {
+            this.opReq(`${CommandId.cs_setSt}`, {
+                is1p: is1p,
+                dt: dt
+            })
+        },
         onCommitGame() {
             this.opReq(`${CommandId.cs_commitGame}`, { duration: this.hp.timeOnSec })
         }
@@ -198,7 +207,7 @@ class KOA extends VueBase {
     }
 
     startGame(data) {
-        this.hp.setPlayer(data.playerDocArr, data.partnerArr)
+        this.hp.setPlayer(data.playerDocArr, data.partnerArr, data.stArr)
     }
 
     initIO() {
@@ -226,6 +235,9 @@ class KOA extends VueBase {
             })
             .on(`${CommandId.sc_setFoul}`, (data) => {
                 this.hp.setFoul(data.is1p, data.foul)
+            })
+            .on(`${CommandId.sc_setSt}`, (data) => {
+                this.hp.setSt(data.is1p, data.st)
             })
             .on(`${CommandId.sc_commitGame}`, (data) => {
                 this.hp.toggleTimer(TimerState.PAUSE)

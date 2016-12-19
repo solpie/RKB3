@@ -42,6 +42,8 @@ class GameDoc:
     foul2p = 0
     blood1p = 5
     blood2p = 5
+    st1p = 2
+    st2p = 2
     playerDocArr = []
 
     def toDict(self):
@@ -55,6 +57,8 @@ class GameDoc:
             pArr.append(p)
         pArr[0]['blood'] = self.blood1p
         pArr[1]['blood'] = self.blood2p
+        pArr[0]['st'] = self.st1p
+        pArr[1]['st'] = self.st2p
         doc['playerDocArr'] = pArr
         return doc
 
@@ -145,6 +149,15 @@ class GameModel(object):
             self.gameDoc.foul2p += dt
             data['foul'] = self.gameDoc.foul2p
 
+    def setSt(self, data):
+        dt = data['dt']
+        if data['is1p']:
+            self.gameDoc.st1p += dt
+            data['st'] = self.gameDoc.st1p
+        else:
+            self.gameDoc.st2p += dt
+            data['st'] = self.gameDoc.st2p
+
     def setBlood(self, data):
         if data['is1p']:
             self.gameDoc.blood1p += data['dt']
@@ -173,6 +186,7 @@ class ActivityModel:
         self.eventMap['cs_startGame'] = self.gameModel.startGame
         self.eventMap['cs_setBlood'] = self.gameModel.setBlood
         self.eventMap['cs_setFoul'] = self.gameModel.setFoul
+        self.eventMap['cs_setSt'] = self.gameModel.setSt
         self.eventMap['cs_commitGame'] = self.gameModel.commitGame
         # ft bracket
         self.eventMap['cs_ftBracketInfo'] = self.bracketModel.onFtBracketInfo

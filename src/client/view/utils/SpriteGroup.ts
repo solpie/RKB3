@@ -9,16 +9,18 @@ export enum Direction {
 export class SpriteGroup extends PIXI.Container {
     dir: Direction
     spArr: Array<PIXI.Sprite>
-    constructor(options: { dir: Direction, invert: number, img: string, count: number,flip?:number }) {
+    _w: number
+    constructor(options: { dir: Direction, invert: number, img: string, count: number, flip?: number }) {
         super()
         this.spArr = []
         let dir = options.dir || Direction.e
         let flip = options.flip || 1
         let count = options.count
         let invert = options.invert
+        this._w = count * invert
         for (var i = 0; i < count; i++) {
             var sp = newBitmap({ url: options.img })
-            if (dir == Direction.e){
+            if (dir == Direction.e) {
                 sp.x = i * options.invert
                 sp.scale.x = flip
             }
@@ -47,6 +49,10 @@ export class SpriteGroup extends PIXI.Container {
             else
                 this.onHidePoint(sp)
         }
+    }
+
+    get width() {
+        return this._w
     }
 
     onShowPoint(sp) {

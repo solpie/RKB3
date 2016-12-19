@@ -11,6 +11,8 @@
                     <br>
                     <button class="button is-medium" @click="onSetFoul(true,-1)">犯规 -1</button>
                     <button class="button is-medium" @click="onSetFoul(true,1)">犯规 +1</button>
+                    <button class="button is-medium" @click="onSetSt(true,-1)">援助 -1</button>
+                    <button class="button is-medium" @click="onSetSt(true,1)">援助 +1</button>
                     <br>
                     <p v-for="player in orderPlayerDocArr1p">
                         <img :src="player.portrait" style="width:40px">
@@ -25,6 +27,8 @@
                     <br>
                     <button class="button is-medium" @click="onSetFoul(false,-1)">犯规 -1</button>
                     <button class="button is-medium" @click="onSetFoul(false,1)">犯规 +1</button>
+                    <button class="button is-medium" @click="onSetSt(false,-1)">援助 -1</button>
+                    <button class="button is-medium" @click="onSetSt(false,1)">援助 +1</button>
                     <br>
                     <p v-for="player in orderPlayerDocArr2p">
                         <img :src="player.portrait" style="width:40px">
@@ -54,7 +58,7 @@
                     <button class="button is-large" @click="onCommitGame()">单场结算</button>
                     <hr>
                     <button class="button is-large" @click="onCommitGame()">战团结算</button>
-                    
+
         </div>
     </div>
 </div>

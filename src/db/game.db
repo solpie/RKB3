@@ -1,4 +1,4 @@
-{"playerDocArr": [{"name": "\u53f2\u8482\u82ac\u5e93\u91ccabc1", "blood": 5, "_id": "BBX2RRB", "id": 1}, {"name": "\u53f2\u8482\u82ac\u5e93\u91ccabc5", "blood": 0, "_id": "ZFFECIK", "id": 5}], "_id": "CUCS7Q0"}
-{"playerDocArr": [{"name": "\u53f2\u8482\u82ac\u5e93\u91ccabc2", "blood": 5, "_id": "VZ04A84", "id": 2}, {"name": "\u53f2\u8482\u82ac\u5e93\u91ccabc6", "blood": 0, "_id": "4UM77WQ", "id": 6}], "_id": "AFYCHZZ"}
-{"playerDocArr": [{"name": "\u53f2\u8482\u82ac\u5e93\u91ccabc2", "blood": 5, "_id": "VZ04A84", "id": 2}, {"name": "\u53f2\u8482\u82ac\u5e93\u91ccabc6", "blood": 0, "_id": "4UM77WQ", "id": 6}], "_id": "QDWBHI8"}
-{"playerDocArr": [{"name": "\u53f2\u8482\u82ac\u5e93\u91ccabc2", "blood": 5, "_id": "VZ04A84", "id": 2}, {"name": "\u53f2\u8482\u82ac\u5e93\u91ccabc6", "blood": 0, "_id": "4UM77WQ", "id": 6}], "_id": "DPG8UB0"}
+{"_id": "AFYCHZZ", "playerDocArr": [{"blood": 5, "name": "\u53f2\u8482\u82ac\u5e93\u91ccabc2", "_id": "VZ04A84", "id": 2}, {"blood": 0, "name": "\u53f2\u8482\u82ac\u5e93\u91ccabc6", "_id": "4UM77WQ", "id": 6}]}
+{"_id": "CUCS7Q0", "playerDocArr": [{"blood": 5, "name": "\u53f2\u8482\u82ac\u5e93\u91ccabc1", "_id": "BBX2RRB", "id": 1}, {"blood": 0, "name": "\u53f2\u8482\u82ac\u5e93\u91ccabc5", "_id": "ZFFECIK", "id": 5}]}
+{"_id": "QDWBHI8", "playerDocArr": [{"blood": 5, "name": "\u53f2\u8482\u82ac\u5e93\u91ccabc2", "_id": "VZ04A84", "id": 2}, {"blood": 0, "name": "\u53f2\u8482\u82ac\u5e93\u91ccabc6", "_id": "4UM77WQ", "id": 6}]}
+{"_id": "DPG8UB0", "playerDocArr": [{"blood": 5, "name": "\u53f2\u8482\u82ac\u5e93\u91ccabc2", "_id": "VZ04A84", "id": 2}, {"blood": 0, "name": "\u53f2\u8482\u82ac\u5e93\u91ccabc6", "_id": "4UM77WQ", "id": 6}]}

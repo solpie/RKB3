@@ -122,6 +122,8 @@ enum cmdEnum {
     sc_setBlood,
     cs_setFoul,
     sc_setFoul,
+    cs_setSt,
+    sc_setSt,
     //ft bracket
     cs_ftBracketInfo,
     sc_ftBracketInfo,
