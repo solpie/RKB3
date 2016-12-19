@@ -56,8 +56,7 @@ export class St extends PIXI.Container {
         this.spg.y = bg.y
         this.addChild(this.spg)
 
-        this.setAvatar('/img/player/avatar/1.png')
-
+        this.setAvatar('/img/player/avatar/st.png')
 
 
         //         蓝：亮c0dbff 暗3b52b3

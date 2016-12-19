@@ -131,17 +131,22 @@ export function getLength(str) {
     }
     return realLength;
 }
-export function cnWrap(str, len, start = 0) {
+export function cnWrap(str, len, limit = 0) {
     let str_line_length = 0;
     let str_len = str.length;
     let str_cut = new String();
     let str_out = '';
-    for (let i = start; i < str_len; i++) {
+    let total_len = 0
+    for (let i = 0; i < str_len; i++) {
+        if (limit != 0 && total_len > limit)
+            break;
         let a = str.charAt(i);
         str_line_length++;
+        total_len++
         if (escape(a).length > 4) {
             //中文字符的长度经编码之后大于4
             str_line_length++;
+            total_len++
         }
         str_cut = str_cut.concat(a);
         if (str_line_length >= len) {

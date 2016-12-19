@@ -1,3 +1,4 @@
+import { Win } from './Win';
 import { St } from './St';
 import { Direction, SpriteGroup } from '../../utils/SpriteGroup';
 import { formatSecond } from '../../utils/JsFunc';
@@ -31,6 +32,8 @@ export class HP extends PIXI.Container {
     timerId = null
     timerState
 
+
+    win: Win
     constructor(stage: PIXI.Container) {
         super()
         stage.addChild(this)
@@ -194,10 +197,10 @@ export class HP extends PIXI.Container {
 
         let ns2 = {
             fontFamily: FontName.MicrosoftYahei,
-            fontSize: '20px',
+            fontSize: '18px',
             fontStyle: 'normal',
             stroke: '#000',
-            strokeThickness: 3,
+            strokeThickness: 2,
             fill: null,
             fillGradientType: PIXI['TEXT_GRADIENT'].LINEAR_VERTICAL,
         }
@@ -208,9 +211,9 @@ export class HP extends PIXI.Container {
             var n1p = new PIXI.Text('player' + (i + 2), ns2)
             n1p['bg'] = bg1p
             n1p['fill'] = ['#c0dbff', '#c0dbff', '#3b52b3']
-            n1p['x0'] = 360 + 115
+            n1p['x0'] = 360 //+ 115
             n1p.x = n1p['x0'] - n1p.width
-            n1p.y = 125 + i * 26
+            n1p.y = 75 + i * 26
             bg1p.x = n1p['x0'] - 120
             bg1p.y = n1p.y + 2
             this.addChild(n1p)
@@ -222,7 +225,7 @@ export class HP extends PIXI.Container {
             var n2p = new PIXI.Text('player' + (i + 2), ns2)
             n2p['bg'] = bg2p
             n2p['fill'] = ['#fff0f0', '#fff0f0', '#b33b3b']
-            n2p.x = 1560 - 120
+            n2p.x = 1555// - 115
             n2p.y = n1p.y
             bg2p.x = n2p.x - 5
             bg2p.y = bg1p.y
@@ -253,21 +256,28 @@ export class HP extends PIXI.Container {
         this.st2p.x = ViewConst.STAGE_WIDTH - 282
         this.st2p.y = this.st1p.y
 
-        // this.test()
+        this.setFoul(true, 0)
+        this.setFoul(false, 0)
+
+
+        this.win = new Win(this)
+        this.test()
     }
 
     test() {
         TweenEx.delayedCall(200, () => {
-            this.setBlood(true, 3)
-            this.setBlood(false, 1)
-            this.setFoul(true, 1)
-            this.setFoul(false, 4)
-            this.foulPG1p.setNum(1)
-            this.foulPG2p.setNum(4)
-            TweenEx.delayedCall(1000, () => {
-                this.setBlood(false, 0)
-                this.toggleTimer()
-            })
+            this.win.show()
+
+            // this.setBlood(true, 3)
+            // this.setBlood(false, 1)
+            // this.setFoul(true, 1)
+            // this.setFoul(false, 4)
+            // this.foulPG1p.setNum(1)
+            // this.foulPG2p.setNum(4)
+            // TweenEx.delayedCall(1000, () => {
+            //     this.setBlood(false, 0)
+            //     this.toggleTimer()
+            // })
         })
     }
 
@@ -365,7 +375,7 @@ export class HP extends PIXI.Container {
 
     setFoul(is1p, foul) {
         is1p ? this.foulPG1p.setNum(foul)
-            : this.foulPG1p.setNum(foul)
+            : this.foulPG2p.setNum(foul)
         var fg;
         is1p ? fg = this.foulGlow1p
             : fg = this.foulGlow2p
@@ -374,7 +384,7 @@ export class HP extends PIXI.Container {
             blink2({ target: fg, loop: Infinity })
         }
         else
-            fg.visible = true
+            fg.visible = false
     }
 
     toggleTimer(state?) {

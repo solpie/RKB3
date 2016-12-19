@@ -10,7 +10,7 @@ export class SpriteGroup extends PIXI.Container {
     dir: Direction
     spArr: Array<PIXI.Sprite>
     _w: number
-    constructor(options: { dir: Direction, invert: number, img: string, count: number, flip?: number }) {
+    constructor(options: { dir?: Direction, invert: number, img: string, count: number, flip?: number }) {
         super()
         this.spArr = []
         let dir = options.dir || Direction.e

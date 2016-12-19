@@ -929,17 +929,22 @@
 	    return realLength;
 	}
 	exports.getLength = getLength;
-	function cnWrap(str, len, start) {
-	    if (start === void 0) { start = 0; }
+	function cnWrap(str, len, limit) {
+	    if (limit === void 0) { limit = 0; }
 	    var str_line_length = 0;
 	    var str_len = str.length;
 	    var str_cut = new String();
 	    var str_out = '';
-	    for (var i = start; i < str_len; i++) {
+	    var total_len = 0;
+	    for (var i = 0; i < str_len; i++) {
+	        if (limit != 0 && total_len > limit)
+	            break;
 	        var a = str.charAt(i);
 	        str_line_length++;
+	        total_len++;
 	        if (escape(a).length > 4) {
 	            str_line_length++;
+	            total_len++;
 	        }
 	        str_cut = str_cut.concat(a);
 	        if (str_line_length >= len) {
