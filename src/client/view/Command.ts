@@ -116,6 +116,8 @@ enum cmdEnum {
     sc_startGame,
     cs_commitGame,
     sc_commitGame,
+    cs_commitTeam,
+    sc_commitTeam,
     cs_toggleTimer,
     sc_toggleTimer,
     cs_setBlood,
@@ -142,9 +144,6 @@ enum cmdEnum {
     cs_fadeOutPlayerPanel,
     movePlayerPanel,
     cs_movePlayerPanel,
-    //自动三杀事件
-    straightScore3,
-    straightScore5,
 
     initPanel,
     ///screen

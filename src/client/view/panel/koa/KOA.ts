@@ -1,7 +1,7 @@
 import { fdatasync } from 'fs';
 import { mapToArr } from '../../utils/JsFunc';
 import { HP } from './HP';
-import { getPlayerDoc } from '../../utils/HupuAPI';
+import { getGameInfo, getPlayerDoc } from '../../utils/HupuAPI';
 import { PickupAnimation } from './PickupAnimation';
 import { CommandId } from '../../Command';
 import { PanelId, TimerState } from '../../const';
@@ -28,6 +28,8 @@ class KOA extends VueBase {
     orderArr2p = VueBase.PROP
     gamePlayer1p = VueBase.PROP
     gamePlayer2p = VueBase.PROP
+
+    bracketInfo = VueBase.PROP
 
     $actTab
     playerIdMap
@@ -64,6 +66,10 @@ class KOA extends VueBase {
             }
             this.playerIdMap = playerMap
             // this.initPlayerData(playerMap)
+        })
+        getGameInfo((res) => {
+            console.log('gameInfo', res);
+            this.startGame(res)
         })
         this.initIO()
     }
@@ -197,9 +203,23 @@ class KOA extends VueBase {
         },
         onCommitGame() {
             this.opReq(`${CommandId.cs_commitGame}`, { duration: this.hp.timeOnSec })
+        },
+        onCommitTeam() {
+            let a = this.bracketInfo.split('-')
+            if (a.length == 3) {
+                // var bracketIdx = a[0]
+                // var scoreBlueTeam = a[1]
+                // var scoreRedTeam = a[2]
+                this.opReq(`${CommandId.cs_commitTeam}`, {
+                    bracketIdx: a[0],
+                    scoreArr: [a[1], a[2]]
+                })
+            }
+            else {
+                alert('数据录入错误！')
+            }
         }
     }
-
 
     showPickup(data) {
         pickupScene = new PickupScene(canvasStage, this.playerIdMap)
@@ -208,6 +228,12 @@ class KOA extends VueBase {
 
     startGame(data) {
         this.hp.setPlayer(data.playerDocArr, data.partnerArr, data.stArr)
+        this.hp.setBlood(true, data.playerDocArr[0].blood)
+        this.hp.setBlood(false, data.playerDocArr[1].blood)
+        this.hp.setFoul(true, data.playerDocArr[0].foul)
+        this.hp.setFoul(false, data.playerDocArr[1].foul)
+        this.hp.setSt(true, data.playerDocArr[0].st)
+        this.hp.setSt(false, data.playerDocArr[1].st)
     }
 
     initIO() {
@@ -241,6 +267,8 @@ class KOA extends VueBase {
             })
             .on(`${CommandId.sc_commitGame}`, (data) => {
                 this.hp.toggleTimer(TimerState.PAUSE)
+                if (data.sus)
+                    this.hp.showWinner(data.winner == 0)
                 console.log('cs_commitGame', data);
             })
     }

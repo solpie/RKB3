@@ -754,10 +754,16 @@
 	            console.error(url);
 	    });
 	};
+	var _get = function (url, callback) {
+	    $.get(url, callback);
+	};
 	exports.getPlayerDoc = function (callback) {
 	    $.get('/game/player', function (res) {
 	        callback(res);
 	    });
+	};
+	exports.getGameInfo = function (callback) {
+	    _get('/game/', callback);
 	};
 
 

@@ -36,30 +36,29 @@ class PlayerModel(object):
 class GameDoc:
     id = None
     start = None
+    duration = 0
     blueTeam = None
     redTeam = None
     foul1p = 0
     foul2p = 0
+    st = 2
     blood1p = 5
     blood2p = 5
     st1p = 2
     st2p = 2
     playerDocArr = []
 
-    def toDict(self):
+    def toDict(self, data):
         doc = dict()
         pArr = []
-        for player in self.playerDocArr:
+        save = ['_id', 'id', 'name', 'blood', 'foul', 'st']
+        for player in data['playerDocArr']:
             p = dict()
-            p['_id'] = player['_id']
-            p['id'] = player['id']
-            p['name'] = player['name']
+            for k in save:
+                p[k] = player[k]
             pArr.append(p)
-        pArr[0]['blood'] = self.blood1p
-        pArr[1]['blood'] = self.blood2p
-        pArr[0]['st'] = self.st1p
-        pArr[1]['st'] = self.st2p
         doc['playerDocArr'] = pArr
+        doc['duration'] = self.duration
         return doc
 
 
@@ -82,39 +81,84 @@ class BracketModel(object):
         docs[0]["group"] = l
         self.db.insert(docs[0])
 
-
     def onFtBracketInfo(self, data):
         print('onFtBracketInfo')
         data['et'] = 'top8Match'
-        l = dict()
-        for i in range(14):
-            l[i + 1] = {"left": {"score": 1, "name": "FTG t1"},
-                        "right": {"score": 3, "name": "FTG t2"}}
-        data['list'] = l
+        docs = self.db.find({"id": -1})
+        data['list'] =  docs[0]["group"]
 
-    def onCommitGame(self, data):
-        # data['left']
-        pass
+    def commitTeam(self, data):
+        idx = data['bracketIdx']
+        docs = self.db.find({"id": -1})
+        g = docs[0]["group"][idx]
+        g['left']['score'] = data['scoreArr'][0]
+        g['right']['score'] = data['scoreArr'][1]
+        self.db.update(docs[0])
 
 
 class GameModel(object):
     playerModel = None
     lastWinner = None
-    lastBlood = None
-    lastWinnerBlood = {"idx": -1, "blood": 0}
+    data = None
 
     def __init__(self, playerModel):
+        self.gameDoc = None
         self.playerModel = playerModel
         self.db = BaseDB('./db/game.db')
 
+    def getPlayer(self, idx):
+        return self.data['playerDocArr'][idx]
+
+    def dtFoul(self, idx, dt=0):
+        player = self.getPlayer(idx)
+        player['foul'] += dt
+        player['foul'] = self._range(player['foul'], 0, 4)
+        return player['foul']
+
+    def dtSt(self, idx, dt=0):
+        player = self.getPlayer(idx)
+        player['st'] += dt
+        player['st'] = self._range(player['st'], 0, 2)
+        return player['st']
+
+    def _range(self, v, min, max):
+        if v < min:
+            return min
+        if v > max:
+            return max
+        return v
+
+    def dtBlood(self, idx, dt=0):
+        self.getPlayer(idx)['blood'] += dt
+        b = self.getPlayer(idx)['blood']
+        self.getPlayer(idx)['blood'] = self._range(b, 0, 5)
+        return self.getPlayer(idx)['blood']
+
+    def getData(self):
+        return self.data
+
     def startGame(self, data):
         self.gameDoc = GameDoc()
-        self.gameDoc.playerDocArr = data['playerDocArr']
-        winnerIdx = self.lastWinnerBlood['idx']
-        if winnerIdx > -1:
-            self.gameDoc.playerDocArr[winnerIdx][
-                'blood'] = self.lastWinnerBlood['blood']
-        print(self.gameDoc.playerDocArr)
+        self.data = data
+        player1 = self.getPlayer(0)
+        player2 = self.getPlayer(1)
+        player1['blood'] = self.gameDoc.blood1p
+        player2['blood'] = self.gameDoc.blood2p
+        player1['foul'] = self.gameDoc.foul1p
+        player2['foul'] = self.gameDoc.foul2p
+        player1['st'] = self.gameDoc.st
+        player2['st'] = self.gameDoc.st
+
+        if self.lastWinner:
+            if player1['id'] == self.lastWinner['id']:
+                player1['blood'] = self._range(
+                    self.lastWinner['blood'] + 1, 0, 5)
+            if player2['id'] == self.lastWinner['id']:
+                player2['blood'] = self._range(
+                    self.lastWinner['blood'] + 1, 0, 5)
+
+    def commitTeam(self, data):
+        self.lastWinner = None
 
     def commitGame(self, data):
         if not self.gameDoc:
@@ -122,57 +166,46 @@ class GameModel(object):
             return data
 
         isFinish = False
-        if self.gameDoc.blood1p == 0:
-            self.lastWinnerBlood = {"idx": 1, "blood": self.gameDoc.blood2p}
-            self.lastWinner = self.gameDoc.playerDocArr[1]
+        winnerIdx = 0
+        #2p win
+        if self.dtBlood(0) == 0:
+            winnerIdx = 1
+            self.lastWinner = self.getPlayer(1)
             isFinish = True
 
-        elif self.gameDoc.blood2p == 0:
-            self.lastWinnerBlood = {"idx": 0, "blood": self.gameDoc.blood1p}
-            self.lastWinner = self.gameDoc.playerDocArr[0]
+        elif self.dtBlood(1) == 0:
+            winnerIdx = 0
+            self.lastWinner = self.getPlayer(0)
             isFinish = True
 
         if isFinish:
-            doc = self.gameDoc.toDict()
+            self.gameDoc.duration = data['duration']
+            doc = self.gameDoc.toDict(self.data)
             self.db.insert(doc)
             data['sus'] = True
             data['gameDoc'] = doc
+            data['winner'] = winnerIdx
             self.gameDoc = None
             return data
 
     def setFoul(self, data):
         dt = data['dt']
         if data['is1p']:
-            self.gameDoc.foul1p += dt
-            data['foul'] = self.gameDoc.foul1p
+            data['foul'] = self.dtFoul(0, dt)
         else:
-            self.gameDoc.foul2p += dt
-            data['foul'] = self.gameDoc.foul2p
+            data['foul'] = self.dtFoul(1, dt)
 
     def setSt(self, data):
-        dt = data['dt']
         if data['is1p']:
-            self.gameDoc.st1p += dt
-            data['st'] = self.gameDoc.st1p
+            data['st'] = self.dtSt(0, data['dt'])
         else:
-            self.gameDoc.st2p += dt
-            data['st'] = self.gameDoc.st2p
+            data['st'] = self.dtSt(1, data['dt'])
 
     def setBlood(self, data):
         if data['is1p']:
-            self.gameDoc.blood1p += data['dt']
-            if self.gameDoc.blood1p > 5:
-                self.gameDoc.blood1p = 5
-            if self.gameDoc.blood1p < 0:
-                self.gameDoc.blood1p = 0
-            data['blood'] = self.gameDoc.blood1p
+            data['blood'] = self.dtBlood(0, data['dt'])
         else:
-            self.gameDoc.blood2p += data['dt']
-            if self.gameDoc.blood2p > 5:
-                self.gameDoc.blood2p = 5
-            if self.gameDoc.blood2p < 0:
-                self.gameDoc.blood2p = 0
-            data['blood'] = self.gameDoc.blood2p
+            data['blood'] = self.dtBlood(1, data['dt'])
 
 
 class ActivityModel:
@@ -183,18 +216,20 @@ class ActivityModel:
         self.bracketModel = BracketModel()
 
         self.eventMap = dict()
-        self.eventMap['cs_startGame'] = self.gameModel.startGame
-        self.eventMap['cs_setBlood'] = self.gameModel.setBlood
-        self.eventMap['cs_setFoul'] = self.gameModel.setFoul
-        self.eventMap['cs_setSt'] = self.gameModel.setSt
-        self.eventMap['cs_commitGame'] = self.gameModel.commitGame
+        self.eventMap['cs_startGame'] = [self.gameModel.startGame]
+        self.eventMap['cs_setBlood'] = [self.gameModel.setBlood]
+        self.eventMap['cs_setFoul'] = [self.gameModel.setFoul]
+        self.eventMap['cs_setSt'] = [self.gameModel.setSt]
+        self.eventMap['cs_commitGame'] = [self.gameModel.commitGame]
+        self.eventMap['cs_commitTeam'] = [self.gameModel.commitTeam,self.bracketModel.commitTeam]
         # ft bracket
-        self.eventMap['cs_ftBracketInfo'] = self.bracketModel.onFtBracketInfo
+        self.eventMap['cs_ftBracketInfo'] = [self.bracketModel.onFtBracketInfo]
 
     def onCmd(self, cmd, data):
         print(cmd, data)
-        data = self.eventMap[cmd](data) or data
-        emit(cmd.replace('cs_', 'sc_'), data)
+        for func in self.eventMap[cmd]:
+            data = func(data) or data
+            emit(cmd.replace('cs_', 'sc_'), data)
 
 actModel = ActivityModel()
 
@@ -212,7 +247,9 @@ def emit(cmd, data):
 
 @gameView.route('/')
 def gameIndex():
-    return 'gameView'
+    if actModel.gameModel.data:
+        return jsonify(actModel.gameModel.getData())
+    return jsonify({"start": False})
 
 
 @gameView.route('/player')

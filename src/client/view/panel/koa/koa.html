@@ -44,7 +44,7 @@
                     </ul>
                 </div>
                 <div v-for="player in playerDocArr">
-                    <a class="box" style="font-size:30px" @click='onPickupPlayer(player)'> <img :src="player.portrait" style="width:80px"> {{player.id +' ' +player.name}}</a>
+                    <a class="box" style="font-size:15px" @click='onPickupPlayer(player)'> <img :src="player.portrait" style="width:60px"> {{player.id +' ' +player.name}}</a>
                     <p>
                 </div>
         </div>
@@ -57,7 +57,11 @@
                 <p>
                     <button class="button is-large" @click="onCommitGame()">单场结算</button>
                     <hr>
-                    <button class="button is-large" @click="onCommitGame()">战团结算</button>
+                    <p class="control">
+                        <label class="label">场次-蓝队比分-红队比分</label>
+                        <input class="input" type="text" v-model='bracketInfo' />
+                    </p>
+                    <button class="button is-large" @click="onCommitTeam()">战团结算</button>
 
         </div>
     </div>

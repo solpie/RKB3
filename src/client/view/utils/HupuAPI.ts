@@ -10,9 +10,15 @@ export let getHupuWS = (callback) => {
         else console.error(url);
     })
 }
-
+let _get = (url, callback) => {
+    $.get(url, callback)
+}
 export let getPlayerDoc = (callback) => {
     $.get('/game/player', (res) => {
         callback(res)
     })
+}
+
+export let getGameInfo = (callback) => {
+    _get('/game/', callback)
 }

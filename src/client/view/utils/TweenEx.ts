@@ -1,6 +1,5 @@
 declare let TWEEN;
 export class TweenEx {
-
     target
     vars
     eventArr
@@ -53,21 +52,24 @@ export class TweenEx {
                         .start();
                 }
                 else if (e.event == 'call') {
-                    e.data.callback()
+                    e.data.callback(this)
                     run()
                 }
             }
         }
         run()
+        return this
     }
     call(callback) {
-        this.eventArr.push({ event: 'call', data: { callback: callback } })
+        if (callback)
+            this.eventArr.push({ event: 'call', data: { callback: callback } })
         return this
     }
     // static to = TweenLite.to
-    static to(target, duration, vars) {
-        new TweenEx(target)
+    static to(target, duration, vars, callback?): TweenEx {
+        return new TweenEx(target)
             .to(vars, duration)
+            .call(callback)
             .start()
     }
     // static delayedCall = TweenLite.delayedCall

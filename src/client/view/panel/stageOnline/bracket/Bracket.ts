@@ -225,7 +225,7 @@ export class Bracket extends BasePanelView {
             let dataObj = res.data[gameIdx];
             let group1 = groupPosMap[gameIdx];
             group1.idx = Number(gameIdx);
-            if (dataObj.left.score || dataObj.right.score) {
+            if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
                 if (dataObj.left.score > dataObj.right.score)
                     group1.playerArr[0].isWin = true;
                 else
@@ -247,9 +247,9 @@ export class Bracket extends BasePanelView {
         }
 
 
-        let comingIdx = 1;
-        for (let i = 0; i < 14; i++) {
-            let isClose = closeGame[14 - i];
+        var comingIdx = 1;
+        for (var i = 0; i < 14; i++) {
+            var isClose = closeGame[14 - i];
             if (isClose) {
                 comingIdx = 14 - i + 1;
                 break;
@@ -257,8 +257,8 @@ export class Bracket extends BasePanelView {
         }
         this.showComingIdx(comingIdx);
 
-        for (let i = 0; i < 14; i++) {
-            let isClose = closeGame[i + 1];
+        for (var i = 0; i < 14; i++) {
+            var isClose = closeGame[i + 1];
             if (!isClose) {
                 if (i + 1 != comingIdx)
                     groupPosMap[i + 1].ctn.alpha = 0.3;

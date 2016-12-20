@@ -1,3 +1,4 @@
+import { Winner } from './Winner';
 import { Win } from './Win';
 import { St } from './St';
 import { Direction, SpriteGroup } from '../../utils/SpriteGroup';
@@ -34,6 +35,7 @@ export class HP extends PIXI.Container {
 
 
     win: Win
+    winner: Winner
     constructor(stage: PIXI.Container) {
         super()
         stage.addChild(this)
@@ -261,12 +263,16 @@ export class HP extends PIXI.Container {
 
 
         this.win = new Win(this)
+        this.winner = new Winner(this)
+        this.winner.y = 300
         this.test()
     }
 
     test() {
         TweenEx.delayedCall(200, () => {
-            this.win.show()
+            // this.showWinner(true)
+            // this.showWinner(false)
+            // this.win.show()
 
             // this.setBlood(true, 3)
             // this.setBlood(false, 1)
@@ -428,4 +434,7 @@ export class HP extends PIXI.Container {
 
     }
 
+    showWinner(is1p: boolean) {
+        this.winner.show(is1p)
+    }
 }
