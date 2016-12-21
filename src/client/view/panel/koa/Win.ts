@@ -3,7 +3,7 @@ import { SpriteGroup } from '../../utils/SpriteGroup';
 import { newBitmap } from '../../utils/PixiEx';
 import { TweenEx } from '../../utils/TweenEx';
 import { FontName, ViewConst } from '../../const';
-export class Win extends PIXI.Container {
+export class WinTeam extends PIXI.Container {
     modal: PIXI.Graphics
     bg: PIXI.Sprite
     avatar: PIXI.Sprite
@@ -48,7 +48,7 @@ export class Win extends PIXI.Container {
 
         // this.avatar = newBitmap({ url: '/img/player/avatar/st.png' })
         this.setAvatar('/img/player/avatar/st.png')
-        this.setFtLogo('/img/ft/1.jpg')
+        // this.setFtLogo('/img/ft/1.jpg')
         let ftStyle = {
             fontFamily: FontName.MicrosoftYahei,
             fontWeight: 'bold',
@@ -75,20 +75,22 @@ export class Win extends PIXI.Container {
 
         let introStyle = {
             fontFamily: FontName.MicrosoftYahei,
-            fontSize: '20px', fill: "#fff"
+            fontSize: '20px', fill: "#fff",
+            lineHeight: 33
         }
         this.introText = new PIXI.Text('', introStyle)
         this.introText.x = 812
         this.introText.y = 445
         this.ctn.addChild(this.introText)
-        this.test()
-
+        // this.test()
     }
 
     test() {
         this.setIntro('今日，一段三星Galaxy Note 7爆炸的视频在YouTube上疯传（相关搜索结果达到了约6,550条），据传视频中被炸伤的是美国好声音导师、著名嘻哈歌手Cee-Lo Green。视频画面中，当时一位长相似Cee-Lo Green的黑人男子在演播室后台接电话时，手机突然爆炸冒出火花，随后男子倒地（疑似重伤，甚至传出了被炸死的消息）。不少网友猜测，爆炸的手机')
+        this.setIntro('一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十')
         this.setFtName('FTG')
         this.setTeamName('爆炸的手机')
+        this.show()
     }
 
     setFtName(n) {
@@ -102,12 +104,13 @@ export class Win extends PIXI.Container {
     }
 
     setIntro(text) {
-        this.introText.text = cnWrap(text, 58, 116)
+        this.introText.text = cnWrap(text, 58, 115)
     }
 
     setAvatar(url: string) {
         if (this.avatar) {
-            this.avatar.parent.removeChild(this.avatar)
+            if (this.avatar.parent)
+                this.avatar.parent.removeChild(this.avatar)
             this.avatar = null
         }
         this.avatar = newBitmap({
@@ -131,15 +134,16 @@ export class Win extends PIXI.Container {
 
     setFtLogo(url) {
         if (this.ftLogo) {
-            this.ftLogo.parent.removeChild(this.ftLogo)
+            if (this.ftLogo.parent)
+                this.ftLogo.parent.removeChild(this.ftLogo)
             this.ftLogo = null
         }
         this.ftLogo = newBitmap({
             url: url, x: this.fx, y: this.fy, callback: (img) => {
-                this.ftLogo.scale.x = this.ftLogo.scale.y = 82 / img.width
+                this.ftLogo.scale.x = this.ftLogo.scale.y = 82 / 120
+                this.ctn.addChildAt(this.ftLogo, 0)
             }
         })
-        this.ctn.addChildAt(this.ftLogo, 0)
     }
 
     show() {
@@ -148,6 +152,10 @@ export class Win extends PIXI.Container {
             .to({ alpha: 0.7 }, 100)
             .call(() => {
                 TweenEx.to(this.ctn, 100, { alpha: 1 })
+            })
+            .delay(7000)
+            .call(() => {
+                this.hide()
             })
             .start()
     }

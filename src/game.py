@@ -20,6 +20,9 @@ class PlayerModel(object):
         self.db = BaseDB('./db/player.db')
         self.make32Player()
 
+    def reload(self, _):
+        self.db.reload()
+
     def all(self):
         return self.db.findAll()
 
@@ -31,6 +34,8 @@ class PlayerModel(object):
             # self.db.update({"id":i+1},{"avatar":''+id+'.jpg'})
             # self.db.update({"id":i+1},{"ft":'FTG'})
             # self.db.update({"id":i+1},{"team":'FTG t1'})
+
+import time
 
 
 class GameDoc:
@@ -47,6 +52,7 @@ class GameDoc:
     st1p = 2
     st2p = 2
     playerDocArr = []
+    bracketIdx = 0
 
     def toDict(self, data):
         doc = dict()
@@ -59,6 +65,8 @@ class GameDoc:
             pArr.append(p)
         doc['playerDocArr'] = pArr
         doc['duration'] = self.duration
+        doc['end'] = int(time.time())
+        doc['bracketIdx'] = self.bracketIdx
         return doc
 
 
@@ -69,31 +77,57 @@ class BracketModel(object):
         docs = self.db.find({"id": -1})
         if len(docs) < 1:
             self.db.insert({"id": -1})
-        # self.makeBracket()
+        self.makeBracket()
 
     def makeBracket(self):
-        l = dict()
-        for i in range(14):
-            l[i + 1] = {"left": {"score": 1, "name": "FTG t1"},
-                        "right": {"score": 3, "name": "FTG t2"}}
+        doc = self._doc()
+        for idx in doc['group']:
+            g = doc['group'][idx]
+            # g['left']['ft'] = 'FTG'
+            # g['right']['ft'] = 'FTG'
+            # g['left']['intro'] = '钢管舞更为充分'
+            # g['right']['intro'] = '特委托物业万佛阿佛i结合实际哦'
+            # g['left']['logo'] = str((int(idx) % 4) + 1) + '.jpg'
+            # g['right']['logo'] = str((int(idx) % 4) + 1) + '.jpg'
+        self.db.update(doc)
+        # l = dict()
+        # for i in range(14):
+        #     l[i + 1] = {"left": {"score": 1, "name": "FTG t1"},
+        #                 "right": {"score": 3, "name": "FTG t2"}}
+        # docs = self.db.find({"id": -1})
+        # # docs[0]["comingIdx"] = -1
+        # docs[0]["group"] = l
+        # self.db.insert(docs[0])
+
+    def _doc(self):
         docs = self.db.find({"id": -1})
-        docs[0]["comingIdx"] = -1
-        docs[0]["group"] = l
-        self.db.insert(docs[0])
+        if len(docs):
+            return docs[0]
+        return None
+
+    def reload(self, _):
+        self.db.reload()
 
     def onFtBracketInfo(self, data):
         print('onFtBracketInfo')
         data['et'] = 'top8Match'
         docs = self.db.find({"id": -1})
-        data['list'] =  docs[0]["group"]
+        data['list'] = docs[0]["group"]
+
+    def getGroup(self, idx):
+        return self._doc()['group'][idx]
 
     def commitTeam(self, data):
-        idx = data['bracketIdx']
+        idx = str(data['bracketIdx'])
         docs = self.db.find({"id": -1})
         g = docs[0]["group"][idx]
         g['left']['score'] = data['scoreArr'][0]
         g['right']['score'] = data['scoreArr'][1]
+        data['group'] = g
         self.db.update(docs[0])
+
+    def clear(self):
+        pass
 
 
 class GameModel(object):
@@ -105,6 +139,9 @@ class GameModel(object):
         self.gameDoc = None
         self.playerModel = playerModel
         self.db = BaseDB('./db/game.db')
+
+    def reload(self, _):
+        self.db.reload()
 
     def getPlayer(self, idx):
         return self.data['playerDocArr'][idx]
@@ -158,6 +195,11 @@ class GameModel(object):
                     self.lastWinner['blood'] + 1, 0, 5)
 
     def commitTeam(self, data):
+        idx = data['bracketIdx']
+        docs = self.db.find({'bracketIdx': idx})
+        if len(docs):
+            data['gameDocArr'] = docs
+        data['lastWinner'] = self.lastWinner
         self.lastWinner = None
 
     def commitGame(self, data):
@@ -167,7 +209,7 @@ class GameModel(object):
 
         isFinish = False
         winnerIdx = 0
-        #2p win
+        # 2p win
         if self.dtBlood(0) == 0:
             winnerIdx = 1
             self.lastWinner = self.getPlayer(1)
@@ -180,9 +222,11 @@ class GameModel(object):
 
         if isFinish:
             self.gameDoc.duration = data['duration']
+            self.gameDoc.bracketIdx = int(data['bracketIdx'])
             doc = self.gameDoc.toDict(self.data)
             self.db.insert(doc)
             data['sus'] = True
+            data['duration'] = data['duration']
             data['gameDoc'] = doc
             data['winner'] = winnerIdx
             self.gameDoc = None
@@ -221,9 +265,11 @@ class ActivityModel:
         self.eventMap['cs_setFoul'] = [self.gameModel.setFoul]
         self.eventMap['cs_setSt'] = [self.gameModel.setSt]
         self.eventMap['cs_commitGame'] = [self.gameModel.commitGame]
-        self.eventMap['cs_commitTeam'] = [self.gameModel.commitTeam,self.bracketModel.commitTeam]
+        self.eventMap['cs_commitTeam'] = [self.bracketModel.commitTeam,
+                                          self.gameModel.commitTeam]
         # ft bracket
         self.eventMap['cs_ftBracketInfo'] = [self.bracketModel.onFtBracketInfo]
+        self.eventMap['cs_reloadDB'] = [self.gameModel.reload,self.playerModel.reload,self.bracketModel.reload]
 
     def onCmd(self, cmd, data):
         print(cmd, data)
@@ -255,6 +301,11 @@ def gameIndex():
 @gameView.route('/player')
 def findAllPlayer():
     return jsonify(actModel.playerModel.all())
+
+
+@gameView.route('/bracket/<idx>')
+def getBracket(idx):
+    return jsonify(actModel.bracketModel.getGroup(idx))
 
 
 @gameView.route('/start', methods=['POST'])

@@ -55,13 +55,20 @@
                 <button class="button is-large" @click="onToggleTimer()">Toggle</button>
                 <button class="button is-large" @click="onResetTimer()">Reset</button>
                 <p>
-                    <button class="button is-large" @click="onCommitGame()">单场结算</button>
                     <hr>
+                    <div class="control">
+                        <label class="label">Bracket场次</label>
+                        <input class="input" type="text" v-model='bracketIdx' style="width:50px" />
+                        <button class="button " @click="onCommitGame()">单场结算</button>
+                    </div>
                     <p class="control">
                         <label class="label">场次-蓝队比分-红队比分</label>
-                        <input class="input" type="text" v-model='bracketInfo' />
+                        <input class="input" type="text" v-model='bracketInfo' style="width:150px" />
                     </p>
                     <button class="button is-large" @click="onCommitTeam()">战团结算</button>
+                    <hr>
+                    <button class="button is-large" @click="onReloadDB()">reload db</button>
+
 
         </div>
     </div>

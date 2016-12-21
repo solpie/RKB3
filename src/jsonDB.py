@@ -21,13 +21,15 @@ class BaseDB(object):
         if not os.path.exists(path):
             open(path, mode='w').close()
         else:
-            with open(path, mode='r', encoding="utf-8") as f:
-                for line in f:
-                    doc = json.loads(line, encoding="utf-8")
-                    self.__docMap[doc['_id']] = doc
-                    # pprint(doc)
-            f.close()
+            self.__load()
             self.__flush()
+
+    def __load(self):
+        with open(self.__path, mode='r', encoding="utf-8") as f:
+            for line in f:
+                doc = json.loads(line, encoding="utf-8")
+                self.__docMap[doc['_id']] = doc
+        f.close()
 
     def insert(self, doc):
         _id = _id_gen()
@@ -44,6 +46,9 @@ class BaseDB(object):
         with open(self.__path, 'a', encoding="utf-8") as f:
             f.writelines(json.dumps(doc) + '\n')
         f.close()
+
+    def reload(self):
+        self.__load()
 
     def __flush(self):
         data = ""

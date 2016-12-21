@@ -54,8 +54,7 @@ import time
 @app.route('/<viewname>/')
 def view(viewname):
     if viewname in serverConf["views"]:
-        print(time.time())
-        return render_template(viewname + '.html', time=time.time())
+        return render_template(viewname + '.html', time=int(time.time()))
     return viewname
 
 # proxy

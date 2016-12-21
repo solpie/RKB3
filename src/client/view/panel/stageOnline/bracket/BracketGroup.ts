@@ -3,10 +3,9 @@ function _mkGroup(parameters) {
     let x = parameters.x;
     let y = parameters.y;
     let hints = parameters.hints ? parameters.hints : ['', ''];
-    let s = { font: '25px', fill: '#C1C1C1', align: 'right' };
+    let s = { font: '25px', fill: '#fff', align: 'right' };
     let s1 = new PIXI.Text('', s);
     s1.y = 8;
-    s.fill = '#fff'
     let s2 = new PIXI.Text('', s);
     s2.y = 8 + 50;
     s1.x = s2.x = 175;

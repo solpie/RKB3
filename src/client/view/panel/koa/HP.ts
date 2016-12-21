@@ -1,5 +1,5 @@
 import { Winner } from './Winner';
-import { Win } from './Win';
+import { WinTeam } from './Win';
 import { St } from './St';
 import { Direction, SpriteGroup } from '../../utils/SpriteGroup';
 import { formatSecond } from '../../utils/JsFunc';
@@ -34,7 +34,7 @@ export class HP extends PIXI.Container {
     timerState
 
 
-    win: Win
+    winTeam: WinTeam
     winner: Winner
     constructor(stage: PIXI.Container) {
         super()
@@ -262,14 +262,15 @@ export class HP extends PIXI.Container {
         this.setFoul(false, 0)
 
 
-        this.win = new Win(this)
         this.winner = new Winner(this)
         this.winner.y = 300
+        this.winTeam = new WinTeam(this)
         this.test()
     }
 
     test() {
         TweenEx.delayedCall(200, () => {
+            this.winTeam.test()
             // this.showWinner(true)
             // this.showWinner(false)
             // this.win.show()
@@ -436,5 +437,16 @@ export class HP extends PIXI.Container {
 
     showWinner(is1p: boolean) {
         this.winner.show(is1p)
+    }
+
+    showWinTeam(team) {
+        this.winTeam.setTeamName(team.name)
+        this.winTeam.setFtName(team.ft)
+        var mvp = team.mvp
+        // this.winTeam.setAvatar()
+        this.winTeam.setFtLogo('/img/ft/'+team.logo)
+        this.winTeam.setIntro(team.intro)
+        this.winTeam.show()
+
     }
 }

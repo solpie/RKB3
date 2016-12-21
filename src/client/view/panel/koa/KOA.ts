@@ -30,6 +30,7 @@ class KOA extends VueBase {
     gamePlayer2p = VueBase.PROP
 
     bracketInfo = VueBase.PROP
+    bracketIdx = VueBase.PROP
 
     $actTab
     playerIdMap
@@ -81,6 +82,21 @@ class KOA extends VueBase {
 
     protected mounted() {
         this.isPickup1p = true
+    }
+
+    showPickup(data) {
+        pickupScene = new PickupScene(canvasStage, this.playerIdMap)
+        new PickupAnimation(pickupScene).startPick(data.teamId1p, data.teamId2p, data.orderArr1p, data.orderArr2p)
+    }
+
+    startGame(data) {
+        this.hp.setPlayer(data.playerDocArr, data.partnerArr, data.stArr)
+        this.hp.setBlood(true, data.playerDocArr[0].blood)
+        this.hp.setBlood(false, data.playerDocArr[1].blood)
+        this.hp.setFoul(true, data.playerDocArr[0].foul)
+        this.hp.setFoul(false, data.playerDocArr[1].foul)
+        this.hp.setSt(true, data.playerDocArr[0].st)
+        this.hp.setSt(false, data.playerDocArr[1].st)
     }
 
     methods = {
@@ -202,7 +218,13 @@ class KOA extends VueBase {
             })
         },
         onCommitGame() {
-            this.opReq(`${CommandId.cs_commitGame}`, { duration: this.hp.timeOnSec })
+            var bracketIdx = Number(this.bracketIdx)
+            if (bracketIdx) {
+                this.opReq(`${CommandId.cs_commitGame}`, { duration: this.hp.timeOnSec, bracketIdx: bracketIdx })
+            }
+        },
+        onReloadDB() {
+                this.opReq('cs_reloadDB', {})
         },
         onCommitTeam() {
             let a = this.bracketInfo.split('-')
@@ -211,29 +233,14 @@ class KOA extends VueBase {
                 // var scoreBlueTeam = a[1]
                 // var scoreRedTeam = a[2]
                 this.opReq(`${CommandId.cs_commitTeam}`, {
-                    bracketIdx: a[0],
-                    scoreArr: [a[1], a[2]]
+                    bracketIdx: Number(a[0]),
+                    scoreArr: [Number(a[1]), Number(a[2])]
                 })
             }
             else {
                 alert('数据录入错误！')
             }
         }
-    }
-
-    showPickup(data) {
-        pickupScene = new PickupScene(canvasStage, this.playerIdMap)
-        new PickupAnimation(pickupScene).startPick(data.teamId1p, data.teamId2p, data.orderArr1p, data.orderArr2p)
-    }
-
-    startGame(data) {
-        this.hp.setPlayer(data.playerDocArr, data.partnerArr, data.stArr)
-        this.hp.setBlood(true, data.playerDocArr[0].blood)
-        this.hp.setBlood(false, data.playerDocArr[1].blood)
-        this.hp.setFoul(true, data.playerDocArr[0].foul)
-        this.hp.setFoul(false, data.playerDocArr[1].foul)
-        this.hp.setSt(true, data.playerDocArr[0].st)
-        this.hp.setSt(false, data.playerDocArr[1].st)
     }
 
     initIO() {
@@ -270,6 +277,17 @@ class KOA extends VueBase {
                 if (data.sus)
                     this.hp.showWinner(data.winner == 0)
                 console.log('cs_commitGame', data);
+            })
+            .on(`${CommandId.sc_commitTeam}`, (data) => {
+                console.log('sc_commitTeam', data);
+                var winTeam;
+                let g = data.group
+                if (g.left.score > g.right.score)
+                    winTeam = g.left
+                else
+                    winTeam = g.right
+
+                this.hp.showWinTeam(winTeam)
             })
     }
 }
