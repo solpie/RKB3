@@ -1,5 +1,5 @@
 import { fdatasync } from 'fs';
-import { mapToArr } from '../../utils/JsFunc';
+import { ascendingProp, mapToArr } from '../../utils/JsFunc';
 import { HP } from './HP';
 import { getGameInfo, getPlayerDoc } from '../../utils/HupuAPI';
 import { PickupAnimation } from './PickupAnimation';
@@ -224,7 +224,7 @@ class KOA extends VueBase {
             }
         },
         onReloadDB() {
-                this.opReq('cs_reloadDB', {})
+            this.opReq('cs_reloadDB', {})
         },
         onCommitTeam() {
             let a = this.bracketInfo.split('-')
@@ -282,11 +282,27 @@ class KOA extends VueBase {
                 console.log('sc_commitTeam', data);
                 var winTeam;
                 let g = data.group
-                if (g.left.score > g.right.score)
-                    winTeam = g.left
-                else
-                    winTeam = g.right
-
+                var is1pWin = g.left.score > g.right.score
+                is1pWin ? winTeam = g.left
+                    : winTeam = g.right
+                var winGameDocArr = []
+                if (data.gameDocArr) {
+                    // winGameDocArr.sort()
+                    data.gameDocArr = data.gameDocArr.sort(ascendingProp('end'))
+                    for (var i = 0; i < data.gameDocArr.length; i++) {
+                        var gameDoc = data.gameDocArr[i];
+                        var loser = gameDoc.playerDocArr[Number(is1pWin)]
+                        if (loser.blood == 0) {
+                            var playerArr = []
+                            playerArr.push(this.playerIdMap[gameDoc.playerDocArr[0].id])
+                            playerArr.push(this.playerIdMap[gameDoc.playerDocArr[1].id])
+                            winGameDocArr.push(playerArr)
+                        }
+                    }
+                }
+                console.log('winGameDocArr', winGameDocArr);
+                winTeam.winPlayerDocArr = winGameDocArr
+                winTeam.is1pWin = is1pWin
                 this.hp.showWinTeam(winTeam)
             })
     }

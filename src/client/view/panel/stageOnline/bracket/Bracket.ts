@@ -1,3 +1,4 @@
+import { TweenEx } from '../../../utils/TweenEx';
 import { CommandId } from '../../../Command';
 import { getHupuWS } from '../../../utils/HupuAPI';
 import { BasePanelView } from "../../BasePanelView";
@@ -134,12 +135,15 @@ export class Bracket extends BasePanelView {
     showComingIdx(idx) {
         //todo：加上延时
         let g = groupPosMap[idx];
-        if (g) {
-            this.comingTitle.visible = true;
-            this.comingTitle.x = g.x - 4;
-            this.comingTitle.y = g.y - 36;
-            blink2({ target: this.comingTitle, time: 600 });
-        }
+        this.comingTitle.visible = false
+        TweenEx.delayedCall(610, () => {
+            if (g) {
+                this.comingTitle.visible = true;
+                this.comingTitle.x = g.x - 4;
+                this.comingTitle.y = g.y - 36;
+                blink2({ target: this.comingTitle, time: 600 });
+            }
+        })
     }
 
     hideComing() {
@@ -200,13 +204,13 @@ export class Bracket extends BasePanelView {
                 if (eventMap[event])
                     eventMap[event](data);
             });
-
-            remoteIO.on(`${CommandId.sc_ftBracketInfo}`, (data) => {
-                console.log('sc_ftBracketInfo', data);
+            let onData = (data) => {
                 let event = data.et;
                 if (eventMap[event])
                     eventMap[event](data);
-            })
+            }
+            remoteIO.on(`${CommandId.sc_ftBracketInfo}`, onData)
+            remoteIO.on(`${CommandId.sc_commitTeam}`, onData)
         }
 
         if (gameId)

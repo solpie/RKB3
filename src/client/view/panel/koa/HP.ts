@@ -111,8 +111,7 @@ export class HP extends PIXI.Container {
 
         //120 x 120
         let initAvatar = (is1p: boolean) => {
-            let url = '/img/player/avatar/'
-            is1p ? url += '1p.png' : url += '2p.png'
+            let url = '/img/player/avatar/1p.png'
             let avt = newBitmap({ url: url })
             let msk1 = new PIXI.Graphics()
             msk1.beginFill(0xff0000)
@@ -128,10 +127,11 @@ export class HP extends PIXI.Container {
                 this.avatar1p = avt
             }
             else {
-                avt.x = 1420
+                avt.x = 1420+120
                 msk1.scale.x = -1
-                msk1.x = avt.x + 120
+                msk1.x = avt.x
                 this.avatar2p = avt
+                avt.scale.x = -1
             }
             this.addChild(avt)
             this.addChild(msk1)
@@ -270,7 +270,7 @@ export class HP extends PIXI.Container {
 
     test() {
         TweenEx.delayedCall(200, () => {
-            this.winTeam.test()
+            // this.winTeam.test()
             // this.showWinner(true)
             // this.showWinner(false)
             // this.win.show()
@@ -440,13 +440,6 @@ export class HP extends PIXI.Container {
     }
 
     showWinTeam(team) {
-        this.winTeam.setTeamName(team.name)
-        this.winTeam.setFtName(team.ft)
-        var mvp = team.mvp
-        // this.winTeam.setAvatar()
-        this.winTeam.setFtLogo('/img/ft/'+team.logo)
-        this.winTeam.setIntro(team.intro)
-        this.winTeam.show()
-
+        this.winTeam.setTeam(team)
     }
 }

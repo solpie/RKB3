@@ -20,7 +20,8 @@ export class WinTeam extends PIXI.Container {
 
     ftName: PIXI.Text
     teamName: PIXI.Text
-
+    winGroupMask: SpriteGroup
+    winIcon: SpriteGroup
     constructor(parent: PIXI.Container) {
         super()
         parent.addChild(this)
@@ -71,7 +72,14 @@ export class WinTeam extends PIXI.Container {
         this.groupCtn.y = 563
         this.ctn.addChild(this.groupCtn)
         let winGroupBg = new SpriteGroup({ invert: 208, img: '/img/panel/koa/hp/winGroup.png', count: 3 })
+        this.winGroupMask = new SpriteGroup({ invert: 208, img: '/img/panel/koa/hp/winGroupMask.png', count: 3 })
+        this.groupCtn.addChild(this.winGroupMask)
         this.groupCtn.addChild(winGroupBg)
+
+        this.winIcon = new SpriteGroup({ invert: 208, img: '/img/panel/koa/hp/win.png', count: 3 })
+        this.winIcon.x = 820
+        this.winIcon.y = 535
+        this.ctn.addChild(this.winIcon)
 
         let introStyle = {
             fontFamily: FontName.MicrosoftYahei,
@@ -145,7 +153,36 @@ export class WinTeam extends PIXI.Container {
             }
         })
     }
-
+    setTeam(team) {
+        this.setTeamName(team.name)
+        this.setFtName(team.ft)
+        var mvp = team.mvp
+        // this.winTeam.setAvatar()
+        this.setFtLogo('/img/ft/' + team.logo)
+        this.setIntro(team.intro)
+        this.show()
+        while (this.groupCtn.children.length > 2) {
+            this.groupCtn.removeChildAt(0)
+        }
+        for (var i = 0; i < team.winPlayerDocArr.length; i++) {
+            var playerDocArr = team.winPlayerDocArr[i];
+            var p1 = newBitmap({ url: playerDocArr[0].portrait })
+            p1.x = 2 + i * 208
+            p1.scale.x = p1.scale.y = 82 / 400
+            // p1.mask = this.winGroupMask.spArr[i]
+            // this.groupCtn.addChildAt(p1, 0)
+            var p2 = newBitmap({ url: playerDocArr[1].portrait })
+            p2.x = 83 / p1.scale.x
+            // p2.scale.x = p2.scale.y = 70 / 400
+            p1.addChild(p2)
+            p1.mask = this.winGroupMask.spArr[i]
+            this.groupCtn.addChildAt(p1, 0)
+        }
+        if (team.is1pWin)
+            this.winIcon.x = 820 + 8
+        else
+            this.winIcon.x = 820 + 90
+    }
     show() {
         console.log('show win');
         new TweenEx(this.modal)
@@ -153,7 +190,7 @@ export class WinTeam extends PIXI.Container {
             .call(() => {
                 TweenEx.to(this.ctn, 100, { alpha: 1 })
             })
-            .delay(7000)
+            .delay(10000)
             .call(() => {
                 this.hide()
             })

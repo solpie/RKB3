@@ -56,6 +56,11 @@ export class TweenEx {
                     run()
                 }
             }
+            else {
+                this.target = null
+                this.eventArr = null
+                this.vars = null
+            }
         }
         run()
         return this

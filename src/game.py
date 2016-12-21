@@ -69,15 +69,35 @@ class GameDoc:
         doc['bracketIdx'] = self.bracketIdx
         return doc
 
+import json
+def clone(obj):
+    return json.loads(json.dumps(obj))
 
 class BracketModel(object):
 
     def __init__(self):
+        road = dict()
+        road['1'] = [[7, 0], [5, 0]]
+        road["2"] = [[7, 1], [5, 1]]
+        road['3'] = [[8, 0], [6, 0]]
+        road['4'] = [[8, 1], [6, 1]]
+        road['5'] = [[10, 1], [-1, 1]]
+        road['6'] = [[9, 1], [-1, 1]]
+        road['7'] = [[11, 0], [9, 0]]
+        road['8'] = [[11, 1], [10, 0]]
+        road['9'] = [[12, 1], [-1, 0]]
+        road['10'] = [[12, 0], [-1, 0]]
+        road['11'] = [[14, 0], [13, 0]]
+        road['12'] = [[13, 1], [-1, 0]]
+        road['13'] = [[14, 1], [-1, 0]]
+        road['14'] = [[-1, 1], [-1, 1]]
+        self.road = road
         self.db = BaseDB('./db/bracket.db')
         docs = self.db.find({"id": -1})
         if len(docs) < 1:
             self.db.insert({"id": -1})
-        self.makeBracket()
+        # self.makeBracket()
+        # self.clear()
 
     def makeBracket(self):
         doc = self._doc()
@@ -85,19 +105,21 @@ class BracketModel(object):
             g = doc['group'][idx]
             # g['left']['ft'] = 'FTG'
             # g['right']['ft'] = 'FTG'
+            g['left']['name'] = 'Team L#'+idx
+            g['right']['name'] = 'Team R#'+idx
             # g['left']['intro'] = '钢管舞更为充分'
             # g['right']['intro'] = '特委托物业万佛阿佛i结合实际哦'
             # g['left']['logo'] = str((int(idx) % 4) + 1) + '.jpg'
             # g['right']['logo'] = str((int(idx) % 4) + 1) + '.jpg'
-        self.db.update(doc)
         # l = dict()
         # for i in range(14):
-        #     l[i + 1] = {"left": {"score": 1, "name": "FTG t1"},
-        #                 "right": {"score": 3, "name": "FTG t2"}}
+            # l[i + 1] = {"left": {"score": 0, "name": "Team 1#"+str(i)},
+                        # "right": {"score": 0, "name": "Team 2#"+str(i)}}
         # docs = self.db.find({"id": -1})
         # # docs[0]["comingIdx"] = -1
         # docs[0]["group"] = l
         # self.db.insert(docs[0])
+        self.db.update(doc)
 
     def _doc(self):
         docs = self.db.find({"id": -1})
@@ -115,19 +137,58 @@ class BracketModel(object):
         data['list'] = docs[0]["group"]
 
     def getGroup(self, idx):
-        return self._doc()['group'][idx]
+        return self._doc()['group'][str(idx)]
 
     def commitTeam(self, data):
         idx = str(data['bracketIdx'])
-        docs = self.db.find({"id": -1})
-        g = docs[0]["group"][idx]
+        doc = self.db.find({"id": -1})[0]
+        data['et'] = 'top8Match'
+
+        g = doc["group"][idx]
         g['left']['score'] = data['scoreArr'][0]
         g['right']['score'] = data['scoreArr'][1]
         data['group'] = g
-        self.db.update(docs[0])
+
+        data['list'] = doc["group"]
+
+        r = self.road[idx]
+        winTeam = None
+        loseTeam = None
+        if g['left']['score'] > g['right']['score']:
+            winTeam = g['left']
+            loseTeam = g['right']
+        else:
+            winTeam = g['right']
+            loseTeam = g['left']
+
+        def roadTo(toGroup, team):
+            if toGroup[0] > 0:
+                toIdx = str(toGroup[0])
+                lr = None
+                if toGroup[1] > 0:
+                    lr = 'right'
+                else:
+                    lr = 'left'
+                doc['group'][toIdx][lr] = clone(team)
+                doc['group'][toIdx][lr]['score'] = 0
+                    
+
+        roadTo(r[0], winTeam)
+        roadTo(r[1], loseTeam)
+        self.db.update(doc)
 
     def clear(self):
-        pass
+        doc = self._doc()
+        for idx in range(1, 5):
+            g = doc['group'][str(idx)]
+            g['left']['score'] = 0
+            g['right']['score'] = 0
+
+        for idx in range(5, 15):
+            g = doc['group'][str(idx)]
+            g['left'] = dict()
+            g['right'] = dict()
+        self.db.update(doc)
 
 
 class GameModel(object):
@@ -269,7 +330,8 @@ class ActivityModel:
                                           self.gameModel.commitTeam]
         # ft bracket
         self.eventMap['cs_ftBracketInfo'] = [self.bracketModel.onFtBracketInfo]
-        self.eventMap['cs_reloadDB'] = [self.gameModel.reload,self.playerModel.reload,self.bracketModel.reload]
+        self.eventMap['cs_reloadDB'] = [self.gameModel.reload,
+                                        self.playerModel.reload, self.bracketModel.reload]
 
     def onCmd(self, cmd, data):
         print(cmd, data)
@@ -305,7 +367,11 @@ def findAllPlayer():
 
 @gameView.route('/bracket/<idx>')
 def getBracket(idx):
-    return jsonify(actModel.bracketModel.getGroup(idx))
+    if idx=='clear':
+        actModel.bracketModel.clear()
+        return 'clear bracket'
+    else:
+        return jsonify(actModel.bracketModel.getGroup(idx))
 
 
 @gameView.route('/start', methods=['POST'])

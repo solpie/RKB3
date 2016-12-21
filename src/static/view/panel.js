@@ -486,6 +486,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var JsFunc_1 = __webpack_require__(24);
 	var HP_1 = __webpack_require__(33);
 	var HupuAPI_1 = __webpack_require__(22);
 	var PickupAnimation_1 = __webpack_require__(42);
@@ -746,10 +747,26 @@
 	            console.log('sc_commitTeam', data);
 	            var winTeam;
 	            var g = data.group;
-	            if (g.left.score > g.right.score)
-	                winTeam = g.left;
-	            else
-	                winTeam = g.right;
+	            var is1pWin = g.left.score > g.right.score;
+	            is1pWin ? winTeam = g.left
+	                : winTeam = g.right;
+	            var winGameDocArr = [];
+	            if (data.gameDocArr) {
+	                data.gameDocArr = data.gameDocArr.sort(JsFunc_1.ascendingProp('end'));
+	                for (var i = 0; i < data.gameDocArr.length; i++) {
+	                    var gameDoc = data.gameDocArr[i];
+	                    var loser = gameDoc.playerDocArr[Number(is1pWin)];
+	                    if (loser.blood == 0) {
+	                        var playerArr = [];
+	                        playerArr.push(_this.playerIdMap[gameDoc.playerDocArr[0].id]);
+	                        playerArr.push(_this.playerIdMap[gameDoc.playerDocArr[1].id]);
+	                        winGameDocArr.push(playerArr);
+	                    }
+	                }
+	            }
+	            console.log('winGameDocArr', winGameDocArr);
+	            winTeam.winPlayerDocArr = winGameDocArr;
+	            winTeam.is1pWin = is1pWin;
 	            _this.hp.showWinTeam(winTeam);
 	        });
 	    };
@@ -850,8 +867,7 @@
 	        fg.visible = false;
 	        this.addChild(fg);
 	        var initAvatar = function (is1p) {
-	            var url = '/img/player/avatar/';
-	            is1p ? url += '1p.png' : url += '2p.png';
+	            var url = '/img/player/avatar/1p.png';
 	            var avt = PixiEx_1.newBitmap({ url: url });
 	            var msk1 = new PIXI.Graphics();
 	            msk1.beginFill(0xff0000);
@@ -867,10 +883,11 @@
 	                _this.avatar1p = avt;
 	            }
 	            else {
-	                avt.x = 1420;
+	                avt.x = 1420 + 120;
 	                msk1.scale.x = -1;
-	                msk1.x = avt.x + 120;
+	                msk1.x = avt.x;
 	                _this.avatar2p = avt;
+	                avt.scale.x = -1;
 	            }
 	            _this.addChild(avt);
 	            _this.addChild(msk1);
@@ -983,9 +1000,7 @@
 	        this.test();
 	    }
 	    HP.prototype.test = function () {
-	        var _this = this;
 	        TweenEx_1.TweenEx.delayedCall(200, function () {
-	            _this.winTeam.test();
 	        });
 	    };
 	    HP.prototype.setPlayer = function (playerDocArr, partnerArr, stArr) {
@@ -1122,12 +1137,7 @@
 	        this.winner.show(is1p);
 	    };
 	    HP.prototype.showWinTeam = function (team) {
-	        this.winTeam.setTeamName(team.name);
-	        this.winTeam.setFtName(team.ft);
-	        var mvp = team.mvp;
-	        this.winTeam.setFtLogo('/img/ft/' + team.logo);
-	        this.winTeam.setIntro(team.intro);
-	        this.winTeam.show();
+	        this.winTeam.setTeam(team);
 	    };
 	    return HP;
 	}(PIXI.Container));
@@ -1319,6 +1329,11 @@
 	                    e.data.callback(_this);
 	                    run();
 	                }
+	            }
+	            else {
+	                _this.target = null;
+	                _this.eventArr = null;
+	                _this.vars = null;
 	            }
 	        };
 	        run();
@@ -1590,7 +1605,13 @@
 	        this.groupCtn.y = 563;
 	        this.ctn.addChild(this.groupCtn);
 	        var winGroupBg = new SpriteGroup_1.SpriteGroup({ invert: 208, img: '/img/panel/koa/hp/winGroup.png', count: 3 });
+	        this.winGroupMask = new SpriteGroup_1.SpriteGroup({ invert: 208, img: '/img/panel/koa/hp/winGroupMask.png', count: 3 });
+	        this.groupCtn.addChild(this.winGroupMask);
 	        this.groupCtn.addChild(winGroupBg);
+	        this.winIcon = new SpriteGroup_1.SpriteGroup({ invert: 208, img: '/img/panel/koa/hp/win.png', count: 3 });
+	        this.winIcon.x = 820;
+	        this.winIcon.y = 535;
+	        this.ctn.addChild(this.winIcon);
 	        var introStyle = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
 	            fontSize: '20px', fill: "#fff",
@@ -1650,6 +1671,32 @@
 	            }
 	        });
 	    };
+	    WinTeam.prototype.setTeam = function (team) {
+	        this.setTeamName(team.name);
+	        this.setFtName(team.ft);
+	        var mvp = team.mvp;
+	        this.setFtLogo('/img/ft/' + team.logo);
+	        this.setIntro(team.intro);
+	        this.show();
+	        while (this.groupCtn.children.length > 2) {
+	            this.groupCtn.removeChildAt(0);
+	        }
+	        for (var i = 0; i < team.winPlayerDocArr.length; i++) {
+	            var playerDocArr = team.winPlayerDocArr[i];
+	            var p1 = PixiEx_1.newBitmap({ url: playerDocArr[0].portrait });
+	            p1.x = 2 + i * 208;
+	            p1.scale.x = p1.scale.y = 82 / 400;
+	            var p2 = PixiEx_1.newBitmap({ url: playerDocArr[1].portrait });
+	            p2.x = 83 / p1.scale.x;
+	            p1.addChild(p2);
+	            p1.mask = this.winGroupMask.spArr[i];
+	            this.groupCtn.addChildAt(p1, 0);
+	        }
+	        if (team.is1pWin)
+	            this.winIcon.x = 820 + 8;
+	        else
+	            this.winIcon.x = 820 + 90;
+	    };
 	    WinTeam.prototype.show = function () {
 	        var _this = this;
 	        console.log('show win');
@@ -1658,7 +1705,7 @@
 	            .call(function () {
 	            TweenEx_1.TweenEx.to(_this.ctn, 100, { alpha: 1 });
 	        })
-	            .delay(7000)
+	            .delay(10000)
 	            .call(function () {
 	            _this.hide();
 	        })
@@ -1795,6 +1842,8 @@
 	                to1(a ? 0 : 1);
 	            })
 	                .start();
+	        else
+	            loop = -1;
 	    }
 	    to1(1);
 	}
@@ -3710,6 +3759,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var TweenEx_1 = __webpack_require__(36);
 	var Command_1 = __webpack_require__(45);
 	var HupuAPI_1 = __webpack_require__(22);
 	var BasePanelView_1 = __webpack_require__(46);
@@ -3815,13 +3865,17 @@
 	        ctn.addChild(this.comingTitle);
 	    };
 	    Bracket.prototype.showComingIdx = function (idx) {
+	        var _this = this;
 	        var g = BracketGroup_1.groupPosMap[idx];
-	        if (g) {
-	            this.comingTitle.visible = true;
-	            this.comingTitle.x = g.x - 4;
-	            this.comingTitle.y = g.y - 36;
-	            Fx_1.blink2({ target: this.comingTitle, time: 600 });
-	        }
+	        this.comingTitle.visible = false;
+	        TweenEx_1.TweenEx.delayedCall(610, function () {
+	            if (g) {
+	                _this.comingTitle.visible = true;
+	                _this.comingTitle.x = g.x - 4;
+	                _this.comingTitle.y = g.y - 36;
+	                Fx_1.blink2({ target: _this.comingTitle, time: 600 });
+	            }
+	        });
 	    };
 	    Bracket.prototype.hideComing = function () {
 	        this.comingTitle.visible = false;
@@ -3878,12 +3932,13 @@
 	                if (eventMap[event])
 	                    eventMap[event](data);
 	            });
-	            remoteIO.on("" + Command_1.CommandId.sc_ftBracketInfo, function (data) {
-	                console.log('sc_ftBracketInfo', data);
+	            var onData = function (data) {
 	                var event = data.et;
 	                if (eventMap[event])
 	                    eventMap[event](data);
-	            });
+	            };
+	            remoteIO.on("" + Command_1.CommandId.sc_ftBracketInfo, onData);
+	            remoteIO.on("" + Command_1.CommandId.sc_commitTeam, onData);
 	        };
 	        if (gameId)
 	            HupuAPI_1.getHupuWS(function (hupuWsUrl) {

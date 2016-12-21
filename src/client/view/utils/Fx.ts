@@ -32,6 +32,8 @@ export function blink2(options: { target: any, time?: number, loop?: number, cal
                     to1(a ? 0 : 1);
                 })
                 .start()
+        else
+            loop = -1
     }
     to1(1);
 }
