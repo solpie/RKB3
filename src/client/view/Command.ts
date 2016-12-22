@@ -129,6 +129,9 @@ enum cmdEnum {
     //ft bracket
     cs_ftBracketInfo,
     sc_ftBracketInfo,
+    //---------------- 5v5 panel
+    cs_showHeaderText,
+    sc_showHeaderText,
     //---------------- player panel
 
     cs_startingLine,
@@ -149,21 +152,6 @@ enum cmdEnum {
     ///screen
     cs_inScreenScore,
     inScreenScore,
-    //FT
-    cs_fadeInFTShow,
-    fadeInFTShow,
-    cs_fadeOutFTShow,
-    fadeOutFTShow,
-    cs_fadeInPlayerRank,
-    fadeInPlayerRank,
-    cs_fadeInFtRank,
-    fadeInFtRank,
-    cs_fadeInMixRank,
-    fadeInMixRank,
-    // cs_fadeInComingActivity,
-    // fadeInComingActivity,
-    //db op
-    cs_findPlayerData,
     //// RKB
     cs_attack,
     attack,

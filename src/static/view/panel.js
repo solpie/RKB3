@@ -250,6 +250,28 @@
 	exports.proxy = function (url) {
 	    return "/proxy?url=" + url;
 	};
+	var OpReq = (function () {
+	    function OpReq(io, reqFunc) {
+	        this.cmdMap = {};
+	        this.reqFunc = reqFunc;
+	        this.io = io;
+	    }
+	    OpReq.prototype.send = function (cmd, data) {
+	        var _this = this;
+	        this.reqFunc(cmd, data);
+	        if (!this.cmdMap[cmd]) {
+	            this.cmdMap[cmd] = true;
+	            return {
+	                on: function (resCmd, callback) {
+	                    _this.io.on(resCmd, callback);
+	                }
+	            };
+	        }
+	        return { on: function (resCmd, callback) { } };
+	    };
+	    return OpReq;
+	}());
+	exports.OpReq = OpReq;
 
 
 /***/ },
@@ -2683,38 +2705,29 @@
 	    cmdEnum[cmdEnum["sc_setSt"] = 109] = "sc_setSt";
 	    cmdEnum[cmdEnum["cs_ftBracketInfo"] = 110] = "cs_ftBracketInfo";
 	    cmdEnum[cmdEnum["sc_ftBracketInfo"] = 111] = "sc_ftBracketInfo";
-	    cmdEnum[cmdEnum["cs_startingLine"] = 112] = "cs_startingLine";
-	    cmdEnum[cmdEnum["startingLine"] = 113] = "startingLine";
-	    cmdEnum[cmdEnum["cs_hideStartingLine"] = 114] = "cs_hideStartingLine";
-	    cmdEnum[cmdEnum["hideStartingLine"] = 115] = "hideStartingLine";
-	    cmdEnum[cmdEnum["cs_queryPlayerByPos"] = 116] = "cs_queryPlayerByPos";
-	    cmdEnum[cmdEnum["fadeInPlayerPanel"] = 117] = "fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeInPlayerPanel"] = 118] = "cs_fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["fadeOutPlayerPanel"] = 119] = "fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeOutPlayerPanel"] = 120] = "cs_fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["movePlayerPanel"] = 121] = "movePlayerPanel";
-	    cmdEnum[cmdEnum["cs_movePlayerPanel"] = 122] = "cs_movePlayerPanel";
-	    cmdEnum[cmdEnum["initPanel"] = 123] = "initPanel";
-	    cmdEnum[cmdEnum["cs_inScreenScore"] = 124] = "cs_inScreenScore";
-	    cmdEnum[cmdEnum["inScreenScore"] = 125] = "inScreenScore";
-	    cmdEnum[cmdEnum["cs_fadeInFTShow"] = 126] = "cs_fadeInFTShow";
-	    cmdEnum[cmdEnum["fadeInFTShow"] = 127] = "fadeInFTShow";
-	    cmdEnum[cmdEnum["cs_fadeOutFTShow"] = 128] = "cs_fadeOutFTShow";
-	    cmdEnum[cmdEnum["fadeOutFTShow"] = 129] = "fadeOutFTShow";
-	    cmdEnum[cmdEnum["cs_fadeInPlayerRank"] = 130] = "cs_fadeInPlayerRank";
-	    cmdEnum[cmdEnum["fadeInPlayerRank"] = 131] = "fadeInPlayerRank";
-	    cmdEnum[cmdEnum["cs_fadeInFtRank"] = 132] = "cs_fadeInFtRank";
-	    cmdEnum[cmdEnum["fadeInFtRank"] = 133] = "fadeInFtRank";
-	    cmdEnum[cmdEnum["cs_fadeInMixRank"] = 134] = "cs_fadeInMixRank";
-	    cmdEnum[cmdEnum["fadeInMixRank"] = 135] = "fadeInMixRank";
-	    cmdEnum[cmdEnum["cs_findPlayerData"] = 136] = "cs_findPlayerData";
-	    cmdEnum[cmdEnum["cs_attack"] = 137] = "cs_attack";
-	    cmdEnum[cmdEnum["attack"] = 138] = "attack";
-	    cmdEnum[cmdEnum["cs_addHealth"] = 139] = "cs_addHealth";
-	    cmdEnum[cmdEnum["addHealth"] = 140] = "addHealth";
-	    cmdEnum[cmdEnum["fadeInOK"] = 141] = "fadeInOK";
-	    cmdEnum[cmdEnum["cs_combo"] = 142] = "cs_combo";
-	    cmdEnum[cmdEnum["combo"] = 143] = "combo";
+	    cmdEnum[cmdEnum["cs_showHeaderText"] = 112] = "cs_showHeaderText";
+	    cmdEnum[cmdEnum["sc_showHeaderText"] = 113] = "sc_showHeaderText";
+	    cmdEnum[cmdEnum["cs_startingLine"] = 114] = "cs_startingLine";
+	    cmdEnum[cmdEnum["startingLine"] = 115] = "startingLine";
+	    cmdEnum[cmdEnum["cs_hideStartingLine"] = 116] = "cs_hideStartingLine";
+	    cmdEnum[cmdEnum["hideStartingLine"] = 117] = "hideStartingLine";
+	    cmdEnum[cmdEnum["cs_queryPlayerByPos"] = 118] = "cs_queryPlayerByPos";
+	    cmdEnum[cmdEnum["fadeInPlayerPanel"] = 119] = "fadeInPlayerPanel";
+	    cmdEnum[cmdEnum["cs_fadeInPlayerPanel"] = 120] = "cs_fadeInPlayerPanel";
+	    cmdEnum[cmdEnum["fadeOutPlayerPanel"] = 121] = "fadeOutPlayerPanel";
+	    cmdEnum[cmdEnum["cs_fadeOutPlayerPanel"] = 122] = "cs_fadeOutPlayerPanel";
+	    cmdEnum[cmdEnum["movePlayerPanel"] = 123] = "movePlayerPanel";
+	    cmdEnum[cmdEnum["cs_movePlayerPanel"] = 124] = "cs_movePlayerPanel";
+	    cmdEnum[cmdEnum["initPanel"] = 125] = "initPanel";
+	    cmdEnum[cmdEnum["cs_inScreenScore"] = 126] = "cs_inScreenScore";
+	    cmdEnum[cmdEnum["inScreenScore"] = 127] = "inScreenScore";
+	    cmdEnum[cmdEnum["cs_attack"] = 128] = "cs_attack";
+	    cmdEnum[cmdEnum["attack"] = 129] = "attack";
+	    cmdEnum[cmdEnum["cs_addHealth"] = 130] = "cs_addHealth";
+	    cmdEnum[cmdEnum["addHealth"] = 131] = "addHealth";
+	    cmdEnum[cmdEnum["fadeInOK"] = 132] = "fadeInOK";
+	    cmdEnum[cmdEnum["cs_combo"] = 133] = "cs_combo";
+	    cmdEnum[cmdEnum["combo"] = 134] = "combo";
 	})(cmdEnum || (cmdEnum = {}));
 	exports.CommandId = {};
 	for (var k in cmdEnum) {

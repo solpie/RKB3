@@ -21,6 +21,28 @@ export let dynamicLoading = {
         head.appendChild(script);
     }
 };
-export let proxy: (url)=>any = (url) => {
+export let proxy: (url) => any = (url) => {
     return "/proxy?url=" + url;
 };
+
+export class OpReq {
+    cmdMap = {}
+    reqFunc
+    io
+    constructor(io, reqFunc) {
+        this.reqFunc = reqFunc
+        this.io = io
+    }
+    send(cmd, data) {
+        this.reqFunc(cmd, data)
+        if (!this.cmdMap[cmd]) {
+            this.cmdMap[cmd] = true
+            return {
+                on: (resCmd, callback) => {
+                    this.io.on(resCmd, callback)
+                }
+            }
+        }
+        return { on: (resCmd, callback) => { } }
+    }
+}

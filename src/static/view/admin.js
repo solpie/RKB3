@@ -578,9 +578,10 @@
 	            { title: "比分面板", url: "/panel/#/rkb/ob/" + gameId },
 	            { title: "比分面板 操作", url: "/panel/#/rkb/op/" + gameId },
 	            { title: "战团排行 操作", url: "/panel/#/ol/op/" + gameId },
+	            { title: "---------------------Final--------------------", url: "/panel/#/ol/ob/0?panel=bracket" },
+	            { title: "K.O.A", url: "/panel/#/koa/op/" },
 	            { title: "战团双败", url: "/panel/#/ol/ob/0?panel=bracket" },
-	            { title: "战团双败 操作", url: "/panel/#/ol/op/0?panel=bracket" },
-	            { title: "screen1v1 ob", url: "/panel/#/screen1v1/ob" },
+	            { title: "5v5", url: "/panel/#/5v5/op/" },
 	        ];
 	    };
 	    HomeView.prototype.genQRCode = function () {
@@ -798,6 +799,28 @@
 	exports.proxy = function (url) {
 	    return "/proxy?url=" + url;
 	};
+	var OpReq = (function () {
+	    function OpReq(io, reqFunc) {
+	        this.cmdMap = {};
+	        this.reqFunc = reqFunc;
+	        this.io = io;
+	    }
+	    OpReq.prototype.send = function (cmd, data) {
+	        var _this = this;
+	        this.reqFunc(cmd, data);
+	        if (!this.cmdMap[cmd]) {
+	            this.cmdMap[cmd] = true;
+	            return {
+	                on: function (resCmd, callback) {
+	                    _this.io.on(resCmd, callback);
+	                }
+	            };
+	        }
+	        return { on: function (resCmd, callback) { } };
+	    };
+	    return OpReq;
+	}());
+	exports.OpReq = OpReq;
 
 
 /***/ },

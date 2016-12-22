@@ -51,9 +51,11 @@ class HomeView extends VueBase {
             { title: "比分面板 操作", url: `/panel/#/rkb/op/${gameId}` },
             { title: "战团排行 操作", url: `/panel/#/ol/op/${gameId}` },
             // /panel/#/ol/op/0?panel=bracket
+            { title: "---------------------Final--------------------", url: `/panel/#/ol/ob/0?panel=bracket` },
+            { title: "K.O.A", url: `/panel/#/koa/op/` },
             { title: "战团双败", url: `/panel/#/ol/ob/0?panel=bracket` },
-            { title: "战团双败 操作", url: `/panel/#/ol/op/0?panel=bracket` },
-            { title: "screen1v1 ob", url: "/panel/#/screen1v1/ob" },
+            { title: "5v5", url: `/panel/#/5v5/op/` },
+            // { title: "screen1v1 ob", url: "/panel/#/screen1v1/ob" },
         ];
     }
 
