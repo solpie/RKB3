@@ -1,3 +1,30 @@
 <div class="box" v-if='isOp' style="opacity:0.8;width:1000px;left:100px;top:50px">
+    <input class="input" type="text" v-model='queter' @keyup.enter='onQueter(queter)' style="width:350px" />
     <button class="button is-medium" @click="onShowHeaderText()">onShowHeaderText</button>
+    <label class="label"> 小节：</label>
+    <input class="input" type="text" v-model='queter' @keyup.enter='onQueter(queter)' style="width:50px" />
+    <label class="label"> 比分：</label>
+    <div class="columns">
+        <div class="column">
+            <input class="input" type="text" v-model='leftScore' @keyup.enter='onScore(true,leftScore)' style="width:50px" />
+        </div>
+        <div class="column">
+            <input class="input" type="text" v-model='rightScore' @keyup.enter='onScore(false,rightScore)' style="width:50px" />
+        </div>
+    </div>
+    <label class="label">暂停：</label>
+    <div class="columns">
+        <div class="column">
+            <input class="input" type="text" v-model='leftTimeup' @keyup.enter='onTimeup(true,leftTimeup)' style="width:50px" />
+        </div>
+        <div class="column">
+            <input class="input" type="text" v-model='rightTimeup' @keyup.enter='onTimeup(false,rightTimeup)' style="width:50px" />
+        </div>
+    </div>
+
+    <button class="button is-medium" @click="onScore(true,-1)"> -1</button>
+    <button class="button is-medium" @click="onScore(true,1)"> +1</button>
+
+    <button class="button is-medium" @click="onScore(false,-1)"> -1</button>
+    <button class="button is-medium" @click="onScore(false,1)"> +1</button>
 </div>

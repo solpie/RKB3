@@ -9,7 +9,13 @@ declare let io
 class Stage5v5 extends VueBase {
     template = require('./stage5v5.html')
     isOp = VueBase.PROP
-    req: OpReq = new OpReq(io.connect(`/${PanelId.rkbPanel}`), (cmdId: string, param: any, callback: any) => {
+    leftScore = VueBase.PROP
+    rightScore = VueBase.PROP
+    leftTimeup = VueBase.PROP
+    rightTimeup = VueBase.PROP
+    queter = VueBase.PROP
+    req: OpReq
+    opReq = (cmdId: string, param: any, callback: any) => {
         $.ajax({
             url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
             type: 'post',
@@ -18,8 +24,9 @@ class Stage5v5 extends VueBase {
             dataType: 'json',
             success: callback
         });
-    })
-    panel: any
+    }
+    panel: Score5v5
+    $this: Stage5v5
     constructor() {
         super()
         VueBase.initProps(this)
@@ -28,28 +35,65 @@ class Stage5v5 extends VueBase {
         this.panel = new Score5v5(BasePanelView.initPixi())
     }
     protected created() {
-        
+        this.initCanvas()
         this.isOp = this.$route.params['op'] == 'op'
         if (this.isOp) {
             dynamicLoading.css('/css/bulma.min.css')
         }
+        this.initIO()
     }
-    protected mounted() {
-        console.log('this is', this);
-
-        this.initCanvas()
+    initIO() {
+        io.connect(`/${PanelId.rkbPanel}`)
+            .on(`${CommandId.sc_showHeaderText}`, (data) => {
+                console.log("CommandId.sc_showHeaderText", data)
+                this.panel.showText(data.text, data.sec)
+            })
+            .on(`${CommandId.sc_5v5score}`, (data) => {
+                console.log("CommandId.sc_5v5score", data)
+                var isLeft = data.isLeft
+                isLeft ? this.panel.setLeftScore(data.score)
+                    : this.panel.setRightScore(data.score)
+            })
+            .on(`${CommandId.sc_5v5timeup}`, (data) => {
+                console.log("CommandId.sc_5v5score", data)
+                var isLeft = data.isLeft
+                isLeft ? this.panel.setLeftTimeup(data.timeup)
+                    : this.panel.setRightTimeup(data.timup)
+            })
     }
-
-    // onShowHeaderText = VueBase.$method(() => {
-    //     this.req.send(`${CommandId.cs_showHeaderText}`,
-    //         {
-    //             _: null,
-    //             text: 'test', sec: 5
-    //         })
-    //         .on(`${CommandId.sc_showHeaderText}`, (data) => {
-    //             console.log("CommandId.sc_showHeaderText", data)
-    //         })
-    // })
-
+    methods = {
+        onShowHeaderText() {
+            this.opReq(`${CommandId.cs_showHeaderText}`,
+                {
+                    _: null,
+                    text: 'test', sec: 5
+                })
+        },
+        onTimeup(isLeft, t) {
+            console.log('timeup',t);
+            
+            this.opReq(`${CommandId.cs_5v5timeup}`,
+                {
+                    _: null,
+                    isLeft: isLeft,
+                    timeup: t
+                })
+        },
+        onQueter(queter) {
+            this.opReq(`${CommandId.cs_5v5queter}`,
+                {
+                    _: null,
+                    queter: queter,
+                })
+        },
+        onScore(isLeft, score) {
+            this.opReq(`${CommandId.cs_5v5score}`,
+                {
+                    _: null,
+                    isLeft: isLeft,
+                    score: score
+                })
+        }
+    }
 }
 export let stage5v5 = new Stage5v5()

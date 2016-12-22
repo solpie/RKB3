@@ -3,15 +3,17 @@
 // };
 
 export class VueBase {
-    static PROP: any = {v: null, _: null};
-    static Dict: any = {v: {}, _: null};
-    static Number: any = {v: 0, _: null};
-    static String: any = {v: "", _: null};
+    static PROP: any = { v: null, _: null };
+    static Dict: any = { v: {}, _: null };
+    static Number: any = { v: 0, _: null };
+    static String: any = { v: "", _: null };
     props = {};
     methods = {};
     template;
     $route;
-
+    static $method(func) {
+        return { f: func, _: null };
+    }
     // constructor() {
     //     super();
     //     VueBase.initProps(this);
@@ -27,6 +29,7 @@ export class VueBase {
                     subClassObj.props[key] = o.v;
                 }
                 else if (o.hasOwnProperty("f")) {
+                    //create methods
                     subClassObj.methods[key] = o.f;
                 }
             }
@@ -37,6 +40,7 @@ export class VueBase {
                 }
             }
         }
+        return subClassObj
     }
 
     protected created() {

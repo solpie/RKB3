@@ -614,6 +614,9 @@
 	        this.props = {};
 	        this.methods = {};
 	    }
+	    VueBase.$method = function (func) {
+	        return { f: func, _: null };
+	    };
 	    VueBase.initProps = function (subClassObj) {
 	        for (var key in subClassObj) {
 	            var o = subClassObj[key];
@@ -632,6 +635,7 @@
 	                }
 	            }
 	        }
+	        return subClassObj;
 	    };
 	    VueBase.prototype.created = function () {
 	    };
@@ -812,7 +816,9 @@
 	            this.cmdMap[cmd] = true;
 	            return {
 	                on: function (resCmd, callback) {
-	                    _this.io.on(resCmd, callback);
+	                    _this.io.on(resCmd, function (data) {
+	                        callback(data);
+	                    });
 	                }
 	            };
 	        }

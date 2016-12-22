@@ -39,7 +39,9 @@ export class OpReq {
             this.cmdMap[cmd] = true
             return {
                 on: (resCmd, callback) => {
-                    this.io.on(resCmd, callback)
+                    this.io.on(resCmd, (data) => {
+                        callback(data)
+                    })
                 }
             }
         }

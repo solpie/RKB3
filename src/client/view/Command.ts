@@ -132,6 +132,13 @@ enum cmdEnum {
     //---------------- 5v5 panel
     cs_showHeaderText,
     sc_showHeaderText,
+    cs_5v5score,
+    sc_5v5score,
+    cs_5v5timeup,
+    sc_5v5timeup,
+    cs_5v5queter,
+    sc_5v5queter,
+    
     //---------------- player panel
 
     cs_startingLine,

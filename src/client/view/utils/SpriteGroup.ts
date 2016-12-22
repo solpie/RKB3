@@ -10,32 +10,27 @@ export class SpriteGroup extends PIXI.Container {
     dir: Direction
     spArr: Array<PIXI.Sprite>
     _w: number
-    constructor(options: { dir?: Direction, invert: number, img: string, count: number, flip?: number }) {
+    constructor(options: { dir?: Direction, invert: number, img: string, count: number, flip?: number, flipY?: number }) {
         super()
         this.spArr = []
         let dir = options.dir || Direction.e
         let flip = options.flip || 1
+        let flipY = options.flipY || 1
         let count = options.count
         let invert = options.invert
         this._w = count * invert
         for (var i = 0; i < count; i++) {
             var sp = newBitmap({ url: options.img })
-            if (dir == Direction.e) {
+            if (dir == Direction.e)
                 sp.x = i * options.invert
-                sp.scale.x = flip
-            }
-            else if (dir == Direction.w) {
+            else if (dir == Direction.w)
                 sp.x = (count - 1 - i) * invert
-                sp.scale.x = flip
-            }
-            else if (dir == Direction.s) {
+            else if (dir == Direction.s)
                 sp.y = i * invert
-                sp.scale.y = flip
-            }
-            else if (dir == Direction.n) {
+            else if (dir == Direction.n)
                 sp.y = (count - 1 - i) * invert
-                sp.scale.y = flip
-            }
+            sp.scale.x = flip
+            sp.scale.y = flipY
             this.spArr.push(sp)
             this.addChild(sp)
         }
