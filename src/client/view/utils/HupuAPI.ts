@@ -1,4 +1,4 @@
-import { proxy } from './WebJsFunc';
+import { $post, proxy } from './WebJsFunc';
 declare let $;
 export let getHupuWS = (callback) => {
     let url = 'http://test.jrstvapi.hupu.com/zhubo/getNodeServer'
@@ -10,13 +10,19 @@ export let getHupuWS = (callback) => {
         else console.error(url);
     })
 }
+
 let _get = (url, callback) => {
     $.get(url, callback)
 }
+
 export let getPlayerDoc = (callback) => {
     $.get('/game/player', (res) => {
         callback(res)
     })
+}
+
+export let updatePlayerDoc = (playerDoc, callback) => {
+    $post('/game/player/update', playerDoc, callback)
 }
 
 export let getGameInfo = (callback) => {

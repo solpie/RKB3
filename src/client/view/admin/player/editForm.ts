@@ -1,3 +1,4 @@
+import { updatePlayerDoc } from '../../utils/HupuAPI';
 import { $post } from '../../utils/WebJsFunc';
 import { VueBase } from '../../utils/VueBase';
 declare let JSONEditor;
@@ -44,7 +45,7 @@ class EditForm extends VueBase {
             playerDoc._id = this.player_id
             console.log('playerDoc', playerDoc);
             if (playerDoc._id) {
-                $post('/game/player/update', playerDoc, (res) => {
+                updatePlayerDoc(playerDoc, (res) => {
                     console.log('playerDoc update', res);
                     if (res && res._id) {
                         window.location.reload()

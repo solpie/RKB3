@@ -1,3 +1,4 @@
+import { TextTimer } from '../../utils/TextTimer';
 import { Winner } from './Winner';
 import { WinTeam } from './Win';
 import { St } from './St';
@@ -28,11 +29,7 @@ export class HP extends PIXI.Container {
     st1p: St
     st2p: St
 
-    timeText: PIXI.Text
-    timeOnSec = 0
-    timerId = null
-    timerState
-
+    timeText: TextTimer
 
     winTeam: WinTeam
     winner: Winner
@@ -245,7 +242,7 @@ export class HP extends PIXI.Container {
             stroke: '#222',
             strokeThickness: 3,
         }
-        let t = new PIXI.Text("00:00", ts)
+        let t = new TextTimer("00:00", ts)
         this.timeText = t
         t.x = 889
         t.y = 35
@@ -395,40 +392,11 @@ export class HP extends PIXI.Container {
     }
 
     toggleTimer(state?) {
-        var pauseTimer = () => {
-            if (this.timerId) {
-                clearInterval(this.timerId);
-                this.timerId = 0;
-                this.timerState = TimerState.PAUSE;
-            }
-        };
-
-        var playTimer = () => {
-            if (this.timerId)
-                clearInterval(this.timerId);
-            this.timerId = setInterval(() => {
-                this.timeOnSec++;
-                this.timeText.text = formatSecond(this.timeOnSec);
-            }, 1000);
-            this.timerState = TimerState.RUNNING;
-        };
-
-        if (state != null) {
-            if (state == TimerState.PAUSE)
-                pauseTimer();
-            else if (state == TimerState.RUNNING)
-                playTimer();
-        }
-        else {
-            this.timerId ? pauseTimer() : playTimer()
-        }
-
+        this.timeText.toggleTimer()
     }
 
     resetTimer() {
-        this.timeOnSec = 0;
-        this.timerState = TimerState.PAUSE;
-        this.timeText.text = formatSecond(this.timeOnSec);
+        this.timeText.resetTimer()
     }
 
     setBeatBy(is1p, num) {

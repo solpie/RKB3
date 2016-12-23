@@ -710,7 +710,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var WebJsFunc_1 = __webpack_require__(23);
+	var HupuAPI_1 = __webpack_require__(22);
 	var VueBase_1 = __webpack_require__(17);
 	var EditForm = (function (_super) {
 	    __extends(EditForm, _super);
@@ -732,7 +732,7 @@
 	                playerDoc._id = this.player_id;
 	                console.log('playerDoc', playerDoc);
 	                if (playerDoc._id) {
-	                    WebJsFunc_1.$post('/game/player/update', playerDoc, function (res) {
+	                    HupuAPI_1.updatePlayerDoc(playerDoc, function (res) {
 	                        console.log('playerDoc update', res);
 	                        if (res && res._id) {
 	                            window.location.reload();
@@ -795,6 +795,9 @@
 	    $.get('/game/player', function (res) {
 	        callback(res);
 	    });
+	};
+	exports.updatePlayerDoc = function (playerDoc, callback) {
+	    WebJsFunc_1.$post('/game/player/update', playerDoc, callback);
 	};
 	exports.getGameInfo = function (callback) {
 	    _get('/game/', callback);

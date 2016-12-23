@@ -223,6 +223,9 @@
 	        callback(res);
 	    });
 	};
+	exports.updatePlayerDoc = function (playerDoc, callback) {
+	    WebJsFunc_1.$post('/game/player/update', playerDoc, callback);
+	};
 	exports.getGameInfo = function (callback) {
 	    _get('/game/', callback);
 	};
@@ -828,11 +831,11 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var TextTimer_1 = __webpack_require__(64);
 	var Winner_1 = __webpack_require__(34);
 	var Win_1 = __webpack_require__(38);
 	var St_1 = __webpack_require__(41);
 	var SpriteGroup_1 = __webpack_require__(39);
-	var JsFunc_1 = __webpack_require__(24);
 	var const_1 = __webpack_require__(35);
 	var TweenEx_1 = __webpack_require__(36);
 	var Fx_1 = __webpack_require__(40);
@@ -846,8 +849,6 @@
 	        this.pointArr2p = [];
 	        this.nameArr1p = [];
 	        this.nameArr2p = [];
-	        this.timeOnSec = 0;
-	        this.timerId = null;
 	        stage.addChild(this);
 	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/koa/hp/bg.png' }));
 	        var _b = function () {
@@ -1025,7 +1026,7 @@
 	            stroke: '#222',
 	            strokeThickness: 3,
 	        };
-	        var t = new PIXI.Text("00:00", ts);
+	        var t = new TextTimer_1.TextTimer("00:00", ts);
 	        this.timeText = t;
 	        t.x = 889;
 	        t.y = 35;
@@ -1142,37 +1143,10 @@
 	            fg.visible = false;
 	    };
 	    HP.prototype.toggleTimer = function (state) {
-	        var _this = this;
-	        var pauseTimer = function () {
-	            if (_this.timerId) {
-	                clearInterval(_this.timerId);
-	                _this.timerId = 0;
-	                _this.timerState = const_1.TimerState.PAUSE;
-	            }
-	        };
-	        var playTimer = function () {
-	            if (_this.timerId)
-	                clearInterval(_this.timerId);
-	            _this.timerId = setInterval(function () {
-	                _this.timeOnSec++;
-	                _this.timeText.text = JsFunc_1.formatSecond(_this.timeOnSec);
-	            }, 1000);
-	            _this.timerState = const_1.TimerState.RUNNING;
-	        };
-	        if (state != null) {
-	            if (state == const_1.TimerState.PAUSE)
-	                pauseTimer();
-	            else if (state == const_1.TimerState.RUNNING)
-	                playTimer();
-	        }
-	        else {
-	            this.timerId ? pauseTimer() : playTimer();
-	        }
+	        this.timeText.toggleTimer();
 	    };
 	    HP.prototype.resetTimer = function () {
-	        this.timeOnSec = 0;
-	        this.timerState = const_1.TimerState.PAUSE;
-	        this.timeText.text = JsFunc_1.formatSecond(this.timeOnSec);
+	        this.timeText.resetTimer();
 	    };
 	    HP.prototype.setBeatBy = function (is1p, num) {
 	    };
@@ -1590,6 +1564,22 @@
 	    }
 	    return a;
 	};
+	var TextEx = (function (_super) {
+	    __extends(TextEx, _super);
+	    function TextEx() {
+	        _super.apply(this, arguments);
+	    }
+	    Object.defineProperty(TextEx.prototype, "text", {
+	        set: function (t) {
+	            this._text = t;
+	            if (this.align == 'center') {
+	            }
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    return TextEx;
+	}(PIXI.Text));
 
 
 /***/ },
@@ -2729,27 +2719,35 @@
 	    cmdEnum[cmdEnum["sc_5v5timeup"] = 117] = "sc_5v5timeup";
 	    cmdEnum[cmdEnum["cs_5v5queter"] = 118] = "cs_5v5queter";
 	    cmdEnum[cmdEnum["sc_5v5queter"] = 119] = "sc_5v5queter";
-	    cmdEnum[cmdEnum["cs_startingLine"] = 120] = "cs_startingLine";
-	    cmdEnum[cmdEnum["startingLine"] = 121] = "startingLine";
-	    cmdEnum[cmdEnum["cs_hideStartingLine"] = 122] = "cs_hideStartingLine";
-	    cmdEnum[cmdEnum["hideStartingLine"] = 123] = "hideStartingLine";
-	    cmdEnum[cmdEnum["cs_queryPlayerByPos"] = 124] = "cs_queryPlayerByPos";
-	    cmdEnum[cmdEnum["fadeInPlayerPanel"] = 125] = "fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeInPlayerPanel"] = 126] = "cs_fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["fadeOutPlayerPanel"] = 127] = "fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeOutPlayerPanel"] = 128] = "cs_fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["movePlayerPanel"] = 129] = "movePlayerPanel";
-	    cmdEnum[cmdEnum["cs_movePlayerPanel"] = 130] = "cs_movePlayerPanel";
-	    cmdEnum[cmdEnum["initPanel"] = 131] = "initPanel";
-	    cmdEnum[cmdEnum["cs_inScreenScore"] = 132] = "cs_inScreenScore";
-	    cmdEnum[cmdEnum["inScreenScore"] = 133] = "inScreenScore";
-	    cmdEnum[cmdEnum["cs_attack"] = 134] = "cs_attack";
-	    cmdEnum[cmdEnum["attack"] = 135] = "attack";
-	    cmdEnum[cmdEnum["cs_addHealth"] = 136] = "cs_addHealth";
-	    cmdEnum[cmdEnum["addHealth"] = 137] = "addHealth";
-	    cmdEnum[cmdEnum["fadeInOK"] = 138] = "fadeInOK";
-	    cmdEnum[cmdEnum["cs_combo"] = 139] = "cs_combo";
-	    cmdEnum[cmdEnum["combo"] = 140] = "combo";
+	    cmdEnum[cmdEnum["cs_5v5toggleTimer"] = 120] = "cs_5v5toggleTimer";
+	    cmdEnum[cmdEnum["sc_5v5toggleTimer"] = 121] = "sc_5v5toggleTimer";
+	    cmdEnum[cmdEnum["cs_5v5resetTimer"] = 122] = "cs_5v5resetTimer";
+	    cmdEnum[cmdEnum["sc_5v5resetTimer"] = 123] = "sc_5v5resetTimer";
+	    cmdEnum[cmdEnum["cs_5v5setPlayer"] = 124] = "cs_5v5setPlayer";
+	    cmdEnum[cmdEnum["sc_5v5setPlayer"] = 125] = "sc_5v5setPlayer";
+	    cmdEnum[cmdEnum["cs_5v5hidePlayer"] = 126] = "cs_5v5hidePlayer";
+	    cmdEnum[cmdEnum["sc_5v5hidePlayer"] = 127] = "sc_5v5hidePlayer";
+	    cmdEnum[cmdEnum["cs_startingLine"] = 128] = "cs_startingLine";
+	    cmdEnum[cmdEnum["startingLine"] = 129] = "startingLine";
+	    cmdEnum[cmdEnum["cs_hideStartingLine"] = 130] = "cs_hideStartingLine";
+	    cmdEnum[cmdEnum["hideStartingLine"] = 131] = "hideStartingLine";
+	    cmdEnum[cmdEnum["cs_queryPlayerByPos"] = 132] = "cs_queryPlayerByPos";
+	    cmdEnum[cmdEnum["fadeInPlayerPanel"] = 133] = "fadeInPlayerPanel";
+	    cmdEnum[cmdEnum["cs_fadeInPlayerPanel"] = 134] = "cs_fadeInPlayerPanel";
+	    cmdEnum[cmdEnum["fadeOutPlayerPanel"] = 135] = "fadeOutPlayerPanel";
+	    cmdEnum[cmdEnum["cs_fadeOutPlayerPanel"] = 136] = "cs_fadeOutPlayerPanel";
+	    cmdEnum[cmdEnum["movePlayerPanel"] = 137] = "movePlayerPanel";
+	    cmdEnum[cmdEnum["cs_movePlayerPanel"] = 138] = "cs_movePlayerPanel";
+	    cmdEnum[cmdEnum["initPanel"] = 139] = "initPanel";
+	    cmdEnum[cmdEnum["cs_inScreenScore"] = 140] = "cs_inScreenScore";
+	    cmdEnum[cmdEnum["inScreenScore"] = 141] = "inScreenScore";
+	    cmdEnum[cmdEnum["cs_attack"] = 142] = "cs_attack";
+	    cmdEnum[cmdEnum["attack"] = 143] = "attack";
+	    cmdEnum[cmdEnum["cs_addHealth"] = 144] = "cs_addHealth";
+	    cmdEnum[cmdEnum["addHealth"] = 145] = "addHealth";
+	    cmdEnum[cmdEnum["fadeInOK"] = 146] = "fadeInOK";
+	    cmdEnum[cmdEnum["cs_combo"] = 147] = "cs_combo";
+	    cmdEnum[cmdEnum["combo"] = 148] = "combo";
 	})(cmdEnum || (cmdEnum = {}));
 	exports.CommandId = {};
 	for (var k in cmdEnum) {
@@ -2811,6 +2809,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var HupuAPI_1 = __webpack_require__(22);
 	var WebJsFunc_1 = __webpack_require__(23);
 	var Command_1 = __webpack_require__(45);
 	var Score5v5_1 = __webpack_require__(49);
@@ -2827,6 +2826,8 @@
 	        this.rightScore = VueBase_1.VueBase.PROP;
 	        this.leftTimeup = VueBase_1.VueBase.PROP;
 	        this.rightTimeup = VueBase_1.VueBase.PROP;
+	        this.leftPlayerArr = VueBase_1.VueBase.PROP;
+	        this.rightPlayerArr = VueBase_1.VueBase.PROP;
 	        this.headerText = VueBase_1.VueBase.PROP;
 	        this.headerTextSec = VueBase_1.VueBase.PROP;
 	        this.queter = VueBase_1.VueBase.PROP;
@@ -2861,7 +2862,45 @@
 	                    queter: queter,
 	                });
 	            },
+	            onToggleTimer: function () {
+	                this.opReq("" + Command_1.CommandId.cs_5v5toggleTimer, { _: null });
+	            },
+	            onResetTimer: function () {
+	                this.opReq("" + Command_1.CommandId.cs_5v5resetTimer, { _: null });
+	            },
+	            onPlayer: function (isLeft, idOrArr, idx) {
+	                var _this = this;
+	                var u = function (playerId, isFx) {
+	                    if (isFx === void 0) { isFx = false; }
+	                    var playerDoc = _this.playerMap[playerId];
+	                    if (playerDoc) {
+	                        _this.opReq("" + Command_1.CommandId.cs_5v5setPlayer, {
+	                            _: null,
+	                            isLeft: isLeft,
+	                            idx: idx,
+	                            playerDoc: playerDoc, isFx: isFx
+	                        });
+	                    }
+	                };
+	                if (idx < 0) {
+	                    for (var i = 0; i < idOrArr.length; i++) {
+	                        var id = idOrArr[i];
+	                        idx = i;
+	                        u(id, i == (idOrArr.length - 1));
+	                    }
+	                }
+	                else
+	                    u(idOrArr);
+	            },
+	            onHidePlayer: function (isLeft) {
+	                this.opReq("" + Command_1.CommandId.cs_5v5hidePlayer, {
+	                    _: null,
+	                    isLeft: isLeft,
+	                });
+	            },
 	            onScore: function (isLeft, score) {
+	                isLeft ? this.leftScore = Number(score)
+	                    : this.rightScore = Number(score);
 	                this.opReq("" + Command_1.CommandId.cs_5v5score, {
 	                    _: null,
 	                    isLeft: isLeft,
@@ -2875,12 +2914,33 @@
 	        this.panel = new Score5v5_1.Score5v5(BasePanelView_1.BasePanelView.initPixi());
 	    };
 	    Stage5v5.prototype.created = function () {
+	        var _this = this;
+	        this.leftScore = this.rightScore = 0;
+	        this.leftPlayerArr = [0, 0, 0, 0, 0];
+	        this.rightPlayerArr = [0, 0, 0, 0, 0];
 	        this.initCanvas();
 	        this.isOp = this.$route.params['op'] == 'op';
 	        if (this.isOp) {
 	            WebJsFunc_1.dynamicLoading.css('/css/bulma.min.css');
 	        }
 	        this.initIO();
+	        var m = function (reqCmd, data) {
+	            var on = function (resCmd, callback) {
+	            };
+	            return {
+	                on: function (resCmd, callback) {
+	                    return on;
+	                }
+	            };
+	        };
+	        HupuAPI_1.getPlayerDoc(function (playerDocArr) {
+	            var pm = {};
+	            for (var _i = 0, playerDocArr_1 = playerDocArr; _i < playerDocArr_1.length; _i++) {
+	                var player = playerDocArr_1[_i];
+	                pm[player.id] = player;
+	            }
+	            _this.playerMap = pm;
+	        });
 	    };
 	    Stage5v5.prototype.initIO = function () {
 	        var _this = this;
@@ -2896,10 +2956,29 @@
 	                : _this.panel.setRightScore(data.score);
 	        })
 	            .on("" + Command_1.CommandId.sc_5v5timeup, function (data) {
-	            console.log("CommandId.sc_5v5score", data);
+	            console.log("CommandId.sc_5v5timeup", data);
 	            var isLeft = data.isLeft;
-	            isLeft ? _this.panel.setLeftTimeup(data.timeup)
-	                : _this.panel.setRightTimeup(data.timup);
+	            var timeup = Number(data.timeup);
+	            isLeft ? _this.panel.setLeftTimeup(timeup)
+	                : _this.panel.setRightTimeup(timeup);
+	        })
+	            .on("" + Command_1.CommandId.sc_5v5queter, function (data) {
+	            console.log("CommandId.sc_5v5queter", data);
+	            _this.panel.setQueter(data.queter);
+	        })
+	            .on("" + Command_1.CommandId.sc_5v5toggleTimer, function (data) {
+	            _this.panel.timeText.toggleTimer();
+	        })
+	            .on("" + Command_1.CommandId.sc_5v5resetTimer, function (data) {
+	            _this.panel.timeText.resetTimer();
+	            _this.panel.timeText.setTimeBySec(12 * 60);
+	        })
+	            .on("" + Command_1.CommandId.sc_5v5setPlayer, function (data) {
+	            console.log("CommandId.sc_5v5setPlayer", data);
+	            _this.panel.setPlayer(data.isLeft, data.idx, data.playerDoc, data.isFx);
+	        })
+	            .on("" + Command_1.CommandId.sc_5v5hidePlayer, function (data) {
+	            _this.panel.hidePlayer(data.isLeft);
 	        });
 	    };
 	    return Stage5v5;
@@ -2917,6 +2996,8 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var JsFunc_1 = __webpack_require__(24);
+	var TextTimer_1 = __webpack_require__(64);
 	var SpriteGroup_1 = __webpack_require__(39);
 	var const_1 = __webpack_require__(35);
 	var TweenEx_1 = __webpack_require__(36);
@@ -2961,11 +3042,11 @@
 	        rt.y = lt.y;
 	        scorePanel.addChild(rt);
 	        this.rightTimeup = rt;
-	        var lp = new SpriteGroup_1.SpriteGroup({ dir: SpriteGroup_1.Direction.n, invert: 63, img: '/img/panel/5v5/playerBg.png', count: 5 });
+	        var lp = new SpriteGroup_1.SpriteGroup({ dir: SpriteGroup_1.Direction.s, invert: 63, img: '/img/panel/5v5/playerBg.png', count: 5 });
 	        lp.y = 320;
 	        this.addChild(lp);
 	        this.leftPlayer = lp;
-	        var rp = new SpriteGroup_1.SpriteGroup({ dir: SpriteGroup_1.Direction.n, invert: 63, img: '/img/panel/5v5/playerBg.png', count: 5, flip: -1 });
+	        var rp = new SpriteGroup_1.SpriteGroup({ dir: SpriteGroup_1.Direction.s, invert: 63, img: '/img/panel/5v5/playerBg.png', count: 5, flip: -1 });
 	        rp.x = const_1.ViewConst.STAGE_WIDTH;
 	        rp.y = lp.y;
 	        this.rightPlayer = rp;
@@ -3017,6 +3098,19 @@
 	        this.queterText = qt;
 	        scorePanel.addChild(qt);
 	        this.setQueter(1);
+	        var tts = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '25px', fill: '#fff'
+	        };
+	        var tt = new TextTimer_1.TextTimer('', tts);
+	        tt.isMin = true;
+	        tt.y = 56;
+	        tt.x = 1150;
+	        tt.setTimeBySec(12 * 60);
+	        this.timeText = tt;
+	        scorePanel.addChild(tt);
+	        this.hidePlayer(true);
+	        this.hidePlayer(false);
 	    }
 	    Score5v5.prototype.setLeftScore = function (score) {
 	        this.leftScore.text = String(score);
@@ -3056,6 +3150,65 @@
 	    Score5v5.prototype.hideHeader = function () {
 	        TweenEx_1.TweenEx.to(this.header, 80, { y: this.header['y0'] });
 	    };
+	    Score5v5.prototype.setPlayer = function (isLeft, idx, playerDoc, isFx) {
+	        var spArr;
+	        var sp;
+	        var flip = 1;
+	        isLeft ? spArr = this.leftPlayer.spArr
+	            : spArr = this.rightPlayer.spArr;
+	        sp = spArr[idx];
+	        var from;
+	        var to;
+	        if (isLeft) {
+	            from = -301;
+	        }
+	        else {
+	            from = 301;
+	            flip = -1;
+	        }
+	        sp.removeChildren();
+	        var avt = PixiEx_1.newBitmap({ url: '/img/player/avatar/' + playerDoc.avatar });
+	        avt.x = 58;
+	        avt.y = 2;
+	        avt.scale.x = avt.scale.y = 56 / 120;
+	        sp.addChild(avt);
+	        var nt = new PIXI.Text(JsFunc_1.cnWrap(playerDoc.name, 30, 12));
+	        nt.style.fill = '#fff';
+	        nt.x = 205 - nt.width * .5 * flip;
+	        nt.y = 12;
+	        nt.scale.x = flip;
+	        sp.addChild(nt);
+	        var nbt = new PIXI.Text(playerDoc.number);
+	        nbt.style.fill = '#fff';
+	        nbt.style['fontSize'] = '36px';
+	        nbt.style['fontWeight'] = 'bold';
+	        nbt.x = 30 - nbt.width * .5 * flip;
+	        nbt.y = 10;
+	        nbt.scale.x = flip;
+	        sp.addChild(nbt);
+	        if (isFx)
+	            for (var i = 0; i < spArr.length; i++) {
+	                spArr[i].x = from;
+	                new TweenEx_1.TweenEx(spArr[i])
+	                    .delay(i * 30)
+	                    .to({ x: 0 }, 100)
+	                    .start();
+	            }
+	    };
+	    Score5v5.prototype.hidePlayer = function (isLeft) {
+	        var spArr;
+	        var to;
+	        isLeft ? spArr = this.leftPlayer.spArr
+	            : spArr = this.rightPlayer.spArr;
+	        isLeft ? to = -301
+	            : to = 301;
+	        for (var i = 0; i < spArr.length; i++) {
+	            new TweenEx_1.TweenEx(spArr[i])
+	                .delay(i * 30)
+	                .to({ x: to }, 100)
+	                .start();
+	        }
+	    };
 	    return Score5v5;
 	}(PIXI.Container));
 	exports.Score5v5 = Score5v5;
@@ -3065,7 +3218,7 @@
 /* 50 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <label class=\"label\"> 滚动字幕： 秒      内容</label>\r\n    <label class=\"checkbox\">\r\n        <input type=\"checkbox\">\r\n        滚动\r\n     </label>\r\n    <input class=\"input\" type=\"text\" v-model='headerTextSec' style=\"width:50px\" />\r\n    <input class=\"input\" type=\"text\" v-model='headerText' @keyup.enter='onShowHeaderText(headerText,headerTextSec)' style=\"width:650px\" />\r\n    <label class=\"label\"> 小节：</label>\r\n    <input class=\"input\" type=\"text\" v-model='queter' @keyup.enter='onQueter(queter)' style=\"width:50px\" />\r\n    <label class=\"label\"> 比分：</label>\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='leftScore' @keyup.enter='onScore(true,leftScore)' style=\"width:50px\" />\r\n        </div>\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='rightScore' @keyup.enter='onScore(false,rightScore)' style=\"width:50px\" />\r\n        </div>\r\n    </div>\r\n    <label class=\"label\">暂停：</label>\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='leftTimeup' @keyup.enter='onTimeup(true,leftTimeup)' style=\"width:50px\" />\r\n        </div>\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='rightTimeup' @keyup.enter='onTimeup(false,rightTimeup)' style=\"width:50px\" />\r\n        </div>\r\n    </div>\r\n    <label class=\"label\">球员</label>\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='leftTimeup' @keyup.enter='onTimeup(true,leftTimeup)' style=\"width:50px\" />\r\n        </div>\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='rightTimeup' @keyup.enter='onTimeup(false,rightTimeup)' style=\"width:50px\" />\r\n        </div>\r\n    </div>\r\n\r\n    <button class=\"button is-medium\" @click=\"onScore(true,-1)\"> -1</button>\r\n    <button class=\"button is-medium\" @click=\"onScore(true,1)\"> +1</button>\r\n\r\n    <button class=\"button is-medium\" @click=\"onScore(false,-1)\"> -1</button>\r\n    <button class=\"button is-medium\" @click=\"onScore(false,1)\"> +1</button>\r\n</div>";
+	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <label class=\"label\"> 滚动字幕： 秒      内容</label>\r\n    <label class=\"checkbox\">\r\n        <input type=\"checkbox\">\r\n        滚动\r\n     </label>\r\n    <input class=\"input\" type=\"text\" v-model='headerTextSec' style=\"width:50px\" />\r\n    <input class=\"input\" type=\"text\" v-model='headerText' @keyup.enter='onShowHeaderText(headerText,headerTextSec)' style=\"width:650px\" />\r\n    <label class=\"label\"> 小节：</label>\r\n    <input class=\"input\" type=\"text\" v-model='queter' @keyup.enter='onQueter(queter)' style=\"width:50px\" />\r\n    <label class=\"label\"> 比分：</label>\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onScore(true,leftScore-1)\"> -1</button>\r\n            <button class=\"button\" @click=\"onScore(true,leftScore-2)\"> -2</button>\r\n            <button class=\"button\" @click=\"onScore(true,leftScore-3)\"> -3</button>\r\n            <input class=\"input\" type=\"text\" v-model='leftScore' @keyup.enter='onScore(true,leftScore)' style=\"width:50px\" />\r\n            <button class=\"button\" @click=\"onScore(true,leftScore+1)\"> +1</button>\r\n            <button class=\"button\" @click=\"onScore(true,leftScore+2)\"> +2</button>\r\n            <button class=\"button\" @click=\"onScore(true,leftScore+3)\"> +3</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onScore(false,rightScore-1)\"> -1</button>\r\n            <button class=\"button\" @click=\"onScore(false,rightScore-2)\"> -2</button>\r\n            <button class=\"button\" @click=\"onScore(false,rightScore-3)\"> -3</button>\r\n            <input class=\"input\" type=\"text\" v-model='rightScore' @keyup.enter='onScore(false,rightScore)' style=\"width:50px\" />\r\n            <button class=\"button\" @click=\"onScore(false,rightScore+1)\"> +1</button>\r\n            <button class=\"button\" @click=\"onScore(false,rightScore+2)\"> +2</button>\r\n            <button class=\"button\" @click=\"onScore(false,rightScore+3)\"> +3</button>\r\n        </div>\r\n    </div>\r\n    <label class=\"label\">暂停：</label>\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='leftTimeup' @keyup.enter='onTimeup(true,leftTimeup)' style=\"width:50px\" />\r\n        </div>\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='rightTimeup' @keyup.enter='onTimeup(false,rightTimeup)' style=\"width:50px\" />\r\n        </div>\r\n    </div>\r\n    <label class=\"label\">球员</label>\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <input v-for=\"_,index in leftPlayerArr\" class=\"input\" type=\"text\" v-model='leftPlayerArr[index]' @keyup.enter='onPlayer(true,leftPlayerArr[index],index)' style=\"width:40px\" />\r\n            <button class=\"button\" @click=\"onPlayer(true,leftPlayerArr,-1)\">set</button>\r\n            <button class=\"button\" @click=\"onHidePlayer(true)\">hide</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <input v-for=\"_,index in rightPlayerArr\" class=\"input\" type=\"text\" v-model='rightPlayerArr[index]' @keyup.enter='onPlayer(false,rightPlayerArr[index],index)' style=\"width:40px\" />\r\n            <button class=\"button\" @click=\"onPlayer(false,rightPlayerArr,-1)\">set</button>\r\n            <button class=\"button\" @click=\"onHidePlayer(false)\">hide</button>\r\n        </div>\r\n    </div>\r\n    <button class=\"button is-large\" @click=\"onToggleTimer()\">Toggle</button>\r\n    <button class=\"button is-large\" @click=\"onResetTimer()\">Reset</button>\r\n</div>";
 
 /***/ },
 /* 51 */
@@ -4430,6 +4583,72 @@
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        game id:{{gameId}}\r\n        <a class=\"button\" @click=\"onClkRank\">个人战团排行</a>\r\n        <a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>\r\n    </div>\r\n</div>\r\n";
+
+/***/ },
+/* 64 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var JsFunc_1 = __webpack_require__(24);
+	var TimerState = {
+	    PAUSE: 0,
+	    RUNNING: 1
+	};
+	var TextTimer = (function (_super) {
+	    __extends(TextTimer, _super);
+	    function TextTimer() {
+	        _super.apply(this, arguments);
+	        this.timeInSec = 0;
+	        this.timerId = null;
+	        this.isMin = false;
+	    }
+	    TextTimer.prototype.setTimeBySec = function (sec) {
+	        this.timeInSec = sec;
+	        this.text = JsFunc_1.formatSecond(this.timeInSec);
+	    };
+	    TextTimer.prototype.toggleTimer = function (state) {
+	        var _this = this;
+	        var pauseTimer = function () {
+	            if (_this.timerId) {
+	                clearInterval(_this.timerId);
+	                _this.timerId = 0;
+	                _this.timerState = TimerState.PAUSE;
+	            }
+	        };
+	        var playTimer = function () {
+	            if (_this.timerId)
+	                clearInterval(_this.timerId);
+	            _this.timerId = setInterval(function () {
+	                _this.isMin ? _this.timeInSec--
+	                    : _this.timeInSec++;
+	                _this.text = JsFunc_1.formatSecond(_this.timeInSec);
+	            }, 1000);
+	            _this.timerState = TimerState.RUNNING;
+	        };
+	        if (state != null) {
+	            if (state == TimerState.PAUSE)
+	                pauseTimer();
+	            else if (state == TimerState.RUNNING)
+	                playTimer();
+	        }
+	        else {
+	            this.timerId ? pauseTimer() : playTimer();
+	        }
+	    };
+	    TextTimer.prototype.resetTimer = function () {
+	        this.timeInSec = 0;
+	        this.timerState = TimerState.PAUSE;
+	        this.text = JsFunc_1.formatSecond(this.timeInSec);
+	    };
+	    return TextTimer;
+	}(PIXI.Text));
+	exports.TextTimer = TextTimer;
+
 
 /***/ }
 /******/ ]);

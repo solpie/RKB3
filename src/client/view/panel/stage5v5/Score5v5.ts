@@ -1,3 +1,5 @@
+import { cnWrap } from '../../utils/JsFunc';
+import { TextTimer } from '../../utils/TextTimer';
 import { Direction, SpriteGroup } from '../../utils/SpriteGroup';
 import { FontName, ViewConst } from '../../const';
 import { TweenEx } from '../../utils/TweenEx';
@@ -12,6 +14,7 @@ export class Score5v5 extends PIXI.Container {
     rightTimeup: SpriteGroup
     leftScore: PIXI.Text
     rightScore: PIXI.Text
+    timeText: TextTimer
     constructor(parent: PIXI.Container) {
         super()
         parent.addChild(this)
@@ -57,12 +60,12 @@ export class Score5v5 extends PIXI.Container {
         this.rightTimeup = rt
 
 
-        let lp = new SpriteGroup({ dir: Direction.n, invert: 63, img: '/img/panel/5v5/playerBg.png', count: 5 })
+        let lp = new SpriteGroup({ dir: Direction.s, invert: 63, img: '/img/panel/5v5/playerBg.png', count: 5 })
         lp.y = 320
         this.addChild(lp)
         this.leftPlayer = lp
 
-        let rp = new SpriteGroup({ dir: Direction.n, invert: 63, img: '/img/panel/5v5/playerBg.png', count: 5, flip: -1 })
+        let rp = new SpriteGroup({ dir: Direction.s, invert: 63, img: '/img/panel/5v5/playerBg.png', count: 5, flip: -1 })
         rp.x = ViewConst.STAGE_WIDTH
         rp.y = lp.y
         this.rightPlayer = rp
@@ -121,7 +124,23 @@ export class Score5v5 extends PIXI.Container {
         this.queterText = qt
         scorePanel.addChild(qt)
         this.setQueter(1)
+
+        let tts = {
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '25px', fill: '#fff'
+        }
+        let tt = new TextTimer('', tts)
+        tt.isMin = true
+        tt.y = 56
+        tt.x = 1150
+        tt.setTimeBySec(12 * 60)
+        this.timeText = tt
+        scorePanel.addChild(tt)
+
+        this.hidePlayer(true)
+        this.hidePlayer(false)
     }
+
     setLeftScore(score) {
         this.leftScore.text = String(score)
         this.leftScore.x = 435 - this.leftScore.width * .5
@@ -170,5 +189,72 @@ export class Score5v5 extends PIXI.Container {
 
     hideHeader() {
         TweenEx.to(this.header, 80, { y: this.header['y0'] })
+    }
+
+    setPlayer(isLeft, idx, playerDoc, isFx?) {
+        var spArr
+        var sp
+        var flip = 1
+        isLeft ? spArr = this.leftPlayer.spArr
+            : spArr = this.rightPlayer.spArr
+        sp = spArr[idx]
+        var from
+        var to
+        if (isLeft) {
+            from = -301
+        }
+        else {
+            from = 301
+            flip = -1
+        }
+        sp.removeChildren()
+
+        let avt = newBitmap({ url: '/img/player/avatar/' + playerDoc.avatar })
+        avt.x = 58
+        avt.y = 2
+        avt.scale.x = avt.scale.y = 56 / 120
+        sp.addChild(avt)
+
+        let nt = new PIXI.Text(cnWrap(playerDoc.name, 30, 12))
+        nt.style.fill = '#fff'
+        nt.x = 205 - nt.width * .5 * flip
+        nt.y = 12
+        nt.scale.x = flip
+        sp.addChild(nt)
+
+        let nbt = new PIXI.Text(playerDoc.number)
+        nbt.style.fill = '#fff'
+        nbt.style['fontSize'] = '36px'
+        nbt.style['fontWeight'] = 'bold'
+        nbt.x = 30 - nbt.width * .5 * flip
+        nbt.y = 10
+        nbt.scale.x = flip
+        sp.addChild(nbt)
+
+        if (isFx)
+            for (var i = 0; i < spArr.length; i++) {
+                spArr[i].x = from
+                new TweenEx(spArr[i])
+                    .delay(i * 30)
+                    .to({ x: 0 }, 100)
+                    .start()
+            }
+    }
+
+    hidePlayer(isLeft) {
+        // isLeft
+        //todo
+        var spArr
+        var to
+        isLeft ? spArr = this.leftPlayer.spArr
+            : spArr = this.rightPlayer.spArr
+        isLeft ? to = -301
+            : to = 301
+        for (var i = 0; i < spArr.length; i++) {
+            new TweenEx(spArr[i])
+                .delay(i * 30)
+                .to({ x: to }, 100)
+                .start()
+        }
     }
 }

@@ -191,3 +191,15 @@ export let makeColorRatio = (colorArr: Array<string>, ratioArr: Array<number>) =
     }
     return a
 }
+// namespace PIXI{
+class TextEx extends PIXI.Text {
+    align
+    set text(t) {
+        this._text = t
+        if (this.align == 'center') {
+            
+        }
+        // super.text = t
+    }
+}
+// }
