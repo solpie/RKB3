@@ -52,9 +52,9 @@
 	__webpack_require__(10);
 	__webpack_require__(12);
 	var KOA_1 = __webpack_require__(32);
-	var Stage5v5_1 = __webpack_require__(61);
-	var RKBOPView_1 = __webpack_require__(48);
-	var StageOnlineView_1 = __webpack_require__(50);
+	var Stage5v5_1 = __webpack_require__(48);
+	var RKBOPView_1 = __webpack_require__(51);
+	var StageOnlineView_1 = __webpack_require__(53);
 	var routes = [
 	    {
 	        path: '/', name: 'panel',
@@ -283,6 +283,16 @@
 	    return OpReq;
 	}());
 	exports.OpReq = OpReq;
+	exports.$post = function (url, data, callback) {
+	    $.ajax({
+	        url: url,
+	        type: 'post',
+	        data: JSON.stringify(data),
+	        headers: { "Content-Type": "application/json" },
+	        dataType: 'json',
+	        success: callback
+	    });
+	};
 
 
 /***/ },
@@ -2802,6 +2812,272 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var WebJsFunc_1 = __webpack_require__(23);
+	var Command_1 = __webpack_require__(45);
+	var Score5v5_1 = __webpack_require__(49);
+	var BasePanelView_1 = __webpack_require__(46);
+	var const_1 = __webpack_require__(35);
+	var VueBase_1 = __webpack_require__(17);
+	var Stage5v5 = (function (_super) {
+	    __extends(Stage5v5, _super);
+	    function Stage5v5() {
+	        _super.call(this);
+	        this.template = __webpack_require__(50);
+	        this.isOp = VueBase_1.VueBase.PROP;
+	        this.leftScore = VueBase_1.VueBase.PROP;
+	        this.rightScore = VueBase_1.VueBase.PROP;
+	        this.leftTimeup = VueBase_1.VueBase.PROP;
+	        this.rightTimeup = VueBase_1.VueBase.PROP;
+	        this.headerText = VueBase_1.VueBase.PROP;
+	        this.headerTextSec = VueBase_1.VueBase.PROP;
+	        this.queter = VueBase_1.VueBase.PROP;
+	        this.opReq = function (cmdId, param, callback) {
+	            $.ajax({
+	                url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
+	                type: 'post',
+	                data: JSON.stringify(param),
+	                headers: { "Content-Type": "application/json" },
+	                dataType: 'json',
+	                success: callback
+	            });
+	        };
+	        this.methods = {
+	            onShowHeaderText: function (text, sec) {
+	                this.opReq("" + Command_1.CommandId.cs_showHeaderText, {
+	                    _: null,
+	                    text: text, sec: Number(sec)
+	                });
+	            },
+	            onTimeup: function (isLeft, t) {
+	                console.log('timeup', t);
+	                this.opReq("" + Command_1.CommandId.cs_5v5timeup, {
+	                    _: null,
+	                    isLeft: isLeft,
+	                    timeup: t
+	                });
+	            },
+	            onQueter: function (queter) {
+	                this.opReq("" + Command_1.CommandId.cs_5v5queter, {
+	                    _: null,
+	                    queter: queter,
+	                });
+	            },
+	            onScore: function (isLeft, score) {
+	                this.opReq("" + Command_1.CommandId.cs_5v5score, {
+	                    _: null,
+	                    isLeft: isLeft,
+	                    score: score
+	                });
+	            }
+	        };
+	        VueBase_1.VueBase.initProps(this);
+	    }
+	    Stage5v5.prototype.initCanvas = function () {
+	        this.panel = new Score5v5_1.Score5v5(BasePanelView_1.BasePanelView.initPixi());
+	    };
+	    Stage5v5.prototype.created = function () {
+	        this.initCanvas();
+	        this.isOp = this.$route.params['op'] == 'op';
+	        if (this.isOp) {
+	            WebJsFunc_1.dynamicLoading.css('/css/bulma.min.css');
+	        }
+	        this.initIO();
+	    };
+	    Stage5v5.prototype.initIO = function () {
+	        var _this = this;
+	        io.connect("/" + const_1.PanelId.rkbPanel)
+	            .on("" + Command_1.CommandId.sc_showHeaderText, function (data) {
+	            console.log("CommandId.sc_showHeaderText", data);
+	            _this.panel.showText(data.text, data.sec);
+	        })
+	            .on("" + Command_1.CommandId.sc_5v5score, function (data) {
+	            console.log("CommandId.sc_5v5score", data);
+	            var isLeft = data.isLeft;
+	            isLeft ? _this.panel.setLeftScore(data.score)
+	                : _this.panel.setRightScore(data.score);
+	        })
+	            .on("" + Command_1.CommandId.sc_5v5timeup, function (data) {
+	            console.log("CommandId.sc_5v5score", data);
+	            var isLeft = data.isLeft;
+	            isLeft ? _this.panel.setLeftTimeup(data.timeup)
+	                : _this.panel.setRightTimeup(data.timup);
+	        });
+	    };
+	    return Stage5v5;
+	}(VueBase_1.VueBase));
+	exports.stage5v5 = new Stage5v5();
+
+
+/***/ },
+/* 49 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var SpriteGroup_1 = __webpack_require__(39);
+	var const_1 = __webpack_require__(35);
+	var TweenEx_1 = __webpack_require__(36);
+	var PixiEx_1 = __webpack_require__(37);
+	var Score5v5 = (function (_super) {
+	    __extends(Score5v5, _super);
+	    function Score5v5(parent) {
+	        _super.call(this);
+	        parent.addChild(this);
+	        console.log('Score5v5');
+	        var bx = 330, by = 900;
+	        var scorePanel = new PIXI.Container();
+	        scorePanel.x = bx;
+	        scorePanel.y = by;
+	        this.addChild(scorePanel);
+	        this.header = PixiEx_1.newBitmap({ url: '/img/panel/5v5/bgHeader.png' });
+	        this.header['y0'] = 0;
+	        this.header['y1'] = -40;
+	        scorePanel.addChild(this.header);
+	        var msk = new PIXI.Graphics()
+	            .beginFill(0xff0000)
+	            .drawRect(0, 0, 1260, 45);
+	        scorePanel.addChild(msk);
+	        this.header.mask = msk;
+	        var htStyle = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '25px', fill: '#fff'
+	        };
+	        var ht = new PIXI.Text('', htStyle);
+	        ht.x = 10;
+	        ht.y = 48;
+	        this.header.addChild(ht);
+	        this.headerText = ht;
+	        scorePanel.addChild(PixiEx_1.newBitmap({ url: '/img/panel/5v5/scoreBg.png' }));
+	        var lt = new SpriteGroup_1.SpriteGroup({ invert: 77, count: 5, img: '/img/panel/5v5/foul.jpg' });
+	        lt.x = 5;
+	        lt.y = 103;
+	        scorePanel.addChild(lt);
+	        this.leftTimeup = lt;
+	        var rt = new SpriteGroup_1.SpriteGroup({ invert: 77, count: 5, img: '/img/panel/5v5/foul.jpg' });
+	        rt.x = 481;
+	        rt.y = lt.y;
+	        scorePanel.addChild(rt);
+	        this.rightTimeup = rt;
+	        var lp = new SpriteGroup_1.SpriteGroup({ dir: SpriteGroup_1.Direction.n, invert: 63, img: '/img/panel/5v5/playerBg.png', count: 5 });
+	        lp.y = 320;
+	        this.addChild(lp);
+	        this.leftPlayer = lp;
+	        var rp = new SpriteGroup_1.SpriteGroup({ dir: SpriteGroup_1.Direction.n, invert: 63, img: '/img/panel/5v5/playerBg.png', count: 5, flip: -1 });
+	        rp.x = const_1.ViewConst.STAGE_WIDTH;
+	        rp.y = lp.y;
+	        this.rightPlayer = rp;
+	        this.addChild(rp);
+	        var whiteLogo = PixiEx_1.newBitmap({ url: '/img/ft/white.jpg' });
+	        whiteLogo.y = 45;
+	        whiteLogo.x = 5;
+	        whiteLogo.scale.x = whiteLogo.scale.y = 56 / 120;
+	        scorePanel.addChild(whiteLogo);
+	        var blackLogo = PixiEx_1.newBitmap({ url: '/img/ft/black.jpg' });
+	        blackLogo.y = whiteLogo.y;
+	        blackLogo.x = 481;
+	        blackLogo.scale.x = blackLogo.scale.y = 56 / 120;
+	        scorePanel.addChild(blackLogo);
+	        var ts = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '35px', fill: '#fff'
+	        };
+	        var whiteText = new PIXI.Text('路人王白队', ts);
+	        whiteText.x = 140;
+	        whiteText.y = 49;
+	        scorePanel.addChild(whiteText);
+	        var blackText = new PIXI.Text('路人王黑队', ts);
+	        blackText.x = 620;
+	        blackText.y = whiteText.y;
+	        scorePanel.addChild(blackText);
+	        var ss = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '43px', fill: '#fff',
+	            fontWeight: 'bold'
+	        };
+	        var ls = new PIXI.Text('', ss);
+	        ls.y = 46;
+	        scorePanel.addChild(ls);
+	        this.leftScore = ls;
+	        this.setLeftScore(0);
+	        var rs = new PIXI.Text('', ss);
+	        rs.y = ls.y;
+	        this.rightScore = rs;
+	        scorePanel.addChild(rs);
+	        this.setRightScore(0);
+	        var qs = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '25px', fill: '#bcbcbc'
+	        };
+	        var qt = new PIXI.Text('', qs);
+	        qt.x = 985;
+	        qt.y = 56;
+	        this.queterText = qt;
+	        scorePanel.addChild(qt);
+	        this.setQueter(1);
+	    }
+	    Score5v5.prototype.setLeftScore = function (score) {
+	        this.leftScore.text = String(score);
+	        this.leftScore.x = 435 - this.leftScore.width * .5;
+	    };
+	    Score5v5.prototype.setRightScore = function (score) {
+	        this.rightScore.text = String(score);
+	        this.rightScore.x = 910 - this.rightScore.width * .5;
+	    };
+	    Score5v5.prototype.setLeftTimeup = function (score) {
+	        this.leftTimeup.setNum(score);
+	    };
+	    Score5v5.prototype.setRightTimeup = function (score) {
+	        this.rightTimeup.setNum(score);
+	    };
+	    Score5v5.prototype.test = function () {
+	        var _this = this;
+	        TweenEx_1.TweenEx.delayedCall(500, function () {
+	            _this.showText('fsfsasasfasdadf', 5);
+	        });
+	    };
+	    Score5v5.prototype.setQueter = function (queter) {
+	        var qmap = { '1': '1ST', '2': '2ND', '3': '3RD', '4': '4TH' };
+	        this.queterText.text = qmap[queter] + ' QTR';
+	    };
+	    Score5v5.prototype.showText = function (text, sec, isRoll) {
+	        var _this = this;
+	        this.headerText.text = text;
+	        this.showHeader();
+	        TweenEx_1.TweenEx.delayedCall(sec * 1000, function () {
+	            _this.hideHeader();
+	        });
+	    };
+	    Score5v5.prototype.showHeader = function (callback) {
+	        TweenEx_1.TweenEx.to(this.header, 80, { y: this.header['y1'] }, callback);
+	    };
+	    Score5v5.prototype.hideHeader = function () {
+	        TweenEx_1.TweenEx.to(this.header, 80, { y: this.header['y0'] });
+	    };
+	    return Score5v5;
+	}(PIXI.Container));
+	exports.Score5v5 = Score5v5;
+
+
+/***/ },
+/* 50 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <label class=\"label\"> 滚动字幕： 秒      内容</label>\r\n    <label class=\"checkbox\">\r\n        <input type=\"checkbox\">\r\n        滚动\r\n     </label>\r\n    <input class=\"input\" type=\"text\" v-model='headerTextSec' style=\"width:50px\" />\r\n    <input class=\"input\" type=\"text\" v-model='headerText' @keyup.enter='onShowHeaderText(headerText,headerTextSec)' style=\"width:650px\" />\r\n    <label class=\"label\"> 小节：</label>\r\n    <input class=\"input\" type=\"text\" v-model='queter' @keyup.enter='onQueter(queter)' style=\"width:50px\" />\r\n    <label class=\"label\"> 比分：</label>\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='leftScore' @keyup.enter='onScore(true,leftScore)' style=\"width:50px\" />\r\n        </div>\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='rightScore' @keyup.enter='onScore(false,rightScore)' style=\"width:50px\" />\r\n        </div>\r\n    </div>\r\n    <label class=\"label\">暂停：</label>\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='leftTimeup' @keyup.enter='onTimeup(true,leftTimeup)' style=\"width:50px\" />\r\n        </div>\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='rightTimeup' @keyup.enter='onTimeup(false,rightTimeup)' style=\"width:50px\" />\r\n        </div>\r\n    </div>\r\n    <label class=\"label\">球员</label>\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='leftTimeup' @keyup.enter='onTimeup(true,leftTimeup)' style=\"width:50px\" />\r\n        </div>\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='rightTimeup' @keyup.enter='onTimeup(false,rightTimeup)' style=\"width:50px\" />\r\n        </div>\r\n    </div>\r\n\r\n    <button class=\"button is-medium\" @click=\"onScore(true,-1)\"> -1</button>\r\n    <button class=\"button is-medium\" @click=\"onScore(true,1)\"> +1</button>\r\n\r\n    <button class=\"button is-medium\" @click=\"onScore(false,-1)\"> -1</button>\r\n    <button class=\"button is-medium\" @click=\"onScore(false,1)\"> +1</button>\r\n</div>";
+
+/***/ },
+/* 51 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var WebJsFunc_1 = __webpack_require__(23);
 	var VueBase_1 = __webpack_require__(17);
 	var JsFunc_1 = __webpack_require__(24);
 	var const_1 = __webpack_require__(35);
@@ -2813,7 +3089,7 @@
 	    __extends(RKBView, _super);
 	    function RKBView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(49);
+	        this.template = __webpack_require__(52);
 	        this.links = VueBase_1.VueBase.PROP;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.gameId = VueBase_1.VueBase.PROP;
@@ -2887,13 +3163,13 @@
 
 
 /***/ },
-/* 49 */
+/* 52 */
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <h1>game id:{{gameId}}</h1>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\"\r\n                   onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46'\r\n                   placeholder=\"\" style=\"width: 50px;\"\r\n                   v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n    </div>\r\n</div>\r\n";
 
 /***/ },
-/* 50 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2902,10 +3178,10 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var ScoreView_1 = __webpack_require__(51);
-	var RankView_1 = __webpack_require__(53);
+	var ScoreView_1 = __webpack_require__(54);
+	var RankView_1 = __webpack_require__(56);
 	var BasePanelView_1 = __webpack_require__(46);
-	var Bracket_1 = __webpack_require__(57);
+	var Bracket_1 = __webpack_require__(60);
 	var WebJsFunc_1 = __webpack_require__(23);
 	var VueBase_1 = __webpack_require__(17);
 	var const_1 = __webpack_require__(35);
@@ -2918,7 +3194,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(60);
+	        this.template = __webpack_require__(63);
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.opReq = function (cmdId, param, callback) {
@@ -3031,7 +3307,7 @@
 
 
 /***/ },
-/* 51 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3041,7 +3317,7 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var HupuAPI_1 = __webpack_require__(22);
-	var ScorePanel2_1 = __webpack_require__(52);
+	var ScorePanel2_1 = __webpack_require__(55);
 	var Command_1 = __webpack_require__(45);
 	var const_1 = __webpack_require__(35);
 	var BasePanelView_1 = __webpack_require__(46);
@@ -3147,7 +3423,7 @@
 
 
 /***/ },
-/* 52 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3288,7 +3564,7 @@
 
 
 /***/ },
-/* 53 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3297,10 +3573,10 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var PlayerInfo_1 = __webpack_require__(54);
+	var PlayerInfo_1 = __webpack_require__(57);
 	var BasePanelView_1 = __webpack_require__(46);
 	var const_1 = __webpack_require__(35);
-	var FTInfo_1 = __webpack_require__(56);
+	var FTInfo_1 = __webpack_require__(59);
 	var PixiEx_1 = __webpack_require__(37);
 	var JsFunc_1 = __webpack_require__(24);
 	var RankView = (function (_super) {
@@ -3504,7 +3780,7 @@
 
 
 /***/ },
-/* 54 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3513,7 +3789,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var BaseInfo_1 = __webpack_require__(55);
+	var BaseInfo_1 = __webpack_require__(58);
 	var PlayerDoc = (function () {
 	    function PlayerDoc() {
 	        this.id = 0;
@@ -3701,7 +3977,7 @@
 
 
 /***/ },
-/* 55 */
+/* 58 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -3746,7 +4022,7 @@
 
 
 /***/ },
-/* 56 */
+/* 59 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -3775,7 +4051,7 @@
 
 
 /***/ },
-/* 57 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3789,9 +4065,9 @@
 	var HupuAPI_1 = __webpack_require__(22);
 	var BasePanelView_1 = __webpack_require__(46);
 	var const_1 = __webpack_require__(35);
-	var BracketGroup_1 = __webpack_require__(58);
+	var BracketGroup_1 = __webpack_require__(61);
 	var PixiEx_1 = __webpack_require__(37);
-	var GroupLine_1 = __webpack_require__(59);
+	var GroupLine_1 = __webpack_require__(62);
 	var Fx_1 = __webpack_require__(40);
 	var Bracket = (function (_super) {
 	    __extends(Bracket, _super);
@@ -4031,7 +4307,7 @@
 
 
 /***/ },
-/* 58 */
+/* 61 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -4086,7 +4362,7 @@
 
 
 /***/ },
-/* 59 */
+/* 62 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -4150,274 +4426,10 @@
 
 
 /***/ },
-/* 60 */
-/***/ function(module, exports) {
-
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        game id:{{gameId}}\r\n        <a class=\"button\" @click=\"onClkRank\">个人战团排行</a>\r\n        <a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>\r\n    </div>\r\n</div>\r\n";
-
-/***/ },
-/* 61 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var WebJsFunc_1 = __webpack_require__(23);
-	var Command_1 = __webpack_require__(45);
-	var Score5v5_1 = __webpack_require__(62);
-	var BasePanelView_1 = __webpack_require__(46);
-	var const_1 = __webpack_require__(35);
-	var VueBase_1 = __webpack_require__(17);
-	var Stage5v5 = (function (_super) {
-	    __extends(Stage5v5, _super);
-	    function Stage5v5() {
-	        _super.call(this);
-	        this.template = __webpack_require__(63);
-	        this.isOp = VueBase_1.VueBase.PROP;
-	        this.leftScore = VueBase_1.VueBase.PROP;
-	        this.rightScore = VueBase_1.VueBase.PROP;
-	        this.leftTimeup = VueBase_1.VueBase.PROP;
-	        this.rightTimeup = VueBase_1.VueBase.PROP;
-	        this.queter = VueBase_1.VueBase.PROP;
-	        this.opReq = function (cmdId, param, callback) {
-	            $.ajax({
-	                url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
-	                type: 'post',
-	                data: JSON.stringify(param),
-	                headers: { "Content-Type": "application/json" },
-	                dataType: 'json',
-	                success: callback
-	            });
-	        };
-	        this.methods = {
-	            onShowHeaderText: function () {
-	                this.opReq("" + Command_1.CommandId.cs_showHeaderText, {
-	                    _: null,
-	                    text: 'test', sec: 5
-	                });
-	            },
-	            onTimeup: function (isLeft, t) {
-	                console.log('timeup', t);
-	                this.opReq("" + Command_1.CommandId.cs_5v5timeup, {
-	                    _: null,
-	                    isLeft: isLeft,
-	                    timeup: t
-	                });
-	            },
-	            onQueter: function (queter) {
-	                this.opReq("" + Command_1.CommandId.cs_5v5queter, {
-	                    _: null,
-	                    queter: queter,
-	                });
-	            },
-	            onScore: function (isLeft, score) {
-	                this.opReq("" + Command_1.CommandId.cs_5v5score, {
-	                    _: null,
-	                    isLeft: isLeft,
-	                    score: score
-	                });
-	            }
-	        };
-	        VueBase_1.VueBase.initProps(this);
-	    }
-	    Stage5v5.prototype.initCanvas = function () {
-	        this.panel = new Score5v5_1.Score5v5(BasePanelView_1.BasePanelView.initPixi());
-	    };
-	    Stage5v5.prototype.created = function () {
-	        this.initCanvas();
-	        this.isOp = this.$route.params['op'] == 'op';
-	        if (this.isOp) {
-	            WebJsFunc_1.dynamicLoading.css('/css/bulma.min.css');
-	        }
-	        this.initIO();
-	    };
-	    Stage5v5.prototype.initIO = function () {
-	        var _this = this;
-	        io.connect("/" + const_1.PanelId.rkbPanel)
-	            .on("" + Command_1.CommandId.sc_showHeaderText, function (data) {
-	            console.log("CommandId.sc_showHeaderText", data);
-	            _this.panel.showText(data.text, data.sec);
-	        })
-	            .on("" + Command_1.CommandId.sc_5v5score, function (data) {
-	            console.log("CommandId.sc_5v5score", data);
-	            var isLeft = data.isLeft;
-	            isLeft ? _this.panel.setLeftScore(data.score)
-	                : _this.panel.setRightScore(data.score);
-	        })
-	            .on("" + Command_1.CommandId.sc_5v5timeup, function (data) {
-	            console.log("CommandId.sc_5v5score", data);
-	            var isLeft = data.isLeft;
-	            isLeft ? _this.panel.setLeftTimeup(data.timeup)
-	                : _this.panel.setRightTimeup(data.timup);
-	        });
-	    };
-	    return Stage5v5;
-	}(VueBase_1.VueBase));
-	exports.stage5v5 = new Stage5v5();
-
-
-/***/ },
-/* 62 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var SpriteGroup_1 = __webpack_require__(39);
-	var const_1 = __webpack_require__(35);
-	var TweenEx_1 = __webpack_require__(36);
-	var PixiEx_1 = __webpack_require__(37);
-	var Score5v5 = (function (_super) {
-	    __extends(Score5v5, _super);
-	    function Score5v5(parent) {
-	        _super.call(this);
-	        parent.addChild(this);
-	        console.log('Score5v5');
-	        var bx = 330, by = 900;
-	        var scorePanel = new PIXI.Container();
-	        scorePanel.x = bx;
-	        scorePanel.y = by;
-	        this.addChild(scorePanel);
-	        this.header = PixiEx_1.newBitmap({ url: '/img/panel/5v5/bgHeader.png' });
-	        this.header['y0'] = 0;
-	        this.header['y1'] = -40;
-	        scorePanel.addChild(this.header);
-	        var msk = new PIXI.Graphics()
-	            .beginFill(0xff0000)
-	            .drawRect(0, 0, 1260, 45);
-	        scorePanel.addChild(msk);
-	        this.header.mask = msk;
-	        var htStyle = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '25px', fill: '#fff'
-	        };
-	        var ht = new PIXI.Text('', htStyle);
-	        ht.x = 10;
-	        ht.y = 48;
-	        this.header.addChild(ht);
-	        this.headerText = ht;
-	        scorePanel.addChild(PixiEx_1.newBitmap({ url: '/img/panel/5v5/scoreBg.png' }));
-	        var lt = new SpriteGroup_1.SpriteGroup({ invert: 77, count: 5, img: '/img/panel/5v5/foul.jpg' });
-	        lt.x = 5;
-	        lt.y = 103;
-	        scorePanel.addChild(lt);
-	        this.leftTimeup = lt;
-	        var rt = new SpriteGroup_1.SpriteGroup({ invert: 77, count: 5, img: '/img/panel/5v5/foul.jpg' });
-	        rt.x = 481;
-	        rt.y = lt.y;
-	        scorePanel.addChild(rt);
-	        this.rightTimeup = rt;
-	        var lp = new SpriteGroup_1.SpriteGroup({ dir: SpriteGroup_1.Direction.n, invert: 63, img: '/img/panel/5v5/playerBg.png', count: 5 });
-	        lp.y = 320;
-	        this.addChild(lp);
-	        this.leftPlayer = lp;
-	        var rp = new SpriteGroup_1.SpriteGroup({ dir: SpriteGroup_1.Direction.n, invert: 63, img: '/img/panel/5v5/playerBg.png', count: 5, flip: -1 });
-	        rp.x = const_1.ViewConst.STAGE_WIDTH;
-	        rp.y = lp.y;
-	        this.rightPlayer = rp;
-	        this.addChild(rp);
-	        var whiteLogo = PixiEx_1.newBitmap({ url: '/img/ft/white.jpg' });
-	        whiteLogo.y = 45;
-	        whiteLogo.x = 5;
-	        whiteLogo.scale.x = whiteLogo.scale.y = 56 / 120;
-	        scorePanel.addChild(whiteLogo);
-	        var blackLogo = PixiEx_1.newBitmap({ url: '/img/ft/black.jpg' });
-	        blackLogo.y = whiteLogo.y;
-	        blackLogo.x = 481;
-	        blackLogo.scale.x = blackLogo.scale.y = 56 / 120;
-	        scorePanel.addChild(blackLogo);
-	        var ts = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '35px', fill: '#fff'
-	        };
-	        var whiteText = new PIXI.Text('路人王白队', ts);
-	        whiteText.x = 140;
-	        whiteText.y = 49;
-	        scorePanel.addChild(whiteText);
-	        var blackText = new PIXI.Text('路人王黑队', ts);
-	        blackText.x = 620;
-	        blackText.y = whiteText.y;
-	        scorePanel.addChild(blackText);
-	        var ss = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '43px', fill: '#fff',
-	            fontWeight: 'bold'
-	        };
-	        var ls = new PIXI.Text('', ss);
-	        ls.y = 46;
-	        scorePanel.addChild(ls);
-	        this.leftScore = ls;
-	        this.setLeftScore(0);
-	        var rs = new PIXI.Text('', ss);
-	        rs.y = ls.y;
-	        this.rightScore = rs;
-	        scorePanel.addChild(rs);
-	        this.setRightScore(0);
-	        var qs = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '25px', fill: '#bcbcbc'
-	        };
-	        var qt = new PIXI.Text('', qs);
-	        qt.x = 985;
-	        qt.y = 56;
-	        this.queterText = qt;
-	        scorePanel.addChild(qt);
-	        this.setQueter(1);
-	    }
-	    Score5v5.prototype.setLeftScore = function (score) {
-	        this.leftScore.text = String(score);
-	        this.leftScore.x = 435 - this.leftScore.width * .5;
-	    };
-	    Score5v5.prototype.setRightScore = function (score) {
-	        this.rightScore.text = String(score);
-	        this.rightScore.x = 910 - this.rightScore.width * .5;
-	    };
-	    Score5v5.prototype.setLeftTimeup = function (score) {
-	        this.leftTimeup.setNum(score);
-	    };
-	    Score5v5.prototype.setRightTimeup = function (score) {
-	        this.rightTimeup.setNum(score);
-	    };
-	    Score5v5.prototype.test = function () {
-	        var _this = this;
-	        TweenEx_1.TweenEx.delayedCall(500, function () {
-	            _this.showText('fsfsasasfasdadf', 5);
-	        });
-	    };
-	    Score5v5.prototype.setQueter = function (queter) {
-	        var qmap = { '1': '1ST', '2': '2ND', '3': '3RD', '4': '4TH' };
-	        this.queterText.text = qmap[queter] + ' QTR';
-	    };
-	    Score5v5.prototype.showText = function (text, sec, isRoll) {
-	        var _this = this;
-	        this.headerText.text = text;
-	        this.showHeader();
-	        TweenEx_1.TweenEx.delayedCall(sec * 1000, function () {
-	            _this.hideHeader();
-	        });
-	    };
-	    Score5v5.prototype.showHeader = function (callback) {
-	        TweenEx_1.TweenEx.to(this.header, 80, { y: this.header['y1'] }, callback);
-	    };
-	    Score5v5.prototype.hideHeader = function () {
-	        TweenEx_1.TweenEx.to(this.header, 80, { y: this.header['y0'] });
-	    };
-	    return Score5v5;
-	}(PIXI.Container));
-	exports.Score5v5 = Score5v5;
-
-
-/***/ },
 /* 63 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <input class=\"input\" type=\"text\" v-model='queter' @keyup.enter='onQueter(queter)' style=\"width:350px\" />\r\n    <button class=\"button is-medium\" @click=\"onShowHeaderText()\">onShowHeaderText</button>\r\n    <label class=\"label\"> 小节：</label>\r\n    <input class=\"input\" type=\"text\" v-model='queter' @keyup.enter='onQueter(queter)' style=\"width:50px\" />\r\n    <label class=\"label\"> 比分：</label>\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='leftScore' @keyup.enter='onScore(true,leftScore)' style=\"width:50px\" />\r\n        </div>\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='rightScore' @keyup.enter='onScore(false,rightScore)' style=\"width:50px\" />\r\n        </div>\r\n    </div>\r\n    <label class=\"label\">暂停：</label>\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='leftTimeup' @keyup.enter='onTimeup(true,leftTimeup)' style=\"width:50px\" />\r\n        </div>\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='rightTimeup' @keyup.enter='onTimeup(false,rightTimeup)' style=\"width:50px\" />\r\n        </div>\r\n    </div>\r\n\r\n    <button class=\"button is-medium\" @click=\"onScore(true,-1)\"> -1</button>\r\n    <button class=\"button is-medium\" @click=\"onScore(true,1)\"> +1</button>\r\n\r\n    <button class=\"button is-medium\" @click=\"onScore(false,-1)\"> -1</button>\r\n    <button class=\"button is-medium\" @click=\"onScore(false,1)\"> +1</button>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        game id:{{gameId}}\r\n        <a class=\"button\" @click=\"onClkRank\">个人战团排行</a>\r\n        <a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>\r\n    </div>\r\n</div>\r\n";
 
 /***/ }
 /******/ ]);

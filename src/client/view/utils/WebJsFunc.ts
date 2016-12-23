@@ -48,3 +48,14 @@ export class OpReq {
         return { on: (resCmd, callback) => { } }
     }
 }
+declare let $;
+export let $post = (url, data, callback) => {
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+        dataType: 'json',
+        success: callback
+    });
+}

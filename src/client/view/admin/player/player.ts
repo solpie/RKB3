@@ -7,7 +7,7 @@ class PlayerView extends VueBase {
     playerArr = VueBase.PROP
     editPlayerDoc = VueBase.PROP
     components = {"editForm":editForm}
-    
+    isEdit = VueBase.PROP
     constructor() {
         super();
         VueBase.initProps(this);
@@ -24,7 +24,8 @@ class PlayerView extends VueBase {
         onEdit(playerDoc){
             console.log('onEdit player id:',playerDoc.id)
             this.editPlayerDoc = playerDoc
-        }
+            this.isEdit = true
+         }
     }
 }
 export let playerView = new PlayerView()

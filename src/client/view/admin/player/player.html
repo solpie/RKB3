@@ -11,16 +11,15 @@
         </ul>
     </aside>
 
-    <div id="player-grid"  style="position: relative;left: 290px">
-        <div class="box" v-for="player in playerArr" style="display: inline-block;width: 400px;height: 300px;">
-            <img v-bind:src="player.portrait">
+    <div id="player-grid" style="position: relative;left: 290px">
+        <div class="box" v-for="player in playerArr" style="display: inline-block;width:200px;">
+            <img v-bind:src="player.portrait" @click="onEdit(player)">
             <div class="content">
-                {{player.name}}
-                <i class="icon edit" @click="onEdit(player)">edit</i>
-                id:{{player.id}}
+                {{player.name}} id:{{player.id}}
             </div>
         </div>
     </div>
 
-    <editForm :playerInfo='editPlayerDoc'></editform>
+    <editForm :playerInfo='editPlayerDoc' v-if='isEdit'>
+    </editform>
 </div>

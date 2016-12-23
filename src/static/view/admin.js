@@ -678,10 +678,12 @@
 	        this.playerArr = VueBase_1.VueBase.PROP;
 	        this.editPlayerDoc = VueBase_1.VueBase.PROP;
 	        this.components = { "editForm": editForm_1.editForm };
+	        this.isEdit = VueBase_1.VueBase.PROP;
 	        this.methods = {
 	            onEdit: function (playerDoc) {
 	                console.log('onEdit player id:', playerDoc.id);
 	                this.editPlayerDoc = playerDoc;
+	                this.isEdit = true;
 	            }
 	        };
 	        VueBase_1.VueBase.initProps(this);
@@ -708,28 +710,55 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var WebJsFunc_1 = __webpack_require__(23);
 	var VueBase_1 = __webpack_require__(17);
 	var EditForm = (function (_super) {
 	    __extends(EditForm, _super);
 	    function EditForm() {
 	        _super.call(this);
+	        this.isShow = VueBase_1.VueBase.PROP;
 	        this.playerInfo = VueBase_1.VueBase.PROP;
 	        this.template = __webpack_require__(21);
 	        this.watch = { "playerInfo": "onPlayerInfo" };
 	        this.methods = {
 	            onPlayerInfo: function (v) {
-	                console.log(v);
-	                this.editor.set(v);
+	                this.setPlayerDoc(v);
+	            },
+	            onCancel: function () {
+	                this.$parent.isEdit = false;
+	            },
+	            onUpdate: function () {
+	                var playerDoc = this.editor.get();
+	                playerDoc._id = this.player_id;
+	                console.log('playerDoc', playerDoc);
+	                if (playerDoc._id) {
+	                    WebJsFunc_1.$post('/game/player/update', playerDoc, function (res) {
+	                        console.log('playerDoc update', res);
+	                        if (res && res._id) {
+	                            window.location.reload();
+	                        }
+	                    });
+	                    this.$parent.isEdit = false;
+	                }
 	            }
 	        };
 	        VueBase_1.VueBase.initProps(this);
 	    }
 	    EditForm.prototype.created = function () {
-	        this.playerInfo = { "name": "233" };
+	        this.player_id = '';
 	    };
 	    EditForm.prototype.mounted = function () {
 	        var container = document.getElementById("jsoneditor");
 	        this.editor = new JSONEditor(container);
+	        this.setPlayerDoc(this.playerInfo);
+	    };
+	    EditForm.prototype.setPlayerDoc = function (v) {
+	        console.log(v);
+	        if (v) {
+	            this.player_id = v._id;
+	            delete v._id;
+	            this.editor.set(v);
+	        }
 	    };
 	    return EditForm;
 	}(VueBase_1.VueBase));
@@ -740,7 +769,7 @@
 /* 21 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"box\" style=\"position:absolute;left:200px;top:0;width:500px\">\r\n    <label class=\"label\">Name</label>\r\n    <p class=\"control\">\r\n        <input class=\"input\" type=\"text\"/>\r\n    </p>\r\n    <div class=\"columns\">\r\n        <div class=\"column is-one-quarter\">\r\n            <label class=\"label\">身高</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\"/>\r\n            </p>\r\n        </div>\r\n\r\n        <div class=\"column is-one-quarter\">\r\n            <label class=\"label\">體重</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\"/>\r\n            </p>\r\n        </div>\r\n    </div>\r\n\r\n    <div id=\"jsoneditor\" style=\"width: 400px; height: 400px;\"></div>\r\n\r\n</div>";
+	module.exports = "<div class=\"box\" style=\"position:fixed;left:200px;top:60px;width:500px\">\r\n    {{player_id}}\r\n    <div id=\"jsoneditor\" style=\"width: 400px; height: 400px;\"></div>\r\n    <button class=\"button\" @click=\"onUpdate()\">update</button>\r\n    <button class=\"button\" @click=\"onCancel()\">cancel</button>\r\n</div>";
 
 /***/ },
 /* 22 */
@@ -827,6 +856,16 @@
 	    return OpReq;
 	}());
 	exports.OpReq = OpReq;
+	exports.$post = function (url, data, callback) {
+	    $.ajax({
+	        url: url,
+	        type: 'post',
+	        data: JSON.stringify(data),
+	        headers: { "Content-Type": "application/json" },
+	        dataType: 'json',
+	        success: callback
+	    });
+	};
 
 
 /***/ },
@@ -1020,7 +1059,7 @@
 /* 25 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <aside class=\"menu\" style=\"width:250px\">\r\n        <p class=\"menu-label\">\r\n            Player\r\n        </p>\r\n        <ul class=\"menu-list\">\r\n            <ul>\r\n                <li><a href=\"#\">添加Player</a></li>\r\n                <li><a href=\"#\">同步数据</a></li>\r\n            </ul>\r\n        </ul>\r\n    </aside>\r\n\r\n    <div id=\"player-grid\"  style=\"position: relative;left: 290px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width: 400px;height: 300px;\">\r\n            <img v-bind:src=\"player.portrait\">\r\n            <div class=\"content\">\r\n                {{player.name}}\r\n                <i class=\"icon edit\" @click=\"onEdit(player)\">edit</i>\r\n                id:{{player.id}}\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <editForm :playerInfo='editPlayerDoc'></editform>\r\n</div>";
+	module.exports = "<div>\r\n    <aside class=\"menu\" style=\"width:250px\">\r\n        <p class=\"menu-label\">\r\n            Player\r\n        </p>\r\n        <ul class=\"menu-list\">\r\n            <ul>\r\n                <li><a href=\"#\">添加Player</a></li>\r\n                <li><a href=\"#\">同步数据</a></li>\r\n            </ul>\r\n        </ul>\r\n    </aside>\r\n\r\n    <div id=\"player-grid\" style=\"position: relative;left: 290px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width:200px;\">\r\n            <img v-bind:src=\"player.portrait\" @click=\"onEdit(player)\">\r\n            <div class=\"content\">\r\n                {{player.name}} id:{{player.id}}\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <editForm :playerInfo='editPlayerDoc' v-if='isEdit'>\r\n    </editform>\r\n</div>";
 
 /***/ }
 /******/ ]);

@@ -13,6 +13,8 @@ class Stage5v5 extends VueBase {
     rightScore = VueBase.PROP
     leftTimeup = VueBase.PROP
     rightTimeup = VueBase.PROP
+    headerText = VueBase.PROP
+    headerTextSec = VueBase.PROP
     queter = VueBase.PROP
     req: OpReq
     opReq = (cmdId: string, param: any, callback: any) => {
@@ -62,16 +64,16 @@ class Stage5v5 extends VueBase {
             })
     }
     methods = {
-        onShowHeaderText() {
+        onShowHeaderText(text,sec) {
             this.opReq(`${CommandId.cs_showHeaderText}`,
                 {
                     _: null,
-                    text: 'test', sec: 5
+                    text: text, sec: Number(sec)
                 })
         },
         onTimeup(isLeft, t) {
-            console.log('timeup',t);
-            
+            console.log('timeup', t);
+
             this.opReq(`${CommandId.cs_5v5timeup}`,
                 {
                     _: null,

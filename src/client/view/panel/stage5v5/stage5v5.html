@@ -1,6 +1,11 @@
 <div class="box" v-if='isOp' style="opacity:0.8;width:1000px;left:100px;top:50px">
-    <input class="input" type="text" v-model='queter' @keyup.enter='onQueter(queter)' style="width:350px" />
-    <button class="button is-medium" @click="onShowHeaderText()">onShowHeaderText</button>
+    <label class="label"> 滚动字幕： 秒      内容</label>
+    <label class="checkbox">
+        <input type="checkbox">
+        滚动
+     </label>
+    <input class="input" type="text" v-model='headerTextSec' style="width:50px" />
+    <input class="input" type="text" v-model='headerText' @keyup.enter='onShowHeaderText(headerText,headerTextSec)' style="width:650px" />
     <label class="label"> 小节：</label>
     <input class="input" type="text" v-model='queter' @keyup.enter='onQueter(queter)' style="width:50px" />
     <label class="label"> 比分：</label>
@@ -13,6 +18,15 @@
         </div>
     </div>
     <label class="label">暂停：</label>
+    <div class="columns">
+        <div class="column">
+            <input class="input" type="text" v-model='leftTimeup' @keyup.enter='onTimeup(true,leftTimeup)' style="width:50px" />
+        </div>
+        <div class="column">
+            <input class="input" type="text" v-model='rightTimeup' @keyup.enter='onTimeup(false,rightTimeup)' style="width:50px" />
+        </div>
+    </div>
+    <label class="label">球员</label>
     <div class="columns">
         <div class="column">
             <input class="input" type="text" v-model='leftTimeup' @keyup.enter='onTimeup(true,leftTimeup)' style="width:50px" />

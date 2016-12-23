@@ -27,13 +27,15 @@ class PlayerModel(object):
         return self.db.findAll()
 
     def make32Player(self):
-        for i in range(32):
-            id = str(i + 1)
+        docs = self.all()
+        for doc in docs:
+            pass
+            # doc['number'] = 1
+            # self.db.update(doc)
+            # print(doc)
+        # for i in range(32):
+            # id = str(i + 1)
             # self.db.insert({"id": i + 1, 'name': "player" + id})
-            # self.db.update({"id":i+1},{"portrait":'/img/player/portrait/'+id+'.png'})
-            # self.db.update({"id":i+1},{"avatar":''+id+'.jpg'})
-            # self.db.update({"id":i+1},{"ft":'FTG'})
-            # self.db.update({"id":i+1},{"team":'FTG t1'})
 
 import time
 
@@ -70,8 +72,11 @@ class GameDoc:
         return doc
 
 import json
+
+
 def clone(obj):
     return json.loads(json.dumps(obj))
+
 
 class BracketModel(object):
 
@@ -105,8 +110,8 @@ class BracketModel(object):
             g = doc['group'][idx]
             # g['left']['ft'] = 'FTG'
             # g['right']['ft'] = 'FTG'
-            g['left']['name'] = 'Team L#'+idx
-            g['right']['name'] = 'Team R#'+idx
+            g['left']['name'] = 'Team L#' + idx
+            g['right']['name'] = 'Team R#' + idx
             # g['left']['intro'] = '钢管舞更为充分'
             # g['right']['intro'] = '特委托物业万佛阿佛i结合实际哦'
             # g['left']['logo'] = str((int(idx) % 4) + 1) + '.jpg'
@@ -114,7 +119,7 @@ class BracketModel(object):
         # l = dict()
         # for i in range(14):
             # l[i + 1] = {"left": {"score": 0, "name": "Team 1#"+str(i)},
-                        # "right": {"score": 0, "name": "Team 2#"+str(i)}}
+            # "right": {"score": 0, "name": "Team 2#"+str(i)}}
         # docs = self.db.find({"id": -1})
         # # docs[0]["comingIdx"] = -1
         # docs[0]["group"] = l
@@ -171,7 +176,6 @@ class BracketModel(object):
                     lr = 'left'
                 doc['group'][toIdx][lr] = clone(team)
                 doc['group'][toIdx][lr]['score'] = 0
-                    
 
         roadTo(r[0], winTeam)
         roadTo(r[1], loseTeam)
@@ -365,9 +369,16 @@ def findAllPlayer():
     return jsonify(actModel.playerModel.all())
 
 
+@gameView.route('/player/update', methods=["POST"])
+def updatePlayer():
+    data = request.json
+    actModel.playerModel.db.update(data)
+    return jsonify(data)
+
+
 @gameView.route('/bracket/<idx>')
 def getBracket(idx):
-    if idx=='clear':
+    if idx == 'clear':
         actModel.bracketModel.clear()
         return 'clear bracket'
     else:
