@@ -10,6 +10,7 @@ declare let io
 class Stage5v5 extends VueBase {
     template = require('./stage5v5.html')
     isOp = VueBase.PROP
+    isMobile = VueBase.PROP
     leftScore = VueBase.PROP
     rightScore = VueBase.PROP
     leftTimeup = VueBase.PROP
@@ -50,6 +51,8 @@ class Stage5v5 extends VueBase {
         if (this.isOp) {
             dynamicLoading.css('/css/bulma.min.css')
         }
+
+        this.isMobile = this.$route.query['mobile']=='1'
         this.initIO()
         let m = (reqCmd, data) => {
             let on = (resCmd, callback) => {

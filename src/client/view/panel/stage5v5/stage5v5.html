@@ -1,4 +1,14 @@
 <div class="box" v-if='isOp' style="opacity:0.8;width:1000px;left:100px;top:50px">
+    <div v-if='isMobile'>
+    <input class="input" type="text" v-model='timeString' @keyup.enter='onTimeString(timeString)' style="width:80px" />    
+    <button class="button is-large" @click="onTimeString(timeString)">Set</button>
+   
+    <br>
+    <button class="button is-large" @click="onToggleTimer()">Toggle</button>
+    <br>
+    <button class="button is-large" @click="onResetTimer()">Reset</button>
+    </div>
+    <div v-if='!isMobile'>
     <label class="label"> 滚动字幕： 秒      内容</label>
     <label class="checkbox">
         <input type="checkbox">
@@ -54,4 +64,5 @@
     <input class="input" type="text" v-model='timeString' @keyup.enter='onTimeString(timeString)' style="width:80px" />    
     <button class="button is-large" @click="onToggleTimer()">Toggle</button>
     <button class="button is-large" @click="onResetTimer()">Reset</button>
+</div>
 </div>
