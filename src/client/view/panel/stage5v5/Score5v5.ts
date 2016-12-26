@@ -88,12 +88,12 @@ export class Score5v5 extends PIXI.Container {
             fontFamily: FontName.MicrosoftYahei,
             fontSize: '35px', fill: '#fff'
         }
-        let whiteText = new PIXI.Text('路人王白队', ts)
+        let whiteText = new PIXI.Text('路人王全明星白', ts)
         whiteText.x = 140
         whiteText.y = 49
         scorePanel.addChild(whiteText)
 
-        let blackText = new PIXI.Text('路人王黑队', ts)
+        let blackText = new PIXI.Text('路人王全明星黑', ts)
         blackText.x = 620
         blackText.y = whiteText.y
         scorePanel.addChild(blackText)
