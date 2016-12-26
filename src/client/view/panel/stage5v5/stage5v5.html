@@ -51,6 +51,7 @@
             <button class="button" @click="onHidePlayer(false)">hide</button>
         </div>
     </div>
+    <input class="input" type="text" v-model='timeString' @keyup.enter='onTimeString(timeString)' style="width:80px" />    
     <button class="button is-large" @click="onToggleTimer()">Toggle</button>
     <button class="button is-large" @click="onResetTimer()">Reset</button>
 </div>

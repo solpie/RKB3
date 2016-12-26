@@ -17,6 +17,7 @@ class Stage5v5 extends VueBase {
     leftPlayerArr = VueBase.PROP
     rightPlayerArr = VueBase.PROP
     headerText = VueBase.PROP
+    timeString = VueBase.PROP
     headerTextSec = VueBase.PROP
     queter = VueBase.PROP
     req: OpReq
@@ -109,6 +110,9 @@ class Stage5v5 extends VueBase {
             .on(`${CommandId.sc_5v5hidePlayer}`, (data) => {
                 this.panel.hidePlayer(data.isLeft)
             })
+            .on(`${CommandId.sc_5v5setTimeString}`, (data) => {
+                this.panel.timeText.setTimeBySec(data.timeInSec)
+            })
     }
     methods = {
         onShowHeaderText(text, sec) {
@@ -166,6 +170,12 @@ class Stage5v5 extends VueBase {
             this.opReq(`${CommandId.cs_5v5hidePlayer}`, {
                 _: null,
                 isLeft: isLeft,
+            })
+        },
+        onTimeString(time) {
+            this.opReq(`${CommandId.cs_5v5setTimeString}`, {
+                _: null,
+                timeInSec: this.timeString,
             })
         },
         onScore(isLeft, score) {

@@ -146,6 +146,8 @@ enum cmdEnum {
     sc_5v5setPlayer,
     cs_5v5hidePlayer,
     sc_5v5hidePlayer,
+    cs_5v5setTimeString,
+    sc_5v5setTimeString,
     
     //---------------- player panel
 
