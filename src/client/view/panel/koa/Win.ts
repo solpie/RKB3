@@ -1,3 +1,4 @@
+import { _avatar } from '../../utils/HupuAPI';
 import { cnWrap } from '../../utils/JsFunc';
 import { SpriteGroup } from '../../utils/SpriteGroup';
 import { newBitmap } from '../../utils/PixiEx';
@@ -48,7 +49,7 @@ export class WinTeam extends PIXI.Container {
         this.ctn.addChild(this.bg)
 
         // this.avatar = newBitmap({ url: '/img/player/avatar/st.png' })
-        this.setAvatar('/img/player/avatar/st.png')
+        this.setAvatar(_avatar('st.png'))
         // this.setFtLogo('/img/ft/1.jpg')
         let ftStyle = {
             fontFamily: FontName.MicrosoftYahei,
@@ -164,19 +165,27 @@ export class WinTeam extends PIXI.Container {
         while (this.groupCtn.children.length > 2) {
             this.groupCtn.removeChildAt(0)
         }
+        if (team.winPlayerDocArr.length > 3)
+            team.winPlayerDocArr.length = 3
         for (var i = 0; i < team.winPlayerDocArr.length; i++) {
+            var ctn = new PIXI.Graphics().beginFill(0x222222)
+                .drawRect(0, 0, 82 * 2, 82)
+            this.groupCtn.addChildAt(ctn, 0)
+            ctn.x = 2 + i * 208
             var playerDocArr = team.winPlayerDocArr[i];
-            var p1 = newBitmap({ url: playerDocArr[0].portrait })
-            p1.x = 2 + i * 208
-            p1.scale.x = p1.scale.y = 82 / 400
+            var p1 = newBitmap({ url: _avatar(playerDocArr[0].avatar) })
+            // p1.x = 2 + i * 208
+            // p1.y = 20
+            p1.scale.x = p1.scale.y = 82 / 120
             // p1.mask = this.winGroupMask.spArr[i]
             // this.groupCtn.addChildAt(p1, 0)
-            var p2 = newBitmap({ url: playerDocArr[1].portrait })
-            p2.x = 83 / p1.scale.x
+            var p2 = newBitmap({ url: _avatar(playerDocArr[1].avatar) })
+            p2.x = 83 / p1.scale.x * 2
+            p2.scale.x = -1
             // p2.scale.x = p2.scale.y = 70 / 400
             p1.addChild(p2)
-            p1.mask = this.winGroupMask.spArr[i]
-            this.groupCtn.addChildAt(p1, 0)
+            ctn.mask = this.winGroupMask.spArr[i]
+            ctn.addChild(p1)
         }
         if (team.is1pWin)
             this.winIcon.x = 820 + 8

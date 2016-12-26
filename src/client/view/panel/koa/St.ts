@@ -1,3 +1,4 @@
+import { _avatar } from '../../utils/HupuAPI';
 import { FontName } from '../../const';
 import { Direction, SpriteGroup } from '../../utils/SpriteGroup';
 import { imgToTex, loadRes, makeColorRatio, newBitmap } from '../../utils/PixiEx';
@@ -56,7 +57,7 @@ export class St extends PIXI.Container {
         this.spg.y = bg.y
         this.addChild(this.spg)
 
-        this.setAvatar('/img/player/avatar/st.png')
+        this.setAvatar(_avatar('st.png'))
 
 
         //         蓝：亮c0dbff 暗3b52b3

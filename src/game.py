@@ -80,7 +80,7 @@ def clone(obj):
 
 class BracketModel(object):
 
-    def __init__(self):
+    def __init__(self, gameModel):
         road = dict()
         road['1'] = [[7, 0], [5, 0]]
         road["2"] = [[7, 1], [5, 1]]
@@ -97,10 +97,12 @@ class BracketModel(object):
         road['13'] = [[14, 1], [-1, 0]]
         road['14'] = [[-1, 1], [-1, 1]]
         self.road = road
+        self.gameModel = gameModel
         self.db = BaseDB('./db/bracket.db')
         docs = self.db.find({"id": -1})
         if len(docs) < 1:
             self.db.insert({"id": -1})
+
         # self.makeBracket()
         # self.clear()
 
@@ -150,8 +152,23 @@ class BracketModel(object):
         data['et'] = 'top8Match'
 
         g = doc["group"][idx]
-        g['left']['score'] = data['scoreArr'][0]
-        g['right']['score'] = data['scoreArr'][1]
+        if 'scoreArr' in data:
+            g['left']['score'] = data['scoreArr'][0]
+            g['right']['score'] = data['scoreArr'][1]
+        else:
+            docs = self.gameModel.db.find({'bracketIdx': int(idx)})
+            scoreArr = [0, 0]
+            for gameDoc in docs:
+                playerArr = gameDoc['playerDocArr']
+                if playerArr[0]['blood'] > playerArr[1]['blood']:
+                    scoreArr[0] += 1
+                else:
+                    scoreArr[1] += 1
+            # if scoreArr[0] == 3 or scoreArr[1] == 3:
+            g['left']['score'] = scoreArr[0]
+            g['right']['score'] = scoreArr[1]
+            print(docs)
+            print('scoreArr', scoreArr)
         data['group'] = g
 
         data['list'] = doc["group"]
@@ -198,13 +215,15 @@ class BracketModel(object):
 class GameModel(object):
     playerModel = None
     lastWinner = None
+    beatBy01 = None
     data = None
 
     def __init__(self, playerModel):
         self.gameDoc = None
         self.playerModel = playerModel
         self.db = BaseDB('./db/game.db')
-
+        self.resetBeatBy01()
+        
     def reload(self, _):
         self.db.reload()
 
@@ -237,13 +256,28 @@ class GameModel(object):
         return self.getPlayer(idx)['blood']
 
     def getData(self):
+        self.data['beatBy01'] = self.beatBy01
         return self.data
 
     def startGame(self, data):
         self.gameDoc = GameDoc()
         self.data = data
+        data['start'] = True
         player1 = self.getPlayer(0)
         player2 = self.getPlayer(1)
+
+        lastWinnerId = None
+        if self.lastWinner:
+            lastWinnerId = self.lastWinner['id']
+
+        if lastWinnerId:
+            if lastWinnerId == player1['id']:
+                self.beatBy01[0] = 0
+                self.beatBy01[1] += 1
+            elif lastWinnerId == player1['id']:
+                self.beatBy01[0] = 1
+                self.beatBy01[1] += 1    
+        data['beatBy01'] = self.beatBy01
         player1['blood'] = self.gameDoc.blood1p
         player2['blood'] = self.gameDoc.blood2p
         player1['foul'] = self.gameDoc.foul1p
@@ -266,6 +300,10 @@ class GameModel(object):
             data['gameDocArr'] = docs
         data['lastWinner'] = self.lastWinner
         self.lastWinner = None
+        self.resetBeatBy01()
+
+    def resetBeatBy01(self):
+        self.beatBy01  = [-1,0]
 
     def commitGame(self, data):
         if not self.gameDoc:
@@ -274,14 +312,30 @@ class GameModel(object):
 
         isFinish = False
         winnerIdx = 0
+        lastWinnerId = None
+        if self.lastWinner:
+            lastWinnerId = self.lastWinner['id']
+
         # 2p win
         if self.dtBlood(0) == 0:
             winnerIdx = 1
+            if lastWinnerId and lastWinnerId == self.getPlayer(1)['id']:
+                # self.beatBy01[0] = winnerIdx
+                # self.beatBy01[1] += 1
+                pass
+            else:
+                self.resetBeatBy01()
             self.lastWinner = self.getPlayer(1)
             isFinish = True
 
         elif self.dtBlood(1) == 0:
             winnerIdx = 0
+            if lastWinnerId and lastWinnerId == self.getPlayer(0)['id']:
+                # self.beatBy01[0] = winnerIdx
+                # self.beatBy01[1] += 1
+                pass
+            else:
+                self.resetBeatBy01()
             self.lastWinner = self.getPlayer(0)
             isFinish = True
 
@@ -296,6 +350,8 @@ class GameModel(object):
             data['winner'] = winnerIdx
             self.gameDoc = None
             return data
+        else:
+            print('game is not finish')
 
     def setFoul(self, data):
         dt = data['dt']
@@ -316,13 +372,20 @@ class GameModel(object):
         else:
             data['blood'] = self.dtBlood(1, data['dt'])
 
+    def curGame(self):
+        if self.data:
+            res = self.getData()
+            res['start'] = True
+            return jsonify(res)
+        return jsonify({"start": False})
+
 
 class ActivityModel:
 
     def __init__(self):
         self.playerModel = PlayerModel()
         self.gameModel = GameModel(self.playerModel)
-        self.bracketModel = BracketModel()
+        self.bracketModel = BracketModel(self.gameModel)
 
         self.eventMap = dict()
         self.eventMap['cs_startGame'] = [self.gameModel.startGame]
@@ -359,9 +422,10 @@ def emit(cmd, data):
 
 @gameView.route('/')
 def gameIndex():
-    if actModel.gameModel.data:
-        return jsonify(actModel.gameModel.getData())
-    return jsonify({"start": False})
+    return actModel.gameModel.curGame()
+    # if actModel.gameModel.data:
+        # return jsonify(actModel.gameModel.getData())
+    # return jsonify({"start": False})
 
 
 @gameView.route('/player')

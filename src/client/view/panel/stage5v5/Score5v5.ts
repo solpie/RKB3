@@ -1,3 +1,4 @@
+import { _avatar } from '../../utils/HupuAPI';
 import { cnWrap } from '../../utils/JsFunc';
 import { TextTimer } from '../../utils/TextTimer';
 import { Direction, SpriteGroup } from '../../utils/SpriteGroup';
@@ -209,7 +210,7 @@ export class Score5v5 extends PIXI.Container {
         }
         sp.removeChildren()
 
-        let avt = newBitmap({ url: '/img/player/avatar/' + playerDoc.avatar })
+        let avt = newBitmap({ url: _avatar( playerDoc.avatar) })
         avt.x = 58
         avt.y = 2
         avt.scale.x = avt.scale.y = 56 / 120

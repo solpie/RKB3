@@ -14,8 +14,9 @@
     <div id="player-grid" style="position: relative;left: 290px">
         <div class="box" v-for="player in playerArr" style="display: inline-block;width:200px;">
             <img v-bind:src="player.portrait" @click="onEdit(player)">
+            <img v-bind:src="'/img/player/avatar/'+player.avatar" style="width: 50px">
             <div class="content">
-                {{player.name}} id:{{player.id}}
+                {{player.name}} id:{{player.id}} 背号:{{player.number}}
             </div>
         </div>
     </div>

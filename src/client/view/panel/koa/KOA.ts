@@ -90,13 +90,20 @@ class KOA extends VueBase {
     }
 
     startGame(data) {
-        this.hp.setPlayer(data.playerDocArr, data.partnerArr, data.stArr)
-        this.hp.setBlood(true, data.playerDocArr[0].blood)
-        this.hp.setBlood(false, data.playerDocArr[1].blood)
-        this.hp.setFoul(true, data.playerDocArr[0].foul)
-        this.hp.setFoul(false, data.playerDocArr[1].foul)
-        this.hp.setSt(true, data.playerDocArr[0].st)
-        this.hp.setSt(false, data.playerDocArr[1].st)
+        if (data.start) {
+            this.hp.setPlayer(data.playerDocArr, data.partnerArr, data.stArr)
+            this.hp.setBlood(true, data.playerDocArr[0].blood)
+            this.hp.setBlood(false, data.playerDocArr[1].blood)
+            this.hp.setFoul(true, data.playerDocArr[0].foul)
+            this.hp.setFoul(false, data.playerDocArr[1].foul)
+            this.hp.setSt(true, data.playerDocArr[0].st)
+            this.hp.setSt(false, data.playerDocArr[1].st)
+            if (data.beatBy01 && data.beatBy01[0] > -1) {
+                this.hp.setBeatBy(data.beatBy01[0] == 0, data.beatBy01[1])
+            }
+            this.hp.resetTimer()
+            this.hp.toggleTimer(TimerState.PAUSE)
+        }
     }
 
     methods = {
@@ -220,25 +227,36 @@ class KOA extends VueBase {
         onCommitGame() {
             var bracketIdx = Number(this.bracketIdx)
             if (bracketIdx) {
-                this.opReq(`${CommandId.cs_commitGame}`, { duration: this.hp.timeOnSec, bracketIdx: bracketIdx })
+                this.opReq(`${CommandId.cs_commitGame}`, { duration: (this.hp as HP).timeText.timeInSec, bracketIdx: bracketIdx })
             }
         },
         onReloadDB() {
             this.opReq('cs_reloadDB', {})
         },
         onCommitTeam() {
-            let a = this.bracketInfo.split('-')
-            if (a.length == 3) {
-                // var bracketIdx = a[0]
-                // var scoreBlueTeam = a[1]
-                // var scoreRedTeam = a[2]
-                this.opReq(`${CommandId.cs_commitTeam}`, {
-                    bracketIdx: Number(a[0]),
-                    scoreArr: [Number(a[1]), Number(a[2])]
-                })
+            var a = []
+            if (this.bracketInfo)
+                a = this.bracketInfo.split('-').concat([this.bracketIdx])
+            if (a.length) {
+                if (a.length == 3) {
+                    // var bracketIdx = a[0]
+                    // var scoreBlueTeam = a[1]
+                    // var scoreRedTeam = a[2]
+                    this.opReq(`${CommandId.cs_commitTeam}`, {
+                        bracketIdx: Number(a[0]),
+                        scoreArr: [Number(a[1]), Number(a[2])]
+                    })
+                }
+                else
+                    alert('数据录入错误！')
             }
             else {
-                alert('数据录入错误！')
+                if (this.bracketIdx)
+                    this.opReq(`${CommandId.cs_commitTeam}`, {
+                        bracketIdx: Number(this.bracketIdx)
+                    })
+                else
+                    alert('数据录入错误！')
             }
         }
     }

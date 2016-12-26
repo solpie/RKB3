@@ -1,7 +1,7 @@
 import { TweenEx } from '../../utils/TweenEx';
 import { PickupAnimation } from './PickupAnimation';
 import { mapToArr } from '../../utils/JsFunc';
-import { getPlayerDoc } from '../../utils/HupuAPI';
+import { _avatar, getPlayerDoc } from '../../utils/HupuAPI';
 import { FontName, ViewConst } from '../../const';
 import { blink2 } from '../../utils/Fx';
 import { imgToTex, loadRes, newBitmap } from '../../utils/PixiEx';
@@ -84,14 +84,14 @@ export class PickupScene extends PIXI.Container {
 
     initPlayerData(playerMap) {
         let teamPos = [
-            { x: 245, y: 13 },
-            { x: 1300, y: 13 },
-            { x: 189, y: 110 },
-            { x: 580, y: 110 },
-            { x: 970, y: 110 },
-            { x: 1365, y: 110 },
-            { x: 528, y: 204 },
-            { x: 1027, y: 204 },
+            { x: 245, y: 13, flip: 1 },
+            { x: 1300, y: 13, flip: -1 },
+            { x: 189, y: 110, flip: 1 },
+            { x: 580, y: 110, flip: 1 },
+            { x: 970, y: 110, flip: -1 },
+            { x: 1365, y: 110, flip: -1 },
+            { x: 528, y: 204, flip: 1 },
+            { x: 1027, y: 204, flip: -1 },
         ]
         let invert = 95
         var pickupIdx = 1;
@@ -124,8 +124,20 @@ export class PickupScene extends PIXI.Container {
                 msk.y = ay
                 this.title.addChild(msk)
 
-                let avt = newBitmap({ x: ax, y: ay, url: '/img/player/avatar/' + pDoc.avatar })
+                var avtBg = new PIXI.Graphics().beginFill(0x222222)
+                    .drawRect(0, 0, 88, 88)
+                avtBg.x = ax
+                avtBg.y = ay
+                avtBg.mask = msk
+                this.title.addChild(avtBg)
+
+                let avt = newBitmap({ x: ax, y: ay, url: _avatar(pDoc.avatar) })
+
                 avt.scale.x = avt.scale.y = 88 / 120
+                if (tp.flip < 0) {
+                    avt.scale.x *= tp.flip
+                    avt.x += 88
+                }
                 avt.mask = msk
                 this.title.addChild(avt)
 

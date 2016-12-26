@@ -667,7 +667,7 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var editForm_1 = __webpack_require__(20);
-	var HupuAPI_1 = __webpack_require__(22);
+	var HupuAPI_1 = __webpack_require__(21);
 	var JsFunc_1 = __webpack_require__(24);
 	var VueBase_1 = __webpack_require__(17);
 	var PlayerView = (function (_super) {
@@ -710,7 +710,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var HupuAPI_1 = __webpack_require__(22);
+	var HupuAPI_1 = __webpack_require__(21);
 	var VueBase_1 = __webpack_require__(17);
 	var EditForm = (function (_super) {
 	    __extends(EditForm, _super);
@@ -718,7 +718,7 @@
 	        _super.call(this);
 	        this.isShow = VueBase_1.VueBase.PROP;
 	        this.playerInfo = VueBase_1.VueBase.PROP;
-	        this.template = __webpack_require__(21);
+	        this.template = __webpack_require__(23);
 	        this.watch = { "playerInfo": "onPlayerInfo" };
 	        this.methods = {
 	            onPlayerInfo: function (v) {
@@ -767,16 +767,10 @@
 
 /***/ },
 /* 21 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"box\" style=\"position:fixed;left:200px;top:60px;width:500px\">\r\n    {{player_id}}\r\n    <div id=\"jsoneditor\" style=\"width: 400px; height: 400px;\"></div>\r\n    <button class=\"button\" @click=\"onUpdate()\">update</button>\r\n    <button class=\"button\" @click=\"onCancel()\">cancel</button>\r\n</div>";
-
-/***/ },
-/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var WebJsFunc_1 = __webpack_require__(23);
+	var WebJsFunc_1 = __webpack_require__(22);
 	exports.getHupuWS = function (callback) {
 	    var url = 'http://test.jrstvapi.hupu.com/zhubo/getNodeServer';
 	    $.get(WebJsFunc_1.proxy('http://test.jrstvapi.hupu.com/zhubo/getNodeServer'), function (res) {
@@ -802,10 +796,13 @@
 	exports.getGameInfo = function (callback) {
 	    _get('/game/', callback);
 	};
+	exports._avatar = function (filename) {
+	    return '/img/player/avatar/' + filename;
+	};
 
 
 /***/ },
-/* 23 */
+/* 22 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -870,6 +867,12 @@
 	    });
 	};
 
+
+/***/ },
+/* 23 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"box\" style=\"position:fixed;left:200px;top:60px;width:500px\">\r\n    {{player_id}}\r\n    <div id=\"jsoneditor\" style=\"width: 400px; height: 400px;\"></div>\r\n    <button class=\"button\" @click=\"onUpdate()\">update</button>\r\n    <button class=\"button\" @click=\"onCancel()\">cancel</button>\r\n</div>";
 
 /***/ },
 /* 24 */
@@ -1062,7 +1065,7 @@
 /* 25 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <aside class=\"menu\" style=\"width:250px\">\r\n        <p class=\"menu-label\">\r\n            Player\r\n        </p>\r\n        <ul class=\"menu-list\">\r\n            <ul>\r\n                <li><a href=\"#\">添加Player</a></li>\r\n                <li><a href=\"#\">同步数据</a></li>\r\n            </ul>\r\n        </ul>\r\n    </aside>\r\n\r\n    <div id=\"player-grid\" style=\"position: relative;left: 290px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width:200px;\">\r\n            <img v-bind:src=\"player.portrait\" @click=\"onEdit(player)\">\r\n            <div class=\"content\">\r\n                {{player.name}} id:{{player.id}}\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <editForm :playerInfo='editPlayerDoc' v-if='isEdit'>\r\n    </editform>\r\n</div>";
+	module.exports = "<div>\r\n    <aside class=\"menu\" style=\"width:250px\">\r\n        <p class=\"menu-label\">\r\n            Player\r\n        </p>\r\n        <ul class=\"menu-list\">\r\n            <ul>\r\n                <li><a href=\"#\">添加Player</a></li>\r\n                <li><a href=\"#\">同步数据</a></li>\r\n            </ul>\r\n        </ul>\r\n    </aside>\r\n\r\n    <div id=\"player-grid\" style=\"position: relative;left: 290px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width:200px;\">\r\n            <img v-bind:src=\"player.portrait\" @click=\"onEdit(player)\">\r\n            <img v-bind:src=\"'/img/player/avatar/'+player.avatar\" style=\"width: 50px\">\r\n            <div class=\"content\">\r\n                {{player.name}} id:{{player.id}} 背号:{{player.number}}\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <editForm :playerInfo='editPlayerDoc' v-if='isEdit'>\r\n    </editform>\r\n</div>";
 
 /***/ }
 /******/ ]);

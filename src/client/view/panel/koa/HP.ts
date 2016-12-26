@@ -1,9 +1,10 @@
+import { _avatar } from '../../utils/HupuAPI';
 import { TextTimer } from '../../utils/TextTimer';
 import { Winner } from './Winner';
 import { WinTeam } from './Win';
 import { St } from './St';
 import { Direction, SpriteGroup } from '../../utils/SpriteGroup';
-import { formatSecond } from '../../utils/JsFunc';
+import { cnWrap, formatSecond } from '../../utils/JsFunc';
 import { FontName, TimerState, ViewConst } from '../../const';
 import { TweenEx } from '../../utils/TweenEx';
 import { blink2, blink3 } from '../../utils/Fx';
@@ -108,7 +109,7 @@ export class HP extends PIXI.Container {
 
         //120 x 120
         let initAvatar = (is1p: boolean) => {
-            let url = '/img/player/avatar/1p.png'
+            let url = _avatar('1p.png')
             let avt = newBitmap({ url: url })
             let msk1 = new PIXI.Graphics()
             msk1.beginFill(0xff0000)
@@ -124,7 +125,7 @@ export class HP extends PIXI.Container {
                 this.avatar1p = avt
             }
             else {
-                avt.x = 1420+120
+                avt.x = 1420 + 120
                 msk1.scale.x = -1
                 msk1.x = avt.x
                 this.avatar2p = avt
@@ -183,12 +184,12 @@ export class HP extends PIXI.Container {
             // fill: ['#dc6b17', '#debc1d', '#debc1d', '#debc1d', '#dc6b17'],
             fillGradientType: PIXI['TEXT_GRADIENT'].LINEAR_VERTICAL,
         }
-        let bb = new PIXI.Text('BEAT BY 01', beatStyle)
+        let bb = new PIXI.Text('', beatStyle)
         bb.x = 540
         bb.y = 2
         this.addChild(bb)
         this.beatByNum1p = bb
-        let bb2 = new PIXI.Text('BEAT BY 01', beatStyle)
+        let bb2 = new PIXI.Text('', beatStyle)
         bb2.x = 1240
         bb2.y = bb.y
         this.addChild(bb2)
@@ -286,19 +287,19 @@ export class HP extends PIXI.Container {
     }
 
     setPlayer(playerDocArr, partnerArr, stArr) {
-        loadRes('/img/player/avatar/' + playerDocArr[0].avatar, (img) => {
+        loadRes(_avatar(playerDocArr[0].avatar), (img) => {
             this.avatar1p.texture = imgToTex(img);
         });
-        loadRes('/img/player/avatar/' + playerDocArr[1].avatar, (img) => {
+        loadRes(_avatar(playerDocArr[1].avatar), (img) => {
             this.avatar2p.texture = imgToTex(img);
         });
         this.st1p.setName(stArr[0].name)
-        this.st1p.setAvatar('/img/player/avatar/' + stArr[0].avatar)
+        this.st1p.setAvatar(_avatar(stArr[0].avatar))
         this.st2p.setName(stArr[1].name)
-        this.st2p.setAvatar('/img/player/avatar/' + stArr[1].avatar)
+        this.st2p.setAvatar(_avatar(stArr[1].avatar))
 
-        this.name1p.text = playerDocArr[0].name
-        this.name2p.text = playerDocArr[1].name
+        this.name1p.text = cnWrap(playerDocArr[0].name, 30, 12)
+        this.name2p.text = cnWrap(playerDocArr[1].name, 30, 12)
         this.name2p.x = this.name2p['x0'] - this.name2p.width
         // let ns2 = {
         //     fontFamily: FontName.MicrosoftYahei,
@@ -392,7 +393,7 @@ export class HP extends PIXI.Container {
     }
 
     toggleTimer(state?) {
-        this.timeText.toggleTimer()
+        this.timeText.toggleTimer(state)
     }
 
     resetTimer() {
@@ -400,7 +401,10 @@ export class HP extends PIXI.Container {
     }
 
     setBeatBy(is1p, num) {
-
+        var bt: PIXI.Text
+        is1p ? bt = this.beatByNum1p
+            : bt = this.beatByNum2p
+        bt.text = 'BEAT BY 0' + num
     }
 
     showWinner(is1p: boolean) {

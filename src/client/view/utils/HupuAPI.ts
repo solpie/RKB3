@@ -28,3 +28,7 @@ export let updatePlayerDoc = (playerDoc, callback) => {
 export let getGameInfo = (callback) => {
     _get('/game/', callback)
 }
+
+export let _avatar = (filename) => {
+    return '/img/player/avatar/' + filename
+}
