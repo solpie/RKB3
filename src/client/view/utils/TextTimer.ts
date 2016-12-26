@@ -27,8 +27,15 @@ export class TextTimer extends PIXI.Text {
             if (this.timerId)
                 clearInterval(this.timerId);
             this.timerId = setInterval(() => {
-                this.isMin ? this.timeInSec--
-                    : this.timeInSec++;
+                // this.isMin ? this.timeInSec--
+                //     : this.timeInSec++;
+                if(this.isMin){
+                    this.timeInSec--
+                    if(this.timeInSec<0)
+                    this.timeInSec = 0
+                }
+                else 
+                    this.timeInSec++
                 this.text = formatSecond(this.timeInSec);
             }, 1000);
             this.timerState = TimerState.RUNNING;
