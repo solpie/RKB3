@@ -50,7 +50,13 @@ class BaseDB(object):
     def reload(self):
         self.__load()
 
-    def __flush(self):
+    def clear(self):
+        self.__docMap = {}
+        with open(self.__path, 'w', encoding="utf-8") as f:
+            f.write('')
+        f.close()
+
+    def __flush(self, fromRemove=False):
         data = ""
         docNum = 0
         # pprint(self.__docMap)
@@ -59,7 +65,7 @@ class BaseDB(object):
             docLine = json.dumps(doc)
             data += docLine + '\n'
             docNum += 1
-        if data != "":
+        if data != "" or fromRemove:
             with open(self.__path, mode='w', encoding="utf-8") as f:
                 f.write(data)
             f.close()
@@ -71,6 +77,22 @@ class BaseDB(object):
             self.__flush()
         else:
             print('update doc no _id', doc)
+
+    def remove(self, query):
+        r = []
+        for k in query:
+            v = query[k]
+            for _id in self.__docMap:
+                doc = self.__docMap[_id]
+                if k in doc and v == doc[k]:
+                    r.append(_id)
+        print(self.__docMap)
+        for _id in r:
+            print('remove', _id)
+            del self.__docMap[_id]
+        print(self.__docMap)
+
+        self.__flush(fromRemove=True)
 
     def find(self, query, update=None):
         docs = []

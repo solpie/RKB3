@@ -1,5 +1,5 @@
 import { _avatar } from '../../utils/HupuAPI';
-import { cnWrap } from '../../utils/JsFunc';
+import { ascendingProp, cnWrap, mapToArr } from '../../utils/JsFunc';
 import { SpriteGroup } from '../../utils/SpriteGroup';
 import { newBitmap } from '../../utils/PixiEx';
 import { TweenEx } from '../../utils/TweenEx';
@@ -37,9 +37,15 @@ export class WinTeam extends PIXI.Container {
 
         this.ax = 453
         this.ay = 428
+        let bg = new PIXI.Graphics().beginFill(0x222222)
+            .drawRect(0, 0, 326, 326)
+        this.ctn.addChildAt(bg, 0)
         this.msk = newBitmap({ url: '/img/panel/koa/hp/winMask.png' })
         // this.msk.alpha = 0
         this.ctn.addChild(this.msk)
+        bg.x = this.ax
+        bg.y = this.ay
+        bg.mask = this.msk
 
         this.fx = 731
         this.fy = 200
@@ -124,11 +130,12 @@ export class WinTeam extends PIXI.Container {
         }
         this.avatar = newBitmap({
             url: url, x: this.ax, y: this.ay, callback: (img) => {
-                this.avatar.scale.x = this.avatar.scale.y = 324 / img.width
+                this.avatar.scale.x = this.avatar.scale.y = 324 / img.height
+                this.avatar.x -= (this.avatar.width - 326) * .5
             }
         })
         this.avatar.mask = this.msk
-        this.ctn.addChildAt(this.avatar, 0)
+        this.ctn.addChildAt(this.avatar, 1)
     }
 
 
@@ -155,8 +162,10 @@ export class WinTeam extends PIXI.Container {
         })
     }
     setTeam(team) {
-        this.setTeamName(team.name)
-        this.setFtName(team.ft)
+        console.log('set Team', team);
+        let sa = team.scoreArr
+        this.setTeamName(sa[0]+' - '+sa[1])
+        this.setFtName(team.name)
         var mvp = team.mvp
         // this.winTeam.setAvatar()
         this.setFtLogo('/img/ft/' + team.logo)
@@ -167,12 +176,26 @@ export class WinTeam extends PIXI.Container {
         }
         if (team.winPlayerDocArr.length > 3)
             team.winPlayerDocArr.length = 3
+        let mvpMap = {}
+        var winPlayer
+
         for (var i = 0; i < team.winPlayerDocArr.length; i++) {
             var ctn = new PIXI.Graphics().beginFill(0x222222)
                 .drawRect(0, 0, 82 * 2, 82)
             this.groupCtn.addChildAt(ctn, 0)
             ctn.x = 2 + i * 208
             var playerDocArr = team.winPlayerDocArr[i];
+            if (team.is1pWin) {
+                winPlayer = playerDocArr[0]
+            }
+            else {
+                winPlayer = playerDocArr[1]
+            }
+            if (!mvpMap[winPlayer.id]) {
+                mvpMap[winPlayer.id] = { win: 0, player: winPlayer }
+            }
+            mvpMap[winPlayer.id].win++
+
             var p1 = newBitmap({ url: _avatar(playerDocArr[0].avatar) })
             // p1.x = 2 + i * 208
             // p1.y = 20
@@ -187,10 +210,24 @@ export class WinTeam extends PIXI.Container {
             ctn.mask = this.winGroupMask.spArr[i]
             ctn.addChild(p1)
         }
-        if (team.is1pWin)
+        if (team.is1pWin) {
             this.winIcon.x = 820 + 8
-        else
+        }
+        else {
             this.winIcon.x = 820 + 90
+        }
+
+        let mvpArr = mapToArr(mvpMap)
+        var mvp
+        if (mvpArr.length == 3 || mvpArr.length == 1)
+            mvp = winPlayer
+        else if (mvpArr.length == 2) {
+            mvpArr[0].win > mvpArr[1].win ? mvp = mvpArr[0].player
+                : mvp = mvpArr[1].player
+        }
+        console.log('mvp', mvp);
+        this.setAvatar(mvp.portrait)
+        // this.setAvatar(_avatar(mvp.avatar))
     }
     show() {
         console.log('show win');

@@ -321,6 +321,7 @@ class KOA extends VueBase {
                 console.log('winGameDocArr', winGameDocArr);
                 winTeam.winPlayerDocArr = winGameDocArr
                 winTeam.is1pWin = is1pWin
+                winTeam.scoreArr = data.scoreArr
                 this.hp.showWinTeam(winTeam)
             })
     }

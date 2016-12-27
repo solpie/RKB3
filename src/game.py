@@ -103,7 +103,7 @@ class BracketModel(object):
         if len(docs) < 1:
             self.db.insert({"id": -1})
 
-        self.makeBracket()
+        # self.makeBracket()
         # self.clear()
 
     def makeBracket(self):
@@ -123,14 +123,14 @@ class BracketModel(object):
         #     # g['right']['ft'] = 'FTG'
         #     g['left']['name'] = 'Team L#' + idx
         #     g['right']['name'] = 'Team R#' + idx
-            # g['left']['intro'] = '钢管舞更为充分'
-            # g['right']['intro'] = '特委托物业万佛阿佛i结合实际哦'
-            # g['left']['logo'] = str((int(idx) % 4) + 1) + '.jpg'
-            # g['right']['logo'] = str((int(idx) % 4) + 1) + '.jpg'
+        # g['left']['intro'] = '钢管舞更为充分'
+        # g['right']['intro'] = '特委托物业万佛阿佛i结合实际哦'
+        # g['left']['logo'] = str((int(idx) % 4) + 1) + '.jpg'
+        # g['right']['logo'] = str((int(idx) % 4) + 1) + '.jpg'
         # l = dict()
         # for i in range(14):
-            # l[i + 1] = {"left": {"score": 0, "name": "Team 1#"+str(i)},
-            # "right": {"score": 0, "name": "Team 2#"+str(i)}}
+        # l[i + 1] = {"left": {"score": 0, "name": "Team 1#"+str(i)},
+        # "right": {"score": 0, "name": "Team 2#"+str(i)}}
         # docs = self.db.find({"id": -1})
         # # docs[0]["comingIdx"] = -1
         # docs[0]["group"] = l
@@ -178,6 +178,7 @@ class BracketModel(object):
             g['right']['score'] = scoreArr[1]
             print(docs)
             print('scoreArr', scoreArr)
+        data['scoreArr'] = scoreArr
         data['group'] = g
 
         data['list'] = doc["group"]
@@ -206,6 +207,7 @@ class BracketModel(object):
         roadTo(r[0], winTeam)
         roadTo(r[1], loseTeam)
         self.db.update(doc)
+        data['_block_']  = True
 
     def clear(self):
         doc = self._doc()
@@ -232,7 +234,7 @@ class GameModel(object):
         self.playerModel = playerModel
         self.db = BaseDB('./db/game.db')
         self.resetBeatBy01()
-        
+
     def reload(self, _):
         self.db.reload()
 
@@ -285,7 +287,7 @@ class GameModel(object):
                 self.beatBy01[1] += 1
             elif lastWinnerId == player1['id']:
                 self.beatBy01[0] = 1
-                self.beatBy01[1] += 1    
+                self.beatBy01[1] += 1
         data['beatBy01'] = self.beatBy01
         player1['blood'] = self.gameDoc.blood1p
         player2['blood'] = self.gameDoc.blood2p
@@ -296,11 +298,11 @@ class GameModel(object):
 
         if self.lastWinner:
             if player1['id'] == self.lastWinner['id']:
-                player1['blood'] = self._range(
-                    self.lastWinner['blood'] + 1, 0, 5)
+                player1['foul'] = self._range(
+                    self.lastWinner['foul'] - 2, 0, 5)
             if player2['id'] == self.lastWinner['id']:
-                player2['blood'] = self._range(
-                    self.lastWinner['blood'] + 1, 0, 5)
+                player2['foul'] = self._range(
+                    self.lastWinner['foul'] - 2, 0, 5)
 
     def commitTeam(self, data):
         idx = data['bracketIdx']
@@ -312,7 +314,7 @@ class GameModel(object):
         self.resetBeatBy01()
 
     def resetBeatBy01(self):
-        self.beatBy01  = [-1,0]
+        self.beatBy01 = [-1, 0]
 
     def commitGame(self, data):
         if not self.gameDoc:
@@ -412,8 +414,11 @@ class ActivityModel:
     def onCmd(self, cmd, data):
         print(cmd, data)
         for func in self.eventMap[cmd]:
-            data = func(data) or data
-            emit(cmd.replace('cs_', 'sc_'), data)
+            if '_block_' in data:
+                del data['_block_']
+            func(data)
+            if '_block_' not in data:
+                emit(cmd.replace('cs_', 'sc_'), data)
 
 actModel = ActivityModel()
 
@@ -433,7 +438,7 @@ def emit(cmd, data):
 def gameIndex():
     return actModel.gameModel.curGame()
     # if actModel.gameModel.data:
-        # return jsonify(actModel.gameModel.getData())
+    # return jsonify(actModel.gameModel.getData())
     # return jsonify({"start": False})
 
 
@@ -448,6 +453,16 @@ def updatePlayer():
     actModel.playerModel.db.update(data)
     return jsonify(data)
 
+
+@gameView.route('/clear/<idx>')
+def clearGame(idx):
+    if idx=='all':
+        actModel.gameModel.db.clear()
+        return 'sus'
+    else:
+        # bracketIdx = int(idx)
+        actModel.gameModel.db.remove({'bracketIdx':  int(idx)})
+        return 'remove bracketIdx '+idx
 
 @gameView.route('/bracket/<idx>')
 def getBracket(idx):

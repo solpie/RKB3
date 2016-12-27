@@ -1,3 +1,4 @@
+import { Ready } from './Ready';
 import { _avatar } from '../../utils/HupuAPI';
 import { TextTimer } from '../../utils/TextTimer';
 import { Winner } from './Winner';
@@ -34,10 +35,15 @@ export class HP extends PIXI.Container {
 
     winTeam: WinTeam
     winner: Winner
+    ready:Ready
     constructor(stage: PIXI.Container) {
         super()
         stage.addChild(this)
-        this.addChild(newBitmap({ url: '/img/panel/koa/hp/bg.png' }))
+        let titleCtn = new PIXI.Container 
+        this.addChild(titleCtn)
+
+        titleCtn.addChild(newBitmap({ url: '/img/panel/koa/hp/bg.png' }))
+        titleCtn.y = ViewConst.STAGE_HEIGHT-136
 
 
         let _b = () => {
@@ -52,7 +58,7 @@ export class HP extends PIXI.Container {
             bFx.addChild(bFx['blood'])
             bFx.addChild(bFx['msk'])
             bFx['blood'].mask = bFx['msk']
-            this.addChild(bFx)
+            titleCtn.addChild(bFx)
             return bFx
         }
         this.bloodFx1p = _b()
@@ -78,7 +84,7 @@ export class HP extends PIXI.Container {
                     this.pointArr2p.push(p)
                 }
                 p.y = 42
-                this.addChild(p)
+                titleCtn.addChild(p)
             }
         }
         initPoint(true)
@@ -89,23 +95,23 @@ export class HP extends PIXI.Container {
         this.foulPG1p.x = 708
         this.foulPG1p.y = 89
         // this.foulPG1p.alpha = .5
-        this.addChild(this.foulPG1p)
+        titleCtn.addChild(this.foulPG1p)
         fpg.flip = -1
         fpg.dir = Direction.e
         this.foulPG2p = new SpriteGroup(fpg)
         this.foulPG2p.x = 1098
         this.foulPG2p.y = this.foulPG1p.y
-        this.addChild(this.foulPG2p)
+        titleCtn.addChild(this.foulPG2p)
 
 
         var fg = newBitmap({ x: 692, y: 75, url: '/img/panel/koa/hp/foulGlow.png' })
         this.foulGlow1p = fg
         fg.visible = false
-        this.addChild(fg)
+        titleCtn.addChild(fg)
         fg = newBitmap({ x: 1045, y: fg.y, url: '/img/panel/koa/hp/foulGlow.png' })
         this.foulGlow2p = fg
         fg.visible = false
-        this.addChild(fg)
+        titleCtn.addChild(fg)
 
         //120 x 120
         let initAvatar = (is1p: boolean) => {
@@ -131,8 +137,8 @@ export class HP extends PIXI.Container {
                 this.avatar2p = avt
                 avt.scale.x = -1
             }
-            this.addChild(avt)
-            this.addChild(msk1)
+            titleCtn.addChild(avt)
+            titleCtn.addChild(msk1)
             avt.mask = msk1
         }
 
@@ -140,7 +146,7 @@ export class HP extends PIXI.Container {
         initAvatar(true)
         initAvatar(false)
 
-        this.addChild(newBitmap({ url: '/img/panel/koa/hp/deco.png' }))
+        titleCtn.addChild(newBitmap({ url: '/img/panel/koa/hp/deco.png' }))
         // init name
         //         两遍暗的 dc6b17
         // 亮的 debc1d
@@ -163,7 +169,7 @@ export class HP extends PIXI.Container {
         n1.x = 495
         n1.y = 93
         // n1.style.fill = makeColorRatio(['#dc6b17', '#debc1d', '#dc6b17'], [2, 7, 2])
-        this.addChild(n1)
+        titleCtn.addChild(n1)
 
         ns.fill = ['#fff0f0', '#fff0f0', '#b33b3b']
         let n2 = new PIXI.Text("player1", ns)
@@ -172,7 +178,7 @@ export class HP extends PIXI.Container {
         n2.x = n2['x0'] - n2.width
         n2.y = n1.y
         // n2.style.fill = makeColorRatio(['#dc6b17', '#debc1d', '#dc6b17'], [2, 7, 2])
-        this.addChild(n2)
+        titleCtn.addChild(n2)
 
         //beat by 01
         let beatStyle = {
@@ -187,12 +193,12 @@ export class HP extends PIXI.Container {
         let bb = new PIXI.Text('', beatStyle)
         bb.x = 540
         bb.y = 2
-        this.addChild(bb)
+        titleCtn.addChild(bb)
         this.beatByNum1p = bb
         let bb2 = new PIXI.Text('', beatStyle)
         bb2.x = 1240
         bb2.y = bb.y
-        this.addChild(bb2)
+        titleCtn.addChild(bb2)
         this.beatByNum2p = bb2
 
         let ns2 = {
@@ -204,32 +210,40 @@ export class HP extends PIXI.Container {
             fill: null,
             fillGradientType: PIXI['TEXT_GRADIENT'].LINEAR_VERTICAL,
         }
+        let _ns1 = () => {
+            // return ['#c0dbff', '#c0dbff', '#3b52b3']
+            return '#3b52b3'
+        }
+        let _ns2 = () => {
+            // return ['#fff0f0', '#fff0f0', '#b33b3b']
+            return  '#b33b3b'
+        }
         for (var i = 0; i < 2; i++) {
-            var bg1p = newBitmap({ url: '/img/panel/koa/hp/blueBg.png' })
-            this.addChild(bg1p)
-            ns2.fill = ['#c0dbff', '#c0dbff', '#3b52b3']
+            // var bg1p = newBitmap({ url: '/img/panel/koa/hp/blueBg.png' })
+            // this.addChild(bg1p)
+            ns2.fill = _ns1()
             var n1p = new PIXI.Text('player' + (i + 2), ns2)
-            n1p['bg'] = bg1p
-            n1p['fill'] = ['#c0dbff', '#c0dbff', '#3b52b3']
+            // n1p['bg'] = bg1p
+            n1p['fill'] = _ns1()
             n1p['x0'] = 360 //+ 115
             n1p.x = n1p['x0'] - n1p.width
             n1p.y = 75 + i * 26
-            bg1p.x = n1p['x0'] - 120
-            bg1p.y = n1p.y + 2
-            this.addChild(n1p)
+            // bg1p.x = n1p['x0'] - 120
+            // bg1p.y = n1p.y + 2
+            titleCtn.addChild(n1p)
             this.nameArr1p.push(n1p)
 
-            var bg2p = newBitmap({ url: '/img/panel/koa/hp/redBg.png' })
-            this.addChild(bg2p)
-            ns2.fill = ['#fff0f0', '#fff0f0', '#b33b3b']
+            // var bg2p = newBitmap({ url: '/img/panel/koa/hp/redBg.png' })
+            // this.addChild(bg2p)
+            ns2.fill = _ns2()
             var n2p = new PIXI.Text('player' + (i + 2), ns2)
-            n2p['bg'] = bg2p
-            n2p['fill'] = ['#fff0f0', '#fff0f0', '#b33b3b']
+            // n2p['bg'] = bg2p
+            n2p['fill'] = _ns2()
             n2p.x = 1555// - 115
             n2p.y = n1p.y
-            bg2p.x = n2p.x - 5
-            bg2p.y = bg1p.y
-            this.addChild(n2p)
+            // bg2p.x = n2p.x - 5
+            // bg2p.y = bg1p.y
+            titleCtn.addChild(n2p)
             this.nameArr2p.push(n2p)
         }
         // console.log('n1p')
@@ -247,7 +261,7 @@ export class HP extends PIXI.Container {
         this.timeText = t
         t.x = 889
         t.y = 35
-        this.addChild(t)
+        titleCtn.addChild(t)
 
 
         this.st1p = new St(this, true)
@@ -263,7 +277,11 @@ export class HP extends PIXI.Container {
         this.winner = new Winner(this)
         this.winner.y = 300
         this.winTeam = new WinTeam(this)
+
+
+        this.ready = new Ready(this)
         this.test()
+
     }
 
     test() {
@@ -330,12 +348,12 @@ export class HP extends PIXI.Container {
                 nt.text = pn.name
                 idx == 0 ? nt.x = nt['x0'] - nt.width : nt;
                 if (pn.isDead) {
-                    nt['bg'].filters = [f]
+                    // nt['bg'].filters = [f]
                     nt.style.fill = '#ddd'
                 }
                 else {
                     nt.style.fill = nt['fill']
-                    nt['bg'].filters = null
+                    // nt['bg'].filters = null
                 }
             }
         }

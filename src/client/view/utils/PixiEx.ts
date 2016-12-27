@@ -203,3 +203,8 @@ class TextEx extends PIXI.Text {
     }
 }
 // }
+export let setPivot = (obj, x, y) => {
+    obj.pivot = new PIXI.Point(x,y)
+    obj.x += x
+    obj.y += y
+}
