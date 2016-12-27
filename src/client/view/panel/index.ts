@@ -1,3 +1,4 @@
+import { stage3point } from './3point/stage3point';
 // require(`script!./../../libs/createjs/createjs.min.js`);
 // require(`script!./../../libs/createjs/easeljs.min.js`);
 // require(`script!./../../libs/createjs/tweenjs.min.js`);
@@ -32,6 +33,10 @@ let routes = [
     {
         path: '/5v5/:op',
         components: { default: stage5v5 }
+    },
+    {
+        path: '/3/:op',
+        components: { default: stage3point }
     },
     {
         path: '/ol/:op/:game_id',

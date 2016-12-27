@@ -103,17 +103,26 @@ class BracketModel(object):
         if len(docs) < 1:
             self.db.insert({"id": -1})
 
-        # self.makeBracket()
+        self.makeBracket()
         # self.clear()
 
     def makeBracket(self):
         doc = self._doc()
-        for idx in doc['group']:
-            g = doc['group'][idx]
-            # g['left']['ft'] = 'FTG'
-            # g['right']['ft'] = 'FTG'
-            g['left']['name'] = 'Team L#' + idx
-            g['right']['name'] = 'Team R#' + idx
+        group = doc['group']
+        group['1']['left']['name'] = 'FTG #1'
+        group['1']['right']['name'] = 'Fe3O4 #1'
+        group['2']['left']['name'] = 'TSH #1'
+        group['2']['right']['name'] = 'Gambia #1'
+        group['3']['left']['name'] = 'Gambia #2'
+        group['3']['right']['name'] = 'FTG #2'
+        group['4']['left']['name'] = 'TSH #2'
+        group['4']['right']['name'] = 'Fe3O4 #2'
+        # for idx in doc['group']:
+        #     g = doc['group'][idx]
+        #     # g['left']['ft'] = 'FTG'
+        #     # g['right']['ft'] = 'FTG'
+        #     g['left']['name'] = 'Team L#' + idx
+        #     g['right']['name'] = 'Team R#' + idx
             # g['left']['intro'] = '钢管舞更为充分'
             # g['right']['intro'] = '特委托物业万佛阿佛i结合实际哦'
             # g['left']['logo'] = str((int(idx) % 4) + 1) + '.jpg'
