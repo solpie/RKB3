@@ -126,6 +126,8 @@ enum cmdEnum {
     sc_setFoul,
     cs_setSt,
     sc_setSt,
+    cs_hideSt,
+    sc_hideSt,
     //ft bracket
     cs_ftBracketInfo,
     sc_ftBracketInfo,

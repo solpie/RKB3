@@ -62,7 +62,7 @@ export class HP extends PIXI.Container {
             return bFx
         }
         this.bloodFx1p = _b()
-        this.bloodFx1p.x = 518
+        this.bloodFx1p.x = 519
         this.bloodFx1p.y = 42
 
         this.bloodFx2p = _b()
@@ -270,7 +270,7 @@ export class HP extends PIXI.Container {
         this.st2p = new St(this, false)
         this.st2p.x = ViewConst.STAGE_WIDTH - 282
         this.st2p.y = this.st1p.y
-  
+
         this.setFoul(true, 0)
         this.setFoul(false, 0)
 
@@ -397,9 +397,16 @@ export class HP extends PIXI.Container {
         is1p ? st12 = this.st1p
             : st12 = this.st2p
         st12.setNum(st)
-        new TweenEx(st12)
-        .to({alpha:1},100)
-        .start()
+        new TweenEx(this.st1p)
+            .to({ alpha: 1 }, 100)
+            .start()
+        new TweenEx(this.st2p)
+            .to({ alpha: 1 }, 100)
+            .start()
+    }
+    hideSt() {
+        this.st1p.alpha = 0
+        this.st2p.alpha = 0
     }
 
     setFoul(is1p, foul) {

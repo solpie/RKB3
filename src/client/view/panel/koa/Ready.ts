@@ -209,7 +209,7 @@ export class Ready extends PIXI.Container {
 
             })
             new TweenEx(whiteEnd)
-                .delay(_f(70))
+                .delay(_f(120))
                 .call(() => [
                     this.addChild(whiteEnd)
                 ])

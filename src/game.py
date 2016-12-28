@@ -405,6 +405,7 @@ class GameModel(object):
         if self.data:
             res = self.getData()
             res['start'] = True
+            res['noFx'] = True
             return jsonify(res)
         return jsonify({"start": False})
 

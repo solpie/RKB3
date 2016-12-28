@@ -98,7 +98,8 @@ class KOA extends VueBase {
 
     startGame(data) {
         if (data.start) {
-            new Ready(canvasStage, data.playerDocArr)
+            if (!data.noFx)
+                new Ready(canvasStage, data.playerDocArr)
             this.hp.setPlayer(data.playerDocArr, data.partnerArr, data.stArr)
             this.hp.setBlood(true, data.playerDocArr[0].blood)
             this.hp.setBlood(false, data.playerDocArr[1].blood)
@@ -106,8 +107,6 @@ class KOA extends VueBase {
             this.hp.setFoul(false, data.playerDocArr[1].foul)
             this.hp.setSt(true, data.playerDocArr[0].st)
             this.hp.setSt(false, data.playerDocArr[1].st)
-            this.hp.st1p.alpha = 0      
-            this.hp.st2p.alpha = 0      
             if (data.beatBy01 && data.beatBy01[0] > -1) {
                 this.hp.setBeatBy(data.beatBy01[0] == 0, data.beatBy01[1])
             }
@@ -228,6 +227,11 @@ class KOA extends VueBase {
                 dt: dt
             })
         },
+        onHideSt() {
+             this.opReq(`${CommandId.cs_hideSt}`, {
+                 _:null,
+            })
+        },
         onSetSt(is1p: boolean, dt) {
             this.opReq(`${CommandId.cs_setSt}`, {
                 is1p: is1p,
@@ -299,6 +303,9 @@ class KOA extends VueBase {
             })
             .on(`${CommandId.sc_setSt}`, (data) => {
                 this.hp.setSt(data.is1p, data.st)
+            })
+            .on(`${CommandId.sc_hideSt}`, (data) => {
+                this.hp.hideSt()
             })
             .on(`${CommandId.sc_commitGame}`, (data) => {
                 this.hp.toggleTimer(TimerState.PAUSE)

@@ -27,7 +27,12 @@ class Game3 extends PIXI.Container {
         gidx['1'] = gidx['5'] = gidx['0'] + 275
         gidx['2'] = gidx['6'] = 883
         gidx['3'] = gidx['7'] = gidx['6'] + 275
-        var y
+        var flipIdx = {}
+        flipIdx['2'] = -1
+        flipIdx['3'] = -1
+        flipIdx['6'] = -1
+        flipIdx['7'] = -1
+        var  y
         let avtArr = []
         for (var i = 0; i < 8; i++) {
             for (var j = 0; j < 4; j++) {
@@ -37,11 +42,17 @@ class Game3 extends PIXI.Container {
                 avtBg.height = 60
                 var msk = this.makeMsk(avtBg.x, avtBg.y)
                 bg.addChild(msk)
+               
                 var avt = newBitmap({ x: avtBg.x, y: avtBg.y, url: _avatar(playerDocArr[i * 4 + j].avatar) })
                 avt['id'] = playerDocArr[i * 4 + j].id
+                avt['mx'] = avtBg.x
                 avtArr.push(avt)
                 avt.width = 56
                 avt.height = 56
+                if (flipIdx[i]) {
+                    avt.x += 56
+                    avt.scale.x = -1
+                }
                 bg.addChild(avt)
                 avt.mask = msk
                 bg.addChild(avtBg)
@@ -54,7 +65,7 @@ class Game3 extends PIXI.Container {
             var mx = e.clientX - bg.x
             var my = e.clientY - bg.y
             for (var a of avtArr) {
-                if (a.x < mx && a.x + a.width > mx && a.y < my && a.y + a.height > my) {
+                if (a.mx < mx && a.mx + a.width > mx && a.y < my && a.y + a.height > my) {
                     this.opReq('cs_3pointTogglePlayer', { _: null, id: a.id }, () => {
 
                     })
