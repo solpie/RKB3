@@ -1,4 +1,3 @@
-import { stage3point } from './3point/stage3point';
 // require(`script!./../../libs/createjs/createjs.min.js`);
 // require(`script!./../../libs/createjs/easeljs.min.js`);
 // require(`script!./../../libs/createjs/tweenjs.min.js`);
@@ -11,6 +10,7 @@ require(`script!./../../libs/jquery.min.js`);
 require(`script!./../../libs/socket.io-1.4.5.min.js`);
 require(`script!./../../libs/vue/vue.min.js`);
 require(`script!./../../libs/vue/vue-router.min.js`);
+import { stage3point } from './3point/stage3point';
 import { koa } from './koa/KOA';
 import { stage5v5 } from './stage5v5/Stage5v5';
 import { rkbView } from "./stageRKB/RKBOPView";

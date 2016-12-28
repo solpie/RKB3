@@ -32,6 +32,7 @@ class KOA extends VueBase {
 
     bracketInfo = VueBase.PROP
     bracketIdx = VueBase.PROP
+    teamNameArr = VueBase.PROP
 
     $actTab
     playerIdMap
@@ -53,6 +54,11 @@ class KOA extends VueBase {
         VueBase.initProps(this)
     }
     protected created() {
+        this.teamNameArr = ['FTG#1', 'Fe#1',
+            'TSH#1', "GBA#1",
+            'GBA#2', 'FTG#2',
+            'TSH#2', 'Fe#2',
+        ]
         this.initCanvas()
         this.gamePlayer1p = { name: '1p' }
         this.gamePlayer2p = { name: '2p' }
@@ -67,7 +73,6 @@ class KOA extends VueBase {
                 playerMap[player.id] = player
             }
             this.playerIdMap = playerMap
-            new Ready(canvasStage, [playerDocArr[0], playerDocArr[1]])
             // this.initPlayerData(playerMap)
         })
         getGameInfo((res) => {
@@ -80,7 +85,6 @@ class KOA extends VueBase {
     initCanvas() {
         canvasStage = BasePanelView.initPixi()
         this.hp = new HP(canvasStage)
-
     }
 
     protected mounted() {
@@ -94,6 +98,7 @@ class KOA extends VueBase {
 
     startGame(data) {
         if (data.start) {
+            new Ready(canvasStage, data.playerDocArr)
             this.hp.setPlayer(data.playerDocArr, data.partnerArr, data.stArr)
             this.hp.setBlood(true, data.playerDocArr[0].blood)
             this.hp.setBlood(false, data.playerDocArr[1].blood)
@@ -101,6 +106,8 @@ class KOA extends VueBase {
             this.hp.setFoul(false, data.playerDocArr[1].foul)
             this.hp.setSt(true, data.playerDocArr[0].st)
             this.hp.setSt(false, data.playerDocArr[1].st)
+            this.hp.st1p.alpha = 0      
+            this.hp.st2p.alpha = 0      
             if (data.beatBy01 && data.beatBy01[0] > -1) {
                 this.hp.setBeatBy(data.beatBy01[0] == 0, data.beatBy01[1])
             }

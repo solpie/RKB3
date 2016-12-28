@@ -35,15 +35,15 @@ export class HP extends PIXI.Container {
 
     winTeam: WinTeam
     winner: Winner
-    ready:Ready
+    ready: Ready
     constructor(stage: PIXI.Container) {
         super()
         stage.addChild(this)
-        let titleCtn = new PIXI.Container 
+        let titleCtn = new PIXI.Container
         this.addChild(titleCtn)
 
         titleCtn.addChild(newBitmap({ url: '/img/panel/koa/hp/bg.png' }))
-        titleCtn.y = ViewConst.STAGE_HEIGHT-136
+        titleCtn.y = ViewConst.STAGE_HEIGHT - 136
 
 
         let _b = () => {
@@ -90,7 +90,7 @@ export class HP extends PIXI.Container {
         initPoint(true)
         initPoint(false)
 
-        let fpg = { dir: Direction.w, invert: 38, img: '/img/panel/koa/hp/foul.png', count: 4, flip: 1 }
+        let fpg = { dir: Direction.w, invert: 30, img: '/img/panel/koa/hp/foul.png', count: 5, flip: 1 }
         this.foulPG1p = new SpriteGroup(fpg)
         this.foulPG1p.x = 708
         this.foulPG1p.y = 89
@@ -103,7 +103,8 @@ export class HP extends PIXI.Container {
         this.foulPG2p.y = this.foulPG1p.y
         titleCtn.addChild(this.foulPG2p)
 
-
+        // this.foulPG1p.setNum(5)
+        // this.foulPG2p.setNum(5)
         var fg = newBitmap({ x: 692, y: 75, url: '/img/panel/koa/hp/foulGlow.png' })
         this.foulGlow1p = fg
         fg.visible = false
@@ -216,7 +217,7 @@ export class HP extends PIXI.Container {
         }
         let _ns2 = () => {
             // return ['#fff0f0', '#fff0f0', '#b33b3b']
-            return  '#b33b3b'
+            return '#b33b3b'
         }
         for (var i = 0; i < 2; i++) {
             // var bg1p = newBitmap({ url: '/img/panel/koa/hp/blueBg.png' })
@@ -265,11 +266,11 @@ export class HP extends PIXI.Container {
 
 
         this.st1p = new St(this, true)
-        this.st1p.y = ViewConst.STAGE_HEIGHT - 78 - 50
+        this.st1p.y = 500
         this.st2p = new St(this, false)
         this.st2p.x = ViewConst.STAGE_WIDTH - 282
         this.st2p.y = this.st1p.y
-
+  
         this.setFoul(true, 0)
         this.setFoul(false, 0)
 
@@ -392,7 +393,13 @@ export class HP extends PIXI.Container {
     }
 
     setSt(is1p, st) {
-        is1p ? this.st1p.setNum(st) : this.st2p.setNum(st)
+        var st12;
+        is1p ? st12 = this.st1p
+            : st12 = this.st2p
+        st12.setNum(st)
+        new TweenEx(st12)
+        .to({alpha:1},100)
+        .start()
     }
 
     setFoul(is1p, foul) {
@@ -401,7 +408,7 @@ export class HP extends PIXI.Container {
         var fg;
         is1p ? fg = this.foulGlow1p
             : fg = this.foulGlow2p
-        if (foul > 3) {
+        if (foul > 4) {
             fg.visible = true
             blink2({ target: fg, loop: Infinity })
         }

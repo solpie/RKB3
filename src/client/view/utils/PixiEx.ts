@@ -197,14 +197,18 @@ class TextEx extends PIXI.Text {
     set text(t) {
         this._text = t
         if (this.align == 'center') {
-            
+
         }
         // super.text = t
     }
 }
 // }
 export let setPivot = (obj, x, y) => {
-    obj.pivot = new PIXI.Point(x,y)
+    obj.pivot = new PIXI.Point(x, y)
     obj.x += x
     obj.y += y
+}
+export let PIXI_MOUSE_EVENT = {
+    mousedown: 'mousedown',
+    click: 'click',
 }

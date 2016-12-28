@@ -40,7 +40,7 @@
             <p>
                 <div class="tabs is-boxed">
                     <ul>
-                        <li v-for="teamIdx in 8"><a @click="onTabTeam($event,teamIdx)">Team{{teamIdx}}</a></li>
+                        <li v-for="teamIdx in 8"><a @click="onTabTeam($event,teamIdx)">{{teamNameArr[teamIdx-1]}}</a></li>
                     </ul>
                 </div>
                 <div v-for="player in playerDocArr">

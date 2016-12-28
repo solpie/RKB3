@@ -45,13 +45,13 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var stage3point_1 = __webpack_require__(26);
 	__webpack_require__(28);
 	__webpack_require__(30);
 	__webpack_require__(5);
 	__webpack_require__(32);
 	__webpack_require__(10);
 	__webpack_require__(12);
+	var stage3point_1 = __webpack_require__(26);
 	var KOA_1 = __webpack_require__(34);
 	var Stage5v5_1 = __webpack_require__(52);
 	var RKBOPView_1 = __webpack_require__(55);
@@ -504,8 +504,98 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var const_1 = __webpack_require__(39);
+	var JsFunc_1 = __webpack_require__(24);
+	var HupuAPI_1 = __webpack_require__(21);
+	var BasePanelView_1 = __webpack_require__(50);
 	var WebJsFunc_1 = __webpack_require__(22);
 	var VueBase_1 = __webpack_require__(17);
+	var PixiEx_1 = __webpack_require__(37);
+	var Game3 = (function (_super) {
+	    __extends(Game3, _super);
+	    function Game3(parent, playerDocArr) {
+	        var _this = this;
+	        _super.call(this);
+	        this.opReq = function (cmdId, param, callback) {
+	            $.ajax({
+	                url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
+	                type: 'post',
+	                data: JSON.stringify(param),
+	                headers: { "Content-Type": "application/json" },
+	                dataType: 'json',
+	                success: callback
+	            });
+	        };
+	        parent.addChild(this);
+	        var bg = PixiEx_1.newBitmap({ x: 220, y: 0, url: "/img/panel/3/title.png" });
+	        this.addChild(bg);
+	        var gidx = {};
+	        gidx['0'] = gidx['4'] = 68;
+	        gidx['1'] = gidx['5'] = gidx['0'] + 275;
+	        gidx['2'] = gidx['6'] = 883;
+	        gidx['3'] = gidx['7'] = gidx['6'] + 275;
+	        var y;
+	        var avtArr = [];
+	        for (var i = 0; i < 8; i++) {
+	            for (var j = 0; j < 4; j++) {
+	                i < 4 ? y = 2 : y = 65;
+	                var avtBg = PixiEx_1.newBitmap({ x: gidx[i] + j * 65, y: y, url: '/img/panel/koa/pickup/avatar.png' });
+	                avtBg.width = 60;
+	                avtBg.height = 60;
+	                var msk = this.makeMsk(avtBg.x, avtBg.y);
+	                bg.addChild(msk);
+	                var avt = PixiEx_1.newBitmap({ x: avtBg.x, y: avtBg.y, url: HupuAPI_1._avatar(playerDocArr[i * 4 + j].avatar) });
+	                avt['id'] = playerDocArr[i * 4 + j].id;
+	                avtArr.push(avt);
+	                avt.width = 56;
+	                avt.height = 56;
+	                bg.addChild(avt);
+	                avt.mask = msk;
+	                bg.addChild(avtBg);
+	            }
+	        }
+	        this.avtArr = avtArr;
+	        document.onclick = function (e) {
+	            console.log('click ', e);
+	            var mx = e.clientX - bg.x;
+	            var my = e.clientY - bg.y;
+	            for (var _i = 0, avtArr_1 = avtArr; _i < avtArr_1.length; _i++) {
+	                var a = avtArr_1[_i];
+	                if (a.x < mx && a.x + a.width > mx && a.y < my && a.y + a.height > my) {
+	                    _this.opReq('cs_3pointTogglePlayer', { _: null, id: a.id }, function () {
+	                    });
+	                }
+	            }
+	        };
+	    }
+	    Game3.prototype.makeMsk = function (ax, ay) {
+	        var r = 13, ax, ay;
+	        var msk = new PIXI.Graphics();
+	        msk.beginFill(0xff0000, 0.5);
+	        msk.moveTo(17, 4);
+	        msk.lineTo(72, 4);
+	        msk.lineTo(72 + r, 4 + r);
+	        msk.lineTo(72 + r, 72);
+	        msk.lineTo(72, 72 + r);
+	        msk.lineTo(17, 72 + r);
+	        msk.lineTo(17 - r, 72);
+	        msk.lineTo(17 - r, 4 + r);
+	        msk.x = ax;
+	        msk.y = ay;
+	        msk.width = 56;
+	        msk.height = 56;
+	        return msk;
+	    };
+	    Game3.prototype.togglePlayer = function (playerId) {
+	        for (var _i = 0, _a = this.avtArr; _i < _a.length; _i++) {
+	            var p = _a[_i];
+	            if (p.id == playerId) {
+	                p.visible = !p.visible;
+	            }
+	        }
+	    };
+	    return Game3;
+	}(PIXI.Container));
 	var Stage3point = (function (_super) {
 	    __extends(Stage3point, _super);
 	    function Stage3point() {
@@ -515,10 +605,24 @@
 	        VueBase_1.VueBase.initProps(this);
 	    }
 	    Stage3point.prototype.created = function () {
+	        var _this = this;
 	        this.isOp = this.$route.params['op'] == 'op';
 	        if (this.isOp) {
 	            WebJsFunc_1.dynamicLoading.css('/css/bulma.min.css');
 	        }
+	        HupuAPI_1.getPlayerDoc(function (playerDocArr) {
+	            var playerMap = {};
+	            playerDocArr = playerDocArr.sort(JsFunc_1.ascendingProp('id'));
+	            _this.game3 = new Game3(BasePanelView_1.BasePanelView.initPixi(), playerDocArr);
+	        });
+	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
+	        localWs.on('connect', function (msg) {
+	            console.log('connect', window.location.host);
+	        })
+	            .on("sc_3pointTogglePlayer", function (data) {
+	            console.log("sc_3pointTogglePlayer", data);
+	            _this.game3.togglePlayer(data.id);
+	        });
 	    };
 	    Stage3point.prototype.setPlayerState = function (playerId, state) {
 	    };
@@ -610,6 +714,7 @@
 	        this.gamePlayer2p = VueBase_1.VueBase.PROP;
 	        this.bracketInfo = VueBase_1.VueBase.PROP;
 	        this.bracketIdx = VueBase_1.VueBase.PROP;
+	        this.teamNameArr = VueBase_1.VueBase.PROP;
 	        this.opReq = function (cmdId, param, callback) {
 	            $.ajax({
 	                url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
@@ -771,6 +876,11 @@
 	    }
 	    KOA.prototype.created = function () {
 	        var _this = this;
+	        this.teamNameArr = ['FTG#1', 'Fe#1',
+	            'TSH#1', "GBA#1",
+	            'GBA#2', 'FTG#2',
+	            'TSH#2', 'Fe#2',
+	        ];
 	        this.initCanvas();
 	        this.gamePlayer1p = { name: '1p' };
 	        this.gamePlayer2p = { name: '2p' };
@@ -786,7 +896,6 @@
 	                playerMap[player.id] = player;
 	            }
 	            _this.playerIdMap = playerMap;
-	            new Ready_1.Ready(canvasStage, [playerDocArr[0], playerDocArr[1]]);
 	        });
 	        HupuAPI_1.getGameInfo(function (res) {
 	            console.log('gameInfo', res);
@@ -807,6 +916,7 @@
 	    };
 	    KOA.prototype.startGame = function (data) {
 	        if (data.start) {
+	            new Ready_1.Ready(canvasStage, data.playerDocArr);
 	            this.hp.setPlayer(data.playerDocArr, data.partnerArr, data.stArr);
 	            this.hp.setBlood(true, data.playerDocArr[0].blood);
 	            this.hp.setBlood(false, data.playerDocArr[1].blood);
@@ -814,6 +924,8 @@
 	            this.hp.setFoul(false, data.playerDocArr[1].foul);
 	            this.hp.setSt(true, data.playerDocArr[0].st);
 	            this.hp.setSt(false, data.playerDocArr[1].st);
+	            this.hp.st1p.alpha = 0;
+	            this.hp.st2p.alpha = 0;
 	            if (data.beatBy01 && data.beatBy01[0] > -1) {
 	                this.hp.setBeatBy(data.beatBy01[0] == 0, data.beatBy01[1]);
 	            }
@@ -964,7 +1076,7 @@
 	        };
 	        initPoint(true);
 	        initPoint(false);
-	        var fpg = { dir: SpriteGroup_1.Direction.w, invert: 38, img: '/img/panel/koa/hp/foul.png', count: 4, flip: 1 };
+	        var fpg = { dir: SpriteGroup_1.Direction.w, invert: 30, img: '/img/panel/koa/hp/foul.png', count: 5, flip: 1 };
 	        this.foulPG1p = new SpriteGroup_1.SpriteGroup(fpg);
 	        this.foulPG1p.x = 708;
 	        this.foulPG1p.y = 89;
@@ -1101,7 +1213,7 @@
 	        t.y = 35;
 	        titleCtn.addChild(t);
 	        this.st1p = new St_1.St(this, true);
-	        this.st1p.y = const_1.ViewConst.STAGE_HEIGHT - 78 - 50;
+	        this.st1p.y = 500;
 	        this.st2p = new St_1.St(this, false);
 	        this.st2p.x = const_1.ViewConst.STAGE_WIDTH - 282;
 	        this.st2p.y = this.st1p.y;
@@ -1194,7 +1306,13 @@
 	            bFx['blink'].visible = false;
 	    };
 	    HP.prototype.setSt = function (is1p, st) {
-	        is1p ? this.st1p.setNum(st) : this.st2p.setNum(st);
+	        var st12;
+	        is1p ? st12 = this.st1p
+	            : st12 = this.st2p;
+	        st12.setNum(st);
+	        new TweenEx_1.TweenEx(st12)
+	            .to({ alpha: 1 }, 100)
+	            .start();
 	    };
 	    HP.prototype.setFoul = function (is1p, foul) {
 	        is1p ? this.foulPG1p.setNum(foul)
@@ -1202,7 +1320,7 @@
 	        var fg;
 	        is1p ? fg = this.foulGlow1p
 	            : fg = this.foulGlow2p;
-	        if (foul > 3) {
+	        if (foul > 4) {
 	            fg.visible = true;
 	            Fx_1.blink2({ target: fg, loop: Infinity });
 	        }
@@ -1301,7 +1419,7 @@
 	        playerAvt1p.addChild(name1p);
 	        this.addChild(playerAvt1p);
 	        var playerAvt2p = PixiEx_1.newBitmap({ x: const_1.ViewConst.STAGE_WIDTH - 300, y: const_1.ViewConst.STAGE_HEIGHT - 300, url: player2p.portrait });
-	        var name2p = new PIXI.Text(player1p.name, ns);
+	        var name2p = new PIXI.Text(player2p.name, ns);
 	        name2p.x = -30 - name2p.width;
 	        name2p.y = 200;
 	        playerAvt2p.addChild(name2p);
@@ -1651,6 +1769,10 @@
 	    obj.pivot = new PIXI.Point(x, y);
 	    obj.x += x;
 	    obj.y += y;
+	};
+	exports.PIXI_MOUSE_EVENT = {
+	    mousedown: 'mousedown',
+	    click: 'click',
 	};
 
 
@@ -2079,7 +2201,12 @@
 	        this.setFtName(team.name);
 	        var mvp = team.mvp;
 	        this.setFtLogo('/img/ft/' + team.logo);
-	        this.setIntro(team.intro);
+	        var introMap = {};
+	        introMap['1.jpg'] = '源于虎扑黑话“干过羊”，经团员引申为Fuck the GOAT(greatest all time)。他强任他强，我干我的羊正是羊团的座右铭。';
+	        introMap['2.jpg'] = '在虎扑社区文化中“二院”（The second hospital）是脑洞打开的代名词。二院战团，同样以球风或飘逸或诡异的球员著称。';
+	        introMap['3.jpg'] = '四氧化三铁，黑粉用来调侃科比的黑话如今却成了一种情怀。铁团成员风格迥异，却也同样有一颗好胜的心。';
+	        introMap['4.jpg'] = '甘比亚是是虎扑社区中最重要的板块之一，甘比亚战团也是由一群欢乐的JRs组成的战团。';
+	        this.setIntro(introMap[team.logo]);
 	        this.show();
 	        while (this.groupCtn.children.length > 2) {
 	            this.groupCtn.removeChildAt(0);
@@ -3215,7 +3342,7 @@
 /* 51 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <label class=\"label\">出场顺序</label>\r\n            <div class=\"columns\">\r\n                <div class=\"column\">\r\n                    <button class=\"button is-medium\" @click=\"onPickup(true)\">1P</button>\r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer1p.name}}]</label>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(true,-1)\"> -1</button>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(true,1)\">+1</button> {{orderArr1p|json}}\r\n                    <br>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(true,-1)\">犯规 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(true,1)\">犯规 +1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(true,-1)\">援助 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(true,1)\">援助 +1</button>\r\n                    <br>\r\n                    <p v-for=\"player in orderPlayerDocArr1p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(0,player)\"> {{player.id +' ' +player.name}} {{player.isDead?\"败\":\"\"}}</a>\r\n                    </p>\r\n                </div>\r\n                <div class=\"column\">\r\n                    <button class=\"button is-medium\" @click=\"onPickup(false)\">2P</button>\r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer2p.name}}]</label>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(false,-1)\"> -1</button>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(false,1)\"> +1</button>{{orderArr2p|json}}\r\n                    <br>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(false,-1)\">犯规 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(false,1)\">犯规 +1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(false,-1)\">援助 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(false,1)\">援助 +1</button>\r\n                    <br>\r\n                    <p v-for=\"player in orderPlayerDocArr2p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(1,player)\"> {{player.id +' ' +player.name}} {{player.isDead?\"败\":\"\"}} </a>\r\n                    </p>\r\n                </div>\r\n            </div>\r\n\r\n            <p>\r\n                <div class=\"tabs is-boxed\">\r\n                    <ul>\r\n                        <li v-for=\"teamIdx in 8\"><a @click=\"onTabTeam($event,teamIdx)\">Team{{teamIdx}}</a></li>\r\n                    </ul>\r\n                </div>\r\n                <div v-for=\"player in playerDocArr\">\r\n                    <a class=\"box\" style=\"font-size:15px\" @click='onPickupPlayer(player)'> <img :src=\"player.portrait\" style=\"width:60px\"> {{player.id +' ' +player.name}}</a>\r\n                    <p>\r\n                </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            <button class=\"button is-large\" @click=\"onShowPickup\">出阵</button>\r\n            <button class=\"button is-large\" @click=\"onStartGame()\">开始</button>\r\n            <p>\r\n                <button class=\"button is-large\" @click=\"onToggleTimer()\">Toggle</button>\r\n                <button class=\"button is-large\" @click=\"onResetTimer()\">Reset</button>\r\n                <p>\r\n                    <hr>\r\n                    <div class=\"control\">\r\n                        <label class=\"label\">Bracket场次</label>\r\n                        <input class=\"input\" type=\"text\" v-model='bracketIdx' style=\"width:50px\" />\r\n                        <button class=\"button \" @click=\"onCommitGame()\">单场结算</button>\r\n                    </div>\r\n                    <p class=\"control\">\r\n                        <label class=\"label\">蓝队比分-红队比分</label>\r\n                        <input class=\"input\" type=\"text\" v-model='bracketInfo' style=\"width:150px\" />\r\n                    </p>\r\n                    <button class=\"button is-large\" @click=\"onCommitTeam()\">战团结算</button>\r\n                    <hr>\r\n                    <button class=\"button is-large\" @click=\"onReloadDB()\">reload db</button>\r\n\r\n\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <label class=\"label\">出场顺序</label>\r\n            <div class=\"columns\">\r\n                <div class=\"column\">\r\n                    <button class=\"button is-medium\" @click=\"onPickup(true)\">1P</button>\r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer1p.name}}]</label>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(true,-1)\"> -1</button>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(true,1)\">+1</button> {{orderArr1p|json}}\r\n                    <br>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(true,-1)\">犯规 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(true,1)\">犯规 +1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(true,-1)\">援助 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(true,1)\">援助 +1</button>\r\n                    <br>\r\n                    <p v-for=\"player in orderPlayerDocArr1p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(0,player)\"> {{player.id +' ' +player.name}} {{player.isDead?\"败\":\"\"}}</a>\r\n                    </p>\r\n                </div>\r\n                <div class=\"column\">\r\n                    <button class=\"button is-medium\" @click=\"onPickup(false)\">2P</button>\r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer2p.name}}]</label>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(false,-1)\"> -1</button>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(false,1)\"> +1</button>{{orderArr2p|json}}\r\n                    <br>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(false,-1)\">犯规 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(false,1)\">犯规 +1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(false,-1)\">援助 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(false,1)\">援助 +1</button>\r\n                    <br>\r\n                    <p v-for=\"player in orderPlayerDocArr2p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(1,player)\"> {{player.id +' ' +player.name}} {{player.isDead?\"败\":\"\"}} </a>\r\n                    </p>\r\n                </div>\r\n            </div>\r\n\r\n            <p>\r\n                <div class=\"tabs is-boxed\">\r\n                    <ul>\r\n                        <li v-for=\"teamIdx in 8\"><a @click=\"onTabTeam($event,teamIdx)\">{{teamNameArr[teamIdx-1]}}</a></li>\r\n                    </ul>\r\n                </div>\r\n                <div v-for=\"player in playerDocArr\">\r\n                    <a class=\"box\" style=\"font-size:15px\" @click='onPickupPlayer(player)'> <img :src=\"player.portrait\" style=\"width:60px\"> {{player.id +' ' +player.name}}</a>\r\n                    <p>\r\n                </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            <button class=\"button is-large\" @click=\"onShowPickup\">出阵</button>\r\n            <button class=\"button is-large\" @click=\"onStartGame()\">开始</button>\r\n            <p>\r\n                <button class=\"button is-large\" @click=\"onToggleTimer()\">Toggle</button>\r\n                <button class=\"button is-large\" @click=\"onResetTimer()\">Reset</button>\r\n                <p>\r\n                    <hr>\r\n                    <div class=\"control\">\r\n                        <label class=\"label\">Bracket场次</label>\r\n                        <input class=\"input\" type=\"text\" v-model='bracketIdx' style=\"width:50px\" />\r\n                        <button class=\"button \" @click=\"onCommitGame()\">单场结算</button>\r\n                    </div>\r\n                    <p class=\"control\">\r\n                        <label class=\"label\">蓝队比分-红队比分</label>\r\n                        <input class=\"input\" type=\"text\" v-model='bracketInfo' style=\"width:150px\" />\r\n                    </p>\r\n                    <button class=\"button is-large\" @click=\"onCommitTeam()\">战团结算</button>\r\n                    <hr>\r\n                    <button class=\"button is-large\" @click=\"onReloadDB()\">reload db</button>\r\n\r\n\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 52 */

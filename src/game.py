@@ -117,6 +117,24 @@ class BracketModel(object):
         group['3']['right']['name'] = 'FTG #2'
         group['4']['left']['name'] = 'TSH #2'
         group['4']['right']['name'] = 'Fe3O4 #2'
+
+        group['1']['left']['logo'] = '1.jpg'
+        group['1']['right']['logo'] = '3.jpg'
+        group['2']['left']['logo'] = '2.jpg'
+        group['2']['right']['logo'] = '4.jpg'
+        group['3']['left']['logo'] = '4.jpg'
+        group['3']['right']['logo'] = '1.jpg'
+        group['4']['left']['logo'] = '2.jpg'
+        group['4']['right']['logo'] = '3.jpg'
+
+        group['1']['left']['intro'] = ''
+        group['1']['right']['intro'] = ''
+        group['2']['left']['intro'] = ''
+        group['2']['right']['intro'] = ''
+        group['3']['left']['intro'] = ''
+        group['3']['right']['intro'] = ''
+        group['4']['left']['intro'] = ''
+        group['4']['right']['intro'] = ''
         # for idx in doc['group']:
         #     g = doc['group'][idx]
         #     # g['left']['ft'] = 'FTG'
@@ -207,7 +225,7 @@ class BracketModel(object):
         roadTo(r[0], winTeam)
         roadTo(r[1], loseTeam)
         self.db.update(doc)
-        data['_block_']  = True
+        data['_block_'] = True
 
     def clear(self):
         doc = self._doc()
@@ -244,7 +262,7 @@ class GameModel(object):
     def dtFoul(self, idx, dt=0):
         player = self.getPlayer(idx)
         player['foul'] += dt
-        player['foul'] = self._range(player['foul'], 0, 4)
+        player['foul'] = self._range(player['foul'], 0, 5)
         return player['foul']
 
     def dtSt(self, idx, dt=0):
@@ -456,13 +474,14 @@ def updatePlayer():
 
 @gameView.route('/clear/<idx>')
 def clearGame(idx):
-    if idx=='all':
+    if idx == 'all':
         actModel.gameModel.db.clear()
         return 'sus'
     else:
         # bracketIdx = int(idx)
         actModel.gameModel.db.remove({'bracketIdx':  int(idx)})
-        return 'remove bracketIdx '+idx
+        return 'remove bracketIdx ' + idx
+
 
 @gameView.route('/bracket/<idx>')
 def getBracket(idx):

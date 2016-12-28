@@ -164,12 +164,17 @@ export class WinTeam extends PIXI.Container {
     setTeam(team) {
         console.log('set Team', team);
         let sa = team.scoreArr
-        this.setTeamName(sa[0]+' - '+sa[1])
+        this.setTeamName(sa[0] + ' - ' + sa[1])
         this.setFtName(team.name)
         var mvp = team.mvp
         // this.winTeam.setAvatar()
         this.setFtLogo('/img/ft/' + team.logo)
-        this.setIntro(team.intro)
+        let introMap = {}
+        introMap['1.jpg'] = '源于虎扑黑话“干过羊”，经团员引申为Fuck the GOAT(greatest all time)。他强任他强，我干我的羊正是羊团的座右铭。'
+        introMap['2.jpg'] = '在虎扑社区文化中“二院”（The second hospital）是脑洞打开的代名词。二院战团，同样以球风或飘逸或诡异的球员著称。'
+        introMap['3.jpg'] = '四氧化三铁，黑粉用来调侃科比的黑话如今却成了一种情怀。铁团成员风格迥异，却也同样有一颗好胜的心。'
+        introMap['4.jpg'] = '甘比亚是是虎扑社区中最重要的板块之一，甘比亚战团也是由一群欢乐的JRs组成的战团。'
+        this.setIntro(introMap[team.logo])
         this.show()
         while (this.groupCtn.children.length > 2) {
             this.groupCtn.removeChildAt(0)

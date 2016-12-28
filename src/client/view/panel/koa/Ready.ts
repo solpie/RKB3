@@ -69,7 +69,7 @@ export class Ready extends PIXI.Container {
         this.addChild(playerAvt1p)
 
         let playerAvt2p = newBitmap({ x: ViewConst.STAGE_WIDTH - 300, y: ViewConst.STAGE_HEIGHT - 300, url: player2p.portrait })
-        let name2p = new PIXI.Text(player1p.name, ns)
+        let name2p = new PIXI.Text(player2p.name, ns)
         name2p.x = -30 - name2p.width
         name2p.y = 200
         playerAvt2p.addChild(name2p)
