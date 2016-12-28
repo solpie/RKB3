@@ -1,3 +1,4 @@
+import { Ready } from './Ready';
 import { fdatasync } from 'fs';
 import { ascendingProp, mapToArr } from '../../utils/JsFunc';
 import { HP } from './HP';
@@ -66,6 +67,7 @@ class KOA extends VueBase {
                 playerMap[player.id] = player
             }
             this.playerIdMap = playerMap
+            new Ready(canvasStage, [playerDocArr[0], playerDocArr[1]])
             // this.initPlayerData(playerMap)
         })
         getGameInfo((res) => {
@@ -78,6 +80,7 @@ class KOA extends VueBase {
     initCanvas() {
         canvasStage = BasePanelView.initPixi()
         this.hp = new HP(canvasStage)
+
     }
 
     protected mounted() {

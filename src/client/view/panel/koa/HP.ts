@@ -279,7 +279,6 @@ export class HP extends PIXI.Container {
         this.winTeam = new WinTeam(this)
 
 
-        this.ready = new Ready(this)
         this.test()
 
     }

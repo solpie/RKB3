@@ -53,9 +53,9 @@
 	__webpack_require__(10);
 	__webpack_require__(12);
 	var KOA_1 = __webpack_require__(34);
-	var Stage5v5_1 = __webpack_require__(51);
-	var RKBOPView_1 = __webpack_require__(54);
-	var StageOnlineView_1 = __webpack_require__(56);
+	var Stage5v5_1 = __webpack_require__(52);
+	var RKBOPView_1 = __webpack_require__(55);
+	var StageOnlineView_1 = __webpack_require__(57);
 	var routes = [
 	    {
 	        path: '/', name: 'panel',
@@ -579,15 +579,16 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var Ready_1 = __webpack_require__(36);
 	var JsFunc_1 = __webpack_require__(24);
 	var HP_1 = __webpack_require__(35);
 	var HupuAPI_1 = __webpack_require__(21);
-	var PickupAnimation_1 = __webpack_require__(45);
-	var Command_1 = __webpack_require__(48);
-	var const_1 = __webpack_require__(38);
+	var PickupAnimation_1 = __webpack_require__(46);
+	var Command_1 = __webpack_require__(49);
+	var const_1 = __webpack_require__(39);
 	var WebJsFunc_1 = __webpack_require__(22);
-	var Pickup_1 = __webpack_require__(47);
-	var BasePanelView_1 = __webpack_require__(49);
+	var Pickup_1 = __webpack_require__(48);
+	var BasePanelView_1 = __webpack_require__(50);
 	var VueBase_1 = __webpack_require__(17);
 	var pickupScene;
 	var canvasStage;
@@ -595,7 +596,7 @@
 	    __extends(KOA, _super);
 	    function KOA() {
 	        _super.call(this);
-	        this.template = __webpack_require__(50);
+	        this.template = __webpack_require__(51);
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.playerDocArr = VueBase_1.VueBase.PROP;
 	        this.isPickup1p = VueBase_1.VueBase.PROP;
@@ -785,6 +786,7 @@
 	                playerMap[player.id] = player;
 	            }
 	            _this.playerIdMap = playerMap;
+	            new Ready_1.Ready(canvasStage, [playerDocArr[0], playerDocArr[1]]);
 	        });
 	        HupuAPI_1.getGameInfo(function (res) {
 	            console.log('gameInfo', res);
@@ -897,18 +899,17 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Ready_1 = __webpack_require__(67);
 	var HupuAPI_1 = __webpack_require__(21);
-	var TextTimer_1 = __webpack_require__(36);
-	var Winner_1 = __webpack_require__(37);
-	var Win_1 = __webpack_require__(41);
-	var St_1 = __webpack_require__(44);
-	var SpriteGroup_1 = __webpack_require__(42);
+	var TextTimer_1 = __webpack_require__(40);
+	var Winner_1 = __webpack_require__(41);
+	var Win_1 = __webpack_require__(42);
+	var St_1 = __webpack_require__(45);
+	var SpriteGroup_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(24);
-	var const_1 = __webpack_require__(38);
-	var TweenEx_1 = __webpack_require__(39);
-	var Fx_1 = __webpack_require__(43);
-	var PixiEx_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(39);
+	var TweenEx_1 = __webpack_require__(38);
+	var Fx_1 = __webpack_require__(44);
+	var PixiEx_1 = __webpack_require__(37);
 	var HP = (function (_super) {
 	    __extends(HP, _super);
 	    function HP(stage) {
@@ -1109,7 +1110,6 @@
 	        this.winner = new Winner_1.Winner(this);
 	        this.winner.y = 300;
 	        this.winTeam = new Win_1.WinTeam(this);
-	        this.ready = new Ready_1.Ready(this);
 	        this.test();
 	    }
 	    HP.prototype.test = function () {
@@ -1242,286 +1242,211 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var JsFunc_1 = __webpack_require__(24);
-	var TimerState = {
-	    PAUSE: 0,
-	    RUNNING: 1
-	};
-	var TextTimer = (function (_super) {
-	    __extends(TextTimer, _super);
-	    function TextTimer() {
-	        _super.apply(this, arguments);
-	        this.timeInSec = 0;
-	        this.timerId = null;
-	        this.isMin = false;
-	    }
-	    TextTimer.prototype.setTimeBySec = function (sec) {
-	        this.timeInSec = sec;
-	        this.text = JsFunc_1.formatSecond(this.timeInSec);
-	    };
-	    TextTimer.prototype.toggleTimer = function (state) {
+	var PixiEx_1 = __webpack_require__(37);
+	var TweenEx_1 = __webpack_require__(38);
+	var const_1 = __webpack_require__(39);
+	var Ready = (function (_super) {
+	    __extends(Ready, _super);
+	    function Ready(parent, playerDocArr) {
 	        var _this = this;
-	        var pauseTimer = function () {
-	            if (_this.timerId) {
-	                clearInterval(_this.timerId);
-	                _this.timerId = 0;
-	                _this.timerState = TimerState.PAUSE;
-	            }
-	        };
-	        var playTimer = function () {
-	            if (_this.timerId)
-	                clearInterval(_this.timerId);
-	            _this.timerId = setInterval(function () {
-	                if (_this.isMin) {
-	                    _this.timeInSec--;
-	                    if (_this.timeInSec < 0)
-	                        _this.timeInSec = 0;
-	                }
-	                else
-	                    _this.timeInSec++;
-	                _this.text = JsFunc_1.formatSecond(_this.timeInSec);
-	            }, 1000);
-	            _this.timerState = TimerState.RUNNING;
-	        };
-	        if (state != null) {
-	            if (state == TimerState.PAUSE)
-	                pauseTimer();
-	            else if (state == TimerState.RUNNING)
-	                playTimer();
-	        }
-	        else {
-	            this.timerId ? pauseTimer() : playTimer();
-	        }
-	    };
-	    TextTimer.prototype.resetTimer = function () {
-	        this.timeInSec = 0;
-	        this.timerState = TimerState.PAUSE;
-	        this.text = JsFunc_1.formatSecond(this.timeInSec);
-	    };
-	    return TextTimer;
-	}(PIXI.Text));
-	exports.TextTimer = TextTimer;
-
-
-/***/ },
-/* 37 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var const_1 = __webpack_require__(38);
-	var TweenEx_1 = __webpack_require__(39);
-	var PixiEx_1 = __webpack_require__(40);
-	var Winner = (function (_super) {
-	    __extends(Winner, _super);
-	    function Winner(parent) {
 	        _super.call(this);
 	        parent.addChild(this);
-	        this.hide();
-	        this.spArr = [];
-	        var a = ['W', 'I', 'N', 'N', 'E', 'R'];
-	        var px = [0, 20, -3, -3, -3, -6];
-	        for (var i = 0; i < a.length; i++) {
-	            var chr = a[i];
-	            var sp = PixiEx_1.newBitmap({ url: '/img/panel/koa/hp/' + chr + '.png' });
-	            sp.pivot = new PIXI.Point(0, 35);
-	            sp.y = sp.pivot.y;
-	            sp.x = i * 65 + px[i];
-	            this.addChild(sp);
-	            this.spArr.push(sp);
-	            sp['white'] = PixiEx_1.newWhiteMask('/img/panel/koa/hp/' + chr + '.png');
-	            sp['white'].alpha = 0;
-	            sp.addChild(sp['white']);
-	        }
-	    }
-	    Winner.prototype.show = function (is1p) {
-	        var _this = this;
-	        this.visible = false;
-	        var spArrWidth = 72 * 6;
-	        is1p ? this.x = 100
-	            : this.x = const_1.ViewConst.STAGE_WIDTH - spArrWidth - 100;
-	        this.visible = true;
-	        var d1 = 70;
-	        var d2 = 90;
-	        var d3 = 70;
-	        var isodd = true;
-	        for (var i = 0; i < this.spArr.length; i++) {
-	            var sp = this.spArr[i];
-	            isodd ? sp.y = -60
-	                : sp.y = sp.height + 60;
-	            TweenEx_1.TweenEx.to(sp, i * d1 + 5, { y: 0 }, function (t) {
-	                new TweenEx_1.TweenEx(t.target)
-	                    .delay(i * d1)
-	                    .call(function (t) {
-	                    console.log('target', t);
-	                    new TweenEx_1.TweenEx(t.target.scale)
-	                        .to({ x: 1.5 }, d2)
-	                        .to({ x: 1 }, d3)
-	                        .start();
-	                    new TweenEx_1.TweenEx(t.target.white)
-	                        .to({ alpha: .2 }, d2 + 10)
-	                        .to({ alpha: 0 }, d3 + 20)
-	                        .to({ alpha: .1 }, 5)
-	                        .start();
-	                    new TweenEx_1.TweenEx(t.target.scale)
-	                        .to({ y: 1.5 }, d2)
-	                        .to({ y: 1 }, d3)
+	        var player1p = playerDocArr[0];
+	        var player2p = playerDocArr[1];
+	        this.addChild(new PIXI.Graphics().drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT));
+	        var rc = new PIXI.Container;
+	        this.rotCtn = rc;
+	        this.addChild(rc);
+	        rc.pivot = new PIXI.Point(const_1.ViewConst.STAGE_WIDTH * .5, const_1.ViewConst.STAGE_HEIGHT * .5);
+	        rc.x = const_1.ViewConst.STAGE_WIDTH * .5;
+	        rc.y = const_1.ViewConst.STAGE_HEIGHT * .5;
+	        rc.rotation = PIXI.DEG_TO_RAD * 123;
+	        var blue = new PIXI.Graphics()
+	            .beginFill(0x2a6ad7)
+	            .drawRect(0, 0, 1920, 600);
+	        blue.y = 500;
+	        blue.x = -1200;
+	        rc.addChild(blue);
+	        var red = new PIXI.Graphics()
+	            .beginFill(0xD72A37)
+	            .drawRect(0, 0, 1920, 600);
+	        red.y = -60;
+	        red.x = 1500;
+	        rc.addChild(red);
+	        var gray = new PIXI.Graphics()
+	            .beginFill(0xb4b4b4)
+	            .drawRect(0, 0, 1920, 800);
+	        gray.pivot = new PIXI.Point(0, 400);
+	        gray.scale.x = gray.scale.y = 0;
+	        gray.y = const_1.ViewConst.STAGE_HEIGHT * .5;
+	        rc.addChild(gray);
+	        var blue2 = PixiEx_1.newBitmap({ x: -1920, url: '/img/panel/koa/ad/blue.png' });
+	        this.addChild(blue2);
+	        var red2 = PixiEx_1.newBitmap({ x: 1920, url: '/img/panel/koa/ad/red.png' });
+	        red2.y = const_1.ViewConst.STAGE_HEIGHT - 335;
+	        this.addChild(red2);
+	        var playerAvt1p = PixiEx_1.newBitmap({ x: -100, y: 35, url: player1p.portrait });
+	        var ns = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '50px',
+	            fontStyle: 'normal',
+	            fontWeight: 'bold',
+	            fill: '#fff',
+	            stroke: '#222',
+	            strokeThickness: 3,
+	        };
+	        var name1p = new PIXI.Text(player1p.name, ns);
+	        name1p.x = 430;
+	        name1p.y = 200;
+	        playerAvt1p.addChild(name1p);
+	        this.addChild(playerAvt1p);
+	        var playerAvt2p = PixiEx_1.newBitmap({ x: const_1.ViewConst.STAGE_WIDTH - 300, y: const_1.ViewConst.STAGE_HEIGHT - 300, url: player2p.portrait });
+	        var name2p = new PIXI.Text(player1p.name, ns);
+	        name2p.x = -30 - name2p.width;
+	        name2p.y = 200;
+	        playerAvt2p.addChild(name2p);
+	        this.addChild(playerAvt2p);
+	        var white = new PIXI.Graphics();
+	        white
+	            .beginFill(0xffffff)
+	            .drawRect(0, 0, 1920, 410);
+	        white.y = const_1.ViewConst.STAGE_HEIGHT * .5;
+	        white.pivot = new PIXI.Point(0, 205);
+	        white.scale.y = 0;
+	        this.addChild(white);
+	        var logo = PixiEx_1.newBitmap({ url: '/img/panel/koa/ad/logo1.png' });
+	        logo.pivot = new PIXI.Point(307 / 2, 307 / 2);
+	        logo.x = const_1.ViewConst.STAGE_WIDTH * .5;
+	        logo.y = const_1.ViewConst.STAGE_HEIGHT * .5;
+	        logo.scale.x = 1 / .24;
+	        logo.scale.y = 1 / .24;
+	        logo['1'] = PixiEx_1.newBitmap({ x: 35, y: 144, url: '/img/panel/koa/ad/1.png' });
+	        logo['2'] = PixiEx_1.newBitmap({ x: 85, y: 98, url: '/img/panel/koa/ad/2.png' });
+	        logo['3'] = PixiEx_1.newBitmap({ x: 140, y: 50, url: '/img/panel/koa/ad/3.png' });
+	        logo['yiqi'] = PixiEx_1.newBitmap({ x: const_1.ViewConst.STAGE_WIDTH * .5 - 200, y: 400, url: '/img/panel/koa/ad/yiqi.png' });
+	        logo['shoeMsk'] = PixiEx_1.newBitmap({ url: '/img/panel/koa/ad/msk.png' });
+	        logo.addChild(logo['shoeMsk']);
+	        logo['shoe'] = PixiEx_1.newBitmap({ x: 400, y: 0, url: '/img/panel/koa/ad/shoe.png' });
+	        logo['shoe'].mask = logo['shoeMsk'];
+	        logo['shoe'].alpha = 0;
+	        logo.addChild(logo['shoe']);
+	        PixiEx_1.setPivot(logo['1'], 35, 21);
+	        PixiEx_1.setPivot(logo['2'], 48, 44);
+	        PixiEx_1.setPivot(logo['3'], 62, 78);
+	        logo.addChild(logo['1']);
+	        logo.addChild(logo['2']);
+	        logo.addChild(logo['3']);
+	        this.addChild(logo);
+	        var whiteEnd = new PIXI.Graphics().beginFill(0xffffff).drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT);
+	        whiteEnd.alpha = 0;
+	        var _f = function (frame) {
+	            return frame * 1000 / 60 * 2;
+	        };
+	        TweenEx_1.TweenEx.delayedCall(200, function () {
+	            new TweenEx_1.TweenEx(playerAvt1p)
+	                .to({ x: 200 }, _f(5))
+	                .to({ x: 250 }, _f(28))
+	                .to({ x: 1000 }, _f(5))
+	                .start();
+	            new TweenEx_1.TweenEx(playerAvt2p)
+	                .to({ x: const_1.ViewConst.STAGE_WIDTH - 400 - 200 }, _f(5))
+	                .to({ x: const_1.ViewConst.STAGE_WIDTH - 400 - 250 }, _f(28))
+	                .to({ x: const_1.ViewConst.STAGE_WIDTH - 400 - 1000 }, _f(5))
+	                .start();
+	            TweenEx_1.TweenEx.to(gray.scale, _f(5), { x: 1, y: 1 });
+	            TweenEx_1.TweenEx.to(white.scale, _f(10), { y: 1 });
+	            TweenEx_1.TweenEx.to(logo.scale, _f(8), { x: 1, y: 1 }, function () {
+	                logo['shoe'].alpha = 0;
+	                new TweenEx_1.TweenEx(logo['shoe'])
+	                    .delay(_f(15))
+	                    .to({ alpha: 1, x: 0 }, _f(3))
+	                    .delay(_f(5))
+	                    .call(function () {
+	                    new TweenEx_1.TweenEx(logo['shoe'])
+	                        .to({ x: 300 }, _f(8))
+	                        .call(function () {
+	                        logo['shoe'].mask = null;
+	                        logo['shoe'].x = logo.x;
+	                        logo['shoe'].y = 400;
+	                        logo['shoeMsk'].visible = false;
+	                        _this.addChild(logo['shoe']);
+	                    })
+	                        .to({ x: 1200 }, _f(3))
+	                        .to({ x: 1300 }, _f(20))
 	                        .start();
 	                })
 	                    .start();
 	            });
-	            isodd = !isodd;
-	        }
-	        TweenEx_1.TweenEx.delayedCall(3000, function () {
-	            is1p ? TweenEx_1.TweenEx.to(_this, 50, { x: -spArrWidth })
-	                : TweenEx_1.TweenEx.to(_this, 50, { x: const_1.ViewConst.STAGE_WIDTH });
+	            TweenEx_1.TweenEx.to(gray, _f(60), { height: 410 });
+	            TweenEx_1.TweenEx.to(blue, _f(12), { x: 0 });
+	            TweenEx_1.TweenEx.to(red, _f(12), { x: 0 }, function () {
+	                TweenEx_1.TweenEx.delayedCall(_f(4), function () {
+	                    TweenEx_1.TweenEx.to(gray.scale, _f(34 - 16), { y: .5 });
+	                });
+	            });
+	            TweenEx_1.TweenEx.delayedCall(_f(28), function () {
+	                TweenEx_1.TweenEx.to(rc, _f(6), { rotation: 180 * PIXI.DEG_TO_RAD }, function () {
+	                });
+	                TweenEx_1.TweenEx.delayedCall(_f(4), function () {
+	                    TweenEx_1.TweenEx.to(blue2, _f(28), { x: 0 });
+	                    TweenEx_1.TweenEx.to(red2, _f(28), { x: 0 });
+	                });
+	                var s150 = function (obj) {
+	                    new TweenEx_1.TweenEx(obj.scale)
+	                        .to({ x: 1.8, y: 1.8 }, _f(6))
+	                        .to({ x: 1, y: 1 }, _f(3))
+	                        .start();
+	                };
+	                new TweenEx_1.TweenEx(logo)
+	                    .call(function () {
+	                    s150(logo['1']);
+	                    TweenEx_1.TweenEx.delayedCall(_f(2), function () {
+	                        s150(logo['2']);
+	                        TweenEx_1.TweenEx.delayedCall(_f(2), function () {
+	                            s150(logo['3']);
+	                        });
+	                    });
+	                })
+	                    .call(function () {
+	                    logo['yiqi'].alpha = 0;
+	                    _this.addChild(logo['yiqi']);
+	                    new TweenEx_1.TweenEx(logo['yiqi'])
+	                        .delay(_f(12))
+	                        .to({ alpha: 1, x: const_1.ViewConst.STAGE_WIDTH * .5 - 250 }, _f(2))
+	                        .to({ alpha: 1, x: const_1.ViewConst.STAGE_WIDTH * .5 - 150 }, _f(20))
+	                        .start();
+	                })
+	                    .delay(_f(5))
+	                    .to({ x: const_1.ViewConst.STAGE_WIDTH * .5 - 150 }, _f(5))
+	                    .to({ x: const_1.ViewConst.STAGE_WIDTH * .5 - 600 }, _f(3))
+	                    .to({ x: const_1.ViewConst.STAGE_WIDTH * .5 - 550 }, _f(8))
+	                    .start();
+	            });
+	            new TweenEx_1.TweenEx(whiteEnd)
+	                .delay(_f(70))
+	                .call(function () { return [
+	                _this.addChild(whiteEnd)
+	            ]; })
+	                .to({ alpha: 1 }, _f(8))
+	                .call(function () {
+	                while (_this.children.length > 1) {
+	                    _this.removeChildAt(0);
+	                }
+	            })
+	                .to({ alpha: 0 }, _f(8))
+	                .call(function () {
+	                whiteEnd.parent.removeChild(whiteEnd);
+	            })
+	                .start();
 	        });
-	    };
-	    Winner.prototype.hide = function () {
-	        this.visible = false;
-	    };
-	    return Winner;
-	}(PIXI.Container));
-	exports.Winner = Winner;
-
-
-/***/ },
-/* 38 */
-/***/ function(module, exports) {
-
-	"use strict";
-	exports.PanelId = {
-	    stagePanel: 'stage',
-	    stage1v1Panel: 'stage1v1',
-	    rkbPanel: 'rkb',
-	    scorePanel: 'score',
-	    bracketPanel: 'bracket',
-	    rankPanel: 'rankPanel',
-	    onlinePanel: 'online',
-	    winPanel: 'win',
-	    actPanel: 'act',
-	    screenPanel: 'screen',
-	    playerPanel: 'player'
-	};
-	exports.FontName = {
-	    MicrosoftYahei: "Microsoft Yahei"
-	};
-	exports.ServerConst = {
-	    SEND_ASYNC: true,
-	    DEF_AVATAR: '/img/panel/stage1v1/blue.png'
-	};
-	exports.ViewConst = {
-	    STAGE_WIDTH: 1920,
-	    STAGE_HEIGHT: 1080
-	};
-	exports.TimerState = {
-	    START_STR: 'start',
-	    PAUSE_STR: 'pause',
-	    PAUSE: 0,
-	    RUNNING: 1
-	};
-	exports.ViewEvent = {
-	    PLAYER_EDIT: 'edit player',
-	    PLAYER_ADD: 'add player',
-	    STRAIGHT3_LEFT: 'STRAIGHT3_LEFT',
-	    STRAIGHT3_RIGHT: 'STRAIGHT3_RIGHT'
-	};
-	function ScParam(param) {
-	    return param;
-	}
-	exports.ScParam = ScParam;
-
-
-/***/ },
-/* 39 */
-/***/ function(module, exports) {
-
-	"use strict";
-	var TweenEx = (function () {
-	    function TweenEx(target) {
-	        this.target = target;
-	        this.eventArr = [];
 	    }
-	    TweenEx.prototype.to = function (vars, duration) {
-	        this.eventArr.push({ event: 'to', data: { vars: vars, duration: duration } });
-	        return this;
-	    };
-	    TweenEx.prototype.delay = function (duration) {
-	        this.eventArr.push({ event: 'delay', data: { duration: duration } });
-	        return this;
-	    };
-	    TweenEx.prototype.start = function () {
-	        var _this = this;
-	        var run = function () {
-	            var e = _this.eventArr.shift();
-	            if (e) {
-	                if (e.event == 'to') {
-	                    var fromVars_1 = {};
-	                    for (var k in e.data.vars) {
-	                        fromVars_1[k] = _this.target[k];
-	                    }
-	                    new TWEEN.Tween(fromVars_1)
-	                        .to(e.data.vars, e.data.duration)
-	                        .onUpdate(function () {
-	                        for (var k in e.data.vars) {
-	                            _this.target[k] = fromVars_1[k];
-	                        }
-	                    })
-	                        .onComplete(function () {
-	                        run();
-	                    })
-	                        .start();
-	                }
-	                else if (e.event == 'delay') {
-	                    new TWEEN.Tween({ _: 0 })
-	                        .to({ _: 0 }, e.data.duration)
-	                        .onComplete(function () {
-	                        run();
-	                    })
-	                        .start();
-	                }
-	                else if (e.event == 'call') {
-	                    e.data.callback(_this);
-	                    run();
-	                }
-	            }
-	            else {
-	                _this.target = null;
-	                _this.eventArr = null;
-	                _this.vars = null;
-	            }
-	        };
-	        run();
-	        return this;
-	    };
-	    TweenEx.prototype.call = function (callback) {
-	        if (callback)
-	            this.eventArr.push({ event: 'call', data: { callback: callback } });
-	        return this;
-	    };
-	    TweenEx.to = function (target, duration, vars, callback) {
-	        return new TweenEx(target)
-	            .to(vars, duration)
-	            .call(callback)
-	            .start();
-	    };
-	    TweenEx.delayedCall = function (duration, callback) {
-	        new TweenEx({ _: 0 })
-	            .delay(duration)
-	            .call(callback)
-	            .start();
-	    };
-	    return TweenEx;
-	}());
-	exports.TweenEx = TweenEx;
+	    return Ready;
+	}(PIXI.Container));
+	exports.Ready = Ready;
 
 
 /***/ },
-/* 40 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1730,7 +1655,295 @@
 
 
 /***/ },
+/* 38 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var TweenEx = (function () {
+	    function TweenEx(target) {
+	        this.target = target;
+	        this.eventArr = [];
+	    }
+	    TweenEx.prototype.to = function (vars, duration) {
+	        this.eventArr.push({ event: 'to', data: { vars: vars, duration: duration } });
+	        return this;
+	    };
+	    TweenEx.prototype.delay = function (duration) {
+	        this.eventArr.push({ event: 'delay', data: { duration: duration } });
+	        return this;
+	    };
+	    TweenEx.prototype.start = function () {
+	        var _this = this;
+	        var run = function () {
+	            var e = _this.eventArr.shift();
+	            if (e) {
+	                if (e.event == 'to') {
+	                    var fromVars_1 = {};
+	                    for (var k in e.data.vars) {
+	                        fromVars_1[k] = _this.target[k];
+	                    }
+	                    new TWEEN.Tween(fromVars_1)
+	                        .to(e.data.vars, e.data.duration)
+	                        .onUpdate(function () {
+	                        for (var k in e.data.vars) {
+	                            _this.target[k] = fromVars_1[k];
+	                        }
+	                    })
+	                        .onComplete(function () {
+	                        run();
+	                    })
+	                        .start();
+	                }
+	                else if (e.event == 'delay') {
+	                    new TWEEN.Tween({ _: 0 })
+	                        .to({ _: 0 }, e.data.duration)
+	                        .onComplete(function () {
+	                        run();
+	                    })
+	                        .start();
+	                }
+	                else if (e.event == 'call') {
+	                    e.data.callback(_this);
+	                    run();
+	                }
+	            }
+	            else {
+	                _this.target = null;
+	                _this.eventArr = null;
+	                _this.vars = null;
+	            }
+	        };
+	        run();
+	        return this;
+	    };
+	    TweenEx.prototype.call = function (callback) {
+	        if (callback)
+	            this.eventArr.push({ event: 'call', data: { callback: callback } });
+	        return this;
+	    };
+	    TweenEx.to = function (target, duration, vars, callback) {
+	        return new TweenEx(target)
+	            .to(vars, duration)
+	            .call(callback)
+	            .start();
+	    };
+	    TweenEx.delayedCall = function (duration, callback) {
+	        new TweenEx({ _: 0 })
+	            .delay(duration)
+	            .call(callback)
+	            .start();
+	    };
+	    return TweenEx;
+	}());
+	exports.TweenEx = TweenEx;
+
+
+/***/ },
+/* 39 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.PanelId = {
+	    stagePanel: 'stage',
+	    stage1v1Panel: 'stage1v1',
+	    rkbPanel: 'rkb',
+	    scorePanel: 'score',
+	    bracketPanel: 'bracket',
+	    rankPanel: 'rankPanel',
+	    onlinePanel: 'online',
+	    winPanel: 'win',
+	    actPanel: 'act',
+	    screenPanel: 'screen',
+	    playerPanel: 'player'
+	};
+	exports.FontName = {
+	    MicrosoftYahei: "Microsoft Yahei"
+	};
+	exports.ServerConst = {
+	    SEND_ASYNC: true,
+	    DEF_AVATAR: '/img/panel/stage1v1/blue.png'
+	};
+	exports.ViewConst = {
+	    STAGE_WIDTH: 1920,
+	    STAGE_HEIGHT: 1080
+	};
+	exports.TimerState = {
+	    START_STR: 'start',
+	    PAUSE_STR: 'pause',
+	    PAUSE: 0,
+	    RUNNING: 1
+	};
+	exports.ViewEvent = {
+	    PLAYER_EDIT: 'edit player',
+	    PLAYER_ADD: 'add player',
+	    STRAIGHT3_LEFT: 'STRAIGHT3_LEFT',
+	    STRAIGHT3_RIGHT: 'STRAIGHT3_RIGHT'
+	};
+	function ScParam(param) {
+	    return param;
+	}
+	exports.ScParam = ScParam;
+
+
+/***/ },
+/* 40 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var JsFunc_1 = __webpack_require__(24);
+	var TimerState = {
+	    PAUSE: 0,
+	    RUNNING: 1
+	};
+	var TextTimer = (function (_super) {
+	    __extends(TextTimer, _super);
+	    function TextTimer() {
+	        _super.apply(this, arguments);
+	        this.timeInSec = 0;
+	        this.timerId = null;
+	        this.isMin = false;
+	    }
+	    TextTimer.prototype.setTimeBySec = function (sec) {
+	        this.timeInSec = sec;
+	        this.text = JsFunc_1.formatSecond(this.timeInSec);
+	    };
+	    TextTimer.prototype.toggleTimer = function (state) {
+	        var _this = this;
+	        var pauseTimer = function () {
+	            if (_this.timerId) {
+	                clearInterval(_this.timerId);
+	                _this.timerId = 0;
+	                _this.timerState = TimerState.PAUSE;
+	            }
+	        };
+	        var playTimer = function () {
+	            if (_this.timerId)
+	                clearInterval(_this.timerId);
+	            _this.timerId = setInterval(function () {
+	                if (_this.isMin) {
+	                    _this.timeInSec--;
+	                    if (_this.timeInSec < 0)
+	                        _this.timeInSec = 0;
+	                }
+	                else
+	                    _this.timeInSec++;
+	                _this.text = JsFunc_1.formatSecond(_this.timeInSec);
+	            }, 1000);
+	            _this.timerState = TimerState.RUNNING;
+	        };
+	        if (state != null) {
+	            if (state == TimerState.PAUSE)
+	                pauseTimer();
+	            else if (state == TimerState.RUNNING)
+	                playTimer();
+	        }
+	        else {
+	            this.timerId ? pauseTimer() : playTimer();
+	        }
+	    };
+	    TextTimer.prototype.resetTimer = function () {
+	        this.timeInSec = 0;
+	        this.timerState = TimerState.PAUSE;
+	        this.text = JsFunc_1.formatSecond(this.timeInSec);
+	    };
+	    return TextTimer;
+	}(PIXI.Text));
+	exports.TextTimer = TextTimer;
+
+
+/***/ },
 /* 41 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var const_1 = __webpack_require__(39);
+	var TweenEx_1 = __webpack_require__(38);
+	var PixiEx_1 = __webpack_require__(37);
+	var Winner = (function (_super) {
+	    __extends(Winner, _super);
+	    function Winner(parent) {
+	        _super.call(this);
+	        parent.addChild(this);
+	        this.hide();
+	        this.spArr = [];
+	        var a = ['W', 'I', 'N', 'N', 'E', 'R'];
+	        var px = [0, 20, -3, -3, -3, -6];
+	        for (var i = 0; i < a.length; i++) {
+	            var chr = a[i];
+	            var sp = PixiEx_1.newBitmap({ url: '/img/panel/koa/hp/' + chr + '.png' });
+	            sp.pivot = new PIXI.Point(0, 35);
+	            sp.y = sp.pivot.y;
+	            sp.x = i * 65 + px[i];
+	            this.addChild(sp);
+	            this.spArr.push(sp);
+	            sp['white'] = PixiEx_1.newWhiteMask('/img/panel/koa/hp/' + chr + '.png');
+	            sp['white'].alpha = 0;
+	            sp.addChild(sp['white']);
+	        }
+	    }
+	    Winner.prototype.show = function (is1p) {
+	        var _this = this;
+	        this.visible = false;
+	        var spArrWidth = 72 * 6;
+	        is1p ? this.x = 100
+	            : this.x = const_1.ViewConst.STAGE_WIDTH - spArrWidth - 100;
+	        this.visible = true;
+	        var d1 = 70;
+	        var d2 = 90;
+	        var d3 = 70;
+	        var isodd = true;
+	        for (var i = 0; i < this.spArr.length; i++) {
+	            var sp = this.spArr[i];
+	            isodd ? sp.y = -60
+	                : sp.y = sp.height + 60;
+	            TweenEx_1.TweenEx.to(sp, i * d1 + 5, { y: 0 }, function (t) {
+	                new TweenEx_1.TweenEx(t.target)
+	                    .delay(i * d1)
+	                    .call(function (t) {
+	                    console.log('target', t);
+	                    new TweenEx_1.TweenEx(t.target.scale)
+	                        .to({ x: 1.5 }, d2)
+	                        .to({ x: 1 }, d3)
+	                        .start();
+	                    new TweenEx_1.TweenEx(t.target.white)
+	                        .to({ alpha: .2 }, d2 + 10)
+	                        .to({ alpha: 0 }, d3 + 20)
+	                        .to({ alpha: .1 }, 5)
+	                        .start();
+	                    new TweenEx_1.TweenEx(t.target.scale)
+	                        .to({ y: 1.5 }, d2)
+	                        .to({ y: 1 }, d3)
+	                        .start();
+	                })
+	                    .start();
+	            });
+	            isodd = !isodd;
+	        }
+	        TweenEx_1.TweenEx.delayedCall(3000, function () {
+	            is1p ? TweenEx_1.TweenEx.to(_this, 50, { x: -spArrWidth })
+	                : TweenEx_1.TweenEx.to(_this, 50, { x: const_1.ViewConst.STAGE_WIDTH });
+	        });
+	    };
+	    Winner.prototype.hide = function () {
+	        this.visible = false;
+	    };
+	    return Winner;
+	}(PIXI.Container));
+	exports.Winner = Winner;
+
+
+/***/ },
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1741,10 +1954,10 @@
 	};
 	var HupuAPI_1 = __webpack_require__(21);
 	var JsFunc_1 = __webpack_require__(24);
-	var SpriteGroup_1 = __webpack_require__(42);
-	var PixiEx_1 = __webpack_require__(40);
-	var TweenEx_1 = __webpack_require__(39);
-	var const_1 = __webpack_require__(38);
+	var SpriteGroup_1 = __webpack_require__(43);
+	var PixiEx_1 = __webpack_require__(37);
+	var TweenEx_1 = __webpack_require__(38);
+	var const_1 = __webpack_require__(39);
 	var WinTeam = (function (_super) {
 	    __extends(WinTeam, _super);
 	    function WinTeam(parent) {
@@ -1946,7 +2159,7 @@
 
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1955,8 +2168,8 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Fx_1 = __webpack_require__(43);
-	var PixiEx_1 = __webpack_require__(40);
+	var Fx_1 = __webpack_require__(44);
+	var PixiEx_1 = __webpack_require__(37);
 	(function (Direction) {
 	    Direction[Direction["e"] = 0] = "e";
 	    Direction[Direction["w"] = 1] = "w";
@@ -2020,11 +2233,11 @@
 
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var TweenEx_1 = __webpack_require__(39);
+	var TweenEx_1 = __webpack_require__(38);
 	function delayCall(delay, callback) {
 	    createjs.Tween.get(this).wait(delay).call(callback);
 	}
@@ -2088,7 +2301,7 @@
 
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2098,9 +2311,9 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var HupuAPI_1 = __webpack_require__(21);
-	var const_1 = __webpack_require__(38);
-	var SpriteGroup_1 = __webpack_require__(42);
-	var PixiEx_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(39);
+	var SpriteGroup_1 = __webpack_require__(43);
+	var PixiEx_1 = __webpack_require__(37);
 	var St = (function (_super) {
 	    __extends(St, _super);
 	    function St(parent, is1p) {
@@ -2199,15 +2412,15 @@
 
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var TweenEx_1 = __webpack_require__(39);
-	var Order_1 = __webpack_require__(46);
-	var const_1 = __webpack_require__(38);
-	var Fx_1 = __webpack_require__(43);
-	var PixiEx_1 = __webpack_require__(40);
+	var TweenEx_1 = __webpack_require__(38);
+	var Order_1 = __webpack_require__(47);
+	var const_1 = __webpack_require__(39);
+	var Fx_1 = __webpack_require__(44);
+	var PixiEx_1 = __webpack_require__(37);
 	var PickupAnimation = (function () {
 	    function PickupAnimation(pickupScene) {
 	        this.curIdx1p = 0;
@@ -2497,7 +2710,7 @@
 
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2506,9 +2719,9 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Pickup_1 = __webpack_require__(47);
-	var const_1 = __webpack_require__(38);
-	var PixiEx_1 = __webpack_require__(40);
+	var Pickup_1 = __webpack_require__(48);
+	var const_1 = __webpack_require__(39);
+	var PixiEx_1 = __webpack_require__(37);
 	var OrderScene = (function (_super) {
 	    __extends(OrderScene, _super);
 	    function OrderScene(stage, playerPortraitArr) {
@@ -2622,7 +2835,7 @@
 
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2631,11 +2844,11 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var TweenEx_1 = __webpack_require__(39);
+	var TweenEx_1 = __webpack_require__(38);
 	var HupuAPI_1 = __webpack_require__(21);
-	var const_1 = __webpack_require__(38);
-	var Fx_1 = __webpack_require__(43);
-	var PixiEx_1 = __webpack_require__(40);
+	var const_1 = __webpack_require__(39);
+	var Fx_1 = __webpack_require__(44);
+	var PixiEx_1 = __webpack_require__(37);
 	var PickupPlayerInfo = (function () {
 	    function PickupPlayerInfo(options) {
 	        this.x = options.x;
@@ -2796,7 +3009,7 @@
 
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2961,11 +3174,11 @@
 
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var const_1 = __webpack_require__(38);
+	var const_1 = __webpack_require__(39);
 	var BasePanelView = (function () {
 	    function BasePanelView(pid) {
 	        this.opReq = function (cmdId, param, callback) {
@@ -2999,13 +3212,13 @@
 
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <label class=\"label\">出场顺序</label>\r\n            <div class=\"columns\">\r\n                <div class=\"column\">\r\n                    <button class=\"button is-medium\" @click=\"onPickup(true)\">1P</button>\r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer1p.name}}]</label>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(true,-1)\"> -1</button>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(true,1)\">+1</button> {{orderArr1p|json}}\r\n                    <br>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(true,-1)\">犯规 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(true,1)\">犯规 +1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(true,-1)\">援助 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(true,1)\">援助 +1</button>\r\n                    <br>\r\n                    <p v-for=\"player in orderPlayerDocArr1p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(0,player)\"> {{player.id +' ' +player.name}} {{player.isDead?\"败\":\"\"}}</a>\r\n                    </p>\r\n                </div>\r\n                <div class=\"column\">\r\n                    <button class=\"button is-medium\" @click=\"onPickup(false)\">2P</button>\r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer2p.name}}]</label>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(false,-1)\"> -1</button>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(false,1)\"> +1</button>{{orderArr2p|json}}\r\n                    <br>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(false,-1)\">犯规 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(false,1)\">犯规 +1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(false,-1)\">援助 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(false,1)\">援助 +1</button>\r\n                    <br>\r\n                    <p v-for=\"player in orderPlayerDocArr2p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(1,player)\"> {{player.id +' ' +player.name}} {{player.isDead?\"败\":\"\"}} </a>\r\n                    </p>\r\n                </div>\r\n            </div>\r\n\r\n            <p>\r\n                <div class=\"tabs is-boxed\">\r\n                    <ul>\r\n                        <li v-for=\"teamIdx in 8\"><a @click=\"onTabTeam($event,teamIdx)\">Team{{teamIdx}}</a></li>\r\n                    </ul>\r\n                </div>\r\n                <div v-for=\"player in playerDocArr\">\r\n                    <a class=\"box\" style=\"font-size:15px\" @click='onPickupPlayer(player)'> <img :src=\"player.portrait\" style=\"width:60px\"> {{player.id +' ' +player.name}}</a>\r\n                    <p>\r\n                </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            <button class=\"button is-large\" @click=\"onShowPickup\">出阵</button>\r\n            <button class=\"button is-large\" @click=\"onStartGame()\">开始</button>\r\n            <p>\r\n                <button class=\"button is-large\" @click=\"onToggleTimer()\">Toggle</button>\r\n                <button class=\"button is-large\" @click=\"onResetTimer()\">Reset</button>\r\n                <p>\r\n                    <hr>\r\n                    <div class=\"control\">\r\n                        <label class=\"label\">Bracket场次</label>\r\n                        <input class=\"input\" type=\"text\" v-model='bracketIdx' style=\"width:50px\" />\r\n                        <button class=\"button \" @click=\"onCommitGame()\">单场结算</button>\r\n                    </div>\r\n                    <p class=\"control\">\r\n                        <label class=\"label\">蓝队比分-红队比分</label>\r\n                        <input class=\"input\" type=\"text\" v-model='bracketInfo' style=\"width:150px\" />\r\n                    </p>\r\n                    <button class=\"button is-large\" @click=\"onCommitTeam()\">战团结算</button>\r\n                    <hr>\r\n                    <button class=\"button is-large\" @click=\"onReloadDB()\">reload db</button>\r\n\r\n\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3016,16 +3229,16 @@
 	};
 	var HupuAPI_1 = __webpack_require__(21);
 	var WebJsFunc_1 = __webpack_require__(22);
-	var Command_1 = __webpack_require__(48);
-	var Score5v5_1 = __webpack_require__(52);
-	var BasePanelView_1 = __webpack_require__(49);
-	var const_1 = __webpack_require__(38);
+	var Command_1 = __webpack_require__(49);
+	var Score5v5_1 = __webpack_require__(53);
+	var BasePanelView_1 = __webpack_require__(50);
+	var const_1 = __webpack_require__(39);
 	var VueBase_1 = __webpack_require__(17);
 	var Stage5v5 = (function (_super) {
 	    __extends(Stage5v5, _super);
 	    function Stage5v5() {
 	        _super.call(this);
-	        this.template = __webpack_require__(53);
+	        this.template = __webpack_require__(54);
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.isMobile = VueBase_1.VueBase.PROP;
 	        this.leftScore = VueBase_1.VueBase.PROP;
@@ -3204,7 +3417,7 @@
 
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3215,11 +3428,11 @@
 	};
 	var HupuAPI_1 = __webpack_require__(21);
 	var JsFunc_1 = __webpack_require__(24);
-	var TextTimer_1 = __webpack_require__(36);
-	var SpriteGroup_1 = __webpack_require__(42);
-	var const_1 = __webpack_require__(38);
-	var TweenEx_1 = __webpack_require__(39);
-	var PixiEx_1 = __webpack_require__(40);
+	var TextTimer_1 = __webpack_require__(40);
+	var SpriteGroup_1 = __webpack_require__(43);
+	var const_1 = __webpack_require__(39);
+	var TweenEx_1 = __webpack_require__(38);
+	var PixiEx_1 = __webpack_require__(37);
 	var Score5v5 = (function (_super) {
 	    __extends(Score5v5, _super);
 	    function Score5v5(parent) {
@@ -3433,13 +3646,13 @@
 
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <div v-if='isMobile'>\r\n    <input class=\"input\" type=\"text\" v-model='timeString' @keyup.enter='onTimeString(timeString)' style=\"width:80px\" />    \r\n    <button class=\"button is-large\" @click=\"onTimeString(timeString)\">Set</button>\r\n   \r\n    <br>\r\n    <button class=\"button is-large\" @click=\"onToggleTimer()\">Toggle</button>\r\n    <br>\r\n    <button class=\"button is-large\" @click=\"onResetTimer()\">Reset</button>\r\n    </div>\r\n    <div v-if='!isMobile'>\r\n    <label class=\"label\"> 滚动字幕： 秒      内容</label>\r\n    <label class=\"checkbox\">\r\n        <input type=\"checkbox\">\r\n        滚动\r\n     </label>\r\n    <input class=\"input\" type=\"text\" v-model='headerTextSec' style=\"width:50px\" />\r\n    <input class=\"input\" type=\"text\" v-model='headerText' @keyup.enter='onShowHeaderText(headerText,headerTextSec)' style=\"width:650px\" />\r\n    <label class=\"label\"> 小节：</label>\r\n    <input class=\"input\" type=\"text\" v-model='queter' @keyup.enter='onQueter(queter)' style=\"width:50px\" />\r\n    <label class=\"label\"> 比分：</label>\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onScore(true,leftScore-1)\"> -1</button>\r\n            <button class=\"button\" @click=\"onScore(true,leftScore-2)\"> -2</button>\r\n            <button class=\"button\" @click=\"onScore(true,leftScore-3)\"> -3</button>\r\n            <input class=\"input\" type=\"text\" v-model='leftScore' @keyup.enter='onScore(true,leftScore)' style=\"width:50px\" />\r\n            <button class=\"button\" @click=\"onScore(true,leftScore+1)\"> +1</button>\r\n            <button class=\"button\" @click=\"onScore(true,leftScore+2)\"> +2</button>\r\n            <button class=\"button\" @click=\"onScore(true,leftScore+3)\"> +3</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onScore(false,rightScore-1)\"> -1</button>\r\n            <button class=\"button\" @click=\"onScore(false,rightScore-2)\"> -2</button>\r\n            <button class=\"button\" @click=\"onScore(false,rightScore-3)\"> -3</button>\r\n            <input class=\"input\" type=\"text\" v-model='rightScore' @keyup.enter='onScore(false,rightScore)' style=\"width:50px\" />\r\n            <button class=\"button\" @click=\"onScore(false,rightScore+1)\"> +1</button>\r\n            <button class=\"button\" @click=\"onScore(false,rightScore+2)\"> +2</button>\r\n            <button class=\"button\" @click=\"onScore(false,rightScore+3)\"> +3</button>\r\n        </div>\r\n    </div>\r\n    <label class=\"label\">暂停：</label>\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='leftTimeup' @keyup.enter='onTimeup(true,leftTimeup)' style=\"width:50px\" />\r\n        </div>\r\n        <div class=\"column\">\r\n            <input class=\"input\" type=\"text\" v-model='rightTimeup' @keyup.enter='onTimeup(false,rightTimeup)' style=\"width:50px\" />\r\n        </div>\r\n    </div>\r\n    <label class=\"label\">球员</label>\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <input v-for=\"_,index in leftPlayerArr\" class=\"input\" type=\"text\" v-model='leftPlayerArr[index]' @keyup.enter='onPlayer(true,leftPlayerArr[index],index)' style=\"width:40px\" />\r\n            <button class=\"button\" @click=\"onPlayer(true,leftPlayerArr,-1)\">set</button>\r\n            <button class=\"button\" @click=\"onHidePlayer(true)\">hide</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <input v-for=\"_,index in rightPlayerArr\" class=\"input\" type=\"text\" v-model='rightPlayerArr[index]' @keyup.enter='onPlayer(false,rightPlayerArr[index],index)' style=\"width:40px\" />\r\n            <button class=\"button\" @click=\"onPlayer(false,rightPlayerArr,-1)\">set</button>\r\n            <button class=\"button\" @click=\"onHidePlayer(false)\">hide</button>\r\n        </div>\r\n    </div>\r\n    <input class=\"input\" type=\"text\" v-model='timeString' @keyup.enter='onTimeString(timeString)' style=\"width:80px\" />    \r\n    <button class=\"button is-large\" @click=\"onToggleTimer()\">Toggle</button>\r\n    <button class=\"button is-large\" @click=\"onResetTimer()\">Reset</button>\r\n</div>\r\n</div>";
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3451,8 +3664,8 @@
 	var WebJsFunc_1 = __webpack_require__(22);
 	var VueBase_1 = __webpack_require__(17);
 	var JsFunc_1 = __webpack_require__(24);
-	var const_1 = __webpack_require__(38);
-	var Command_1 = __webpack_require__(48);
+	var const_1 = __webpack_require__(39);
+	var Command_1 = __webpack_require__(49);
 	var opReq = function (cmdId, param, callback) {
 	    $.post("/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId, param, callback);
 	};
@@ -3460,7 +3673,7 @@
 	    __extends(RKBView, _super);
 	    function RKBView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(55);
+	        this.template = __webpack_require__(56);
 	        this.links = VueBase_1.VueBase.PROP;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.gameId = VueBase_1.VueBase.PROP;
@@ -3534,13 +3747,13 @@
 
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <h1>game id:{{gameId}}</h1>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\"\r\n                   onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46'\r\n                   placeholder=\"\" style=\"width: 50px;\"\r\n                   v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n    </div>\r\n</div>\r\n";
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3549,14 +3762,14 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var ScoreView_1 = __webpack_require__(57);
-	var RankView_1 = __webpack_require__(59);
-	var BasePanelView_1 = __webpack_require__(49);
-	var Bracket_1 = __webpack_require__(63);
+	var ScoreView_1 = __webpack_require__(58);
+	var RankView_1 = __webpack_require__(60);
+	var BasePanelView_1 = __webpack_require__(50);
+	var Bracket_1 = __webpack_require__(64);
 	var WebJsFunc_1 = __webpack_require__(22);
 	var VueBase_1 = __webpack_require__(17);
-	var const_1 = __webpack_require__(38);
-	var Command_1 = __webpack_require__(48);
+	var const_1 = __webpack_require__(39);
+	var Command_1 = __webpack_require__(49);
 	var rankView;
 	var bracketView;
 	var scoreView;
@@ -3565,7 +3778,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(66);
+	        this.template = __webpack_require__(67);
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.opReq = function (cmdId, param, callback) {
@@ -3678,7 +3891,7 @@
 
 
 /***/ },
-/* 57 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3688,10 +3901,10 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var HupuAPI_1 = __webpack_require__(21);
-	var ScorePanel2_1 = __webpack_require__(58);
-	var Command_1 = __webpack_require__(48);
-	var const_1 = __webpack_require__(38);
-	var BasePanelView_1 = __webpack_require__(49);
+	var ScorePanel2_1 = __webpack_require__(59);
+	var Command_1 = __webpack_require__(49);
+	var const_1 = __webpack_require__(39);
+	var BasePanelView_1 = __webpack_require__(50);
 	var ScoreView = (function (_super) {
 	    __extends(ScoreView, _super);
 	    function ScoreView(stage) {
@@ -3794,13 +4007,13 @@
 
 
 /***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var Fx_1 = __webpack_require__(43);
-	var PixiEx_1 = __webpack_require__(40);
-	var const_1 = __webpack_require__(38);
+	var Fx_1 = __webpack_require__(44);
+	var PixiEx_1 = __webpack_require__(37);
+	var const_1 = __webpack_require__(39);
 	var ScorePanel2 = (function () {
 	    function ScorePanel2(parent) {
 	        var _this = this;
@@ -3935,7 +4148,7 @@
 
 
 /***/ },
-/* 59 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3944,11 +4157,11 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var PlayerInfo_1 = __webpack_require__(60);
-	var BasePanelView_1 = __webpack_require__(49);
-	var const_1 = __webpack_require__(38);
-	var FTInfo_1 = __webpack_require__(62);
-	var PixiEx_1 = __webpack_require__(40);
+	var PlayerInfo_1 = __webpack_require__(61);
+	var BasePanelView_1 = __webpack_require__(50);
+	var const_1 = __webpack_require__(39);
+	var FTInfo_1 = __webpack_require__(63);
+	var PixiEx_1 = __webpack_require__(37);
 	var JsFunc_1 = __webpack_require__(24);
 	var RankView = (function (_super) {
 	    __extends(RankView, _super);
@@ -4151,7 +4364,7 @@
 
 
 /***/ },
-/* 60 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4160,7 +4373,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var BaseInfo_1 = __webpack_require__(61);
+	var BaseInfo_1 = __webpack_require__(62);
 	var PlayerDoc = (function () {
 	    function PlayerDoc() {
 	        this.id = 0;
@@ -4348,7 +4561,7 @@
 
 
 /***/ },
-/* 61 */
+/* 62 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -4393,7 +4606,7 @@
 
 
 /***/ },
-/* 62 */
+/* 63 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -4422,7 +4635,7 @@
 
 
 /***/ },
-/* 63 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4431,15 +4644,15 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var TweenEx_1 = __webpack_require__(39);
-	var Command_1 = __webpack_require__(48);
+	var TweenEx_1 = __webpack_require__(38);
+	var Command_1 = __webpack_require__(49);
 	var HupuAPI_1 = __webpack_require__(21);
-	var BasePanelView_1 = __webpack_require__(49);
-	var const_1 = __webpack_require__(38);
-	var BracketGroup_1 = __webpack_require__(64);
-	var PixiEx_1 = __webpack_require__(40);
-	var GroupLine_1 = __webpack_require__(65);
-	var Fx_1 = __webpack_require__(43);
+	var BasePanelView_1 = __webpack_require__(50);
+	var const_1 = __webpack_require__(39);
+	var BracketGroup_1 = __webpack_require__(65);
+	var PixiEx_1 = __webpack_require__(37);
+	var GroupLine_1 = __webpack_require__(66);
+	var Fx_1 = __webpack_require__(44);
 	var Bracket = (function (_super) {
 	    __extends(Bracket, _super);
 	    function Bracket(stage, gameId) {
@@ -4678,7 +4891,7 @@
 
 
 /***/ },
-/* 64 */
+/* 65 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -4733,7 +4946,7 @@
 
 
 /***/ },
-/* 65 */
+/* 66 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -4797,134 +5010,10 @@
 
 
 /***/ },
-/* 66 */
+/* 67 */
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        game id:{{gameId}}\r\n        <a class=\"button\" @click=\"onClkRank\">个人战团排行</a>\r\n        <a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>\r\n    </div>\r\n</div>\r\n";
-
-/***/ },
-/* 67 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var PixiEx_1 = __webpack_require__(40);
-	var TweenEx_1 = __webpack_require__(39);
-	var const_1 = __webpack_require__(38);
-	var Ready = (function (_super) {
-	    __extends(Ready, _super);
-	    function Ready(parent) {
-	        _super.call(this);
-	        parent.addChild(this);
-	        this.addChild(new PIXI.Graphics().drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT));
-	        var rc = new PIXI.Container;
-	        this.rotCtn = rc;
-	        this.addChild(rc);
-	        rc.pivot = new PIXI.Point(const_1.ViewConst.STAGE_WIDTH * .5, const_1.ViewConst.STAGE_HEIGHT * .5);
-	        rc.x = const_1.ViewConst.STAGE_WIDTH * .5;
-	        rc.y = const_1.ViewConst.STAGE_HEIGHT * .5;
-	        rc.rotation = PIXI.DEG_TO_RAD * 123;
-	        var blue = new PIXI.Graphics()
-	            .beginFill(0x2a6ad7)
-	            .drawRect(0, 0, 1920, 600);
-	        blue.y = 500;
-	        blue.x = -1200;
-	        rc.addChild(blue);
-	        var red = new PIXI.Graphics()
-	            .beginFill(0xD72A37)
-	            .drawRect(0, 0, 1920, 600);
-	        red.y = -60;
-	        red.x = 1500;
-	        rc.addChild(red);
-	        var gray = new PIXI.Graphics()
-	            .beginFill(0xb4b4b4)
-	            .drawRect(0, 0, 1920, 800);
-	        gray.pivot = new PIXI.Point(0, 400);
-	        gray.scale.x = gray.scale.y = 0;
-	        gray.y = const_1.ViewConst.STAGE_HEIGHT * .5;
-	        rc.addChild(gray);
-	        var blue2 = PixiEx_1.newBitmap({ x: -1920, url: '/img/panel/koa/ad/blue.png' });
-	        this.addChild(blue2);
-	        var red2 = PixiEx_1.newBitmap({ x: 1920, url: '/img/panel/koa/ad/red.png' });
-	        red2.y = const_1.ViewConst.STAGE_HEIGHT - 335;
-	        this.addChild(red2);
-	        var white = new PIXI.Graphics();
-	        white
-	            .beginFill(0xffffff)
-	            .drawRect(0, 0, 1920, 410);
-	        white.y = const_1.ViewConst.STAGE_HEIGHT * .5;
-	        white.pivot = new PIXI.Point(0, 205);
-	        white.scale.y = 0;
-	        this.addChild(white);
-	        var logo = PixiEx_1.newBitmap({ url: '/img/panel/koa/ad/logo1.png' });
-	        logo.pivot = new PIXI.Point(307 / 2, 307 / 2);
-	        logo.x = const_1.ViewConst.STAGE_WIDTH * .5;
-	        logo.y = const_1.ViewConst.STAGE_HEIGHT * .5;
-	        logo.scale.x = 1 / .24;
-	        logo.scale.y = 1 / .24;
-	        logo['1'] = PixiEx_1.newBitmap({ x: 35, y: 144, url: '/img/panel/koa/ad/1.png' });
-	        logo['2'] = PixiEx_1.newBitmap({ x: 85, y: 98, url: '/img/panel/koa/ad/2.png' });
-	        logo['3'] = PixiEx_1.newBitmap({ x: 140, y: 50, url: '/img/panel/koa/ad/3.png' });
-	        PixiEx_1.setPivot(logo['1'], 35, 21);
-	        PixiEx_1.setPivot(logo['2'], 48, 44);
-	        PixiEx_1.setPivot(logo['3'], 62, 78);
-	        logo.addChild(logo['1']);
-	        logo.addChild(logo['2']);
-	        logo.addChild(logo['3']);
-	        this.addChild(logo);
-	        var _f = function (frame) {
-	            return frame * 1000 / 60;
-	        };
-	        TweenEx_1.TweenEx.delayedCall(200, function () {
-	            TweenEx_1.TweenEx.to(gray.scale, _f(5), { x: 1 });
-	            TweenEx_1.TweenEx.to(gray.scale, _f(5), { y: 1 });
-	            TweenEx_1.TweenEx.to(white.scale, _f(7), { y: 1 });
-	            TweenEx_1.TweenEx.to(logo.scale, _f(8), { x: 1 });
-	            TweenEx_1.TweenEx.to(logo.scale, _f(8), { y: 1 });
-	            TweenEx_1.TweenEx.to(gray, _f(60), { height: 410 });
-	            TweenEx_1.TweenEx.to(blue, _f(12), { x: 0 });
-	            TweenEx_1.TweenEx.to(red, _f(12), { x: 0 }, function () {
-	                TweenEx_1.TweenEx.delayedCall(_f(4), function () {
-	                    TweenEx_1.TweenEx.to(gray.scale, _f(34 - 16), { y: .5 });
-	                });
-	            });
-	            TweenEx_1.TweenEx.delayedCall(_f(28), function () {
-	                TweenEx_1.TweenEx.to(rc, _f(6), { rotation: 180 * PIXI.DEG_TO_RAD }, function () {
-	                });
-	                TweenEx_1.TweenEx.delayedCall(_f(4), function () {
-	                    TweenEx_1.TweenEx.to(blue2, _f(28), { x: 0 });
-	                    TweenEx_1.TweenEx.to(red2, _f(28), { x: 0 });
-	                });
-	                var s150 = function (obj) {
-	                    new TweenEx_1.TweenEx(obj.scale)
-	                        .to({ x: 1.5 }, _f(6))
-	                        .to({ x: 1 }, _f(3))
-	                        .start();
-	                    new TweenEx_1.TweenEx(obj.scale)
-	                        .to({ y: 1.5 }, _f(6))
-	                        .to({ y: 1 }, _f(3))
-	                        .start();
-	                };
-	                TweenEx_1.TweenEx.to(logo, _f(10), { x: 300 }, function () {
-	                    s150(logo['1']);
-	                    TweenEx_1.TweenEx.delayedCall(_f(2), function () {
-	                        s150(logo['2']);
-	                        TweenEx_1.TweenEx.delayedCall(_f(2), function () {
-	                            s150(logo['3']);
-	                        });
-	                    });
-	                });
-	            });
-	        });
-	    }
-	    return Ready;
-	}(PIXI.Container));
-	exports.Ready = Ready;
-
 
 /***/ }
 /******/ ]);
