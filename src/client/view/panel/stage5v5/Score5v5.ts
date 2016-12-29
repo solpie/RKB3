@@ -75,13 +75,13 @@ export class Score5v5 extends PIXI.Container {
         let whiteLogo = newBitmap({ url: '/img/ft/white.jpg' })
         whiteLogo.y = 45
         whiteLogo.x = 5
-        whiteLogo.scale.x = whiteLogo.scale.y = 56 / 120
+        // whiteLogo.scale.x = whiteLogo.scale.y = 56 / 150
         scorePanel.addChild(whiteLogo)
 
         let blackLogo = newBitmap({ url: '/img/ft/black.jpg' })
         blackLogo.y = whiteLogo.y
         blackLogo.x = 481
-        blackLogo.scale.x = blackLogo.scale.y = 56 / 120
+        // blackLogo.scale.x = blackLogo.scale.y = 56 / 150
         scorePanel.addChild(blackLogo)
 
         let ts = {
@@ -89,12 +89,12 @@ export class Score5v5 extends PIXI.Container {
             fontSize: '35px', fill: '#fff'
         }
         let whiteText = new PIXI.Text('路人王全明星白', ts)
-        whiteText.x = 140
+        whiteText.x = 105
         whiteText.y = 49
         scorePanel.addChild(whiteText)
 
         let blackText = new PIXI.Text('路人王全明星黑', ts)
-        blackText.x = 620
+        blackText.x = 585
         blackText.y = whiteText.y
         scorePanel.addChild(blackText)
 

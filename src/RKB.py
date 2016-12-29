@@ -28,7 +28,7 @@ def loadConf():
 loadConf()
 
 # web server
-from flask import Flask, render_template, session, request, make_response
+from flask import Flask, render_template, session, request, make_response,redirect
 from flask_socketio import SocketIO, emit, disconnect
 
 # Set this variable to "threading", "eventlet" or "gevent" to test the
@@ -45,7 +45,8 @@ socketio = SocketIO(app, async_mode=async_mode)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return redirect('/admin')
+    # return render_template('index.html')
 
 import time
 

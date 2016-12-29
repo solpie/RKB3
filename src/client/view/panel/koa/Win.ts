@@ -1,7 +1,8 @@
+import { TextTimer } from '../../utils/TextTimer';
 import { _avatar } from '../../utils/HupuAPI';
 import { ascendingProp, cnWrap, mapToArr } from '../../utils/JsFunc';
 import { SpriteGroup } from '../../utils/SpriteGroup';
-import { newBitmap } from '../../utils/PixiEx';
+import { newBitmap, setPivot } from '../../utils/PixiEx';
 import { TweenEx } from '../../utils/TweenEx';
 import { FontName, ViewConst } from '../../const';
 export class WinTeam extends PIXI.Container {
@@ -23,6 +24,7 @@ export class WinTeam extends PIXI.Container {
     teamName: PIXI.Text
     winGroupMask: SpriteGroup
     winIcon: SpriteGroup
+    durationText: TextTimer
     constructor(parent: PIXI.Container) {
         super()
         parent.addChild(this)
@@ -97,7 +99,44 @@ export class WinTeam extends PIXI.Container {
         this.introText.x = 812
         this.introText.y = 445
         this.ctn.addChild(this.introText)
+
+        let tts = {
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '50px', fill: "#fff",
+            fontWeight: 'bold'
+        }
+        let tt = new TextTimer('', tts)
+        tt.x = 1200
+        tt.y = 695
+        setPivot(tt, 70, 25)
+        tt.setTimeBySec(0)
+        this.ctn.addChild(tt)
+        this.durationText = tt
         // this.test()
+    }
+
+    setDuration(d) {
+        this.durationText.setTimeBySec(0)
+        // let delay = d / 150 * 1000
+        let delay = Math.min(d / 60 * 1000, 3000)
+        var dropFrame = 0
+        new TweenEx({ sec: 0 })
+            .to({ sec: d }, delay)
+            .update((t) => {
+                if (dropFrame < 0) {
+                    dropFrame = 1
+                    var r = Math.random()
+                    this.durationText.scale.x = (r % .5) + 1
+                    this.durationText.scale.y = (r % .5) + 1
+                }
+                dropFrame--
+                this.durationText.setTimeBySec(parseInt(t.sec))
+            })
+            .call(() => {
+                this.durationText.scale.x = 1
+                this.durationText.scale.y = 1
+            })
+            .start()
     }
 
     test() {
@@ -107,7 +146,6 @@ export class WinTeam extends PIXI.Container {
         this.setTeamName('爆炸的手机')
         this.show()
     }
-
     setFtName(n) {
         this.ftName.text = n
         this.ftName.x = Math.max((ViewConst.STAGE_WIDTH - this.ftName.width) * .5, 830)
@@ -163,6 +201,7 @@ export class WinTeam extends PIXI.Container {
     }
     setTeam(team) {
         console.log('set Team', team);
+        this.setDuration(team.duration)
         let sa = team.scoreArr
         this.setTeamName(sa[0] + ' - ' + sa[1])
         this.setFtName(team.name)

@@ -24,7 +24,7 @@
     },
     "scripts": {
         "app": "python src/RKB.py",
-        "build": "rollup -c&&npm run server-build",
+        "build": "pyinstaller src/RKB.py -F --upx-dir c:/bin/upx391w --noupx",
         "view": "webpack --watch --progress --profile --colors --display-error-details --display-cached --config webpack.view.js",
         "view-build": "webpack --progress --profile --colors --disZplay-error-details --display-cached --config webpack.view.js",
         "test": "echo \"Error: no test specified\" && exit 1"

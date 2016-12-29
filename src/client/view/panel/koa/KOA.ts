@@ -228,8 +228,8 @@ class KOA extends VueBase {
             })
         },
         onHideSt() {
-             this.opReq(`${CommandId.cs_hideSt}`, {
-                 _:null,
+            this.opReq(`${CommandId.cs_hideSt}`, {
+                _: null,
             })
         },
         onSetSt(is1p: boolean, dt) {
@@ -241,7 +241,9 @@ class KOA extends VueBase {
         onCommitGame() {
             var bracketIdx = Number(this.bracketIdx)
             if (bracketIdx) {
-                this.opReq(`${CommandId.cs_commitGame}`, { duration: (this.hp as HP).timeText.timeInSec, bracketIdx: bracketIdx })
+                this.bracketIdx = null
+                this.opReq(`${CommandId.cs_commitGame}`, { duration: (this.hp as HP).timeText.timeInSec, bracketIdx: bracketIdx }, () => {
+                })
             }
         },
         onReloadDB() {
@@ -339,6 +341,7 @@ class KOA extends VueBase {
                 winTeam.winPlayerDocArr = winGameDocArr
                 winTeam.is1pWin = is1pWin
                 winTeam.scoreArr = data.scoreArr
+                winTeam.duration = data.duration
                 this.hp.showWinTeam(winTeam)
             })
     }

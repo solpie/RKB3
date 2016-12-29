@@ -179,6 +179,7 @@ class BracketModel(object):
         data['et'] = 'top8Match'
 
         g = doc["group"][idx]
+        data['duration'] =0
         if 'scoreArr' in data:
             g['left']['score'] = data['scoreArr'][0]
             g['right']['score'] = data['scoreArr'][1]
@@ -186,6 +187,7 @@ class BracketModel(object):
             docs = self.gameModel.db.find({'bracketIdx': int(idx)})
             scoreArr = [0, 0]
             for gameDoc in docs:
+                data['duration'] += gameDoc['duration']
                 playerArr = gameDoc['playerDocArr']
                 if playerArr[0]['blood'] > playerArr[1]['blood']:
                     scoreArr[0] += 1

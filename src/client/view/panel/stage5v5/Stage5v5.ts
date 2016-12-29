@@ -52,7 +52,10 @@ class Stage5v5 extends VueBase {
             dynamicLoading.css('/css/bulma.min.css')
         }
 
-        this.isMobile = this.$route.query['mobile']=='1'
+        this.isMobile = this.$route.query['m'] == '1'
+        if (this.isMobile) {
+            this.panel.x = -600
+        }
         this.initIO()
         let m = (reqCmd, data) => {
             let on = (resCmd, callback) => {
@@ -100,7 +103,12 @@ class Stage5v5 extends VueBase {
                 this.panel.setQueter(data.queter)
             })
             .on(`${CommandId.sc_5v5toggleTimer}`, (data) => {
-                this.panel.timeText.toggleTimer()
+                if (data.isPause == undefined)
+                    this.panel.timeText.toggleTimer()
+                else if (data.isPause)
+                    this.panel.timeText.toggleTimer(TimerState.PAUSE)
+                else
+                    this.panel.timeText.toggleTimer(TimerState.RUNNING)
             })
             .on(`${CommandId.sc_5v5resetTimer}`, (data) => {
                 this.panel.timeText.resetTimer()
@@ -138,8 +146,11 @@ class Stage5v5 extends VueBase {
                 queter: queter,
             })
         },
-        onToggleTimer() {
-            this.opReq(`${CommandId.cs_5v5toggleTimer}`, { _: null })
+        onToggleTimer(b) {
+            if (b < 0)
+                this.opReq(`${CommandId.cs_5v5toggleTimer}`, { _: null })
+            else
+                this.opReq(`${CommandId.cs_5v5toggleTimer}`, { _: null, isPause: Boolean(b) })
         },
         onResetTimer() {
             this.opReq(`${CommandId.cs_5v5resetTimer}`, { _: null })

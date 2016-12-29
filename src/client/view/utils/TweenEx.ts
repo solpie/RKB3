@@ -3,6 +3,7 @@ export class TweenEx {
     target
     vars
     eventArr
+    updateFunc
     //duration ms
     constructor(target) {
         this.target = target
@@ -14,6 +15,10 @@ export class TweenEx {
     }
     delay(duration) {
         this.eventArr.push({ event: 'delay', data: { duration: duration } })
+        return this
+    }
+    update(callback) {
+        this.updateFunc = callback
         return this
     }
     start() {
@@ -34,6 +39,8 @@ export class TweenEx {
                             for (let k in e.data.vars) {
                                 this.target[k] = fromVars[k]
                             }
+                            if (this.updateFunc)
+                                this.updateFunc(this.target)
                         })
                         .onComplete(() => {
                             run()

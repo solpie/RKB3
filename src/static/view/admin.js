@@ -582,6 +582,7 @@
 	            { title: "K.O.A", url: "/panel/#/koa/op/" },
 	            { title: "战团双败", url: "/panel/#/ol/ob/0?panel=bracket" },
 	            { title: "5v5", url: "/panel/#/5v5/op/" },
+	            { title: "5v5 手机", url: "/panel/#/5v5/op/?m=1" },
 	        ];
 	    };
 	    HomeView.prototype.genQRCode = function () {

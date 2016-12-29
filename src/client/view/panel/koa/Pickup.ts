@@ -96,9 +96,14 @@ export class PickupScene extends PIXI.Container {
         let invert = 95
         var pickupIdx = 1;
         let r = 13
+        let reverseTeam = [1, 3, 4, 7]
         for (let tp of teamPos) {
             for (var i = 0; i < 4; i++) {
-                let p: PickupPlayerInfo = new PickupPlayerInfo({ x: tp.x + i * 95, y: tp.y })
+                var px = tp.x + i * 95
+                if (tp.flip == 1) {
+                    px = tp.x + (3 - i) * 95
+                }
+                let p: PickupPlayerInfo = new PickupPlayerInfo({ x: px, y: tp.y })
                 let pDoc = playerMap[pickupIdx]
                 p.name = pDoc.name
                 p.portrait = pDoc.portrait

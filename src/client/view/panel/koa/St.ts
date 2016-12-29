@@ -77,6 +77,10 @@ export class St extends PIXI.Container {
         nt.x = 82
         this.nameText = nt
         this.addChild(nt)
+        let avtBg= new PIXI.Graphics()
+        .beginFill(0xb4b4b4)
+        .drawRect(this.ax,this.ay,68,68)
+        this.addChildAt(avtBg,0)
     }
     ax
     ay
@@ -92,15 +96,13 @@ export class St extends PIXI.Container {
         this.avatar = newBitmap({
             url: url, x: this.ax, y: this.ay, callback: (img) => {
                 this.avatar.scale.x = this.avatar.scale.y = 60 / img.width
-                if(!this.is1p)
-                {
-
-                this.avatar.scale.x *= -1
-                this.avatar.x = this.ax + 60
+                if (!this.is1p) {
+                    this.avatar.scale.x *= -1
+                    this.avatar.x = this.ax + 60
                 }
             }
         })
-        this.addChildAt(this.avatar, 0)
+        this.addChildAt(this.avatar, 1)
     }
 
     setName(name: string) {
