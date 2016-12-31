@@ -50,7 +50,8 @@
         </div>
         <div class="column">
             <button class="button is-large" @click="onShowPickup">出阵</button>
-            <button class="button is-large" @click="onStartGame()">开始</button>
+            <button class="button is-large" @click="onStartGame(false)">开始</button>
+            <button class="button is-large" @click="onStartGame(true)">开始 No fx</button>
             <button class="button is-medium" @click="onHideSt()">援助 隐藏</button>
             <p>
                 <button class="button is-large" @click="onToggleTimer()">Toggle</button>

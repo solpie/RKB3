@@ -272,7 +272,7 @@ export class PickupAnimation {
             else {
                 this.orderDone++
                 if (this.orderDone > 1)
-                    TweenEx.delayedCall(1500, () => {
+                    TweenEx.delayedCall(3500, () => {
                         this.fadeOut()
                     })
             }

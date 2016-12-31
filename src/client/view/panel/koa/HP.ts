@@ -99,7 +99,7 @@ export class HP extends PIXI.Container {
         fpg.flip = -1
         fpg.dir = Direction.e
         this.foulPG2p = new SpriteGroup(fpg)
-        this.foulPG2p.x = 1098
+        this.foulPG2p.x = 1091
         this.foulPG2p.y = this.foulPG1p.y
         titleCtn.addChild(this.foulPG2p)
 
