@@ -193,10 +193,11 @@ class KOA extends VueBase {
                 }
             }
         },
-        onStartGame() {
+        onStartGame(noFx = false) {
             if (this.gamePlayer1p.id && this.gamePlayer2p.id)
                 this.opReq(`${CommandId.cs_startGame}`, {
                     // _: null,
+                    noFx:noFx,
                     playerDocArr: [this.gamePlayer1p, this.gamePlayer2p],
                     partnerArr: [this.orderPlayerDocArr1p, this.orderPlayerDocArr2p],
                     stArr: [this.orderPlayerDocArr1p[3], this.orderPlayerDocArr2p[3]],
