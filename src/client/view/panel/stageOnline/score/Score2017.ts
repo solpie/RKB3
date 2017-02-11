@@ -1,5 +1,6 @@
+import { TextTimer } from '../../../utils/TextTimer';
 import { Direction, SpriteGroup } from '../../../utils/SpriteGroup';
-import { ViewConst } from '../../../const';
+import { FontName, ViewConst } from '../../../const';
 import { loadImg } from '../../../utils/JsFunc';
 import { BitmapText, imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
 const skin = {
@@ -36,6 +37,8 @@ export class Score2017 {
     rightScoreText: BitmapText;
     leftFoul: SpriteGroup
     rightFoul: SpriteGroup
+    timer: TextTimer
+
     constructor(stage: PIXI.Container, isDark = false) {
         this.stage = stage
         if (isDark)
@@ -98,6 +101,17 @@ export class Score2017 {
         rf.y = lf.y
         this.rightFoul = rf
         // this.setGameIdx(1,true)
+        let tts = {
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '30px', fill: "#fff",
+            fontWeight: 'bold'
+        }
+        let t = new TextTimer('', tts)
+        ctn.addChild(t)
+        t.x = 917
+        t.y = 90
+        t.setTimeBySec(0)
+        this.timer = t
     }
 
     set35ScoreLight(winScore) {
@@ -144,14 +158,25 @@ export class Score2017 {
     }
 
     resetTimer() {
-
+        this.timer.resetTimer()
     }
 
-    toggleTimer1(v) {
-
+    toggleTimer(v) {
+        this.timer.toggleTimer(v)
     }
 
     resetScore() {
+        this.setLeftScore(0);
+        this.setRightScore(0);
+        this.setLeftFoul(0);
+        this.setRightFoul(0);
+    }
+
+    //player
+    setLeftPlayerInfo(name: string, avatar: string, ft: string) {
+        //cm kg
+    }
+    setRightPlayerInfo(name: string, avatar: string, ft: string) {
 
     }
 }

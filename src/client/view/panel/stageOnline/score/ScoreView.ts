@@ -1,3 +1,4 @@
+import { PlayerInfo } from '../../../../model/PlayerInfo';
 import { TweenEx } from '../../../utils/TweenEx';
 import { Score2017 } from './Score2017';
 import { getHupuWS } from '../../../utils/HupuAPI';
@@ -26,28 +27,9 @@ export class ScoreView extends BasePanelView {
         getHupuWS((hupuWsUrl) => {
             let remoteIO = io.connect(hupuWsUrl);
             let setPlayer = (leftPlayer, rightPlayer) => {
-                // let leftPlayerInfo = new PlayerInfo();
-                // let playerData = leftPlayer;
-                // leftPlayerInfo.name(playerData.name);
-                // leftPlayerInfo.avatar(playerData.avatar);
-                // leftPlayerInfo.winGameCount(playerData.winAmount);
-                // leftPlayerInfo.loseGameCount(playerData.loseAmount);
-                // leftPlayerInfo.playerData['ftDoc'] = {name: leftPlayer.group};
-                // leftPlayerInfo.playerData.playerNum = leftPlayer.playerNum;
-                // leftPlayerInfo.playerData.curFtScore = leftPlayer.roundScore;
-                // this.playerPanel.setPlayer(0, leftPlayerInfo.playerData);
-
-                // let rightPlayerInfo = new PlayerInfo();
-                // playerData = rightPlayer;
-                // rightPlayerInfo.name(playerData.name);
-                // rightPlayerInfo.avatar(playerData.avatar);
-                // rightPlayerInfo.winGameCount(playerData.winAmount);
-                // rightPlayerInfo.loseGameCount(playerData.loseAmount);
-                // rightPlayerInfo.playerData['ftDoc'] = {name: rightPlayer.group};
-                // rightPlayerInfo.playerData.playerNum = rightPlayer.playerNum;
-                // rightPlayerInfo.playerData.curFtScore = rightPlayer.roundScore;
-                // this.playerPanel.setPlayer(1, rightPlayerInfo.playerData);
-                // this.scorePanel.setPlayerName([leftPlayer.name, rightPlayer.name])
+                console.log(leftPlayer)
+                this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.group)
+                this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.group)
             };
 
             remoteIO.on('connect', () => {
@@ -76,7 +58,7 @@ export class ScoreView extends BasePanelView {
 
                     if (data.status == 0) {//status字段吧 0 进行中 1已结束
                         this.scorePanel.resetTimer();
-                        this.scorePanel.toggleTimer1(TimerState.RUNNING);
+                        this.scorePanel.toggleTimer(TimerState.RUNNING);
                     }
 
 
@@ -156,7 +138,7 @@ export class ScoreView extends BasePanelView {
                     // window.location.reload();
                     this.scorePanel.resetScore();
                     this.scorePanel.resetTimer();
-                    this.scorePanel.toggleTimer1(TimerState.RUNNING);
+                    this.scorePanel.toggleTimer(TimerState.RUNNING);
                 };
 
                 // eventMap['commitGame'] = ()=> {
@@ -188,10 +170,10 @@ export class ScoreView extends BasePanelView {
                 this.delayTimeMS = data.delayTimeMS;
             })
             .on(CommandId.sc_startTimer, (data) => {
-                this.scorePanel.toggleTimer1(TimerState.RUNNING)
+                this.scorePanel.toggleTimer(TimerState.RUNNING)
             })
             .on(CommandId.sc_pauseTimer, (data) => {
-                this.scorePanel.toggleTimer1(TimerState.PAUSE)
+                this.scorePanel.toggleTimer(TimerState.PAUSE)
             })
             .on(CommandId.sc_resetTimer, (data) => {
                 console.log("CommandId.sc_resetTimer", data);
