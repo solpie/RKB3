@@ -54,8 +54,8 @@
 	var stage3point_1 = __webpack_require__(32);
 	var KOA_1 = __webpack_require__(37);
 	var Stage5v5_1 = __webpack_require__(52);
-	var RKBOPView_1 = __webpack_require__(55);
 	var StageOnlineView_1 = __webpack_require__(57);
+	var RKBOPView_1 = __webpack_require__(55);
 	var routes = [
 	    {
 	        path: '/', name: 'panel',
@@ -210,7 +210,7 @@
 	var WebJsFunc_1 = __webpack_require__(22);
 	exports.getHupuWS = function (callback) {
 	    var url = 'http://test.jrstvapi.hupu.com/zhubo/getNodeServer';
-	    $.get(WebJsFunc_1.proxy('http://test.jrstvapi.hupu.com/zhubo/getNodeServer'), function (res) {
+	    $.get(WebJsFunc_1.proxy(url), function (res) {
 	        var a = JSON.parse(res);
 	        if (a && a.length) {
 	            callback(a[0]);
@@ -737,7 +737,7 @@
 	        };
 	    }
 	    BasePanelView.initPixi = function () {
-	        var renderer = new PIXI.autoDetectRenderer(const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT, { antialias: false, transparent: true, resolution: 1 });
+	        var renderer = new PIXI.autoDetectRenderer(const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT, { antialias: false, transparent: true, resolution: 1 }, false);
 	        document.body.insertBefore(renderer.view, document.getElementById("panel"));
 	        renderer.stage = new PIXI.Container();
 	        renderer.backgroundColor = 0x00000000;
@@ -748,10 +748,6 @@
 	        };
 	        renderer.renderStage();
 	        return renderer.stage;
-	    };
-	    BasePanelView.initStage = function () {
-	    };
-	    BasePanelView.prototype.initCanvas = function () {
 	    };
 	    BasePanelView.prototype.show = function () {
 	    };
@@ -2481,19 +2477,12 @@
 	"use strict";
 	var TweenEx_1 = __webpack_require__(39);
 	function delayCall(delay, callback) {
-	    createjs.Tween.get(this).wait(delay).call(callback);
 	}
 	exports.delayCall = delayCall;
 	function blink(target, time, loop) {
 	    if (time === void 0) { time = 80; }
 	    if (loop === void 0) { loop = false; }
 	    var blink = time;
-	    createjs.Tween.get(target, { loop: loop })
-	        .to({ alpha: 1 }, blink)
-	        .to({ alpha: 0 }, blink)
-	        .to({ alpha: 1 }, blink)
-	        .to({ alpha: 0 }, blink)
-	        .to({ alpha: 1 }, blink);
 	}
 	exports.blink = blink;
 	function blink2(options) {
@@ -2533,11 +2522,6 @@
 	exports.blink3 = blink3;
 	function fadeOutCtn(ctn) {
 	    console.log(this, "show fade Out WinPanel");
-	    createjs.Tween.get(ctn).to({ alpha: 0 }, 200)
-	        .call(function () {
-	        ctn.alpha = 1;
-	        ctn.removeAllChildren();
-	    });
 	}
 	exports.fadeOutCtn = fadeOutCtn;
 
@@ -4124,8 +4108,9 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var TweenEx_1 = __webpack_require__(39);
+	var Score2017_1 = __webpack_require__(68);
 	var HupuAPI_1 = __webpack_require__(21);
-	var ScorePanel2_1 = __webpack_require__(59);
 	var Command_1 = __webpack_require__(50);
 	var const_1 = __webpack_require__(33);
 	var BasePanelView_1 = __webpack_require__(34);
@@ -4135,9 +4120,7 @@
 	        _super.call(this, const_1.PanelId.onlinePanel);
 	        this.delayTimeMS = 0;
 	        this.name = const_1.PanelId.scorePanel;
-	        this.ctn = new PIXI.Container();
-	        stage.addChild(this.ctn);
-	        this.scorePanel = new ScorePanel2_1.ScorePanel2(this.ctn);
+	        this.scorePanel = new Score2017_1.Score2017(stage);
 	        console.log('new ScoreView');
 	        this.initRemote();
 	    }
@@ -4148,7 +4131,7 @@
 	            var setPlayer = function (leftPlayer, rightPlayer) {
 	            };
 	            remoteIO.on('connect', function () {
-	                console.log('hupuAuto socket connected');
+	                console.log('hupuAuto socket connected', hupuWsUrl);
 	                remoteIO.emit('passerbyking', {
 	                    game_id: '107',
 	                    page: 'score'
@@ -4198,7 +4181,9 @@
 	                    _this.scorePanel.toggleTimer1(const_1.TimerState.RUNNING);
 	                };
 	                if (eventMap[event]) {
-	                    eventMap[event]();
+	                    TweenEx_1.TweenEx.delayedCall(_this.delayTimeMS, function () {
+	                        eventMap[event]();
+	                    });
 	                }
 	            });
 	        });
@@ -4231,147 +4216,7 @@
 
 
 /***/ },
-/* 59 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var Fx_1 = __webpack_require__(45);
-	var PixiEx_1 = __webpack_require__(35);
-	var const_1 = __webpack_require__(33);
-	var ScorePanel2 = (function () {
-	    function ScorePanel2(parent) {
-	        var _this = this;
-	        var ctn = new PIXI.Container();
-	        ctn.y = const_1.ViewConst.STAGE_HEIGHT - 132;
-	        parent.addChild(ctn);
-	        this.ctn = ctn;
-	        ctn.addChild(PixiEx_1.newBitmap({ url: '/img/panel/score/bg.png' }));
-	        var timeText = this.timeText = new PIXI.Text("99:99", { fill: "#ffffffff" });
-	        timeText.x = const_1.ViewConst.STAGE_WIDTH * .5 - 28;
-	        timeText.y = 100;
-	        ctn.addChild(timeText);
-	        var px = 855;
-	        PixiEx_1.loadRes("/img/panel/stage1v1/scoreNum.png", function (img) {
-	            var tex = PixiEx_1.imgToTex(img);
-	            var sheet = {
-	                text: '0',
-	                animations: {
-	                    "0": 1, "1": 2, "2": 3, "3": 4, "4": 5,
-	                    "5": 6, "6": 7, "7": 8, "8": 9, "9": 0
-	                },
-	                texture: tex,
-	                frames: [[0, 0, 40, 54],
-	                    [41, 0, 40, 54],
-	                    [0, 55, 40, 54],
-	                    [41, 55, 40, 54],
-	                    [82, 0, 40, 54],
-	                    [82, 55, 40, 54],
-	                    [123, 0, 40, 54],
-	                    [123, 55, 40, 54],
-	                    [0, 110, 40, 54],
-	                    [41, 110, 40, 54]]
-	            };
-	            var leftScoreNum = new PixiEx_1.BitmapText(sheet);
-	            _this.leftScoreNum = leftScoreNum;
-	            leftScoreNum.x = px;
-	            leftScoreNum.y = 60;
-	            leftScoreNum.align = 'center';
-	            ctn.addChild(leftScoreNum);
-	            var rightScoreNum = new PixiEx_1.BitmapText(sheet);
-	            _this.rightScoreNum = rightScoreNum;
-	            rightScoreNum.x = px + 175;
-	            rightScoreNum.y = leftScoreNum.y;
-	            rightScoreNum.align = 'center';
-	            ctn.addChild(rightScoreNum);
-	        });
-	        this.initFoulCircle();
-	    }
-	    ScorePanel2.prototype.initFoulCircle = function () {
-	        var circle;
-	        this.leftFoulCircleArr = [];
-	        this.rightFoulCircleArr = [];
-	        for (var i = 0; i < 4; i++) {
-	            circle = PixiEx_1.newBitmap({ url: '/img/panel/score/foul.png' });
-	            circle.x = 604 + i * 9;
-	            circle.y = 120 - i * 15;
-	            circle.alpha = 0;
-	            this.ctn.addChild(circle);
-	            this.leftFoulCircleArr.push(circle);
-	            circle = PixiEx_1.newBitmap({ url: '/img/panel/score/foul.png' });
-	            circle.x = 1318 - i * 9;
-	            circle.scale.x = -1;
-	            circle.y = 120 - i * 15;
-	            circle.alpha = 0;
-	            this.ctn.addChild(circle);
-	            this.rightFoulCircleArr.push(circle);
-	        }
-	        this.leftFoulHint = PixiEx_1.newBitmap({ url: '/img/panel/score/foulHint.png' });
-	        this.leftFoulHint.x = 590;
-	        this.leftFoulHint.y = 62;
-	        this.ctn.addChild(this.leftFoulHint);
-	        this.rightFoulHint = PixiEx_1.newBitmap({ url: '/img/panel/score/foulHint.png' });
-	        this.rightFoulHint.scale.x = -1;
-	        this.rightFoulHint.x = 1332;
-	        this.rightFoulHint.y = 62;
-	        this.ctn.addChild(this.rightFoulHint);
-	        this.rightFoulHint.alpha = this.leftFoulHint.alpha = 0;
-	    };
-	    ScorePanel2.prototype.toggleTimer1 = function (state) {
-	    };
-	    ScorePanel2.prototype.resetTimer = function () {
-	    };
-	    ScorePanel2.prototype.set35ScoreLight = function (winScore) {
-	    };
-	    ScorePanel2.prototype.setGameIdx = function (gameIdx) {
-	    };
-	    ScorePanel2.prototype.resetScore = function () {
-	        this.setLeftScore(0);
-	        this.setRightScore(0);
-	        this.setLeftFoul(0);
-	        this.setRightFoul(0);
-	    };
-	    ScorePanel2.prototype.setLeftScore = function (leftScore) {
-	        this.leftScoreNum.text = String(leftScore);
-	    };
-	    ScorePanel2.prototype.setRightScore = function (rightScore) {
-	        this.rightScoreNum.text = String(rightScore);
-	    };
-	    ScorePanel2.prototype.setLeftFoul = function (leftFoul) {
-	        this._setFoul(leftFoul, this.leftFoulCircleArr, this.leftFoulHint);
-	    };
-	    ScorePanel2.prototype._setFoul = function (foul, circleArr, hint) {
-	        foul = Number(foul);
-	        if (foul > 4)
-	            foul = 4;
-	        var c;
-	        for (var i = 0; i < circleArr.length; i++) {
-	            if (i < foul) {
-	                if (circleArr[i].alpha == 0) {
-	                    Fx_1.blink2({
-	                        target: circleArr[i]
-	                    });
-	                }
-	            }
-	            else {
-	            }
-	        }
-	        if (foul > 3) {
-	            console.log("foul: 4");
-	            Fx_1.blink2({ target: hint, time: 150 });
-	        }
-	        else {
-	            hint.alpha = 0;
-	        }
-	    };
-	    ScorePanel2.prototype.setRightFoul = function (rightFoul) {
-	        this._setFoul(rightFoul, this.rightFoulCircleArr, this.rightFoulHint);
-	    };
-	    return ScorePanel2;
-	}());
-	exports.ScorePanel2 = ScorePanel2;
-
-
-/***/ },
+/* 59 */,
 /* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -5238,6 +5083,142 @@
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        game id:{{gameId}}\r\n        <a class=\"button\" @click=\"onClkRank\">个人战团排行</a>\r\n        <a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>\r\n    </div>\r\n</div>\r\n";
+
+/***/ },
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var SpriteGroup_1 = __webpack_require__(44);
+	var const_1 = __webpack_require__(33);
+	var JsFunc_1 = __webpack_require__(24);
+	var PixiEx_1 = __webpack_require__(35);
+	var skin = {
+	    light: {
+	        bg: '/img/panel/score2017/bgLight.png',
+	        score: '/img/panel/score2017/scoreLight.png',
+	        foul: '/img/panel/score2017/foul.png',
+	        section1: '/img/panel/score2017/section1Light.png',
+	        section2: '/img/panel/score2017/section2Light.png'
+	    },
+	    dark: {
+	        bg: '/img/panel/score2017/bgDark.png',
+	        score: '/img/panel/score2017/scoreDark.png',
+	        foul: '/img/panel/score2017/foul.png',
+	        section1: '/img/panel/score2017/section1Dark.png',
+	        section2: '/img/panel/score2017/section2Dark.png'
+	    }
+	};
+	var Score2017 = (function () {
+	    function Score2017(stage, isDark) {
+	        var _this = this;
+	        if (isDark === void 0) { isDark = false; }
+	        this.stage = stage;
+	        if (isDark)
+	            this.skin = skin.dark;
+	        else
+	            this.skin = skin.light;
+	        var bg = PixiEx_1.newBitmap({ url: this.skin.bg });
+	        stage.addChild(bg);
+	        var ctn = new PIXI.Container;
+	        bg.addChild(ctn);
+	        ctn.y = const_1.ViewConst.STAGE_HEIGHT - 300;
+	        this.gameSection = new PIXI.Sprite;
+	        this.gameSection.x = 926;
+	        this.gameSection.y = 174;
+	        ctn.addChild(this.gameSection);
+	        PixiEx_1.loadRes(this.skin.score, function (img) {
+	            var tex = PixiEx_1.imgToTex(img);
+	            var sheet = {
+	                text: '0',
+	                animations: {
+	                    "0": 0, "1": 1, "2": 2, "3": 3, "4": 4,
+	                    "5": 5, "6": 6, "7": 7, "8": 9, "9": 8
+	                },
+	                texture: tex,
+	                frames: [[0, 0, 110, 128],
+	                    [111, 0, 110, 128],
+	                    [0, 129, 110, 128],
+	                    [111, 129, 110, 128],
+	                    [222, 0, 110, 128],
+	                    [222, 129, 110, 128],
+	                    [0, 258, 110, 128],
+	                    [111, 258, 110, 128],
+	                    [222, 258, 110, 128],
+	                    [333, 0, 110, 128]]
+	            };
+	            var leftScoreNum = new PixiEx_1.BitmapText(sheet);
+	            _this.leftScoreText = leftScoreNum;
+	            leftScoreNum.x = 765;
+	            leftScoreNum.y = 130;
+	            leftScoreNum.align = 'center';
+	            ctn.addChild(leftScoreNum);
+	            var rightScoreNum = new PixiEx_1.BitmapText(sheet);
+	            _this.rightScoreText = rightScoreNum;
+	            rightScoreNum.x = leftScoreNum.x + 275;
+	            rightScoreNum.y = leftScoreNum.y;
+	            rightScoreNum.align = 'center';
+	            ctn.addChild(rightScoreNum);
+	        });
+	        var lf = new SpriteGroup_1.SpriteGroup({ dir: SpriteGroup_1.Direction.e, invert: 29, img: this.skin.foul, count: 4 });
+	        ctn.addChild(lf);
+	        lf.x = 771;
+	        lf.y = 262;
+	        this.leftFoul = lf;
+	        var rf = new SpriteGroup_1.SpriteGroup({ dir: SpriteGroup_1.Direction.w, invert: 29, img: this.skin.foul, count: 4 });
+	        ctn.addChild(rf);
+	        rf.x = 1037;
+	        rf.y = lf.y;
+	        this.rightFoul = rf;
+	    }
+	    Score2017.prototype.set35ScoreLight = function (winScore) {
+	    };
+	    Score2017.prototype.setGameIdx = function (gameIdx, isMaster) {
+	        var _this = this;
+	        if (isMaster === void 0) { isMaster = false; }
+	        if (isMaster) {
+	            console.log('isMaster', isMaster);
+	            if (!this.gameSection2)
+	                JsFunc_1.loadImg(this.skin.section2, function (img) {
+	                    _this.gameSection2 = PixiEx_1.imgToTex(img);
+	                    _this.gameSection.texture = _this.gameSection2;
+	                });
+	            else
+	                this.gameSection.texture = this.gameSection2;
+	        }
+	        else {
+	            console.log('isMaster', isMaster);
+	            if (!this.gameSection1)
+	                JsFunc_1.loadImg(this.skin.section1, function (img) {
+	                    _this.gameSection1 = PixiEx_1.imgToTex(img);
+	                    _this.gameSection.texture = _this.gameSection1;
+	                });
+	            else
+	                this.gameSection.texture = this.gameSection1;
+	        }
+	    };
+	    Score2017.prototype.setLeftScore = function (v) {
+	        this.leftScoreText.text = v + '';
+	    };
+	    Score2017.prototype.setRightScore = function (v) {
+	        this.rightScoreText.text = v + '';
+	    };
+	    Score2017.prototype.setLeftFoul = function (v) {
+	        this.leftFoul.setNum(v);
+	    };
+	    Score2017.prototype.setRightFoul = function (v) {
+	        this.rightFoul.setNum(v);
+	    };
+	    Score2017.prototype.resetTimer = function () {
+	    };
+	    Score2017.prototype.toggleTimer1 = function (v) {
+	    };
+	    Score2017.prototype.resetScore = function () {
+	    };
+	    return Score2017;
+	}());
+	exports.Score2017 = Score2017;
+
 
 /***/ }
 /******/ ]);

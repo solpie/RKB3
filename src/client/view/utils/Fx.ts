@@ -1,18 +1,18 @@
 import { TweenEx } from './TweenEx';
 //delay in ms
 export function delayCall(delay, callback) {
-    createjs.Tween.get(this).wait(delay).call(callback);
+    // createjs.Tween.get(this).wait(delay).call(callback);
     // setTimeout(callback, delay/1000);
 }
 
 export function blink(target, time = 80, loop = false) {
     var blink = time;
-    createjs.Tween.get(target, { loop: loop })
-        .to({ alpha: 1 }, blink)
-        .to({ alpha: 0 }, blink)
-        .to({ alpha: 1 }, blink)
-        .to({ alpha: 0 }, blink)
-        .to({ alpha: 1 }, blink);
+    // createjs.Tween.get(target, { loop: loop })
+    //     .to({ alpha: 1 }, blink)
+    //     .to({ alpha: 0 }, blink)
+    //     .to({ alpha: 1 }, blink)
+    //     .to({ alpha: 0 }, blink)
+    //     .to({ alpha: 1 }, blink);
 }
 //time sec
 export function blink2(options: { target: any, time?: number, loop?: number, callback?: any }) {
@@ -51,9 +51,9 @@ export function blink3(target, time = 80, loop = false) {
 
 export function fadeOutCtn(ctn) {
     console.log(this, "show fade Out WinPanel");
-    createjs.Tween.get(ctn).to({ alpha: 0 }, 200)
-        .call(function () {
-            ctn.alpha = 1;
-            ctn.removeAllChildren();
-        });
+    // createjs.Tween.get(ctn).to({ alpha: 0 }, 200)
+    //     .call(function () {
+    //         ctn.alpha = 1;
+    //         ctn.removeAllChildren();
+    //     });
 }

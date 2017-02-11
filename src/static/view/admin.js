@@ -574,10 +574,9 @@
 	    };
 	    HomeView.prototype.updateLinks = function (gameId) {
 	        this.links = [
-	            { title: "战团排行", url: "/panel/#/ol/ob/" + gameId + "?panel=score" },
-	            { title: "比分面板", url: "/panel/#/rkb/ob/" + gameId },
+	            { title: "比分面板", url: "/panel/#/ol/ob/" + gameId + "?panel=score" },
 	            { title: "比分面板 操作", url: "/panel/#/rkb/op/" + gameId },
-	            { title: "战团排行 操作", url: "/panel/#/ol/op/" + gameId },
+	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
 	            { title: "---------------------Final--------------------", url: "/panel/#/ol/ob/0?panel=bracket" },
 	            { title: "K.O.A", url: "/panel/#/koa/op/" },
 	            { title: "战团双败", url: "/panel/#/ol/ob/0?panel=bracket" },
@@ -774,7 +773,7 @@
 	var WebJsFunc_1 = __webpack_require__(22);
 	exports.getHupuWS = function (callback) {
 	    var url = 'http://test.jrstvapi.hupu.com/zhubo/getNodeServer';
-	    $.get(WebJsFunc_1.proxy('http://test.jrstvapi.hupu.com/zhubo/getNodeServer'), function (res) {
+	    $.get(WebJsFunc_1.proxy(url), function (res) {
 	        var a = JSON.parse(res);
 	        if (a && a.length) {
 	            callback(a[0]);

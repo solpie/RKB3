@@ -8,7 +8,6 @@ import {CountDownPanel} from "./CountDownPanel";
 import {RKBView} from "./RKBOPView";
 import {delayCall} from "../../utils/Fx";
 import {CommandId} from "../../Command";
-import Tween = createjs.Tween;
 /**
  * Created by toramisu on 2016/10/24.
  */
@@ -26,7 +25,7 @@ export class StageRKBView extends BasePanelView {
 
     constructor($opView: RKBView) {
         super(PanelId.rkbPanel);
-        this.initCanvas();
+        // this.initCanvas();
 
         this.$opView = $opView;
 
