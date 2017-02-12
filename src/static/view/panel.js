@@ -3991,6 +3991,9 @@
 	        this.template = __webpack_require__(67);
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
+	        this.delayTime = VueBase_1.VueBase.PROP;
+	        this.liveTime = VueBase_1.VueBase.PROP;
+	        this.panelTime = VueBase_1.VueBase.PROP;
 	        this.opReq = function (cmdId, param, callback) {
 	            $.ajax({
 	                url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
@@ -4009,6 +4012,18 @@
 	            onClkRank: function () {
 	                console.log('onClkRank');
 	                this.opReq("" + Command_1.CommandId.cs_showRank, { _: null });
+	            },
+	            onClkStartTimer: function () {
+	                console.log('onClkStartTimer');
+	                this.opReq("" + Command_1.CommandId.cs_startTimer, { _: null });
+	            },
+	            onClkPauseTimer: function () {
+	                this.opReq("" + Command_1.CommandId.cs_pauseTimer, { _: null });
+	            },
+	            onClkSetDelay: function () {
+	            },
+	            onClkResetTimer: function () {
+	                this.opReq("" + Command_1.CommandId.cs_resetTimer, { _: null });
 	            },
 	            onClkBracket: function () {
 	                this.opReq("" + Command_1.CommandId.cs_showBracket, { _: null });
@@ -4045,11 +4060,6 @@
 	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
 	        localWs.on('connect', function (msg) {
 	            console.log('connect', window.location.host);
-	            localWs.emit("opUrl", { opUrl: window.location.host });
-	        })
-	            .on("" + Command_1.CommandId.sc_showRank, function (data) {
-	            console.log("CommandId.sc_showRank", data);
-	            _this.showRank();
 	        })
 	            .on("" + Command_1.CommandId.sc_showBracket, function (data) {
 	            console.log("CommandId.sc_showBracket", data);
@@ -4125,7 +4135,24 @@
 	        this.scorePanel = new Score2017_1.Score2017(stage);
 	        console.log('new ScoreView');
 	        this.initRemote();
+	        this.initLocal();
 	    }
+	    ScoreView.prototype.initLocal = function () {
+	        var _this = this;
+	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
+	        localWs.on('connect', function (msg) {
+	            console.log('connect', window.location.host);
+	        })
+	            .on("" + Command_1.CommandId.sc_startTimer, function (data) {
+	            _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
+	        })
+	            .on("" + Command_1.CommandId.sc_pauseTimer, function (data) {
+	            _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
+	        })
+	            .on("" + Command_1.CommandId.sc_resetTimer, function (data) {
+	            _this.scorePanel.resetTimer();
+	        });
+	    };
 	    ScoreView.prototype.initRemote = function () {
 	        var _this = this;
 	        HupuAPI_1.getHupuWS(function (hupuWsUrl) {
@@ -5087,7 +5114,7 @@
 /* 67 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        game id:{{gameId}}\r\n        <a class=\"button\" @click=\"onClkRank\">个人战团排行</a>\r\n        <a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>\r\n    </div>\r\n</div>\r\n";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        game id:{{gameId}}\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>\r\n\r\n\r\n        <h1>game id:{{gameId}}</h1>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 68 */

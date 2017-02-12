@@ -13,20 +13,33 @@ let rankView: RankView
 let bracketView: Bracket
 let scoreView: ScoreView
 let canvasStage
+// const opReq = (cmdId: string, param: any, callback: any) => {
+//     $.ajax({
+//         url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
+//         type: 'post',
+//         data: JSON.stringify(param),
+//         headers: { "Content-Type": "application/json" },
+//         dataType: 'json',
+//         success: callback
+//     });
+// }
 class StageOnlineView extends VueBase {
     template = require('./stage-online.html')
     basePanelArr: BasePanelView[]
     gameId = VueBase.String
     isOp = VueBase.PROP
+    delayTime = VueBase.PROP
+    liveTime = VueBase.PROP
+    panelTime = VueBase.PROP
     opReq = (cmdId: string, param: any, callback: any) => {
-            $.ajax({
-                url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
-                type: 'post',
-                data: JSON.stringify(param),
-                headers:{"Content-Type": "application/json"},
-                dataType: 'json',
-                success:callback
-            });
+        $.ajax({
+            url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
+            type: 'post',
+            data: JSON.stringify(param),
+            headers: { "Content-Type": "application/json" },
+            dataType: 'json',
+            success: callback
+        });
     }
 
     constructor() {
@@ -67,12 +80,12 @@ class StageOnlineView extends VueBase {
         let localWs = io.connect(`/${PanelId.rkbPanel}`)
         localWs.on('connect', (msg) => {
             console.log('connect', window.location.host)
-            localWs.emit("opUrl", { opUrl: window.location.host })
+            // localWs.emit("opUrl", { opUrl: window.location.host })
         })
-            .on(`${CommandId.sc_showRank}`, (data) => {
-                console.log("CommandId.sc_showRank", data)
-                this.showRank()
-            })
+            // .on(`${CommandId.sc_showRank}`, (data) => {
+            //     console.log("CommandId.sc_showRank", data)
+            //     this.showRank()
+            // })
             .on(`${CommandId.sc_showBracket}`, (data) => {
                 console.log("CommandId.sc_showBracket", data)
                 this.showBracket()
@@ -80,6 +93,7 @@ class StageOnlineView extends VueBase {
             .on(`${CommandId.sc_hideOnlinePanel}`, (data) => {
                 this.showOnly("")
             })
+
     }
 
     showRank() {
@@ -130,6 +144,18 @@ class StageOnlineView extends VueBase {
         onClkRank() {
             console.log('onClkRank')
             this.opReq(`${CommandId.cs_showRank}`, { _: null })
+        },
+        onClkStartTimer() {
+            console.log('onClkStartTimer')
+            this.opReq(`${CommandId.cs_startTimer}`, { _: null })
+        },
+        onClkPauseTimer() {
+            this.opReq(`${CommandId.cs_pauseTimer}`, { _: null })
+        },
+        onClkSetDelay() {
+        },
+        onClkResetTimer() {
+            this.opReq(`${CommandId.cs_resetTimer}`, { _: null })
         },
         onClkBracket() {
             this.opReq(`${CommandId.cs_showBracket}`, { _: null })

@@ -38,6 +38,7 @@ export class Score2017 {
     leftFoul: SpriteGroup
     rightFoul: SpriteGroup
     timer: TextTimer
+    
 
     constructor(stage: PIXI.Container, isDark = false) {
         this.stage = stage

@@ -20,8 +20,24 @@ export class ScoreView extends BasePanelView {
         console.log('new ScoreView')
 
         this.initRemote()
+        this.initLocal()
     }
-
+    initLocal() {
+        let localWs = io.connect(`/${PanelId.rkbPanel}`)
+        localWs.on('connect', (msg) => {
+            console.log('connect', window.location.host)
+            // localWs.emit("opUrl", { opUrl: window.location.host })
+        })
+            .on(`${CommandId.sc_startTimer}`, (data) => {
+                this.scorePanel.toggleTimer(TimerState.RUNNING)
+            })
+            .on(`${CommandId.sc_pauseTimer}`, (data) => {
+                this.scorePanel.toggleTimer(TimerState.PAUSE)
+            })
+            .on(`${CommandId.sc_resetTimer}`, (data) => {
+                this.scorePanel.resetTimer()
+            })
+    }
     initRemote() {
         // getHupuWs()
         getHupuWS((hupuWsUrl) => {
