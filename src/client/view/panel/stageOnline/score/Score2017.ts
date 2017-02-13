@@ -1,11 +1,14 @@
+import { _avatar } from '../../../utils/HupuAPI';
+import { proxy } from '../../../utils/WebJsFunc';
 import { TextTimer } from '../../../utils/TextTimer';
 import { Direction, SpriteGroup } from '../../../utils/SpriteGroup';
 import { FontName, ViewConst } from '../../../const';
-import { loadImg } from '../../../utils/JsFunc';
+import { loadImg, paddy } from '../../../utils/JsFunc';
 import { BitmapText, imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
 const skin = {
     light: {
         bg: '/img/panel/score2017/bgLight.png',
+        fontColor: '#fff',
         score: '/img/panel/score2017/scoreLight.png',
         foul: '/img/panel/score2017/foul.png',
         section1: '/img/panel/score2017/section1Light.png',
@@ -13,6 +16,7 @@ const skin = {
     },
     dark: {
         bg: '/img/panel/score2017/bgDark.png',
+        fontColor: '#1b5e80',
         score: '/img/panel/score2017/scoreDark.png',
         foul: '/img/panel/score2017/foul.png',
         section1: '/img/panel/score2017/section1Dark.png',
@@ -25,6 +29,15 @@ interface Skin {
     section2: string
     score: string
     foul: string
+    fontColor: string
+}
+function polygon(g: PIXI.Graphics, radius, sides) {
+    if (sides < 3) return;
+    var a = (Math.PI * 2) / sides;
+    g.moveTo(radius, 0);
+    for (var i = 1; i < sides; i++) {
+        g.lineTo(radius * Math.cos(a * i), radius * Math.sin(a * i));
+    }
 }
 export class Score2017 {
     stage: PIXI.Container
@@ -38,7 +51,15 @@ export class Score2017 {
     leftFoul: SpriteGroup
     rightFoul: SpriteGroup
     timer: TextTimer
-    
+    gameIdx: PIXI.Text
+
+    lPlayerName: PIXI.Text
+    lPlayerInfo: PIXI.Text
+    rPlayerName: PIXI.Text
+    rPlayerInfo: PIXI.Text
+
+    lAvatar: PIXI.Sprite
+    rAvatar: PIXI.Sprite
 
     constructor(stage: PIXI.Container, isDark = false) {
         this.stage = stage
@@ -113,6 +134,72 @@ export class Score2017 {
         t.y = 90
         t.setTimeBySec(0)
         this.timer = t
+        let gis = {
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '26px', fill: "#fff",
+            fontWeight: 'bold'
+        }
+        let gi = new PIXI.Text("第00场", gis)
+        this.gameIdx = gi
+        gi.x = 917
+        gi.y = 258
+        ctn.addChild(gi)
+
+        let pns = {
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '31px', fill: this.skin.fontColor,
+            fontWeight: 'bold'
+        }
+        let lpn = new PIXI.Text("111", pns)
+        lpn.y = 155
+        lpn['x0'] = 250
+        this.lPlayerName = lpn
+        ctn.addChild(lpn)
+
+        let lpi = new PIXI.Text("222", pns)
+        lpi.y = 194
+        this.lPlayerInfo = lpi
+        ctn.addChild(lpi)
+
+        let rpn = new PIXI.Text("333", pns)
+        rpn.y = lpn.y
+        rpn.x = 1420
+        this.rPlayerName = rpn
+        ctn.addChild(rpn)
+
+        let rpi = new PIXI.Text("444", pns)
+        rpi.x = rpn.x
+        rpi.y = lpi.y
+        this.rPlayerInfo = rpi
+        ctn.addChild(rpi)
+
+        let lm = new PIXI.Graphics()
+            .beginFill(0xff0000)
+        polygon(lm, 63, 6)
+        lm.x = 628
+        lm.y = 193
+        ctn.addChild(lm)
+
+        let rm = new PIXI.Graphics()
+            .beginFill(0xff0000)
+        polygon(rm, 63, 6)
+        rm.x = 1294
+        rm.y = lm.y
+        ctn.addChild(rm)
+
+        let la = new PIXI.Sprite()
+        la.x = lm.x
+        la.y = lm.y
+        la.mask = lm
+        this.lAvatar = la
+        ctn.addChild(this.lAvatar)
+
+        let ra = new PIXI.Sprite()
+        ra.x = rm.x
+        ra.y = rm.y
+        ra.mask = rm
+        this.rAvatar = ra
+        ctn.addChild(this.rAvatar)
     }
 
     set35ScoreLight(winScore) {
@@ -140,6 +227,7 @@ export class Score2017 {
             else
                 this.gameSection.texture = this.gameSection1
         }
+        this.gameIdx.text = '第' + paddy(gameIdx, 0) + '场'
     }
 
     setLeftScore(v) {
@@ -176,8 +264,29 @@ export class Score2017 {
     //player
     setLeftPlayerInfo(name: string, avatar: string, ft: string) {
         //cm kg
+        this.lPlayerName.text = name
+        this.lPlayerName.x = 500 - this.lPlayerName.width
+        loadRes(avatar, (img) => {
+            let avt = this.lAvatar
+            avt.texture = imgToTex(img)
+            let s = avt.mask.width / img.width
+            avt.x = avt.mask.x - avt.texture.width * .5 * s
+            avt.y = avt.mask.y - avt.texture.height * .5 * s
+            avt.scale.x = avt.scale.y = s
+        }, true);
+        // loadImg(proxy(avatar), (img) => {
+        //     this.lAvatar.texture = imgToTex(img)
+        // })
     }
     setRightPlayerInfo(name: string, avatar: string, ft: string) {
-
+        this.rPlayerName.text = name
+        loadRes(avatar, (img) => {
+            let avt = this.rAvatar
+            avt.texture = imgToTex(img)
+            let s = avt.mask.width / img.width
+            avt.x = avt.mask.x - avt.texture.width * .5 * s
+            avt.y = avt.mask.y - avt.texture.height * .5 * s
+            avt.scale.x = avt.scale.y = s
+        }, true);
     }
 }

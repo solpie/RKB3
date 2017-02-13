@@ -37,6 +37,9 @@ export class ScoreView extends BasePanelView {
             .on(`${CommandId.sc_resetTimer}`, (data) => {
                 this.scorePanel.resetTimer()
             })
+            .on(`${CommandId.sc_setDelayTime}`, (data) => {
+                this.delayTimeMS = data.delayTimeMS
+            })
     }
     initRemote() {
         // getHupuWs()

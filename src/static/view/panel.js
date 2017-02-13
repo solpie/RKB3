@@ -491,6 +491,12 @@
 	            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
 	    return fmt;
 	};
+	function paddy(n, p, c) {
+	    var pad_char = typeof c !== 'undefined' ? c : '0';
+	    var pad = new Array(1 + p).join(pad_char);
+	    return (pad + n).slice(-pad.length);
+	}
+	exports.paddy = paddy;
 
 
 /***/ },
@@ -4021,6 +4027,13 @@
 	                this.opReq("" + Command_1.CommandId.cs_pauseTimer, { _: null });
 	            },
 	            onClkSetDelay: function () {
+	                console.log("onClkSetDelay", this, this.delayTime);
+	                var dt = Number(this.delayTime);
+	                if (dt >= 0) {
+	                    this.delayTimeMS = dt * 1000;
+	                    this.opReq("" + Command_1.CommandId.cs_setDelayTime, { delayTimeMS: this.delayTimeMS, _: null }, function () {
+	                    });
+	                }
 	            },
 	            onClkResetTimer: function () {
 	                this.opReq("" + Command_1.CommandId.cs_resetTimer, { _: null });
@@ -4151,6 +4164,9 @@
 	        })
 	            .on("" + Command_1.CommandId.sc_resetTimer, function (data) {
 	            _this.scorePanel.resetTimer();
+	        })
+	            .on("" + Command_1.CommandId.sc_setDelayTime, function (data) {
+	            _this.delayTimeMS = data.delayTimeMS;
 	        });
 	    };
 	    ScoreView.prototype.initRemote = function () {
@@ -5129,6 +5145,7 @@
 	var skin = {
 	    light: {
 	        bg: '/img/panel/score2017/bgLight.png',
+	        fontColor: '#fff',
 	        score: '/img/panel/score2017/scoreLight.png',
 	        foul: '/img/panel/score2017/foul.png',
 	        section1: '/img/panel/score2017/section1Light.png',
@@ -5136,12 +5153,22 @@
 	    },
 	    dark: {
 	        bg: '/img/panel/score2017/bgDark.png',
+	        fontColor: '#1b5e80',
 	        score: '/img/panel/score2017/scoreDark.png',
 	        foul: '/img/panel/score2017/foul.png',
 	        section1: '/img/panel/score2017/section1Dark.png',
 	        section2: '/img/panel/score2017/section2Dark.png'
 	    }
 	};
+	function polygon(g, radius, sides) {
+	    if (sides < 3)
+	        return;
+	    var a = (Math.PI * 2) / sides;
+	    g.moveTo(radius, 0);
+	    for (var i = 1; i < sides; i++) {
+	        g.lineTo(radius * Math.cos(a * i), radius * Math.sin(a * i));
+	    }
+	}
 	var Score2017 = (function () {
 	    function Score2017(stage, isDark) {
 	        var _this = this;
@@ -5214,6 +5241,64 @@
 	        t.y = 90;
 	        t.setTimeBySec(0);
 	        this.timer = t;
+	        var gis = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '26px', fill: "#fff",
+	            fontWeight: 'bold'
+	        };
+	        var gi = new PIXI.Text("第00场", gis);
+	        this.gameIdx = gi;
+	        gi.x = 917;
+	        gi.y = 258;
+	        ctn.addChild(gi);
+	        var pns = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '31px', fill: this.skin.fontColor,
+	            fontWeight: 'bold'
+	        };
+	        var lpn = new PIXI.Text("111", pns);
+	        lpn.y = 155;
+	        lpn['x0'] = 250;
+	        this.lPlayerName = lpn;
+	        ctn.addChild(lpn);
+	        var lpi = new PIXI.Text("222", pns);
+	        lpi.y = 194;
+	        this.lPlayerInfo = lpi;
+	        ctn.addChild(lpi);
+	        var rpn = new PIXI.Text("333", pns);
+	        rpn.y = lpn.y;
+	        rpn.x = 1420;
+	        this.rPlayerName = rpn;
+	        ctn.addChild(rpn);
+	        var rpi = new PIXI.Text("444", pns);
+	        rpi.x = rpn.x;
+	        rpi.y = lpi.y;
+	        this.rPlayerInfo = rpi;
+	        ctn.addChild(rpi);
+	        var lm = new PIXI.Graphics()
+	            .beginFill(0xff0000);
+	        polygon(lm, 63, 6);
+	        lm.x = 628;
+	        lm.y = 193;
+	        ctn.addChild(lm);
+	        var rm = new PIXI.Graphics()
+	            .beginFill(0xff0000);
+	        polygon(rm, 63, 6);
+	        rm.x = 1294;
+	        rm.y = lm.y;
+	        ctn.addChild(rm);
+	        var la = new PIXI.Sprite();
+	        la.x = lm.x;
+	        la.y = lm.y;
+	        la.mask = lm;
+	        this.lAvatar = la;
+	        ctn.addChild(this.lAvatar);
+	        var ra = new PIXI.Sprite();
+	        ra.x = rm.x;
+	        ra.y = rm.y;
+	        ra.mask = rm;
+	        this.rAvatar = ra;
+	        ctn.addChild(this.rAvatar);
 	    }
 	    Score2017.prototype.set35ScoreLight = function (winScore) {
 	    };
@@ -5240,6 +5325,7 @@
 	            else
 	                this.gameSection.texture = this.gameSection1;
 	        }
+	        this.gameIdx.text = '第' + JsFunc_1.paddy(gameIdx, 0) + '场';
 	    };
 	    Score2017.prototype.setLeftScore = function (v) {
 	        this.leftScoreText.text = v + '';
@@ -5266,8 +5352,29 @@
 	        this.setRightFoul(0);
 	    };
 	    Score2017.prototype.setLeftPlayerInfo = function (name, avatar, ft) {
+	        var _this = this;
+	        this.lPlayerName.text = name;
+	        this.lPlayerName.x = 500 - this.lPlayerName.width;
+	        PixiEx_1.loadRes(avatar, function (img) {
+	            var avt = _this.lAvatar;
+	            avt.texture = PixiEx_1.imgToTex(img);
+	            var s = avt.mask.width / img.width;
+	            avt.x = avt.mask.x - avt.texture.width * .5 * s;
+	            avt.y = avt.mask.y - avt.texture.height * .5 * s;
+	            avt.scale.x = avt.scale.y = s;
+	        }, true);
 	    };
 	    Score2017.prototype.setRightPlayerInfo = function (name, avatar, ft) {
+	        var _this = this;
+	        this.rPlayerName.text = name;
+	        PixiEx_1.loadRes(avatar, function (img) {
+	            var avt = _this.rAvatar;
+	            avt.texture = PixiEx_1.imgToTex(img);
+	            var s = avt.mask.width / img.width;
+	            avt.x = avt.mask.x - avt.texture.width * .5 * s;
+	            avt.y = avt.mask.y - avt.texture.height * .5 * s;
+	            avt.scale.x = avt.scale.y = s;
+	        }, true);
 	    };
 	    return Score2017;
 	}());

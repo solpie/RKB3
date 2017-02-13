@@ -153,6 +153,15 @@ class StageOnlineView extends VueBase {
             this.opReq(`${CommandId.cs_pauseTimer}`, { _: null })
         },
         onClkSetDelay() {
+            console.log("onClkSetDelay", this, this.delayTime);
+            // this.panelTime = this.liveTime
+            let dt = Number(this.delayTime);
+            if (dt >= 0) {
+                this.delayTimeMS = dt * 1000;
+                this.opReq(`${CommandId.cs_setDelayTime}`, { delayTimeMS: this.delayTimeMS, _: null }, () => {
+
+                })
+            }
         },
         onClkResetTimer() {
             this.opReq(`${CommandId.cs_resetTimer}`, { _: null })
