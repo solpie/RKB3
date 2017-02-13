@@ -104,6 +104,8 @@ enum cmdEnum {
     // rkb panel
     cs_resetTimer,
     sc_resetTimer,
+    cs_setTimer,
+    sc_setTimer,
     //koa panel
     cs_startTimer,
     sc_startTimer,

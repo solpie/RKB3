@@ -31,6 +31,7 @@ class StageOnlineView extends VueBase {
     delayTime = VueBase.PROP
     liveTime = VueBase.PROP
     panelTime = VueBase.PROP
+    panelTime2Set = VueBase.PROP
     opReq = (cmdId: string, param: any, callback: any) => {
         $.ajax({
             url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
@@ -117,7 +118,7 @@ class StageOnlineView extends VueBase {
 
     showScore() {
         if (!scoreView) {
-            scoreView = new ScoreView(canvasStage)
+            scoreView = new ScoreView(canvasStage, this.$route)
             this.basePanelArr.push(scoreView)
         }
         this.showOnly(scoreView.name)
@@ -165,6 +166,9 @@ class StageOnlineView extends VueBase {
         },
         onClkResetTimer() {
             this.opReq(`${CommandId.cs_resetTimer}`, { _: null })
+        },
+        onClkSetPanelTime(timeBySec) {
+            this.opReq(`${CommandId.cs_setTimer}`, { _: null,time:Number(timeBySec) })
         },
         onClkBracket() {
             this.opReq(`${CommandId.cs_showBracket}`, { _: null })

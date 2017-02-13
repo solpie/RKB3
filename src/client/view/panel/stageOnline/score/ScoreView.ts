@@ -11,11 +11,16 @@ declare let io;
 export class ScoreView extends BasePanelView {
     scorePanel: Score2017
     delayTimeMS = 0
-    constructor(stage: PIXI.Container) {
+    gameId: any
+    constructor(stage: PIXI.Container, $route) {
         super(PanelId.onlinePanel)
         this.name = PanelId.scorePanel
+        // this.isOp = this.$route.params.op == "op"
+        let darkTheme = $route.query.theme == "dark"
+        this.gameId = $route.params.game_id
 
-        this.scorePanel = new Score2017(stage)
+
+        this.scorePanel = new Score2017(stage, darkTheme)
 
         console.log('new ScoreView')
 
@@ -40,6 +45,9 @@ export class ScoreView extends BasePanelView {
             .on(`${CommandId.sc_setDelayTime}`, (data) => {
                 this.delayTimeMS = data.delayTimeMS
             })
+            .on(`${CommandId.sc_setTimer}`, (data) => {
+                this.scorePanel.setTimer(data.time)
+            })
     }
     initRemote() {
         // getHupuWs()
@@ -47,14 +55,14 @@ export class ScoreView extends BasePanelView {
             let remoteIO = io.connect(hupuWsUrl);
             let setPlayer = (leftPlayer, rightPlayer) => {
                 console.log(leftPlayer)
-                this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.group)
-                this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.group)
+                this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar,leftPlayer.weight,leftPlayer.height, leftPlayer.group)
+                this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar,rightPlayer.weight,rightPlayer.height, rightPlayer.group)
             };
 
             remoteIO.on('connect', () => {
                 console.log('hupuAuto socket connected', hupuWsUrl);
                 remoteIO.emit('passerbyking', {
-                    game_id: '107',
+                    game_id: this.gameId,
                     page: 'score'
                 })
             });
@@ -65,20 +73,19 @@ export class ScoreView extends BasePanelView {
                 console.log('event:', event, data);
 
                 eventMap['init'] = () => {
-                    console.log('init', data, "visible");
-                    // this.scorePanel.ctn.visible = this.isScorePanelVisible;
+                    console.log('init', data);
                     this.scorePanel.set35ScoreLight(data.winScore);
-                    this.scorePanel.setGameIdx(data.gameIdx);
+                    this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType) == 2);
                     setPlayer(data.player.left, data.player.right);
                     this.scorePanel.setLeftScore(data.player.left.leftScore);
                     this.scorePanel.setRightScore(data.player.right.rightScore);
                     this.scorePanel.setLeftFoul(data.player.left.leftFoul);
                     this.scorePanel.setRightFoul(data.player.right.rightFoul);
 
-                    if (data.status == 0) {//status字段吧 0 进行中 1已结束
-                        this.scorePanel.resetTimer();
-                        this.scorePanel.toggleTimer(TimerState.RUNNING);
-                    }
+                    // if (data.status == 0) {//status字段吧 0 进行中 1已结束
+                    //     this.scorePanel.resetTimer();
+                    //     this.scorePanel.toggleTimer(TimerState.RUNNING);
+                    // }
 
 
                     //setup timer
@@ -97,40 +104,7 @@ export class ScoreView extends BasePanelView {
                     //     this.scorePanel.toggleTimer1(TimerState.PAUSE);
                     // });
                     // this.scorePanel.setRightFoul(3)
-                    this.scorePanel.setLeftFoul(4)
-                    // var i = 0
-                    // new TweenEx(this.scorePanel)
-                    //     .delay(1000)
-                    //     .call(() => {
-                    //         this.scorePanel.setRightScore(i)
-                    //         this.scorePanel.setLeftScore(++i)
-                    //     })
-                    //     .delay(1000)
-                    //     .call(() => {
-                    //         this.scorePanel.setRightScore(i)
-                    //         this.scorePanel.setLeftScore(++i)
-                    //     })
-                    //     .delay(1000)
-                    //     .call(() => {
-                    //         this.scorePanel.setRightScore(i)
-                    //         this.scorePanel.setLeftScore(++i)
-                    //     })
-                    //     .delay(1000)
-                    //     .call(() => {
-                    //         this.scorePanel.setRightScore(i)
-                    //         this.scorePanel.setLeftScore(++i)
-                    //     })
-                    //     .delay(1000)
-                    //     .call(() => {
-                    //         this.scorePanel.setRightScore(i)
-                    //         this.scorePanel.setLeftScore(++i)
-                    //     })
-                    //     .delay(1000)
-                    //     .call(() => {
-                    //         this.scorePanel.setRightScore(i)
-                    //         this.scorePanel.setLeftScore(++i)
-                    //     })
-                    //     .start()
+                    // this.scorePanel.setLeftFoul(4)
                 };
 
                 eventMap['updateScore'] = () => {
@@ -149,16 +123,22 @@ export class ScoreView extends BasePanelView {
                     }
                 };
 
+                eventMap['timeStart'] = () => {
+                    console.log('timeStart', data);
+                    this.scorePanel.toggleTimer(TimerState.RUNNING);
+                }
                 eventMap['startGame'] = () => {
                     console.log('startGame', data);
                     this.scorePanel.set35ScoreLight(data.winScore);
                     this.scorePanel.setGameIdx(data.gameIdx);
                     setPlayer(data.player.left, data.player.right);
                     // window.location.reload();
+                    this.scorePanel.toggleTimer(TimerState.PAUSE);
                     this.scorePanel.resetScore();
                     this.scorePanel.resetTimer();
-                    this.scorePanel.toggleTimer(TimerState.RUNNING);
                 };
+
+
 
                 // eventMap['commitGame'] = ()=> {
                 //     if (this.isScorePanelVisible) {

@@ -3348,69 +3348,71 @@
 	    cmdEnum[cmdEnum["sc_hideOnlinePanel"] = 87] = "sc_hideOnlinePanel";
 	    cmdEnum[cmdEnum["cs_resetTimer"] = 88] = "cs_resetTimer";
 	    cmdEnum[cmdEnum["sc_resetTimer"] = 89] = "sc_resetTimer";
-	    cmdEnum[cmdEnum["cs_startTimer"] = 90] = "cs_startTimer";
-	    cmdEnum[cmdEnum["sc_startTimer"] = 91] = "sc_startTimer";
-	    cmdEnum[cmdEnum["cs_pauseTimer"] = 92] = "cs_pauseTimer";
-	    cmdEnum[cmdEnum["sc_pauseTimer"] = 93] = "sc_pauseTimer";
-	    cmdEnum[cmdEnum["cs_showPickup"] = 94] = "cs_showPickup";
-	    cmdEnum[cmdEnum["sc_showPickup"] = 95] = "sc_showPickup";
-	    cmdEnum[cmdEnum["cs_startGame"] = 96] = "cs_startGame";
-	    cmdEnum[cmdEnum["sc_startGame"] = 97] = "sc_startGame";
-	    cmdEnum[cmdEnum["cs_commitGame"] = 98] = "cs_commitGame";
-	    cmdEnum[cmdEnum["sc_commitGame"] = 99] = "sc_commitGame";
-	    cmdEnum[cmdEnum["cs_commitTeam"] = 100] = "cs_commitTeam";
-	    cmdEnum[cmdEnum["sc_commitTeam"] = 101] = "sc_commitTeam";
-	    cmdEnum[cmdEnum["cs_toggleTimer"] = 102] = "cs_toggleTimer";
-	    cmdEnum[cmdEnum["sc_toggleTimer"] = 103] = "sc_toggleTimer";
-	    cmdEnum[cmdEnum["cs_setBlood"] = 104] = "cs_setBlood";
-	    cmdEnum[cmdEnum["sc_setBlood"] = 105] = "sc_setBlood";
-	    cmdEnum[cmdEnum["cs_setFoul"] = 106] = "cs_setFoul";
-	    cmdEnum[cmdEnum["sc_setFoul"] = 107] = "sc_setFoul";
-	    cmdEnum[cmdEnum["cs_setSt"] = 108] = "cs_setSt";
-	    cmdEnum[cmdEnum["sc_setSt"] = 109] = "sc_setSt";
-	    cmdEnum[cmdEnum["cs_hideSt"] = 110] = "cs_hideSt";
-	    cmdEnum[cmdEnum["sc_hideSt"] = 111] = "sc_hideSt";
-	    cmdEnum[cmdEnum["cs_ftBracketInfo"] = 112] = "cs_ftBracketInfo";
-	    cmdEnum[cmdEnum["sc_ftBracketInfo"] = 113] = "sc_ftBracketInfo";
-	    cmdEnum[cmdEnum["cs_showHeaderText"] = 114] = "cs_showHeaderText";
-	    cmdEnum[cmdEnum["sc_showHeaderText"] = 115] = "sc_showHeaderText";
-	    cmdEnum[cmdEnum["cs_5v5score"] = 116] = "cs_5v5score";
-	    cmdEnum[cmdEnum["sc_5v5score"] = 117] = "sc_5v5score";
-	    cmdEnum[cmdEnum["cs_5v5timeup"] = 118] = "cs_5v5timeup";
-	    cmdEnum[cmdEnum["sc_5v5timeup"] = 119] = "sc_5v5timeup";
-	    cmdEnum[cmdEnum["cs_5v5queter"] = 120] = "cs_5v5queter";
-	    cmdEnum[cmdEnum["sc_5v5queter"] = 121] = "sc_5v5queter";
-	    cmdEnum[cmdEnum["cs_5v5toggleTimer"] = 122] = "cs_5v5toggleTimer";
-	    cmdEnum[cmdEnum["sc_5v5toggleTimer"] = 123] = "sc_5v5toggleTimer";
-	    cmdEnum[cmdEnum["cs_5v5resetTimer"] = 124] = "cs_5v5resetTimer";
-	    cmdEnum[cmdEnum["sc_5v5resetTimer"] = 125] = "sc_5v5resetTimer";
-	    cmdEnum[cmdEnum["cs_5v5setPlayer"] = 126] = "cs_5v5setPlayer";
-	    cmdEnum[cmdEnum["sc_5v5setPlayer"] = 127] = "sc_5v5setPlayer";
-	    cmdEnum[cmdEnum["cs_5v5hidePlayer"] = 128] = "cs_5v5hidePlayer";
-	    cmdEnum[cmdEnum["sc_5v5hidePlayer"] = 129] = "sc_5v5hidePlayer";
-	    cmdEnum[cmdEnum["cs_5v5setTimeString"] = 130] = "cs_5v5setTimeString";
-	    cmdEnum[cmdEnum["sc_5v5setTimeString"] = 131] = "sc_5v5setTimeString";
-	    cmdEnum[cmdEnum["cs_startingLine"] = 132] = "cs_startingLine";
-	    cmdEnum[cmdEnum["startingLine"] = 133] = "startingLine";
-	    cmdEnum[cmdEnum["cs_hideStartingLine"] = 134] = "cs_hideStartingLine";
-	    cmdEnum[cmdEnum["hideStartingLine"] = 135] = "hideStartingLine";
-	    cmdEnum[cmdEnum["cs_queryPlayerByPos"] = 136] = "cs_queryPlayerByPos";
-	    cmdEnum[cmdEnum["fadeInPlayerPanel"] = 137] = "fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeInPlayerPanel"] = 138] = "cs_fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["fadeOutPlayerPanel"] = 139] = "fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeOutPlayerPanel"] = 140] = "cs_fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["movePlayerPanel"] = 141] = "movePlayerPanel";
-	    cmdEnum[cmdEnum["cs_movePlayerPanel"] = 142] = "cs_movePlayerPanel";
-	    cmdEnum[cmdEnum["initPanel"] = 143] = "initPanel";
-	    cmdEnum[cmdEnum["cs_inScreenScore"] = 144] = "cs_inScreenScore";
-	    cmdEnum[cmdEnum["inScreenScore"] = 145] = "inScreenScore";
-	    cmdEnum[cmdEnum["cs_attack"] = 146] = "cs_attack";
-	    cmdEnum[cmdEnum["attack"] = 147] = "attack";
-	    cmdEnum[cmdEnum["cs_addHealth"] = 148] = "cs_addHealth";
-	    cmdEnum[cmdEnum["addHealth"] = 149] = "addHealth";
-	    cmdEnum[cmdEnum["fadeInOK"] = 150] = "fadeInOK";
-	    cmdEnum[cmdEnum["cs_combo"] = 151] = "cs_combo";
-	    cmdEnum[cmdEnum["combo"] = 152] = "combo";
+	    cmdEnum[cmdEnum["cs_setTimer"] = 90] = "cs_setTimer";
+	    cmdEnum[cmdEnum["sc_setTimer"] = 91] = "sc_setTimer";
+	    cmdEnum[cmdEnum["cs_startTimer"] = 92] = "cs_startTimer";
+	    cmdEnum[cmdEnum["sc_startTimer"] = 93] = "sc_startTimer";
+	    cmdEnum[cmdEnum["cs_pauseTimer"] = 94] = "cs_pauseTimer";
+	    cmdEnum[cmdEnum["sc_pauseTimer"] = 95] = "sc_pauseTimer";
+	    cmdEnum[cmdEnum["cs_showPickup"] = 96] = "cs_showPickup";
+	    cmdEnum[cmdEnum["sc_showPickup"] = 97] = "sc_showPickup";
+	    cmdEnum[cmdEnum["cs_startGame"] = 98] = "cs_startGame";
+	    cmdEnum[cmdEnum["sc_startGame"] = 99] = "sc_startGame";
+	    cmdEnum[cmdEnum["cs_commitGame"] = 100] = "cs_commitGame";
+	    cmdEnum[cmdEnum["sc_commitGame"] = 101] = "sc_commitGame";
+	    cmdEnum[cmdEnum["cs_commitTeam"] = 102] = "cs_commitTeam";
+	    cmdEnum[cmdEnum["sc_commitTeam"] = 103] = "sc_commitTeam";
+	    cmdEnum[cmdEnum["cs_toggleTimer"] = 104] = "cs_toggleTimer";
+	    cmdEnum[cmdEnum["sc_toggleTimer"] = 105] = "sc_toggleTimer";
+	    cmdEnum[cmdEnum["cs_setBlood"] = 106] = "cs_setBlood";
+	    cmdEnum[cmdEnum["sc_setBlood"] = 107] = "sc_setBlood";
+	    cmdEnum[cmdEnum["cs_setFoul"] = 108] = "cs_setFoul";
+	    cmdEnum[cmdEnum["sc_setFoul"] = 109] = "sc_setFoul";
+	    cmdEnum[cmdEnum["cs_setSt"] = 110] = "cs_setSt";
+	    cmdEnum[cmdEnum["sc_setSt"] = 111] = "sc_setSt";
+	    cmdEnum[cmdEnum["cs_hideSt"] = 112] = "cs_hideSt";
+	    cmdEnum[cmdEnum["sc_hideSt"] = 113] = "sc_hideSt";
+	    cmdEnum[cmdEnum["cs_ftBracketInfo"] = 114] = "cs_ftBracketInfo";
+	    cmdEnum[cmdEnum["sc_ftBracketInfo"] = 115] = "sc_ftBracketInfo";
+	    cmdEnum[cmdEnum["cs_showHeaderText"] = 116] = "cs_showHeaderText";
+	    cmdEnum[cmdEnum["sc_showHeaderText"] = 117] = "sc_showHeaderText";
+	    cmdEnum[cmdEnum["cs_5v5score"] = 118] = "cs_5v5score";
+	    cmdEnum[cmdEnum["sc_5v5score"] = 119] = "sc_5v5score";
+	    cmdEnum[cmdEnum["cs_5v5timeup"] = 120] = "cs_5v5timeup";
+	    cmdEnum[cmdEnum["sc_5v5timeup"] = 121] = "sc_5v5timeup";
+	    cmdEnum[cmdEnum["cs_5v5queter"] = 122] = "cs_5v5queter";
+	    cmdEnum[cmdEnum["sc_5v5queter"] = 123] = "sc_5v5queter";
+	    cmdEnum[cmdEnum["cs_5v5toggleTimer"] = 124] = "cs_5v5toggleTimer";
+	    cmdEnum[cmdEnum["sc_5v5toggleTimer"] = 125] = "sc_5v5toggleTimer";
+	    cmdEnum[cmdEnum["cs_5v5resetTimer"] = 126] = "cs_5v5resetTimer";
+	    cmdEnum[cmdEnum["sc_5v5resetTimer"] = 127] = "sc_5v5resetTimer";
+	    cmdEnum[cmdEnum["cs_5v5setPlayer"] = 128] = "cs_5v5setPlayer";
+	    cmdEnum[cmdEnum["sc_5v5setPlayer"] = 129] = "sc_5v5setPlayer";
+	    cmdEnum[cmdEnum["cs_5v5hidePlayer"] = 130] = "cs_5v5hidePlayer";
+	    cmdEnum[cmdEnum["sc_5v5hidePlayer"] = 131] = "sc_5v5hidePlayer";
+	    cmdEnum[cmdEnum["cs_5v5setTimeString"] = 132] = "cs_5v5setTimeString";
+	    cmdEnum[cmdEnum["sc_5v5setTimeString"] = 133] = "sc_5v5setTimeString";
+	    cmdEnum[cmdEnum["cs_startingLine"] = 134] = "cs_startingLine";
+	    cmdEnum[cmdEnum["startingLine"] = 135] = "startingLine";
+	    cmdEnum[cmdEnum["cs_hideStartingLine"] = 136] = "cs_hideStartingLine";
+	    cmdEnum[cmdEnum["hideStartingLine"] = 137] = "hideStartingLine";
+	    cmdEnum[cmdEnum["cs_queryPlayerByPos"] = 138] = "cs_queryPlayerByPos";
+	    cmdEnum[cmdEnum["fadeInPlayerPanel"] = 139] = "fadeInPlayerPanel";
+	    cmdEnum[cmdEnum["cs_fadeInPlayerPanel"] = 140] = "cs_fadeInPlayerPanel";
+	    cmdEnum[cmdEnum["fadeOutPlayerPanel"] = 141] = "fadeOutPlayerPanel";
+	    cmdEnum[cmdEnum["cs_fadeOutPlayerPanel"] = 142] = "cs_fadeOutPlayerPanel";
+	    cmdEnum[cmdEnum["movePlayerPanel"] = 143] = "movePlayerPanel";
+	    cmdEnum[cmdEnum["cs_movePlayerPanel"] = 144] = "cs_movePlayerPanel";
+	    cmdEnum[cmdEnum["initPanel"] = 145] = "initPanel";
+	    cmdEnum[cmdEnum["cs_inScreenScore"] = 146] = "cs_inScreenScore";
+	    cmdEnum[cmdEnum["inScreenScore"] = 147] = "inScreenScore";
+	    cmdEnum[cmdEnum["cs_attack"] = 148] = "cs_attack";
+	    cmdEnum[cmdEnum["attack"] = 149] = "attack";
+	    cmdEnum[cmdEnum["cs_addHealth"] = 150] = "cs_addHealth";
+	    cmdEnum[cmdEnum["addHealth"] = 151] = "addHealth";
+	    cmdEnum[cmdEnum["fadeInOK"] = 152] = "fadeInOK";
+	    cmdEnum[cmdEnum["cs_combo"] = 153] = "cs_combo";
+	    cmdEnum[cmdEnum["combo"] = 154] = "combo";
 	})(cmdEnum || (cmdEnum = {}));
 	exports.CommandId = {};
 	for (var k in cmdEnum) {
@@ -4000,6 +4002,7 @@
 	        this.delayTime = VueBase_1.VueBase.PROP;
 	        this.liveTime = VueBase_1.VueBase.PROP;
 	        this.panelTime = VueBase_1.VueBase.PROP;
+	        this.panelTime2Set = VueBase_1.VueBase.PROP;
 	        this.opReq = function (cmdId, param, callback) {
 	            $.ajax({
 	                url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
@@ -4037,6 +4040,9 @@
 	            },
 	            onClkResetTimer: function () {
 	                this.opReq("" + Command_1.CommandId.cs_resetTimer, { _: null });
+	            },
+	            onClkSetPanelTime: function (timeBySec) {
+	                this.opReq("" + Command_1.CommandId.cs_setTimer, { _: null, time: Number(timeBySec) });
 	            },
 	            onClkBracket: function () {
 	                this.opReq("" + Command_1.CommandId.cs_showBracket, { _: null });
@@ -4101,7 +4107,7 @@
 	    };
 	    StageOnlineView.prototype.showScore = function () {
 	        if (!scoreView) {
-	            scoreView = new ScoreView_1.ScoreView(canvasStage);
+	            scoreView = new ScoreView_1.ScoreView(canvasStage, this.$route);
 	            this.basePanelArr.push(scoreView);
 	        }
 	        this.showOnly(scoreView.name);
@@ -4141,11 +4147,13 @@
 	var BasePanelView_1 = __webpack_require__(34);
 	var ScoreView = (function (_super) {
 	    __extends(ScoreView, _super);
-	    function ScoreView(stage) {
+	    function ScoreView(stage, $route) {
 	        _super.call(this, const_1.PanelId.onlinePanel);
 	        this.delayTimeMS = 0;
 	        this.name = const_1.PanelId.scorePanel;
-	        this.scorePanel = new Score2017_1.Score2017(stage);
+	        var darkTheme = $route.query.theme == "dark";
+	        this.gameId = $route.params.game_id;
+	        this.scorePanel = new Score2017_1.Score2017(stage, darkTheme);
 	        console.log('new ScoreView');
 	        this.initRemote();
 	        this.initLocal();
@@ -4167,6 +4175,9 @@
 	        })
 	            .on("" + Command_1.CommandId.sc_setDelayTime, function (data) {
 	            _this.delayTimeMS = data.delayTimeMS;
+	        })
+	            .on("" + Command_1.CommandId.sc_setTimer, function (data) {
+	            _this.scorePanel.setTimer(data.time);
 	        });
 	    };
 	    ScoreView.prototype.initRemote = function () {
@@ -4175,13 +4186,13 @@
 	            var remoteIO = io.connect(hupuWsUrl);
 	            var setPlayer = function (leftPlayer, rightPlayer) {
 	                console.log(leftPlayer);
-	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.group);
-	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.group);
+	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.group);
+	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.group);
 	            };
 	            remoteIO.on('connect', function () {
 	                console.log('hupuAuto socket connected', hupuWsUrl);
 	                remoteIO.emit('passerbyking', {
-	                    game_id: '107',
+	                    game_id: _this.gameId,
 	                    page: 'score'
 	                });
 	            });
@@ -4190,19 +4201,14 @@
 	                var eventMap = {};
 	                console.log('event:', event, data);
 	                eventMap['init'] = function () {
-	                    console.log('init', data, "visible");
+	                    console.log('init', data);
 	                    _this.scorePanel.set35ScoreLight(data.winScore);
-	                    _this.scorePanel.setGameIdx(data.gameIdx);
+	                    _this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType) == 2);
 	                    setPlayer(data.player.left, data.player.right);
 	                    _this.scorePanel.setLeftScore(data.player.left.leftScore);
 	                    _this.scorePanel.setRightScore(data.player.right.rightScore);
 	                    _this.scorePanel.setLeftFoul(data.player.left.leftFoul);
 	                    _this.scorePanel.setRightFoul(data.player.right.rightFoul);
-	                    if (data.status == 0) {
-	                        _this.scorePanel.resetTimer();
-	                        _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
-	                    }
-	                    _this.scorePanel.setLeftFoul(4);
 	                };
 	                eventMap['updateScore'] = function () {
 	                    console.log('updateScore', data);
@@ -4219,14 +4225,18 @@
 	                        _this.scorePanel.setLeftFoul(data.leftFoul);
 	                    }
 	                };
+	                eventMap['timeStart'] = function () {
+	                    console.log('timeStart', data);
+	                    _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
+	                };
 	                eventMap['startGame'] = function () {
 	                    console.log('startGame', data);
 	                    _this.scorePanel.set35ScoreLight(data.winScore);
 	                    _this.scorePanel.setGameIdx(data.gameIdx);
 	                    setPlayer(data.player.left, data.player.right);
+	                    _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
 	                    _this.scorePanel.resetScore();
 	                    _this.scorePanel.resetTimer();
-	                    _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
 	                };
 	                if (eventMap[event]) {
 	                    TweenEx_1.TweenEx.delayedCall(_this.delayTimeMS, function () {
@@ -5130,7 +5140,7 @@
 /* 67 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        game id:{{gameId}}\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>\r\n\r\n\r\n        <h1>game id:{{gameId}}</h1>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n    </div>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        game id:{{gameId}}\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>\r\n\r\n\r\n        <h1>game id:{{gameId}}</h1>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 68 */
@@ -5256,21 +5266,25 @@
 	            fontSize: '31px', fill: this.skin.fontColor,
 	            fontWeight: 'bold'
 	        };
-	        var lpn = new PIXI.Text("111", pns);
+	        var pis = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '22px', fill: this.skin.fontColor,
+	            fontWeight: 'bold'
+	        };
+	        var lpn = new PIXI.Text("", pns);
 	        lpn.y = 155;
-	        lpn['x0'] = 250;
 	        this.lPlayerName = lpn;
 	        ctn.addChild(lpn);
-	        var lpi = new PIXI.Text("222", pns);
-	        lpi.y = 194;
+	        var lpi = new PIXI.Text("", pis);
+	        lpi.y = 200;
 	        this.lPlayerInfo = lpi;
 	        ctn.addChild(lpi);
-	        var rpn = new PIXI.Text("333", pns);
+	        var rpn = new PIXI.Text("", pns);
 	        rpn.y = lpn.y;
 	        rpn.x = 1420;
 	        this.rPlayerName = rpn;
 	        ctn.addChild(rpn);
-	        var rpi = new PIXI.Text("444", pns);
+	        var rpi = new PIXI.Text("", pis);
 	        rpi.x = rpn.x;
 	        rpi.y = lpi.y;
 	        this.rPlayerInfo = rpi;
@@ -5299,6 +5313,20 @@
 	        ra.mask = rm;
 	        this.rAvatar = ra;
 	        ctn.addChild(this.rAvatar);
+	        var ftns = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '22px', fill: this.skin.fontColor,
+	            fontWeight: 'bold'
+	        };
+	        var lftn = new PIXI.Text('', ftns);
+	        this.lFtName = lftn;
+	        lftn.y = 267;
+	        ctn.addChild(lftn);
+	        var rftn = new PIXI.Text('', ftns);
+	        ctn.addChild(rftn);
+	        this.rFtName = rftn;
+	        rftn.y = lftn.y;
+	        ctn.addChild(rftn);
 	    }
 	    Score2017.prototype.set35ScoreLight = function (winScore) {
 	    };
@@ -5325,7 +5353,7 @@
 	            else
 	                this.gameSection.texture = this.gameSection1;
 	        }
-	        this.gameIdx.text = '第' + JsFunc_1.paddy(gameIdx, 0) + '场';
+	        this.gameIdx.text = '第' + JsFunc_1.paddy(gameIdx, 2) + '场';
 	    };
 	    Score2017.prototype.setLeftScore = function (v) {
 	        this.leftScoreText.text = v + '';
@@ -5342,6 +5370,9 @@
 	    Score2017.prototype.resetTimer = function () {
 	        this.timer.resetTimer();
 	    };
+	    Score2017.prototype.setTimer = function (v) {
+	        this.timer.setTimeBySec(v);
+	    };
 	    Score2017.prototype.toggleTimer = function (v) {
 	        this.timer.toggleTimer(v);
 	    };
@@ -5351,7 +5382,7 @@
 	        this.setLeftFoul(0);
 	        this.setRightFoul(0);
 	    };
-	    Score2017.prototype.setLeftPlayerInfo = function (name, avatar, ft) {
+	    Score2017.prototype.setLeftPlayerInfo = function (name, avatar, weight, height, ft) {
 	        var _this = this;
 	        this.lPlayerName.text = name;
 	        this.lPlayerName.x = 500 - this.lPlayerName.width;
@@ -5363,8 +5394,12 @@
 	            avt.y = avt.mask.y - avt.texture.height * .5 * s;
 	            avt.scale.x = avt.scale.y = s;
 	        }, true);
+	        this.lPlayerInfo.text = height + 'CM ' + weight + "KG";
+	        this.lPlayerInfo.x = 500 - this.lPlayerInfo.width;
+	        this.lFtName.text = ft;
+	        this.lFtName.x = 630 - this.lFtName.width * .5;
 	    };
-	    Score2017.prototype.setRightPlayerInfo = function (name, avatar, ft) {
+	    Score2017.prototype.setRightPlayerInfo = function (name, avatar, weight, height, ft) {
 	        var _this = this;
 	        this.rPlayerName.text = name;
 	        PixiEx_1.loadRes(avatar, function (img) {
@@ -5375,6 +5410,9 @@
 	            avt.y = avt.mask.y - avt.texture.height * .5 * s;
 	            avt.scale.x = avt.scale.y = s;
 	        }, true);
+	        this.rPlayerInfo.text = height + 'CM ' + weight + "KG";
+	        this.rFtName.text = ft;
+	        this.rFtName.x = 1293 - this.rFtName.width * .5;
 	    };
 	    return Score2017;
 	}());

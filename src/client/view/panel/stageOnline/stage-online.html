@@ -8,7 +8,6 @@
 
         <h1>game id:{{gameId}}</h1>
         <label class="label">设置延时时间(秒)</label>
-
         <p class="control">
             <input class="input" type="text" onkeypress='var c = event.charCode;
                    return c >= 48 && c <= 57 ||c==46' placeholder="" style="width: 50px;" v-model="delayTime">
@@ -21,5 +20,10 @@
         <button class="button" @click="onClkStartTimer">开始</button>
         <button class="button" @click="onClkPauseTimer">暂停</button>
         <button class="button" @click="onClkResetTimer">重置</button>
+        <p class="control">
+            <input class="input" type="text" onkeypress='var c = event.charCode;
+                   return c >= 48 && c <= 57 ||c==46' placeholder="" style="width: 50px;" v-model="panelTime2Set">
+            <button class="button" @click="onClkSetPanelTime(panelTime2Set)">确定</button>
+        </p>
     </div>
 </div>

@@ -61,6 +61,8 @@ export class Score2017 {
     lAvatar: PIXI.Sprite
     rAvatar: PIXI.Sprite
 
+    lFtName: PIXI.Text
+    rFtName: PIXI.Text
     constructor(stage: PIXI.Container, isDark = false) {
         this.stage = stage
         if (isDark)
@@ -150,24 +152,28 @@ export class Score2017 {
             fontSize: '31px', fill: this.skin.fontColor,
             fontWeight: 'bold'
         }
-        let lpn = new PIXI.Text("111", pns)
+        let pis = {
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '22px', fill: this.skin.fontColor,
+            fontWeight: 'bold'
+        }
+        let lpn = new PIXI.Text("", pns)
         lpn.y = 155
-        lpn['x0'] = 250
         this.lPlayerName = lpn
         ctn.addChild(lpn)
 
-        let lpi = new PIXI.Text("222", pns)
-        lpi.y = 194
+        let lpi = new PIXI.Text("", pis)
+        lpi.y = 200
         this.lPlayerInfo = lpi
         ctn.addChild(lpi)
 
-        let rpn = new PIXI.Text("333", pns)
+        let rpn = new PIXI.Text("", pns)
         rpn.y = lpn.y
         rpn.x = 1420
         this.rPlayerName = rpn
         ctn.addChild(rpn)
 
-        let rpi = new PIXI.Text("444", pns)
+        let rpi = new PIXI.Text("", pis)
         rpi.x = rpn.x
         rpi.y = lpi.y
         this.rPlayerInfo = rpi
@@ -200,6 +206,24 @@ export class Score2017 {
         ra.mask = rm
         this.rAvatar = ra
         ctn.addChild(this.rAvatar)
+
+
+        let ftns = {
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '22px', fill: this.skin.fontColor,
+            fontWeight: 'bold'
+        }
+
+        let lftn = new PIXI.Text('', ftns)
+        this.lFtName = lftn
+        lftn.y = 267
+        ctn.addChild(lftn)
+
+        let rftn = new PIXI.Text('', ftns)
+        ctn.addChild(rftn)
+        this.rFtName = rftn
+        rftn.y = lftn.y
+        ctn.addChild(rftn)
     }
 
     set35ScoreLight(winScore) {
@@ -227,7 +251,7 @@ export class Score2017 {
             else
                 this.gameSection.texture = this.gameSection1
         }
-        this.gameIdx.text = '第' + paddy(gameIdx, 0) + '场'
+        this.gameIdx.text = '第' + paddy(gameIdx, 2) + '场'
     }
 
     setLeftScore(v) {
@@ -250,6 +274,10 @@ export class Score2017 {
         this.timer.resetTimer()
     }
 
+    setTimer(v) {
+        this.timer.setTimeBySec(v)
+    }
+
     toggleTimer(v) {
         this.timer.toggleTimer(v)
     }
@@ -262,7 +290,7 @@ export class Score2017 {
     }
 
     //player
-    setLeftPlayerInfo(name: string, avatar: string, ft: string) {
+    setLeftPlayerInfo(name: string, avatar: string, weight, height, ft: string) {
         //cm kg
         this.lPlayerName.text = name
         this.lPlayerName.x = 500 - this.lPlayerName.width
@@ -277,8 +305,13 @@ export class Score2017 {
         // loadImg(proxy(avatar), (img) => {
         //     this.lAvatar.texture = imgToTex(img)
         // })
+        this.lPlayerInfo.text = height + 'CM ' + weight + "KG"
+        this.lPlayerInfo.x = 500 - this.lPlayerInfo.width
+
+        this.lFtName.text = ft
+        this.lFtName.x = 630 - this.lFtName.width * .5
     }
-    setRightPlayerInfo(name: string, avatar: string, ft: string) {
+    setRightPlayerInfo(name: string, avatar: string, weight, height, ft: string) {
         this.rPlayerName.text = name
         loadRes(avatar, (img) => {
             let avt = this.rAvatar
@@ -288,5 +321,9 @@ export class Score2017 {
             avt.y = avt.mask.y - avt.texture.height * .5 * s
             avt.scale.x = avt.scale.y = s
         }, true);
+        this.rPlayerInfo.text = height + 'CM ' + weight + "KG"
+
+        this.rFtName.text = ft
+        this.rFtName.x = 1293 - this.rFtName.width * .5
     }
 }
