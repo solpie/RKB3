@@ -54,8 +54,8 @@
 	var stage3point_1 = __webpack_require__(32);
 	var KOA_1 = __webpack_require__(37);
 	var Stage5v5_1 = __webpack_require__(52);
-	var StageOnlineView_1 = __webpack_require__(57);
-	var RKBOPView_1 = __webpack_require__(55);
+	var StageOnlineView_1 = __webpack_require__(55);
+	var RKBOPView_1 = __webpack_require__(67);
 	var routes = [
 	    {
 	        path: '/', name: 'panel',
@@ -735,9 +735,17 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var EventDispatcher_1 = __webpack_require__(69);
 	var const_1 = __webpack_require__(33);
-	var BasePanelView = (function () {
+	var BasePanelView = (function (_super) {
+	    __extends(BasePanelView, _super);
 	    function BasePanelView(pid) {
+	        _super.call(this);
 	        this.opReq = function (cmdId, param, callback) {
 	            $.post("/panel/" + pid + "/" + cmdId, param, callback);
 	        };
@@ -760,7 +768,7 @@
 	    BasePanelView.prototype.hide = function () {
 	    };
 	    return BasePanelView;
-	}());
+	}(EventDispatcher_1.EventDispatcher));
 	exports.BasePanelView = BasePanelView;
 
 
@@ -3879,115 +3887,15 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var WebJsFunc_1 = __webpack_require__(22);
-	var VueBase_1 = __webpack_require__(17);
 	var JsFunc_1 = __webpack_require__(24);
-	var const_1 = __webpack_require__(33);
 	var Command_1 = __webpack_require__(50);
-	var opReq = function (cmdId, param, callback) {
-	    $.post("/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId, param, callback);
-	};
-	var RKBView = (function (_super) {
-	    __extends(RKBView, _super);
-	    function RKBView() {
-	        _super.call(this);
-	        this.template = __webpack_require__(56);
-	        this.links = VueBase_1.VueBase.PROP;
-	        this.isOp = VueBase_1.VueBase.PROP;
-	        this.gameId = VueBase_1.VueBase.PROP;
-	        this.panelTime = VueBase_1.VueBase.String;
-	        this.liveTime = VueBase_1.VueBase.String;
-	        this.delayTime = VueBase_1.VueBase.Number;
-	        this.test = VueBase_1.VueBase.PROP;
-	        this.srvTime = 0;
-	        this.isTimerRunning = false;
-	        this.delayTimeMS = 0;
-	        this.methods = {
-	            onClkSetDelay: function () {
-	                console.log("onClkSetDelay", this, this.delayTime);
-	                var dt = Number(this.delayTime);
-	                if (dt >= 0) {
-	                    this.delayTimeMS = dt * 1000;
-	                    opReq("" + Command_1.CommandId.cs_setDelayTime, { delayTimeMS: this.delayTimeMS, _: null }, function () {
-	                    });
-	                }
-	            },
-	            onClkStartTimer: function () {
-	                opReq("" + Command_1.CommandId.cs_startTimer, { _: null }, function () {
-	                    console.log("onClkStartTimer");
-	                });
-	            },
-	            onClkPauseTimer: function () {
-	                opReq("" + Command_1.CommandId.cs_pauseTimer, { _: null }, function () {
-	                    console.log("onClkPauseTimer");
-	                });
-	            },
-	            onClkResetTimer: function () {
-	                opReq("" + Command_1.CommandId.cs_resetTimer, { _: null }, function () {
-	                    console.log("onClkResetTimer");
-	                });
-	            }
-	        };
-	        VueBase_1.VueBase.initProps(this);
-	    }
-	    RKBView.prototype.created = function () {
-	        console.log('RKBView created!');
-	        this.panelTime = "tesst";
-	        this.isOp = this.$route.params.op == "op";
-	        if (this.isOp) {
-	            WebJsFunc_1.dynamicLoading.css('/css/bulma.min.css');
-	        }
-	        this.gameId = this.$route.params.game_id;
-	    };
-	    RKBView.prototype.mounted = function () {
-	    };
-	    RKBView.prototype.onTick = function () {
-	        console.log("onTick");
-	        this.srvTime += 1000;
-	        this.liveTime = JsFunc_1.DateFormat(new Date(this.srvTime), "hh:mm:ss");
-	        this.panelTime = JsFunc_1.DateFormat(new Date(this.srvTime - this.delayTimeMS), "hh:mm:ss");
-	    };
-	    RKBView.prototype.setSrvTime = function (t) {
-	        var _this = this;
-	        console.log("isRunning:", this.isTimerRunning, this.onTick, t);
-	        this.srvTime = t;
-	        if (!this.isTimerRunning) {
-	            this.isTimerRunning = true;
-	            setInterval(function () {
-	                _this.onTick();
-	            }, 1000);
-	        }
-	    };
-	    return RKBView;
-	}(VueBase_1.VueBase));
-	exports.RKBView = RKBView;
-	exports.rkbView = new RKBView();
-
-
-/***/ },
-/* 56 */
-/***/ function(module, exports) {
-
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <h1>game id:{{gameId}}</h1>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\"\r\n                   onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46'\r\n                   placeholder=\"\" style=\"width: 50px;\"\r\n                   v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n    </div>\r\n</div>\r\n";
-
-/***/ },
-/* 57 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var ScoreView_1 = __webpack_require__(58);
-	var RankView_1 = __webpack_require__(60);
-	var BasePanelView_1 = __webpack_require__(34);
-	var Bracket_1 = __webpack_require__(64);
-	var WebJsFunc_1 = __webpack_require__(22);
+	var const_1 = __webpack_require__(33);
 	var VueBase_1 = __webpack_require__(17);
-	var const_1 = __webpack_require__(33);
-	var Command_1 = __webpack_require__(50);
+	var WebJsFunc_1 = __webpack_require__(22);
+	var BasePanelView_1 = __webpack_require__(34);
+	var BracketView_1 = __webpack_require__(56);
+	var RankView_1 = __webpack_require__(59);
+	var ScoreView_1 = __webpack_require__(63);
 	var rankView;
 	var bracketView;
 	var scoreView;
@@ -3996,11 +3904,14 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(67);
+	        this.template = __webpack_require__(66);
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.delayTime = VueBase_1.VueBase.PROP;
 	        this.liveTime = VueBase_1.VueBase.PROP;
+	        this.srvTime = 0;
+	        this.isTimerRunning = false;
+	        this.delayTimeMS = 0;
 	        this.panelTime = VueBase_1.VueBase.PROP;
 	        this.panelTime2Set = VueBase_1.VueBase.PROP;
 	        this.opReq = function (cmdId, param, callback) {
@@ -4100,14 +4011,20 @@
 	    StageOnlineView.prototype.showBracket = function () {
 	        console.log('onClkBracket');
 	        if (!bracketView) {
-	            bracketView = new Bracket_1.Bracket(canvasStage, this.gameId);
+	            bracketView = new BracketView_1.BracketView(canvasStage, this.gameId);
 	            this.basePanelArr.push(bracketView);
 	        }
 	        this.showOnly(bracketView.name);
 	    };
 	    StageOnlineView.prototype.showScore = function () {
+	        var _this = this;
 	        if (!scoreView) {
 	            scoreView = new ScoreView_1.ScoreView(canvasStage, this.$route);
+	            if (this.isOp)
+	                scoreView.on('init', function (data) {
+	                    _this.setSrvTime(data.t);
+	                    _this.liveTime = JsFunc_1.DateFormat(new Date(_this.srvTime), "hh:mm:ss");
+	                });
 	            this.basePanelArr.push(scoreView);
 	        }
 	        this.showOnly(scoreView.name);
@@ -4124,13 +4041,30 @@
 	        if (showBp)
 	            showBp.show();
 	    };
+	    StageOnlineView.prototype.onTick = function () {
+	        console.log("onTick");
+	        this.srvTime += 1000;
+	        this.liveTime = JsFunc_1.DateFormat(new Date(this.srvTime), "hh:mm:ss");
+	        this.panelTime = JsFunc_1.DateFormat(new Date(this.srvTime - this.delayTimeMS), "hh:mm:ss");
+	    };
+	    StageOnlineView.prototype.setSrvTime = function (t) {
+	        var _this = this;
+	        console.log("isRunning:", this.isTimerRunning, this.onTick, t);
+	        this.srvTime = t;
+	        if (!this.isTimerRunning) {
+	            this.isTimerRunning = true;
+	            setInterval(function () {
+	                _this.onTick();
+	            }, 1000);
+	        }
+	    };
 	    return StageOnlineView;
 	}(VueBase_1.VueBase));
 	exports.stageOnlineView = new StageOnlineView();
 
 
 /***/ },
-/* 58 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4139,143 +4073,134 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var TweenEx_1 = __webpack_require__(39);
-	var Score2017_1 = __webpack_require__(68);
+	var Bracket2017_1 = __webpack_require__(57);
 	var HupuAPI_1 = __webpack_require__(21);
-	var Command_1 = __webpack_require__(50);
-	var const_1 = __webpack_require__(33);
 	var BasePanelView_1 = __webpack_require__(34);
-	var ScoreView = (function (_super) {
-	    __extends(ScoreView, _super);
-	    function ScoreView(stage, $route) {
+	var const_1 = __webpack_require__(33);
+	var BracketGroup_1 = __webpack_require__(58);
+	var BracketView = (function (_super) {
+	    __extends(BracketView, _super);
+	    function BracketView(stage, gameId) {
 	        _super.call(this, const_1.PanelId.onlinePanel);
-	        this.delayTimeMS = 0;
-	        this.name = const_1.PanelId.scorePanel;
-	        var darkTheme = $route.query.theme == "dark";
-	        this.gameId = $route.params.game_id;
-	        this.scorePanel = new Score2017_1.Score2017(stage, darkTheme);
-	        console.log('new ScoreView');
-	        this.initRemote();
-	        this.initLocal();
+	        this.name = const_1.PanelId.bracketPanel;
+	        console.log("new bracket");
+	        this.bracket = new Bracket2017_1.Bracket2017(stage);
+	        this.initAuto(Number(gameId));
+	        this.initBg();
 	    }
-	    ScoreView.prototype.initLocal = function () {
-	        var _this = this;
-	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
-	        localWs.on('connect', function (msg) {
-	            console.log('connect', window.location.host);
-	        })
-	            .on("" + Command_1.CommandId.sc_startTimer, function (data) {
-	            _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
-	        })
-	            .on("" + Command_1.CommandId.sc_pauseTimer, function (data) {
-	            _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
-	        })
-	            .on("" + Command_1.CommandId.sc_resetTimer, function (data) {
-	            _this.scorePanel.resetTimer();
-	        })
-	            .on("" + Command_1.CommandId.sc_setDelayTime, function (data) {
-	            _this.delayTimeMS = data.delayTimeMS;
-	        })
-	            .on("" + Command_1.CommandId.sc_setTimer, function (data) {
-	            _this.scorePanel.setTimer(data.time);
-	        });
+	    BracketView.prototype.initBg = function () {
 	    };
-	    ScoreView.prototype.initRemote = function () {
+	    BracketView.prototype.showComingIdx = function (idx) {
+	        this.bracket.showComingIdx(idx);
+	    };
+	    BracketView.prototype.hide = function () {
+	    };
+	    BracketView.prototype.show = function () {
+	    };
+	    BracketView.prototype.getFtBracketInfo = function () {
+	        $.ajax({
+	            url: "/panel/" + const_1.PanelId.onlinePanel + "/cs_ftBracketInfo",
+	            type: 'post',
+	            data: JSON.stringify({}),
+	            headers: { "Content-Type": "application/json" },
+	            dataType: 'json',
+	        });
+	        console.log('connected local /rkb');
+	    };
+	    BracketView.prototype.initAuto = function (gameId) {
 	        var _this = this;
-	        HupuAPI_1.getHupuWS(function (hupuWsUrl) {
-	            var remoteIO = io.connect(hupuWsUrl);
-	            var setPlayer = function (leftPlayer, rightPlayer) {
-	                console.log(leftPlayer);
-	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.group);
-	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.group);
-	            };
+	        var conWs = function (url) {
+	            var remoteIO = io.connect(url);
 	            remoteIO.on('connect', function () {
-	                console.log('hupuAuto socket connected', hupuWsUrl);
-	                remoteIO.emit('passerbyking', {
-	                    game_id: _this.gameId,
-	                    page: 'score'
-	                });
-	            });
-	            remoteIO.on('wall', function (data) {
-	                var event = data.et;
-	                var eventMap = {};
-	                console.log('event:', event, data);
-	                eventMap['init'] = function () {
-	                    console.log('init', data);
-	                    _this.scorePanel.set35ScoreLight(data.winScore);
-	                    _this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType) == 2);
-	                    setPlayer(data.player.left, data.player.right);
-	                    _this.scorePanel.setLeftScore(data.player.left.leftScore);
-	                    _this.scorePanel.setRightScore(data.player.right.rightScore);
-	                    _this.scorePanel.setLeftFoul(data.player.left.leftFoul);
-	                    _this.scorePanel.setRightFoul(data.player.right.rightFoul);
-	                };
-	                eventMap['updateScore'] = function () {
-	                    console.log('updateScore', data);
-	                    if (data.leftScore != null) {
-	                        _this.scorePanel.setLeftScore(data.leftScore);
-	                    }
-	                    if (data.rightScore != null) {
-	                        _this.scorePanel.setRightScore(data.rightScore);
-	                    }
-	                    if (data.rightFoul != null) {
-	                        _this.scorePanel.setRightFoul(data.rightFoul);
-	                    }
-	                    if (data.leftFoul != null) {
-	                        _this.scorePanel.setLeftFoul(data.leftFoul);
-	                    }
-	                };
-	                eventMap['timeStart'] = function () {
-	                    console.log('timeStart', data);
-	                    _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
-	                };
-	                eventMap['startGame'] = function () {
-	                    console.log('startGame', data);
-	                    _this.scorePanel.set35ScoreLight(data.winScore);
-	                    _this.scorePanel.setGameIdx(data.gameIdx);
-	                    setPlayer(data.player.left, data.player.right);
-	                    _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
-	                    _this.scorePanel.resetScore();
-	                    _this.scorePanel.resetTimer();
-	                };
-	                if (eventMap[event]) {
-	                    TweenEx_1.TweenEx.delayedCall(_this.delayTimeMS, function () {
-	                        eventMap[event]();
+	                if (gameId) {
+	                    console.log('hupuAuto socket connected GameId', gameId);
+	                    remoteIO.emit('passerbyking', {
+	                        game_id: gameId,
+	                        page: 'top8Map'
 	                    });
 	                }
+	                else {
+	                    _this.getFtBracketInfo();
+	                    console.log('connected local /rkb');
+	                }
 	            });
-	        });
+	            var eventMap = {};
+	            eventMap['top8Match'] = function (data) {
+	                console.log('top8Match', data);
+	                data.data = data.list;
+	                _this.onBracketData(data);
+	            };
+	            eventMap['startGame'] = function (data) {
+	            };
+	            eventMap['updateScore'] = function (data) {
+	                _this.bracket.hideComing();
+	            };
+	            remoteIO.on('wall', function (data) {
+	                var event = data.et;
+	                console.log('event:', event, data);
+	                if (eventMap[event])
+	                    eventMap[event](data);
+	            });
+	            var onData = function (data) {
+	                var event = data.et;
+	                if (eventMap[event])
+	                    eventMap[event](data);
+	            };
+	        };
+	        if (gameId)
+	            HupuAPI_1.getHupuWS(function (hupuWsUrl) {
+	                conWs(hupuWsUrl);
+	            });
+	        else {
+	            conWs('/rkb');
+	        }
 	    };
-	    ScoreView.prototype.initIO = function () {
-	        var _this = this;
-	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
-	        localWs.on('connect', function (msg) {
-	            console.log('connect', window.location.host);
-	            localWs.emit("opUrl", { opUrl: window.location.host });
-	        })
-	            .on("" + Command_1.CommandId.sc_setDelayTime, function (data) {
-	            console.log("CommandId.setDelayTime", data);
-	            _this.delayTimeMS = data.delayTimeMS;
-	        })
-	            .on(Command_1.CommandId.sc_startTimer, function (data) {
-	            _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
-	        })
-	            .on(Command_1.CommandId.sc_pauseTimer, function (data) {
-	            _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
-	        })
-	            .on(Command_1.CommandId.sc_resetTimer, function (data) {
-	            console.log("CommandId.sc_resetTimer", data);
-	            _this.scorePanel.resetTimer();
-	        });
+	    BracketView.prototype.onBracketData = function (res) {
+	        var closeGame = {};
+	        var s = { font: '25px', fill: '#e1e1e1', align: 'right' };
+	        console.log('onBracketData', res.data);
+	        for (var gameIdx in res.data) {
+	            var dataObj = res.data[gameIdx];
+	            var group1 = BracketGroup_1.groupPosMap[gameIdx];
+	            group1.idx = Number(gameIdx);
+	            if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
+	                if (dataObj.left.score > dataObj.right.score)
+	                    this.bracket.setWinHint(group1.hint1, true);
+	                else
+	                    this.bracket.setWinHint(group1.hint2);
+	                closeGame[gameIdx] = true;
+	            }
+	            if (dataObj.left.name) {
+	                group1.labels[0].style = s;
+	            }
+	            if (dataObj.right.name) {
+	                group1.labels[1].style = s;
+	            }
+	            var hints = group1.hints;
+	            group1.labels[0].text = dataObj.left.name || (hints ? hints[0] : '');
+	            BracketGroup_1.fitWidth(group1.labels[0], 160, 25);
+	            group1.scores[0].text = dataObj.left.score || "0";
+	            group1.labels[1].text = dataObj.right.name || (hints ? hints[1] : '');
+	            BracketGroup_1.fitWidth(group1.labels[1], 160, 25);
+	            group1.scores[1].text = dataObj.right.score || "0";
+	        }
+	        var comingIdx = 1;
+	        for (var i = 0; i < 14; i++) {
+	            var isClose = closeGame[14 - i];
+	            if (isClose) {
+	                comingIdx = 14 - i + 1;
+	                break;
+	            }
+	        }
+	        this.showComingIdx(comingIdx);
 	    };
-	    return ScoreView;
+	    return BracketView;
 	}(BasePanelView_1.BasePanelView));
-	exports.ScoreView = ScoreView;
+	exports.BracketView = BracketView;
 
 
 /***/ },
-/* 59 */,
-/* 60 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4284,10 +4209,179 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var PlayerInfo_1 = __webpack_require__(61);
+	var JsFunc_1 = __webpack_require__(24);
+	var BracketGroup_1 = __webpack_require__(58);
+	var TweenEx_1 = __webpack_require__(39);
+	var Fx_1 = __webpack_require__(45);
+	var const_1 = __webpack_require__(33);
+	var PixiEx_1 = __webpack_require__(35);
+	var Bracket2017 = (function (_super) {
+	    __extends(Bracket2017, _super);
+	    function Bracket2017(parent) {
+	        var _this = this;
+	        _super.call(this);
+	        parent.addChild(this);
+	        var bg = PixiEx_1.newBitmap({
+	            url: "/img/panel/bracket/tile2.png",
+	            isTiling: true,
+	            width: const_1.ViewConst.STAGE_WIDTH,
+	            height: const_1.ViewConst.STAGE_HEIGHT
+	        });
+	        bg.alpha = 0.8;
+	        this.addChild(bg);
+	        var hintCtn = new PIXI.Container();
+	        this.addChild(hintCtn);
+	        var frame = PixiEx_1.newBitmap({
+	            url: '/img/panel/bracket/bg1.png'
+	        });
+	        this.addChild(frame);
+	        this.comingTitle = PixiEx_1.newBitmap({ url: '/img/panel/bracket/coming.png' });
+	        this.comingTitle.visible = false;
+	        this.addChild(this.comingTitle);
+	        for (var idx in BracketGroup_1.groupPosMap) {
+	            var ctn = new PIXI.Container();
+	            this.addChild(ctn);
+	            var g = BracketGroup_1.groupPosMap[idx];
+	            console.log(g);
+	            ctn.x = g.x;
+	            ctn.y = g.y;
+	            var h1 = new PIXI.Sprite();
+	            h1.x = g.x + 170;
+	            h1.y = g.y + 50;
+	            h1.scale.y = -1;
+	            hintCtn.addChild(h1);
+	            g.hint1 = h1;
+	            var h2 = new PIXI.Sprite();
+	            h2.x = h1.x;
+	            h2.y = g.y + 49;
+	            hintCtn.addChild(h2);
+	            g.hint2 = h2;
+	            ctn.addChild(g.scores[0]);
+	            ctn.addChild(g.scores[1]);
+	            ctn.addChild(g.labels[0]);
+	            ctn.addChild(g.labels[1]);
+	        }
+	        JsFunc_1.loadImgArr(['/img/panel/bracket/hint1.png', '/img/panel/bracket/hint2.png'], function (img) {
+	            var tex = PixiEx_1.imgToTex(img[0]);
+	            _this.hint1Tex = tex;
+	            _this.hint2Tex = PixiEx_1.imgToTex(img[1]);
+	            console.log('load tex', hintCtn.children);
+	            for (var _i = 0, _a = hintCtn.children; _i < _a.length; _i++) {
+	                var c = _a[_i];
+	                c.texture = tex;
+	            }
+	        });
+	    }
+	    Bracket2017.prototype.setWinHint = function (sp, isFlip) {
+	        if (isFlip === void 0) { isFlip = false; }
+	        sp.texture = this.hint2Tex;
+	    };
+	    Bracket2017.prototype.hideComing = function () {
+	        this.comingTitle.visible = false;
+	    };
+	    Bracket2017.prototype.showComingIdx = function (idx) {
+	        var _this = this;
+	        var g = BracketGroup_1.groupPosMap[idx];
+	        this.comingTitle.visible = false;
+	        TweenEx_1.TweenEx.delayedCall(610, function () {
+	            if (g) {
+	                _this.comingTitle.visible = true;
+	                _this.comingTitle.x = g.x - 38;
+	                _this.comingTitle.y = g.y - 43;
+	                Fx_1.blink2({ target: _this.comingTitle, time: 600 });
+	            }
+	        });
+	    };
+	    return Bracket2017;
+	}(PIXI.Container));
+	exports.Bracket2017 = Bracket2017;
+
+
+/***/ },
+/* 58 */
+/***/ function(module, exports) {
+
+	"use strict";
+	function _mkGroup(parameters) {
+	    var x = parameters.x;
+	    var y = parameters.y;
+	    var hints = parameters.hints ? parameters.hints : ['', ''];
+	    var s = { font: '25px', fill: '#fff', align: 'right' };
+	    var s1 = new PIXI.Text('', s);
+	    s1.y = 8;
+	    var s2 = new PIXI.Text('', s);
+	    s2.y = 8 + 53;
+	    s1.x = s2.x = 188;
+	    var ps = { fontSize: '25px' };
+	    var p1 = new PIXI.Text("", ps);
+	    p1.x = 3;
+	    p1.y = 8;
+	    var p2 = new PIXI.Text("", ps);
+	    p2.x = p1.x;
+	    p2.y = p1.y + 50;
+	    return {
+	        x: x, y: y, labels: [p1, p2], hints: hints,
+	        winIdx: -1,
+	        scores: [s1, s2]
+	    };
+	}
+	function fitWidth(label, width, size) {
+	    console.log(label.width, width);
+	    if (label.width > width) {
+	        label.style.font = size + 'px';
+	        fitWidth(label, width, size - 1);
+	    }
+	}
+	exports.fitWidth = fitWidth;
+	exports.groupPosMap = {
+	    "1": _mkGroup({ x: 320, y: 91, hints: ['1号种子 ', "8号种子 "] }),
+	    "2": _mkGroup({ x: 320, y: 95 + 137, hints: ['4号种子 ', "5号种子 "] }),
+	    "3": _mkGroup({ x: 320, y: 95 + 145 * 2 + 18, hints: ['2号种子 ', "7号种子 "] }),
+	    "4": _mkGroup({ x: 320, y: 95 + 145 * 3 + 14, hints: ['3号种子 ', "6号种子 "] }),
+	    "5": _mkGroup({ x: 320, y: 806, hints: ['第1场败者 ', "第2场败者 "] }),
+	    "6": _mkGroup({ x: 320, y: 805 + 142, hints: ['第3场败者 ', "第4场败者 "] }),
+	    "7": _mkGroup({ x: 671, y: 162 }),
+	    "8": _mkGroup({ x: 671, y: 476 }),
+	    "9": _mkGroup({ x: 664, y: 893, hints: ['第7场败者 ', ""] }),
+	    "10": _mkGroup({ x: 664, y: 751, hints: ['第8场败者 ', ""] }),
+	    "11": _mkGroup({ x: 1067, y: 319 }),
+	    "12": _mkGroup({ x: 1020, y: 825 }),
+	    "13": _mkGroup({ x: 1366, y: 770, hints: ['第11场败者 ', ""] }),
+	    "14": _mkGroup({ x: 1463, y: 396, hints: ['', "第13场胜者 "] }),
+	};
+	var BracketGroup = (function () {
+	    function BracketGroup(idx) {
+	        this.idx = idx;
+	        this.playerArr = [new PlayerSvg, new PlayerSvg];
+	    }
+	    return BracketGroup;
+	}());
+	exports.BracketGroup = BracketGroup;
+	var PlayerSvg = (function () {
+	    function PlayerSvg() {
+	        this.isHint = false;
+	        this.isWin = false;
+	        this.score = 0;
+	    }
+	    return PlayerSvg;
+	}());
+	exports.PlayerSvg = PlayerSvg;
+
+
+/***/ },
+/* 59 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var PlayerInfo_1 = __webpack_require__(60);
 	var BasePanelView_1 = __webpack_require__(34);
 	var const_1 = __webpack_require__(33);
-	var FTInfo_1 = __webpack_require__(63);
+	var FTInfo_1 = __webpack_require__(62);
 	var PixiEx_1 = __webpack_require__(35);
 	var JsFunc_1 = __webpack_require__(24);
 	var RankView = (function (_super) {
@@ -4491,7 +4585,7 @@
 
 
 /***/ },
-/* 61 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4500,7 +4594,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var BaseInfo_1 = __webpack_require__(62);
+	var BaseInfo_1 = __webpack_require__(61);
 	var PlayerDoc = (function () {
 	    function PlayerDoc() {
 	        this.id = 0;
@@ -4688,7 +4782,7 @@
 
 
 /***/ },
-/* 62 */
+/* 61 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -4733,7 +4827,7 @@
 
 
 /***/ },
-/* 63 */
+/* 62 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -4762,6 +4856,175 @@
 
 
 /***/ },
+/* 63 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var Event2017_1 = __webpack_require__(64);
+	var TweenEx_1 = __webpack_require__(39);
+	var Score2017_1 = __webpack_require__(65);
+	var HupuAPI_1 = __webpack_require__(21);
+	var Command_1 = __webpack_require__(50);
+	var const_1 = __webpack_require__(33);
+	var BasePanelView_1 = __webpack_require__(34);
+	var ScoreView = (function (_super) {
+	    __extends(ScoreView, _super);
+	    function ScoreView(stage, $route) {
+	        _super.call(this, const_1.PanelId.onlinePanel);
+	        this.delayTimeMS = 0;
+	        this.isTest = false;
+	        this.name = const_1.PanelId.scorePanel;
+	        var darkTheme = $route.query.theme == "dark";
+	        this.gameId = $route.params.game_id;
+	        this.isTest = $route.query.test == "1";
+	        this.scorePanel = new Score2017_1.Score2017(stage, darkTheme);
+	        this.eventPanel = new Event2017_1.Event2017(stage, darkTheme);
+	        console.log('new ScoreView');
+	        this.initRemote();
+	        this.initLocal();
+	    }
+	    ScoreView.prototype.initLocal = function () {
+	        var _this = this;
+	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
+	        localWs.on('connect', function (msg) {
+	            console.log('connect', window.location.host);
+	        })
+	            .on("" + Command_1.CommandId.sc_startTimer, function (data) {
+	            _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
+	        })
+	            .on("" + Command_1.CommandId.sc_pauseTimer, function (data) {
+	            _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
+	        })
+	            .on("" + Command_1.CommandId.sc_resetTimer, function (data) {
+	            _this.scorePanel.resetTimer();
+	        })
+	            .on("" + Command_1.CommandId.sc_setDelayTime, function (data) {
+	            _this.delayTimeMS = data.delayTimeMS;
+	        })
+	            .on("" + Command_1.CommandId.sc_setTimer, function (data) {
+	            _this.scorePanel.setTimer(data.time);
+	        });
+	    };
+	    ScoreView.prototype.initRemote = function () {
+	        var _this = this;
+	        HupuAPI_1.getHupuWS(function (hupuWsUrl) {
+	            var remoteIO = io.connect(hupuWsUrl);
+	            var setPlayer = function (leftPlayer, rightPlayer) {
+	                console.log(leftPlayer);
+	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.group);
+	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.group);
+	            };
+	            remoteIO.on('connect', function () {
+	                console.log('hupuAuto socket connected', hupuWsUrl);
+	                remoteIO.emit('passerbyking', {
+	                    game_id: _this.gameId,
+	                    page: 'score'
+	                });
+	            });
+	            remoteIO.on('wall', function (data) {
+	                var event = data.et;
+	                var eventMap = {};
+	                console.log('event:', event, data);
+	                eventMap['init'] = function () {
+	                    console.log('init', data);
+	                    _this.scorePanel.set35ScoreLight(data.winScore);
+	                    _this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType) == 2);
+	                    setPlayer(data.player.left, data.player.right);
+	                    _this.scorePanel.setLeftScore(data.player.left.leftScore);
+	                    _this.scorePanel.setRightScore(data.player.right.rightScore);
+	                    _this.scorePanel.setLeftFoul(data.player.left.leftFoul);
+	                    _this.scorePanel.setRightFoul(data.player.right.rightFoul);
+	                    _this.emit('init', data);
+	                    if (_this.isTest) {
+	                        var player = {
+	                            avatar: "http://w2.hoopchina.com.cn/43/6f/6a/436f6a5aa8a38e158b98830a3b5c4a4b001.jpg",
+	                            group: 'Fe3O4',
+	                            height: '177',
+	                            intro: "一二三四五六七八九十一二三四五六七八九十一二三22四五六七八九十一二三四五六七八九十一二三四五六七八九十",
+	                            loseAmount: 1,
+	                            name: "geoffrey0326",
+	                            roundScore: 28,
+	                            totalChampion: 0,
+	                            weight: '79',
+	                            winAmount: "3"
+	                        };
+	                        _this.eventPanel.showWin(player);
+	                    }
+	                };
+	                eventMap['updateScore'] = function () {
+	                    console.log('updateScore', data);
+	                    if (data.leftScore != null) {
+	                        _this.scorePanel.setLeftScore(data.leftScore);
+	                    }
+	                    if (data.rightScore != null) {
+	                        _this.scorePanel.setRightScore(data.rightScore);
+	                    }
+	                    if (data.rightFoul != null) {
+	                        _this.scorePanel.setRightFoul(data.rightFoul);
+	                    }
+	                    if (data.leftFoul != null) {
+	                        _this.scorePanel.setLeftFoul(data.leftFoul);
+	                    }
+	                };
+	                eventMap['timeStart'] = function () {
+	                    console.log('timeStart', data);
+	                    _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
+	                };
+	                eventMap['startGame'] = function () {
+	                    console.log('startGame', data);
+	                    _this.scorePanel.set35ScoreLight(data.winScore);
+	                    _this.scorePanel.setGameIdx(data.gameIdx);
+	                    setPlayer(data.player.left, data.player.right);
+	                    _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
+	                    _this.scorePanel.resetScore();
+	                    _this.scorePanel.resetTimer();
+	                };
+	                eventMap['commitGame'] = function () {
+	                    console.log('commitGame', data);
+	                    var player = data.player;
+	                    _this.eventPanel.showWin(player);
+	                };
+	                if (eventMap[event]) {
+	                    TweenEx_1.TweenEx.delayedCall(_this.delayTimeMS, function () {
+	                        eventMap[event]();
+	                    });
+	                }
+	            });
+	        });
+	    };
+	    ScoreView.prototype.initIO = function () {
+	        var _this = this;
+	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
+	        localWs.on('connect', function (msg) {
+	            console.log('connect', window.location.host);
+	            localWs.emit("opUrl", { opUrl: window.location.host });
+	        })
+	            .on("" + Command_1.CommandId.sc_setDelayTime, function (data) {
+	            console.log("CommandId.setDelayTime", data);
+	            _this.delayTimeMS = data.delayTimeMS;
+	        })
+	            .on(Command_1.CommandId.sc_startTimer, function (data) {
+	            _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
+	        })
+	            .on(Command_1.CommandId.sc_pauseTimer, function (data) {
+	            _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
+	        })
+	            .on(Command_1.CommandId.sc_resetTimer, function (data) {
+	            console.log("CommandId.sc_resetTimer", data);
+	            _this.scorePanel.resetTimer();
+	        });
+	    };
+	    return ScoreView;
+	}(BasePanelView_1.BasePanelView));
+	exports.ScoreView = ScoreView;
+
+
+/***/ },
 /* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -4771,379 +5034,145 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var TweenEx_1 = __webpack_require__(39);
-	var Command_1 = __webpack_require__(50);
-	var HupuAPI_1 = __webpack_require__(21);
-	var BasePanelView_1 = __webpack_require__(34);
-	var const_1 = __webpack_require__(33);
-	var BracketGroup_1 = __webpack_require__(65);
+	var BracketGroup_1 = __webpack_require__(58);
+	var JsFunc_1 = __webpack_require__(24);
 	var PixiEx_1 = __webpack_require__(35);
-	var GroupLine_1 = __webpack_require__(66);
-	var Fx_1 = __webpack_require__(45);
-	var Bracket = (function (_super) {
-	    __extends(Bracket, _super);
-	    function Bracket(stage, gameId) {
-	        _super.call(this, const_1.PanelId.onlinePanel);
-	        this.name = const_1.PanelId.bracketPanel;
-	        console.log("new bracket");
-	        this.ctn = new PIXI.Container();
-	        stage.addChild(this.ctn);
-	        this.stage = stage;
-	        this.initAuto(Number(gameId));
-	        this.initBg();
-	    }
-	    Bracket.prototype.initBg = function () {
-	        var ctn = this.ctn;
+	var TweenEx_1 = __webpack_require__(39);
+	var const_1 = __webpack_require__(33);
+	var Event2017 = (function (_super) {
+	    __extends(Event2017, _super);
+	    function Event2017(stage, isDark) {
+	        if (isDark === void 0) { isDark = false; }
+	        _super.call(this);
+	        this._texMap = {};
+	        stage.addChild(this);
+	        this.visible = false;
+	        this.modal = new PIXI.Graphics()
+	            .beginFill(0x000000, .7)
+	            .drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT);
+	        this.addChild(this.modal);
+	        var bgUrl = '/img/panel/score2017/winBg.png';
+	        if (isDark)
+	            bgUrl = '/img/panel/score2017/winBgDark.png';
 	        var bg = PixiEx_1.newBitmap({
-	            url: "/img/panel/bracket/tile2.png",
-	            isTiling: true,
-	            width: const_1.ViewConst.STAGE_WIDTH,
-	            height: const_1.ViewConst.STAGE_HEIGHT
+	            url: bgUrl,
 	        });
-	        bg.alpha = 0.8;
-	        ctn.addChild(bg);
-	        ctn.addChild(PixiEx_1.newBitmap({ url: "/img/panel/bracket/title.png" }));
-	        var s = { font: '25px', fill: '#C1C1C1', align: 'right' };
-	        var hintStyle = {
+	        this.addChild(bg);
+	        var ts = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '25px',
-	            fontStyle: 'italic',
-	            fill: '#C1C1C1',
+	            fontSize: '22px', fill: '#fff',
+	            fontWeight: 'bold'
 	        };
-	        for (var idx in BracketGroup_1.groupPosMap) {
-	            var group2 = BracketGroup_1.groupPosMap[idx];
-	            var groupCtn = group2.ctn = PixiEx_1.newBitmap({
-	                url: "/img/panel/bracket/group.png",
-	                x: group2.x, y: group2.y
-	            });
-	            ctn.addChild(groupCtn);
-	            var winHint = new PIXI.Graphics();
-	            winHint.beginFill(0xf8a300)
-	                .drawRoundedRect(0, 0, 46, 45, 0);
-	            winHint.x = 158;
-	            winHint.y = 2;
-	            winHint["y1"] = 2;
-	            winHint["y2"] = 51;
-	            winHint.visible = false;
-	            group2.winHint = winHint;
-	            groupCtn.addChild(winHint);
-	            var gameIdx = Number(idx);
-	            var gameIdxText = new PIXI.Text(idx, s);
-	            if (gameIdx > 9)
-	                gameIdxText.x = -50;
+	        var t = new PIXI.Text("", ts);
+	        this.addChild(t);
+	        t.x = 923;
+	        t.y = 318;
+	        t.style['fontSize'] = '40px';
+	        this.pName = t;
+	        t = new PIXI.Text("", ts);
+	        this.addChild(t);
+	        t.style['fontSize'] = '34px';
+	        t.x = 540;
+	        t.y = 750;
+	        this.pIntro = t;
+	        t = new PIXI.Text("", ts);
+	        this.addChild(t);
+	        t.style['fontSize'] = '32px';
+	        t.x = 1240;
+	        t.y = 427;
+	        this.pWeight = t;
+	        t = new PIXI.Text("", ts);
+	        this.addChild(t);
+	        t.style['fontSize'] = '30px';
+	        t.x = 897;
+	        t.y = this.pWeight.y;
+	        this.pHeight = t;
+	        t = new PIXI.Text("", ts);
+	        this.addChild(t);
+	        t.style['fontSize'] = '40px';
+	        t.x = 570;
+	        t.y = 647;
+	        this.ftName = t;
+	        t = new PIXI.Text("", ts);
+	        this.addChild(t);
+	        t.style['fontSize'] = '40px';
+	        t.x = 805;
+	        t.y = 617;
+	        this.winLose = t;
+	        t = new PIXI.Text("", ts);
+	        this.addChild(t);
+	        t.style['fontSize'] = '40px';
+	        t.x = 330;
+	        t.y = this.winLose.y;
+	        this.pRankScore = t;
+	        this.avatar = new PIXI.Sprite();
+	        this.avatar.x = 511;
+	        this.avatar.y = 314;
+	        this.addChild(this.avatar);
+	        this.ftLogo = new PIXI.Sprite();
+	        this.ftLogo.x = 498;
+	        this.ftLogo.y = 644;
+	        this.addChild(this.ftLogo);
+	        this.medal = new PIXI.Sprite();
+	        this.medal.x = 566;
+	        this.medal.y = 544;
+	        this.addChild(this.medal);
+	    }
+	    Event2017.prototype.showWin = function (player) {
+	        var _this = this;
+	        var champion = Number(player.totalChampion);
+	        var medal = Math.floor(champion / 5);
+	        if (medal > 0) {
+	            var medalUrl_1 = '/img/panel/score2017/medal' + medal + '.png';
+	            if (!this._texMap[medalUrl_1])
+	                JsFunc_1.loadImg(medalUrl_1, function (img) {
+	                    _this.medal.texture = _this._texMap[medalUrl_1] = PixiEx_1.imgToTex(img);
+	                });
 	            else
-	                gameIdxText.x = -30;
-	            gameIdxText.y = 5;
-	            groupCtn.addChild(gameIdxText);
-	            for (var i = 0; i < group2.hints.length; i++) {
-	                var hint = group2.hints[i];
-	                var label = new PIXI.Text(hint, hintStyle);
-	                label.x = 15;
-	                label.y = 8 + i * 48;
-	                group2.labels.push(label);
-	                groupCtn.addChild(label);
-	                var msk = new PIXI.Graphics();
-	                msk.y = label.y;
-	                msk.x = label.x;
-	                msk.beginFill(0x000000).drawRect(0, 0, 135, 50);
-	                groupCtn.addChild(msk);
-	                label.mask = msk;
-	                groupCtn.addChild(group2.scores[i]);
-	                group2.playerArr = [new BracketGroup_1.PlayerSvg, new BracketGroup_1.PlayerSvg];
-	            }
-	            if (gameIdx > 4) {
-	            }
+	                this.medal.texture = this._texMap[medalUrl_1];
 	        }
-	        var ofsX = 213;
-	        var ofsY = 48;
-	        var g1 = BracketGroup_1.groupPosMap[1];
-	        ctn.addChild(GroupLine_1.drawLine1(g1.x + ofsX, g1.y + ofsY));
-	        g1 = BracketGroup_1.groupPosMap[3];
-	        ctn.addChild(GroupLine_1.drawLine1(g1.x + ofsX, g1.y + ofsY));
-	        g1 = BracketGroup_1.groupPosMap[10];
-	        ctn.addChild(GroupLine_1.drawLine1(g1.x + ofsX, g1.y + ofsY - 1));
-	        g1 = BracketGroup_1.groupPosMap[7];
-	        ctn.addChild(GroupLine_1.drawLine1(g1.x + ofsX, g1.y + ofsY, 144));
-	        g1 = BracketGroup_1.groupPosMap[5];
-	        ctn.addChild(GroupLine_1.drawLine2(g1.x + ofsX, g1.y - 5));
-	        g1 = BracketGroup_1.groupPosMap[6];
-	        ctn.addChild(GroupLine_1.drawLine2(g1.x + ofsX, g1.y - 5));
-	        g1 = BracketGroup_1.groupPosMap[12];
-	        ctn.addChild(GroupLine_1.drawLine2(g1.x + ofsX, g1.y - 24, 19));
-	        g1 = BracketGroup_1.groupPosMap[11];
-	        ctn.addChild(GroupLine_1.drawLine4(g1.x + ofsX, g1.y + ofsY - 1));
-	        this.comingTitle = PixiEx_1.newBitmap({ url: '/img/panel/bracket/comingTitle.png' });
-	        this.comingTitle.visible = false;
-	        ctn.addChild(this.comingTitle);
-	    };
-	    Bracket.prototype.showComingIdx = function (idx) {
-	        var _this = this;
-	        var g = BracketGroup_1.groupPosMap[idx];
-	        this.comingTitle.visible = false;
-	        TweenEx_1.TweenEx.delayedCall(610, function () {
-	            if (g) {
-	                _this.comingTitle.visible = true;
-	                _this.comingTitle.x = g.x - 4;
-	                _this.comingTitle.y = g.y - 36;
-	                Fx_1.blink2({ target: _this.comingTitle, time: 600 });
-	            }
+	        var avatar = player.avatar;
+	        var ftName = player.group;
+	        this.pName.text = player.name;
+	        this.pIntro.text = JsFunc_1.cnWrap(player.intro, 49, 98);
+	        this.pWeight.text = player.weight + " KG";
+	        this.pHeight.text = player.height + " CM";
+	        this.ftName.text = player.group;
+	        BracketGroup_1.fitWidth(this.ftName, 155, 50);
+	        this.winLose.text = player.winAmount + ' 胜 / ' + player.loseAmount + ' 负';
+	        this.winLose.x = 935 - this.winLose.width * .5;
+	        this.pRankScore.text = player.roundScore;
+	        this.pRankScore.x = 1265 - this.pRankScore.width * 0.5;
+	        if (!this._texMap[avatar])
+	            PixiEx_1.loadRes(avatar, function (img) {
+	                _this.avatar.texture = _this._texMap[avatar] = PixiEx_1.imgToTex(img);
+	                _this.avatar.texture['w'] = img.width;
+	                _this.avatar.texture['h'] = img.height;
+	            }, true);
+	        else
+	            this.avatar.texture = this._texMap[avatar];
+	        console.log('tex width', this.avatar.texture['w']);
+	        this.avatar.height = this.avatar.width = 213;
+	        var ftUrl = '/img/ft/' + ftName + '.jpg';
+	        if (!this._texMap[ftUrl])
+	            JsFunc_1.loadImg(ftUrl, function (img) {
+	                _this.ftLogo.texture = _this._texMap[ftUrl] = PixiEx_1.imgToTex(img);
+	            });
+	        else
+	            this.ftLogo.texture = this._texMap[ftUrl];
+	        this.ftLogo.width = this.ftLogo.height = 56;
+	        this.visible = true;
+	        TweenEx_1.TweenEx.delayedCall(6000, function () {
+	            _this.visible = false;
 	        });
 	    };
-	    Bracket.prototype.hideComing = function () {
-	        this.comingTitle.visible = false;
-	    };
-	    Bracket.prototype.hide = function () {
-	        this.ctn.visible = false;
-	    };
-	    Bracket.prototype.show = function () {
-	        this.ctn.visible = true;
-	        this.getFtBracketInfo();
-	    };
-	    Bracket.prototype.getFtBracketInfo = function () {
-	        $.ajax({
-	            url: "/panel/" + const_1.PanelId.onlinePanel + "/cs_ftBracketInfo",
-	            type: 'post',
-	            data: JSON.stringify({}),
-	            headers: { "Content-Type": "application/json" },
-	            dataType: 'json',
-	        });
-	        console.log('connected local /rkb');
-	    };
-	    Bracket.prototype.initAuto = function (gameId) {
-	        var _this = this;
-	        var conWs = function (url) {
-	            var remoteIO = io.connect(url);
-	            remoteIO.on('connect', function () {
-	                if (gameId) {
-	                    console.log('hupuAuto socket connected GameId', gameId);
-	                    remoteIO.emit('passerbyking', {
-	                        game_id: gameId,
-	                        page: 'top8Map'
-	                    });
-	                }
-	                else {
-	                    _this.getFtBracketInfo();
-	                    console.log('connected local /rkb');
-	                }
-	            });
-	            var eventMap = {};
-	            eventMap['top8Match'] = function (data) {
-	                console.log('top8Match', data);
-	                data.data = data.list;
-	                _this.onBracketData(data);
-	            };
-	            eventMap['startGame'] = function (data) {
-	                _this.hideComing();
-	            };
-	            eventMap['updateScore'] = function (data) {
-	                _this.hideComing();
-	            };
-	            remoteIO.on('wall', function (data) {
-	                var event = data.et;
-	                console.log('event:', event, data);
-	                if (eventMap[event])
-	                    eventMap[event](data);
-	            });
-	            var onData = function (data) {
-	                var event = data.et;
-	                if (eventMap[event])
-	                    eventMap[event](data);
-	            };
-	            remoteIO.on("" + Command_1.CommandId.sc_ftBracketInfo, onData);
-	            remoteIO.on("" + Command_1.CommandId.sc_commitTeam, onData);
-	        };
-	        if (gameId)
-	            HupuAPI_1.getHupuWS(function (hupuWsUrl) {
-	                conWs(hupuWsUrl);
-	            });
-	        else {
-	            conWs('/rkb');
-	        }
-	    };
-	    Bracket.prototype.onBracketData = function (res) {
-	        var closeGame = {};
-	        var s = { font: '25px', fill: '#e1e1e1', align: 'right' };
-	        for (var gameIdx in res.data) {
-	            var dataObj = res.data[gameIdx];
-	            var group1 = BracketGroup_1.groupPosMap[gameIdx];
-	            group1.idx = Number(gameIdx);
-	            if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
-	                if (dataObj.left.score > dataObj.right.score)
-	                    group1.playerArr[0].isWin = true;
-	                else
-	                    group1.playerArr[1].isWin = true;
-	                closeGame[gameIdx] = true;
-	            }
-	            if (dataObj.left.name) {
-	                group1.labels[0].style = s;
-	            }
-	            if (dataObj.right.name) {
-	                group1.labels[1].style = s;
-	            }
-	            var hints = group1.hints;
-	            group1.labels[0].text = dataObj.left.name || (hints ? hints[0] : '');
-	            group1.scores[0].text = dataObj.left.score || "0";
-	            group1.labels[1].text = dataObj.right.name || (hints ? hints[1] : '');
-	            group1.scores[1].text = dataObj.right.score || "0";
-	        }
-	        var comingIdx = 1;
-	        for (var i = 0; i < 14; i++) {
-	            var isClose = closeGame[14 - i];
-	            if (isClose) {
-	                comingIdx = 14 - i + 1;
-	                break;
-	            }
-	        }
-	        this.showComingIdx(comingIdx);
-	        for (var i = 0; i < 14; i++) {
-	            var isClose = closeGame[i + 1];
-	            if (!isClose) {
-	                if (i + 1 != comingIdx)
-	                    BracketGroup_1.groupPosMap[i + 1].ctn.alpha = 0.3;
-	                BracketGroup_1.groupPosMap[i + 1].winHint.visible = false;
-	            }
-	            else {
-	                BracketGroup_1.groupPosMap[i + 1].ctn.alpha = 1;
-	                BracketGroup_1.groupPosMap[i + 1].winHint.visible = true;
-	                if (BracketGroup_1.groupPosMap[i + 1].playerArr[0].isWin)
-	                    BracketGroup_1.groupPosMap[i + 1].winHint.y = BracketGroup_1.groupPosMap[i + 1].winHint["y1"];
-	                else
-	                    BracketGroup_1.groupPosMap[i + 1].winHint.y = BracketGroup_1.groupPosMap[i + 1].winHint["y2"];
-	            }
-	        }
-	    };
-	    return Bracket;
-	}(BasePanelView_1.BasePanelView));
-	exports.Bracket = Bracket;
+	    return Event2017;
+	}(PIXI.Container));
+	exports.Event2017 = Event2017;
 
 
 /***/ },
 /* 65 */
-/***/ function(module, exports) {
-
-	"use strict";
-	function _mkGroup(parameters) {
-	    var x = parameters.x;
-	    var y = parameters.y;
-	    var hints = parameters.hints ? parameters.hints : ['', ''];
-	    var s = { font: '25px', fill: '#fff', align: 'right' };
-	    var s1 = new PIXI.Text('', s);
-	    s1.y = 8;
-	    var s2 = new PIXI.Text('', s);
-	    s2.y = 8 + 50;
-	    s1.x = s2.x = 175;
-	    return {
-	        x: x, y: y, labels: [], hints: hints,
-	        scores: [s1, s2]
-	    };
-	}
-	exports.groupPosMap = {
-	    "1": _mkGroup({ x: 255, y: 95, hints: ['1号种子 ', "8号种子 "] }),
-	    "2": _mkGroup({ x: 255, y: 95 + 145, hints: ['4号种子 ', "5号种子 "] }),
-	    "3": _mkGroup({ x: 255, y: 95 + 145 * 2, hints: ['2号种子 ', "7号种子 "] }),
-	    "4": _mkGroup({ x: 255, y: 95 + 145 * 3, hints: ['3号种子 ', "6号种子 "] }),
-	    "5": _mkGroup({ x: 255, y: 805, hints: ['第1场败者 ', "第2场败者 "] }),
-	    "6": _mkGroup({ x: 255, y: 805 + 145, hints: ['第3场败者 ', "第4场败者 "] }),
-	    "7": _mkGroup({ x: 655, y: 168 }),
-	    "8": _mkGroup({ x: 655, y: 457 }),
-	    "9": _mkGroup({ x: 655, y: 900, hints: ['第7场败者 ', ""] }),
-	    "10": _mkGroup({ x: 655, y: 755, hints: ['第8场败者 ', ""] }),
-	    "11": _mkGroup({ x: 1055, y: 312 }),
-	    "12": _mkGroup({ x: 1055, y: 825 }),
-	    "13": _mkGroup({ x: 1460, y: 755, hints: ['第11场败者 ', ""] }),
-	    "14": _mkGroup({ x: 1460, y: 390, hints: ['', "第13场胜者 "] }),
-	};
-	var BracketGroup = (function () {
-	    function BracketGroup(idx) {
-	        this.idx = idx;
-	        this.playerArr = [new PlayerSvg, new PlayerSvg];
-	    }
-	    return BracketGroup;
-	}());
-	exports.BracketGroup = BracketGroup;
-	var PlayerSvg = (function () {
-	    function PlayerSvg() {
-	        this.isHint = false;
-	        this.isWin = false;
-	        this.score = 0;
-	    }
-	    return PlayerSvg;
-	}());
-	exports.PlayerSvg = PlayerSvg;
-
-
-/***/ },
-/* 66 */
-/***/ function(module, exports) {
-
-	"use strict";
-	var ivt = 5;
-	var lineCol = 0x18191a;
-	function drawLine1(x, y, height) {
-	    if (height === void 0) { height = 72; }
-	    var g = new PIXI.Graphics();
-	    g.x = x;
-	    g.y = y;
-	    g.lineColor = lineCol;
-	    return g.lineStyle(2, 0x18191a)
-	        .moveTo(0, 1)
-	        .lineTo(77, 1)
-	        .lineTo(77, height)
-	        .lineTo(77 + 98, height)
-	        .moveTo(77 + 98, height + ivt)
-	        .lineTo(77, height + ivt)
-	        .lineTo(77, height + ivt + height)
-	        .lineTo(1, height + ivt + height)
-	        .moveTo(1, height + height)
-	        .lineTo(77 - ivt, height + height)
-	        .lineTo(77 - ivt, 1 + ivt)
-	        .lineTo(0, 1 + ivt);
-	}
-	exports.drawLine1 = drawLine1;
-	function drawLine2(x, y, height) {
-	    if (height === void 0) { height = 0; }
-	    var g = new PIXI.Graphics();
-	    g.x = x;
-	    g.y = y;
-	    g.lineWidth = 2;
-	    return g.lineStyle(2, lineCol)
-	        .moveTo(77 + 98, 1)
-	        .lineTo(77, 1)
-	        .lineTo(77, 1 + 52 + height)
-	        .lineTo(0, 1 + 52 + height)
-	        .moveTo(0, 1 + 52 + ivt + height)
-	        .lineTo(77 + ivt, 1 + 52 + ivt + height)
-	        .lineTo(77 + ivt, 1 + ivt)
-	        .lineTo(77 + 98, 1 + ivt);
-	}
-	exports.drawLine2 = drawLine2;
-	function drawLine4(x, y) {
-	    var height = 78;
-	    var g = new PIXI.Graphics();
-	    g.x = x;
-	    g.y = y;
-	    g.lineColor = lineCol;
-	    return g.lineStyle(2, 0x18191a)
-	        .moveTo(0, 1)
-	        .lineTo(77, 1)
-	        .lineTo(77, height)
-	        .lineTo(77 + 98, height)
-	        .moveTo(77 + 98, height + ivt)
-	        .lineTo(77 - ivt, height + ivt)
-	        .lineTo(77 - ivt, 1 + ivt)
-	        .lineTo(0, 1 + ivt);
-	}
-	exports.drawLine4 = drawLine4;
-
-
-/***/ },
-/* 67 */
-/***/ function(module, exports) {
-
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        game id:{{gameId}}\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>\r\n\r\n\r\n        <h1>game id:{{gameId}}</h1>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n    </div>\r\n</div>";
-
-/***/ },
-/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5315,7 +5344,7 @@
 	        ctn.addChild(this.rAvatar);
 	        var ftns = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '22px', fill: this.skin.fontColor,
+	            fontSize: '22px', fill: '#fff',
 	            fontWeight: 'bold'
 	        };
 	        var lftn = new PIXI.Text('', ftns);
@@ -5394,6 +5423,10 @@
 	            avt.y = avt.mask.y - avt.texture.height * .5 * s;
 	            avt.scale.x = avt.scale.y = s;
 	        }, true);
+	        if (!height)
+	            height = 0;
+	        if (!weight)
+	            weight = 0;
 	        this.lPlayerInfo.text = height + 'CM ' + weight + "KG";
 	        this.lPlayerInfo.x = 500 - this.lPlayerInfo.width;
 	        this.lFtName.text = ft;
@@ -5410,6 +5443,10 @@
 	            avt.y = avt.mask.y - avt.texture.height * .5 * s;
 	            avt.scale.x = avt.scale.y = s;
 	        }, true);
+	        if (!height)
+	            height = 0;
+	        if (!weight)
+	            weight = 0;
 	        this.rPlayerInfo.text = height + 'CM ' + weight + "KG";
 	        this.rFtName.text = ft;
 	        this.rFtName.x = 1293 - this.rFtName.width * .5;
@@ -5417,6 +5454,166 @@
 	    return Score2017;
 	}());
 	exports.Score2017 = Score2017;
+
+
+/***/ },
+/* 66 */
+/***/ function(module, exports) {
+
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h1>game id:{{gameId}}</h1>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n    </div>\r\n</div>";
+
+/***/ },
+/* 67 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var WebJsFunc_1 = __webpack_require__(22);
+	var VueBase_1 = __webpack_require__(17);
+	var JsFunc_1 = __webpack_require__(24);
+	var const_1 = __webpack_require__(33);
+	var Command_1 = __webpack_require__(50);
+	var opReq = function (cmdId, param, callback) {
+	    $.post("/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId, param, callback);
+	};
+	var RKBView = (function (_super) {
+	    __extends(RKBView, _super);
+	    function RKBView() {
+	        _super.call(this);
+	        this.template = __webpack_require__(68);
+	        this.links = VueBase_1.VueBase.PROP;
+	        this.isOp = VueBase_1.VueBase.PROP;
+	        this.gameId = VueBase_1.VueBase.PROP;
+	        this.panelTime = VueBase_1.VueBase.String;
+	        this.liveTime = VueBase_1.VueBase.String;
+	        this.delayTime = VueBase_1.VueBase.Number;
+	        this.test = VueBase_1.VueBase.PROP;
+	        this.srvTime = 0;
+	        this.isTimerRunning = false;
+	        this.delayTimeMS = 0;
+	        this.methods = {
+	            onClkSetDelay: function () {
+	                console.log("onClkSetDelay", this, this.delayTime);
+	                var dt = Number(this.delayTime);
+	                if (dt >= 0) {
+	                    this.delayTimeMS = dt * 1000;
+	                    opReq("" + Command_1.CommandId.cs_setDelayTime, { delayTimeMS: this.delayTimeMS, _: null }, function () {
+	                    });
+	                }
+	            },
+	            onClkStartTimer: function () {
+	                opReq("" + Command_1.CommandId.cs_startTimer, { _: null }, function () {
+	                    console.log("onClkStartTimer");
+	                });
+	            },
+	            onClkPauseTimer: function () {
+	                opReq("" + Command_1.CommandId.cs_pauseTimer, { _: null }, function () {
+	                    console.log("onClkPauseTimer");
+	                });
+	            },
+	            onClkResetTimer: function () {
+	                opReq("" + Command_1.CommandId.cs_resetTimer, { _: null }, function () {
+	                    console.log("onClkResetTimer");
+	                });
+	            }
+	        };
+	        VueBase_1.VueBase.initProps(this);
+	    }
+	    RKBView.prototype.created = function () {
+	        console.log('RKBView created!');
+	        this.panelTime = "tesst";
+	        this.isOp = this.$route.params.op == "op";
+	        if (this.isOp) {
+	            WebJsFunc_1.dynamicLoading.css('/css/bulma.min.css');
+	        }
+	        this.gameId = this.$route.params.game_id;
+	    };
+	    RKBView.prototype.mounted = function () {
+	    };
+	    RKBView.prototype.onTick = function () {
+	        console.log("onTick");
+	        this.srvTime += 1000;
+	        this.liveTime = JsFunc_1.DateFormat(new Date(this.srvTime), "hh:mm:ss");
+	        this.panelTime = JsFunc_1.DateFormat(new Date(this.srvTime - this.delayTimeMS), "hh:mm:ss");
+	    };
+	    RKBView.prototype.setSrvTime = function (t) {
+	        var _this = this;
+	        console.log("isRunning:", this.isTimerRunning, this.onTick, t);
+	        this.srvTime = t;
+	        if (!this.isTimerRunning) {
+	            this.isTimerRunning = true;
+	            setInterval(function () {
+	                _this.onTick();
+	            }, 1000);
+	        }
+	    };
+	    return RKBView;
+	}(VueBase_1.VueBase));
+	exports.RKBView = RKBView;
+	exports.rkbView = new RKBView();
+
+
+/***/ },
+/* 68 */
+/***/ function(module, exports) {
+
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <h1>game id:{{gameId}}</h1>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\"\r\n                   onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46'\r\n                   placeholder=\"\" style=\"width: 50px;\"\r\n                   v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n    </div>\r\n</div>\r\n";
+
+/***/ },
+/* 69 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var EventDispatcher = (function () {
+	    function EventDispatcher() {
+	        this.isSort = false;
+	        this._func = {};
+	        this._funcId = 0;
+	    }
+	    EventDispatcher.prototype.on = function (type, func) {
+	        if (!this._func[type])
+	            this._func[type] = [];
+	        this._funcId++;
+	        this._func[type].push({ func: func, id: this._funcId });
+	        return this._funcId;
+	    };
+	    EventDispatcher.prototype.emit = function (type, param) {
+	        if (this._func[type])
+	            for (var i = 0; i < this._func[type].length; ++i) {
+	                var f = this._func[type][i];
+	                if (f)
+	                    if (f.func(param))
+	                        break;
+	            }
+	    };
+	    EventDispatcher.prototype.del = function (type, funcId) {
+	        if (funcId === void 0) { funcId = -1; }
+	        if (this._func[type])
+	            if (funcId < 0) {
+	                this._func[type] = [];
+	            }
+	            else {
+	                for (var i = 0; i < this._func[type].length; ++i) {
+	                    var f = this._func[type][i];
+	                    if (f) {
+	                        if (f.id == funcId) {
+	                            delete this._func[type][i];
+	                            break;
+	                        }
+	                    }
+	                }
+	            }
+	    };
+	    EventDispatcher.prototype.removeAll = function () {
+	        this._func = {};
+	    };
+	    return EventDispatcher;
+	}());
+	exports.EventDispatcher = EventDispatcher;
 
 
 /***/ }

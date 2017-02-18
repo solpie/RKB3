@@ -1,16 +1,17 @@
-import { ScoreView } from './score/ScoreView'
-import { RankView } from "./rank/RankView"
-import { BasePanelView } from "../BasePanelView"
-import { Bracket } from "./bracket/Bracket"
-import { dynamicLoading } from "../../utils/WebJsFunc"
-import { VueBase } from "../../utils/VueBase"
-import { PanelId } from "../../const"
-import { CommandId } from "../../Command"
+import { DateFormat } from '../../utils/JsFunc';
+import { CommandId } from '../../Command';
+import { PanelId } from '../../const';
+import { VueBase } from '../../utils/VueBase';
+import { dynamicLoading } from '../../utils/WebJsFunc';
+import { BasePanelView } from '../BasePanelView';
+import { BracketView } from './bracket/BracketView';
+import { RankView } from './rank/RankView';
+import { ScoreView } from './score/ScoreView';
 
 declare let $
 declare let io
 let rankView: RankView
-let bracketView: Bracket
+let bracketView: BracketView
 let scoreView: ScoreView
 let canvasStage
 // const opReq = (cmdId: string, param: any, callback: any) => {
@@ -30,6 +31,10 @@ class StageOnlineView extends VueBase {
     isOp = VueBase.PROP
     delayTime = VueBase.PROP
     liveTime = VueBase.PROP
+    srvTime = 0;//服务器时间(毫秒)
+    isTimerRunning = false;
+    delayTimeMS = 0;
+
     panelTime = VueBase.PROP
     panelTime2Set = VueBase.PROP
     opReq = (cmdId: string, param: any, callback: any) => {
@@ -110,7 +115,7 @@ class StageOnlineView extends VueBase {
     showBracket() {
         console.log('onClkBracket')
         if (!bracketView) {
-            bracketView = new Bracket(canvasStage, this.gameId)
+            bracketView = new BracketView(canvasStage, this.gameId)
             this.basePanelArr.push(bracketView)
         }
         this.showOnly(bracketView.name)
@@ -119,6 +124,11 @@ class StageOnlineView extends VueBase {
     showScore() {
         if (!scoreView) {
             scoreView = new ScoreView(canvasStage, this.$route)
+            if (this.isOp)
+                scoreView.on('init', (data) => {
+                    this.setSrvTime(data.t)
+                    this.liveTime = DateFormat(new Date(this.srvTime), "hh:mm:ss");
+                })
             this.basePanelArr.push(scoreView)
         }
         this.showOnly(scoreView.name)
@@ -136,7 +146,22 @@ class StageOnlineView extends VueBase {
         if (showBp)
             showBp.show()
     }
-
+    onTick() {
+        console.log("onTick");
+        this.srvTime += 1000;
+        this.liveTime = DateFormat(new Date(this.srvTime), "hh:mm:ss");
+        this.panelTime = DateFormat(new Date(this.srvTime - this.delayTimeMS), "hh:mm:ss");
+    }
+    setSrvTime(t) {
+        console.log("isRunning:", this.isTimerRunning, this.onTick, t);
+        this.srvTime = t;
+        if (!this.isTimerRunning) {
+            this.isTimerRunning = true;
+            setInterval(() => {
+                this.onTick();
+            }, 1000);
+        }
+    }
     methods = {
         onClkHide() {
             console.log('onClkHide')
@@ -168,7 +193,7 @@ class StageOnlineView extends VueBase {
             this.opReq(`${CommandId.cs_resetTimer}`, { _: null })
         },
         onClkSetPanelTime(timeBySec) {
-            this.opReq(`${CommandId.cs_setTimer}`, { _: null,time:Number(timeBySec) })
+            this.opReq(`${CommandId.cs_setTimer}`, { _: null, time: Number(timeBySec) })
         },
         onClkBracket() {
             this.opReq(`${CommandId.cs_showBracket}`, { _: null })

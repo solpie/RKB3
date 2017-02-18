@@ -1,13 +1,9 @@
-import Bitmap = createjs.Bitmap;
-import Container = createjs.Container;
 import {PlayerDoc} from "../../../../model/PlayerInfo";
 import {BasePanelView} from "../../BasePanelView";
 import {PanelId, FontName} from "../../../const";
 import {FTInfo} from "../../../../model/FTInfo";
 import {newBitmap} from "../../../utils/PixiEx";
 import {loadImgArr} from "../../../utils/JsFunc";
-import Shape = createjs.Shape;
-import Text = createjs.Text;
 declare let $;
 declare let PIXI;
 

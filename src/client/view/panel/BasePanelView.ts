@@ -1,8 +1,9 @@
+import { EventDispatcher } from '../utils/EventDispatcher';
 
 import { ViewConst } from "../const";
 declare var $;
 declare var PIXI;
-export class BasePanelView {
+export class BasePanelView extends EventDispatcher {
     name: string;
     stageWidth;
     stageHeight;
@@ -11,6 +12,7 @@ export class BasePanelView {
     opReq: (cmdId: string, param: any, callback?: any) => void;
 
     constructor(pid) {
+        super()
         this.opReq = (cmdId: string, param: any, callback?: any) => {
             $.post(`/panel/${pid}/${cmdId}`,
                 param,

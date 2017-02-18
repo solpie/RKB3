@@ -1,3 +1,4 @@
+import { Event2017 } from './Event2017';
 import { PlayerInfo } from '../../../../model/PlayerInfo';
 import { TweenEx } from '../../../utils/TweenEx';
 import { Score2017 } from './Score2017';
@@ -10,8 +11,12 @@ import { BasePanelView } from '../../BasePanelView';
 declare let io;
 export class ScoreView extends BasePanelView {
     scorePanel: Score2017
+    eventPanel: Event2017
+
     delayTimeMS = 0
     gameId: any
+    isTest = false
+
     constructor(stage: PIXI.Container, $route) {
         super(PanelId.onlinePanel)
         this.name = PanelId.scorePanel
@@ -19,9 +24,10 @@ export class ScoreView extends BasePanelView {
         let darkTheme = $route.query.theme == "dark"
         this.gameId = $route.params.game_id
 
+        this.isTest = $route.query.test == "1"
 
         this.scorePanel = new Score2017(stage, darkTheme)
-
+        this.eventPanel = new Event2017(stage, darkTheme)
         console.log('new ScoreView')
 
         this.initRemote()
@@ -55,8 +61,8 @@ export class ScoreView extends BasePanelView {
             let remoteIO = io.connect(hupuWsUrl);
             let setPlayer = (leftPlayer, rightPlayer) => {
                 console.log(leftPlayer)
-                this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar,leftPlayer.weight,leftPlayer.height, leftPlayer.group)
-                this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar,rightPlayer.weight,rightPlayer.height, rightPlayer.group)
+                this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.group)
+                this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.group)
             };
 
             remoteIO.on('connect', () => {
@@ -81,12 +87,11 @@ export class ScoreView extends BasePanelView {
                     this.scorePanel.setRightScore(data.player.right.rightScore);
                     this.scorePanel.setLeftFoul(data.player.left.leftFoul);
                     this.scorePanel.setRightFoul(data.player.right.rightFoul);
-
+                    this.emit('init', data)
                     // if (data.status == 0) {//status字段吧 0 进行中 1已结束
                     //     this.scorePanel.resetTimer();
                     //     this.scorePanel.toggleTimer(TimerState.RUNNING);
                     // }
-
 
                     //setup timer
                     // console.log('$opView', this.$opView);
@@ -105,6 +110,22 @@ export class ScoreView extends BasePanelView {
                     // });
                     // this.scorePanel.setRightFoul(3)
                     // this.scorePanel.setLeftFoul(4)
+                    if (this.isTest) {
+                        let player = {
+                            avatar: "http://w2.hoopchina.com.cn/43/6f/6a/436f6a5aa8a38e158b98830a3b5c4a4b001.jpg",
+                            group: 'Fe3O4',
+                            height: '177',
+                            intro: "一二三四五六七八九十一二三四五六七八九十一二三22四五六七八九十一二三四五六七八九十一二三四五六七八九十",
+                            loseAmount: 1,
+                            name: "geoffrey0326",
+                            roundScore: 28,
+                            totalChampion: 0,
+                            weight: '79',
+                            winAmount: "3"
+                        }
+                        this.eventPanel.showWin(player)
+                    }
+
                 };
 
                 eventMap['updateScore'] = () => {
@@ -140,16 +161,20 @@ export class ScoreView extends BasePanelView {
 
 
 
-                // eventMap['commitGame'] = ()=> {
-                //     if (this.isScorePanelVisible) {
-                //         let isBlue = data.idx == 0;
-                //         data.player.winGameCount = data.player.winAmount;
-                //         data.player.loseGameCount = data.player.loseAmount;
-                //         data.player.curFtScore = data.player.roundScore;
-                //         this.eventPanel.playerInfoCard.fadeInWinPlayer(isBlue, data.player);
-                //         this.scorePanel.toggleTimer1(TimerState.PAUSE);
-                //     }
-                // };
+                eventMap['commitGame'] = () => {
+                    console.log('commitGame', data)
+                    let player = data.player
+
+                    this.eventPanel.showWin(player)
+                    // if (this.isScorePanelVisible) {
+                    //     let isBlue = data.idx == 0;
+                    //     data.player.winGameCount = data.player.winAmount;
+                    //     data.player.loseGameCount = data.player.loseAmount;
+                    //     data.player.curFtScore = data.player.roundScore;
+                    //     this.eventPanel.playerInfoCard.fadeInWinPlayer(isBlue, data.player);
+                    //     this.scorePanel.toggleTimer1(TimerState.PAUSE);
+                    // }
+                };
                 if (eventMap[event]) {
                     TweenEx.delayedCall(this.delayTimeMS, () => {
                         eventMap[event]();

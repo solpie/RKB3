@@ -1,209 +1,198 @@
 // import {loadImg, descendingProp} from "../../../utils/JsFunc";
 // import {ViewConst} from "../../../event/Const";
-import {PlayerInfo, PlayerState1v1, PlayerDoc} from "../../../model/PlayerInfo";
 // import {TeamInfo} from "../../../model/TeamInfo";
-import {CreateJsEx} from "../CreateJsEx";
-import {PlayerInfoCard} from "./PlayerInfoCard";
 // import {FTInfo} from "../../../model/FTInfo";
-import Container = createjs.Container;
-import Text = createjs.Text;
-import Bitmap = createjs.Bitmap;
-import SpriteContainer = createjs.SpriteContainer;
-import Ease = createjs.Ease;
-import Shape = createjs.Shape;
-import {ViewConst} from "../../const";
-import {loadImg, descendingProp} from "../../utils/JsFunc";
 export class EventPanel {
-    ctn: Container;
-    fireFx: any;
-    itemArr: Array<any>;
-    titleItemArr: Array<any>;
-    playerInfoCard: PlayerInfoCard;
-    curPage: number = 0;
+    // ctn: Container;
+    // fireFx: any;
+    // itemArr: Array<any>;
+    // titleItemArr: Array<any>;
+    // playerInfoCard: PlayerInfoCard;
+    // curPage: number = 0;
 
     constructor(parent: any) {
-        var ctn = new createjs.Container();
-        parent.stage.addChild(ctn);
-        this.ctn = ctn;
-        this.playerInfoCard = new PlayerInfoCard(parent.stage);
+        // var ctn = new createjs.Container();
+        // parent.stage.addChild(ctn);
+        // this.ctn = ctn;
+        // this.playerInfoCard = new PlayerInfoCard(parent.stage);
     }
 
     fadeInActPanel(playerDocArr, isOp: boolean, dtPage, eventCallback) {
-        this.curPage += dtPage;
-        this.itemArr = [];
-        this.titleItemArr = [];
-        this.ctn.removeAllChildren();
-        // var modal = new createjs.Shape();
-        // modal.graphics.beginFill('#000').drawRect(0, 0, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT);
-        // modal.alpha = .3;
-        this.ctn.addChild(CreateJsEx.newModal());
-        //first column
-        var actColumn = (playerDocArrC)=> {
-            var ctn = new createjs.Container();
-            var title = new createjs.Bitmap('/img/panel/stage1v1/actTitle.png');
-            this.titleItemArr.push(title);
-            ctn.addChild(title);
-            ////            test
-            // var tmp = [PlayerState1v1.WAITING, PlayerState1v1.FIGHTING, PlayerState1v1.Dead, PlayerState1v1.PIGEON]
-            // for (var i = 0; i < playerDocArrC.length; i++) {
-            //     playerDocArrC[i].state = tmp[i % 4];
-            // }
-            ////////////////////
-            for (var i = 0; i < 10; i++) {
-                var playerDoc = playerDocArrC[i];
-                if (playerDoc) {
-                    var itemCtn = new createjs.Container();
-                    this.itemArr.push(itemCtn);
-                    itemCtn.y = i * 95 + 95;
-                    if (!playerDoc.state || playerDoc.state == PlayerState1v1.FIGHTING)
-                        playerDoc.state = PlayerState1v1.WAITING;
-                    // if (playerDoc.state == PlayerState1v1.FIGHTING)
-                    //     playerDoc.state = PlayerState1v1.WAITING;
-                    var state = playerDoc.state;
-                    var stateBg: Bitmap;
-                    if (state == PlayerState1v1.FIGHTING) {
-                        stateBg = new createjs.Bitmap('/img/panel/stage1v1/fighting.png');
-                    }
-                    else if (state == PlayerState1v1.WAITING) {
-                        stateBg = new createjs.Bitmap('/img/panel/stage1v1/waiting.png');
-                    }
-                    else if (state == PlayerState1v1.Dead) {
-                        stateBg = new createjs.Bitmap('/img/panel/stage1v1/dead.png');
-                    }
-                    else if (state == PlayerState1v1.PIGEON) {
-                        stateBg = new createjs.Bitmap('/img/panel/stage1v1/pigeon.png');
-                    }
-                    stateBg.name = 'bg';
-                    (itemCtn as any).playerDoc = playerDoc;
-                    itemCtn.addChild(stateBg);
-                    ctn.addChild(itemCtn);
+        // this.curPage += dtPage;
+        // this.itemArr = [];
+        // this.titleItemArr = [];
+        // this.ctn.removeAllChildren();
+        // // var modal = new createjs.Shape();
+        // // modal.graphics.beginFill('#000').drawRect(0, 0, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT);
+        // // modal.alpha = .3;
+        // this.ctn.addChild(CreateJsEx.newModal());
+        // //first column
+        // var actColumn = (playerDocArrC)=> {
+        //     var ctn = new createjs.Container();
+        //     var title = new createjs.Bitmap('/img/panel/stage1v1/actTitle.png');
+        //     this.titleItemArr.push(title);
+        //     ctn.addChild(title);
+        //     ////            test
+        //     // var tmp = [PlayerState1v1.WAITING, PlayerState1v1.FIGHTING, PlayerState1v1.Dead, PlayerState1v1.PIGEON]
+        //     // for (var i = 0; i < playerDocArrC.length; i++) {
+        //     //     playerDocArrC[i].state = tmp[i % 4];
+        //     // }
+        //     ////////////////////
+        //     for (var i = 0; i < 10; i++) {
+        //         var playerDoc = playerDocArrC[i];
+        //         if (playerDoc) {
+        //             var itemCtn = new createjs.Container();
+        //             this.itemArr.push(itemCtn);
+        //             itemCtn.y = i * 95 + 95;
+        //             if (!playerDoc.state || playerDoc.state == PlayerState1v1.FIGHTING)
+        //                 playerDoc.state = PlayerState1v1.WAITING;
+        //             // if (playerDoc.state == PlayerState1v1.FIGHTING)
+        //             //     playerDoc.state = PlayerState1v1.WAITING;
+        //             var state = playerDoc.state;
+        //             var stateBg: Bitmap;
+        //             if (state == PlayerState1v1.FIGHTING) {
+        //                 stateBg = new createjs.Bitmap('/img/panel/stage1v1/fighting.png');
+        //             }
+        //             else if (state == PlayerState1v1.WAITING) {
+        //                 stateBg = new createjs.Bitmap('/img/panel/stage1v1/waiting.png');
+        //             }
+        //             else if (state == PlayerState1v1.Dead) {
+        //                 stateBg = new createjs.Bitmap('/img/panel/stage1v1/dead.png');
+        //             }
+        //             else if (state == PlayerState1v1.PIGEON) {
+        //                 stateBg = new createjs.Bitmap('/img/panel/stage1v1/pigeon.png');
+        //             }
+        //             stateBg.name = 'bg';
+        //             (itemCtn as any).playerDoc = playerDoc;
+        //             itemCtn.addChild(stateBg);
+        //             ctn.addChild(itemCtn);
 
-                    var avatar = new createjs.Bitmap(playerDoc.avatar);
-                    avatar.x = 10;
-                    avatar.y = 10;
-                    if (avatar.getBounds()) {
-                        var scale = 70 / avatar.getBounds().height;
-                        avatar.scaleX = avatar.scaleY = scale;
-                    }
-                    itemCtn.addChild(avatar);
+        //             var avatar = new createjs.Bitmap(playerDoc.avatar);
+        //             avatar.x = 10;
+        //             avatar.y = 10;
+        //             if (avatar.getBounds()) {
+        //                 var scale = 70 / avatar.getBounds().height;
+        //                 avatar.scaleX = avatar.scaleY = scale;
+        //             }
+        //             itemCtn.addChild(avatar);
 
-                    // var backNumBg = new createjs.Bitmap('/img/panel/stage1v1/backNumBg.png');
-                    // backNumBg.x = 122;
-                    // backNumBg.y = stateBg.y + 7;
-                    // ctn.addChild(backNumBg);
-                    //
-                    // var backNum = new createjs.Text(playerDoc.backNum || 30, "26px Arial", "#fff");
-                    // backNum.textAlign = 'center';
-                    // backNum.x = backNumBg.x + 27;
-                    // backNum.y = backNumBg.y + 35;
-                    // ctn.addChild(backNum);
-
-
-                    var nameText = new createjs.Text(playerDoc.name, "28px Arial", "#fff");
-                    nameText.textAlign = 'center';
-                    nameText.x = 300;
-                    nameText.y = 30;
-                    itemCtn.addChild(nameText);
-
-                    var winLoseText = new createjs.Text(playerDoc.winGameCount + '/' + playerDoc.loseGameCount, "32px Arial", "#fff");
-                    winLoseText.textAlign = 'center';
-                    winLoseText.x = 495;
-                    winLoseText.y = nameText.y;
-                    itemCtn.addChild(winLoseText);
-
-                    var stateText = new createjs.Text(state, "28px Arial", "#fff");
-                    stateText.name = 'stateText';
-                    stateText.textAlign = 'left';
-                    stateText.x = 675;
-                    stateText.y = nameText.y;
-                    itemCtn.addChild(stateText);
-
-                    if (isOp) {
-                        var idBtn = CreateJsEx.newBtn((e)=> {
-                            // var item = e.target.parent.parent;
-                            // item.playerDoc.state = PlayerState1v1.FIGHTING;
-                            // eventCallback(item.playerDoc);
-                        }, playerDoc.id + "");
-                        idBtn.x = 180;
-                        idBtn.y = 15;
-                        itemCtn.addChild(idBtn);
-
-                        var fightingBtn = CreateJsEx.newBtn((e)=> {
-                            var item = e.target.parent.parent;
-                            item.playerDoc.state = PlayerState1v1.FIGHTING;
-                            eventCallback(item.playerDoc);
-                        }, '战斗');
-                        fightingBtn.x = 420;
-                        fightingBtn.y = 15;
-                        itemCtn.addChild(fightingBtn);
-
-                        var waitingBtn = CreateJsEx.newBtn((e)=> {
-                            var item = e.target.parent.parent;
-                            item.playerDoc.state = PlayerState1v1.WAITING;
-                            eventCallback(item.playerDoc);
-                        }, '等待');
-                        waitingBtn.x = 500;
-                        waitingBtn.y = 15;
-                        itemCtn.addChild(waitingBtn);
-
-                        var deadBtn = CreateJsEx.newBtn((e)=> {
-                            var item = e.target.parent.parent;
-                            item.playerDoc.state = PlayerState1v1.Dead;
-                            eventCallback(item.playerDoc);
-                        }, '淘汰');
-                        deadBtn.x = 580;
-                        deadBtn.y = 15;
-                        itemCtn.addChild(deadBtn);
+        //             // var backNumBg = new createjs.Bitmap('/img/panel/stage1v1/backNumBg.png');
+        //             // backNumBg.x = 122;
+        //             // backNumBg.y = stateBg.y + 7;
+        //             // ctn.addChild(backNumBg);
+        //             //
+        //             // var backNum = new createjs.Text(playerDoc.backNum || 30, "26px Arial", "#fff");
+        //             // backNum.textAlign = 'center';
+        //             // backNum.x = backNumBg.x + 27;
+        //             // backNum.y = backNumBg.y + 35;
+        //             // ctn.addChild(backNum);
 
 
-                        var pigeonBtn = CreateJsEx.newBtn((e)=> {
-                            var item = e.target.parent.parent;
-                            item.playerDoc.state = PlayerState1v1.PIGEON;
-                            eventCallback(item.playerDoc);
-                        }, '鸽子');
-                        pigeonBtn.x = 660;
-                        pigeonBtn.y = fightingBtn.y;
-                        itemCtn.addChild(pigeonBtn);
-                    }
-                }
-            }
-            return ctn;
-        };
-        var col1 = actColumn(playerDocArr.slice(this.curPage * 10, (this.curPage + 1) * 10));
-        col1.x = 120;
-        col1.y = 10;
-        var col2 = actColumn(playerDocArr.slice((this.curPage + 1) * 10, (this.curPage + 2) * 10));
-        col2.x = 1030;
-        col2.y = col1.y;
-        this.ctn.addChild(col1);
-        this.ctn.addChild(col2);
+        //             var nameText = new createjs.Text(playerDoc.name, "28px Arial", "#fff");
+        //             nameText.textAlign = 'center';
+        //             nameText.x = 300;
+        //             nameText.y = 30;
+        //             itemCtn.addChild(nameText);
+
+        //             var winLoseText = new createjs.Text(playerDoc.winGameCount + '/' + playerDoc.loseGameCount, "32px Arial", "#fff");
+        //             winLoseText.textAlign = 'center';
+        //             winLoseText.x = 495;
+        //             winLoseText.y = nameText.y;
+        //             itemCtn.addChild(winLoseText);
+
+        //             var stateText = new createjs.Text(state, "28px Arial", "#fff");
+        //             stateText.name = 'stateText';
+        //             stateText.textAlign = 'left';
+        //             stateText.x = 675;
+        //             stateText.y = nameText.y;
+        //             itemCtn.addChild(stateText);
+
+        //             if (isOp) {
+        //                 var idBtn = CreateJsEx.newBtn((e)=> {
+        //                     // var item = e.target.parent.parent;
+        //                     // item.playerDoc.state = PlayerState1v1.FIGHTING;
+        //                     // eventCallback(item.playerDoc);
+        //                 }, playerDoc.id + "");
+        //                 idBtn.x = 180;
+        //                 idBtn.y = 15;
+        //                 itemCtn.addChild(idBtn);
+
+        //                 var fightingBtn = CreateJsEx.newBtn((e)=> {
+        //                     var item = e.target.parent.parent;
+        //                     item.playerDoc.state = PlayerState1v1.FIGHTING;
+        //                     eventCallback(item.playerDoc);
+        //                 }, '战斗');
+        //                 fightingBtn.x = 420;
+        //                 fightingBtn.y = 15;
+        //                 itemCtn.addChild(fightingBtn);
+
+        //                 var waitingBtn = CreateJsEx.newBtn((e)=> {
+        //                     var item = e.target.parent.parent;
+        //                     item.playerDoc.state = PlayerState1v1.WAITING;
+        //                     eventCallback(item.playerDoc);
+        //                 }, '等待');
+        //                 waitingBtn.x = 500;
+        //                 waitingBtn.y = 15;
+        //                 itemCtn.addChild(waitingBtn);
+
+        //                 var deadBtn = CreateJsEx.newBtn((e)=> {
+        //                     var item = e.target.parent.parent;
+        //                     item.playerDoc.state = PlayerState1v1.Dead;
+        //                     eventCallback(item.playerDoc);
+        //                 }, '淘汰');
+        //                 deadBtn.x = 580;
+        //                 deadBtn.y = 15;
+        //                 itemCtn.addChild(deadBtn);
+
+
+        //                 var pigeonBtn = CreateJsEx.newBtn((e)=> {
+        //                     var item = e.target.parent.parent;
+        //                     item.playerDoc.state = PlayerState1v1.PIGEON;
+        //                     eventCallback(item.playerDoc);
+        //                 }, '鸽子');
+        //                 pigeonBtn.x = 660;
+        //                 pigeonBtn.y = fightingBtn.y;
+        //                 itemCtn.addChild(pigeonBtn);
+        //             }
+        //         }
+        //     }
+        //     return ctn;
+        // };
+        // var col1 = actColumn(playerDocArr.slice(this.curPage * 10, (this.curPage + 1) * 10));
+        // col1.x = 120;
+        // col1.y = 10;
+        // var col2 = actColumn(playerDocArr.slice((this.curPage + 1) * 10, (this.curPage + 2) * 10));
+        // col2.x = 1030;
+        // col2.y = col1.y;
+        // this.ctn.addChild(col1);
+        // this.ctn.addChild(col2);
     }
 
     updatePlayerState(newPlayerDoc: any) {
-        console.log('updatePlayerState', newPlayerDoc);
-        for (var i = 0; i < this.itemArr.length; i++) {
-            var itemCtn = this.itemArr[i];
-            if (itemCtn.playerDoc.id == newPlayerDoc.id) {
-                itemCtn.playerDoc.state = newPlayerDoc.state;
-                if (newPlayerDoc.state == PlayerState1v1.Dead) {
-                    itemCtn.getChildByName('bg').image.src = '/img/panel/stage1v1/dead.png';
-                    itemCtn.getChildByName('stateText').text = itemCtn.playerDoc.state;
-                }
-                else if (newPlayerDoc.state == PlayerState1v1.PIGEON) {
-                    itemCtn.getChildByName('bg').image.src = '/img/panel/stage1v1/pigeon.png';
-                    itemCtn.getChildByName('stateText').text = itemCtn.playerDoc.state;
-                }
-                else if (newPlayerDoc.state == PlayerState1v1.WAITING) {
-                    itemCtn.getChildByName('bg').image.src = '/img/panel/stage1v1/waiting.png';
-                    itemCtn.getChildByName('stateText').text = itemCtn.playerDoc.state;
-                }
-                else if (newPlayerDoc.state == PlayerState1v1.FIGHTING) {
-                    itemCtn.getChildByName('bg').image.src = '/img/panel/stage1v1/fighting.png';
-                    itemCtn.getChildByName('stateText').text = itemCtn.playerDoc.state;
-                }
-                break;
-            }
-        }
+        // console.log('updatePlayerState', newPlayerDoc);
+        // for (var i = 0; i < this.itemArr.length; i++) {
+        //     var itemCtn = this.itemArr[i];
+        //     if (itemCtn.playerDoc.id == newPlayerDoc.id) {
+        //         itemCtn.playerDoc.state = newPlayerDoc.state;
+        //         if (newPlayerDoc.state == PlayerState1v1.Dead) {
+        //             itemCtn.getChildByName('bg').image.src = '/img/panel/stage1v1/dead.png';
+        //             itemCtn.getChildByName('stateText').text = itemCtn.playerDoc.state;
+        //         }
+        //         else if (newPlayerDoc.state == PlayerState1v1.PIGEON) {
+        //             itemCtn.getChildByName('bg').image.src = '/img/panel/stage1v1/pigeon.png';
+        //             itemCtn.getChildByName('stateText').text = itemCtn.playerDoc.state;
+        //         }
+        //         else if (newPlayerDoc.state == PlayerState1v1.WAITING) {
+        //             itemCtn.getChildByName('bg').image.src = '/img/panel/stage1v1/waiting.png';
+        //             itemCtn.getChildByName('stateText').text = itemCtn.playerDoc.state;
+        //         }
+        //         else if (newPlayerDoc.state == PlayerState1v1.FIGHTING) {
+        //             itemCtn.getChildByName('bg').image.src = '/img/panel/stage1v1/fighting.png';
+        //             itemCtn.getChildByName('stateText').text = itemCtn.playerDoc.state;
+        //         }
+        //         break;
+        //     }
+        // }
     }
 
     // fadeInWinPanel(teamInfo: TeamInfo, mvpIdx, mpvId) {
@@ -320,159 +309,159 @@ export class EventPanel {
     // }
 
 
-    getWinPlayerCard(p: PlayerInfo, callback): any {
-        var isMvp = p.isMvp;
-        var ctn = new createjs.Container();
-        console.log("playerCard=======:", p.avatar());
-        loadImg(p.avatar(), function () {
-            var avatar = new createjs.Bitmap(p.avatar());
-            var scale = 80 / avatar.getBounds().height;
-            if (isMvp) {
-                avatar.scaleX = avatar.scaleY = 1.5 * scale;
-                avatar.x = (180 - 180 * 1.2) * .5 + 60;
-                avatar.y = 45 + 30;
-            }
-            else {
-                avatar.scaleX = avatar.scaleY = 1.2 * scale;
-                avatar.x = (180 - 180 * 1.2) * .5 + 60;
-                avatar.y = 50 + 30;
-            }
-            ctn.addChild(avatar);
+    // getWinPlayerCard(p: PlayerInfo, callback): any {
+    //     var isMvp = p.isMvp;
+    //     var ctn = new createjs.Container();
+    //     console.log("playerCard=======:", p.avatar());
+    //     loadImg(p.avatar(), function () {
+    //         var avatar = new createjs.Bitmap(p.avatar());
+    //         var scale = 80 / avatar.getBounds().height;
+    //         if (isMvp) {
+    //             avatar.scaleX = avatar.scaleY = 1.5 * scale;
+    //             avatar.x = (180 - 180 * 1.2) * .5 + 60;
+    //             avatar.y = 45 + 30;
+    //         }
+    //         else {
+    //             avatar.scaleX = avatar.scaleY = 1.2 * scale;
+    //             avatar.x = (180 - 180 * 1.2) * .5 + 60;
+    //             avatar.y = 50 + 30;
+    //         }
+    //         ctn.addChild(avatar);
 
 
-            var bgPath = '/img/panel/stage/win/playerBgWin';
-            if (p.isBlue)
-                bgPath += "Blue";
-            else
-                bgPath += "Red";
-            bgPath += '.png';
-            var bg = new createjs.Bitmap(bgPath);
-            if (p.isMvp) {
-                bg.x = -132;
-                bg.y = -105;
-            }
-            else {
-                bg.x = -116;
-                bg.y = -80;
-            }
-            ctn.addChild(bg);
+    //         var bgPath = '/img/panel/stage/win/playerBgWin';
+    //         if (p.isBlue)
+    //             bgPath += "Blue";
+    //         else
+    //             bgPath += "Red";
+    //         bgPath += '.png';
+    //         var bg = new createjs.Bitmap(bgPath);
+    //         if (p.isMvp) {
+    //             bg.x = -132;
+    //             bg.y = -105;
+    //         }
+    //         else {
+    //             bg.x = -116;
+    //             bg.y = -80;
+    //         }
+    //         ctn.addChild(bg);
 
 
-            var col;
-            if (p.isRed)
-                col = "#e23f6b";
-            else
-                col = "#1ac3fa";
+    //         var col;
+    //         if (p.isRed)
+    //             col = "#e23f6b";
+    //         else
+    //             col = "#1ac3fa";
 
-            var nameCol = "#ddd";
-            if (isMvp)
-                nameCol = "#f1c236";
-            var name;
-            if (isMvp)
-                name = new createjs.Text(p.name(), "30px Arial", nameCol);
-            else
-                name = new createjs.Text(p.name(), "30px Arial", col);
-            name.textAlign = 'center';
-            name.x = 90 + 60;
-            name.y = 200;
-            if (isMvp) {
-                name.x += 20;
-                name.y = 215;
-            }
-            ctn.addChild(name);
+    //         var nameCol = "#ddd";
+    //         if (isMvp)
+    //             nameCol = "#f1c236";
+    //         var name;
+    //         if (isMvp)
+    //             name = new createjs.Text(p.name(), "30px Arial", nameCol);
+    //         else
+    //             name = new createjs.Text(p.name(), "30px Arial", col);
+    //         name.textAlign = 'center';
+    //         name.x = 90 + 60;
+    //         name.y = 200;
+    //         if (isMvp) {
+    //             name.x += 20;
+    //             name.y = 215;
+    //         }
+    //         ctn.addChild(name);
 
-            var eloScore;
-            var eloScoreText = '新秀';
-            if (p.gameCount() >= 3) {
-                eloScoreText = p.eloScore();
-            }
-            eloScore = new createjs.Text(eloScoreText, "bold 32px Arial", nameCol);
-            eloScore.textAlign = 'center';
-            eloScore.x = name.x;
-            eloScore.y = 245 + 30;
-            if (isMvp)
-                eloScore.y += 30;
-            ctn.addChild(eloScore);
+    //         var eloScore;
+    //         var eloScoreText = '新秀';
+    //         if (p.gameCount() >= 3) {
+    //             eloScoreText = p.eloScore();
+    //         }
+    //         eloScore = new createjs.Text(eloScoreText, "bold 32px Arial", nameCol);
+    //         eloScore.textAlign = 'center';
+    //         eloScore.x = name.x;
+    //         eloScore.y = 245 + 30;
+    //         if (isMvp)
+    //             eloScore.y += 30;
+    //         ctn.addChild(eloScore);
 
-            var eloScoreDt = new createjs.Text("+" + p.dtScore(), "12px Arial", col);
-            eloScoreDt.textAlign = 'left';
-            eloScoreDt.x = 140 + 60;
-            eloScoreDt.y = 260 + 30;
-            if (isMvp) {
-                eloScoreDt.x += 30;
-                eloScoreDt.y += 30;
-            }
-            ctn.addChild(eloScoreDt);
+    //         var eloScoreDt = new createjs.Text("+" + p.dtScore(), "12px Arial", col);
+    //         eloScoreDt.textAlign = 'left';
+    //         eloScoreDt.x = 140 + 60;
+    //         eloScoreDt.y = 260 + 30;
+    //         if (isMvp) {
+    //             eloScoreDt.x += 30;
+    //             eloScoreDt.y += 30;
+    //         }
+    //         ctn.addChild(eloScoreDt);
 
-            var winpercent: Text = new createjs.Text("胜率" + p.getWinPercent(), "18px Arial", col);
-            winpercent.textAlign = 'center';
-            winpercent.x = name.x;
-            winpercent.y = 320;
-            if (isMvp)
-                winpercent.y += 35;
-            ctn.addChild(winpercent);
+    //         var winpercent: Text = new createjs.Text("胜率" + p.getWinPercent(), "18px Arial", col);
+    //         winpercent.textAlign = 'center';
+    //         winpercent.x = name.x;
+    //         winpercent.y = 320;
+    //         if (isMvp)
+    //             winpercent.y += 35;
+    //         ctn.addChild(winpercent);
 
-            var gameCount = new createjs.Text("场数" + p.gameCount(), "18px Arial", col);
-            gameCount.textAlign = 'center';
-            gameCount.x = name.x;
-            gameCount.y = 350;
-            if (isMvp)
-                gameCount.y += 35;
-            ctn.addChild(gameCount);
+    //         var gameCount = new createjs.Text("场数" + p.gameCount(), "18px Arial", col);
+    //         gameCount.textAlign = 'center';
+    //         gameCount.x = name.x;
+    //         gameCount.y = 350;
+    //         if (isMvp)
+    //             gameCount.y += 35;
+    //         ctn.addChild(gameCount);
 
-            var style = new createjs.Bitmap(p.getWinStyleIcon());
-            style.x = 110;
-            style.y = 370;
-            if (isMvp) {
-                style.x += 20;
-                style.y += 45;
-            }
-            ctn.addChild(style);
-            callback(p.isMvp);
-        });
-        return ctn;
-    }
+    //         var style = new createjs.Bitmap(p.getWinStyleIcon());
+    //         style.x = 110;
+    //         style.y = 370;
+    //         if (isMvp) {
+    //             style.x += 20;
+    //             style.y += 45;
+    //         }
+    //         ctn.addChild(style);
+    //         callback(p.isMvp);
+    //     });
+    //     return ctn;
+    // }
 
-    fadeOutWinPanel() {
-        console.log(this, "show fade Out WinPanel");
-        // var ctn = this.ctn;
-        // createjs.Tween.get(ctn).to({alpha: 0}, 200)
-        //     .call(function () {
-        //         ctn.alpha = 1;
-        //         ctn.removeAllChildren();
-        //     });
-        for (var i = 0; i < this.titleItemArr.length; i++) {
-            var obj = this.titleItemArr[i];
-            if (i < 1)
-                createjs.Tween.get(obj).wait(80 * i).to({x: -920}, 150, Ease.elasticIn);
-            else
-                createjs.Tween.get(obj).wait(80 * (i - 1)).to({x: 1920}, 150, Ease.elasticIn)
-        }
-        for (var i = 0; i < this.itemArr.length; i++) {
-            var item = this.itemArr[i];
-            if (i < 10)
-                createjs.Tween.get(item).wait(80 * (i + 2)).to({x: -920}, 150, Ease.elasticIn);
-            else
-                createjs.Tween.get(item).wait(80 * (i - 10 + 2)).to({x: 1920}, 150, Ease.elasticIn)
-        }
-        var ctn = this.ctn;
-        createjs.Tween.get(ctn).wait(80 * (i - 10)).to({alpha: 0}, 100).call(function () {
-            ctn.alpha = 1;
-            ctn.removeAllChildren();
-        });
-    }
+    // fadeOutWinPanel() {
+    //     console.log(this, "show fade Out WinPanel");
+    //     // var ctn = this.ctn;
+    //     // createjs.Tween.get(ctn).to({alpha: 0}, 200)
+    //     //     .call(function () {
+    //     //         ctn.alpha = 1;
+    //     //         ctn.removeAllChildren();
+    //     //     });
+    //     for (var i = 0; i < this.titleItemArr.length; i++) {
+    //         var obj = this.titleItemArr[i];
+    //         if (i < 1)
+    //             createjs.Tween.get(obj).wait(80 * i).to({x: -920}, 150, Ease.elasticIn);
+    //         else
+    //             createjs.Tween.get(obj).wait(80 * (i - 1)).to({x: 1920}, 150, Ease.elasticIn)
+    //     }
+    //     for (var i = 0; i < this.itemArr.length; i++) {
+    //         var item = this.itemArr[i];
+    //         if (i < 10)
+    //             createjs.Tween.get(item).wait(80 * (i + 2)).to({x: -920}, 150, Ease.elasticIn);
+    //         else
+    //             createjs.Tween.get(item).wait(80 * (i - 10 + 2)).to({x: 1920}, 150, Ease.elasticIn)
+    //     }
+    //     var ctn = this.ctn;
+    //     createjs.Tween.get(ctn).wait(80 * (i - 10)).to({alpha: 0}, 100).call(function () {
+    //         ctn.alpha = 1;
+    //         ctn.removeAllChildren();
+    //     });
+    // }
 
-    commonFadeOut() {
-        var ctn = this.ctn;
-        createjs.Tween.get(ctn).to({alpha: 0}, 100).call(function () {
-            ctn.alpha = 1;
-            ctn.removeAllChildren();
-        });
-    }
+    // commonFadeOut() {
+    //     var ctn = this.ctn;
+    //     createjs.Tween.get(ctn).to({alpha: 0}, 100).call(function () {
+    //         ctn.alpha = 1;
+    //         ctn.removeAllChildren();
+    //     });
+    // }
 
-    fadeOutFtShow() {
-        this.commonFadeOut();
-    }
+    // fadeOutFtShow() {
+    //     this.commonFadeOut();
+    // }
 
     // fadeInFTIntro(param) {
     //     var idx = param.idx;
@@ -563,167 +552,167 @@ export class EventPanel {
     //     // }
     // }
 
-    fadeInMixRank(param) {
-        this.ctn.removeAllChildren();
+    // fadeInMixRank(param) {
+    //     this.ctn.removeAllChildren();
 
-        var bg = new Bitmap('/img/panel/stage1v1/ft/ftRankBg2.jpg');
-        this.ctn.addChild(bg);
+    //     var bg = new Bitmap('/img/panel/stage1v1/ft/ftRankBg2.jpg');
+    //     this.ctn.addChild(bg);
 
 
 
-        for (var i = 0; i < 5; i++) {
-            var curItem = this.getPlayerItem(param.totalPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
-            curItem.x = 45;
-            curItem.y = 140 + i * 185;
-            this.ctn.addChild(curItem);
+    //     for (var i = 0; i < 5; i++) {
+    //         var curItem = this.getPlayerItem(param.totalPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
+    //         curItem.x = 45;
+    //         curItem.y = 140 + i * 185;
+    //         this.ctn.addChild(curItem);
 
-            if (param.totalFtDocArr[i]) {
-                var totalItem = this.getFtItem(param.totalFtDocArr[i], (i == 0 || i == 1 ? i + 1 : null));
-                totalItem.x = 1005;
-                totalItem.y = curItem.y;
-                this.ctn.addChild(totalItem);
-            }
-        }
-    }
+    //         if (param.totalFtDocArr[i]) {
+    //             var totalItem = this.getFtItem(param.totalFtDocArr[i], (i == 0 || i == 1 ? i + 1 : null));
+    //             totalItem.x = 1005;
+    //             totalItem.y = curItem.y;
+    //             this.ctn.addChild(totalItem);
+    //         }
+    //     }
+    // }
 
-    getFtItem(ftDoc, rank12?) {
-        var ctn = new Container();
-        var itemBg = new Bitmap('/img/panel/stage1v1/ft/ftRankTeam.jpg');
-        ctn.addChild(itemBg);
+    // getFtItem(ftDoc, rank12?) {
+    //     var ctn = new Container();
+    //     var itemBg = new Bitmap('/img/panel/stage1v1/ft/ftRankTeam.jpg');
+    //     ctn.addChild(itemBg);
 
-        var logo = new Bitmap(ftDoc.logo);
-        logo.x = 18;
-        logo.y = 18;
-        ctn.addChild(logo);
+    //     var logo = new Bitmap(ftDoc.logo);
+    //     logo.x = 18;
+    //     logo.y = 18;
+    //     ctn.addChild(logo);
 
-        if (rank12) {
-            var icon = new Bitmap('/img/panel/stage1v1/ft/rank' + rank12 + '.png')
-            icon.x = -20;
-            icon.y = -30;
-            ctn.addChild(icon);
-        }
+    //     if (rank12) {
+    //         var icon = new Bitmap('/img/panel/stage1v1/ft/rank' + rank12 + '.png')
+    //         icon.x = -20;
+    //         icon.y = -30;
+    //         ctn.addChild(icon);
+    //     }
 
-        var nameText = new Text(ftDoc.name, "bold 40px Arial", "#fff");
-        nameText.x = 160;
-        nameText.y = 40;
-        ctn.addChild(nameText);
+    //     var nameText = new Text(ftDoc.name, "bold 40px Arial", "#fff");
+    //     nameText.x = 160;
+    //     nameText.y = 40;
+    //     ctn.addChild(nameText);
 
-        var ftIntroText = new Text(ftDoc.fullName + '', "22px Arial", "#fff");
-        ftIntroText.x = 160;
-        ftIntroText.y = 90;
-        ctn.addChild(ftIntroText);
+    //     var ftIntroText = new Text(ftDoc.fullName + '', "22px Arial", "#fff");
+    //     ftIntroText.x = 160;
+    //     ftIntroText.y = 90;
+    //     ctn.addChild(ftIntroText);
 
-        var curScoreText = new Text((ftDoc.curScore ? ftDoc.curScore : 0) + '', "22px Arial", "#fff");
-        curScoreText.textAlign = 'right';
-        curScoreText.x = 620;
-        curScoreText.y = 95;
-        ctn.addChild(curScoreText);
+    //     var curScoreText = new Text((ftDoc.curScore ? ftDoc.curScore : 0) + '', "22px Arial", "#fff");
+    //     curScoreText.textAlign = 'right';
+    //     curScoreText.x = 620;
+    //     curScoreText.y = 95;
+    //     ctn.addChild(curScoreText);
 
-        var totalScoreText = new Text((ftDoc.score ? ftDoc.score : 0) + '', "22px Arial", "#fff");
-        totalScoreText.textAlign = 'right';
-        totalScoreText.x = 780;
-        totalScoreText.y = 95;
-        ctn.addChild(totalScoreText);
+    //     var totalScoreText = new Text((ftDoc.score ? ftDoc.score : 0) + '', "22px Arial", "#fff");
+    //     totalScoreText.textAlign = 'right';
+    //     totalScoreText.x = 780;
+    //     totalScoreText.y = 95;
+    //     ctn.addChild(totalScoreText);
 
-        return ctn;
-    }
+    //     return ctn;
+    // }
 
-    fadeInFtRank(param) {
-        this.ctn.removeAllChildren();
+    // fadeInFtRank(param) {
+    //     this.ctn.removeAllChildren();
 
-        var bg = new Bitmap('/img/panel/stage1v1/ft/ftRankBg.jpg');
-        this.ctn.addChild(bg);
+    //     var bg = new Bitmap('/img/panel/stage1v1/ft/ftRankBg.jpg');
+    //     this.ctn.addChild(bg);
 
-        for (var i = 0; i < param.curFtDocArr.length; i++) {
-            var curFtItem = this.getFtItem(param.curFtDocArr[i]);
-            curFtItem.x = 45;
-            curFtItem.y = 140 + i * 185;
-            this.ctn.addChild(curFtItem);
+    //     for (var i = 0; i < param.curFtDocArr.length; i++) {
+    //         var curFtItem = this.getFtItem(param.curFtDocArr[i]);
+    //         curFtItem.x = 45;
+    //         curFtItem.y = 140 + i * 185;
+    //         this.ctn.addChild(curFtItem);
 
-            var totalFtItem = this.getFtItem(param.totalFtDocArr[i]);
-            totalFtItem.x = 1005;
-            totalFtItem.y = curFtItem.y;
-            this.ctn.addChild(totalFtItem);
-        }
-    }
+    //         var totalFtItem = this.getFtItem(param.totalFtDocArr[i]);
+    //         totalFtItem.x = 1005;
+    //         totalFtItem.y = curFtItem.y;
+    //         this.ctn.addChild(totalFtItem);
+    //     }
+    // }
 
-    getPlayerItem(playerDoc: PlayerDoc, ftMap, rank12?) {
-        var ctn = new Container();
-        var itemBg = new Bitmap('/img/panel/stage1v1/ft/ftRankPlayer.jpg');
-        ctn.addChild(itemBg);
+    // getPlayerItem(playerDoc: PlayerDoc, ftMap, rank12?) {
+    //     var ctn = new Container();
+    //     var itemBg = new Bitmap('/img/panel/stage1v1/ft/ftRankPlayer.jpg');
+    //     ctn.addChild(itemBg);
 
-        var avtCtn = new Container();
-        ctn.addChild(avtCtn);
-        loadImg(playerDoc.avatar, (img)=> {
-            var avatar = new Bitmap(playerDoc.avatar);
-            avatar.y = 18;
-            console.log('aw ', img.width);
-            avatar.scaleX = avatar.scaleY = 119 / img.height;
-            console.log('aw ',img.width);
-            avatar.x = 18 + (130 - img.width * avatar.scaleX) / 2;
-            avtCtn.addChild(avatar);
+    //     var avtCtn = new Container();
+    //     ctn.addChild(avtCtn);
+    //     loadImg(playerDoc.avatar, (img)=> {
+    //         var avatar = new Bitmap(playerDoc.avatar);
+    //         avatar.y = 18;
+    //         console.log('aw ', img.width);
+    //         avatar.scaleX = avatar.scaleY = 119 / img.height;
+    //         console.log('aw ',img.width);
+    //         avatar.x = 18 + (130 - img.width * avatar.scaleX) / 2;
+    //         avtCtn.addChild(avatar);
 
-            var m = new Shape();
-            m.graphics.beginFill('#000').dr(0, 0, 130, 130);
-            m.x = m.y = 18;
-            avatar.mask = m;
-        });
+    //         var m = new Shape();
+    //         m.graphics.beginFill('#000').dr(0, 0, 130, 130);
+    //         m.x = m.y = 18;
+    //         avatar.mask = m;
+    //     });
 
-        if (rank12) {
-            var icon = new Bitmap('/img/panel/stage1v1/ft/rank' + rank12 + '.png')
-            icon.x = -20;
-            icon.y = -30;
-            ctn.addChild(icon);
-        }
+    //     if (rank12) {
+    //         var icon = new Bitmap('/img/panel/stage1v1/ft/rank' + rank12 + '.png')
+    //         icon.x = -20;
+    //         icon.y = -30;
+    //         ctn.addChild(icon);
+    //     }
 
-        var nameText = new Text(playerDoc.name, "bold 40px Arial", "#fff");
-        nameText.x = 160;
-        nameText.y = 40;
-        ctn.addChild(nameText);
-        var ftName;
-        if (playerDoc['ftName']) {
-            ftName = playerDoc['ftName'];
-        }
-        else {
-            var ftInfo = ftMap[playerDoc.ftId];
-            ftName = ftInfo ? ftInfo.name : '无';
-        }
+    //     var nameText = new Text(playerDoc.name, "bold 40px Arial", "#fff");
+    //     nameText.x = 160;
+    //     nameText.y = 40;
+    //     ctn.addChild(nameText);
+    //     var ftName;
+    //     if (playerDoc['ftName']) {
+    //         ftName = playerDoc['ftName'];
+    //     }
+    //     else {
+    //         var ftInfo = ftMap[playerDoc.ftId];
+    //         ftName = ftInfo ? ftInfo.name : '无';
+    //     }
 
-        var ftText = new Text(ftName, "22px Arial", "#fff");
-        ftText.x = 268;
-        ftText.y = 95;
-        ctn.addChild(ftText);
+    //     var ftText = new Text(ftName, "22px Arial", "#fff");
+    //     ftText.x = 268;
+    //     ftText.y = 95;
+    //     ctn.addChild(ftText);
 
-        var curScoreText = new Text((playerDoc.curFtScore ? playerDoc.curFtScore : 0) + '', "22px Arial", "#fff");
-        curScoreText.textAlign = 'right';
-        curScoreText.x = 620;
-        curScoreText.y = 95;
-        ctn.addChild(curScoreText);
+    //     var curScoreText = new Text((playerDoc.curFtScore ? playerDoc.curFtScore : 0) + '', "22px Arial", "#fff");
+    //     curScoreText.textAlign = 'right';
+    //     curScoreText.x = 620;
+    //     curScoreText.y = 95;
+    //     ctn.addChild(curScoreText);
 
-        var totalScoreText = new Text((playerDoc.ftScore ? playerDoc.ftScore : 0) + '', "22px Arial", "#fff");
-        totalScoreText.textAlign = 'right';
-        totalScoreText.x = 780;
-        totalScoreText.y = 95;
-        ctn.addChild(totalScoreText);
+    //     var totalScoreText = new Text((playerDoc.ftScore ? playerDoc.ftScore : 0) + '', "22px Arial", "#fff");
+    //     totalScoreText.textAlign = 'right';
+    //     totalScoreText.x = 780;
+    //     totalScoreText.y = 95;
+    //     ctn.addChild(totalScoreText);
 
-        return ctn;
-    };
+    //     return ctn;
+    // };
 
-    fadeInPlayerRank(param) {
-        this.ctn.removeAllChildren();
-        var bg = new Bitmap('/img/panel/stage1v1/ft/ftRankBg.jpg');
-        this.ctn.addChild(bg);
+    // fadeInPlayerRank(param) {
+    //     this.ctn.removeAllChildren();
+    //     var bg = new Bitmap('/img/panel/stage1v1/ft/ftRankBg.jpg');
+    //     this.ctn.addChild(bg);
 
-        for (var i = 0; i < 5; i++) {
-            var curItem = this.getPlayerItem(param.curPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
-            curItem.x = 45;
-            curItem.y = 140 + i * 185;
-            this.ctn.addChild(curItem);
+    //     for (var i = 0; i < 5; i++) {
+    //         var curItem = this.getPlayerItem(param.curPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
+    //         curItem.x = 45;
+    //         curItem.y = 140 + i * 185;
+    //         this.ctn.addChild(curItem);
 
-            var totalItem = this.getPlayerItem(param.totalPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
-            totalItem.x = 1005;
-            totalItem.y = curItem.y;
-            this.ctn.addChild(totalItem);
-        }
-    }
+    //         var totalItem = this.getPlayerItem(param.totalPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
+    //         totalItem.x = 1005;
+    //         totalItem.y = curItem.y;
+    //         this.ctn.addChild(totalItem);
+    //     }
+    // }
 }

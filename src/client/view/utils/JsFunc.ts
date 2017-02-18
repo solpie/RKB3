@@ -57,6 +57,7 @@ export function loadImg(path1, callback) {
     img.src = path1;
 }
 
+// arr.push({name: 'itemBg', url: '/img/panel/stage1v1/ft/ftRankPlayer.jpg'});
 export function loadImgArr(pathArr, callback) {
     let count = pathArr.length;
     let imgCollection;

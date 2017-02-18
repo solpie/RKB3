@@ -574,14 +574,10 @@
 	    };
 	    HomeView.prototype.updateLinks = function (gameId) {
 	        this.links = [
-	            { title: "比分面板", url: "/panel/#/ol/ob/" + gameId + "?panel=score" },
+	            { title: "比分面板（蓝色）", url: "/panel/#/ol/ob/" + gameId + "?panel=score&theme=dark" },
+	            { title: "比分面板（绿色）", url: "/panel/#/ol/ob/" + gameId + "?panel=score" },
 	            { title: "比分面板 操作", url: "/panel/#/ol/op/" + gameId + "?panel=score" },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
-	            { title: "---------------------Final--------------------", url: "/panel/#/ol/ob/0?panel=bracket" },
-	            { title: "K.O.A", url: "/panel/#/koa/op/" },
-	            { title: "战团双败", url: "/panel/#/ol/ob/0?panel=bracket" },
-	            { title: "5v5", url: "/panel/#/5v5/op/" },
-	            { title: "5v5 手机", url: "/panel/#/5v5/op/?m=1" },
 	        ];
 	    };
 	    HomeView.prototype.genQRCode = function () {

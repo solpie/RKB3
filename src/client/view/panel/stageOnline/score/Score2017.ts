@@ -210,7 +210,7 @@ export class Score2017 {
 
         let ftns = {
             fontFamily: FontName.MicrosoftYahei,
-            fontSize: '22px', fill: this.skin.fontColor,
+            fontSize: '22px', fill: '#fff',
             fontWeight: 'bold'
         }
 
@@ -305,6 +305,10 @@ export class Score2017 {
         // loadImg(proxy(avatar), (img) => {
         //     this.lAvatar.texture = imgToTex(img)
         // })
+        if (!height)
+            height = 0
+        if (!weight)
+            weight = 0
         this.lPlayerInfo.text = height + 'CM ' + weight + "KG"
         this.lPlayerInfo.x = 500 - this.lPlayerInfo.width
 
@@ -321,6 +325,11 @@ export class Score2017 {
             avt.y = avt.mask.y - avt.texture.height * .5 * s
             avt.scale.x = avt.scale.y = s
         }, true);
+
+        if (!height)
+            height = 0
+        if (!weight)
+            weight = 0
         this.rPlayerInfo.text = height + 'CM ' + weight + "KG"
 
         this.rFtName.text = ft
