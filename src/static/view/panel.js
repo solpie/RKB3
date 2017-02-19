@@ -4157,7 +4157,7 @@
 	    };
 	    BracketView.prototype.onBracketData = function (res) {
 	        var closeGame = {};
-	        var s = { font: '25px', fill: '#e1e1e1', align: 'right' };
+	        var s = { font: '25px', fill: '#e1e1e1', align: 'right', fontFamily: const_1.FontName.MicrosoftYahei };
 	        console.log('onBracketData', res.data);
 	        for (var gameIdx in res.data) {
 	            var dataObj = res.data[gameIdx];
@@ -4299,9 +4299,10 @@
 
 /***/ },
 /* 58 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var const_1 = __webpack_require__(33);
 	function _mkGroup(parameters) {
 	    var x = parameters.x;
 	    var y = parameters.y;
@@ -4312,7 +4313,7 @@
 	    var s2 = new PIXI.Text('', s);
 	    s2.y = 8 + 53;
 	    s1.x = s2.x = 188;
-	    var ps = { fontSize: '25px' };
+	    var ps = { fontSize: '25px', fontFamily: const_1.FontName.MicrosoftYahei, fontWeight: 'bold' };
 	    var p1 = new PIXI.Text("", ps);
 	    p1.x = 3;
 	    p1.y = 8;
@@ -4329,6 +4330,7 @@
 	    console.log(label.width, width);
 	    if (label.width > width) {
 	        label.style.font = size + 'px';
+	        label.style['fontFamily'] = const_1.FontName.MicrosoftYahei;
 	        fitWidth(label, width, size - 1);
 	    }
 	}
@@ -4978,7 +4980,7 @@
 	                eventMap['startGame'] = function () {
 	                    console.log('startGame', data);
 	                    _this.scorePanel.set35ScoreLight(data.winScore);
-	                    _this.scorePanel.setGameIdx(data.gameIdx);
+	                    _this.scorePanel.setGameIdx(data.gameIdx, Number(data.matchType) == 2);
 	                    setPlayer(data.player.left, data.player.right);
 	                    _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
 	                    _this.scorePanel.resetScore();
@@ -5121,7 +5123,7 @@
 	    Event2017.prototype.showWin = function (player) {
 	        var _this = this;
 	        var champion = Number(player.totalChampion);
-	        var medal = Math.floor(champion / 5);
+	        var medal = Math.ceil(champion / 5);
 	        if (medal > 0) {
 	            var medalUrl_1 = '/img/panel/score2017/medal' + medal + '.png';
 	            if (!this._texMap[medalUrl_1])
@@ -5130,7 +5132,10 @@
 	                });
 	            else
 	                this.medal.texture = this._texMap[medalUrl_1];
+	            this.medal.visible = true;
 	        }
+	        else
+	            this.medal.visible = false;
 	        var avatar = player.avatar;
 	        var ftName = player.group;
 	        this.pName.text = player.name;

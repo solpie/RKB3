@@ -48,59 +48,59 @@ export class BracketView extends BasePanelView {
         // };
         // // let hintStyle = {fontFamily: FontName.MicrosoftYahei, font: '25px italic', fill: '#AFAFAF', align: 'right'};
         // for (let idx in groupPosMap) {
-            //     let group2 = groupPosMap[idx];
-            //     //todo 优化newBitmap options use tex
-            //     let groupCtn = group2.ctn = newBitmap({
-            //         url: "/img/panel/bracket/group.png",
-            //         x: group2.x, y: group2.y
-            //     });
+        //     let group2 = groupPosMap[idx];
+        //     //todo 优化newBitmap options use tex
+        //     let groupCtn = group2.ctn = newBitmap({
+        //         url: "/img/panel/bracket/group.png",
+        //         x: group2.x, y: group2.y
+        //     });
 
-            //     ctn.addChild(groupCtn);
+        //     ctn.addChild(groupCtn);
 
-            //     let winHint = new PIXI.Graphics()
-            //     winHint.beginFill(0xf8a300)
-            //         .drawRoundedRect(0, 0, 46, 45, 0)
-            //     winHint.x = 158
-            //     winHint.y = 2
-            //     winHint["y1"] = 2
-            //     winHint["y2"] = 51
-            //     winHint.visible = false;
-            //     group2.winHint = winHint;
+        //     let winHint = new PIXI.Graphics()
+        //     winHint.beginFill(0xf8a300)
+        //         .drawRoundedRect(0, 0, 46, 45, 0)
+        //     winHint.x = 158
+        //     winHint.y = 2
+        //     winHint["y1"] = 2
+        //     winHint["y2"] = 51
+        //     winHint.visible = false;
+        //     group2.winHint = winHint;
 
-            //     groupCtn.addChild(winHint);
+        //     groupCtn.addChild(winHint);
 
-            //     //game idx
-            //     let gameIdx = Number(idx);
-            //     let gameIdxText = new PIXI.Text(idx, s);
-            //     if (gameIdx > 9)
-            //         gameIdxText.x = - 50;
-            //     else
-            //         gameIdxText.x = - 30;
-            //     gameIdxText.y = 5;
-            //     groupCtn.addChild(gameIdxText);
+        //     //game idx
+        //     let gameIdx = Number(idx);
+        //     let gameIdxText = new PIXI.Text(idx, s);
+        //     if (gameIdx > 9)
+        //         gameIdxText.x = - 50;
+        //     else
+        //         gameIdxText.x = - 30;
+        //     gameIdxText.y = 5;
+        //     groupCtn.addChild(gameIdxText);
 
-            //     //hint
-            //     for (let i = 0; i < group2.hints.length; i++) {
-            //         let hint = group2.hints[i];
-            //         let label = new PIXI.Text(hint, hintStyle);
-            //         label.x = 15;
-            //         label.y = 8 + i * 48;
-            //         group2.labels.push(label);
-            //         groupCtn.addChild(label);
+        //     //hint
+        //     for (let i = 0; i < group2.hints.length; i++) {
+        //         let hint = group2.hints[i];
+        //         let label = new PIXI.Text(hint, hintStyle);
+        //         label.x = 15;
+        //         label.y = 8 + i * 48;
+        //         group2.labels.push(label);
+        //         groupCtn.addChild(label);
 
-            //         let msk = new PIXI.Graphics();
-            //         msk.y = label.y;
-            //         msk.x = label.x;
-            //         msk.beginFill(0x000000).drawRect(0, 0, 135, 50);
-            //         groupCtn.addChild(msk);
-            //         label.mask = msk;
+        //         let msk = new PIXI.Graphics();
+        //         msk.y = label.y;
+        //         msk.x = label.x;
+        //         msk.beginFill(0x000000).drawRect(0, 0, 135, 50);
+        //         groupCtn.addChild(msk);
+        //         label.mask = msk;
 
-            //         groupCtn.addChild(group2.scores[i]);
-            //         group2.playerArr = [new PlayerSvg, new PlayerSvg]
-            //     }
-            //     if (gameIdx > 4) {
+        //         groupCtn.addChild(group2.scores[i]);
+        //         group2.playerArr = [new PlayerSvg, new PlayerSvg]
+        //     }
+        //     if (gameIdx > 4) {
 
-            //     }
+        //     }
         // }
         // ///group line
         // let ofsX = 213;
@@ -218,7 +218,7 @@ export class BracketView extends BasePanelView {
 
     onBracketData(res) {
         let closeGame = {};
-        let s = { font: '25px', fill: '#e1e1e1', align: 'right' };
+        let s = { font: '25px', fill: '#e1e1e1', align: 'right', fontFamily: FontName.MicrosoftYahei };
         console.log('onBracketData', res.data)
         for (let gameIdx in res.data) {
             let dataObj = res.data[gameIdx];
@@ -226,7 +226,7 @@ export class BracketView extends BasePanelView {
             group1.idx = Number(gameIdx);
             if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
                 if (dataObj.left.score > dataObj.right.score)
-                    this.bracket.setWinHint(group1.hint1,true)
+                    this.bracket.setWinHint(group1.hint1, true)
                 else
                     this.bracket.setWinHint(group1.hint2)
                 closeGame[gameIdx] = true;

@@ -151,7 +151,7 @@ export class ScoreView extends BasePanelView {
                 eventMap['startGame'] = () => {
                     console.log('startGame', data);
                     this.scorePanel.set35ScoreLight(data.winScore);
-                    this.scorePanel.setGameIdx(data.gameIdx);
+                    this.scorePanel.setGameIdx(data.gameIdx, Number(data.matchType) == 2);
                     setPlayer(data.player.left, data.player.right);
                     // window.location.reload();
                     this.scorePanel.toggleTimer(TimerState.PAUSE);

@@ -1,3 +1,4 @@
+import { FontName } from '../../../const';
 // 18452736
 function _mkGroup(parameters) {
     let x = parameters.x;
@@ -9,7 +10,7 @@ function _mkGroup(parameters) {
     let s2 = new PIXI.Text('', s);
     s2.y = 8 + 53;
     s1.x = s2.x = 188;
-    let ps = { fontSize: '25px' }
+    let ps = { fontSize: '25px', fontFamily: FontName.MicrosoftYahei, fontWeight: 'bold' }
     let p1 = new PIXI.Text("", ps)
     p1.x = 3
     p1.y = 8
@@ -28,6 +29,7 @@ export function fitWidth(label: PIXI.Text, width, size) {
         // label.style = { font: size + 'px' }
         // label.text = label.text
         label.style.font = size + 'px'
+        label.style['fontFamily'] = FontName.MicrosoftYahei
         fitWidth(label, width, size - 1)
     }
 }
