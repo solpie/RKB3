@@ -4918,8 +4918,8 @@
 	            var remoteIO = io.connect(hupuWsUrl);
 	            var setPlayer = function (leftPlayer, rightPlayer) {
 	                console.log(leftPlayer);
-	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.group);
-	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.group);
+	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.group, leftPlayer.totalChampion);
+	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.group, rightPlayer.totalChampion);
 	            };
 	            remoteIO.on('connect', function () {
 	                console.log('hupuAuto socket connected', hupuWsUrl);
@@ -5217,6 +5217,7 @@
 	    function Score2017(stage, isDark) {
 	        var _this = this;
 	        if (isDark === void 0) { isDark = false; }
+	        this._tex = {};
 	        this.stage = stage;
 	        if (isDark)
 	            this.skin = skin.dark;
@@ -5361,6 +5362,18 @@
 	        this.rFtName = rftn;
 	        rftn.y = lftn.y;
 	        ctn.addChild(rftn);
+	        var lFrame = new PIXI.Sprite();
+	        lFrame.scale.x = lFrame.scale.y = 0.97;
+	        this.lFrame = lFrame;
+	        lFrame.x = 562;
+	        lFrame.y = 134;
+	        ctn.addChild(lFrame);
+	        var rFrame = new PIXI.Sprite();
+	        rFrame.scale.x = rFrame.scale.y = 0.97;
+	        this.rFrame = rFrame;
+	        rFrame.x = 1228;
+	        rFrame.y = lFrame.y;
+	        ctn.addChild(rFrame);
 	    }
 	    Score2017.prototype.set35ScoreLight = function (winScore) {
 	    };
@@ -5416,8 +5429,9 @@
 	        this.setLeftFoul(0);
 	        this.setRightFoul(0);
 	    };
-	    Score2017.prototype.setLeftPlayerInfo = function (name, avatar, weight, height, ft) {
+	    Score2017.prototype.setLeftPlayerInfo = function (name, avatar, weight, height, ft, numChampion) {
 	        var _this = this;
+	        this._loadFrame(numChampion, this.lFrame);
 	        this.lPlayerName.text = name;
 	        this.lPlayerName.x = 500 - this.lPlayerName.width;
 	        PixiEx_1.loadRes(avatar, function (img) {
@@ -5437,8 +5451,26 @@
 	        this.lFtName.text = ft;
 	        this.lFtName.x = 630 - this.lFtName.width * .5;
 	    };
-	    Score2017.prototype.setRightPlayerInfo = function (name, avatar, weight, height, ft) {
+	    Score2017.prototype._loadFrame = function (numChampion, frame) {
 	        var _this = this;
+	        numChampion = Math.ceil(Number(numChampion) / 5);
+	        if (numChampion > 0) {
+	            var frameUrl_1 = '/img/panel/score2017/frame' + numChampion + '.png';
+	            frame.visible = true;
+	            if (!this._tex[frameUrl_1]) {
+	                JsFunc_1.loadImg(frameUrl_1, function (img) {
+	                    _this._tex[frameUrl_1] = frame.texture = PixiEx_1.imgToTex(img);
+	                });
+	            }
+	            else
+	                frame.texture = this._tex[frameUrl_1];
+	        }
+	        else
+	            frame.visible = false;
+	    };
+	    Score2017.prototype.setRightPlayerInfo = function (name, avatar, weight, height, ft, numChampion) {
+	        var _this = this;
+	        this._loadFrame(numChampion, this.rFrame);
 	        this.rPlayerName.text = name;
 	        PixiEx_1.loadRes(avatar, function (img) {
 	            var avt = _this.rAvatar;

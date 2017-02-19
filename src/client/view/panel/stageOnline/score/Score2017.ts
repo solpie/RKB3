@@ -63,6 +63,11 @@ export class Score2017 {
 
     lFtName: PIXI.Text
     rFtName: PIXI.Text
+
+    lFrame: PIXI.Sprite
+    rFrame: PIXI.Sprite
+
+    _tex = {}
     constructor(stage: PIXI.Container, isDark = false) {
         this.stage = stage
         if (isDark)
@@ -224,6 +229,21 @@ export class Score2017 {
         this.rFtName = rftn
         rftn.y = lftn.y
         ctn.addChild(rftn)
+
+        let lFrame = new PIXI.Sprite()
+        lFrame.scale.x = lFrame.scale.y = 0.97
+        this.lFrame = lFrame
+        lFrame.x = 562
+        lFrame.y = 134
+        ctn.addChild(lFrame)
+
+        let rFrame = new PIXI.Sprite()
+        rFrame.scale.x = rFrame.scale.y = 0.97
+        this.rFrame = rFrame
+        rFrame.x = 1228
+        rFrame.y = lFrame.y
+        ctn.addChild(rFrame)
+
     }
 
     set35ScoreLight(winScore) {
@@ -290,7 +310,8 @@ export class Score2017 {
     }
 
     //player
-    setLeftPlayerInfo(name: string, avatar: string, weight, height, ft: string) {
+    setLeftPlayerInfo(name: string, avatar: string, weight, height, ft: string, numChampion: Number) {
+        this._loadFrame(numChampion, this.lFrame)
         //cm kg
         this.lPlayerName.text = name
         this.lPlayerName.x = 500 - this.lPlayerName.width
@@ -315,7 +336,25 @@ export class Score2017 {
         this.lFtName.text = ft
         this.lFtName.x = 630 - this.lFtName.width * .5
     }
-    setRightPlayerInfo(name: string, avatar: string, weight, height, ft: string) {
+    _loadFrame(numChampion, frame: PIXI.Sprite) {
+        numChampion = Math.ceil(Number(numChampion) / 5)
+        if (numChampion > 0) {
+            let frameUrl = '/img/panel/score2017/frame' + numChampion + '.png'
+            frame.visible = true
+            if (!this._tex[frameUrl]) {
+                loadImg(frameUrl, (img) => {
+                    this._tex[frameUrl] = frame.texture = imgToTex(img)
+                })
+            }
+            else
+                frame.texture = this._tex[frameUrl]
+        }
+        else
+            frame.visible = false
+    }
+    setRightPlayerInfo(name: string, avatar: string, weight, height, ft: string, numChampion: Number) {
+        this._loadFrame(numChampion, this.rFrame)
+
         this.rPlayerName.text = name
         loadRes(avatar, (img) => {
             let avt = this.rAvatar
