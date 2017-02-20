@@ -54,6 +54,7 @@ export class SpriteGroup extends PIXI.Container {
         sp.visible = true
         blink3(sp)
     }
+    
     onHidePoint(sp) {
         sp.visible = false
     }

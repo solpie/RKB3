@@ -2495,12 +2495,6 @@
 	function delayCall(delay, callback) {
 	}
 	exports.delayCall = delayCall;
-	function blink(target, time, loop) {
-	    if (time === void 0) { time = 80; }
-	    if (loop === void 0) { loop = false; }
-	    var blink = time;
-	}
-	exports.blink = blink;
 	function blink2(options) {
 	    var target = options.target;
 	    var time = options.time || 80;
@@ -5181,6 +5175,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var FoulGroup_1 = __webpack_require__(70);
 	var TextTimer_1 = __webpack_require__(41);
 	var SpriteGroup_1 = __webpack_require__(44);
 	var const_1 = __webpack_require__(33);
@@ -5265,12 +5260,12 @@
 	            rightScoreNum.align = 'center';
 	            ctn.addChild(rightScoreNum);
 	        });
-	        var lf = new SpriteGroup_1.SpriteGroup({ dir: SpriteGroup_1.Direction.e, invert: 29, img: this.skin.foul, count: 4 });
+	        var lf = new FoulGroup_1.FoulGroup({ dir: SpriteGroup_1.Direction.e, invert: 29, img: this.skin.foul, count: 4 });
 	        ctn.addChild(lf);
 	        lf.x = 771;
 	        lf.y = 262;
 	        this.leftFoul = lf;
-	        var rf = new SpriteGroup_1.SpriteGroup({ dir: SpriteGroup_1.Direction.w, invert: 29, img: this.skin.foul, count: 4 });
+	        var rf = new FoulGroup_1.FoulGroup({ dir: SpriteGroup_1.Direction.w, invert: 29, img: this.skin.foul, count: 4 });
 	        ctn.addChild(rf);
 	        rf.x = 1037;
 	        rf.y = lf.y;
@@ -5651,6 +5646,46 @@
 	    return EventDispatcher;
 	}());
 	exports.EventDispatcher = EventDispatcher;
+
+
+/***/ },
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var Fx_1 = __webpack_require__(45);
+	var PixiEx_1 = __webpack_require__(35);
+	var SpriteGroup_1 = __webpack_require__(44);
+	var FoulGroup = (function (_super) {
+	    __extends(FoulGroup, _super);
+	    function FoulGroup() {
+	        _super.apply(this, arguments);
+	    }
+	    FoulGroup.prototype.setNum = function (v) {
+	        _super.prototype.setNum.call(this, v);
+	        if (v >= 4) {
+	            if (!this._hint) {
+	                this._hint = PixiEx_1.newBitmap({
+	                    url: '/img/panel/score2017/foulHint.png',
+	                    x: -20,
+	                    y: -22
+	                });
+	                this.addChild(this._hint);
+	            }
+	            this._hint.visible = true;
+	            Fx_1.blink2({ target: this._hint, time: 100, loop: 100 });
+	        }
+	        else
+	            this._hint.visible = false;
+	    };
+	    return FoulGroup;
+	}(SpriteGroup_1.SpriteGroup));
+	exports.FoulGroup = FoulGroup;
 
 
 /***/ }

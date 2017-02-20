@@ -5,15 +5,15 @@ export function delayCall(delay, callback) {
     // setTimeout(callback, delay/1000);
 }
 
-export function blink(target, time = 80, loop = false) {
-    var blink = time;
-    // createjs.Tween.get(target, { loop: loop })
-    //     .to({ alpha: 1 }, blink)
-    //     .to({ alpha: 0 }, blink)
-    //     .to({ alpha: 1 }, blink)
-    //     .to({ alpha: 0 }, blink)
-    //     .to({ alpha: 1 }, blink);
-}
+// export function blink(target, time = 80, loop = false) {
+//     var blink = time;
+//     // createjs.Tween.get(target, { loop: loop })
+//     //     .to({ alpha: 1 }, blink)
+//     //     .to({ alpha: 0 }, blink)
+//     //     .to({ alpha: 1 }, blink)
+//     //     .to({ alpha: 0 }, blink)
+//     //     .to({ alpha: 1 }, blink);
+// }
 //time sec
 export function blink2(options: { target: any, time?: number, loop?: number, callback?: any }) {
     // target, time = 0.08, loop = 0, callback = null

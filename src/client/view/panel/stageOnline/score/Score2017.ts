@@ -1,3 +1,4 @@
+import { FoulGroup } from './FoulGroup';
 import { _avatar } from '../../../utils/HupuAPI';
 import { proxy } from '../../../utils/WebJsFunc';
 import { TextTimer } from '../../../utils/TextTimer';
@@ -118,13 +119,13 @@ export class Score2017 {
             ctn.addChild(rightScoreNum)
         })
 
-        let lf = new SpriteGroup({ dir: Direction.e, invert: 29, img: this.skin.foul, count: 4 })
+        let lf = new FoulGroup({ dir: Direction.e, invert: 29, img: this.skin.foul, count: 4 })
         ctn.addChild(lf)
         lf.x = 771
         lf.y = 262
         this.leftFoul = lf
 
-        let rf = new SpriteGroup({ dir: Direction.w, invert: 29, img: this.skin.foul, count: 4 })
+        let rf = new FoulGroup({ dir: Direction.w, invert: 29, img: this.skin.foul, count: 4 })
         ctn.addChild(rf)
         rf.x = 1037
         rf.y = lf.y

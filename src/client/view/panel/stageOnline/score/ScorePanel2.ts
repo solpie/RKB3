@@ -1,4 +1,4 @@
-import { blink, blink2, blink3 } from '../../../utils/Fx';
+import {  blink2, blink3 } from '../../../utils/Fx';
 import { BitmapText, imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
 
 import { ViewConst } from '../../../const';
