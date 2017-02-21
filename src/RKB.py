@@ -93,6 +93,14 @@ def proxy():
         url = request.values.get("url")
         r = requests.post(url, headers=req_headers)
         return 'ok'
+# auto git pull
+import os
+@app.route('/git/<param>', methods=['GET', 'POST'])
+def git(param):
+    ret = os.system("cd ..&&git "+param)  
+    # print(param)
+    return 'git '+param
+
 # panel router
 
 from game import actModel
