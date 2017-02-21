@@ -284,10 +284,12 @@ export class Score2017 {
     }
 
     setLeftFoul(v) {
+        v = Number(v)
         this.leftFoul.setNum(v)
     }
 
     setRightFoul(v) {
+        v = Number(v)
         this.rightFoul.setNum(v)
     }
 

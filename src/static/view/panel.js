@@ -5404,9 +5404,11 @@
 	        this.rightScoreText.text = v + '';
 	    };
 	    Score2017.prototype.setLeftFoul = function (v) {
+	        v = Number(v);
 	        this.leftFoul.setNum(v);
 	    };
 	    Score2017.prototype.setRightFoul = function (v) {
+	        v = Number(v);
 	        this.rightFoul.setNum(v);
 	    };
 	    Score2017.prototype.resetTimer = function () {
