@@ -5680,7 +5680,7 @@
 	            this._hint.visible = true;
 	            Fx_1.blink2({ target: this._hint, time: 100, loop: 100 });
 	        }
-	        else
+	        else if (this._hint)
 	            this._hint.visible = false;
 	    };
 	    return FoulGroup;
