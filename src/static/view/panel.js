@@ -4937,6 +4937,11 @@
 	        this.initRemote();
 	        this.initLocal();
 	    }
+	    ScoreView.prototype.initDefaultPlayer = function () {
+	        var p = 'http://w1.hoopchina.com.cn/huputv/resource/img/amateur.jpg';
+	        this.scorePanel.setLeftPlayerInfo('Player 1', p, 78, 178, '', 0);
+	        this.scorePanel.setRightPlayerInfo('Player 1', p, 78, 178, '', 0);
+	    };
 	    ScoreView.prototype.initLocal = function () {
 	        var _this = this;
 	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
@@ -4961,6 +4966,7 @@
 	    };
 	    ScoreView.prototype.initRemote = function () {
 	        var _this = this;
+	        var isRunning = false;
 	        HupuAPI_1.getHupuWS(function (hupuWsUrl) {
 	            var remoteIO = io.connect(hupuWsUrl);
 	            var setPlayer = function (leftPlayer, rightPlayer) {
@@ -4973,6 +4979,10 @@
 	                remoteIO.emit('passerbyking', {
 	                    game_id: _this.gameId,
 	                    page: 'score'
+	                });
+	                TweenEx_1.TweenEx.delayedCall(3000, function () {
+	                    if (!isRunning)
+	                        _this.initDefaultPlayer();
 	                });
 	            });
 	            remoteIO.on('wall', function (data) {
@@ -5039,6 +5049,7 @@
 	                    _this.eventPanel.showWin(player);
 	                };
 	                if (eventMap[event]) {
+	                    isRunning = true;
 	                    TweenEx_1.TweenEx.delayedCall(_this.delayTimeMS, function () {
 	                        eventMap[event]();
 	                    });

@@ -244,7 +244,6 @@ export class Score2017 {
         rFrame.x = 1228
         rFrame.y = lFrame.y
         ctn.addChild(rFrame)
-
     }
 
     set35ScoreLight(winScore) {

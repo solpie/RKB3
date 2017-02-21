@@ -33,6 +33,13 @@ export class ScoreView extends BasePanelView {
         this.initRemote()
         this.initLocal()
     }
+
+    initDefaultPlayer() {
+        let p = 'http://w1.hoopchina.com.cn/huputv/resource/img/amateur.jpg'
+        this.scorePanel.setLeftPlayerInfo('Player 1', p, 78, 178, '', 0)
+        this.scorePanel.setRightPlayerInfo('Player 1', p, 78, 178, '', 0)
+    }
+
     initLocal() {
         let localWs = io.connect(`/${PanelId.rkbPanel}`)
         localWs.on('connect', (msg) => {
@@ -57,6 +64,7 @@ export class ScoreView extends BasePanelView {
     }
     initRemote() {
         // getHupuWs()
+        let isRunning = false
         getHupuWS((hupuWsUrl) => {
             let remoteIO = io.connect(hupuWsUrl);
             let setPlayer = (leftPlayer, rightPlayer) => {
@@ -71,6 +79,11 @@ export class ScoreView extends BasePanelView {
                     game_id: this.gameId,
                     page: 'score'
                 })
+
+                TweenEx.delayedCall(3000, () => {
+                    if (!isRunning)
+                        this.initDefaultPlayer()
+                });
             });
 
             remoteIO.on('wall', (data: any) => {
@@ -176,6 +189,7 @@ export class ScoreView extends BasePanelView {
                     // }
                 };
                 if (eventMap[event]) {
+                    isRunning = true
                     TweenEx.delayedCall(this.delayTimeMS, () => {
                         eventMap[event]();
                     });
