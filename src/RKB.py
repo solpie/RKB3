@@ -28,7 +28,7 @@ def loadConf():
 loadConf()
 
 # web server
-from flask import Flask, render_template, session, request, make_response,redirect
+from flask import Flask, render_template, session, request, make_response, redirect
 from flask_socketio import SocketIO, emit, disconnect
 
 # Set this variable to "threading", "eventlet" or "gevent" to test the
@@ -95,11 +95,16 @@ def proxy():
         return 'ok'
 # auto git pull
 import os
+from subprocess import Popen, PIPE
+
+
 @app.route('/git/<param>', methods=['GET', 'POST'])
 def git(param):
-    ret = os.system("cd ..&&git "+param)  
-    # print(param)
-    return 'git '+param
+    proc = Popen(['git', param], stdin=PIPE,
+                 stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    (stdout, stderr) = proc.communicate()
+
+    return 'git ' + param + '\n' + stdout
 
 # panel router
 
