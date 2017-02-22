@@ -5061,6 +5061,7 @@
 	                    console.log('commitGame', data);
 	                    var player = data.player;
 	                    _this.eventPanel.showWin(player);
+	                    _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
 	                };
 	                if (eventMap[event]) {
 	                    isRunning = true;

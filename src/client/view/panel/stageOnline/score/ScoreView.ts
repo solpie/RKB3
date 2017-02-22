@@ -196,6 +196,7 @@ export class ScoreView extends BasePanelView {
                     let player = data.player
 
                     this.eventPanel.showWin(player)
+                    this.scorePanel.toggleTimer(TimerState.PAUSE);
                     // if (this.isScorePanelVisible) {
                     //     let isBlue = data.idx == 0;
                     //     data.player.winGameCount = data.player.winAmount;
