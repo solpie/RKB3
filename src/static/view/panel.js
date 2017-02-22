@@ -4937,6 +4937,20 @@
 	        this.initRemote();
 	        this.initLocal();
 	    }
+	    ScoreView.prototype.initRoom = function () {
+	        var roomIO = io.connect("tcp.lb.liangle.com:3081")
+	            .on('connect', function (msg) {
+	            console.log('msg', msg);
+	            roomIO.emit('join', {
+	                room_id: 10287,
+	                match_id: 1,
+	                token: ''
+	            });
+	        })
+	            .on('wall', function (msg) {
+	            console.log('wall', msg);
+	        });
+	    };
 	    ScoreView.prototype.initDefaultPlayer = function () {
 	        var p = 'http://w1.hoopchina.com.cn/huputv/resource/img/amateur.jpg';
 	        this.scorePanel.setLeftPlayerInfo('Player 1', p, 78, 178, '', 0);
@@ -5358,11 +5372,15 @@
 	        var pns = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
 	            fontSize: '31px', fill: this.skin.fontColor,
-	            fontWeight: 'bold'
+	            stroke: '#000',
+	            strokeThickness: 2,
+	            fontWeight: 'bold',
 	        };
 	        var pis = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
 	            fontSize: '22px', fill: this.skin.fontColor,
+	            stroke: '#000',
+	            strokeThickness: 2,
 	            fontWeight: 'bold'
 	        };
 	        var lpn = new PIXI.Text("", pns);

@@ -32,6 +32,23 @@ export class ScoreView extends BasePanelView {
 
         this.initRemote()
         this.initLocal()
+        // if (this.isTest)
+        //     this.initRoom()
+    }
+
+    initRoom() {
+        let roomIO = io.connect("tcp.lb.liangle.com:3081")
+            .on('connect', (msg) => {
+                console.log('msg', msg)
+                roomIO.emit('join', {
+                    room_id: 10287,
+                    match_id: 1,
+                    token: ''
+                })
+            })
+            .on('wall', (msg) => {
+                console.log('wall', msg)
+            })
     }
 
     initDefaultPlayer() {

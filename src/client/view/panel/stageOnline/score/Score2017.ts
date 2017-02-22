@@ -156,11 +156,15 @@ export class Score2017 {
         let pns = {
             fontFamily: FontName.MicrosoftYahei,
             fontSize: '31px', fill: this.skin.fontColor,
-            fontWeight: 'bold'
+            stroke: '#000',
+            strokeThickness: 2,
+            fontWeight: 'bold',
         }
         let pis = {
             fontFamily: FontName.MicrosoftYahei,
             fontSize: '22px', fill: this.skin.fontColor,
+            stroke: '#000',
+            strokeThickness: 2,
             fontWeight: 'bold'
         }
         let lpn = new PIXI.Text("", pns)
