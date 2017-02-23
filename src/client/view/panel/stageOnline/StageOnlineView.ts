@@ -30,10 +30,11 @@ class StageOnlineView extends VueBase {
     gameId = VueBase.String
     isOp = VueBase.PROP
     delayTime = VueBase.PROP
+    delayTimeShowOnly = VueBase.PROP
     liveTime = VueBase.PROP
     srvTime = 0;//服务器时间(毫秒)
     isTimerRunning = false;
-    delayTimeMS = 0;
+    // delayTimeMS = 0;
 
     panelTime = VueBase.PROP
     panelTime2Set = VueBase.PROP
@@ -56,6 +57,7 @@ class StageOnlineView extends VueBase {
     protected created() {
         this.basePanelArr = []
         this.isOp = this.$route.params.op == "op"
+        this.gameId = this.$route.params.game_id
         if (this.isOp) {
             dynamicLoading.css('/css/bulma.min.css')
         }
@@ -66,7 +68,6 @@ class StageOnlineView extends VueBase {
         canvasStage = BasePanelView.initPixi()
         // this.bracket = new BracketView()
         // this.bracket.gameId = this.$route.params.game_id
-        this.gameId = this.$route.params.game_id
         let panel = this.$route.query['panel']
         if (panel == "bracket") {
             //test
@@ -128,12 +129,21 @@ class StageOnlineView extends VueBase {
                 scoreView.on('init', (data) => {
                     this.setSrvTime(data.t)
                     this.liveTime = DateFormat(new Date(this.srvTime), "hh:mm:ss");
+                    this.delayTimeShowOnly = data.delayTimeMS / 1000
                 })
             this.basePanelArr.push(scoreView)
+
+
         }
         this.showOnly(scoreView.name)
     }
-
+    getView(bpName: string): any {
+        for (let i = 0; i < this.basePanelArr.length; i++) {
+            let bp: BasePanelView = this.basePanelArr[i]
+            if (bpName == bp.name)
+                return bp
+        }
+    }
     showOnly(bpName: string) {
         let showBp
         for (let i = 0; i < this.basePanelArr.length; i++) {
@@ -150,7 +160,7 @@ class StageOnlineView extends VueBase {
         console.log("onTick");
         this.srvTime += 1000;
         this.liveTime = DateFormat(new Date(this.srvTime), "hh:mm:ss");
-        this.panelTime = DateFormat(new Date(this.srvTime - this.delayTimeMS), "hh:mm:ss");
+        this.panelTime = DateFormat(new Date(this.srvTime - this.getView('score').delayTimeMS), "hh:mm:ss");
     }
     setSrvTime(t) {
         console.log("isRunning:", this.isTimerRunning, this.onTick, t);
@@ -185,7 +195,11 @@ class StageOnlineView extends VueBase {
             if (dt >= 0) {
                 this.delayTimeMS = dt * 1000;
                 this.opReq(`${CommandId.cs_setDelayTime}`, { delayTimeMS: this.delayTimeMS, _: null }, () => {
-
+                })
+                $.post(`/online/delay/${this.gameId}/${dt}`, (res) => {
+                    if (res) {
+                        this.delayTimeShowOnly = dt
+                    }
                 })
             }
         },

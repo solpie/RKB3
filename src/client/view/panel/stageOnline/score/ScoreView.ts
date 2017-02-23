@@ -9,6 +9,7 @@ import { CommandId } from '../../../Command';
 import { PanelId, TimerState } from '../../../const';
 import { BasePanelView } from '../../BasePanelView';
 declare let io;
+declare let $;
 export class ScoreView extends BasePanelView {
     scorePanel: Score2017
     eventPanel: Event2017
@@ -30,12 +31,20 @@ export class ScoreView extends BasePanelView {
         this.eventPanel = new Event2017(stage, darkTheme)
         console.log('new ScoreView')
 
-        this.initRemote()
+        this.initDelay()
         this.initLocal()
         // if (this.isTest)
         //     this.initRoom()
     }
-
+    initDelay() {
+        $.get('/online/delay/' + this.gameId, (delay) => {
+            // this.delayTimeShowOnly = delay
+            if (delay)
+                this.delayTimeMS = Number(delay) * 1000
+            console.log('/online/delay/' + this.delayTimeMS)
+            this.initRemote()
+        })
+    }
     initRoom() {
         let roomIO = io.connect("tcp.lb.liangle.com:3081")
             .on('connect', (msg) => {
@@ -117,6 +126,11 @@ export class ScoreView extends BasePanelView {
                     this.scorePanel.setRightScore(data.player.right.rightScore);
                     this.scorePanel.setLeftFoul(data.player.left.leftFoul);
                     this.scorePanel.setRightFoul(data.player.right.rightFoul);
+                    data.delayTimeMS = this.delayTimeMS
+                    let gameTime = Math.floor(data.t / 1000 - Number(data.st))
+                    this.scorePanel.setTimer(gameTime)
+                    if (gameTime > 0)
+                        this.scorePanel.toggleTimer(TimerState.RUNNING)
                     this.emit('init', data)
                     // if (data.status == 0) {//status字段吧 0 进行中 1已结束
                     //     this.scorePanel.resetTimer();
@@ -208,7 +222,10 @@ export class ScoreView extends BasePanelView {
                 };
                 if (eventMap[event]) {
                     isRunning = true
-                    TweenEx.delayedCall(this.delayTimeMS, () => {
+                    let d = this.delayTimeMS;
+                    if (event == 'init')
+                        d = 0
+                    TweenEx.delayedCall(d, () => {
                         eventMap[event]();
                     });
                 }
@@ -236,4 +253,6 @@ export class ScoreView extends BasePanelView {
                 this.scorePanel.resetTimer()
             })
     }
+
+
 }

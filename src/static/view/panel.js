@@ -3955,10 +3955,10 @@
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.delayTime = VueBase_1.VueBase.PROP;
+	        this.delayTimeShowOnly = VueBase_1.VueBase.PROP;
 	        this.liveTime = VueBase_1.VueBase.PROP;
 	        this.srvTime = 0;
 	        this.isTimerRunning = false;
-	        this.delayTimeMS = 0;
 	        this.panelTime = VueBase_1.VueBase.PROP;
 	        this.panelTime2Set = VueBase_1.VueBase.PROP;
 	        this.opReq = function (cmdId, param, callback) {
@@ -3988,11 +3988,17 @@
 	                this.opReq("" + Command_1.CommandId.cs_pauseTimer, { _: null });
 	            },
 	            onClkSetDelay: function () {
+	                var _this = this;
 	                console.log("onClkSetDelay", this, this.delayTime);
 	                var dt = Number(this.delayTime);
 	                if (dt >= 0) {
 	                    this.delayTimeMS = dt * 1000;
 	                    this.opReq("" + Command_1.CommandId.cs_setDelayTime, { delayTimeMS: this.delayTimeMS, _: null }, function () {
+	                    });
+	                    $.post("/online/delay/" + this.gameId + "/" + dt, function (res) {
+	                        if (res) {
+	                            _this.delayTimeShowOnly = dt;
+	                        }
 	                    });
 	                }
 	            },
@@ -4011,6 +4017,7 @@
 	    StageOnlineView.prototype.created = function () {
 	        this.basePanelArr = [];
 	        this.isOp = this.$route.params.op == "op";
+	        this.gameId = this.$route.params.game_id;
 	        if (this.isOp) {
 	            WebJsFunc_1.dynamicLoading.css('/css/bulma.min.css');
 	        }
@@ -4018,7 +4025,6 @@
 	    };
 	    StageOnlineView.prototype.mounted = function () {
 	        canvasStage = BasePanelView_1.BasePanelView.initPixi();
-	        this.gameId = this.$route.params.game_id;
 	        var panel = this.$route.query['panel'];
 	        if (panel == "bracket") {
 	            this.showBracket();
@@ -4071,10 +4077,18 @@
 	                scoreView.on('init', function (data) {
 	                    _this.setSrvTime(data.t);
 	                    _this.liveTime = JsFunc_1.DateFormat(new Date(_this.srvTime), "hh:mm:ss");
+	                    _this.delayTimeShowOnly = data.delayTimeMS / 1000;
 	                });
 	            this.basePanelArr.push(scoreView);
 	        }
 	        this.showOnly(scoreView.name);
+	    };
+	    StageOnlineView.prototype.getView = function (bpName) {
+	        for (var i = 0; i < this.basePanelArr.length; i++) {
+	            var bp = this.basePanelArr[i];
+	            if (bpName == bp.name)
+	                return bp;
+	        }
 	    };
 	    StageOnlineView.prototype.showOnly = function (bpName) {
 	        var showBp;
@@ -4092,7 +4106,7 @@
 	        console.log("onTick");
 	        this.srvTime += 1000;
 	        this.liveTime = JsFunc_1.DateFormat(new Date(this.srvTime), "hh:mm:ss");
-	        this.panelTime = JsFunc_1.DateFormat(new Date(this.srvTime - this.delayTimeMS), "hh:mm:ss");
+	        this.panelTime = JsFunc_1.DateFormat(new Date(this.srvTime - this.getView('score').delayTimeMS), "hh:mm:ss");
 	    };
 	    StageOnlineView.prototype.setSrvTime = function (t) {
 	        var _this = this;
@@ -4934,9 +4948,18 @@
 	        this.scorePanel = new Score2017_1.Score2017(stage, darkTheme);
 	        this.eventPanel = new Event2017_1.Event2017(stage, darkTheme);
 	        console.log('new ScoreView');
-	        this.initRemote();
+	        this.initDelay();
 	        this.initLocal();
 	    }
+	    ScoreView.prototype.initDelay = function () {
+	        var _this = this;
+	        $.get('/online/delay/' + this.gameId, function (delay) {
+	            if (delay)
+	                _this.delayTimeMS = Number(delay) * 1000;
+	            console.log('/online/delay/' + _this.delayTimeMS);
+	            _this.initRemote();
+	        });
+	    };
 	    ScoreView.prototype.initRoom = function () {
 	        var roomIO = io.connect("tcp.lb.liangle.com:3081")
 	            .on('connect', function (msg) {
@@ -5012,6 +5035,11 @@
 	                    _this.scorePanel.setRightScore(data.player.right.rightScore);
 	                    _this.scorePanel.setLeftFoul(data.player.left.leftFoul);
 	                    _this.scorePanel.setRightFoul(data.player.right.rightFoul);
+	                    data.delayTimeMS = _this.delayTimeMS;
+	                    var gameTime = Math.floor(data.t / 1000 - Number(data.st));
+	                    _this.scorePanel.setTimer(gameTime);
+	                    if (gameTime > 0)
+	                        _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
 	                    _this.emit('init', data);
 	                    if (_this.isTest) {
 	                        var player = {
@@ -5065,7 +5093,10 @@
 	                };
 	                if (eventMap[event]) {
 	                    isRunning = true;
-	                    TweenEx_1.TweenEx.delayedCall(_this.delayTimeMS, function () {
+	                    var d = _this.delayTimeMS;
+	                    if (event == 'init')
+	                        d = 0;
+	                    TweenEx_1.TweenEx.delayedCall(d, function () {
 	                        eventMap[event]();
 	                    });
 	                }
@@ -5617,7 +5648,7 @@
 /* 68 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h1>game id:{{gameId}}</h1>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n    </div>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒</h2>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 69 */

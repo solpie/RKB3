@@ -137,6 +137,9 @@ def test_disconnect():
 from game import gameView
 
 app.register_blueprint(gameView, url_prefix='/game')
+# onlineView
+from online import onlineView
+app.register_blueprint(onlineView, url_prefix='/online')
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=int(serverConf["port"]), debug=True)
