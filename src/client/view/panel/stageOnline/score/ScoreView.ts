@@ -127,15 +127,21 @@ export class ScoreView extends BasePanelView {
                     this.scorePanel.setLeftFoul(data.player.left.leftFoul);
                     this.scorePanel.setRightFoul(data.player.right.rightFoul);
                     data.delayTimeMS = this.delayTimeMS
-                    let gameTime = Math.floor(data.t / 1000 - Number(data.st))
-                    this.scorePanel.setTimer(gameTime)
-                    if (gameTime > 0)
-                        this.scorePanel.toggleTimer(TimerState.RUNNING)
+
+                    let gameStatus = Number(data.status)
+                    if (data.status == 0) {//status字段吧 0 进行中 1已结束 2 ready
+                        let gameTime = Math.floor(data.t / 1000 - Number(data.st))
+                        this.scorePanel.setTimer(gameTime)
+                        this.scorePanel.toggleTimer(TimerState.RUNNING);
+                    }
+                    else if (data.status == 2) {
+                        this.scorePanel.toggleTimer(TimerState.PAUSE);
+                        this.scorePanel.resetTimer();
+                    }
+                    // if (gameTime > 0)
+                    //     this.scorePanel.toggleTimer(TimerState.RUNNING)
                     this.emit('init', data)
-                    // if (data.status == 0) {//status字段吧 0 进行中 1已结束
-                    //     this.scorePanel.resetTimer();
-                    //     this.scorePanel.toggleTimer(TimerState.RUNNING);
-                    // }
+
 
                     //setup timer
                     // console.log('$opView', this.$opView);

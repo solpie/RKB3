@@ -5036,10 +5036,16 @@
 	                    _this.scorePanel.setLeftFoul(data.player.left.leftFoul);
 	                    _this.scorePanel.setRightFoul(data.player.right.rightFoul);
 	                    data.delayTimeMS = _this.delayTimeMS;
-	                    var gameTime = Math.floor(data.t / 1000 - Number(data.st));
-	                    _this.scorePanel.setTimer(gameTime);
-	                    if (gameTime > 0)
+	                    var gameStatus = Number(data.status);
+	                    if (data.status == 0) {
+	                        var gameTime = Math.floor(data.t / 1000 - Number(data.st));
+	                        _this.scorePanel.setTimer(gameTime);
 	                        _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
+	                    }
+	                    else if (data.status == 2) {
+	                        _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
+	                        _this.scorePanel.resetTimer();
+	                    }
 	                    _this.emit('init', data);
 	                    if (_this.isTest) {
 	                        var player = {
