@@ -516,6 +516,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var JsFunc_1 = __webpack_require__(24);
 	var VueBase_1 = __webpack_require__(17);
 	var HomeView = (function (_super) {
 	    __extends(HomeView, _super);
@@ -562,11 +563,14 @@
 	            _this.gameDataArr = [];
 	            for (var i = 0; i < gameDataArr.length; i++) {
 	                var gameData = gameDataArr[gameDataArr.length - 1 - i];
-	                gameData.text = "[" + gameData.id + "]:" + gameData.title;
-	                gameData.value = gameData.id;
-	                _this.gameDataArr.push(gameData);
+	                if (Number(gameData.id) > 131) {
+	                    gameData.text = "[" + gameData.id + "]:" + gameData.title;
+	                    gameData.value = gameData.id;
+	                    _this.gameDataArr.push(gameData);
+	                }
 	            }
-	            _this.options = gameDataArr;
+	            _this.gameDataArr.sort(JsFunc_1.ascendingProp('id'));
+	            _this.options = _this.gameDataArr;
 	        });
 	    };
 	    HomeView.prototype.mounted = function () {
@@ -921,11 +925,16 @@
 	    return i == a.indexOf(el);
 	}
 	exports.arrUniqueFilter = arrUniqueFilter;
-	function loadImg(path1, callback) {
+	function loadImg(path1, callback, onerror) {
 	    var img = new Image();
 	    img.onload = function () {
 	        callback(img);
 	    };
+	    if (onerror != null) {
+	        img.onerror = function (e) {
+	            onerror(e);
+	        };
+	    }
 	    img.src = path1;
 	}
 	exports.loadImg = loadImg;

@@ -1,3 +1,4 @@
+import { ascendingProp } from '../../utils/JsFunc';
 import { VueBase } from "../../utils/VueBase";
 /**
  * Created by toramisu on 2016/10/24.
@@ -32,11 +33,14 @@ class HomeView extends VueBase {
             for (var i = 0; i < gameDataArr.length; i++) {
                 // var gameData = gameDataArr[i];
                 var gameData = gameDataArr[gameDataArr.length - 1 - i];
-                gameData.text = "[" + gameData.id + "]:" + gameData.title;
-                gameData.value = gameData.id;
-                this.gameDataArr.push(gameData);
+                if (Number(gameData.id) > 131) {
+                    gameData.text = "[" + gameData.id + "]:" + gameData.title;
+                    gameData.value = gameData.id;
+                    this.gameDataArr.push(gameData);
+                }
             }
-            this.options = gameDataArr;
+            this.gameDataArr.sort(ascendingProp('id'))
+            this.options = this.gameDataArr;
         });
     }
 

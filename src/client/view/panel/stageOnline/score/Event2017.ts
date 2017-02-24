@@ -162,9 +162,15 @@ export class Event2017 extends PIXI.Container {
         if (!this._texMap[ftUrl])
             loadImg(ftUrl, (img) => {
                 this.ftLogo.texture = this._texMap[ftUrl] = imgToTex(img)
+                this.ftLogo.visible = true
+            }, (e) => {
+                console.log('fterror',e)
+                this.ftLogo.visible = false
             })
-        else
+        else {
             this.ftLogo.texture = this._texMap[ftUrl]
+            this.ftLogo.visible = true
+        }
         this.ftLogo.width = this.ftLogo.height = 56
         this.visible = true
 

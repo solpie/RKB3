@@ -357,11 +357,16 @@
 	    return i == a.indexOf(el);
 	}
 	exports.arrUniqueFilter = arrUniqueFilter;
-	function loadImg(path1, callback) {
+	function loadImg(path1, callback, onerror) {
 	    var img = new Image();
 	    img.onload = function () {
 	        callback(img);
 	    };
+	    if (onerror != null) {
+	        img.onerror = function (e) {
+	            onerror(e);
+	        };
+	    }
 	    img.src = path1;
 	}
 	exports.loadImg = loadImg;
@@ -4938,6 +4943,7 @@
 	var ScoreView = (function (_super) {
 	    __extends(ScoreView, _super);
 	    function ScoreView(stage, $route) {
+	        var _this = this;
 	        _super.call(this, const_1.PanelId.onlinePanel);
 	        this.delayTimeMS = 0;
 	        this.isTest = false;
@@ -4948,6 +4954,25 @@
 	        this.scorePanel = new Score2017_1.Score2017(stage, darkTheme);
 	        this.eventPanel = new Event2017_1.Event2017(stage, darkTheme);
 	        console.log('new ScoreView');
+	        if (this.isTest) {
+	            var player_1 = {
+	                avatar: "http://w2.hoopchina.com.cn/43/6f/6a/436f6a5aa8a38e158b98830a3b5c4a4b001.jpg",
+	                group: 'Fe3O4',
+	                height: '177',
+	                intro: "一二三四五六七八九十一二三四五六七八九十一二三22四五六七八九十一二三四五六七八九十一二三四五六七八九十",
+	                loseAmount: 1,
+	                name: "geoffrey0326",
+	                roundScore: 28,
+	                totalChampion: 0,
+	                weight: '79',
+	                winAmount: "3"
+	            };
+	            this.eventPanel.showWin(player_1);
+	            TweenEx_1.TweenEx.delayedCall(7000, function () {
+	                player_1.group = 'fff';
+	                _this.eventPanel.showWin(player_1);
+	            });
+	        }
 	        this.initDelay();
 	        this.initLocal();
 	    }
@@ -5047,21 +5072,6 @@
 	                        _this.scorePanel.resetTimer();
 	                    }
 	                    _this.emit('init', data);
-	                    if (_this.isTest) {
-	                        var player = {
-	                            avatar: "http://w2.hoopchina.com.cn/43/6f/6a/436f6a5aa8a38e158b98830a3b5c4a4b001.jpg",
-	                            group: 'Fe3O4',
-	                            height: '177',
-	                            intro: "一二三四五六七八九十一二三四五六七八九十一二三22四五六七八九十一二三四五六七八九十一二三四五六七八九十",
-	                            loseAmount: 1,
-	                            name: "geoffrey0326",
-	                            roundScore: 28,
-	                            totalChampion: 0,
-	                            weight: '79',
-	                            winAmount: "3"
-	                        };
-	                        _this.eventPanel.showWin(player);
-	                    }
 	                };
 	                eventMap['updateScore'] = function () {
 	                    console.log('updateScore', data);
@@ -5272,9 +5282,15 @@
 	        if (!this._texMap[ftUrl])
 	            JsFunc_1.loadImg(ftUrl, function (img) {
 	                _this.ftLogo.texture = _this._texMap[ftUrl] = PixiEx_1.imgToTex(img);
+	                _this.ftLogo.visible = true;
+	            }, function (e) {
+	                console.log('fterror', e);
+	                _this.ftLogo.visible = false;
 	            });
-	        else
+	        else {
 	            this.ftLogo.texture = this._texMap[ftUrl];
+	            this.ftLogo.visible = true;
+	        }
 	        this.ftLogo.width = this.ftLogo.height = 56;
 	        this.visible = true;
 	        TweenEx_1.TweenEx.delayedCall(6000, function () {

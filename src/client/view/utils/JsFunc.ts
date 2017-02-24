@@ -49,11 +49,16 @@ export function arrUniqueFilter(el, i, a): boolean {
 }
 
 
-export function loadImg(path1, callback) {
+export function loadImg(path1, callback, onerror?) {
     let img = new Image();
     img.onload = () => {
         callback(img);
     };
+    if (onerror != null) {
+        img.onerror = (e) => {
+            onerror(e)
+        }
+    }
     img.src = path1;
 }
 

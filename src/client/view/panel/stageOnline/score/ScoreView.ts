@@ -30,7 +30,25 @@ export class ScoreView extends BasePanelView {
         this.scorePanel = new Score2017(stage, darkTheme)
         this.eventPanel = new Event2017(stage, darkTheme)
         console.log('new ScoreView')
-
+        if (this.isTest) {
+            let player = {
+                avatar: "http://w2.hoopchina.com.cn/43/6f/6a/436f6a5aa8a38e158b98830a3b5c4a4b001.jpg",
+                group: 'Fe3O4',
+                height: '177',
+                intro: "一二三四五六七八九十一二三四五六七八九十一二三22四五六七八九十一二三四五六七八九十一二三四五六七八九十",
+                loseAmount: 1,
+                name: "geoffrey0326",
+                roundScore: 28,
+                totalChampion: 0,
+                weight: '79',
+                winAmount: "3"
+            }
+            this.eventPanel.showWin(player)
+            TweenEx.delayedCall(7000, () => {
+                player.group = 'fff'
+                this.eventPanel.showWin(player)
+            })
+        }
         this.initDelay()
         this.initLocal()
         // if (this.isTest)
@@ -160,21 +178,7 @@ export class ScoreView extends BasePanelView {
                     // });
                     // this.scorePanel.setRightFoul(3)
                     // this.scorePanel.setLeftFoul(4)
-                    if (this.isTest) {
-                        let player = {
-                            avatar: "http://w2.hoopchina.com.cn/43/6f/6a/436f6a5aa8a38e158b98830a3b5c4a4b001.jpg",
-                            group: 'Fe3O4',
-                            height: '177',
-                            intro: "一二三四五六七八九十一二三四五六七八九十一二三22四五六七八九十一二三四五六七八九十一二三四五六七八九十",
-                            loseAmount: 1,
-                            name: "geoffrey0326",
-                            roundScore: 28,
-                            totalChampion: 0,
-                            weight: '79',
-                            winAmount: "3"
-                        }
-                        this.eventPanel.showWin(player)
-                    }
+
 
                 };
 
