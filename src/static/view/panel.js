@@ -5259,7 +5259,7 @@
 	        var avatar = player.avatar;
 	        var ftName = player.group;
 	        this.pName.text = player.name;
-	        this.pIntro.text = JsFunc_1.cnWrap(player.intro, 49, 98);
+	        this.pIntro.text = JsFunc_1.cnWrap('参赛宣言：' + player.intro, 49, 98);
 	        this.pWeight.text = player.weight + " KG";
 	        this.pHeight.text = player.height + " CM";
 	        this.ftName.text = player.group;

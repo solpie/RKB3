@@ -136,7 +136,7 @@ export class Event2017 extends PIXI.Container {
         let ftName = player.group
 
         this.pName.text = player.name
-        this.pIntro.text = cnWrap(player.intro, 49, 98)
+        this.pIntro.text = cnWrap('参赛宣言：'+player.intro, 49, 98)
         this.pWeight.text = player.weight + " KG"
         this.pHeight.text = player.height + " CM"
         this.ftName.text = player.group
