@@ -5001,7 +5001,7 @@
 	    };
 	    ScoreView.prototype.initDefaultPlayer = function () {
 	        var p = 'http://w1.hoopchina.com.cn/huputv/resource/img/amateur.jpg';
-	        this.scorePanel.setLeftPlayerInfo('Player 1', p, 78, 178, '', 0);
+	        this.scorePanel.setLeftPlayerInfo('Player 1', p, 78, 178, 'GreenLight', 0);
 	        this.scorePanel.setRightPlayerInfo('Player 1', p, 78, 178, '', 0);
 	    };
 	    ScoreView.prototype.initLocal = function () {
@@ -5562,6 +5562,17 @@
 	        this.setLeftFoul(0);
 	        this.setRightFoul(0);
 	    };
+	    Score2017.prototype._ftNameFit = function (label, name) {
+	        if (name.toUpperCase() == "GREENLIGHT") {
+	            name = "GREENLIGHT";
+	            label.style['fontSize'] = '13px';
+	        }
+	        else {
+	            label.style['fontSize'] = '22px';
+	        }
+	        label.text = name;
+	        label.y = 280 - label.height * .5;
+	    };
 	    Score2017.prototype.setLeftPlayerInfo = function (name, avatar, weight, height, ft, numChampion) {
 	        var _this = this;
 	        this._loadFrame(numChampion, this.lFrame);
@@ -5581,7 +5592,7 @@
 	            weight = 0;
 	        this.lPlayerInfo.text = height + 'CM ' + weight + "KG";
 	        this.lPlayerInfo.x = 500 - this.lPlayerInfo.width;
-	        this.lFtName.text = ft;
+	        this._ftNameFit(this.lFtName, ft);
 	        this.lFtName.x = 630 - this.lFtName.width * .5;
 	    };
 	    Score2017.prototype._loadFrame = function (numChampion, frame) {
@@ -5618,7 +5629,7 @@
 	        if (!weight)
 	            weight = 0;
 	        this.rPlayerInfo.text = height + 'CM ' + weight + "KG";
-	        this.rFtName.text = ft;
+	        this._ftNameFit(this.rFtName, ft);
 	        this.rFtName.x = 1293 - this.rFtName.width * .5;
 	    };
 	    return Score2017;

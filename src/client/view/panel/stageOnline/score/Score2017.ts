@@ -314,7 +314,17 @@ export class Score2017 {
         this.setLeftFoul(0);
         this.setRightFoul(0);
     }
-
+    _ftNameFit(label: PIXI.Text, name: string) {
+        if (name.toUpperCase() == "GREENLIGHT") {
+            name = "GREENLIGHT"
+            label.style['fontSize'] = '13px'
+        }
+        else {
+            label.style['fontSize'] = '22px'
+        }
+        label.text = name
+        label.y = 280 - label.height * .5
+    }
     //player
     setLeftPlayerInfo(name: string, avatar: string, weight, height, ft: string, numChampion: Number) {
         this._loadFrame(numChampion, this.lFrame)
@@ -339,7 +349,8 @@ export class Score2017 {
         this.lPlayerInfo.text = height + 'CM ' + weight + "KG"
         this.lPlayerInfo.x = 500 - this.lPlayerInfo.width
 
-        this.lFtName.text = ft
+        // this.lFtName.text = ft
+        this._ftNameFit(this.lFtName, ft)
         this.lFtName.x = 630 - this.lFtName.width * .5
     }
     _loadFrame(numChampion, frame: PIXI.Sprite) {
@@ -377,7 +388,8 @@ export class Score2017 {
             weight = 0
         this.rPlayerInfo.text = height + 'CM ' + weight + "KG"
 
-        this.rFtName.text = ft
+        // this.rFtName.text = ft
+        this._ftNameFit(this.rFtName, ft)
         this.rFtName.x = 1293 - this.rFtName.width * .5
     }
 }
