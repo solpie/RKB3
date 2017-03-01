@@ -1,3 +1,6 @@
+import { FoulText } from './FoulText';
+import { blink2 } from '../../../utils/Fx';
+import { TweenEx } from '../../../utils/TweenEx';
 import { FoulGroup } from './FoulGroup';
 import { _avatar } from '../../../utils/HupuAPI';
 import { proxy } from '../../../utils/WebJsFunc';
@@ -12,6 +15,7 @@ const skin = {
         fontColor: '#fff',
         score: '/img/panel/score2017/scoreLight.png',
         foul: '/img/panel/score2017/foul.png',
+        foulHint: '/img/panel/score2017/foulHintLight.png',
         section1: '/img/panel/score2017/section1Light.png',
         section2: '/img/panel/score2017/section2Light.png'
     },
@@ -20,6 +24,7 @@ const skin = {
         fontColor: '#1b5e80',
         score: '/img/panel/score2017/scoreDark.png',
         foul: '/img/panel/score2017/foul.png',
+        foulHint: '/img/panel/score2017/foulHintDark.png',
         section1: '/img/panel/score2017/section1Dark.png',
         section2: '/img/panel/score2017/section2Dark.png'
     }
@@ -30,6 +35,7 @@ interface Skin {
     section2: string
     score: string
     foul: string
+    foulHint: string
     fontColor: string
 }
 function polygon(g: PIXI.Graphics, radius, sides) {
@@ -51,7 +57,10 @@ export class Score2017 {
     rightScoreText: BitmapText;
     leftFoul: SpriteGroup
     rightFoul: SpriteGroup
+    lFoulText: FoulText
+    rFoulText: FoulText
     timer: TextTimer
+    winScoreText: PIXI.Text
     gameIdx: PIXI.Text
 
     lPlayerName: PIXI.Text
@@ -120,17 +129,36 @@ export class Score2017 {
         })
 
         let lf = new FoulGroup({ dir: Direction.e, invert: 29, img: this.skin.foul, count: 4 })
-        ctn.addChild(lf)
+        // ctn.addChild(lf)
         lf.x = 771
         lf.y = 262
         this.leftFoul = lf
 
         let rf = new FoulGroup({ dir: Direction.w, invert: 29, img: this.skin.foul, count: 4 })
-        ctn.addChild(rf)
+        // ctn.addChild(rf)
         rf.x = 1037
         rf.y = lf.y
         this.rightFoul = rf
         // this.setGameIdx(1,true)
+
+        let fts = {
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '30px', fill: "#fff",
+            fontWeight: 'bold'
+        }
+        let lft = new FoulText(this.skin.foulHint)
+        lft.x = 774
+        lft.y = 255
+        ctn.addChild(lft)
+        this.lFoulText = lft
+
+        let rft = new FoulText(this.skin.foulHint)
+        rft.x = 1036
+        rft.y = lft.y
+        ctn.addChild(rft)
+        this.rFoulText = rft
+
+
         let tts = {
             fontFamily: FontName.MicrosoftYahei,
             fontSize: '30px', fill: "#fff",
@@ -142,6 +170,14 @@ export class Score2017 {
         t.y = 90
         t.setTimeBySec(0)
         this.timer = t
+
+        let winScoreText = new PIXI.Text("", tts)
+        winScoreText.x = t.x
+        winScoreText.y = t.y
+        winScoreText.visible = false
+        ctn.addChild(winScoreText)
+        this.winScoreText = winScoreText
+
         let gis = {
             fontFamily: FontName.MicrosoftYahei,
             fontSize: '26px', fill: "#fff",
@@ -251,7 +287,7 @@ export class Score2017 {
     }
 
     set35ScoreLight(winScore) {
-
+        this.winScoreText.text = winScore + '球胜'
     }
 
     setGameIdx(gameIdx, isMaster = false) {
@@ -277,23 +313,47 @@ export class Score2017 {
         }
         this.gameIdx.text = '第' + paddy(gameIdx, 2) + '场'
     }
-
+    _showWinScore() {
+        this.winScoreText.visible = true
+        this.timer.visible = false
+        blink2({
+            target: this.winScoreText, time: 100, loop: 20, callback: () => {
+                this.winScoreText.visible = false
+                this.timer.visible = true
+            }
+        })
+        // TweenEx.delayedCall(3000, () => {
+        //     this.winScoreText.visible = false
+        //     this.timer.visible = true
+        // })
+    }
     setLeftScore(v) {
         this.leftScoreText.text = v + ''
+        this._showWinScore()
     }
 
     setRightScore(v) {
         this.rightScoreText.text = v + ''
+        this._showWinScore()
     }
 
+    _setFoulText(label: PIXI.Text, v) {
+        let s = v + ' Foul'
+        if (Number(v) > 3) {
+            s = '  犯满'
+        }
+        label.text = s
+    }
     setLeftFoul(v) {
-        v = Number(v)
-        this.leftFoul.setNum(v)
+        // v = Number(v)
+        // this.leftFoul.setNum(v)
+        this.lFoulText.setFoul(v)
     }
 
     setRightFoul(v) {
-        v = Number(v)
-        this.rightFoul.setNum(v)
+        // v = Number(v)
+        // this.rightFoul.setNum(v)
+        this.rFoulText.setFoul(v)
     }
 
     resetTimer() {
@@ -314,7 +374,7 @@ export class Score2017 {
         this.setLeftFoul(0);
         this.setRightFoul(0);
     }
-    _ftNameFit(label: PIXI.Text, name: string) {
+    _fixFtName(label: PIXI.Text, name: string) {
         if (name.toUpperCase() == "GREENLIGHT") {
             name = "GREENLIGHT"
             label.style['fontSize'] = '13px'
@@ -350,7 +410,7 @@ export class Score2017 {
         this.lPlayerInfo.x = 500 - this.lPlayerInfo.width
 
         // this.lFtName.text = ft
-        this._ftNameFit(this.lFtName, ft)
+        this._fixFtName(this.lFtName, ft)
         this.lFtName.x = 630 - this.lFtName.width * .5
     }
     _loadFrame(numChampion, frame: PIXI.Sprite) {
@@ -389,7 +449,7 @@ export class Score2017 {
         this.rPlayerInfo.text = height + 'CM ' + weight + "KG"
 
         // this.rFtName.text = ft
-        this._ftNameFit(this.rFtName, ft)
+        this._fixFtName(this.rFtName, ft)
         this.rFtName.x = 1293 - this.rFtName.width * .5
     }
 }

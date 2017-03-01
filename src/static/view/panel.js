@@ -2564,13 +2564,14 @@
 	                .to({ alpha: a }, time)
 	                .call(function () {
 	                loop -= 1;
-	                if (callback)
-	                    callback();
 	                to1(a ? 0 : 1);
 	            })
 	                .start();
-	        else
+	        else {
+	            if (callback)
+	                callback();
 	            loop = -1;
+	        }
 	    }
 	    to1(1);
 	}
@@ -5307,6 +5308,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var FoulText_1 = __webpack_require__(71);
+	var Fx_1 = __webpack_require__(46);
 	var FoulGroup_1 = __webpack_require__(67);
 	var TextTimer_1 = __webpack_require__(42);
 	var SpriteGroup_1 = __webpack_require__(45);
@@ -5319,6 +5322,7 @@
 	        fontColor: '#fff',
 	        score: '/img/panel/score2017/scoreLight.png',
 	        foul: '/img/panel/score2017/foul.png',
+	        foulHint: '/img/panel/score2017/foulHintLight.png',
 	        section1: '/img/panel/score2017/section1Light.png',
 	        section2: '/img/panel/score2017/section2Light.png'
 	    },
@@ -5327,6 +5331,7 @@
 	        fontColor: '#1b5e80',
 	        score: '/img/panel/score2017/scoreDark.png',
 	        foul: '/img/panel/score2017/foul.png',
+	        foulHint: '/img/panel/score2017/foulHintDark.png',
 	        section1: '/img/panel/score2017/section1Dark.png',
 	        section2: '/img/panel/score2017/section2Dark.png'
 	    }
@@ -5393,15 +5398,28 @@
 	            ctn.addChild(rightScoreNum);
 	        });
 	        var lf = new FoulGroup_1.FoulGroup({ dir: SpriteGroup_1.Direction.e, invert: 29, img: this.skin.foul, count: 4 });
-	        ctn.addChild(lf);
 	        lf.x = 771;
 	        lf.y = 262;
 	        this.leftFoul = lf;
 	        var rf = new FoulGroup_1.FoulGroup({ dir: SpriteGroup_1.Direction.w, invert: 29, img: this.skin.foul, count: 4 });
-	        ctn.addChild(rf);
 	        rf.x = 1037;
 	        rf.y = lf.y;
 	        this.rightFoul = rf;
+	        var fts = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '30px', fill: "#fff",
+	            fontWeight: 'bold'
+	        };
+	        var lft = new FoulText_1.FoulText(this.skin.foulHint);
+	        lft.x = 774;
+	        lft.y = 255;
+	        ctn.addChild(lft);
+	        this.lFoulText = lft;
+	        var rft = new FoulText_1.FoulText(this.skin.foulHint);
+	        rft.x = 1036;
+	        rft.y = lft.y;
+	        ctn.addChild(rft);
+	        this.rFoulText = rft;
 	        var tts = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
 	            fontSize: '30px', fill: "#fff",
@@ -5413,6 +5431,12 @@
 	        t.y = 90;
 	        t.setTimeBySec(0);
 	        this.timer = t;
+	        var winScoreText = new PIXI.Text("", tts);
+	        winScoreText.x = t.x;
+	        winScoreText.y = t.y;
+	        winScoreText.visible = false;
+	        ctn.addChild(winScoreText);
+	        this.winScoreText = winScoreText;
 	        var gis = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
 	            fontSize: '26px', fill: "#fff",
@@ -5507,6 +5531,7 @@
 	        ctn.addChild(rFrame);
 	    }
 	    Score2017.prototype.set35ScoreLight = function (winScore) {
+	        this.winScoreText.text = winScore + '球胜';
 	    };
 	    Score2017.prototype.setGameIdx = function (gameIdx, isMaster) {
 	        var _this = this;
@@ -5533,19 +5558,37 @@
 	        }
 	        this.gameIdx.text = '第' + JsFunc_1.paddy(gameIdx, 2) + '场';
 	    };
+	    Score2017.prototype._showWinScore = function () {
+	        var _this = this;
+	        this.winScoreText.visible = true;
+	        this.timer.visible = false;
+	        Fx_1.blink2({
+	            target: this.winScoreText, time: 100, loop: 20, callback: function () {
+	                _this.winScoreText.visible = false;
+	                _this.timer.visible = true;
+	            }
+	        });
+	    };
 	    Score2017.prototype.setLeftScore = function (v) {
 	        this.leftScoreText.text = v + '';
+	        this._showWinScore();
 	    };
 	    Score2017.prototype.setRightScore = function (v) {
 	        this.rightScoreText.text = v + '';
+	        this._showWinScore();
+	    };
+	    Score2017.prototype._setFoulText = function (label, v) {
+	        var s = v + ' Foul';
+	        if (Number(v) > 3) {
+	            s = '  犯满';
+	        }
+	        label.text = s;
 	    };
 	    Score2017.prototype.setLeftFoul = function (v) {
-	        v = Number(v);
-	        this.leftFoul.setNum(v);
+	        this.lFoulText.setFoul(v);
 	    };
 	    Score2017.prototype.setRightFoul = function (v) {
-	        v = Number(v);
-	        this.rightFoul.setNum(v);
+	        this.rFoulText.setFoul(v);
 	    };
 	    Score2017.prototype.resetTimer = function () {
 	        this.timer.resetTimer();
@@ -5562,7 +5605,7 @@
 	        this.setLeftFoul(0);
 	        this.setRightFoul(0);
 	    };
-	    Score2017.prototype._ftNameFit = function (label, name) {
+	    Score2017.prototype._fixFtName = function (label, name) {
 	        if (name.toUpperCase() == "GREENLIGHT") {
 	            name = "GREENLIGHT";
 	            label.style['fontSize'] = '13px';
@@ -5592,7 +5635,7 @@
 	            weight = 0;
 	        this.lPlayerInfo.text = height + 'CM ' + weight + "KG";
 	        this.lPlayerInfo.x = 500 - this.lPlayerInfo.width;
-	        this._ftNameFit(this.lFtName, ft);
+	        this._fixFtName(this.lFtName, ft);
 	        this.lFtName.x = 630 - this.lFtName.width * .5;
 	    };
 	    Score2017.prototype._loadFrame = function (numChampion, frame) {
@@ -5629,7 +5672,7 @@
 	        if (!weight)
 	            weight = 0;
 	        this.rPlayerInfo.text = height + 'CM ' + weight + "KG";
-	        this._ftNameFit(this.rFtName, ft);
+	        this._fixFtName(this.rFtName, ft);
 	        this.rFtName.x = 1293 - this.rFtName.width * .5;
 	    };
 	    return Score2017;
@@ -5783,6 +5826,53 @@
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <h1>game id:{{gameId}}</h1>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\"\r\n                   onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46'\r\n                   placeholder=\"\" style=\"width: 50px;\"\r\n                   v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n    </div>\r\n</div>\r\n";
+
+/***/ },
+/* 71 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var Fx_1 = __webpack_require__(46);
+	var PixiEx_1 = __webpack_require__(36);
+	var const_1 = __webpack_require__(33);
+	var FoulText = (function (_super) {
+	    __extends(FoulText, _super);
+	    function FoulText(hintUrl) {
+	        _super.call(this);
+	        var h = PixiEx_1.newBitmap({ url: hintUrl });
+	        this.hint = h;
+	        this.addChild(h);
+	        var fts = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '30px', fill: "#fff",
+	            fontWeight: 'bold'
+	        };
+	        var l = new PIXI.Text('', fts);
+	        this.addChild(l);
+	        this.label = l;
+	    }
+	    FoulText.prototype.setFoul = function (v) {
+	        var s = v + ' Foul';
+	        this.hint.visible = false;
+	        if (Number(v) > 3) {
+	            s = '犯 满';
+	            this.hint.visible = true;
+	            Fx_1.blink2({
+	                target: this.hint, time: 130, loop: 31
+	            });
+	        }
+	        this.label.text = s;
+	        this.label.x = (109 - this.label.width) * .5;
+	    };
+	    return FoulText;
+	}(PIXI.Container));
+	exports.FoulText = FoulText;
+
 
 /***/ }
 /******/ ]);

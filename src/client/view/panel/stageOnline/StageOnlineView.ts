@@ -132,8 +132,6 @@ class StageOnlineView extends VueBase {
                     this.delayTimeShowOnly = data.delayTimeMS / 1000
                 })
             this.basePanelArr.push(scoreView)
-
-
         }
         this.showOnly(scoreView.name)
     }

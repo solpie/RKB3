@@ -27,13 +27,15 @@ export function blink2(options: { target: any, time?: number, loop?: number, cal
                 .to({ alpha: a }, time)
                 .call(() => {
                     loop -= 1
-                    if (callback)
-                        callback()
+
                     to1(a ? 0 : 1);
                 })
                 .start()
-        else
+        else {
+            if (callback)
+                callback()
             loop = -1
+        }
     }
     to1(1);
 }
