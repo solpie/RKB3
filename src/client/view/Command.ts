@@ -152,23 +152,10 @@ enum cmdEnum {
     sc_5v5hidePlayer,
     cs_5v5setTimeString,
     sc_5v5setTimeString,
-    
-    //---------------- player panel
 
-    cs_startingLine,
-    startingLine,
-
-    cs_hideStartingLine,
-    hideStartingLine,
-
-    cs_queryPlayerByPos,
-    fadeInPlayerPanel,
-    cs_fadeInPlayerPanel,
-    fadeOutPlayerPanel,
-    cs_fadeOutPlayerPanel,
-    movePlayerPanel,
-    cs_movePlayerPanel,
-
+    //-- online panel
+    cs_toggleTheme,
+    sc_toggleTheme,
     initPanel,
     ///screen
     cs_inScreenScore,

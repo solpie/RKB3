@@ -20,10 +20,15 @@
         <button class="button" @click="onClkStartTimer">开始</button>
         <button class="button" @click="onClkPauseTimer">暂停</button>
         <button class="button" @click="onClkResetTimer">重置</button>
+
         <p class="control">
             <input class="input" type="text" onkeypress='var c = event.charCode;
                    return c >= 48 && c <= 57 ||c==46' placeholder="" style="width: 50px;" v-model="panelTime2Set">
             <button class="button" @click="onClkSetPanelTime(panelTime2Set)">确定</button>
         </p>
+
+        <button class="button" @click="onClkLeftChampion">xx冠军</button>
+        <button class="button" @click="onClkRightChampion">xx冠军</button>
+        <button class="button" @click="onClkToggleTheme">切换面板配色</button>
     </div>
 </div>

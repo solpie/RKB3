@@ -153,7 +153,114 @@
 /***/ },
 /* 14 */,
 /* 15 */,
-/* 16 */,
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var JsFunc_1 = __webpack_require__(24);
+	var VueBase_1 = __webpack_require__(17);
+	function getScorePanelUrl(gameId, isDark, isOb) {
+	    if (isOb === void 0) { isOb = true; }
+	    var op = 'op';
+	    if (isOb)
+	        op = 'ob';
+	    if (isDark)
+	        return "/panel/#/ol/" + op + "/" + gameId + "?panel=score&theme=dark";
+	    return "/panel/#/ol/" + op + "/" + gameId + "?panel=score";
+	}
+	exports.getScorePanelUrl = getScorePanelUrl;
+	var HomeView = (function (_super) {
+	    __extends(HomeView, _super);
+	    function HomeView() {
+	        _super.call(this);
+	        this.template = __webpack_require__(18);
+	        this.links = VueBase_1.VueBase.PROP;
+	        this.opUrlArr = VueBase_1.VueBase.PROP;
+	        this.selected = VueBase_1.VueBase.PROP;
+	        this.options = VueBase_1.VueBase.PROP;
+	        this.gameDataArr = VueBase_1.VueBase.PROP;
+	        this.iosParam = VueBase_1.VueBase.Dict;
+	        this.rmtpUrl = VueBase_1.VueBase.String;
+	        this.playUrl = VueBase_1.VueBase.String;
+	        this.watch = {
+	            selected: "onSelGameID"
+	        };
+	        this.methods = {
+	            onSelGameID: function (gameId) {
+	                var _this = this;
+	                this.updateLinks(gameId);
+	                var url = 'http://api.liangle.com/api/passerbyking/game/info/' + gameId;
+	                $.get("/proxy?url=" + url, function (res1) {
+	                    console.log(res1);
+	                    var p = res1.data.stream.publish;
+	                    _this.rmtpUrl = p.url + "/" + p.stream;
+	                    _this.playUrl = res1.data.stream.play;
+	                    _this.genQRCode();
+	                });
+	            },
+	            onClkQRCode: function () {
+	                this.genQRCode();
+	            }
+	        };
+	        VueBase_1.VueBase.initProps(this);
+	    }
+	    HomeView.prototype.created = function () {
+	        var _this = this;
+	        console.log('post /admin/');
+	        var url = 'http://api.liangle.com/api/passerbyking/game/list';
+	        $.get("/proxy?url=" + url, function (res1) {
+	            console.log(res1);
+	            var gameDataArr = res1.data;
+	            _this.gameDataArr = [];
+	            for (var i = 0; i < gameDataArr.length; i++) {
+	                var gameData = gameDataArr[gameDataArr.length - 1 - i];
+	                if (Number(gameData.id) > 131) {
+	                    gameData.text = "[" + gameData.id + "]:" + gameData.title;
+	                    gameData.value = gameData.id;
+	                    _this.gameDataArr.push(gameData);
+	                }
+	            }
+	            _this.gameDataArr.sort(JsFunc_1.ascendingProp('id'));
+	            _this.options = _this.gameDataArr;
+	        });
+	    };
+	    HomeView.prototype.mounted = function () {
+	        this.updateLinks(79);
+	    };
+	    HomeView.prototype.updateLinks = function (gameId) {
+	        this.links = [
+	            { title: "比分面板（蓝色）", url: getScorePanelUrl(gameId, true) },
+	            { title: "比分面板（绿色）", url: getScorePanelUrl(gameId, false) },
+	            { title: "比分面板 操作", url: getScorePanelUrl(gameId, false, false) },
+	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
+	        ];
+	    };
+	    HomeView.prototype.genQRCode = function () {
+	        this.iosParam = { "rtmp": this.rmtpUrl, gameId: this.selected + "" };
+	        if (this.qrcode) {
+	            $('#qrcode').empty();
+	            console.log('clear');
+	        }
+	        this.qrcode = new QRCode(document.getElementById("qrcode"), {
+	            text: JSON.stringify(this.iosParam),
+	            width: 256,
+	            height: 256,
+	            colorDark: "#000000",
+	            colorLight: "#ffffff",
+	            correctLevel: QRCode.CorrectLevel.H
+	        });
+	    };
+	    return HomeView;
+	}(VueBase_1.VueBase));
+	exports.homeView = new HomeView();
+
+
+/***/ },
 /* 17 */
 /***/ function(module, exports) {
 
@@ -200,7 +307,12 @@
 
 
 /***/ },
-/* 18 */,
+/* 18 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"container\">\r\n    <nav class=\"panel\">\r\n        <p class=\"panel-heading\">\r\n            直播面板op入口 Game ID: {{ selected }}\r\n            <span class=\"select\">\r\n                <select v-model=\"selected\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n        </p>\r\n        <vue v-for=\"link in links\">\r\n            <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                <span class=\"panel-icon\">\r\n            <i class=\"fa fa-book\"></i>\r\n            </span> {{link.url}}\r\n                <br> {{link.title}}\r\n            </a>\r\n            <!--<button class=\"button\">复制地址</button>-->\r\n        </vue>\r\n        command:\r\n        <br> /game/bracket/clear\r\n        <br>/game/clear/bracketIdx\r\n        <br>/git/pull\r\n    </nav>\r\n    播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n    <p>\r\n        推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n            <div id=\"qrcode\"></div>\r\n</div>";
+
+/***/ },
 /* 19 */,
 /* 20 */,
 /* 21 */
@@ -3453,27 +3565,18 @@
 	    cmdEnum[cmdEnum["sc_5v5hidePlayer"] = 131] = "sc_5v5hidePlayer";
 	    cmdEnum[cmdEnum["cs_5v5setTimeString"] = 132] = "cs_5v5setTimeString";
 	    cmdEnum[cmdEnum["sc_5v5setTimeString"] = 133] = "sc_5v5setTimeString";
-	    cmdEnum[cmdEnum["cs_startingLine"] = 134] = "cs_startingLine";
-	    cmdEnum[cmdEnum["startingLine"] = 135] = "startingLine";
-	    cmdEnum[cmdEnum["cs_hideStartingLine"] = 136] = "cs_hideStartingLine";
-	    cmdEnum[cmdEnum["hideStartingLine"] = 137] = "hideStartingLine";
-	    cmdEnum[cmdEnum["cs_queryPlayerByPos"] = 138] = "cs_queryPlayerByPos";
-	    cmdEnum[cmdEnum["fadeInPlayerPanel"] = 139] = "fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeInPlayerPanel"] = 140] = "cs_fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["fadeOutPlayerPanel"] = 141] = "fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeOutPlayerPanel"] = 142] = "cs_fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["movePlayerPanel"] = 143] = "movePlayerPanel";
-	    cmdEnum[cmdEnum["cs_movePlayerPanel"] = 144] = "cs_movePlayerPanel";
-	    cmdEnum[cmdEnum["initPanel"] = 145] = "initPanel";
-	    cmdEnum[cmdEnum["cs_inScreenScore"] = 146] = "cs_inScreenScore";
-	    cmdEnum[cmdEnum["inScreenScore"] = 147] = "inScreenScore";
-	    cmdEnum[cmdEnum["cs_attack"] = 148] = "cs_attack";
-	    cmdEnum[cmdEnum["attack"] = 149] = "attack";
-	    cmdEnum[cmdEnum["cs_addHealth"] = 150] = "cs_addHealth";
-	    cmdEnum[cmdEnum["addHealth"] = 151] = "addHealth";
-	    cmdEnum[cmdEnum["fadeInOK"] = 152] = "fadeInOK";
-	    cmdEnum[cmdEnum["cs_combo"] = 153] = "cs_combo";
-	    cmdEnum[cmdEnum["combo"] = 154] = "combo";
+	    cmdEnum[cmdEnum["cs_toggleTheme"] = 134] = "cs_toggleTheme";
+	    cmdEnum[cmdEnum["sc_toggleTheme"] = 135] = "sc_toggleTheme";
+	    cmdEnum[cmdEnum["initPanel"] = 136] = "initPanel";
+	    cmdEnum[cmdEnum["cs_inScreenScore"] = 137] = "cs_inScreenScore";
+	    cmdEnum[cmdEnum["inScreenScore"] = 138] = "inScreenScore";
+	    cmdEnum[cmdEnum["cs_attack"] = 139] = "cs_attack";
+	    cmdEnum[cmdEnum["attack"] = 140] = "attack";
+	    cmdEnum[cmdEnum["cs_addHealth"] = 141] = "cs_addHealth";
+	    cmdEnum[cmdEnum["addHealth"] = 142] = "addHealth";
+	    cmdEnum[cmdEnum["fadeInOK"] = 143] = "fadeInOK";
+	    cmdEnum[cmdEnum["cs_combo"] = 144] = "cs_combo";
+	    cmdEnum[cmdEnum["combo"] = 145] = "combo";
 	})(cmdEnum || (cmdEnum = {}));
 	exports.CommandId = {};
 	for (var k in cmdEnum) {
@@ -4014,6 +4117,13 @@
 	            onClkSetPanelTime: function (timeBySec) {
 	                this.opReq("" + Command_1.CommandId.cs_setTimer, { _: null, time: Number(timeBySec) });
 	            },
+	            onClkLeftChampion: function () {
+	            },
+	            onClkRightChampion: function () {
+	            },
+	            onClkToggleTheme: function () {
+	                this.opReq("" + Command_1.CommandId.cs_toggleTheme, { _: null });
+	            },
 	            onClkBracket: function () {
 	                this.opReq("" + Command_1.CommandId.cs_showBracket, { _: null });
 	            }
@@ -4042,7 +4152,6 @@
 	            this.showRank();
 	        }
 	        console.log('StageOnlineView mounted!');
-	        this.initIO();
 	    };
 	    StageOnlineView.prototype.initIO = function () {
 	        var _this = this;
@@ -4934,6 +5043,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var home_1 = __webpack_require__(16);
 	var Event2017_1 = __webpack_require__(65);
 	var TweenEx_1 = __webpack_require__(40);
 	var Score2017_1 = __webpack_require__(66);
@@ -4948,6 +5058,7 @@
 	        _super.call(this, const_1.PanelId.onlinePanel);
 	        this.delayTimeMS = 0;
 	        this.isTest = false;
+	        this.$route = $route;
 	        this.name = const_1.PanelId.scorePanel;
 	        var darkTheme = $route.query.theme == "dark";
 	        this.gameId = $route.params.game_id;
@@ -5025,6 +5136,12 @@
 	        })
 	            .on("" + Command_1.CommandId.sc_setTimer, function (data) {
 	            _this.scorePanel.setTimer(data.time);
+	        })
+	            .on("" + Command_1.CommandId.sc_toggleTheme, function (data) {
+	            var s = _this.$route.query['theme'];
+	            var ob = _this.$route.params.op != "op";
+	            window.location.href = home_1.getScorePanelUrl(_this.gameId, s != 'dark', ob);
+	            window.location.reload();
 	        });
 	    };
 	    ScoreView.prototype.initRemote = function () {
@@ -5724,7 +5841,7 @@
 /* 68 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒</h2>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n    </div>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒</h2>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n\r\n        <button class=\"button\" @click=\"onClkLeftChampion\">xx冠军</button>\r\n        <button class=\"button\" @click=\"onClkRightChampion\">xx冠军</button>\r\n        <button class=\"button\" @click=\"onClkToggleTheme\">切换面板配色</button>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 69 */

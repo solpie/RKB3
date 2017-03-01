@@ -1,3 +1,4 @@
+import { getScorePanelUrl } from '../../../admin/home/home';
 import { Event2017 } from './Event2017';
 import { PlayerInfo } from '../../../../model/PlayerInfo';
 import { TweenEx } from '../../../utils/TweenEx';
@@ -17,9 +18,10 @@ export class ScoreView extends BasePanelView {
     delayTimeMS = 0
     gameId: any
     isTest = false
-
+    $route:any
     constructor(stage: PIXI.Container, $route) {
         super(PanelId.onlinePanel)
+        this.$route = $route
         this.name = PanelId.scorePanel
         // this.isOp = this.$route.params.op == "op"
         let darkTheme = $route.query.theme == "dark"
@@ -104,6 +106,12 @@ export class ScoreView extends BasePanelView {
             })
             .on(`${CommandId.sc_setTimer}`, (data) => {
                 this.scorePanel.setTimer(data.time)
+            })
+            .on(`${CommandId.sc_toggleTheme}`, (data) => {
+                let s = this.$route.query['theme']
+                let ob = this.$route.params.op != "op"
+                window.location.href = getScorePanelUrl(this.gameId, s != 'dark',ob)
+                window.location.reload()
             })
     }
     initRemote() {

@@ -5,7 +5,14 @@ import { VueBase } from "../../utils/VueBase";
  */
 declare var $;
 declare var QRCode;
-
+export function getScorePanelUrl(gameId, isDark, isOb = true) {
+    let op = 'op'
+    if (isOb)
+        op = 'ob'
+    if (isDark)
+        return `/panel/#/ol/${op}/${gameId}?panel=score&theme=dark`
+    return `/panel/#/ol/${op}/${gameId}?panel=score`
+}
 class HomeView extends VueBase {
     template = require('./home.html');
     links = VueBase.PROP;
@@ -50,11 +57,10 @@ class HomeView extends VueBase {
 
     updateLinks(gameId) {
         this.links = [
-            { title: "比分面板（蓝色）", url: `/panel/#/ol/ob/${gameId}?panel=score&theme=dark` },
-            { title: "比分面板（绿色）", url: `/panel/#/ol/ob/${gameId}?panel=score` },
-            { title: "比分面板 操作", url: `/panel/#/ol/op/${gameId}?panel=score` },
+            { title: "比分面板（蓝色）", url: getScorePanelUrl(gameId, true) },
+            { title: "比分面板（绿色）", url: getScorePanelUrl(gameId, false) },
+            { title: "比分面板 操作", url: getScorePanelUrl(gameId, false,false) },
             { title: "八强面板", url: `/panel/#/ol/ob/${gameId}?panel=bracket` },
-
 
             // { title: "---------------------Final--------------------", url: `/panel/#/ol/ob/0?panel=bracket` },
             // { title: "K.O.A", url: `/panel/#/koa/op/` },

@@ -1,3 +1,4 @@
+import { getScorePanelUrl } from '../../admin/home/home';
 import { DateFormat } from '../../utils/JsFunc';
 import { CommandId } from '../../Command';
 import { PanelId } from '../../const';
@@ -80,10 +81,11 @@ class StageOnlineView extends VueBase {
             this.showRank()
         }
         console.log('StageOnlineView mounted!')
-        this.initIO()
+        // this.initIO()
     }
 
     initIO() {
+        // http://api.liangle.com/api/passerbyking/game/wheel/ready/156
         let localWs = io.connect(`/${PanelId.rkbPanel}`)
         localWs.on('connect', (msg) => {
             console.log('connect', window.location.host)
@@ -206,6 +208,13 @@ class StageOnlineView extends VueBase {
         },
         onClkSetPanelTime(timeBySec) {
             this.opReq(`${CommandId.cs_setTimer}`, { _: null, time: Number(timeBySec) })
+        },
+        onClkLeftChampion() {
+        },
+        onClkRightChampion() {
+        },
+        onClkToggleTheme() {
+            this.opReq(`${CommandId.cs_toggleTheme}`, { _: null })
         },
         onClkBracket() {
             this.opReq(`${CommandId.cs_showBracket}`, { _: null })

@@ -518,6 +518,16 @@
 	};
 	var JsFunc_1 = __webpack_require__(24);
 	var VueBase_1 = __webpack_require__(17);
+	function getScorePanelUrl(gameId, isDark, isOb) {
+	    if (isOb === void 0) { isOb = true; }
+	    var op = 'op';
+	    if (isOb)
+	        op = 'ob';
+	    if (isDark)
+	        return "/panel/#/ol/" + op + "/" + gameId + "?panel=score&theme=dark";
+	    return "/panel/#/ol/" + op + "/" + gameId + "?panel=score";
+	}
+	exports.getScorePanelUrl = getScorePanelUrl;
 	var HomeView = (function (_super) {
 	    __extends(HomeView, _super);
 	    function HomeView() {
@@ -578,9 +588,9 @@
 	    };
 	    HomeView.prototype.updateLinks = function (gameId) {
 	        this.links = [
-	            { title: "比分面板（蓝色）", url: "/panel/#/ol/ob/" + gameId + "?panel=score&theme=dark" },
-	            { title: "比分面板（绿色）", url: "/panel/#/ol/ob/" + gameId + "?panel=score" },
-	            { title: "比分面板 操作", url: "/panel/#/ol/op/" + gameId + "?panel=score" },
+	            { title: "比分面板（蓝色）", url: getScorePanelUrl(gameId, true) },
+	            { title: "比分面板（绿色）", url: getScorePanelUrl(gameId, false) },
+	            { title: "比分面板 操作", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
 	        ];
 	    };
