@@ -590,7 +590,7 @@
 	        this.links = [
 	            { title: "比分面板（蓝色）", url: getScorePanelUrl(gameId, true) },
 	            { title: "比分面板（绿色）", url: getScorePanelUrl(gameId, false) },
-	            { title: "比分面板 操作", url: getScorePanelUrl(gameId, false, false) },
+	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
 	        ];
 	    };
