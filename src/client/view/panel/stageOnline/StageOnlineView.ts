@@ -39,6 +39,15 @@ class StageOnlineView extends VueBase {
 
     panelTime = VueBase.PROP
     panelTime2Set = VueBase.PROP
+
+    //无延时数据    
+    lLiveScore = VueBase.PROP
+    lLiveFoul = VueBase.PROP
+    lLiveName = VueBase.PROP
+    rLiveScore = VueBase.PROP
+    rLiveFoul = VueBase.PROP
+    rLiveName = VueBase.PROP
+    liveData: any
     opReq = (cmdId: string, param: any, callback: any) => {
         $.ajax({
             url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
@@ -123,16 +132,60 @@ class StageOnlineView extends VueBase {
         }
         this.showOnly(bracketView.name)
     }
-
+    _setLiveData(data?) {
+        if (data == null)
+            data = {
+                leftFoul: 0,
+                rightFoul: 0,
+                leftScore: 0,
+                rightScore: 0
+            }
+        if (data.leftScore != null) {
+            this.lLiveScore = data.leftScore
+        }
+        if (data.rightScore != null) {
+            this.rLiveScore = data.rightScore
+        }
+        if (data.rightFoul != null) {
+            this.rLiveFoul = data.rightFoul
+        }
+        if (data.leftFoul != null) {
+            this.lLiveFoul = data.leftFoul
+        }
+        this.liveData = data
+    }
+    _setPlayer(lPlayer, rPlayer) {
+        this.lLiveName = lPlayer
+        this.rLiveName = rPlayer
+    }
     showScore() {
         if (!scoreView) {
             scoreView = new ScoreView(canvasStage, this.$route)
-            if (this.isOp)
+            if (this.isOp) {
                 scoreView.on('init', (data) => {
                     this.setSrvTime(data.t)
                     this.liveTime = DateFormat(new Date(this.srvTime), "hh:mm:ss");
                     this.delayTimeShowOnly = data.delayTimeMS / 1000
+                    let d = {
+                        leftFoul: data.player.left.leftFoul,
+                        rightFoul: data.player.right.rightFoul,
+                        leftScore: data.player.left.leftScore,
+                        rightScore: data.player.right.rightScore
+                    }
+                    this._setLiveData(d)
+                    this._setPlayer(data.player.left.name, data.player.right.name)
                 })
+                scoreView.on('updateScore', (data) => {
+                    this._setLiveData(data)
+                })
+                scoreView.on('commitGame', (data) => {
+                    this._setLiveData()
+                })
+                scoreView.on('startGame', (data) => {
+                    this._setPlayer(data.player.left.name, data.player.right.name)
+                })
+            }
+
             this.basePanelArr.push(scoreView)
         }
         this.showOnly(scoreView.name)
@@ -213,8 +266,12 @@ class StageOnlineView extends VueBase {
         },
         onClkRightChampion() {
         },
-        onClkToggleTheme() {
-            this.opReq(`${CommandId.cs_toggleTheme}`, { _: null })
+        onClkRenderData() {
+            if (this.liveData)
+                scoreView.setScoreFoul(this.liveData)
+        },
+        onClkToggleTheme(isDark) {
+            this.opReq(`${CommandId.cs_toggleTheme}`, { _: null, isDark: isDark })
         },
         onClkBracket() {
             this.opReq(`${CommandId.cs_showBracket}`, { _: null })

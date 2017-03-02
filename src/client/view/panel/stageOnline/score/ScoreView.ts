@@ -18,7 +18,9 @@ export class ScoreView extends BasePanelView {
     delayTimeMS = 0
     gameId: any
     isTest = false
-    $route:any
+    $route: any
+
+
     constructor(stage: PIXI.Container, $route) {
         super(PanelId.onlinePanel)
         this.$route = $route
@@ -108,9 +110,9 @@ export class ScoreView extends BasePanelView {
                 this.scorePanel.setTimer(data.time)
             })
             .on(`${CommandId.sc_toggleTheme}`, (data) => {
-                let s = this.$route.query['theme']
+                let isDark = data.isDark
                 let ob = this.$route.params.op != "op"
-                window.location.href = getScorePanelUrl(this.gameId, s != 'dark',ob)
+                window.location.href = getScorePanelUrl(this.gameId, isDark, ob)
                 window.location.reload()
             })
     }
@@ -166,9 +168,7 @@ export class ScoreView extends BasePanelView {
                     }
                     // if (gameTime > 0)
                     //     this.scorePanel.toggleTimer(TimerState.RUNNING)
-                    this.emit('init', data)
-
-
+                    // this.emit('init', data)
                     //setup timer
                     // console.log('$opView', this.$opView);
                     // this.$opView.setSrvTime(data.t);
@@ -243,6 +243,7 @@ export class ScoreView extends BasePanelView {
                     let d = this.delayTimeMS;
                     if (event == 'init')
                         d = 0
+                    this.emit(event, data)
                     TweenEx.delayedCall(d, () => {
                         eventMap[event]();
                     });
@@ -250,6 +251,22 @@ export class ScoreView extends BasePanelView {
             });
         })
     }
+
+    setScoreFoul(data) {
+        if (data.leftScore != null) {
+            this.scorePanel.setLeftScore(data.leftScore);
+        }
+        if (data.rightScore != null) {
+            this.scorePanel.setRightScore(data.rightScore);
+        }
+        if (data.rightFoul != null) {
+            this.scorePanel.setRightFoul(data.rightFoul);
+        }
+        if (data.leftFoul != null) {
+            this.scorePanel.setLeftFoul(data.leftFoul);
+        }
+    }
+
     initIO() {
         let localWs = io.connect(`/${PanelId.rkbPanel}`)
         localWs.on('connect', function (msg) {

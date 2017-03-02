@@ -4070,6 +4070,12 @@
 	        this.isTimerRunning = false;
 	        this.panelTime = VueBase_1.VueBase.PROP;
 	        this.panelTime2Set = VueBase_1.VueBase.PROP;
+	        this.lLiveScore = VueBase_1.VueBase.PROP;
+	        this.lLiveFoul = VueBase_1.VueBase.PROP;
+	        this.lLiveName = VueBase_1.VueBase.PROP;
+	        this.rLiveScore = VueBase_1.VueBase.PROP;
+	        this.rLiveFoul = VueBase_1.VueBase.PROP;
+	        this.rLiveName = VueBase_1.VueBase.PROP;
 	        this.opReq = function (cmdId, param, callback) {
 	            $.ajax({
 	                url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
@@ -4121,8 +4127,12 @@
 	            },
 	            onClkRightChampion: function () {
 	            },
-	            onClkToggleTheme: function () {
-	                this.opReq("" + Command_1.CommandId.cs_toggleTheme, { _: null });
+	            onClkRenderData: function () {
+	                if (this.liveData)
+	                    scoreView.setScoreFoul(this.liveData);
+	            },
+	            onClkToggleTheme: function (isDark) {
+	                this.opReq("" + Command_1.CommandId.cs_toggleTheme, { _: null, isDark: isDark });
 	            },
 	            onClkBracket: function () {
 	                this.opReq("" + Command_1.CommandId.cs_showBracket, { _: null });
@@ -4184,16 +4194,60 @@
 	        }
 	        this.showOnly(bracketView.name);
 	    };
+	    StageOnlineView.prototype._setLiveData = function (data) {
+	        if (data == null)
+	            data = {
+	                leftFoul: 0,
+	                rightFoul: 0,
+	                leftScore: 0,
+	                rightScore: 0
+	            };
+	        if (data.leftScore != null) {
+	            this.lLiveScore = data.leftScore;
+	        }
+	        if (data.rightScore != null) {
+	            this.rLiveScore = data.rightScore;
+	        }
+	        if (data.rightFoul != null) {
+	            this.rLiveFoul = data.rightFoul;
+	        }
+	        if (data.leftFoul != null) {
+	            this.lLiveFoul = data.leftFoul;
+	        }
+	        this.liveData = data;
+	    };
+	    StageOnlineView.prototype._setPlayer = function (lPlayer, rPlayer) {
+	        this.lLiveName = lPlayer;
+	        this.rLiveName = rPlayer;
+	    };
 	    StageOnlineView.prototype.showScore = function () {
 	        var _this = this;
 	        if (!scoreView) {
 	            scoreView = new ScoreView_1.ScoreView(canvasStage, this.$route);
-	            if (this.isOp)
+	            if (this.isOp) {
 	                scoreView.on('init', function (data) {
 	                    _this.setSrvTime(data.t);
 	                    _this.liveTime = JsFunc_1.DateFormat(new Date(_this.srvTime), "hh:mm:ss");
 	                    _this.delayTimeShowOnly = data.delayTimeMS / 1000;
+	                    var d = {
+	                        leftFoul: data.player.left.leftFoul,
+	                        rightFoul: data.player.right.rightFoul,
+	                        leftScore: data.player.left.leftScore,
+	                        rightScore: data.player.right.rightScore
+	                    };
+	                    _this._setLiveData(d);
+	                    _this._setPlayer(data.player.left.name, data.player.right.name);
 	                });
+	                scoreView.on('updateScore', function (data) {
+	                    _this._setLiveData(data);
+	                });
+	                scoreView.on('commitGame', function (data) {
+	                    _this._setLiveData();
+	                });
+	                scoreView.on('startGame', function (data) {
+	                    _this._setPlayer(data.player.left.name, data.player.right.name);
+	                });
+	            }
 	            this.basePanelArr.push(scoreView);
 	        }
 	        this.showOnly(scoreView.name);
@@ -5138,9 +5192,9 @@
 	            _this.scorePanel.setTimer(data.time);
 	        })
 	            .on("" + Command_1.CommandId.sc_toggleTheme, function (data) {
-	            var s = _this.$route.query['theme'];
+	            var isDark = data.isDark;
 	            var ob = _this.$route.params.op != "op";
-	            window.location.href = home_1.getScorePanelUrl(_this.gameId, s != 'dark', ob);
+	            window.location.href = home_1.getScorePanelUrl(_this.gameId, isDark, ob);
 	            window.location.reload();
 	        });
 	    };
@@ -5189,7 +5243,6 @@
 	                        _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
 	                        _this.scorePanel.resetTimer();
 	                    }
-	                    _this.emit('init', data);
 	                };
 	                eventMap['updateScore'] = function () {
 	                    console.log('updateScore', data);
@@ -5230,12 +5283,27 @@
 	                    var d = _this.delayTimeMS;
 	                    if (event == 'init')
 	                        d = 0;
+	                    _this.emit(event, data);
 	                    TweenEx_1.TweenEx.delayedCall(d, function () {
 	                        eventMap[event]();
 	                    });
 	                }
 	            });
 	        });
+	    };
+	    ScoreView.prototype.setScoreFoul = function (data) {
+	        if (data.leftScore != null) {
+	            this.scorePanel.setLeftScore(data.leftScore);
+	        }
+	        if (data.rightScore != null) {
+	            this.scorePanel.setRightScore(data.rightScore);
+	        }
+	        if (data.rightFoul != null) {
+	            this.scorePanel.setRightFoul(data.rightFoul);
+	        }
+	        if (data.leftFoul != null) {
+	            this.scorePanel.setLeftFoul(data.leftFoul);
+	        }
 	    };
 	    ScoreView.prototype.initIO = function () {
 	        var _this = this;
@@ -5841,7 +5909,7 @@
 /* 68 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒</h2>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n\r\n        <button class=\"button\" @click=\"onClkLeftChampion\">xx冠军</button>\r\n        <button class=\"button\" @click=\"onClkRightChampion\">xx冠军</button>\r\n        <button class=\"button\" @click=\"onClkToggleTheme\">切换面板配色</button>\r\n    </div>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒</h2>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n        <label class=\"label\" style=\"font-size: 80px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n        <button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button>\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n\r\n        <button class=\"button\" @click=\"onClkLeftChampion\">xx冠军</button>\r\n        <button class=\"button\" @click=\"onClkRightChampion\">xx冠军</button>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 69 */
