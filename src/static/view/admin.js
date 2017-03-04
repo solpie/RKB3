@@ -52,7 +52,7 @@
 	__webpack_require__(12);
 	var Navbar_1 = __webpack_require__(14);
 	var home_1 = __webpack_require__(16);
-	var player_1 = __webpack_require__(19);
+	var player_1 = __webpack_require__(20);
 	var routes = [
 	    {
 	        path: '/', name: 'home',
@@ -516,8 +516,8 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var JsFunc_1 = __webpack_require__(24);
-	var VueBase_1 = __webpack_require__(17);
+	var JsFunc_1 = __webpack_require__(17);
+	var VueBase_1 = __webpack_require__(18);
 	function getScorePanelUrl(gameId, isDark, isOb) {
 	    if (isOb === void 0) { isOb = true; }
 	    var op = 'op';
@@ -532,7 +532,7 @@
 	    __extends(HomeView, _super);
 	    function HomeView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(18);
+	        this.template = __webpack_require__(19);
 	        this.links = VueBase_1.VueBase.PROP;
 	        this.opUrlArr = VueBase_1.VueBase.PROP;
 	        this.selected = VueBase_1.VueBase.PROP;
@@ -616,276 +616,6 @@
 
 /***/ },
 /* 17 */
-/***/ function(module, exports) {
-
-	"use strict";
-	var VueBase = (function () {
-	    function VueBase() {
-	        this.props = {};
-	        this.methods = {};
-	    }
-	    VueBase.$method = function (func) {
-	        return { f: func, _: null };
-	    };
-	    VueBase.initProps = function (subClassObj) {
-	        for (var key in subClassObj) {
-	            var o = subClassObj[key];
-	            if (o.hasOwnProperty("_")) {
-	                if (o.hasOwnProperty("v")) {
-	                    subClassObj.props[key] = o.v;
-	                }
-	                else if (o.hasOwnProperty("f")) {
-	                    subClassObj.methods[key] = o.f;
-	                }
-	            }
-	            else {
-	                var isClsFunc = o instanceof Function;
-	                if (isClsFunc) {
-	                    subClassObj.methods[key] = o;
-	                }
-	            }
-	        }
-	        return subClassObj;
-	    };
-	    VueBase.prototype.created = function () {
-	    };
-	    VueBase.prototype.mounted = function () {
-	    };
-	    VueBase.PROP = { v: null, _: null };
-	    VueBase.Dict = { v: {}, _: null };
-	    VueBase.Number = { v: 0, _: null };
-	    VueBase.String = { v: "", _: null };
-	    return VueBase;
-	}());
-	exports.VueBase = VueBase;
-
-
-/***/ },
-/* 18 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"container\">\r\n    <nav class=\"panel\">\r\n        <p class=\"panel-heading\">\r\n            直播面板op入口 Game ID: {{ selected }}\r\n            <span class=\"select\">\r\n                <select v-model=\"selected\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n        </p>\r\n        <vue v-for=\"link in links\">\r\n            <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                <span class=\"panel-icon\">\r\n            <i class=\"fa fa-book\"></i>\r\n            </span> {{link.url}}\r\n                <br> {{link.title}}\r\n            </a>\r\n            <!--<button class=\"button\">复制地址</button>-->\r\n        </vue>\r\n        command:\r\n        <br> /game/bracket/clear\r\n        <br>/game/clear/bracketIdx\r\n        <br>/git/pull\r\n    </nav>\r\n    播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n    <p>\r\n        推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n            <div id=\"qrcode\"></div>\r\n</div>";
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var editForm_1 = __webpack_require__(20);
-	var HupuAPI_1 = __webpack_require__(21);
-	var JsFunc_1 = __webpack_require__(24);
-	var VueBase_1 = __webpack_require__(17);
-	var PlayerView = (function (_super) {
-	    __extends(PlayerView, _super);
-	    function PlayerView() {
-	        _super.call(this);
-	        this.template = __webpack_require__(25);
-	        this.playerArr = VueBase_1.VueBase.PROP;
-	        this.editPlayerDoc = VueBase_1.VueBase.PROP;
-	        this.components = { "editForm": editForm_1.editForm };
-	        this.isEdit = VueBase_1.VueBase.PROP;
-	        this.methods = {
-	            onEdit: function (playerDoc) {
-	                console.log('onEdit player id:', playerDoc.id);
-	                this.editPlayerDoc = playerDoc;
-	                this.isEdit = true;
-	            }
-	        };
-	        VueBase_1.VueBase.initProps(this);
-	    }
-	    PlayerView.prototype.created = function () {
-	        var _this = this;
-	        HupuAPI_1.getPlayerDoc(function (res) {
-	            _this.playerArr = res.sort(JsFunc_1.ascendingProp('id'));
-	            console.log(_this.playerArr);
-	        });
-	    };
-	    return PlayerView;
-	}(VueBase_1.VueBase));
-	exports.playerView = new PlayerView();
-
-
-/***/ },
-/* 20 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var HupuAPI_1 = __webpack_require__(21);
-	var VueBase_1 = __webpack_require__(17);
-	var EditForm = (function (_super) {
-	    __extends(EditForm, _super);
-	    function EditForm() {
-	        _super.call(this);
-	        this.isShow = VueBase_1.VueBase.PROP;
-	        this.playerInfo = VueBase_1.VueBase.PROP;
-	        this.template = __webpack_require__(23);
-	        this.watch = { "playerInfo": "onPlayerInfo" };
-	        this.methods = {
-	            onPlayerInfo: function (v) {
-	                this.setPlayerDoc(v);
-	            },
-	            onCancel: function () {
-	                this.$parent.isEdit = false;
-	            },
-	            onUpdate: function () {
-	                var playerDoc = this.editor.get();
-	                playerDoc._id = this.player_id;
-	                console.log('playerDoc', playerDoc);
-	                if (playerDoc._id) {
-	                    HupuAPI_1.updatePlayerDoc(playerDoc, function (res) {
-	                        console.log('playerDoc update', res);
-	                        if (res && res._id) {
-	                            window.location.reload();
-	                        }
-	                    });
-	                    this.$parent.isEdit = false;
-	                }
-	            }
-	        };
-	        VueBase_1.VueBase.initProps(this);
-	    }
-	    EditForm.prototype.created = function () {
-	        this.player_id = '';
-	    };
-	    EditForm.prototype.mounted = function () {
-	        var container = document.getElementById("jsoneditor");
-	        this.editor = new JSONEditor(container);
-	        this.setPlayerDoc(this.playerInfo);
-	    };
-	    EditForm.prototype.setPlayerDoc = function (v) {
-	        console.log(v);
-	        if (v) {
-	            this.player_id = v._id;
-	            delete v._id;
-	            this.editor.set(v);
-	        }
-	    };
-	    return EditForm;
-	}(VueBase_1.VueBase));
-	exports.editForm = new EditForm();
-
-
-/***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var WebJsFunc_1 = __webpack_require__(22);
-	exports.getHupuWS = function (callback) {
-	    var url = 'http://test.jrstvapi.hupu.com/zhubo/getNodeServer';
-	    $.get(WebJsFunc_1.proxy(url), function (res) {
-	        var a = JSON.parse(res);
-	        if (a && a.length) {
-	            callback(a[0]);
-	        }
-	        else
-	            console.error(url);
-	    });
-	};
-	var _get = function (url, callback) {
-	    $.get(url, callback);
-	};
-	exports.getPlayerDoc = function (callback) {
-	    $.get('/game/player', function (res) {
-	        callback(res);
-	    });
-	};
-	exports.updatePlayerDoc = function (playerDoc, callback) {
-	    WebJsFunc_1.$post('/game/player/update', playerDoc, callback);
-	};
-	exports.getGameInfo = function (callback) {
-	    _get('/game/', callback);
-	};
-	exports._avatar = function (filename) {
-	    return '/img/player/avatar/' + filename;
-	};
-
-
-/***/ },
-/* 22 */
-/***/ function(module, exports) {
-
-	"use strict";
-	exports.dynamicLoading = {
-	    css: function (path) {
-	        if (!path || path.length === 0) {
-	            throw new Error('argument "path" is required !');
-	        }
-	        var head = document.getElementsByTagName('head')[0];
-	        var link = document.createElement('link');
-	        link.href = path;
-	        link.rel = 'stylesheet';
-	        link.type = 'text/css';
-	        head.appendChild(link);
-	    },
-	    js: function (path) {
-	        if (!path || path.length === 0) {
-	            throw new Error('argument "path" is required !');
-	        }
-	        var head = document.getElementsByTagName('head')[0];
-	        var script = document.createElement('script');
-	        script.src = path;
-	        script.type = 'text/javascript';
-	        head.appendChild(script);
-	    }
-	};
-	exports.proxy = function (url) {
-	    return "/proxy?url=" + url;
-	};
-	var OpReq = (function () {
-	    function OpReq(io, reqFunc) {
-	        this.cmdMap = {};
-	        this.reqFunc = reqFunc;
-	        this.io = io;
-	    }
-	    OpReq.prototype.send = function (cmd, data) {
-	        var _this = this;
-	        this.reqFunc(cmd, data);
-	        if (!this.cmdMap[cmd]) {
-	            this.cmdMap[cmd] = true;
-	            return {
-	                on: function (resCmd, callback) {
-	                    _this.io.on(resCmd, function (data) {
-	                        callback(data);
-	                    });
-	                }
-	            };
-	        }
-	        return { on: function (resCmd, callback) { } };
-	    };
-	    return OpReq;
-	}());
-	exports.OpReq = OpReq;
-	exports.$post = function (url, data, callback) {
-	    $.ajax({
-	        url: url,
-	        type: 'post',
-	        data: JSON.stringify(data),
-	        headers: { "Content-Type": "application/json" },
-	        dataType: 'json',
-	        success: callback
-	    });
-	};
-
-
-/***/ },
-/* 23 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"box\" style=\"position:fixed;left:200px;top:60px;width:500px\">\r\n    {{player_id}}\r\n    <div id=\"jsoneditor\" style=\"width: 400px; height: 400px;\"></div>\r\n    <button class=\"button\" @click=\"onUpdate()\">update</button>\r\n    <button class=\"button\" @click=\"onCancel()\">cancel</button>\r\n</div>";
-
-/***/ },
-/* 24 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1081,6 +811,281 @@
 	}
 	exports.paddy = paddy;
 
+
+/***/ },
+/* 18 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var VueBase = (function () {
+	    function VueBase() {
+	        this.props = {};
+	        this.methods = {};
+	    }
+	    VueBase.$method = function (func) {
+	        return { f: func, _: null };
+	    };
+	    VueBase.initProps = function (subClassObj) {
+	        for (var key in subClassObj) {
+	            var o = subClassObj[key];
+	            if (o.hasOwnProperty("_")) {
+	                if (o.hasOwnProperty("v")) {
+	                    subClassObj.props[key] = o.v;
+	                }
+	                else if (o.hasOwnProperty("f")) {
+	                    subClassObj.methods[key] = o.f;
+	                }
+	            }
+	            else {
+	                var isClsFunc = o instanceof Function;
+	                if (isClsFunc) {
+	                    subClassObj.methods[key] = o;
+	                }
+	            }
+	        }
+	        return subClassObj;
+	    };
+	    VueBase.prototype.created = function () {
+	    };
+	    VueBase.prototype.mounted = function () {
+	    };
+	    VueBase.PROP = { v: null, _: null };
+	    VueBase.Dict = { v: {}, _: null };
+	    VueBase.Number = { v: 0, _: null };
+	    VueBase.String = { v: "", _: null };
+	    return VueBase;
+	}());
+	exports.VueBase = VueBase;
+
+
+/***/ },
+/* 19 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"container\">\r\n    <nav class=\"panel\">\r\n        <p class=\"panel-heading\">\r\n            直播面板op入口 Game ID: {{ selected }}\r\n            <span class=\"select\">\r\n                <select v-model=\"selected\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n        </p>\r\n        <vue v-for=\"link in links\">\r\n            <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                <span class=\"panel-icon\">\r\n            <i class=\"fa fa-book\"></i>\r\n            </span> {{link.url}}\r\n                <br> {{link.title}}\r\n            </a>\r\n            <!--<button class=\"button\">复制地址</button>-->\r\n        </vue>\r\n        command:\r\n        <br> /game/bracket/clear\r\n        <br>/game/clear/bracketIdx\r\n        <br>/git/pull\r\n    </nav>\r\n    播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n    <p>\r\n        推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n            <div id=\"qrcode\"></div>\r\n</div>";
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var editForm_1 = __webpack_require__(21);
+	var HupuAPI_1 = __webpack_require__(22);
+	var JsFunc_1 = __webpack_require__(17);
+	var VueBase_1 = __webpack_require__(18);
+	var PlayerView = (function (_super) {
+	    __extends(PlayerView, _super);
+	    function PlayerView() {
+	        _super.call(this);
+	        this.template = __webpack_require__(25);
+	        this.playerArr = VueBase_1.VueBase.PROP;
+	        this.editPlayerDoc = VueBase_1.VueBase.PROP;
+	        this.components = { "editForm": editForm_1.editForm };
+	        this.isEdit = VueBase_1.VueBase.PROP;
+	        this.methods = {
+	            onEdit: function (playerDoc) {
+	                console.log('onEdit player id:', playerDoc.id);
+	                this.editPlayerDoc = playerDoc;
+	                this.isEdit = true;
+	            }
+	        };
+	        VueBase_1.VueBase.initProps(this);
+	    }
+	    PlayerView.prototype.created = function () {
+	        var _this = this;
+	        HupuAPI_1.getPlayerDoc(function (res) {
+	            _this.playerArr = res.sort(JsFunc_1.ascendingProp('id'));
+	            console.log(_this.playerArr);
+	        });
+	    };
+	    return PlayerView;
+	}(VueBase_1.VueBase));
+	exports.playerView = new PlayerView();
+
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var HupuAPI_1 = __webpack_require__(22);
+	var VueBase_1 = __webpack_require__(18);
+	var EditForm = (function (_super) {
+	    __extends(EditForm, _super);
+	    function EditForm() {
+	        _super.call(this);
+	        this.isShow = VueBase_1.VueBase.PROP;
+	        this.playerInfo = VueBase_1.VueBase.PROP;
+	        this.template = __webpack_require__(24);
+	        this.watch = { "playerInfo": "onPlayerInfo" };
+	        this.methods = {
+	            onPlayerInfo: function (v) {
+	                this.setPlayerDoc(v);
+	            },
+	            onCancel: function () {
+	                this.$parent.isEdit = false;
+	            },
+	            onUpdate: function () {
+	                var playerDoc = this.editor.get();
+	                playerDoc._id = this.player_id;
+	                console.log('playerDoc', playerDoc);
+	                if (playerDoc._id) {
+	                    HupuAPI_1.updatePlayerDoc(playerDoc, function (res) {
+	                        console.log('playerDoc update', res);
+	                        if (res && res._id) {
+	                            window.location.reload();
+	                        }
+	                    });
+	                    this.$parent.isEdit = false;
+	                }
+	            }
+	        };
+	        VueBase_1.VueBase.initProps(this);
+	    }
+	    EditForm.prototype.created = function () {
+	        this.player_id = '';
+	    };
+	    EditForm.prototype.mounted = function () {
+	        var container = document.getElementById("jsoneditor");
+	        this.editor = new JSONEditor(container);
+	        this.setPlayerDoc(this.playerInfo);
+	    };
+	    EditForm.prototype.setPlayerDoc = function (v) {
+	        console.log(v);
+	        if (v) {
+	            this.player_id = v._id;
+	            delete v._id;
+	            this.editor.set(v);
+	        }
+	    };
+	    return EditForm;
+	}(VueBase_1.VueBase));
+	exports.editForm = new EditForm();
+
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var WebJsFunc_1 = __webpack_require__(23);
+	exports.getHupuWS = function (callback) {
+	    var url = 'http://test.jrstvapi.hupu.com/zhubo/getNodeServer';
+	    $.get(WebJsFunc_1.proxy(url), function (res) {
+	        var a = JSON.parse(res);
+	        if (a && a.length) {
+	            callback(a[0]);
+	        }
+	        else
+	            console.error(url);
+	    });
+	};
+	function getRegularPlayer(gameId, callback) {
+	    var url = 'http://api.liangle.com/api/passerbyking/game/wheel/ready/' + gameId;
+	    _get(url, callback);
+	}
+	exports.getRegularPlayer = getRegularPlayer;
+	var _get = function (url, callback) {
+	    $.get(url, callback);
+	};
+	exports.getPlayerDoc = function (callback) {
+	    $.get('/game/player', function (res) {
+	        callback(res);
+	    });
+	};
+	exports.updatePlayerDoc = function (playerDoc, callback) {
+	    WebJsFunc_1.$post('/game/player/update', playerDoc, callback);
+	};
+	exports.getGameInfo = function (callback) {
+	    _get('/game/', callback);
+	};
+	exports._avatar = function (filename) {
+	    return '/img/player/avatar/' + filename;
+	};
+
+
+/***/ },
+/* 23 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.dynamicLoading = {
+	    css: function (path) {
+	        if (!path || path.length === 0) {
+	            throw new Error('argument "path" is required !');
+	        }
+	        var head = document.getElementsByTagName('head')[0];
+	        var link = document.createElement('link');
+	        link.href = path;
+	        link.rel = 'stylesheet';
+	        link.type = 'text/css';
+	        head.appendChild(link);
+	    },
+	    js: function (path) {
+	        if (!path || path.length === 0) {
+	            throw new Error('argument "path" is required !');
+	        }
+	        var head = document.getElementsByTagName('head')[0];
+	        var script = document.createElement('script');
+	        script.src = path;
+	        script.type = 'text/javascript';
+	        head.appendChild(script);
+	    }
+	};
+	exports.proxy = function (url) {
+	    return "/proxy?url=" + url;
+	};
+	var OpReq = (function () {
+	    function OpReq(io, reqFunc) {
+	        this.cmdMap = {};
+	        this.reqFunc = reqFunc;
+	        this.io = io;
+	    }
+	    OpReq.prototype.send = function (cmd, data) {
+	        var _this = this;
+	        this.reqFunc(cmd, data);
+	        if (!this.cmdMap[cmd]) {
+	            this.cmdMap[cmd] = true;
+	            return {
+	                on: function (resCmd, callback) {
+	                    _this.io.on(resCmd, function (data) {
+	                        callback(data);
+	                    });
+	                }
+	            };
+	        }
+	        return { on: function (resCmd, callback) { } };
+	    };
+	    return OpReq;
+	}());
+	exports.OpReq = OpReq;
+	exports.$post = function (url, data, callback) {
+	    $.ajax({
+	        url: url,
+	        type: 'post',
+	        data: JSON.stringify(data),
+	        headers: { "Content-Type": "application/json" },
+	        dataType: 'json',
+	        success: callback
+	    });
+	};
+
+
+/***/ },
+/* 24 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"box\" style=\"position:fixed;left:200px;top:60px;width:500px\">\r\n    {{player_id}}\r\n    <div id=\"jsoneditor\" style=\"width: 400px; height: 400px;\"></div>\r\n    <button class=\"button\" @click=\"onUpdate()\">update</button>\r\n    <button class=\"button\" @click=\"onCancel()\">cancel</button>\r\n</div>";
 
 /***/ },
 /* 25 */

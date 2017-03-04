@@ -11,6 +11,11 @@ export let getHupuWS = (callback) => {
     })
 }
 
+export function getRegularPlayer(gameId, callback) {
+    let url = 'http://api.liangle.com/api/passerbyking/game/wheel/ready/' + gameId
+    _get(url, callback)
+}
+
 let _get = (url, callback) => {
     $.get(url, callback)
 }

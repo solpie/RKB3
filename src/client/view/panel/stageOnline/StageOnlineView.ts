@@ -266,6 +266,8 @@ class StageOnlineView extends VueBase {
         },
         onClkRightChampion() {
         },
+        onClkRegularPlayer() {
+        },
         onClkRenderData() {
             if (this.liveData)
                 scoreView.setScoreFoul(this.liveData)

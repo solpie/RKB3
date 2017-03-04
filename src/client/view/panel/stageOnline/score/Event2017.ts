@@ -1,3 +1,4 @@
+import { ScaleSprite } from '../../../utils/ScaleSprite';
 import { fitWidth } from '../bracket/BracketGroup';
 import { cnWrap, loadImg } from '../../../utils/JsFunc';
 import { proxy } from '../../../utils/WebJsFunc';
@@ -17,15 +18,19 @@ export class Event2017 extends PIXI.Container {
     medal: PIXI.Sprite
 
     winLose: PIXI.Text
+    winPanel: PIXI.Container
     _texMap: any = {}
     constructor(stage: PIXI.Container, isDark = false) {
         super()
         stage.addChild(this)
-        this.visible = false
+        this.winPanel = new PIXI.Container()
+        this.addChild(this.winPanel)
+
+        this.winPanel.visible = false
         this.modal = new PIXI.Graphics()
             .beginFill(0x000000, .7)
             .drawRect(0, 0, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT)
-        this.addChild(this.modal)
+        this.winPanel.addChild(this.modal)
         let bgUrl = '/img/panel/score2017/winBg.png'
         if (isDark)
             bgUrl = '/img/panel/score2017/winBgDark.png'
@@ -33,7 +38,7 @@ export class Event2017 extends PIXI.Container {
         let bg = newBitmap({
             url: bgUrl,
         })
-        this.addChild(bg)
+        this.winPanel.addChild(bg)
 
         let ts = {
             fontFamily: FontName.MicrosoftYahei,
@@ -41,49 +46,49 @@ export class Event2017 extends PIXI.Container {
             fontWeight: 'bold'
         }
         let t = new PIXI.Text("", ts)
-        this.addChild(t)
+        this.winPanel.addChild(t)
         t.x = 923
         t.y = 318
         t.style['fontSize'] = '40px'
         this.pName = t
 
         t = new PIXI.Text("", ts)
-        this.addChild(t)
+        this.winPanel.addChild(t)
         t.style['fontSize'] = '34px'
         t.x = 540
         t.y = 750
         this.pIntro = t
 
         t = new PIXI.Text("", ts)
-        this.addChild(t)
+        this.winPanel.addChild(t)
         t.style['fontSize'] = '32px'
         t.x = 1240
         t.y = 427
         this.pWeight = t
 
         t = new PIXI.Text("", ts)
-        this.addChild(t)
+        this.winPanel.addChild(t)
         t.style['fontSize'] = '30px'
         t.x = 897
         t.y = this.pWeight.y
         this.pHeight = t
 
         t = new PIXI.Text("", ts)
-        this.addChild(t)
+        this.winPanel.addChild(t)
         t.style['fontSize'] = '40px'
         t.x = 570
         t.y = 647
         this.ftName = t
 
         t = new PIXI.Text("", ts)
-        this.addChild(t)
+        this.winPanel.addChild(t)
         t.style['fontSize'] = '40px'
         t.x = 805
         t.y = 617
         this.winLose = t
 
         t = new PIXI.Text("", ts)
-        this.addChild(t)
+        this.winPanel.addChild(t)
         t.style['fontSize'] = '40px'
         t.x = 330
         t.y = this.winLose.y
@@ -92,7 +97,7 @@ export class Event2017 extends PIXI.Container {
         this.avatar = new PIXI.Sprite()
         this.avatar.x = 511
         this.avatar.y = 314
-        this.addChild(this.avatar)
+        this.winPanel.addChild(this.avatar)
 
         // let amsk = new PIXI.Graphics()
         //     .beginFill(0xff0000)
@@ -104,12 +109,12 @@ export class Event2017 extends PIXI.Container {
         this.ftLogo = new PIXI.Sprite()
         this.ftLogo.x = 498
         this.ftLogo.y = 644
-        this.addChild(this.ftLogo)
+        this.winPanel.addChild(this.ftLogo)
 
         this.medal = new PIXI.Sprite()
         this.medal.x = 566
         this.medal.y = 544
-        this.addChild(this.medal)
+        this.winPanel.addChild(this.medal)
     }
 
     showWin(player) {
@@ -136,7 +141,7 @@ export class Event2017 extends PIXI.Container {
         let ftName = player.group
 
         this.pName.text = player.name
-        this.pIntro.text = cnWrap('参赛宣言：'+player.intro, 49, 98)
+        this.pIntro.text = cnWrap('参赛宣言：' + player.intro, 49, 98)
         this.pWeight.text = player.weight + " KG"
         this.pHeight.text = player.height + " CM"
         this.ftName.text = player.group
@@ -164,7 +169,7 @@ export class Event2017 extends PIXI.Container {
                 this.ftLogo.texture = this._texMap[ftUrl] = imgToTex(img)
                 this.ftLogo.visible = true
             }, (e) => {
-                console.log('fterror',e)
+                console.log('fterror', e)
                 this.ftLogo.visible = false
             })
         else {
@@ -172,10 +177,18 @@ export class Event2017 extends PIXI.Container {
             this.ftLogo.visible = true
         }
         this.ftLogo.width = this.ftLogo.height = 56
-        this.visible = true
+        this.winPanel.visible = true
 
         TweenEx.delayedCall(6000, () => {
-            this.visible = false
+            this.winPanel.visible = false
         })
+    }
+
+    noticeSprite: ScaleSprite
+    showNotice(text, x, y) {
+        if (!this.noticeSprite) {
+                this.noticeSprite = new ScaleSprite('/img/panel/score2017/noticeBg.png', { x: 185, y: 100, width: 155, height: 300 })
+                this.addChild(this.noticeSprite)
+        }
     }
 }

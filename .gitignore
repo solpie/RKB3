@@ -27,7 +27,7 @@ node_modules
 images
 jspm_packages
 .vscode
-
+*.db
 # Optional npm cache directory
 .npm
 *portrait*
