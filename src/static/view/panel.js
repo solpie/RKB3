@@ -5557,7 +5557,7 @@
 	        foulHint: '/img/panel/score2017/foulHintLight.png',
 	        section1: '/img/panel/score2017/section1Light.png',
 	        section2: '/img/panel/score2017/section2Light.png',
-	        section3: '/img/panel/score2017/section2Light.png'
+	        section3: '/img/panel/score2017/section3Light.png'
 	    },
 	    dark: {
 	        bg: '/img/panel/score2017/bgDark.png',
