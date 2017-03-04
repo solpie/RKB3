@@ -17,7 +17,8 @@ const skin = {
         foul: '/img/panel/score2017/foul.png',
         foulHint: '/img/panel/score2017/foulHintLight.png',
         section1: '/img/panel/score2017/section1Light.png',
-        section2: '/img/panel/score2017/section2Light.png'
+        section2: '/img/panel/score2017/section2Light.png',
+        section3: '/img/panel/score2017/section2Light.png'
     },
     dark: {
         bg: '/img/panel/score2017/bgDark.png',
@@ -26,13 +27,15 @@ const skin = {
         foul: '/img/panel/score2017/foul.png',
         foulHint: '/img/panel/score2017/foulHintDark.png',
         section1: '/img/panel/score2017/section1Dark.png',
-        section2: '/img/panel/score2017/section2Dark.png'
+        section2: '/img/panel/score2017/section2Dark.png',
+        section3: '/img/panel/score2017/section2Dark.png'
     }
 }
 interface Skin {
     bg: string
     section1: string
     section2: string
+    section3: string
     score: string
     foul: string
     foulHint: string
@@ -51,6 +54,7 @@ export class Score2017 {
     //车轮战
     gameSection1: PIXI.Texture
     gameSection2: PIXI.Texture
+    gameSection3: PIXI.Texture
     gameSection: PIXI.Sprite
     skin: Skin
     leftScoreText: BitmapText;
@@ -290,9 +294,10 @@ export class Score2017 {
         this.winScoreText.text = winScore + '球胜'
     }
 
-    setGameIdx(gameIdx, isMaster = false) {
-        if (isMaster) {
-            console.log('isMaster', isMaster)
+    //1 车轮 2 大师 3 决赛    
+    setGameIdx(gameIdx, matchType) {
+        console.log('isMaster', matchType)
+        if (matchType == 2) {
             if (!this.gameSection2)
                 loadImg(this.skin.section2, (img) => {
                     this.gameSection2 = imgToTex(img)
@@ -301,8 +306,7 @@ export class Score2017 {
             else
                 this.gameSection.texture = this.gameSection2
         }
-        else {
-            console.log('isMaster', isMaster)
+        else if (matchType == 1) {
             if (!this.gameSection1)
                 loadImg(this.skin.section1, (img) => {
                     this.gameSection1 = imgToTex(img)
@@ -310,6 +314,15 @@ export class Score2017 {
                 })
             else
                 this.gameSection.texture = this.gameSection1
+        }
+        else if (matchType == 3) {
+            if (!this.gameSection3)
+                loadImg(this.skin.section3, (img) => {
+                    this.gameSection3 = imgToTex(img)
+                    this.gameSection.texture = this.gameSection3
+                })
+            else
+                this.gameSection.texture = this.gameSection3
         }
         this.gameIdx.text = '第' + paddy(gameIdx, 2) + '场'
     }

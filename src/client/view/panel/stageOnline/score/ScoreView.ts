@@ -149,7 +149,7 @@ export class ScoreView extends BasePanelView {
                 eventMap['init'] = () => {
                     console.log('init', data);
                     this.scorePanel.set35ScoreLight(data.winScore);
-                    this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType) == 2);
+                    this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
                     setPlayer(data.player.left, data.player.right);
                     this.scorePanel.setLeftScore(data.player.left.leftScore);
                     this.scorePanel.setRightScore(data.player.right.rightScore);
@@ -214,7 +214,7 @@ export class ScoreView extends BasePanelView {
                 eventMap['startGame'] = () => {
                     console.log('startGame', data);
                     this.scorePanel.set35ScoreLight(data.winScore);
-                    this.scorePanel.setGameIdx(data.gameIdx, Number(data.matchType) == 2);
+                    this.scorePanel.setGameIdx(data.gameIdx, Number(data.matchType));
                     setPlayer(data.player.left, data.player.right);
                     // window.location.reload();
                     this.scorePanel.toggleTimer(TimerState.PAUSE);
