@@ -11,6 +11,11 @@ import { PanelId, TimerState } from '../../../const';
 import { BasePanelView } from '../../BasePanelView';
 declare let io;
 declare let $;
+function logEvent(...a) {
+    let d = new Date()
+    let t = '[' + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + ']'
+    console.info(t, a)
+}
 export class ScoreView extends BasePanelView {
     scorePanel: Score2017
     eventPanel: Event2017
@@ -52,7 +57,7 @@ export class ScoreView extends BasePanelView {
             //     player.group = 'fff'
             //     this.eventPanel.showWin(player)
             // })
-            this.eventPanel.showNotice('',0,0)
+            this.eventPanel.showNotice('', 0, 0)
         }
         this.initDelay()
         this.initLocal()
@@ -148,6 +153,7 @@ export class ScoreView extends BasePanelView {
 
                 eventMap['init'] = () => {
                     console.log('init', data);
+                    logEvent('init', data);
                     this.scorePanel.set35ScoreLight(data.winScore);
                     this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
                     setPlayer(data.player.left, data.player.right);
@@ -193,6 +199,7 @@ export class ScoreView extends BasePanelView {
 
                 eventMap['updateScore'] = () => {
                     console.log('updateScore', data);
+                    logEvent('updateScore', data);
                     if (data.leftScore != null) {
                         this.scorePanel.setLeftScore(data.leftScore);
                     }
@@ -213,6 +220,7 @@ export class ScoreView extends BasePanelView {
                 }
                 eventMap['startGame'] = () => {
                     console.log('startGame', data);
+                    logEvent('startGame', data)
                     this.scorePanel.set35ScoreLight(data.winScore);
                     this.scorePanel.setGameIdx(data.gameIdx, Number(data.matchType));
                     setPlayer(data.player.left, data.player.right);
@@ -222,10 +230,9 @@ export class ScoreView extends BasePanelView {
                     this.scorePanel.resetTimer();
                 };
 
-
-
                 eventMap['commitGame'] = () => {
                     console.log('commitGame', data)
+                    logEvent('commitGame', data)
                     let player = data.player
 
                     this.eventPanel.showWin(player)
@@ -242,6 +249,7 @@ export class ScoreView extends BasePanelView {
                 if (eventMap[event]) {
                     isRunning = true
                     let d = this.delayTimeMS;
+                    logEvent(event, 'delay', d, data)
                     if (event == 'init')
                         d = 0
                     this.emit(event, data)
@@ -254,6 +262,7 @@ export class ScoreView extends BasePanelView {
     }
 
     setScoreFoul(data) {
+        logEvent('setScoreFoul', data)
         if (data.leftScore != null) {
             this.scorePanel.setLeftScore(data.leftScore);
         }

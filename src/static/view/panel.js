@@ -5112,6 +5112,15 @@
 	var Command_1 = __webpack_require__(51);
 	var const_1 = __webpack_require__(33);
 	var BasePanelView_1 = __webpack_require__(34);
+	function logEvent() {
+	    var a = [];
+	    for (var _i = 0; _i < arguments.length; _i++) {
+	        a[_i - 0] = arguments[_i];
+	    }
+	    var d = new Date();
+	    var t = '[' + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + ']';
+	    console.info(t, a);
+	}
 	var ScoreView = (function (_super) {
 	    __extends(ScoreView, _super);
 	    function ScoreView(stage, $route) {
@@ -5215,6 +5224,7 @@
 	                console.log('event:', event, data);
 	                eventMap['init'] = function () {
 	                    console.log('init', data);
+	                    logEvent('init', data);
 	                    _this.scorePanel.set35ScoreLight(data.winScore);
 	                    _this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
 	                    setPlayer(data.player.left, data.player.right);
@@ -5236,6 +5246,7 @@
 	                };
 	                eventMap['updateScore'] = function () {
 	                    console.log('updateScore', data);
+	                    logEvent('updateScore', data);
 	                    if (data.leftScore != null) {
 	                        _this.scorePanel.setLeftScore(data.leftScore);
 	                    }
@@ -5255,6 +5266,7 @@
 	                };
 	                eventMap['startGame'] = function () {
 	                    console.log('startGame', data);
+	                    logEvent('startGame', data);
 	                    _this.scorePanel.set35ScoreLight(data.winScore);
 	                    _this.scorePanel.setGameIdx(data.gameIdx, Number(data.matchType));
 	                    setPlayer(data.player.left, data.player.right);
@@ -5264,6 +5276,7 @@
 	                };
 	                eventMap['commitGame'] = function () {
 	                    console.log('commitGame', data);
+	                    logEvent('commitGame', data);
 	                    var player = data.player;
 	                    _this.eventPanel.showWin(player);
 	                    _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
@@ -5271,6 +5284,7 @@
 	                if (eventMap[event]) {
 	                    isRunning = true;
 	                    var d = _this.delayTimeMS;
+	                    logEvent(event, 'delay', d, data);
 	                    if (event == 'init')
 	                        d = 0;
 	                    _this.emit(event, data);
@@ -5282,6 +5296,7 @@
 	        });
 	    };
 	    ScoreView.prototype.setScoreFoul = function (data) {
+	        logEvent('setScoreFoul', data);
 	        if (data.leftScore != null) {
 	            this.scorePanel.setLeftScore(data.leftScore);
 	        }
