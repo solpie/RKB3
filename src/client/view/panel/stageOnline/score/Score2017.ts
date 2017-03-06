@@ -28,7 +28,7 @@ const skin = {
         foulHint: '/img/panel/score2017/foulHintDark.png',
         section1: '/img/panel/score2017/section1Dark.png',
         section2: '/img/panel/score2017/section2Dark.png',
-        section3: '/img/panel/score2017/section2Dark.png'
+        section3: '/img/panel/score2017/section3Dark.png'
     }
 }
 interface Skin {

@@ -57,7 +57,7 @@ export class ScoreView extends BasePanelView {
             //     player.group = 'fff'
             //     this.eventPanel.showWin(player)
             // })
-            this.eventPanel.showNotice('', 0, 0)
+            this.eventPanel.showNotice('ssssssssssssss', 0, 0)
         }
         this.initDelay()
         this.initLocal()

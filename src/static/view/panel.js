@@ -5136,7 +5136,7 @@
 	        this.eventPanel = new Event2017_1.Event2017(stage, darkTheme);
 	        console.log('new ScoreView');
 	        if (this.isTest) {
-	            this.eventPanel.showNotice('', 0, 0);
+	            this.eventPanel.showNotice('ssssssssssssss', 0, 0);
 	        }
 	        this.initDelay();
 	        this.initLocal();
@@ -5347,7 +5347,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var ScaleSprite_1 = __webpack_require__(66);
+	var NoticeSprite_1 = __webpack_require__(73);
 	var BracketGroup_1 = __webpack_require__(59);
 	var JsFunc_1 = __webpack_require__(17);
 	var PixiEx_1 = __webpack_require__(36);
@@ -5493,9 +5493,12 @@
 	    };
 	    Event2017.prototype.showNotice = function (text, x, y) {
 	        if (!this.noticeSprite) {
-	            this.noticeSprite = new ScaleSprite_1.ScaleSprite('/img/panel/score2017/noticeBg.png', { x: 185, y: 100, width: 155, height: 300 });
+	            this.noticeSprite = new NoticeSprite_1.NoticeSprite();
 	            this.addChild(this.noticeSprite);
 	        }
+	        this.noticeSprite.setText(text);
+	        this.noticeSprite.x = x;
+	        this.noticeSprite.y = y;
 	    };
 	    return Event2017;
 	}(PIXI.Container));
@@ -5504,7 +5507,7 @@
 
 /***/ },
 /* 66 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -5512,38 +5515,72 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var JsFunc_1 = __webpack_require__(17);
 	var ScaleSprite = (function (_super) {
 	    __extends(ScaleSprite, _super);
 	    function ScaleSprite(img, scaleRect) {
-	        var _this = this;
 	        _super.call(this);
-	        JsFunc_1.loadImg('/img/panel/score2017/noticeBg.png', function (img) {
-	            var bt = new PIXI.BaseTexture(img);
-	            var _sp = function (x, y, w, h) {
-	                return new PIXI.Sprite(new PIXI.Texture(bt, new PIXI.Rectangle(x, y, w, h)));
-	            };
-	            var lt = _sp(0, 0, scaleRect.x, scaleRect.y);
-	            _this.addChild(lt);
-	            _this.lt = lt;
-	            _this.t = _sp(scaleRect.x, 0, scaleRect.width, scaleRect.y);
-	            _this.t.x = scaleRect.x;
-	            _this.addChild(_this.t);
-	            var rt = _sp(scaleRect.x + scaleRect.width, 0, bt.width - scaleRect.x - scaleRect.width, scaleRect.y);
-	            rt.x = scaleRect.x + scaleRect.width;
-	            _this.addChild(rt);
-	            _this.rt = rt;
-	            _this.r = _sp(scaleRect.x + scaleRect.width, scaleRect.y, bt.width - scaleRect.x - scaleRect.width, scaleRect.height);
-	            _this.r.x = scaleRect.x + scaleRect.width;
-	            _this.r.y = scaleRect.y;
-	            _this.addChild(_this.r);
-	            _this.rb = _sp(scaleRect.x + scaleRect.width, scaleRect.y + scaleRect.height, bt.width - scaleRect.x - scaleRect.width, bt.height - scaleRect.y - scaleRect.height);
-	            _this.rb.x = scaleRect.x + scaleRect.width;
-	            _this.rb.y = scaleRect.y + scaleRect.height;
-	            _this.addChild(_this.rb);
-	        });
+	        var bt = new PIXI.BaseTexture(img);
+	        var _sp = function (x, y, w, h) {
+	            return new PIXI.Sprite(new PIXI.Texture(bt, new PIXI.Rectangle(x, y, w, h)));
+	        };
+	        var lt = _sp(0, 0, scaleRect.x, scaleRect.y);
+	        this.addChild(lt);
+	        this.lt = lt;
+	        this.t = _sp(scaleRect.x, 0, scaleRect.width, scaleRect.y);
+	        this.t.x = scaleRect.x;
+	        this.addChild(this.t);
+	        var rt = _sp(scaleRect.x + scaleRect.width, 0, bt.width - scaleRect.x - scaleRect.width, scaleRect.y);
+	        rt.x = scaleRect.x + scaleRect.width;
+	        this.addChild(rt);
+	        this.rt = rt;
+	        this.r = _sp(scaleRect.x + scaleRect.width, scaleRect.y, bt.width - scaleRect.x - scaleRect.width, scaleRect.height);
+	        this.r.x = scaleRect.x + scaleRect.width;
+	        this.r.y = scaleRect.y;
+	        this.addChild(this.r);
+	        this.rb = _sp(scaleRect.x + scaleRect.width, scaleRect.y + scaleRect.height, bt.width - scaleRect.x - scaleRect.width, bt.height - scaleRect.y - scaleRect.height);
+	        this.rb.x = scaleRect.x + scaleRect.width;
+	        this.rb.y = scaleRect.y + scaleRect.height;
+	        this.addChild(this.rb);
+	        this.b = _sp(scaleRect.x, scaleRect.y + scaleRect.height, scaleRect.width, bt.height - scaleRect.y - scaleRect.height);
+	        this.b.x = scaleRect.x;
+	        this.b.y = scaleRect.y + scaleRect.height;
+	        this.addChild(this.b);
+	        this.lb = _sp(0, scaleRect.y + scaleRect.height, scaleRect.x, bt.height - scaleRect.y - scaleRect.height);
+	        this.lb.y = scaleRect.y + scaleRect.height;
+	        this.addChild(this.lb);
+	        this.l = _sp(0, scaleRect.y, scaleRect.x, scaleRect.height);
+	        this.l.y = scaleRect.y;
+	        this.addChild(this.l);
 	    }
+	    Object.defineProperty(ScaleSprite.prototype, "width", {
+	        get: function () {
+	            return this._w;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(ScaleSprite.prototype, "height", {
+	        get: function () {
+	            return this._h;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
 	    ScaleSprite.prototype.resize = function (width, height) {
+	        this._w = width;
+	        this._h = height;
+	        var sw = width - this.lt.width - this.rt.width;
+	        this.t.width = sw;
+	        this.b.width = sw;
+	        this.rt.x = this.lt.width + sw;
+	        this.r.x = this.lt.width + sw;
+	        this.rb.x = this.lt.width + sw;
+	        var sh = height - this.lt.height - this.lb.height;
+	        this.l.height = sh;
+	        this.r.height = sh;
+	        this.lb.y = this.lt.height + sh;
+	        this.b.y = this.lt.height + sh;
+	        this.rb.y = this.lt.height + sh;
 	    };
 	    return ScaleSprite;
 	}(PIXI.Container));
@@ -5582,7 +5619,7 @@
 	        foulHint: '/img/panel/score2017/foulHintDark.png',
 	        section1: '/img/panel/score2017/section1Dark.png',
 	        section2: '/img/panel/score2017/section2Dark.png',
-	        section3: '/img/panel/score2017/section2Dark.png'
+	        section3: '/img/panel/score2017/section3Dark.png'
 	    }
 	};
 	function polygon(g, radius, sides) {
@@ -6129,6 +6166,56 @@
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <h1>game id:{{gameId}}</h1>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\"\r\n                   onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46'\r\n                   placeholder=\"\" style=\"width: 50px;\"\r\n                   v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n    </div>\r\n</div>\r\n";
+
+/***/ },
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var const_1 = __webpack_require__(33);
+	var JsFunc_1 = __webpack_require__(17);
+	var ScaleSprite_1 = __webpack_require__(66);
+	var NoticeSprite = (function (_super) {
+	    __extends(NoticeSprite, _super);
+	    function NoticeSprite() {
+	        var _this = this;
+	        _super.call(this);
+	        JsFunc_1.loadImg('/img/panel/score2017/noticeBg.png', function (img) {
+	            _this.imgWidth = img.width;
+	            _this.imgHeight = img.height;
+	            _this.frame = new ScaleSprite_1.ScaleSprite(img, { x: 185, y: 100, width: 155, height: 300 });
+	            _this.addChildAt(_this.frame, 0);
+	            _this.setText(_this.label.text);
+	        });
+	        var ts = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '20px', fill: "#000",
+	            fontWeight: 'bold'
+	        };
+	        this.label = new PIXI.Text('', ts);
+	        this.addChild(this.label);
+	    }
+	    NoticeSprite.prototype.setText = function (text) {
+	        this.label.text = text;
+	        var w = this.label.width;
+	        if (w > this.imgWidth)
+	            w = this.imgWidth;
+	        var h = this.label.height;
+	        if (h > this.imgHeight)
+	            h = this.imgHeight;
+	        this.frame.resize(this.label.width + 40, this.label.height + 80);
+	        this.label.x = 0.5 * (this.frame.width - this.label.width);
+	        this.label.y = 100;
+	    };
+	    return NoticeSprite;
+	}(PIXI.Container));
+	exports.NoticeSprite = NoticeSprite;
+
 
 /***/ }
 /******/ ]);

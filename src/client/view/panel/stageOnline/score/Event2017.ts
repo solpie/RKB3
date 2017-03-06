@@ -1,3 +1,4 @@
+import { NoticeSprite } from './NoticeSprite';
 import { ScaleSprite } from '../../../utils/ScaleSprite';
 import { fitWidth } from '../bracket/BracketGroup';
 import { cnWrap, loadImg } from '../../../utils/JsFunc';
@@ -184,11 +185,14 @@ export class Event2017 extends PIXI.Container {
         })
     }
 
-    noticeSprite: ScaleSprite
+    noticeSprite: NoticeSprite
     showNotice(text, x, y) {
         if (!this.noticeSprite) {
-                this.noticeSprite = new ScaleSprite('/img/panel/score2017/noticeBg.png', { x: 185, y: 100, width: 155, height: 300 })
+                this.noticeSprite = new NoticeSprite()
                 this.addChild(this.noticeSprite)
         }
+        this.noticeSprite.setText(text)
+        this.noticeSprite.x = x
+        this.noticeSprite.y = y
     }
 }
