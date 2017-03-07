@@ -55,7 +55,7 @@
 	var KOA_1 = __webpack_require__(38);
 	var Stage5v5_1 = __webpack_require__(53);
 	var StageOnlineView_1 = __webpack_require__(56);
-	var RKBOPView_1 = __webpack_require__(71);
+	var RKBOPView_1 = __webpack_require__(72);
 	var routes = [
 	    {
 	        path: '/', name: 'panel',
@@ -3434,157 +3434,129 @@
 /***/ function(module, exports) {
 
 	"use strict";
-	var cmdEnum;
-	(function (cmdEnum) {
-	    cmdEnum[cmdEnum["resetTimer"] = 0] = "resetTimer";
-	    cmdEnum[cmdEnum["disableTracker"] = 1] = "disableTracker";
-	    cmdEnum[cmdEnum["updateLeftScore"] = 2] = "updateLeftScore";
-	    cmdEnum[cmdEnum["cs_addLeftScore"] = 3] = "cs_addLeftScore";
-	    cmdEnum[cmdEnum["updateRightScore"] = 4] = "updateRightScore";
-	    cmdEnum[cmdEnum["cs_addRightScore"] = 5] = "cs_addRightScore";
-	    cmdEnum[cmdEnum["updateLeftBall"] = 6] = "updateLeftBall";
-	    cmdEnum[cmdEnum["updateRightBall"] = 7] = "updateRightBall";
-	    cmdEnum[cmdEnum["cs_addLeftBall"] = 8] = "cs_addLeftBall";
-	    cmdEnum[cmdEnum["cs_addRightBall"] = 9] = "cs_addRightBall";
-	    cmdEnum[cmdEnum["cs_minLeftBall"] = 10] = "cs_minLeftBall";
-	    cmdEnum[cmdEnum["cs_minRightBall"] = 11] = "cs_minRightBall";
-	    cmdEnum[cmdEnum["cs_updateInitBallCount"] = 12] = "cs_updateInitBallCount";
-	    cmdEnum[cmdEnum["minLeftScore"] = 13] = "minLeftScore";
-	    cmdEnum[cmdEnum["cs_minLeftScore"] = 14] = "cs_minLeftScore";
-	    cmdEnum[cmdEnum["minRightScore"] = 15] = "minRightScore";
-	    cmdEnum[cmdEnum["cs_minRightScore"] = 16] = "cs_minRightScore";
-	    cmdEnum[cmdEnum["updateLeftFoul"] = 17] = "updateLeftFoul";
-	    cmdEnum[cmdEnum["cs_addLeftFoul"] = 18] = "cs_addLeftFoul";
-	    cmdEnum[cmdEnum["cs_minLeftFoul"] = 19] = "cs_minLeftFoul";
-	    cmdEnum[cmdEnum["updateRightFoul"] = 20] = "updateRightFoul";
-	    cmdEnum[cmdEnum["cs_addRightFoul"] = 21] = "cs_addRightFoul";
-	    cmdEnum[cmdEnum["cs_minRightFoul"] = 22] = "cs_minRightFoul";
-	    cmdEnum[cmdEnum["cs_updateLeftSkill"] = 23] = "cs_updateLeftSkill";
-	    cmdEnum[cmdEnum["updateLeftSkill"] = 24] = "updateLeftSkill";
-	    cmdEnum[cmdEnum["cs_updateRightSkill"] = 25] = "cs_updateRightSkill";
-	    cmdEnum[cmdEnum["updateRightSkill"] = 26] = "updateRightSkill";
-	    cmdEnum[cmdEnum["stageFadeOut"] = 27] = "stageFadeOut";
-	    cmdEnum[cmdEnum["cs_fadeOut"] = 28] = "cs_fadeOut";
-	    cmdEnum[cmdEnum["playerScore"] = 29] = "playerScore";
-	    cmdEnum[cmdEnum["cs_playerScore"] = 30] = "cs_playerScore";
-	    cmdEnum[cmdEnum["stageFadeIn"] = 31] = "stageFadeIn";
-	    cmdEnum[cmdEnum["cs_stageFadeIn"] = 32] = "cs_stageFadeIn";
-	    cmdEnum[cmdEnum["moveStagePanel"] = 33] = "moveStagePanel";
-	    cmdEnum[cmdEnum["cs_moveStagePanel"] = 34] = "cs_moveStagePanel";
-	    cmdEnum[cmdEnum["updatePlayer"] = 35] = "updatePlayer";
-	    cmdEnum[cmdEnum["cs_updatePlayer"] = 36] = "cs_updatePlayer";
-	    cmdEnum[cmdEnum["updatePlayerAll"] = 37] = "updatePlayerAll";
-	    cmdEnum[cmdEnum["cs_changeColor"] = 38] = "cs_changeColor";
-	    cmdEnum[cmdEnum["cs_updatePlayerAll"] = 39] = "cs_updatePlayerAll";
-	    cmdEnum[cmdEnum["cs_updatePlayerBackNum"] = 40] = "cs_updatePlayerBackNum";
-	    cmdEnum[cmdEnum["updatePlayerBackNum"] = 41] = "updatePlayerBackNum";
-	    cmdEnum[cmdEnum["fadeInNotice"] = 42] = "fadeInNotice";
-	    cmdEnum[cmdEnum["cs_fadeInNotice"] = 43] = "cs_fadeInNotice";
-	    cmdEnum[cmdEnum["cs_resetGame"] = 44] = "cs_resetGame";
-	    cmdEnum[cmdEnum["cs_toggleDmk"] = 45] = "cs_toggleDmk";
-	    cmdEnum[cmdEnum["toggleDmk"] = 46] = "toggleDmk";
-	    cmdEnum[cmdEnum["resetGame"] = 47] = "resetGame";
-	    cmdEnum[cmdEnum["cs_unLimitScore"] = 48] = "cs_unLimitScore";
-	    cmdEnum[cmdEnum["unLimitScore"] = 49] = "unLimitScore";
-	    cmdEnum[cmdEnum["cs_updatePlayerState"] = 50] = "cs_updatePlayerState";
-	    cmdEnum[cmdEnum["updatePlayerState"] = 51] = "updatePlayerState";
-	    cmdEnum[cmdEnum["cs_setGameIdx"] = 52] = "cs_setGameIdx";
-	    cmdEnum[cmdEnum["setGameIdx"] = 53] = "setGameIdx";
-	    cmdEnum[cmdEnum["fadeInWinPanel"] = 54] = "fadeInWinPanel";
-	    cmdEnum[cmdEnum["cs_fadeInWinPanel"] = 55] = "cs_fadeInWinPanel";
-	    cmdEnum[cmdEnum["fadeOutWinPanel"] = 56] = "fadeOutWinPanel";
-	    cmdEnum[cmdEnum["cs_fadeOutWinPanel"] = 57] = "cs_fadeOutWinPanel";
-	    cmdEnum[cmdEnum["saveGameRec"] = 58] = "saveGameRec";
-	    cmdEnum[cmdEnum["cs_saveGameRec"] = 59] = "cs_saveGameRec";
-	    cmdEnum[cmdEnum["cs_fadeInFinalPlayer"] = 60] = "cs_fadeInFinalPlayer";
-	    cmdEnum[cmdEnum["fadeInFinalPlayer"] = 61] = "fadeInFinalPlayer";
-	    cmdEnum[cmdEnum["cs_fadeOutFinalPlayer"] = 62] = "cs_fadeOutFinalPlayer";
-	    cmdEnum[cmdEnum["fadeOutFinalPlayer"] = 63] = "fadeOutFinalPlayer";
-	    cmdEnum[cmdEnum["cs_setActPlayer"] = 64] = "cs_setActPlayer";
-	    cmdEnum[cmdEnum["cs_setBracketPlayer"] = 65] = "cs_setBracketPlayer";
-	    cmdEnum[cmdEnum["cs_clearActPlayerGameRec"] = 66] = "cs_clearActPlayerGameRec";
-	    cmdEnum[cmdEnum["cs_getBracketPlayerByIdx"] = 67] = "cs_getBracketPlayerByIdx";
-	    cmdEnum[cmdEnum["cs_refreshClient"] = 68] = "cs_refreshClient";
-	    cmdEnum[cmdEnum["refreshClient"] = 69] = "refreshClient";
-	    cmdEnum[cmdEnum["cs_updateWinScore"] = 70] = "cs_updateWinScore";
-	    cmdEnum[cmdEnum["updateWinScore"] = 71] = "updateWinScore";
-	    cmdEnum[cmdEnum["cs_updateKingPlayer"] = 72] = "cs_updateKingPlayer";
-	    cmdEnum[cmdEnum["updateKingPlayer"] = 73] = "updateKingPlayer";
-	    cmdEnum[cmdEnum["cs_setCursorPlayer"] = 74] = "cs_setCursorPlayer";
-	    cmdEnum[cmdEnum["setCursorPlayer"] = 75] = "setCursorPlayer";
-	    cmdEnum[cmdEnum["cs_saveToTotalScore"] = 76] = "cs_saveToTotalScore";
-	    cmdEnum[cmdEnum["cs_setScorePanelVisible"] = 77] = "cs_setScorePanelVisible";
-	    cmdEnum[cmdEnum["setScorePanelVisible"] = 78] = "setScorePanelVisible";
-	    cmdEnum[cmdEnum["cs_autoSaveGameRec"] = 79] = "cs_autoSaveGameRec";
-	    cmdEnum[cmdEnum["cs_setDelayTime"] = 80] = "cs_setDelayTime";
-	    cmdEnum[cmdEnum["sc_setDelayTime"] = 81] = "sc_setDelayTime";
-	    cmdEnum[cmdEnum["cs_showRank"] = 82] = "cs_showRank";
-	    cmdEnum[cmdEnum["sc_showRank"] = 83] = "sc_showRank";
-	    cmdEnum[cmdEnum["cs_showBracket"] = 84] = "cs_showBracket";
-	    cmdEnum[cmdEnum["sc_showBracket"] = 85] = "sc_showBracket";
-	    cmdEnum[cmdEnum["cs_hideOnlinePanel"] = 86] = "cs_hideOnlinePanel";
-	    cmdEnum[cmdEnum["sc_hideOnlinePanel"] = 87] = "sc_hideOnlinePanel";
-	    cmdEnum[cmdEnum["cs_resetTimer"] = 88] = "cs_resetTimer";
-	    cmdEnum[cmdEnum["sc_resetTimer"] = 89] = "sc_resetTimer";
-	    cmdEnum[cmdEnum["cs_setTimer"] = 90] = "cs_setTimer";
-	    cmdEnum[cmdEnum["sc_setTimer"] = 91] = "sc_setTimer";
-	    cmdEnum[cmdEnum["cs_startTimer"] = 92] = "cs_startTimer";
-	    cmdEnum[cmdEnum["sc_startTimer"] = 93] = "sc_startTimer";
-	    cmdEnum[cmdEnum["cs_pauseTimer"] = 94] = "cs_pauseTimer";
-	    cmdEnum[cmdEnum["sc_pauseTimer"] = 95] = "sc_pauseTimer";
-	    cmdEnum[cmdEnum["cs_showPickup"] = 96] = "cs_showPickup";
-	    cmdEnum[cmdEnum["sc_showPickup"] = 97] = "sc_showPickup";
-	    cmdEnum[cmdEnum["cs_startGame"] = 98] = "cs_startGame";
-	    cmdEnum[cmdEnum["sc_startGame"] = 99] = "sc_startGame";
-	    cmdEnum[cmdEnum["cs_commitGame"] = 100] = "cs_commitGame";
-	    cmdEnum[cmdEnum["sc_commitGame"] = 101] = "sc_commitGame";
-	    cmdEnum[cmdEnum["cs_commitTeam"] = 102] = "cs_commitTeam";
-	    cmdEnum[cmdEnum["sc_commitTeam"] = 103] = "sc_commitTeam";
-	    cmdEnum[cmdEnum["cs_toggleTimer"] = 104] = "cs_toggleTimer";
-	    cmdEnum[cmdEnum["sc_toggleTimer"] = 105] = "sc_toggleTimer";
-	    cmdEnum[cmdEnum["cs_setBlood"] = 106] = "cs_setBlood";
-	    cmdEnum[cmdEnum["sc_setBlood"] = 107] = "sc_setBlood";
-	    cmdEnum[cmdEnum["cs_setFoul"] = 108] = "cs_setFoul";
-	    cmdEnum[cmdEnum["sc_setFoul"] = 109] = "sc_setFoul";
-	    cmdEnum[cmdEnum["cs_setSt"] = 110] = "cs_setSt";
-	    cmdEnum[cmdEnum["sc_setSt"] = 111] = "sc_setSt";
-	    cmdEnum[cmdEnum["cs_hideSt"] = 112] = "cs_hideSt";
-	    cmdEnum[cmdEnum["sc_hideSt"] = 113] = "sc_hideSt";
-	    cmdEnum[cmdEnum["cs_ftBracketInfo"] = 114] = "cs_ftBracketInfo";
-	    cmdEnum[cmdEnum["sc_ftBracketInfo"] = 115] = "sc_ftBracketInfo";
-	    cmdEnum[cmdEnum["cs_showHeaderText"] = 116] = "cs_showHeaderText";
-	    cmdEnum[cmdEnum["sc_showHeaderText"] = 117] = "sc_showHeaderText";
-	    cmdEnum[cmdEnum["cs_5v5score"] = 118] = "cs_5v5score";
-	    cmdEnum[cmdEnum["sc_5v5score"] = 119] = "sc_5v5score";
-	    cmdEnum[cmdEnum["cs_5v5timeup"] = 120] = "cs_5v5timeup";
-	    cmdEnum[cmdEnum["sc_5v5timeup"] = 121] = "sc_5v5timeup";
-	    cmdEnum[cmdEnum["cs_5v5queter"] = 122] = "cs_5v5queter";
-	    cmdEnum[cmdEnum["sc_5v5queter"] = 123] = "sc_5v5queter";
-	    cmdEnum[cmdEnum["cs_5v5toggleTimer"] = 124] = "cs_5v5toggleTimer";
-	    cmdEnum[cmdEnum["sc_5v5toggleTimer"] = 125] = "sc_5v5toggleTimer";
-	    cmdEnum[cmdEnum["cs_5v5resetTimer"] = 126] = "cs_5v5resetTimer";
-	    cmdEnum[cmdEnum["sc_5v5resetTimer"] = 127] = "sc_5v5resetTimer";
-	    cmdEnum[cmdEnum["cs_5v5setPlayer"] = 128] = "cs_5v5setPlayer";
-	    cmdEnum[cmdEnum["sc_5v5setPlayer"] = 129] = "sc_5v5setPlayer";
-	    cmdEnum[cmdEnum["cs_5v5hidePlayer"] = 130] = "cs_5v5hidePlayer";
-	    cmdEnum[cmdEnum["sc_5v5hidePlayer"] = 131] = "sc_5v5hidePlayer";
-	    cmdEnum[cmdEnum["cs_5v5setTimeString"] = 132] = "cs_5v5setTimeString";
-	    cmdEnum[cmdEnum["sc_5v5setTimeString"] = 133] = "sc_5v5setTimeString";
-	    cmdEnum[cmdEnum["cs_toggleTheme"] = 134] = "cs_toggleTheme";
-	    cmdEnum[cmdEnum["sc_toggleTheme"] = 135] = "sc_toggleTheme";
-	    cmdEnum[cmdEnum["initPanel"] = 136] = "initPanel";
-	    cmdEnum[cmdEnum["cs_inScreenScore"] = 137] = "cs_inScreenScore";
-	    cmdEnum[cmdEnum["inScreenScore"] = 138] = "inScreenScore";
-	    cmdEnum[cmdEnum["cs_attack"] = 139] = "cs_attack";
-	    cmdEnum[cmdEnum["attack"] = 140] = "attack";
-	    cmdEnum[cmdEnum["cs_addHealth"] = 141] = "cs_addHealth";
-	    cmdEnum[cmdEnum["addHealth"] = 142] = "addHealth";
-	    cmdEnum[cmdEnum["fadeInOK"] = 143] = "fadeInOK";
-	    cmdEnum[cmdEnum["cs_combo"] = 144] = "cs_combo";
-	    cmdEnum[cmdEnum["combo"] = 145] = "combo";
-	})(cmdEnum || (cmdEnum = {}));
-	exports.CommandId = {};
-	for (var k in cmdEnum) {
+	exports.CommandId = {
+	    resetTimer: '',
+	    disableTracker: '',
+	    updateLeftScore: '',
+	    cs_addLeftScore: '',
+	    updateRightScore: '',
+	    cs_addRightScore: '',
+	    minLeftScore: '',
+	    cs_minLeftScore: '',
+	    minRightScore: '',
+	    cs_minRightScore: '',
+	    updateLeftFoul: '',
+	    cs_addLeftFoul: '',
+	    cs_minLeftFoul: '',
+	    updateRightFoul: '',
+	    cs_addRightFoul: '',
+	    cs_minRightFoul: '',
+	    cs_updateLeftSkill: '',
+	    updateLeftSkill: '',
+	    cs_updateRightSkill: '',
+	    updateRightSkill: '',
+	    cs_setGameIdx: '',
+	    setGameIdx: '',
+	    fadeInWinPanel: '',
+	    cs_fadeInWinPanel: '',
+	    fadeOutWinPanel: '',
+	    cs_fadeOutWinPanel: '',
+	    saveGameRec: '',
+	    cs_saveGameRec: '',
+	    cs_fadeInFinalPlayer: '',
+	    fadeInFinalPlayer: '',
+	    cs_fadeOutFinalPlayer: '',
+	    fadeOutFinalPlayer: '',
+	    cs_setActPlayer: '',
+	    cs_setBracketPlayer: '',
+	    cs_clearActPlayerGameRec: '',
+	    cs_getBracketPlayerByIdx: '',
+	    cs_refreshClient: '',
+	    refreshClient: '',
+	    cs_updateWinScore: '',
+	    updateWinScore: '',
+	    cs_updateKingPlayer: '',
+	    updateKingPlayer: '',
+	    cs_setCursorPlayer: '',
+	    setCursorPlayer: '',
+	    cs_saveToTotalScore: '',
+	    cs_setScorePanelVisible: '',
+	    setScorePanelVisible: '',
+	    cs_autoSaveGameRec: '',
+	    cs_setDelayTime: '',
+	    sc_setDelayTime: '',
+	    cs_showRank: '',
+	    sc_showRank: '',
+	    cs_showBracket: '',
+	    sc_showBracket: '',
+	    cs_hideOnlinePanel: '',
+	    sc_hideOnlinePanel: '',
+	    cs_resetTimer: '',
+	    sc_resetTimer: '',
+	    cs_setTimer: '',
+	    sc_setTimer: '',
+	    cs_startTimer: '',
+	    sc_startTimer: '',
+	    cs_pauseTimer: '',
+	    sc_pauseTimer: '',
+	    cs_showPickup: '',
+	    sc_showPickup: '',
+	    cs_startGame: '',
+	    sc_startGame: '',
+	    cs_commitGame: '',
+	    sc_commitGame: '',
+	    cs_commitTeam: '',
+	    sc_commitTeam: '',
+	    cs_toggleTimer: '',
+	    sc_toggleTimer: '',
+	    cs_setBlood: '',
+	    sc_setBlood: '',
+	    cs_setFoul: '',
+	    sc_setFoul: '',
+	    cs_setSt: '',
+	    sc_setSt: '',
+	    cs_hideSt: '',
+	    sc_hideSt: '',
+	    cs_ftBracketInfo: '',
+	    sc_ftBracketInfo: '',
+	    cs_showHeaderText: '',
+	    sc_showHeaderText: '',
+	    cs_5v5score: '',
+	    sc_5v5score: '',
+	    cs_5v5timeup: '',
+	    sc_5v5timeup: '',
+	    cs_5v5queter: '',
+	    sc_5v5queter: '',
+	    cs_5v5toggleTimer: '',
+	    sc_5v5toggleTimer: '',
+	    cs_5v5resetTimer: '',
+	    sc_5v5resetTimer: '',
+	    cs_5v5setPlayer: '',
+	    sc_5v5setPlayer: '',
+	    cs_5v5hidePlayer: '',
+	    sc_5v5hidePlayer: '',
+	    cs_5v5setTimeString: '',
+	    sc_5v5setTimeString: '',
+	    cs_toggleTheme: '',
+	    sc_toggleTheme: '',
+	    cs_showChampion: '',
+	    sc_showChampion: '',
+	    cs_toggleScorePanel: '',
+	    sc_toggleScorePanel: '',
+	    cs_toggleChampionPanel: '',
+	    sc_toggleChampionPanel: '',
+	    initPanel: '',
+	    cs_inScreenScore: '',
+	    inScreenScore: '',
+	    cs_attack: '',
+	    attack: '',
+	    cs_addHealth: '',
+	    addHealth: '',
+	    fadeInOK: '',
+	    cs_combo: '',
+	    combo: ''
+	};
+	for (var k in exports.CommandId) {
 	    exports.CommandId[k] = k;
 	}
 
@@ -4065,7 +4037,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(70);
+	        this.template = __webpack_require__(71);
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.delayTime = VueBase_1.VueBase.PROP;
@@ -4081,6 +4053,7 @@
 	        this.rLiveScore = VueBase_1.VueBase.PROP;
 	        this.rLiveFoul = VueBase_1.VueBase.PROP;
 	        this.rLiveName = VueBase_1.VueBase.PROP;
+	        this.championTitle = VueBase_1.VueBase.PROP;
 	        this.opReq = function (cmdId, param, callback) {
 	            $.ajax({
 	                url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
@@ -4129,10 +4102,18 @@
 	                this.opReq("" + Command_1.CommandId.cs_setTimer, { _: null, time: Number(timeBySec) });
 	            },
 	            onClkLeftChampion: function () {
+	                this.opReq("" + Command_1.CommandId.cs_showChampion, { _: null, isLeft: true, title: this.championTitle });
 	            },
 	            onClkRightChampion: function () {
+	                this.opReq("" + Command_1.CommandId.cs_showChampion, { _: null, isLeft: false, title: this.championTitle });
 	            },
 	            onClkRegularPlayer: function () {
+	            },
+	            onClkShowScore: function (v) {
+	                this.opReq("" + Command_1.CommandId.cs_toggleScorePanel, { _: null, visible: v });
+	            },
+	            onClkToggleChampionPanel: function (v) {
+	                this.opReq("" + Command_1.CommandId.cs_toggleChampionPanel, { _: null, visible: v });
 	            },
 	            onClkRenderData: function () {
 	                if (this.liveData)
@@ -5107,7 +5088,7 @@
 	var home_1 = __webpack_require__(16);
 	var Event2017_1 = __webpack_require__(65);
 	var TweenEx_1 = __webpack_require__(40);
-	var Score2017_1 = __webpack_require__(67);
+	var Score2017_1 = __webpack_require__(68);
 	var HupuAPI_1 = __webpack_require__(22);
 	var Command_1 = __webpack_require__(51);
 	var const_1 = __webpack_require__(33);
@@ -5195,6 +5176,22 @@
 	            var ob = _this.$route.params.op != "op";
 	            window.location.href = home_1.getScorePanelUrl(_this.gameId, isDark, ob);
 	            window.location.reload();
+	        })
+	            .on("" + Command_1.CommandId.sc_showChampion, function (data) {
+	            var player = _this.scorePanel.getPlayerInfo(data.isLeft);
+	            _this.eventPanel.showChampion(data.title, player);
+	            _this.eventPanel.champion.show();
+	            _this.scorePanel.hide();
+	        })
+	            .on("" + Command_1.CommandId.sc_toggleScorePanel, function (data) {
+	            data.visible ?
+	                _this.scorePanel.show()
+	                : _this.scorePanel.hide();
+	        })
+	            .on("" + Command_1.CommandId.sc_toggleChampionPanel, function (data) {
+	            data.visible ?
+	                _this.eventPanel.champion.show()
+	                : _this.eventPanel.champion.hide();
 	        });
 	    };
 	    ScoreView.prototype.initRemote = function () {
@@ -5347,7 +5344,8 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var NoticeSprite_1 = __webpack_require__(73);
+	var Champion_1 = __webpack_require__(74);
+	var NoticeSprite_1 = __webpack_require__(66);
 	var BracketGroup_1 = __webpack_require__(59);
 	var JsFunc_1 = __webpack_require__(17);
 	var PixiEx_1 = __webpack_require__(36);
@@ -5500,6 +5498,13 @@
 	        this.noticeSprite.x = x;
 	        this.noticeSprite.y = y;
 	    };
+	    Event2017.prototype.showChampion = function (title, player) {
+	        if (!this.champion) {
+	            this.champion = new Champion_1.Champion();
+	            this.addChild(this.champion);
+	        }
+	        this.champion.setChampion(title, player.name, player.info, player.ftName);
+	    };
 	    return Event2017;
 	}(PIXI.Container));
 	exports.Event2017 = Event2017;
@@ -5507,6 +5512,56 @@
 
 /***/ },
 /* 66 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var const_1 = __webpack_require__(33);
+	var JsFunc_1 = __webpack_require__(17);
+	var ScaleSprite_1 = __webpack_require__(67);
+	var NoticeSprite = (function (_super) {
+	    __extends(NoticeSprite, _super);
+	    function NoticeSprite() {
+	        var _this = this;
+	        _super.call(this);
+	        JsFunc_1.loadImg('/img/panel/score2017/noticeBg.png', function (img) {
+	            _this.imgWidth = img.width;
+	            _this.imgHeight = img.height;
+	            _this.frame = new ScaleSprite_1.ScaleSprite(img, { x: 185, y: 100, width: 155, height: 300 });
+	            _this.addChildAt(_this.frame, 0);
+	            _this.setText(_this.label.text);
+	        });
+	        var ts = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '20px', fill: "#000",
+	            fontWeight: 'bold'
+	        };
+	        this.label = new PIXI.Text('', ts);
+	        this.addChild(this.label);
+	    }
+	    NoticeSprite.prototype.setText = function (text) {
+	        this.label.text = text;
+	        var w = this.label.width;
+	        if (w > this.imgWidth)
+	            w = this.imgWidth;
+	        var h = this.label.height;
+	        if (h > this.imgHeight)
+	            h = this.imgHeight;
+	        this.frame.resize(this.label.width + 40, this.label.height + 80);
+	        this.label.x = 0.5 * (this.frame.width - this.label.width);
+	        this.label.y = 100;
+	    };
+	    return NoticeSprite;
+	}(PIXI.Container));
+	exports.NoticeSprite = NoticeSprite;
+
+
+/***/ },
+/* 67 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -5588,13 +5643,13 @@
 
 
 /***/ },
-/* 67 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var FoulText_1 = __webpack_require__(68);
+	var FoulText_1 = __webpack_require__(69);
 	var Fx_1 = __webpack_require__(46);
-	var FoulGroup_1 = __webpack_require__(69);
+	var FoulGroup_1 = __webpack_require__(70);
 	var TextTimer_1 = __webpack_require__(42);
 	var SpriteGroup_1 = __webpack_require__(45);
 	var const_1 = __webpack_require__(33);
@@ -5643,6 +5698,7 @@
 	            this.skin = skin.light;
 	        var bg = PixiEx_1.newBitmap({ url: this.skin.bg });
 	        stage.addChild(bg);
+	        this.ctn = bg;
 	        var ctn = new PIXI.Container;
 	        bg.addChild(ctn);
 	        ctn.y = const_1.ViewConst.STAGE_HEIGHT - 300;
@@ -5968,13 +6024,33 @@
 	        this._fixFtName(this.rFtName, ft);
 	        this.rFtName.x = 1293 - this.rFtName.width * .5;
 	    };
+	    Score2017.prototype.getPlayerInfo = function (isLeft) {
+	        var player = {};
+	        if (isLeft) {
+	            player.name = this.lPlayerName.text;
+	            player.info = this.lPlayerInfo.text;
+	            player.ftName = this.lFtName.text;
+	        }
+	        else {
+	            player.name = this.rPlayerName.text;
+	            player.info = this.rPlayerInfo.text;
+	            player.ftName = this.lFtName.text;
+	        }
+	        return player;
+	    };
+	    Score2017.prototype.show = function () {
+	        this.ctn.visible = true;
+	    };
+	    Score2017.prototype.hide = function () {
+	        this.ctn.visible = false;
+	    };
 	    return Score2017;
 	}());
 	exports.Score2017 = Score2017;
 
 
 /***/ },
-/* 68 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6021,7 +6097,7 @@
 
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6061,13 +6137,13 @@
 
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒</h2>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n        <button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>\r\n        <label class=\"label\" style=\"font-size: 80px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n\r\n        <button class=\"button\" @click=\"onClkLeftChampion\">xx冠军</button>\r\n        <button class=\"button\" @click=\"onClkRightChampion\">xx冠军</button>\r\n        <button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n    </div>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒</h2>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n        <button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>\r\n        <label class=\"label\" style=\"font-size: 80px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n        <label class=\"label\">比分面板:</label><br>\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n        <label class=\"label\">  冠军面板:</label><br>\r\n\r\n        <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n        <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n        <br>\r\n        <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n        <label class=\"label\">   面板颜色：</label> <br>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n    </div>\r\n</div>";
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6088,7 +6164,7 @@
 	    __extends(RKBView, _super);
 	    function RKBView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(72);
+	        this.template = __webpack_require__(73);
 	        this.links = VueBase_1.VueBase.PROP;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.gameId = VueBase_1.VueBase.PROP;
@@ -6162,13 +6238,13 @@
 
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <h1>game id:{{gameId}}</h1>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\"\r\n                   onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46'\r\n                   placeholder=\"\" style=\"width: 50px;\"\r\n                   v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n    </div>\r\n</div>\r\n";
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6177,44 +6253,87 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var const_1 = __webpack_require__(33);
+	var Com2017_1 = __webpack_require__(75);
 	var JsFunc_1 = __webpack_require__(17);
-	var ScaleSprite_1 = __webpack_require__(66);
-	var NoticeSprite = (function (_super) {
-	    __extends(NoticeSprite, _super);
-	    function NoticeSprite() {
-	        var _this = this;
+	var const_1 = __webpack_require__(33);
+	var PixiEx_1 = __webpack_require__(36);
+	var Champion = (function (_super) {
+	    __extends(Champion, _super);
+	    function Champion() {
 	        _super.call(this);
-	        JsFunc_1.loadImg('/img/panel/score2017/noticeBg.png', function (img) {
-	            _this.imgWidth = img.width;
-	            _this.imgHeight = img.height;
-	            _this.frame = new ScaleSprite_1.ScaleSprite(img, { x: 185, y: 100, width: 155, height: 300 });
-	            _this.addChildAt(_this.frame, 0);
-	            _this.setText(_this.label.text);
-	        });
-	        var ts = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '20px', fill: "#000",
-	            fontWeight: 'bold'
-	        };
-	        this.label = new PIXI.Text('', ts);
-	        this.addChild(this.label);
+	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/score2017/champion.png' });
+	        this.addChild(bg);
+	        this.lLight = PixiEx_1.newBitmap({ url: '/img/panel/score2017/champion.light.png' });
+	        this.addChild(this.lLight);
+	        this.rLight = PixiEx_1.newBitmap({ url: '/img/panel/score2017/champion.light.png' });
+	        this.rLight.y = this.lLight.y = 894;
+	        this.addChild(this.rLight);
+	        var t = new PIXI.Text();
+	        t.y = const_1.ViewConst.STAGE_HEIGHT - 216;
+	        var s = t.style;
+	        s.fill = '#fff';
+	        s.fontSize = '30px';
+	        s.fontFamily = const_1.FontName.MicrosoftYahei;
+	        this.addChild(t);
+	        this.title = t;
+	        t = new PIXI.Text();
+	        t.y = const_1.ViewConst.STAGE_HEIGHT - 162;
+	        s = t.style;
+	        s.fill = '#fff';
+	        s.fontSize = '65px';
+	        s.fontWeight = 'bold';
+	        s.fontFamily = const_1.FontName.MicrosoftYahei;
+	        this.addChild(t);
+	        this.playerName = t;
+	        t = new PIXI.Text();
+	        t.y = const_1.ViewConst.STAGE_HEIGHT - 57;
+	        s = t.style;
+	        s.fill = '#fff';
+	        s.fontSize = '25px';
+	        s.fontFamily = const_1.FontName.MicrosoftYahei;
+	        this.addChild(t);
+	        this.playerInfo = t;
+	        this.ftLogo = new PIXI.Sprite();
+	        this.addChild(this.ftLogo);
 	    }
-	    NoticeSprite.prototype.setText = function (text) {
-	        this.label.text = text;
-	        var w = this.label.width;
-	        if (w > this.imgWidth)
-	            w = this.imgWidth;
-	        var h = this.label.height;
-	        if (h > this.imgHeight)
-	            h = this.imgHeight;
-	        this.frame.resize(this.label.width + 40, this.label.height + 80);
-	        this.label.x = 0.5 * (this.frame.width - this.label.width);
-	        this.label.y = 100;
+	    Champion.prototype.setChampion = function (title, name, info, ftName) {
+	        var _this = this;
+	        var w = const_1.ViewConst.STAGE_WIDTH;
+	        this.title.text = title;
+	        this.title.x = .5 * (w - this.title.width);
+	        this.lLight.x = this.title.x - 128 - 10;
+	        this.rLight.x = this.title.x + this.title.width + 10;
+	        this.playerName.text = name;
+	        this.playerName.x = .5 * (w - this.playerName.width);
+	        this.playerInfo.text = ftName + " | " + info;
+	        JsFunc_1.loadImg(Com2017_1.getFtlogoUrl(ftName), function (img) {
+	            _this.ftLogo.x = .5 * (w - (65 + _this.playerInfo.width));
+	            _this.playerInfo.x = _this.ftLogo.x + 65;
+	            _this.ftLogo.y = _this.playerInfo.y - 3;
+	            _this.ftLogo.texture = PixiEx_1.imgToTex(img);
+	            _this.ftLogo.width = _this.ftLogo.height = 42;
+	        });
 	    };
-	    return NoticeSprite;
+	    Champion.prototype.show = function () {
+	        this.visible = true;
+	    };
+	    Champion.prototype.hide = function () {
+	        this.visible = false;
+	    };
+	    return Champion;
 	}(PIXI.Container));
-	exports.NoticeSprite = NoticeSprite;
+	exports.Champion = Champion;
+
+
+/***/ },
+/* 75 */
+/***/ function(module, exports) {
+
+	"use strict";
+	function getFtlogoUrl(ftName) {
+	    return '/img/ft/' + ftName + '.jpg';
+	}
+	exports.getFtlogoUrl = getFtlogoUrl;
 
 
 /***/ }

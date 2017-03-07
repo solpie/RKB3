@@ -121,7 +121,24 @@ export class ScoreView extends BasePanelView {
                 window.location.href = getScorePanelUrl(this.gameId, isDark, ob)
                 window.location.reload()
             })
+            .on(`${CommandId.sc_showChampion}`, (data) => {
+                let player = this.scorePanel.getPlayerInfo(data.isLeft)
+                this.eventPanel.showChampion(data.title, player)
+                this.eventPanel.champion.show()
+                this.scorePanel.hide()
+            })
+            .on(`${CommandId.sc_toggleScorePanel}`, (data) => {
+                data.visible ?
+                    this.scorePanel.show()
+                    : this.scorePanel.hide()
+            })
+            .on(`${CommandId.sc_toggleChampionPanel}`, (data) => {
+                data.visible ?
+                    this.eventPanel.champion.show()
+                    : this.eventPanel.champion.hide()
+            })
     }
+
     initRemote() {
         // getHupuWs()
         let isRunning = false

@@ -1,3 +1,4 @@
+import { Champion } from './Champion';
 import { NoticeSprite } from './NoticeSprite';
 import { ScaleSprite } from '../../../utils/ScaleSprite';
 import { fitWidth } from '../bracket/BracketGroup';
@@ -21,6 +22,7 @@ export class Event2017 extends PIXI.Container {
     winLose: PIXI.Text
     winPanel: PIXI.Container
     _texMap: any = {}
+
     constructor(stage: PIXI.Container, isDark = false) {
         super()
         stage.addChild(this)
@@ -188,11 +190,20 @@ export class Event2017 extends PIXI.Container {
     noticeSprite: NoticeSprite
     showNotice(text, x, y) {
         if (!this.noticeSprite) {
-                this.noticeSprite = new NoticeSprite()
-                this.addChild(this.noticeSprite)
+            this.noticeSprite = new NoticeSprite()
+            this.addChild(this.noticeSprite)
         }
         this.noticeSprite.setText(text)
         this.noticeSprite.x = x
         this.noticeSprite.y = y
+    }
+
+    champion: Champion
+    showChampion(title, player) {
+        if (!this.champion) {
+            this.champion = new Champion()
+            this.addChild(this.champion)
+        }
+        this.champion.setChampion(title, player.name, player.info, player.ftName)
     }
 }

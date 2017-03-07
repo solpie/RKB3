@@ -82,6 +82,7 @@ export class Score2017 {
     rFrame: PIXI.Sprite
 
     _tex = {}
+    ctn: PIXI.DisplayObject
     constructor(stage: PIXI.Container, isDark = false) {
         this.stage = stage
         if (isDark)
@@ -90,6 +91,7 @@ export class Score2017 {
             this.skin = skin.light
         let bg = newBitmap({ url: this.skin.bg })
         stage.addChild(bg)
+        this.ctn = bg
         let ctn = new PIXI.Container
         bg.addChild(ctn)
         ctn.y = ViewConst.STAGE_HEIGHT - 300
@@ -464,5 +466,27 @@ export class Score2017 {
         // this.rFtName.text = ft
         this._fixFtName(this.rFtName, ft)
         this.rFtName.x = 1293 - this.rFtName.width * .5
+    }
+    getPlayerInfo(isLeft) {
+        let player: any = {}
+        if (isLeft) {
+            player.name = this.lPlayerName.text
+            player.info = this.lPlayerInfo.text
+            player.ftName = this.lFtName.text
+        }
+        else {
+            player.name = this.rPlayerName.text
+            player.info = this.rPlayerInfo.text
+            player.ftName = this.lFtName.text
+        }
+        return player
+    }
+
+    show() {
+        this.ctn.visible = true
+    }
+
+    hide() {
+        this.ctn.visible = false
     }
 }
