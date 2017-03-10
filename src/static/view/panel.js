@@ -3539,6 +3539,8 @@
 	    sc_5v5setTimeString: '',
 	    cs_toggleTheme: '',
 	    sc_toggleTheme: '',
+	    cs_showNotice: '',
+	    sc_showNotice: '',
 	    cs_showChampion: '',
 	    sc_showChampion: '',
 	    cs_toggleScorePanel: '',
@@ -4054,6 +4056,8 @@
 	        this.rLiveFoul = VueBase_1.VueBase.PROP;
 	        this.rLiveName = VueBase_1.VueBase.PROP;
 	        this.championTitle = VueBase_1.VueBase.PROP;
+	        this.noticeTitle = VueBase_1.VueBase.PROP;
+	        this.noticeContent = VueBase_1.VueBase.PROP;
 	        this.opReq = function (cmdId, param, callback) {
 	            $.ajax({
 	                url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
@@ -4118,6 +4122,10 @@
 	            onClkRenderData: function () {
 	                if (this.liveData)
 	                    scoreView.setScoreFoul(this.liveData);
+	            },
+	            onClkNotice: function (visible, isLeft) {
+	                if (this.noticeContent)
+	                    this.opReq("" + Command_1.CommandId.cs_showNotice, { _: null, title: this.noticeTitle, content: this.noticeContent, isLeft: isLeft, visible: visible });
 	            },
 	            onClkToggleTheme: function (isDark) {
 	                this.opReq("" + Command_1.CommandId.cs_toggleTheme, { _: null, isDark: isDark });
@@ -5117,7 +5125,6 @@
 	        this.eventPanel = new Event2017_1.Event2017(stage, darkTheme);
 	        console.log('new ScoreView');
 	        if (this.isTest) {
-	            this.eventPanel.showNotice('ssssssssssssss', 0, 0);
 	        }
 	        this.initDelay();
 	        this.initLocal();
@@ -5192,6 +5199,12 @@
 	            data.visible ?
 	                _this.eventPanel.champion.show()
 	                : _this.eventPanel.champion.hide();
+	        })
+	            .on("" + Command_1.CommandId.sc_showNotice, function (data) {
+	            _this.eventPanel.showNotice(data.title, data.content, data.isLeft);
+	            data.visible ?
+	                _this.eventPanel.noticeSprite.show()
+	                : _this.eventPanel.noticeSprite.hide();
 	        });
 	    };
 	    ScoreView.prototype.initRemote = function () {
@@ -5489,14 +5502,13 @@
 	            _this.winPanel.visible = false;
 	        });
 	    };
-	    Event2017.prototype.showNotice = function (text, x, y) {
+	    Event2017.prototype.showNotice = function (title, content, isLeft) {
 	        if (!this.noticeSprite) {
 	            this.noticeSprite = new NoticeSprite_1.NoticeSprite();
 	            this.addChild(this.noticeSprite);
 	        }
-	        this.noticeSprite.setText(text);
-	        this.noticeSprite.x = x;
-	        this.noticeSprite.y = y;
+	        this.noticeSprite.setText(content, title, isLeft);
+	        this.noticeSprite.show();
 	    };
 	    Event2017.prototype.showChampion = function (title, player) {
 	        if (!this.champion) {
@@ -5520,6 +5532,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var PixiEx_1 = __webpack_require__(36);
 	var const_1 = __webpack_require__(33);
 	var JsFunc_1 = __webpack_require__(17);
 	var ScaleSprite_1 = __webpack_require__(67);
@@ -5528,32 +5541,96 @@
 	    function NoticeSprite() {
 	        var _this = this;
 	        _super.call(this);
+	        this.bg = new PIXI.Graphics();
+	        this.bg.alpha = .8;
+	        this.addChild(this.bg);
 	        JsFunc_1.loadImg('/img/panel/score2017/noticeBg.png', function (img) {
-	            _this.imgWidth = img.width;
-	            _this.imgHeight = img.height;
-	            _this.frame = new ScaleSprite_1.ScaleSprite(img, { x: 185, y: 100, width: 155, height: 300 });
-	            _this.addChildAt(_this.frame, 0);
-	            _this.setText(_this.label.text);
+	            _this.imgWidth = 280;
+	            _this.imgHeight = 150;
+	            _this.frame = new ScaleSprite_1.ScaleSprite(img, { x: 27, y: 29, width: 31, height: 27 });
+	            _this.addChildAt(_this.frame, 1);
+	            _this.setText(_this._content, _this._title, _this._isLeft);
 	        });
+	        this.lLight = PixiEx_1.newBitmap({ url: '/img/panel/score2017/noticeLight.png' });
+	        this.lLight.y = 34;
+	        this.addChild(this.lLight);
+	        this.rLight = PixiEx_1.newBitmap({ url: '/img/panel/score2017/noticeLight.png' });
+	        this.rLight.y = this.lLight.y;
+	        this.addChild(this.rLight);
 	        var ts = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '20px', fill: "#000",
+	            fontSize: '35px', fill: "#fff",
 	            fontWeight: 'bold'
 	        };
-	        this.label = new PIXI.Text('', ts);
-	        this.addChild(this.label);
+	        this.line = PixiEx_1.newBitmap({
+	            url: '/img/panel/score2017/noticeLine.png'
+	        });
+	        this.line.y = 48;
+	        this.line.x = 9;
+	        this.addChild(this.line);
+	        this.content = new PIXI.Text('', ts);
+	        this.content.y = 55;
+	        this.addChild(this.content);
+	        this.title = new PIXI.Text('', ts);
+	        this.title.style.fontSize = '25px';
+	        this.title.y = 12;
+	        this.addChild(this.title);
+	        this.y = 85;
 	    }
-	    NoticeSprite.prototype.setText = function (text) {
-	        this.label.text = text;
-	        var w = this.label.width;
-	        if (w > this.imgWidth)
-	            w = this.imgWidth;
-	        var h = this.label.height;
-	        if (h > this.imgHeight)
+	    NoticeSprite.prototype.show = function () {
+	        this.visible = true;
+	    };
+	    NoticeSprite.prototype.hide = function () {
+	        this.visible = false;
+	    };
+	    NoticeSprite.prototype.setText = function (content, title, isLeft) {
+	        this._content = content;
+	        this._title = title;
+	        this._isLeft = isLeft;
+	        this.content.text = content;
+	        this.title.text = title;
+	        var textWidth = Math.max(this.content.width, this.title.width);
+	        if (textWidth < this.imgWidth)
+	            textWidth = this.imgWidth;
+	        var h = this.content.height;
+	        if (h < this.imgHeight)
 	            h = this.imgHeight;
-	        this.frame.resize(this.label.width + 40, this.label.height + 80);
-	        this.label.x = 0.5 * (this.frame.width - this.label.width);
-	        this.label.y = 100;
+	        this.frame.resize(textWidth + 40, this.content.height + 15 + this.content.y);
+	        this.line.width = textWidth + 40 - 18;
+	        this.content.x = 0.5 * (this.frame.width - this.content.width);
+	        if (!title)
+	            title = '公告';
+	        this.title.x = 0.5 * (this.frame.width - this.title.width);
+	        this.bg.clear();
+	        var fw = this.frame.width;
+	        var fh = this.frame.height;
+	        this.bg.beginFill(0x000000)
+	            .moveTo(25, 6)
+	            .lineTo(fw - 8, 6)
+	            .lineTo(fw - 8, fh - 28)
+	            .lineTo(fw - 25, fh - 6)
+	            .lineTo(6, fh - 6)
+	            .lineTo(6, 25);
+	        if (fw < 260) {
+	            this.lLight.visible = false;
+	            this.rLight.visible = false;
+	        }
+	        else {
+	            this.lLight.visible = true;
+	            this.rLight.visible = true;
+	            this.lLight.x = this.title.x - 75 - 8;
+	            this.rLight.x = this.title.x + this.title.width + 8;
+	            if (this.rLight.x + this.rLight.width - this.lLight.x > fw - 25) {
+	                this.lLight.visible = false;
+	                this.rLight.visible = false;
+	            }
+	        }
+	        if (isLeft) {
+	            this.x = 5;
+	        }
+	        else {
+	            this.x = const_1.ViewConst.STAGE_WIDTH - fw - 5;
+	        }
 	    };
 	    return NoticeSprite;
 	}(PIXI.Container));
@@ -5957,10 +6034,10 @@
 	    Score2017.prototype._fixFtName = function (label, name) {
 	        if (name.toUpperCase() == "GREENLIGHT") {
 	            name = "GREENLIGHT";
-	            label.style['fontSize'] = '13px';
+	            label.style.fontSize = '13px';
 	        }
 	        else {
-	            label.style['fontSize'] = '22px';
+	            label.style.fontSize = '22px';
 	        }
 	        label.text = name;
 	        label.y = 280 - label.height * .5;
@@ -6034,7 +6111,7 @@
 	        else {
 	            player.name = this.rPlayerName.text;
 	            player.info = this.rPlayerInfo.text;
-	            player.ftName = this.lFtName.text;
+	            player.ftName = this.rFtName.text;
 	        }
 	        return player;
 	    };
@@ -6140,7 +6217,7 @@
 /* 71 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒</h2>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n        <button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>\r\n        <label class=\"label\" style=\"font-size: 80px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n        <label class=\"label\">比分面板:</label><br>\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n        <label class=\"label\">  冠军面板:</label><br>\r\n\r\n        <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n        <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n        <br>\r\n        <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n        <label class=\"label\">   面板颜色：</label> <br>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n    </div>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒</h2>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n        <button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>\r\n        <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n        <label class=\"label\">比分面板:</label><br>\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n        <label class=\"label\">  冠军面板:</label><br>\r\n\r\n        <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n        <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n        <br>\r\n        <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n        <label class=\"label\">   面板颜色：</label> <br>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n        <!--公告-->\r\n        <div style=\"left: 600px;top:0px;position: absolute;\">\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 72 */

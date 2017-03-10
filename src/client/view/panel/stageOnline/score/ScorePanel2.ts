@@ -116,18 +116,14 @@ export class ScorePanel2 {
     }
 
     toggleTimer1(state) {
-
     }
     resetTimer() {
-
     }
 
     set35ScoreLight(winScore) {
-
     }
 
     setGameIdx(gameIdx) {
-
     }
 
     resetScore() {

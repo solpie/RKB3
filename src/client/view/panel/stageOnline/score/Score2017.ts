@@ -392,10 +392,10 @@ export class Score2017 {
     _fixFtName(label: PIXI.Text, name: string) {
         if (name.toUpperCase() == "GREENLIGHT") {
             name = "GREENLIGHT"
-            label.style['fontSize'] = '13px'
+            label.style.fontSize = '13px'
         }
         else {
-            label.style['fontSize'] = '22px'
+            label.style.fontSize = '22px'
         }
         label.text = name
         label.y = 280 - label.height * .5
@@ -477,7 +477,7 @@ export class Score2017 {
         else {
             player.name = this.rPlayerName.text
             player.info = this.rPlayerInfo.text
-            player.ftName = this.lFtName.text
+            player.ftName = this.rFtName.text
         }
         return player
     }

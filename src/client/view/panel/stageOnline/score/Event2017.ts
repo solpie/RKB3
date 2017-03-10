@@ -188,14 +188,13 @@ export class Event2017 extends PIXI.Container {
     }
 
     noticeSprite: NoticeSprite
-    showNotice(text, x, y) {
+    showNotice(title, content, isLeft) {
         if (!this.noticeSprite) {
             this.noticeSprite = new NoticeSprite()
             this.addChild(this.noticeSprite)
         }
-        this.noticeSprite.setText(text)
-        this.noticeSprite.x = x
-        this.noticeSprite.y = y
+        this.noticeSprite.setText(content,title,isLeft)
+        this.noticeSprite.show()
     }
 
     champion: Champion

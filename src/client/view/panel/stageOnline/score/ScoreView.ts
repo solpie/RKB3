@@ -57,7 +57,6 @@ export class ScoreView extends BasePanelView {
             //     player.group = 'fff'
             //     this.eventPanel.showWin(player)
             // })
-            this.eventPanel.showNotice('ssssssssssssss', 0, 0)
         }
         this.initDelay()
         this.initLocal()
@@ -136,6 +135,12 @@ export class ScoreView extends BasePanelView {
                 data.visible ?
                     this.eventPanel.champion.show()
                     : this.eventPanel.champion.hide()
+            })
+            .on(`${CommandId.sc_showNotice}`, (data) => {
+                this.eventPanel.showNotice(data.title, data.content, data.isLeft)
+                data.visible ?
+                    this.eventPanel.noticeSprite.show()
+                    : this.eventPanel.noticeSprite.hide()
             })
     }
 
@@ -254,14 +259,6 @@ export class ScoreView extends BasePanelView {
 
                     this.eventPanel.showWin(player)
                     this.scorePanel.toggleTimer(TimerState.PAUSE);
-                    // if (this.isScorePanelVisible) {
-                    //     let isBlue = data.idx == 0;
-                    //     data.player.winGameCount = data.player.winAmount;
-                    //     data.player.loseGameCount = data.player.loseAmount;
-                    //     data.player.curFtScore = data.player.roundScore;
-                    //     this.eventPanel.playerInfoCard.fadeInWinPlayer(isBlue, data.player);
-                    //     this.scorePanel.toggleTimer1(TimerState.PAUSE);
-                    // }
                 };
                 if (eventMap[event]) {
                     isRunning = true

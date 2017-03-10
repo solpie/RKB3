@@ -50,6 +50,9 @@ class StageOnlineView extends VueBase {
     liveData: any
     //冠军 面板
     championTitle = VueBase.PROP
+    //公告
+    noticeTitle = VueBase.PROP
+    noticeContent = VueBase.PROP
     opReq = (cmdId: string, param: any, callback: any) => {
         $.ajax({
             url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
@@ -282,6 +285,11 @@ class StageOnlineView extends VueBase {
         onClkRenderData() {
             if (this.liveData)
                 scoreView.setScoreFoul(this.liveData)
+        },
+        onClkNotice(visible, isLeft) {
+            if (this.noticeContent)
+                this.opReq(`${CommandId.cs_showNotice}`,
+                    { _: null, title: this.noticeTitle, content: this.noticeContent, isLeft: isLeft, visible: visible })
         },
         onClkToggleTheme(isDark) {
             this.opReq(`${CommandId.cs_toggleTheme}`, { _: null, isDark: isDark })

@@ -145,6 +145,8 @@ export const CommandId = {
     //-- online panel
     cs_toggleTheme:'',
     sc_toggleTheme:'',
+    cs_showNotice:'',
+    sc_showNotice:'',
     cs_showChampion:'',
     sc_showChampion:'',
     cs_toggleScorePanel:'',
