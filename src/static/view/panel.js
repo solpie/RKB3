@@ -5584,6 +5584,8 @@
 	        this.visible = false;
 	    };
 	    NoticeSprite.prototype.setText = function (content, title, isLeft) {
+	        if (!title)
+	            title = '公告';
 	        this._content = content;
 	        this._title = title;
 	        this._isLeft = isLeft;
@@ -5598,8 +5600,6 @@
 	        this.frame.resize(textWidth + 40, this.content.height + 15 + this.content.y);
 	        this.line.width = textWidth + 40 - 18;
 	        this.content.x = 0.5 * (this.frame.width - this.content.width);
-	        if (!title)
-	            title = '公告';
 	        this.title.x = 0.5 * (this.frame.width - this.title.width);
 	        this.bg.clear();
 	        var fw = this.frame.width;
