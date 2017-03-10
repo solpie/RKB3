@@ -5545,8 +5545,8 @@
 	        this.bg.alpha = .8;
 	        this.addChild(this.bg);
 	        JsFunc_1.loadImg('/img/panel/score2017/noticeBg.png', function (img) {
-	            _this.imgWidth = 280;
-	            _this.imgHeight = 150;
+	            _this.imgWidth = 250;
+	            _this.imgHeight = 130;
 	            _this.frame = new ScaleSprite_1.ScaleSprite(img, { x: 27, y: 29, width: 31, height: 27 });
 	            _this.addChildAt(_this.frame, 1);
 	            _this.setText(_this._content, _this._title, _this._isLeft);
@@ -5631,6 +5631,7 @@
 	        else {
 	            this.x = const_1.ViewConst.STAGE_WIDTH - fw - 5;
 	        }
+	        this.y = (1 - .618) * (const_1.ViewConst.STAGE_HEIGHT - fh);
 	    };
 	    return NoticeSprite;
 	}(PIXI.Container));

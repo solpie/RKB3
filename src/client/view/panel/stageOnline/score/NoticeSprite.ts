@@ -22,8 +22,8 @@ export class NoticeSprite extends PIXI.Container {
         this.addChild(this.bg)
 
         loadImg('/img/panel/score2017/noticeBg.png', (img) => {
-            this.imgWidth = 280
-            this.imgHeight = 150
+            this.imgWidth = 250
+            this.imgHeight = 130
 
             this.frame = new ScaleSprite(img, { x: 27, y: 29, width: 31, height: 27 })
             // this.frame.resize(1000, 800)
@@ -65,7 +65,7 @@ export class NoticeSprite extends PIXI.Container {
         this.visible = false
     }
     setText(content, title, isLeft) {
-         if (!title)
+        if (!title)
             title = '公告'
         this._content = content
         this._title = title
@@ -83,7 +83,7 @@ export class NoticeSprite extends PIXI.Container {
         this.frame.resize(textWidth + 40, this.content.height + 15 + this.content.y)
         this.line.width = textWidth + 40 - 18
         this.content.x = 0.5 * (this.frame.width - this.content.width)
-      
+
         this.title.x = 0.5 * (this.frame.width - this.title.width)
 
 
@@ -123,5 +123,6 @@ export class NoticeSprite extends PIXI.Container {
         else {
             this.x = ViewConst.STAGE_WIDTH - fw - 5
         }
+        this.y = (1-.618) * (ViewConst.STAGE_HEIGHT - fh)
     }
 }
