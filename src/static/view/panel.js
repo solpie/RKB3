@@ -5214,8 +5214,8 @@
 	            var remoteIO = io.connect(hupuWsUrl);
 	            var setPlayer = function (leftPlayer, rightPlayer) {
 	                console.log(leftPlayer);
-	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.group, leftPlayer.totalChampion);
-	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.group, rightPlayer.totalChampion);
+	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.totalChampion);
+	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.totalChampion);
 	            };
 	            remoteIO.on('connect', function () {
 	                console.log('hupuAuto socket connected', hupuWsUrl);
@@ -5357,6 +5357,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var Com2017_1 = __webpack_require__(75);
 	var Champion_1 = __webpack_require__(74);
 	var NoticeSprite_1 = __webpack_require__(66);
 	var BracketGroup_1 = __webpack_require__(59);
@@ -5462,12 +5463,12 @@
 	        else
 	            this.medal.visible = false;
 	        var avatar = player.avatar;
-	        var ftName = player.group;
+	        var ftName = Com2017_1.getFtName(player.groupId);
 	        this.pName.text = player.name;
 	        this.pIntro.text = JsFunc_1.cnWrap('参赛宣言：' + player.intro, 49, 98);
 	        this.pWeight.text = player.weight + " KG";
 	        this.pHeight.text = player.height + " CM";
-	        this.ftName.text = player.group;
+	        this.ftName.text = ftName;
 	        BracketGroup_1.fitWidth(this.ftName, 155, 50);
 	        this.winLose.text = player.winAmount + ' 胜 / ' + player.loseAmount + ' 负';
 	        this.winLose.x = 935 - this.winLose.width * .5;
@@ -5483,7 +5484,7 @@
 	            this.avatar.texture = this._texMap[avatar];
 	        console.log('tex width', this.avatar.texture['w']);
 	        this.avatar.height = this.avatar.width = 213;
-	        var ftUrl = '/img/ft/' + ftName + '.jpg';
+	        var ftUrl = Com2017_1.getFtLogoUrl2(player.groupId);
 	        if (!this._texMap[ftUrl])
 	            JsFunc_1.loadImg(ftUrl, function (img) {
 	                _this.ftLogo.texture = _this._texMap[ftUrl] = PixiEx_1.imgToTex(img);
@@ -5515,7 +5516,7 @@
 	            this.champion = new Champion_1.Champion();
 	            this.addChild(this.champion);
 	        }
-	        this.champion.setChampion(title, player.name, player.info, player.ftName);
+	        this.champion.setChampion(title, player.name, player.info, player.ftId);
 	    };
 	    return Event2017;
 	}(PIXI.Container));
@@ -5725,6 +5726,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var Com2017_1 = __webpack_require__(75);
 	var FoulText_1 = __webpack_require__(69);
 	var Fx_1 = __webpack_require__(46);
 	var FoulGroup_1 = __webpack_require__(70);
@@ -6043,8 +6045,9 @@
 	        label.text = name;
 	        label.y = 280 - label.height * .5;
 	    };
-	    Score2017.prototype.setLeftPlayerInfo = function (name, avatar, weight, height, ft, numChampion) {
+	    Score2017.prototype.setLeftPlayerInfo = function (name, avatar, weight, height, ftId, numChampion) {
 	        var _this = this;
+	        this._lFtId = ftId;
 	        this._loadFrame(numChampion, this.lFrame);
 	        this.lPlayerName.text = name;
 	        this.lPlayerName.x = 500 - this.lPlayerName.width;
@@ -6062,7 +6065,7 @@
 	            weight = 0;
 	        this.lPlayerInfo.text = height + 'CM ' + weight + "KG";
 	        this.lPlayerInfo.x = 500 - this.lPlayerInfo.width;
-	        this._fixFtName(this.lFtName, ft);
+	        this._fixFtName(this.lFtName, Com2017_1.getFtName(ftId));
 	        this.lFtName.x = 630 - this.lFtName.width * .5;
 	    };
 	    Score2017.prototype._loadFrame = function (numChampion, frame) {
@@ -6082,8 +6085,9 @@
 	        else
 	            frame.visible = false;
 	    };
-	    Score2017.prototype.setRightPlayerInfo = function (name, avatar, weight, height, ft, numChampion) {
+	    Score2017.prototype.setRightPlayerInfo = function (name, avatar, weight, height, ftId, numChampion) {
 	        var _this = this;
+	        this._rFtId = ftId;
 	        this._loadFrame(numChampion, this.rFrame);
 	        this.rPlayerName.text = name;
 	        PixiEx_1.loadRes(avatar, function (img) {
@@ -6099,7 +6103,7 @@
 	        if (!weight)
 	            weight = 0;
 	        this.rPlayerInfo.text = height + 'CM ' + weight + "KG";
-	        this._fixFtName(this.rFtName, ft);
+	        this._fixFtName(this.rFtName, Com2017_1.getFtName(ftId));
 	        this.rFtName.x = 1293 - this.rFtName.width * .5;
 	    };
 	    Score2017.prototype.getPlayerInfo = function (isLeft) {
@@ -6107,12 +6111,12 @@
 	        if (isLeft) {
 	            player.name = this.lPlayerName.text;
 	            player.info = this.lPlayerInfo.text;
-	            player.ftName = this.lFtName.text;
+	            player.ftId = this._lFtId;
 	        }
 	        else {
 	            player.name = this.rPlayerName.text;
 	            player.info = this.rPlayerInfo.text;
-	            player.ftName = this.rFtName.text;
+	            player.ftId = this._rFtId;
 	        }
 	        return player;
 	    };
@@ -6374,7 +6378,7 @@
 	        this.ftLogo = new PIXI.Sprite();
 	        this.addChild(this.ftLogo);
 	    }
-	    Champion.prototype.setChampion = function (title, name, info, ftName) {
+	    Champion.prototype.setChampion = function (title, name, info, ftId) {
 	        var _this = this;
 	        var w = const_1.ViewConst.STAGE_WIDTH;
 	        this.title.text = title;
@@ -6383,8 +6387,8 @@
 	        this.rLight.x = this.title.x + this.title.width + 10;
 	        this.playerName.text = name;
 	        this.playerName.x = .5 * (w - this.playerName.width);
-	        this.playerInfo.text = ftName + " | " + info;
-	        JsFunc_1.loadImg(Com2017_1.getFtlogoUrl(ftName), function (img) {
+	        this.playerInfo.text = Com2017_1.getFtName(ftId) + " | " + info;
+	        JsFunc_1.loadImg(Com2017_1.getFtLogoUrl2(ftId), function (img) {
 	            _this.ftLogo.x = .5 * (w - (65 + _this.playerInfo.width));
 	            _this.playerInfo.x = _this.ftLogo.x + 65;
 	            _this.ftLogo.y = _this.playerInfo.y - 3;
@@ -6412,6 +6416,24 @@
 	    return '/img/ft/' + ftName + '.jpg';
 	}
 	exports.getFtlogoUrl = getFtlogoUrl;
+	function getFtLogoUrl2(ftId) {
+	    return '/img/ft/' + ftId + '.jpg';
+	}
+	exports.getFtLogoUrl2 = getFtLogoUrl2;
+	var ftName = {
+	    '1': 'Gambia',
+	    '2': 'TSH',
+	    '3': 'Fe3O4',
+	    '4': 'FTG',
+	    '5': '3P-Shot',
+	    '6': 'Bravo!',
+	    '7': 'XJBD',
+	    '8': 'GreenLight',
+	};
+	function getFtName(ftId) {
+	    return ftName[ftId] || '';
+	}
+	exports.getFtName = getFtName;
 
 
 /***/ }

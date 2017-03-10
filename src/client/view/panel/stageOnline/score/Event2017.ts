@@ -1,3 +1,4 @@
+import { getFtLogoUrl2, getFtName } from './Com2017';
 import { Champion } from './Champion';
 import { NoticeSprite } from './NoticeSprite';
 import { ScaleSprite } from '../../../utils/ScaleSprite';
@@ -141,13 +142,13 @@ export class Event2017 extends PIXI.Container {
         // let weight = player.weight
         // let height = player.height
         let avatar = player.avatar
-        let ftName = player.group
+        let ftName = getFtName(player.groupId)
 
         this.pName.text = player.name
         this.pIntro.text = cnWrap('参赛宣言：' + player.intro, 49, 98)
         this.pWeight.text = player.weight + " KG"
         this.pHeight.text = player.height + " CM"
-        this.ftName.text = player.group
+        this.ftName.text = ftName
 
         fitWidth(this.ftName, 155, 50)
         this.winLose.text = player.winAmount + ' 胜 / ' + player.loseAmount + ' 负'
@@ -166,7 +167,7 @@ export class Event2017 extends PIXI.Container {
         // this.avatar.scale.x = this.avatar.scale.y = 213
         this.avatar.height = this.avatar.width = 213
 
-        let ftUrl = '/img/ft/' + ftName + '.jpg'
+        let ftUrl = getFtLogoUrl2(player.groupId)
         if (!this._texMap[ftUrl])
             loadImg(ftUrl, (img) => {
                 this.ftLogo.texture = this._texMap[ftUrl] = imgToTex(img)
@@ -193,7 +194,7 @@ export class Event2017 extends PIXI.Container {
             this.noticeSprite = new NoticeSprite()
             this.addChild(this.noticeSprite)
         }
-        this.noticeSprite.setText(content,title,isLeft)
+        this.noticeSprite.setText(content, title, isLeft)
         this.noticeSprite.show()
     }
 
@@ -203,6 +204,6 @@ export class Event2017 extends PIXI.Container {
             this.champion = new Champion()
             this.addChild(this.champion)
         }
-        this.champion.setChampion(title, player.name, player.info, player.ftName)
+        this.champion.setChampion(title, player.name, player.info, player.ftId)
     }
 }

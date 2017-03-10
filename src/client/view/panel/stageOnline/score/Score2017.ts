@@ -1,3 +1,4 @@
+import { getFtName } from './Com2017';
 import { FoulText } from './FoulText';
 import { blink2 } from '../../../utils/Fx';
 import { TweenEx } from '../../../utils/TweenEx';
@@ -77,6 +78,8 @@ export class Score2017 {
 
     lFtName: PIXI.Text
     rFtName: PIXI.Text
+    _lFtId:string
+    _rFtId:string
 
     lFrame: PIXI.Sprite
     rFrame: PIXI.Sprite
@@ -401,7 +404,8 @@ export class Score2017 {
         label.y = 280 - label.height * .5
     }
     //player
-    setLeftPlayerInfo(name: string, avatar: string, weight, height, ft: string, numChampion: Number) {
+    setLeftPlayerInfo(name: string, avatar: string, weight, height, ftId: string, numChampion: Number) {
+        this._lFtId = ftId
         this._loadFrame(numChampion, this.lFrame)
         //cm kg
         this.lPlayerName.text = name
@@ -425,7 +429,7 @@ export class Score2017 {
         this.lPlayerInfo.x = 500 - this.lPlayerInfo.width
 
         // this.lFtName.text = ft
-        this._fixFtName(this.lFtName, ft)
+        this._fixFtName(this.lFtName, getFtName(ftId))
         this.lFtName.x = 630 - this.lFtName.width * .5
     }
     _loadFrame(numChampion, frame: PIXI.Sprite) {
@@ -444,7 +448,8 @@ export class Score2017 {
         else
             frame.visible = false
     }
-    setRightPlayerInfo(name: string, avatar: string, weight, height, ft: string, numChampion: Number) {
+    setRightPlayerInfo(name: string, avatar: string, weight, height, ftId: string, numChampion: Number) {
+        this._rFtId = ftId
         this._loadFrame(numChampion, this.rFrame)
 
         this.rPlayerName.text = name
@@ -464,7 +469,7 @@ export class Score2017 {
         this.rPlayerInfo.text = height + 'CM ' + weight + "KG"
 
         // this.rFtName.text = ft
-        this._fixFtName(this.rFtName, ft)
+        this._fixFtName(this.rFtName, getFtName(ftId))
         this.rFtName.x = 1293 - this.rFtName.width * .5
     }
     getPlayerInfo(isLeft) {
@@ -472,12 +477,12 @@ export class Score2017 {
         if (isLeft) {
             player.name = this.lPlayerName.text
             player.info = this.lPlayerInfo.text
-            player.ftName = this.lFtName.text
+            player.ftId = this._lFtId
         }
         else {
             player.name = this.rPlayerName.text
             player.info = this.rPlayerInfo.text
-            player.ftName = this.rFtName.text
+            player.ftId = this._rFtId
         }
         return player
     }
