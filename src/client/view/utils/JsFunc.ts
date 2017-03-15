@@ -193,8 +193,8 @@ export let DateFormat = function (date, fmt) { //author: meizz
             fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
 };
-export function paddy(n, p, c?) {
+export function paddy(number, p, c?) {
     var pad_char = typeof c !== 'undefined' ? c : '0';
     var pad = new Array(1 + p).join(pad_char);
-    return (pad + n).slice(-pad.length);
+    return (pad + number).slice(-pad.length);
 }

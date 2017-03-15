@@ -26,3 +26,5 @@ const ftName = {
 export function getFtName(ftId) {
     return ftName[ftId]||''
 }
+
+export const noticeJoin = {title:'报名',content:'虎扑路人王全新报名系统已上线！\n编辑你的球员信息一键报名！\nhttp://liangle.com/my'}

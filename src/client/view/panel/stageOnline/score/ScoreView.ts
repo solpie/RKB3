@@ -57,6 +57,8 @@ export class ScoreView extends BasePanelView {
             //     player.group = 'fff'
             //     this.eventPanel.showWin(player)
             // })
+            this.eventPanel.showLogoFx()
+
         }
         this.initDelay()
         this.initLocal()
@@ -215,7 +217,6 @@ export class ScoreView extends BasePanelView {
                     // });
                     // this.scorePanel.setRightFoul(3)
                     // this.scorePanel.setLeftFoul(4)
-
 
                 };
 

@@ -1,3 +1,4 @@
+import { noticeJoin } from './score/Com2017';
 import { getScorePanelUrl } from '../../admin/home/home';
 import { DateFormat } from '../../utils/JsFunc';
 import { CommandId } from '../../Command';
@@ -275,6 +276,14 @@ class StageOnlineView extends VueBase {
             this.opReq(`${CommandId.cs_showChampion}`, { _: null, isLeft: false, title: this.championTitle })
         },
         onClkRegularPlayer() {
+        },
+        onClkNoticePresets(idx) {
+            let presets = { '1': noticeJoin }
+            let preset = presets[idx]
+            if (preset) {
+                this.noticeContent = preset.content
+                this.noticeTitle = preset.title
+            }
         },
         onClkShowScore(v) {
             this.opReq(`${CommandId.cs_toggleScorePanel}`, { _: null, visible: v })

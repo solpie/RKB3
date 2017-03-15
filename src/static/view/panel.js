@@ -55,7 +55,7 @@
 	var KOA_1 = __webpack_require__(38);
 	var Stage5v5_1 = __webpack_require__(53);
 	var StageOnlineView_1 = __webpack_require__(56);
-	var RKBOPView_1 = __webpack_require__(72);
+	var RKBOPView_1 = __webpack_require__(74);
 	var routes = [
 	    {
 	        path: '/', name: 'panel',
@@ -450,10 +450,10 @@
 	            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
 	    return fmt;
 	};
-	function paddy(n, p, c) {
+	function paddy(number, p, c) {
 	    var pad_char = typeof c !== 'undefined' ? c : '0';
 	    var pad = new Array(1 + p).join(pad_char);
-	    return (pad + n).slice(-pad.length);
+	    return (pad + number).slice(-pad.length);
 	}
 	exports.paddy = paddy;
 
@@ -4022,6 +4022,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var Com2017_1 = __webpack_require__(66);
 	var JsFunc_1 = __webpack_require__(17);
 	var Command_1 = __webpack_require__(51);
 	var const_1 = __webpack_require__(33);
@@ -4039,7 +4040,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(71);
+	        this.template = __webpack_require__(73);
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.delayTime = VueBase_1.VueBase.PROP;
@@ -4112,6 +4113,14 @@
 	                this.opReq("" + Command_1.CommandId.cs_showChampion, { _: null, isLeft: false, title: this.championTitle });
 	            },
 	            onClkRegularPlayer: function () {
+	            },
+	            onClkNoticePresets: function (idx) {
+	                var presets = { '1': Com2017_1.noticeJoin };
+	                var preset = presets[idx];
+	                if (preset) {
+	                    this.noticeContent = preset.content;
+	                    this.noticeTitle = preset.title;
+	                }
 	            },
 	            onClkShowScore: function (v) {
 	                this.opReq("" + Command_1.CommandId.cs_toggleScorePanel, { _: null, visible: v });
@@ -5096,7 +5105,7 @@
 	var home_1 = __webpack_require__(16);
 	var Event2017_1 = __webpack_require__(65);
 	var TweenEx_1 = __webpack_require__(40);
-	var Score2017_1 = __webpack_require__(68);
+	var Score2017_1 = __webpack_require__(70);
 	var HupuAPI_1 = __webpack_require__(22);
 	var Command_1 = __webpack_require__(51);
 	var const_1 = __webpack_require__(33);
@@ -5125,6 +5134,7 @@
 	        this.eventPanel = new Event2017_1.Event2017(stage, darkTheme);
 	        console.log('new ScoreView');
 	        if (this.isTest) {
+	            this.eventPanel.showLogoFx();
 	        }
 	        this.initDelay();
 	        this.initLocal();
@@ -5357,9 +5367,10 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Com2017_1 = __webpack_require__(75);
-	var Champion_1 = __webpack_require__(74);
-	var NoticeSprite_1 = __webpack_require__(66);
+	var LogoFx_1 = __webpack_require__(76);
+	var Com2017_1 = __webpack_require__(66);
+	var Champion_1 = __webpack_require__(67);
+	var NoticeSprite_1 = __webpack_require__(68);
 	var BracketGroup_1 = __webpack_require__(59);
 	var JsFunc_1 = __webpack_require__(17);
 	var PixiEx_1 = __webpack_require__(36);
@@ -5518,6 +5529,10 @@
 	        }
 	        this.champion.setChampion(title, player.name, player.info, player.ftId);
 	    };
+	    Event2017.prototype.showLogoFx = function () {
+	        this.logoFx = new LogoFx_1.LogoFx();
+	        this.addChild(this.logoFx);
+	    };
 	    return Event2017;
 	}(PIXI.Container));
 	exports.Event2017 = Event2017;
@@ -5525,6 +5540,118 @@
 
 /***/ },
 /* 66 */
+/***/ function(module, exports) {
+
+	"use strict";
+	function getFtlogoUrl(ftName) {
+	    return '/img/ft/' + ftName + '.jpg';
+	}
+	exports.getFtlogoUrl = getFtlogoUrl;
+	function getFtLogoUrl2(ftId) {
+	    return '/img/ft/' + ftId + '.jpg';
+	}
+	exports.getFtLogoUrl2 = getFtLogoUrl2;
+	var ftName = {
+	    '1': 'Gambia',
+	    '2': 'TSH',
+	    '3': 'Fe3O4',
+	    '4': 'FTG',
+	    '5': '3P-Shot',
+	    '6': 'Bravo!',
+	    '7': 'XJBD',
+	    '8': 'GreenLight',
+	};
+	function getFtName(ftId) {
+	    return ftName[ftId] || '';
+	}
+	exports.getFtName = getFtName;
+	exports.noticeJoin = { title: '报名', content: '虎扑路人王全新报名系统已上线！\n编辑你的球员信息一键报名！\nhttp://liangle.com/my' };
+
+
+/***/ },
+/* 67 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var Com2017_1 = __webpack_require__(66);
+	var JsFunc_1 = __webpack_require__(17);
+	var const_1 = __webpack_require__(33);
+	var PixiEx_1 = __webpack_require__(36);
+	var Champion = (function (_super) {
+	    __extends(Champion, _super);
+	    function Champion() {
+	        _super.call(this);
+	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/score2017/champion.png' });
+	        this.addChild(bg);
+	        this.lLight = PixiEx_1.newBitmap({ url: '/img/panel/score2017/champion.light.png' });
+	        this.addChild(this.lLight);
+	        this.rLight = PixiEx_1.newBitmap({ url: '/img/panel/score2017/champion.light.png' });
+	        this.rLight.y = this.lLight.y = 894;
+	        this.addChild(this.rLight);
+	        var t = new PIXI.Text();
+	        t.y = const_1.ViewConst.STAGE_HEIGHT - 216;
+	        var s = t.style;
+	        s.fill = '#fff';
+	        s.fontSize = '30px';
+	        s.fontFamily = const_1.FontName.MicrosoftYahei;
+	        this.addChild(t);
+	        this.title = t;
+	        t = new PIXI.Text();
+	        t.y = const_1.ViewConst.STAGE_HEIGHT - 162;
+	        s = t.style;
+	        s.fill = '#fff';
+	        s.fontSize = '65px';
+	        s.fontWeight = 'bold';
+	        s.fontFamily = const_1.FontName.MicrosoftYahei;
+	        this.addChild(t);
+	        this.playerName = t;
+	        t = new PIXI.Text();
+	        t.y = const_1.ViewConst.STAGE_HEIGHT - 57;
+	        s = t.style;
+	        s.fill = '#fff';
+	        s.fontSize = '25px';
+	        s.fontFamily = const_1.FontName.MicrosoftYahei;
+	        this.addChild(t);
+	        this.playerInfo = t;
+	        this.ftLogo = new PIXI.Sprite();
+	        this.addChild(this.ftLogo);
+	    }
+	    Champion.prototype.setChampion = function (title, name, info, ftId) {
+	        var _this = this;
+	        var w = const_1.ViewConst.STAGE_WIDTH;
+	        this.title.text = title;
+	        this.title.x = .5 * (w - this.title.width);
+	        this.lLight.x = this.title.x - 128 - 10;
+	        this.rLight.x = this.title.x + this.title.width + 10;
+	        this.playerName.text = name;
+	        this.playerName.x = .5 * (w - this.playerName.width);
+	        this.playerInfo.text = Com2017_1.getFtName(ftId) + " | " + info;
+	        JsFunc_1.loadImg(Com2017_1.getFtLogoUrl2(ftId), function (img) {
+	            _this.ftLogo.x = .5 * (w - (65 + _this.playerInfo.width));
+	            _this.playerInfo.x = _this.ftLogo.x + 65;
+	            _this.ftLogo.y = _this.playerInfo.y - 3;
+	            _this.ftLogo.texture = PixiEx_1.imgToTex(img);
+	            _this.ftLogo.width = _this.ftLogo.height = 42;
+	        });
+	    };
+	    Champion.prototype.show = function () {
+	        this.visible = true;
+	    };
+	    Champion.prototype.hide = function () {
+	        this.visible = false;
+	    };
+	    return Champion;
+	}(PIXI.Container));
+	exports.Champion = Champion;
+
+
+/***/ },
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5536,7 +5663,7 @@
 	var PixiEx_1 = __webpack_require__(36);
 	var const_1 = __webpack_require__(33);
 	var JsFunc_1 = __webpack_require__(17);
-	var ScaleSprite_1 = __webpack_require__(67);
+	var ScaleSprite_1 = __webpack_require__(69);
 	var NoticeSprite = (function (_super) {
 	    __extends(NoticeSprite, _super);
 	    function NoticeSprite() {
@@ -5640,7 +5767,7 @@
 
 
 /***/ },
-/* 67 */
+/* 69 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -5722,14 +5849,14 @@
 
 
 /***/ },
-/* 68 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var Com2017_1 = __webpack_require__(75);
-	var FoulText_1 = __webpack_require__(69);
+	var Com2017_1 = __webpack_require__(66);
+	var FoulText_1 = __webpack_require__(71);
 	var Fx_1 = __webpack_require__(46);
-	var FoulGroup_1 = __webpack_require__(70);
+	var FoulGroup_1 = __webpack_require__(72);
 	var TextTimer_1 = __webpack_require__(42);
 	var SpriteGroup_1 = __webpack_require__(45);
 	var const_1 = __webpack_require__(33);
@@ -6132,7 +6259,7 @@
 
 
 /***/ },
-/* 69 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6179,7 +6306,7 @@
 
 
 /***/ },
-/* 70 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6219,13 +6346,13 @@
 
 
 /***/ },
-/* 71 */
+/* 73 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒</h2>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n        <button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>\r\n        <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n        <label class=\"label\">比分面板:</label><br>\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n        <label class=\"label\">  冠军面板:</label><br>\r\n\r\n        <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n        <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n        <br>\r\n        <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n        <label class=\"label\">   面板颜色：</label> <br>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n        <!--公告-->\r\n        <div style=\"left: 600px;top:0px;position: absolute;\">\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒</h2>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n        <button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>\r\n        <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n        <label class=\"label\">比分面板:</label><br>\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n        <label class=\"label\">  冠军面板:</label><br>\r\n\r\n        <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n        <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n        <br>\r\n        <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n        <label class=\"label\">   面板颜色：</label> <br>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n        <!--公告-->\r\n        <div style=\"left: 600px;top:0px;position: absolute;\">\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkNoticePresets(1)\">报名预置</button>\r\n            <button class=\"button\" @click=\"onClkNoticePresets(2)\">报名预置2</button>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ },
-/* 72 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6246,7 +6373,7 @@
 	    __extends(RKBView, _super);
 	    function RKBView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(73);
+	        this.template = __webpack_require__(75);
 	        this.links = VueBase_1.VueBase.PROP;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.gameId = VueBase_1.VueBase.PROP;
@@ -6320,13 +6447,13 @@
 
 
 /***/ },
-/* 73 */
+/* 75 */
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <h1>game id:{{gameId}}</h1>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\"\r\n                   onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46'\r\n                   placeholder=\"\" style=\"width: 50px;\"\r\n                   v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n    </div>\r\n</div>\r\n";
 
 /***/ },
-/* 74 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6335,105 +6462,34 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Com2017_1 = __webpack_require__(75);
 	var JsFunc_1 = __webpack_require__(17);
-	var const_1 = __webpack_require__(33);
-	var PixiEx_1 = __webpack_require__(36);
-	var Champion = (function (_super) {
-	    __extends(Champion, _super);
-	    function Champion() {
+	var LogoFx = (function (_super) {
+	    __extends(LogoFx, _super);
+	    function LogoFx() {
 	        _super.call(this);
-	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/score2017/champion.png' });
-	        this.addChild(bg);
-	        this.lLight = PixiEx_1.newBitmap({ url: '/img/panel/score2017/champion.light.png' });
-	        this.addChild(this.lLight);
-	        this.rLight = PixiEx_1.newBitmap({ url: '/img/panel/score2017/champion.light.png' });
-	        this.rLight.y = this.lLight.y = 894;
-	        this.addChild(this.rLight);
-	        var t = new PIXI.Text();
-	        t.y = const_1.ViewConst.STAGE_HEIGHT - 216;
-	        var s = t.style;
-	        s.fill = '#fff';
-	        s.fontSize = '30px';
-	        s.fontFamily = const_1.FontName.MicrosoftYahei;
-	        this.addChild(t);
-	        this.title = t;
-	        t = new PIXI.Text();
-	        t.y = const_1.ViewConst.STAGE_HEIGHT - 162;
-	        s = t.style;
-	        s.fill = '#fff';
-	        s.fontSize = '65px';
-	        s.fontWeight = 'bold';
-	        s.fontFamily = const_1.FontName.MicrosoftYahei;
-	        this.addChild(t);
-	        this.playerName = t;
-	        t = new PIXI.Text();
-	        t.y = const_1.ViewConst.STAGE_HEIGHT - 57;
-	        s = t.style;
-	        s.fill = '#fff';
-	        s.fontSize = '25px';
-	        s.fontFamily = const_1.FontName.MicrosoftYahei;
-	        this.addChild(t);
-	        this.playerInfo = t;
-	        this.ftLogo = new PIXI.Sprite();
-	        this.addChild(this.ftLogo);
+	        var alienImages = [];
+	        for (var i = 1; i < 19; i++) {
+	            alienImages.push('/img/panel/logo/logo_' + JsFunc_1.paddy(i, 5) + '.png');
+	        }
+	        var textureArray = [];
+	        for (var i_1 = 0; i_1 < alienImages.length; i_1++) {
+	            var texture = PIXI.Texture.fromImage(alienImages[i_1]);
+	            textureArray.push(texture);
+	        }
+	        ;
+	        var mc = new PIXI.extras['AnimatedSprite'](textureArray);
+	        mc.animationSpeed = .3;
+	        mc.scale.x = mc.scale.y = 2;
+	        mc.play();
+	        this.addChild(mc);
+	        console.log('mc', mc);
 	    }
-	    Champion.prototype.setChampion = function (title, name, info, ftId) {
-	        var _this = this;
-	        var w = const_1.ViewConst.STAGE_WIDTH;
-	        this.title.text = title;
-	        this.title.x = .5 * (w - this.title.width);
-	        this.lLight.x = this.title.x - 128 - 10;
-	        this.rLight.x = this.title.x + this.title.width + 10;
-	        this.playerName.text = name;
-	        this.playerName.x = .5 * (w - this.playerName.width);
-	        this.playerInfo.text = Com2017_1.getFtName(ftId) + " | " + info;
-	        JsFunc_1.loadImg(Com2017_1.getFtLogoUrl2(ftId), function (img) {
-	            _this.ftLogo.x = .5 * (w - (65 + _this.playerInfo.width));
-	            _this.playerInfo.x = _this.ftLogo.x + 65;
-	            _this.ftLogo.y = _this.playerInfo.y - 3;
-	            _this.ftLogo.texture = PixiEx_1.imgToTex(img);
-	            _this.ftLogo.width = _this.ftLogo.height = 42;
-	        });
+	    LogoFx.prototype.show = function () {
+	        this.mc.play();
 	    };
-	    Champion.prototype.show = function () {
-	        this.visible = true;
-	    };
-	    Champion.prototype.hide = function () {
-	        this.visible = false;
-	    };
-	    return Champion;
+	    return LogoFx;
 	}(PIXI.Container));
-	exports.Champion = Champion;
-
-
-/***/ },
-/* 75 */
-/***/ function(module, exports) {
-
-	"use strict";
-	function getFtlogoUrl(ftName) {
-	    return '/img/ft/' + ftName + '.jpg';
-	}
-	exports.getFtlogoUrl = getFtlogoUrl;
-	function getFtLogoUrl2(ftId) {
-	    return '/img/ft/' + ftId + '.jpg';
-	}
-	exports.getFtLogoUrl2 = getFtLogoUrl2;
-	var ftName = {
-	    '1': 'Gambia',
-	    '2': 'TSH',
-	    '3': 'Fe3O4',
-	    '4': 'FTG',
-	    '5': '3P-Shot',
-	    '6': 'Bravo!',
-	    '7': 'XJBD',
-	    '8': 'GreenLight',
-	};
-	function getFtName(ftId) {
-	    return ftName[ftId] || '';
-	}
-	exports.getFtName = getFtName;
+	exports.LogoFx = LogoFx;
 
 
 /***/ }
