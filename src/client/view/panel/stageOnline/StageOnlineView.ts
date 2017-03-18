@@ -54,6 +54,7 @@ class StageOnlineView extends VueBase {
     //公告
     noticeTitle = VueBase.PROP
     noticeContent = VueBase.PROP
+    isBold = VueBase.PROP
     opReq = (cmdId: string, param: any, callback: any) => {
         $.ajax({
             url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
@@ -168,6 +169,7 @@ class StageOnlineView extends VueBase {
         if (!scoreView) {
             scoreView = new ScoreView(canvasStage, this.$route)
             if (this.isOp) {
+                this.isBold ='normal'
                 scoreView.on('init', (data) => {
                     this.setSrvTime(data.t)
                     this.liveTime = DateFormat(new Date(this.srvTime), "hh:mm:ss");
@@ -277,14 +279,7 @@ class StageOnlineView extends VueBase {
         },
         onClkRegularPlayer() {
         },
-        onClkNoticePresets(idx) {
-            let presets = { '1': noticeJoin }
-            let preset = presets[idx]
-            if (preset) {
-                this.noticeContent = preset.content
-                this.noticeTitle = preset.title
-            }
-        },
+
         onClkShowScore(v) {
             this.opReq(`${CommandId.cs_toggleScorePanel}`, { _: null, visible: v })
         },
@@ -295,10 +290,18 @@ class StageOnlineView extends VueBase {
             if (this.liveData)
                 scoreView.setScoreFoul(this.liveData)
         },
+        onClkNoticePresets(idx) {
+            let presets = { '1': noticeJoin }
+            let preset = presets[idx]
+            if (preset) {
+                this.noticeContent = preset.content
+                this.noticeTitle = preset.title
+            }
+        },
         onClkNotice(visible, isLeft) {
             if (this.noticeContent)
                 this.opReq(`${CommandId.cs_showNotice}`,
-                    { _: null, title: this.noticeTitle, content: this.noticeContent, isLeft: isLeft, visible: visible })
+                    { _: null, title: this.noticeTitle, content: this.noticeContent, isLeft: isLeft, visible: visible,isBold:this.isBold })
         },
         onClkToggleTheme(isDark) {
             this.opReq(`${CommandId.cs_toggleTheme}`, { _: null, isDark: isDark })

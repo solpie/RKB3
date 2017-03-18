@@ -15,6 +15,7 @@ export class NoticeSprite extends PIXI.Container {
     _content: string
     _title: string
     _isLeft: boolean
+    _isBold: String
     constructor() {
         super()
         this.bg = new PIXI.Graphics()
@@ -28,7 +29,7 @@ export class NoticeSprite extends PIXI.Container {
             this.frame = new ScaleSprite(img, { x: 27, y: 29, width: 31, height: 27 })
             // this.frame.resize(1000, 800)
             this.addChildAt(this.frame, 1)
-            this.setText(this._content, this._title, this._isLeft)
+            this.setText(this._content, this._title, this._isLeft, this._isBold)
         })        // super()
         this.lLight = newBitmap({ url: '/img/panel/score2017/noticeLight.png' })
         this.lLight.y = 34
@@ -49,7 +50,7 @@ export class NoticeSprite extends PIXI.Container {
         this.addChild(this.line)
 
         this.content = new PIXI.Text('', ts)
-        this.content.y = 55
+        this.content.y = 60
         this.addChild(this.content)
 
         this.title = new PIXI.Text('', ts)
@@ -64,13 +65,21 @@ export class NoticeSprite extends PIXI.Container {
     hide() {
         this.visible = false
     }
-    setText(content, title, isLeft) {
+    setText(content, title, isLeft, isBold) {
         if (!title)
             title = '公告'
         this._content = content
         this._title = title
         this._isLeft = isLeft
+        this._isBold = isBold
 
+        this.content.style.fontWeight = isBold
+        let lineGap = 15
+        if(isBold=='bold')
+        {
+            lineGap = 18
+        }
+        this.content.style.lineHeight = Number(this.content.style.fontSize.replace('px', '')) + lineGap
         this.content.text = content
         this.title.text = title
         let textWidth = Math.max(this.content.width, this.title.width)
@@ -123,6 +132,6 @@ export class NoticeSprite extends PIXI.Container {
         else {
             this.x = ViewConst.STAGE_WIDTH - fw - 5
         }
-        this.y = (1-.618) * (ViewConst.STAGE_HEIGHT - fh)
+        this.y = (1 - .618) * (ViewConst.STAGE_HEIGHT - fh)
     }
 }

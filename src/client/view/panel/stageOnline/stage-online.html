@@ -43,13 +43,21 @@
         <button class="button" @click="onClkToggleTheme(true)">切换蓝色面板</button>
         <!--公告-->
         <div style="left: 600px;top:0px;position: absolute;">
+            <label class="radio">
+                <input type="radio" name="bold" value='normal' v-model='isBold' checked >
+                正常
+            </label>
+            <label class="radio">
+                <input type="radio" name="bold" value='bold' v-model='isBold'>
+                加粗
+            </label>
+            <br>
             <input class="input" type="text" placeholder="公告" style="width: 280px;" v-model="noticeTitle">
             <textarea style="width:580px;height:250px" v-model="noticeContent"></textarea>
             <button class="button" @click="onClkNotice(true,true)">左边显示</button>
             <button class="button" @click="onClkNotice(true,false)">右边显示</button>
             <button class="button" @click="onClkNotice(false,false)">隐藏</button>
             <button class="button" @click="onClkNoticePresets(1)">报名预置</button>
-            <button class="button" @click="onClkNoticePresets(2)">报名预置2</button>
         </div>
     </div>
 </div>

@@ -190,12 +190,12 @@ export class Event2017 extends PIXI.Container {
     }
 
     noticeSprite: NoticeSprite
-    showNotice(title, content, isLeft) {
+    showNotice(title, content, isLeft,isBold) {
         if (!this.noticeSprite) {
             this.noticeSprite = new NoticeSprite()
             this.addChild(this.noticeSprite)
         }
-        this.noticeSprite.setText(content, title, isLeft)
+        this.noticeSprite.setText(content, title, isLeft,isBold)
         this.noticeSprite.show()
     }
 

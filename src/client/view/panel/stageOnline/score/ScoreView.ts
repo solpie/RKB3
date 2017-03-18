@@ -139,7 +139,7 @@ export class ScoreView extends BasePanelView {
                     : this.eventPanel.champion.hide()
             })
             .on(`${CommandId.sc_showNotice}`, (data) => {
-                this.eventPanel.showNotice(data.title, data.content, data.isLeft)
+                this.eventPanel.showNotice(data.title, data.content, data.isLeft,data.isBold)
                 data.visible ?
                     this.eventPanel.noticeSprite.show()
                     : this.eventPanel.noticeSprite.hide()
