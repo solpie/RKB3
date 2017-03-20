@@ -5463,6 +5463,8 @@
 	        var _this = this;
 	        var champion = Number(player.totalChampion);
 	        var medal = Math.ceil(champion / 5);
+	        if (medal > 5)
+	            medal = 5;
 	        if (medal > 0) {
 	            var medalUrl_1 = '/img/panel/score2017/medal' + medal + '.png';
 	            if (!this._texMap[medalUrl_1])
