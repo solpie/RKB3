@@ -2,6 +2,10 @@ export function getFtlogoUrl(ftName) {
     return '/img/ft/' + ftName + '.jpg'
 }
 
+export function getFtLineUrl(ftId) {
+    return '/img/ft/' + ftId + 'L.png'
+}
+
 export function getFtLogoUrl2(ftId) {
     return '/img/ft/' + ftId + '.jpg'
     // 1 => 'Gambia',
@@ -23,8 +27,17 @@ const ftName = {
     '7': 'XJBD',
     '8': 'GreenLight',
 }
+
 export function getFtName(ftId) {
-    return ftName[ftId]||''
+    return ftName[ftId] || ''
 }
 
-export const noticeJoin = {title:'报名',content:'虎扑路人王全新报名系统已上线！\n编辑你的球员信息一键报名！\nhttp://liangle.com/my'}
+export function getFtId(fn) {
+    for (let k in ftName) {
+        if (fn == ftName[k]) {
+            return k
+        }
+    }
+}
+
+export const noticeJoin = { title: '报名', content: '虎扑路人王全新报名系统已上线！\n编辑你的球员信息一键报名！\nhttp://liangle.com/my' }

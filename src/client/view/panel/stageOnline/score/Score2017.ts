@@ -404,9 +404,9 @@ export class Score2017 {
         label.y = 280 - label.height * .5
     }
     //player
-    setLeftPlayerInfo(name: string, avatar: string, weight, height, ftId: string, numChampion: Number) {
+    setLeftPlayerInfo(name: string, avatar: string, weight, height, ftId: string, level: Number) {
         this._lFtId = ftId
-        this._loadFrame(numChampion, this.lFrame)
+        this._loadFrame(level, this.lFrame)
         //cm kg
         this.lPlayerName.text = name
         this.lPlayerName.x = 500 - this.lPlayerName.width
@@ -432,10 +432,11 @@ export class Score2017 {
         this._fixFtName(this.lFtName, getFtName(ftId))
         this.lFtName.x = 630 - this.lFtName.width * .5
     }
-    _loadFrame(numChampion, frame: PIXI.Sprite) {
-        numChampion = Math.ceil(Number(numChampion) / 5)
-        if (numChampion > 0) {
-            let frameUrl = '/img/panel/score2017/frame' + numChampion + '.png'
+    _loadFrame(level, frame: PIXI.Sprite) {
+        // level = Math.ceil(Number(level) / 5)
+        level = Number(level)
+        if (level > 0) {
+            let frameUrl = '/img/panel/score2017/frame' + level + '.png'
             frame.visible = true
             if (!this._tex[frameUrl]) {
                 loadImg(frameUrl, (img) => {
@@ -448,9 +449,9 @@ export class Score2017 {
         else
             frame.visible = false
     }
-    setRightPlayerInfo(name: string, avatar: string, weight, height, ftId: string, numChampion: Number) {
+    setRightPlayerInfo(name: string, avatar: string, weight, height, ftId: string, level: Number) {
         this._rFtId = ftId
-        this._loadFrame(numChampion, this.rFrame)
+        this._loadFrame(level, this.rFrame)
 
         this.rPlayerName.text = name
         loadRes(avatar, (img) => {

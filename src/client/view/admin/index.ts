@@ -1,7 +1,7 @@
+
 /**
  * Created by toramisu on 2016/10/22.
  */
-
 require('../../../static/css/bulma.min.css');
 // require('../../../static/css/jsoneditor.min.css');
 
@@ -10,10 +10,11 @@ require(`script!./../../libs/qrcode.min.js`);
 // require(`script!./../../libs/jsoneditor.min.js`);
 require(`script!./../../libs/vue/vue.min.js`);
 require(`script!./../../libs/vue/vue-router.min.js`);
-
 import { Navbar } from "./navbar/Navbar";
 import { homeView } from "./home/home";
+
 import { playerView } from './player/player';
+import { rankView } from './rank/rank';
 //////////////
 var routes = [
     {
@@ -28,10 +29,10 @@ var routes = [
     //     path: '/panel', name: 'panel',
     //     components: { content: PanelView, Navbar: Navbar },
     // },
-    // {
-    //     path: '/rank', name: 'rank',
-    //     components: { content: RankView, Navbar: Navbar },
-    // }
+    {
+        path: '/rank', name: 'rank',
+        components: { content: rankView, Navbar: Navbar },
+    }
 ];
 
 declare let VueRouter;

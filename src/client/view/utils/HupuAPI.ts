@@ -11,9 +11,18 @@ export let getHupuWS = (callback) => {
     })
 }
 
-export function getRegularPlayer(gameId, callback) {
+export function getPreRoundPlayer(gameId, callback) {
     let url = 'http://api.liangle.com/api/passerbyking/game/wheel/ready/' + gameId
-    _get(url, callback)
+    _get(proxy(url), callback)
+}
+
+export function getRoundList(callback) {
+    let url = 'http://api.liangle.com/api/passerbyking/game/list'
+    _get(proxy(url), callback)
+}
+export function getRoundRawDate(gameId, callback) {
+    let url = 'http://api.liangle.com/api/passerbyking/game/match/' + gameId
+    _get(proxy(url), callback)
 }
 
 let _get = (url, callback) => {

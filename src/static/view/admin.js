@@ -53,6 +53,7 @@
 	var Navbar_1 = __webpack_require__(14);
 	var home_1 = __webpack_require__(16);
 	var player_1 = __webpack_require__(20);
+	var rank_1 = __webpack_require__(26);
 	var routes = [
 	    {
 	        path: '/', name: 'home',
@@ -62,6 +63,10 @@
 	        path: '/player', name: 'player',
 	        components: { content: player_1.playerView, Navbar: Navbar_1.Navbar },
 	    },
+	    {
+	        path: '/rank', name: 'rank',
+	        components: { content: rank_1.rankView, Navbar: Navbar_1.Navbar },
+	    }
 	];
 	var router = new VueRouter({
 	    routes: routes
@@ -504,7 +509,7 @@
 /* 15 */
 /***/ function(module, exports) {
 
-	module.exports = "<nav class=\"nav has-shadow\">\r\n    <div class=\"container\">\r\n        <div class=\"nav-left\">\r\n            <a class=\"nav-item\" :class=\"{active: active === ''}\">\r\n                <i class=\"home icon\"></i>\r\n                <router-link :to=\"{ name: 'home'}\">Home</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'player'}\">\r\n                <i class=\"grid layout icon\"></i>\r\n                <router-link :to=\"{ name: 'player'}\">玩家管理</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'server'}\">\r\n                <i class=\"grid layout icon\"></i>\r\n                <router-link :to=\"{ name: 'server'}\">server</router-link>\r\n            </a>\r\n            <!--<a class=\"nav-item\" :class=\"{active: active === 'panel'}\">\r\n                <router-link :to=\"{ name: 'panel'}\">比赛管理</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'rank'}\">\r\n                <router-link :to=\"{ name: 'rank'}\">天梯排名</router-link>\r\n            </a>-->\r\n        </div>\r\n\r\n        <!--<div class=\"nav-right\">\r\n            <a class=\"nav-item\" :class=\"{active: active === 'setting'}\">\r\n                <router-link :to=\"{ name: 'setting'}\">setting</router-link>\r\n            </a>\r\n        </div>-->\r\n    </div>\r\n\r\n\r\n</nav>";
+	module.exports = "<nav class=\"nav has-shadow\">\r\n    <div class=\"container\">\r\n        <div class=\"nav-left\">\r\n            <a class=\"nav-item\" :class=\"{active: active === ''}\">\r\n                <i class=\"home icon\"></i>\r\n                <router-link :to=\"{ name: 'home'}\">Home</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'player'}\">\r\n                <i class=\"grid layout icon\"></i>\r\n                <router-link :to=\"{ name: 'player'}\">玩家管理</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'rank'}\">\r\n                <router-link :to=\"{ name: 'rank'}\">天梯排名</router-link>\r\n            </a>\r\n        </div>\r\n\r\n        <!--<div class=\"nav-right\">\r\n            <a class=\"nav-item\" :class=\"{active: active === 'setting'}\">\r\n                <router-link :to=\"{ name: 'setting'}\">setting</router-link>\r\n            </a>\r\n        </div>-->\r\n    </div>\r\n\r\n\r\n</nav>";
 
 /***/ },
 /* 16 */
@@ -990,11 +995,21 @@
 	            console.error(url);
 	    });
 	};
-	function getRegularPlayer(gameId, callback) {
+	function getPreRoundPlayer(gameId, callback) {
 	    var url = 'http://api.liangle.com/api/passerbyking/game/wheel/ready/' + gameId;
-	    _get(url, callback);
+	    _get(WebJsFunc_1.proxy(url), callback);
 	}
-	exports.getRegularPlayer = getRegularPlayer;
+	exports.getPreRoundPlayer = getPreRoundPlayer;
+	function getRoundList(callback) {
+	    var url = 'http://api.liangle.com/api/passerbyking/game/list';
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getRoundList = getRoundList;
+	function getRoundRawDate(gameId, callback) {
+	    var url = 'http://api.liangle.com/api/passerbyking/game/match/' + gameId;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getRoundRawDate = getRoundRawDate;
 	var _get = function (url, callback) {
 	    $.get(url, callback);
 	};
@@ -1092,6 +1107,516 @@
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <aside class=\"menu\" style=\"width:250px\">\r\n        <p class=\"menu-label\">\r\n            Player\r\n        </p>\r\n        <ul class=\"menu-list\">\r\n            <ul>\r\n                <li><a href=\"#\">添加Player</a></li>\r\n                <li><a href=\"#\">同步数据</a></li>\r\n            </ul>\r\n        </ul>\r\n    </aside>\r\n\r\n    <div id=\"player-grid\" style=\"position: relative;left: 290px;width: 800px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width:200px;\">\r\n            <img v-bind:src=\"player.portrait\" @click=\"onEdit(player)\">\r\n            <img v-bind:src=\"'/img/player/avatar/'+player.avatar\" style=\"width: 50px\">\r\n            <div class=\"content\">\r\n                {{player.name}} id:{{player.id}}\r\n                <br> 背号:{{player.number}}\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <editForm :playerInfo='editPlayerDoc' v-if='isEdit'>\r\n    </editform>\r\n</div>";
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var HupuAPI_1 = __webpack_require__(22);
+	var VueBase_1 = __webpack_require__(18);
+	var JsFunc_1 = __webpack_require__(17);
+	var elo_1 = __webpack_require__(27);
+	var PlayerInfo_1 = __webpack_require__(29);
+	var RankView = (function (_super) {
+	    __extends(RankView, _super);
+	    function RankView() {
+	        _super.call(this);
+	        this.template = __webpack_require__(31);
+	        this.playerDocArr = VueBase_1.VueBase.PROP;
+	        this.gameRecArr = VueBase_1.VueBase.PROP;
+	        this.playerMap = VueBase_1.VueBase.PROP;
+	        this.playerGameRecArr = VueBase_1.VueBase.PROP;
+	        this.pageIdx = VueBase_1.VueBase.PROP;
+	        this.playerGameRecPageArr = VueBase_1.VueBase.PROP;
+	        this.methods = {
+	            onSortWinPercent: function () {
+	                console.log('onSortWinPercent');
+	            },
+	            onClkGameRecPage: function (pageIdx) {
+	                this.playerGameRecArr = this.playerGameRecPageArr[pageIdx];
+	            },
+	            onShowRec: function (playerName) {
+	                this.playerGameRecArr = [];
+	                this.playerGameRecPageArr = [];
+	                var pageNum = 10;
+	                var page = [];
+	                for (var i = 0; i < this.gameRecArr.length; i++) {
+	                    var gameRec = this.gameRecArr[i];
+	                    if (gameRec.left.name == playerName || gameRec.right.name == playerName) {
+	                        if (gameRec.left.name == playerName) {
+	                            gameRec.win = gameRec.left.score > gameRec.right.score;
+	                        }
+	                        if (gameRec.right.name == playerName) {
+	                            gameRec.win = gameRec.left.score < gameRec.right.score;
+	                        }
+	                        gameRec.name = playerName;
+	                        page.push(gameRec);
+	                        if ((page.length % pageNum) == 0) {
+	                            this.playerGameRecPageArr.push(page);
+	                            page = [];
+	                        }
+	                    }
+	                }
+	                if (page.length)
+	                    this.playerGameRecPageArr.push(page);
+	                this.playerGameRecArr = this.playerGameRecPageArr[0];
+	                console.log('onShowRec', playerName, this.playerGameRecPageArr.length);
+	            },
+	            onSortGameCount: function () {
+	                for (var _i = 0, _a = this.playerDocArr; _i < _a.length; _i++) {
+	                    var p = _a[_i];
+	                    p.gameCount = PlayerInfo_1.PlayerInfo.gameCount(p);
+	                }
+	                this.playerDocArr.sort(JsFunc_1.descendingProp('gameCount'));
+	                console.log('onSortGameCount');
+	            }
+	        };
+	        VueBase_1.VueBase.initProps(this);
+	    }
+	    RankView.prototype.mounted = function () {
+	        var _this = this;
+	        console.log("rank");
+	        this.playerGameRecArr = [{
+	                left: { name: "player3", score: 1 },
+	                right: { name: "player1", score: 2 }
+	            }];
+	        var gameIdArr = [];
+	        var gameDataArr = [];
+	        var gameId;
+	        var getGameData = function (i) {
+	            if (i < gameIdArr.length) {
+	                gameId = gameIdArr[i];
+	                HupuAPI_1.getRoundRawDate(gameId, function (res1) {
+	                    console.log(res1);
+	                    var data = res1;
+	                    data.round = gameId;
+	                    gameDataArr.push(data);
+	                    var p = Math.floor((i + 1) / gameIdArr.length * 100);
+	                    console.log('progress', p);
+	                    $('#progress1').val(p);
+	                    getGameData(i + 1);
+	                });
+	            }
+	            else {
+	                _this.gameRecArr = [];
+	                var playerMap = elo_1.getEloRank(gameDataArr, _this.gameRecArr);
+	                _this.playerMap = playerMap;
+	                setInterval(function () {
+	                    $('#progress1').hide();
+	                    _this.playerDocArr = JsFunc_1.mapToArr(playerMap).sort(JsFunc_1.descendingProp('eloScore'));
+	                }, 500);
+	            }
+	        };
+	        HupuAPI_1.getRoundList(function (res2) {
+	            var data = res2.data;
+	            console.log(data);
+	            for (var i = 0; i < data.length; i++) {
+	                var obj = data[i];
+	                gameIdArr.push(obj.id);
+	            }
+	            getGameData(0);
+	        });
+	    };
+	    return RankView;
+	}(VueBase_1.VueBase));
+	exports.rankView = new RankView();
+
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var EloUtil_1 = __webpack_require__(28);
+	var PlayerData = (function () {
+	    function PlayerData(name) {
+	        this.winGameCount = 0;
+	        this.loseGameCount = 0;
+	        this.roundCount = 0;
+	        this.score = 0;
+	        this.eloScore = 2000;
+	        this.minTimeWin = -1;
+	        this.maxTimeWin = -1;
+	        this.sumTimeWin = 0;
+	        this.minTimeLose = -1;
+	        this.maxTimeLose = -1;
+	        this.sumTimeLose = 0;
+	        this.name = name;
+	    }
+	    Object.defineProperty(PlayerData.prototype, "avgTimeWin", {
+	        get: function () {
+	            return Math.ceil(this.sumTimeWin / this.winGameCount);
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(PlayerData.prototype, "avgTimeLose", {
+	        get: function () {
+	            return Math.ceil(this.sumTimeLose / this.loseGameCount);
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    return PlayerData;
+	}());
+	function updateGameTime(p, gameTimeInSec, isWin) {
+	    if (gameTimeInSec < 20) {
+	        return;
+	    }
+	    if (isWin) {
+	        if (p.minTimeWin < 0)
+	            p.minTimeWin = gameTimeInSec;
+	        p.minTimeWin = Math.min(gameTimeInSec, p.minTimeWin);
+	        if (p.maxTimeWin < 0)
+	            p.maxTimeWin = gameTimeInSec;
+	        p.maxTimeWin = Math.max(gameTimeInSec, p.maxTimeWin);
+	        p.sumTimeWin += gameTimeInSec;
+	    }
+	    else {
+	        p.sumTimeLose += gameTimeInSec;
+	        if (p.minTimeLose < 0)
+	            p.minTimeLose = gameTimeInSec;
+	        p.minTimeLose = Math.min(gameTimeInSec, p.minTimeLose);
+	        if (p.maxTimeLose < 0)
+	            p.maxTimeLose = gameTimeInSec;
+	        p.maxTimeLose = Math.max(gameTimeInSec, p.maxTimeLose);
+	    }
+	}
+	exports.getEloRank = function (gameDataArr, gameRecArr) {
+	    var playerMap = {};
+	    var gameArr = gameDataArr;
+	    for (var j = 0; j < gameArr.length; j++) {
+	        var game = gameArr[j];
+	        for (var i = 1;; i++) {
+	            var gameData = game.data[i];
+	            if (gameData) {
+	                var leftPlayerData = gameData.left;
+	                var rightPlayerData = gameData.right;
+	                if (!playerMap[leftPlayerData.name])
+	                    playerMap[leftPlayerData.name] = new PlayerData(leftPlayerData.name);
+	                if (!playerMap[rightPlayerData.name])
+	                    playerMap[rightPlayerData.name] = new PlayerData(rightPlayerData.name);
+	                var leftPlayer = playerMap[leftPlayerData.name];
+	                var rightPlayer = playerMap[rightPlayerData.name];
+	                gameRecArr.push({
+	                    round: game.round,
+	                    left: { name: leftPlayer.name, score: leftPlayerData.score },
+	                    right: { name: rightPlayer.name, score: rightPlayerData.score }
+	                });
+	                var dt = EloUtil_1.EloUtil.classicMethod(leftPlayer.eloScore, rightPlayer.eloScore);
+	                leftPlayer.score += leftPlayerData.score;
+	                rightPlayer.score += rightPlayerData.score;
+	                var gameTimeInSec = (gameData.end - gameData.start);
+	                if (leftPlayerData.score > rightPlayerData.score) {
+	                    leftPlayer.eloScore += dt;
+	                    rightPlayer.eloScore -= dt;
+	                    leftPlayer.winGameCount += 1;
+	                    rightPlayer.loseGameCount += 1;
+	                    if (gameTimeInSec > 0) {
+	                        updateGameTime(leftPlayer, gameTimeInSec, true);
+	                        updateGameTime(rightPlayer, gameTimeInSec, false);
+	                    }
+	                }
+	                else {
+	                    leftPlayer.eloScore -= dt;
+	                    rightPlayer.eloScore += dt;
+	                    leftPlayer.loseGameCount += 1;
+	                    rightPlayer.winGameCount += 1;
+	                    if (gameTimeInSec > 0) {
+	                        updateGameTime(leftPlayer, gameTimeInSec, false);
+	                        updateGameTime(rightPlayer, gameTimeInSec, true);
+	                    }
+	                }
+	            }
+	            else
+	                break;
+	        }
+	    }
+	    return playerMap;
+	};
+
+
+/***/ },
+/* 28 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.EloConf = {
+	    score: 2000,
+	    K: 32
+	};
+	var EloUtil = (function () {
+	    function EloUtil() {
+	    }
+	    EloUtil.classicMethod = function (winEloScore, loseEloScore) {
+	        var Elo1 = winEloScore;
+	        var Elo2 = loseEloScore;
+	        var K = exports.EloConf.K;
+	        var EloDifference = Elo2 - Elo1;
+	        var percentage = 1 / (1 + Math.pow(10, EloDifference / 400));
+	        var win = Math.round(K * (1 - percentage));
+	        return win;
+	    };
+	    EloUtil.playerToWinMethod = function (winEloScore, loseEloScore) {
+	    };
+	    return EloUtil;
+	}());
+	exports.EloUtil = EloUtil;
+
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var BaseInfo_1 = __webpack_require__(30);
+	var PlayerDoc = (function () {
+	    function PlayerDoc() {
+	        this.id = 0;
+	        this.name = '';
+	        this.phone = 0;
+	        this.eloScore = 0;
+	        this.style = 0;
+	        this.avatar = "";
+	        this.height = 0;
+	        this.weight = 0;
+	        this.dtScore = 0;
+	        this.activityId = 0;
+	        this.gameRec = [];
+	        this.loseGameCount = 0;
+	        this.winGameCount = 0;
+	        this.ftId = 0;
+	        this.ftScore = 0;
+	        this.playerNum = 0;
+	        this.curFtScore = 0;
+	        this.location = '上海';
+	    }
+	    return PlayerDoc;
+	}());
+	exports.PlayerDoc = PlayerDoc;
+	exports.PlayerState1v1 = {
+	    FIGHTING: ' ',
+	    PIGEON: '鸽子',
+	    WAITING: '  ',
+	    Dead: '淘汰'
+	};
+	var PlayerInfo = (function (_super) {
+	    __extends(PlayerInfo, _super);
+	    function PlayerInfo(playerData) {
+	        _super.call(this);
+	        this.playerData = new PlayerDoc();
+	        this.isRed = true;
+	        this.isMvp = false;
+	        this.backNumber = 0;
+	        if (playerData) {
+	            if (playerData['playerData'] != null) {
+	                this.playerData = BaseInfo_1.obj2Class(playerData.playerData, PlayerDoc);
+	                this.setPlayerInfoFromData(playerData);
+	            }
+	            else {
+	                this.playerData = BaseInfo_1.obj2Class(playerData, PlayerDoc);
+	                this.setPlayerInfoFromData(playerData);
+	            }
+	        }
+	    }
+	    PlayerInfo.prototype.setPlayerInfoFromData = function (data) {
+	        if (data['isRed'] != null)
+	            this.isRed = data.isRed;
+	        if (data['isMvp'] != null)
+	            this.isMvp = data.isMvp;
+	        if (data['backNumber'] != null)
+	            this.backNumber = data.backNumber;
+	    };
+	    PlayerInfo.prototype.getPlayerData = function () {
+	        this.playerData['isRed'] = this.isRed;
+	        this.playerData['isMvp'] = this.isMvp;
+	        this.playerData['backNumber'] = this.backNumber;
+	        return this.playerData;
+	    };
+	    PlayerInfo.prototype.id = function (val) {
+	        return BaseInfo_1.prop(this.playerData, "id", val);
+	    };
+	    PlayerInfo.prototype.phone = function (val) {
+	        return BaseInfo_1.prop(this.playerData, "phone", val);
+	    };
+	    PlayerInfo.prototype.name = function (val) {
+	        return BaseInfo_1.prop(this.playerData, "name", val);
+	    };
+	    PlayerInfo.prototype.activityId = function (val) {
+	        return BaseInfo_1.prop(this.playerData, "activityId", val);
+	    };
+	    PlayerInfo.prototype.eloScore = function (val) {
+	        return BaseInfo_1.prop(this.playerData, "eloScore", val);
+	    };
+	    PlayerInfo.prototype.dtScore = function (val) {
+	        return BaseInfo_1.prop(this.playerData, "dtScore", val);
+	    };
+	    PlayerInfo.prototype.style = function (val) {
+	        return BaseInfo_1.prop(this.playerData, "style", val);
+	    };
+	    PlayerInfo.prototype.avatar = function (val) {
+	        return BaseInfo_1.prop(this.playerData, "avatar", val);
+	    };
+	    PlayerInfo.prototype.gameRec = function (val) {
+	        return BaseInfo_1.prop(this.playerData, "gameRec", val);
+	    };
+	    PlayerInfo.winPercent = function (playerDoc) {
+	        var p = playerDoc.winGameCount / PlayerInfo.gameCount(playerDoc);
+	        if (!p)
+	            p = 0;
+	        return p;
+	    };
+	    PlayerInfo.winPercentStr = function (playerDoc) {
+	        return (PlayerInfo.winPercent(playerDoc) * 100).toFixed(1) + "%";
+	    };
+	    PlayerInfo.weight = function (playerDoc) {
+	        return playerDoc.weight || playerDoc.playerData.weight;
+	    };
+	    PlayerInfo.height = function (playerDoc) {
+	        return playerDoc.height || playerDoc.playerData.height;
+	    };
+	    PlayerInfo.intro = function (playerDoc) {
+	        return playerDoc.intro || playerDoc.playerData.intro;
+	    };
+	    PlayerInfo.prototype.winpercent = function (val) {
+	        return this.winGameCount() / this.gameCount();
+	    };
+	    PlayerInfo.gameCount = function (playerDoc) {
+	        return (playerDoc.loseGameCount + playerDoc.winGameCount) || 0;
+	    };
+	    PlayerInfo.addWinGameAmount = function (playerDoc) {
+	        playerDoc.winGameCount++;
+	        return playerDoc.winGameCount;
+	    };
+	    PlayerInfo.addLoseGameAmount = function (playerDoc) {
+	        playerDoc.loseGameCount++;
+	        return playerDoc.loseGameCount;
+	    };
+	    PlayerInfo.prototype.gameCount = function () {
+	        return this.loseGameCount() + this.winGameCount();
+	    };
+	    PlayerInfo.prototype.winGameCount = function (val) {
+	        return BaseInfo_1.prop(this.playerData, "winGameCount", val);
+	    };
+	    PlayerInfo.prototype.loseGameCount = function (val) {
+	        return BaseInfo_1.prop(this.playerData, "loseGameCount", val);
+	    };
+	    PlayerInfo.prototype.getWinPercent = function () {
+	        return (this.winpercent() * 100).toFixed(1) + "%";
+	    };
+	    PlayerInfo.getStyleIcon = function (style) {
+	        var path = '/img/panel/stage/';
+	        if (style === 1) {
+	            path += 'feng.png';
+	        }
+	        else if (style === 2) {
+	            path += 'lin.png';
+	        }
+	        else if (style === 3) {
+	            path += 'huo.png';
+	        }
+	        else if (style === 4) {
+	            path += 'shan.png';
+	        }
+	        return path;
+	    };
+	    PlayerInfo.prototype.getWinStyleIcon = function () {
+	        var path = '/img/panel/stage/win/';
+	        if (this.style() == 1) {
+	            path += 'fengWin.png';
+	        }
+	        else if (this.style() == 2) {
+	            path += 'linWin.png';
+	        }
+	        else if (this.style() == 3) {
+	            path += 'huoWin.png';
+	        }
+	        else if (this.style() == 4) {
+	            path += 'shanWin.png';
+	        }
+	        return path;
+	    };
+	    PlayerInfo.prototype.getRec = function () {
+	        return { id: this.id(), eloScore: this.eloScore(), dtScore: this.dtScore() };
+	    };
+	    PlayerInfo.prototype.saveScore = function (dtScore, isWin) {
+	        this.dtScore(dtScore);
+	        this.eloScore(this.eloScore() + dtScore);
+	        if (isWin) {
+	            this.winGameCount(this.winGameCount() + 1);
+	        }
+	        else
+	            this.loseGameCount(this.loseGameCount() + 1);
+	    };
+	    PlayerInfo.prototype.getCurWinningPercent = function () {
+	        return this.winGameCount() / (this.loseGameCount() + this.winGameCount());
+	    };
+	    return PlayerInfo;
+	}(BaseInfo_1.BaseInfo));
+	exports.PlayerInfo = PlayerInfo;
+
+
+/***/ },
+/* 30 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.isdef = function (val) {
+	    return val != undefined;
+	};
+	exports.prop = function (obj, paramName, v, callback) {
+	    if (exports.isdef(v)) {
+	        obj[paramName] = v;
+	        if (callback)
+	            callback();
+	    }
+	    else
+	        return obj[paramName];
+	};
+	exports.obj2Class = function (obj, cls) {
+	    var c = new cls;
+	    for (var paramName in obj) {
+	        c[paramName] = obj[paramName];
+	    }
+	    return c;
+	};
+	function setPropTo(data, obj) {
+	    for (var key in data) {
+	        if (obj.hasOwnProperty(key))
+	            obj[key] = data[key];
+	    }
+	}
+	exports.setPropTo = setPropTo;
+	var BaseDoc = (function () {
+	    function BaseDoc() {
+	    }
+	    return BaseDoc;
+	}());
+	exports.BaseDoc = BaseDoc;
+	var BaseInfo = (function () {
+	    function BaseInfo() {
+	    }
+	    return BaseInfo;
+	}());
+	exports.BaseInfo = BaseInfo;
+
+
+/***/ },
+/* 31 */
+/***/ function(module, exports) {
+
+	module.exports = "<!--<script src=\"../../../../../yqbe/src/utils/nmserver/app.js\"></script>-->\r\n<div>\r\n    <progress id=\"progress1\" class=\"progress is-success\" value=\"0\" max=\"100\"></progress>\r\n    <div class=\"ui two column grid\" style=\"\">\r\n        <table class=\"table is-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th width=\"50px\"></th>\r\n                    <th width=\"150px\">ID</th>\r\n                    <th width=\"50px\" @click=\"onSortGameCount\">场数</th>\r\n                    <th width=\"70px\" @click=\"onSortWinPercent\">胜率</th>\r\n                    <th width=\"70px\">贡献值</th>\r\n                    <th width=\"70px\">天梯分</th>\r\n                    <th width=\"70px\">最快胜利</th>\r\n                    <th width=\"70px\">最慢胜利</th>\r\n                    <th width=\"70px\">平均胜利</th>\r\n                    <th>战绩</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr v-for=\"(playerDoc,index) in playerDocArr\">\r\n                    <!--<td><img src=\"{{playerDoc.avatar}}\" style=\"width: 100px\"></td>-->\r\n                    <td v-text=\"index+1\"></td>\r\n                    <td v-text=\"playerDoc.name\"></td>\r\n                    <td v-text=\"(playerDoc.winGameCount+playerDoc.loseGameCount)||0\"></td>\r\n                    <td v-text=\"(playerDoc.winGameCount/(playerDoc.winGameCount+playerDoc.loseGameCount)*100||0).toFixed(2)+'%'\"></td>\r\n                    <td v-text=\"playerDoc.score\"></td>\r\n                    <td v-text=\"playerDoc.eloScore\"></td>\r\n                    <td v-text=\"playerDoc.minTimeWin\"></td>\r\n                    <td v-text=\"playerDoc.maxTimeWin\"></td>\r\n                    <td v-text=\"playerDoc.avgTimeWin\"></td>\r\n                    <td>\r\n                        <button class=\"ui right labeled icon button showRec\" @click=\"onShowRec(playerDoc.name)\">\r\n                        <i class=\"right arrow icon\"></i>\r\n                        查看\r\n                    </button>\r\n                    </td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n\r\n        <div class=\"four wide column\" style=\"position: fixed;left:650px;top: 60px;\">\r\n            <table class=\"ui striped table\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>round</th>\r\n                        <th width=\"150px\">ID</th>\r\n                        <th width=\"80px\">VS</th>\r\n                        <th width=\"150px\">ID</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(rec,index) in playerGameRecArr\" :class=\"[{ positive: rec.win }, { negative: !rec.win }]\">\r\n                        <td v-text=\"rec.round\"></td>\r\n                        <td v-text=\"rec.left.name\" :class=\"{bold:rec.name==rec.left.name}\"></td>\r\n                        <td v-text=\"rec.left.score+' : '+rec.right.score\"></td>\r\n                        <td v-text=\"rec.right.name\" :class=\"{bold:rec.name==rec.right.name}\"></td>\r\n                    </tr>\r\n                </tbody>\r\n                <tfoot>\r\n                    <tr>\r\n                        <th colspan=\"3\">\r\n                            <div class=\"ui right floated pagination menu\">\r\n                                <a class=\"icon item\">\r\n                                    <i class=\"left chevron icon\"></i>\r\n                                </a>\r\n                                <a class=\"item \" v-for=\"(page,pageIdx) in playerGameRecPageArr\" @click=\"onClkGameRecPage(pageIdx)\">{{pageIdx+1}}</a>\r\n                                <a class=\"icon item\">\r\n                                    <i class=\"right chevron icon\"></i>\r\n                                </a>\r\n                            </div>\r\n                        </th>\r\n                    </tr>\r\n                </tfoot>\r\n            </table>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ }
 /******/ ]);

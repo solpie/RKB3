@@ -124,10 +124,11 @@ export class Event2017 extends PIXI.Container {
 
     showWin(player) {
         // let name = player.name
-        let champion = Number(player.totalChampion)
-        var medal = Math.ceil(champion / 5)
-        if (medal > 5)
-            medal = 5
+        let level = Number(player.level)
+        // var medal = Math.ceil(level / 5)
+        let medal = level
+        // if (medal > 5)
+        //     medal = 5
         // medal = 2
         if (medal > 0) {
             let medalUrl = '/img/panel/score2017/medal' + medal + '.png'
