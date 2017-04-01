@@ -108,7 +108,7 @@ export class PreRound extends PIXI.Container {
             this.ftMap[f.ftId] = f
             f.x = 51 + i * 50
             f.y = 20
-            this.addChild(f)
+            // this.addChild(f)
             this.ftArr.push(f)
         }
 

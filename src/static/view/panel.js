@@ -4871,7 +4871,6 @@
 	            this.ftMap[f.ftId] = f;
 	            f.x = 51 + i * 50;
 	            f.y = 20;
-	            this.addChild(f);
 	            this.ftArr.push(f);
 	        }
 	        this.playerLeftText = new PIXI.Text();
