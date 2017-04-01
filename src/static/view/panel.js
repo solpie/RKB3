@@ -4790,7 +4790,6 @@
 	        this.ft = new PIXI.Sprite();
 	        this.ft.x = 60;
 	        this.ft.y = -6;
-	        this.addChild(this.ft);
 	        this.playerName = new PIXI.Text('');
 	        this.playerName.x = 60;
 	        var s = this.playerName.style;
@@ -4871,6 +4870,7 @@
 	            this.ftMap[f.ftId] = f;
 	            f.x = 51 + i * 50;
 	            f.y = 20;
+	            this.addChild(f);
 	            this.ftArr.push(f);
 	        }
 	        this.playerLeftText = new PIXI.Text();

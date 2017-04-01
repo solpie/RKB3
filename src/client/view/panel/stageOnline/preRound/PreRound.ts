@@ -21,7 +21,7 @@ class PlayerCtn extends PIXI.Container {
         this.ft = new PIXI.Sprite()
         this.ft.x = 60
         this.ft.y = -6
-        this.addChild(this.ft)
+        // this.addChild(this.ft)
 
         this.playerName = new PIXI.Text('')
         this.playerName.x = 60
@@ -108,7 +108,7 @@ export class PreRound extends PIXI.Container {
             this.ftMap[f.ftId] = f
             f.x = 51 + i * 50
             f.y = 20
-            // this.addChild(f)
+            this.addChild(f)
             this.ftArr.push(f)
         }
 
