@@ -37,6 +37,10 @@ export class BracketView extends BasePanelView {
                 this.bracket.visible = !this.bracket.visible
                 this.preRound.visible = !this.preRound.visible
             }
+            else if (e.key == 'ArrowUp') {
+                this.preRound.toggleTheme()
+
+            }
         }
         // window.onmouseup = (e) => {
         //     this.bracket.visible = !this.bracket.visible

@@ -4636,6 +4636,9 @@
 	                _this.bracket.visible = !_this.bracket.visible;
 	                _this.preRound.visible = !_this.preRound.visible;
 	            }
+	            else if (e.key == 'ArrowUp') {
+	                _this.preRound.toggleTheme();
+	            }
 	        };
 	        this.getPreRoundInfo(gameId);
 	        this.initAuto(Number(gameId));
@@ -4791,11 +4794,25 @@
 	var BracketGroup_1 = __webpack_require__(67);
 	var const_1 = __webpack_require__(39);
 	var PixiEx_1 = __webpack_require__(42);
+	var skinConf = {
+	    'dark': {
+	        bg: '/img/panel/bracket/preRoundBgBlue.png',
+	        ftBg: '/img/panel/bracket/preRoundFtBlue.png',
+	        playerBg: '/img/panel/bracket/preRoundPlayerBlue.png'
+	    },
+	    'light': {
+	        bg: '/img/panel/bracket/preRoundBg.png',
+	        ftBg: '/img/panel/bracket/preRoundFt.png',
+	        playerBg: '/img/panel/bracket/preRoundPlayer.png'
+	    }
+	};
+	var skin;
 	var PlayerCtn = (function (_super) {
 	    __extends(PlayerCtn, _super);
 	    function PlayerCtn() {
 	        _super.call(this);
 	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/bracket/preRoundPlayer.png' });
+	        this.bg = bg;
 	        this.addChild(bg);
 	        this.avt = new PIXI.Sprite();
 	        this.avt.x = 1;
@@ -4825,6 +4842,10 @@
 	        BracketGroup_1.fitWidth(this.playerName, 220, 30);
 	        this.playerName.y = 30 - this.playerName.height * .5;
 	    };
+	    PlayerCtn.prototype.setDark = function (isDark) {
+	        isDark ? this.bg.texture.baseTexture.updateSourceImage(skinConf['dark'].playerBg)
+	            : this.bg.texture.baseTexture.updateSourceImage(skinConf['light'].playerBg);
+	    };
 	    return PlayerCtn;
 	}(PIXI.Container));
 	var FtCtn = (function (_super) {
@@ -4838,6 +4859,7 @@
 	        ftLogo.width = ftLogo.height = 45;
 	        this.addChild(ftLogo);
 	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/bracket/preRoundFt.png' });
+	        this.bg = bg;
 	        this.addChild(bg);
 	        this.leftText = new PIXI.Text();
 	        this.leftText.x = 30;
@@ -4857,18 +4879,25 @@
 	        }
 	        this.leftText.text = num + '';
 	    };
+	    FtCtn.prototype.setDark = function (isDark) {
+	        isDark ? this.bg.texture.baseTexture.updateSourceImage(skinConf['dark'].ftBg)
+	            : this.bg.texture.baseTexture.updateSourceImage(skinConf['light'].ftBg);
+	    };
 	    return FtCtn;
 	}(PIXI.Container));
 	var PreRound = (function (_super) {
 	    __extends(PreRound, _super);
-	    function PreRound(stage) {
+	    function PreRound(stage, isDark) {
+	        if (isDark === void 0) { isDark = false; }
 	        _super.call(this);
 	        this.ftMap = {};
 	        this.imgTex = {};
+	        this.isDark = false;
 	        stage.addChild(this);
 	        this.x = const_1.ViewConst.STAGE_WIDTH - 500;
 	        this.y = 220;
 	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/bracket/preRoundBg.png' });
+	        this.bg = bg;
 	        this.addChild(bg);
 	        this.playerArr = [];
 	        for (var i = 0; i < 6; i++) {
@@ -4921,6 +4950,22 @@
 	        }
 	        else {
 	            this.x = -20;
+	        }
+	    };
+	    PreRound.prototype.setDark = function (isDark) {
+	        isDark ? this.bg.texture.baseTexture.updateSourceImage(skinConf['dark'].bg)
+	            : this.bg.texture.baseTexture.updateSourceImage(skinConf['light'].bg);
+	    };
+	    PreRound.prototype.toggleTheme = function () {
+	        this.isDark = !this.isDark;
+	        this.setDark(this.isDark);
+	        for (var _i = 0, _a = this.playerArr; _i < _a.length; _i++) {
+	            var p = _a[_i];
+	            p.setDark(this.isDark);
+	        }
+	        for (var _b = 0, _c = this.ftArr; _b < _c.length; _b++) {
+	            var f = _c[_b];
+	            f.setDark(this.isDark);
 	        }
 	    };
 	    return PreRound;

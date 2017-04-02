@@ -4,13 +4,28 @@ import { loadImg } from '../../../utils/JsFunc';
 import { fitWidth } from '../bracket/BracketGroup';
 import { FontName, ViewConst } from '../../../const';
 import { imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
+const skinConf: any = {
+    'dark': {
+        bg: '/img/panel/bracket/preRoundBgBlue.png',
+        ftBg: '/img/panel/bracket/preRoundFtBlue.png',
+        playerBg: '/img/panel/bracket/preRoundPlayerBlue.png'
+    },
+    'light': {
+        bg: '/img/panel/bracket/preRoundBg.png',
+        ftBg: '/img/panel/bracket/preRoundFt.png',
+        playerBg: '/img/panel/bracket/preRoundPlayer.png'
+    }
+}
+let skin;
 class PlayerCtn extends PIXI.Container {
     avt: PIXI.Sprite
     ft: PIXI.Sprite
     playerName: PIXI.Text
+    bg: PIXI.Sprite
     constructor() {
         super()
         let bg = newBitmap({ url: '/img/panel/bracket/preRoundPlayer.png' })
+        this.bg = bg
         this.addChild(bg)
 
         this.avt = new PIXI.Sprite()
@@ -45,10 +60,15 @@ class PlayerCtn extends PIXI.Container {
         fitWidth(this.playerName, 220, 30)
         this.playerName.y = 30 - this.playerName.height * .5
     }
+    setDark(isDark) {
+        isDark ? this.bg.texture.baseTexture.updateSourceImage(skinConf['dark'].playerBg)
+            : this.bg.texture.baseTexture.updateSourceImage(skinConf['light'].playerBg)
+    }
 }
 class FtCtn extends PIXI.Container {
     ftId: string
     leftText: PIXI.Text
+    bg: PIXI.Sprite
     constructor(ftId) {
         super()
         this.ftId = ftId + ''
@@ -58,6 +78,7 @@ class FtCtn extends PIXI.Container {
         ftLogo.width = ftLogo.height = 45
         this.addChild(ftLogo)
         let bg = newBitmap({ url: '/img/panel/bracket/preRoundFt.png' })
+        this.bg = bg
         this.addChild(bg)
 
         this.leftText = new PIXI.Text()
@@ -78,6 +99,11 @@ class FtCtn extends PIXI.Container {
         }
         this.leftText.text = num + ''
     }
+    setDark(isDark) {
+        isDark ? this.bg.texture.baseTexture.updateSourceImage(skinConf['dark'].ftBg)
+            : this.bg.texture.baseTexture.updateSourceImage(skinConf['light'].ftBg)
+
+    }
 }
 export class PreRound extends PIXI.Container {
     playerArr: Array<PlayerCtn>
@@ -85,12 +111,14 @@ export class PreRound extends PIXI.Container {
     ftMap: any = {}
     imgTex: any = {}
     playerLeftText: PIXI.Text
-    constructor(stage) {
+    bg: PIXI.Sprite
+    constructor(stage, isDark = false) {
         super()
         stage.addChild(this)
         this.x = ViewConst.STAGE_WIDTH - 500
         this.y = 220
         let bg = newBitmap({ url: '/img/panel/bracket/preRoundBg.png' })
+        this.bg = bg
         this.addChild(bg)
 
         this.playerArr = []
@@ -148,6 +176,22 @@ export class PreRound extends PIXI.Container {
         }
         else {
             this.x = -20
+        }
+    }
+
+    isDark = false
+    setDark(isDark) {
+        isDark ? this.bg.texture.baseTexture.updateSourceImage(skinConf['dark'].bg)
+            : this.bg.texture.baseTexture.updateSourceImage(skinConf['light'].bg)
+    }
+    toggleTheme() {
+        this.isDark = !this.isDark
+        this.setDark(this.isDark)
+        for (let p of this.playerArr) {
+            p.setDark(this.isDark)
+        }
+        for (let f of this.ftArr) {
+            f.setDark(this.isDark)
         }
     }
 }
