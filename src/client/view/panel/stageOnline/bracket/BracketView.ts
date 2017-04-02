@@ -25,7 +25,23 @@ export class BracketView extends BasePanelView {
         this.bracket.visible = false
 
         this.preRound = new PreRound(stage)
-
+        window.onkeyup = (e) => {
+            console.log(e)
+            if (e.key == 'ArrowLeft') {
+                this.preRound.showRight(false)
+            }
+            else if (e.key == 'ArrowRight') {
+                this.preRound.showRight(true)
+            }
+            else if (e.key == 'Tab') {
+                this.bracket.visible = !this.bracket.visible
+                this.preRound.visible = !this.preRound.visible
+            }
+        }
+        // window.onmouseup = (e) => {
+        //     this.bracket.visible = !this.bracket.visible
+        //     this.preRound.visible = !this.preRound.visible
+        // }
         this.getPreRoundInfo(gameId)
         this.initAuto(Number(gameId));
         this.initBg()

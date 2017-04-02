@@ -4617,12 +4617,26 @@
 	var BracketView = (function (_super) {
 	    __extends(BracketView, _super);
 	    function BracketView(stage, gameId) {
+	        var _this = this;
 	        _super.call(this, const_1.PanelId.onlinePanel);
 	        this.name = const_1.PanelId.bracketPanel;
 	        console.log("new bracket");
 	        this.bracket = new Bracket2017_1.Bracket2017(stage);
 	        this.bracket.visible = false;
 	        this.preRound = new PreRound_1.PreRound(stage);
+	        window.onkeyup = function (e) {
+	            console.log(e);
+	            if (e.key == 'ArrowLeft') {
+	                _this.preRound.showRight(false);
+	            }
+	            else if (e.key == 'ArrowRight') {
+	                _this.preRound.showRight(true);
+	            }
+	            else if (e.key == 'Tab') {
+	                _this.bracket.visible = !_this.bracket.visible;
+	                _this.preRound.visible = !_this.preRound.visible;
+	            }
+	        };
 	        this.getPreRoundInfo(gameId);
 	        this.initAuto(Number(gameId));
 	        this.initBg();
@@ -4900,6 +4914,14 @@
 	        }
 	        this.playerLeftText.text = playerDataArr.length + '';
 	        this.playerLeftText.x = 90 - this.playerLeftText.width * .5;
+	    };
+	    PreRound.prototype.showRight = function (isRight) {
+	        if (isRight) {
+	            this.x = const_1.ViewConst.STAGE_WIDTH - 500;
+	        }
+	        else {
+	            this.x = -20;
+	        }
 	    };
 	    return PreRound;
 	}(PIXI.Container));

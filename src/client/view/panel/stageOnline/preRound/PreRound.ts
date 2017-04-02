@@ -142,4 +142,12 @@ export class PreRound extends PIXI.Container {
         this.playerLeftText.text = playerDataArr.length + ''
         this.playerLeftText.x = 90 - this.playerLeftText.width * .5
     }
+    showRight(isRight) {
+        if (isRight) {
+            this.x = ViewConst.STAGE_WIDTH - 500
+        }
+        else {
+            this.x = -20
+        }
+    }
 }
