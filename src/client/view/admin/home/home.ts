@@ -61,6 +61,7 @@ class HomeView extends VueBase {
             { title: "比分面板（绿色）", url: getScorePanelUrl(gameId, false) },
             { title: "线上控制台", url: getScorePanelUrl(gameId, false,false) },
             { title: "八强面板", url: `/panel/#/ol/ob/${gameId}?panel=bracket` },
+            { title: "DmkLeecher", url: `/dmk` },
 
             // { title: "---------------------Final--------------------", url: `/panel/#/ol/ob/0?panel=bracket` },
             // { title: "K.O.A", url: `/panel/#/koa/op/` },

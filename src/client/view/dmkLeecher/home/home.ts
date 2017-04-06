@@ -18,12 +18,14 @@ let opReq = (url: string, param: any, callback: any) => {
 class HomeView extends VueBase {
     template = require('./home.html');
     dmkArrMap = VueBase.PROP
+    serverUrl  = VueBase.PROP
     constructor() {
         super();
         VueBase.initProps(this);
     }
 
     created() {
+        this.serverUrl = 'http://'+window.location.host + '/dmk'
         this.conDmkServer()
         this.dmkArrMap = {}
     }

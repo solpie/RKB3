@@ -509,7 +509,7 @@
 /* 15 */
 /***/ function(module, exports) {
 
-	module.exports = "<nav class=\"nav has-shadow\">\r\n    <div class=\"container\">\r\n        <div class=\"nav-left\">\r\n            <a class=\"nav-item\" :class=\"{active: active === ''}\">\r\n                <i class=\"home icon\"></i>\r\n                <router-link :to=\"{ name: 'home'}\">Home</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'player'}\">\r\n                <i class=\"grid layout icon\"></i>\r\n                <router-link :to=\"{ name: 'player'}\">玩家管理</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'rank'}\">\r\n                <router-link :to=\"{ name: 'rank'}\">天梯排名</router-link>\r\n            </a>\r\n        </div>\r\n\r\n        <!--<div class=\"nav-right\">\r\n            <a class=\"nav-item\" :class=\"{active: active === 'setting'}\">\r\n                <router-link :to=\"{ name: 'setting'}\">setting</router-link>\r\n            </a>\r\n        </div>-->\r\n    </div>\r\n\r\n\r\n</nav>";
+	module.exports = "<nav class=\"nav has-shadow\">\r\n    <div class=\"container\">\r\n        <div class=\"nav-left\">\r\n            <a class=\"nav-item\" :class=\"{active: active === ''}\">\r\n                <i class=\"home icon\"></i>\r\n                <router-link :to=\"{ name: 'home'}\">Home</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'player'}\">\r\n                <i class=\"grid layout icon\"></i>\r\n                <router-link :to=\"{ name: 'player'}\">玩家管理</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'rank'}\">\r\n                <router-link :to=\"{ name: 'rank'}\">天梯排名</router-link>\r\n            </a>\r\n            <a class=\"nav-item\">\r\n                <router-link :to=\"/dmk\">DmkLeecher</router-link>\r\n            </a>\r\n        </div>\r\n\r\n        <!--<div class=\"nav-right\">\r\n            <a class=\"nav-item\" :class=\"{active: active === 'setting'}\">\r\n                <router-link :to=\"{ name: 'setting'}\">setting</router-link>\r\n            </a>\r\n        </div>-->\r\n    </div>\r\n\r\n\r\n</nav>";
 
 /***/ },
 /* 16 */
@@ -597,6 +597,7 @@
 	            { title: "比分面板（绿色）", url: getScorePanelUrl(gameId, false) },
 	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
+	            { title: "DmkLeecher", url: "/dmk" },
 	        ];
 	    };
 	    HomeView.prototype.genQRCode = function () {

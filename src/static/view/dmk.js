@@ -574,6 +574,7 @@
 	        _super.call(this);
 	        this.template = __webpack_require__(35);
 	        this.dmkArrMap = VueBase_1.VueBase.PROP;
+	        this.serverUrl = VueBase_1.VueBase.PROP;
 	        this.methods = {
 	            onTest: function () {
 	                opReq('/dmk', { host: 'live.qq.com', dmkArr: [{ user: 'haha', content: 'dmk22' }] }, function () {
@@ -583,6 +584,7 @@
 	        VueBase_1.VueBase.initProps(this);
 	    }
 	    HomeView.prototype.created = function () {
+	        this.serverUrl = 'http://' + window.location.host + '/dmk';
 	        this.conDmkServer();
 	        this.dmkArrMap = {};
 	    };
@@ -608,7 +610,7 @@
 /* 35 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    dmk leecher\r\n    <button class=\"button\" @click=\"onTest\">test dmk</button>\r\n    <div class=\"box\" v-for=\"item in dmkArrMap\">\r\n        <strong>{{item.host}}</strong>\r\n        <li v-for=\"dmk in item.dmkArr\">\r\n            <strong>{{dmk.user}}</strong>\r\n            <p class=\"subtitle\">\r\n                {{dmk.content}}\r\n            </p>\r\n        </li>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    dmk leecher\r\n    <br>{{serverUrl}}\r\n    <br>\r\n    <button class=\"button\" @click=\"onTest\">test dmk</button>\r\n    <div class=\"box\" v-for=\"item in dmkArrMap\">\r\n        <strong>{{item.host}}</strong>\r\n        <li v-for=\"dmk in item.dmkArr\">\r\n            <strong>{{dmk.user}}</strong>\r\n            <p class=\"subtitle\">\r\n                {{dmk.content}}\r\n            </p>\r\n        </li>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 36 */
