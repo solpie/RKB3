@@ -24,7 +24,7 @@ def loadConf():
     serverConf["db"] = str(
         config.get('db', 'path')).split(",")
     print("serverConf:", serverConf)
-    serverConf["views"] = ["admin", "panel"]
+    serverConf["views"] = ["admin", "panel",'dmk']
 loadConf()
 
 # web server
@@ -140,6 +140,18 @@ app.register_blueprint(gameView, url_prefix='/game')
 # onlineView
 from online import onlineView
 app.register_blueprint(onlineView, url_prefix='/online')
+# dmkLeecher
+namespace_dmk = '/dmk'
+@app.route('/dmk', methods=['POST'])
+def on_dmk():
+    print('dmk post', request.json)
+    emit('dmk', request.json,
+            broadcast=True, namespace=namespace_dmk)
+
+@socketio.on('connect', namespace=namespace_dmk)
+def client_connect_dmk():
+    print('client con')
+
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=int(serverConf["port"]), debug=True)

@@ -11,18 +11,17 @@ import { stage3point } from './3point/stage3point';
 import { koa } from './koa/KOA';
 import { stage5v5 } from './stage5v5/Stage5v5';
 import { stageOnlineView } from './stageOnline/StageOnlineView';
-import { rkbView } from './stageRKB/RKBOPView';
 //////////////
 
 let routes = [
-    {
-        path: '/', name: 'panel',
-        components: { default: rkbView }
-    },
-    {
-        path: '/rkb/:op/:game_id',
-        components: { default: rkbView }
-    },
+    // {
+    //     path: '/', name: 'panel',
+    //     components: { default: rkbView }
+    // },
+    // {
+    //     path: '/rkb/:op/:game_id',
+    //     components: { default: rkbView }
+    // },
     {
         path: '/koa/:op',
         components: { default: koa }

@@ -3,6 +3,7 @@ var webpack = require('webpack');
 module.exports = {
     entry: {
         "admin": "./src/client/view/admin/index.ts",
+        "dmk": "./src/client/view/dmkLeecher/index.ts",
         "panel": "./src/client/view/panel/index.ts"
     },
     output: {

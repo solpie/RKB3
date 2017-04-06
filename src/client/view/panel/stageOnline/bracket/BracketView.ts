@@ -122,6 +122,7 @@ export class BracketView extends BasePanelView {
             };
             eventMap['startGame'] = (data) => {
                 console.log('startGame', data);
+                this.getPreRoundInfo(gameId)
                 // this.bracket.hideComing()
             };
             eventMap['init'] = (data) => {
