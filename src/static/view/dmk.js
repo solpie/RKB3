@@ -595,7 +595,6 @@
 	            .on('dmk', function (data) {
 	            console.log('dmk brocast', data);
 	            Vue.set(_this.dmkArrMap, data.host, data);
-	            _this.dmkArrMap[data.host] = data;
 	        });
 	    };
 	    HomeView.prototype.mounted = function () {
@@ -609,7 +608,7 @@
 /* 35 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    dmk leecher\r\n    <button class=\"button\" @click=\"onTest\">test dmk</button>\r\n    <div class=\"box\" v-for=\"item in dmkArrMap\">\r\n        <strong>{{item.host}}</strong>\r\n        <li v-for=\"dmk in item.dmkArr\">\r\n            <strong>{{dmk.user}}</strong> <small>{{dmk.content}}</small>\r\n        </li>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    dmk leecher\r\n    <button class=\"button\" @click=\"onTest\">test dmk</button>\r\n    <div class=\"box\" v-for=\"item in dmkArrMap\">\r\n        <strong>{{item.host}}</strong>\r\n        <li v-for=\"dmk in item.dmkArr\">\r\n            <strong>{{dmk.user}}</strong>\r\n            <p class=\"subtitle\">\r\n                {{dmk.content}}\r\n            </p>\r\n        </li>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 36 */

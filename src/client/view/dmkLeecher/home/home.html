@@ -4,7 +4,10 @@
     <div class="box" v-for="item in dmkArrMap">
         <strong>{{item.host}}</strong>
         <li v-for="dmk in item.dmkArr">
-            <strong>{{dmk.user}}</strong> <small>{{dmk.content}}</small>
+            <strong>{{dmk.user}}</strong>
+            <p class="subtitle">
+                {{dmk.content}}
+            </p>
         </li>
     </div>
 </div>
