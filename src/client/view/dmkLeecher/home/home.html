@@ -1,3 +1,10 @@
 <div class="container">
     dmk leecher
+    <button class="button" @click="onTest">test dmk</button>
+    <div class="box" v-for="item in dmkArrMap">
+        <strong>{{item.host}}</strong>
+        <li v-for="dmk in item.dmkArr">
+            <strong>{{dmk.user}}</strong> <small>{{dmk.content}}</small>
+        </li>
+    </div>
 </div>

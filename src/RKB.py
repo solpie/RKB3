@@ -144,9 +144,10 @@ app.register_blueprint(onlineView, url_prefix='/online')
 namespace_dmk = '/dmk'
 @app.route('/dmk', methods=['POST'])
 def on_dmk():
-    print('dmk post', request.json)
+    # print('dmk post', request.json)
     emit('dmk', request.json,
             broadcast=True, namespace=namespace_dmk)
+    return 'ok'
 
 @socketio.on('connect', namespace=namespace_dmk)
 def client_connect_dmk():

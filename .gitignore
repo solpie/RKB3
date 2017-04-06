@@ -18,7 +18,6 @@ coverage
 *.pyc
 *win32*
 *.spec
-
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
@@ -35,5 +34,3 @@ jspm_packages
 /build
 # Optional REPL history
 .node_repl_history
-src/client/libs/createjs/createjs.min.js
-src/static/img/index.gif
