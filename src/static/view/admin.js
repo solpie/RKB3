@@ -578,7 +578,7 @@
 	            _this.gameDataArr = [];
 	            for (var i = 0; i < gameDataArr.length; i++) {
 	                var gameData = gameDataArr[gameDataArr.length - 1 - i];
-	                if (Number(gameData.id) > 131) {
+	                if (Number(gameData.id) > 200) {
 	                    gameData.text = "[" + gameData.id + "]:" + gameData.title;
 	                    gameData.value = gameData.id;
 	                    _this.gameDataArr.push(gameData);

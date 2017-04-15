@@ -36,6 +36,7 @@ class StageOnlineView extends VueBase {
     liveTime = VueBase.PROP
     srvTime = 0;//服务器时间(毫秒)
     isTimerRunning = false;
+    timeDiff = VueBase.PROP
     // delayTimeMS = 0;
 
     panelTime = VueBase.PROP
@@ -169,7 +170,7 @@ class StageOnlineView extends VueBase {
         if (!scoreView) {
             scoreView = new ScoreView(canvasStage, this.$route)
             if (this.isOp) {
-                this.isBold ='normal'
+                this.isBold = 'normal'
                 scoreView.on('init', (data) => {
                     this.setSrvTime(data.t)
                     this.liveTime = DateFormat(new Date(this.srvTime), "hh:mm:ss");
@@ -188,6 +189,12 @@ class StageOnlineView extends VueBase {
                 })
                 scoreView.on('commitGame', (data) => {
                     this._setLiveData()
+                })
+                scoreView.on('timeDiff', (data) => {
+                    console.log('timeDiff', data)
+                    if (data && data.td) {
+                        this.timeDiff = data.td
+                    }
                 })
                 scoreView.on('startGame', (data) => {
                     this._setPlayer(data.player.left.name, data.player.right.name)
@@ -301,7 +308,7 @@ class StageOnlineView extends VueBase {
         onClkNotice(visible, isLeft) {
             if (this.noticeContent)
                 this.opReq(`${CommandId.cs_showNotice}`,
-                    { _: null, title: this.noticeTitle, content: this.noticeContent, isLeft: isLeft, visible: visible,isBold:this.isBold })
+                    { _: null, title: this.noticeTitle, content: this.noticeContent, isLeft: isLeft, visible: visible, isBold: this.isBold })
         },
         onClkToggleTheme(isDark) {
             this.opReq(`${CommandId.cs_toggleTheme}`, { _: null, isDark: isDark })
