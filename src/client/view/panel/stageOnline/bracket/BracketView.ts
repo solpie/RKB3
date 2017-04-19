@@ -101,10 +101,10 @@ export class BracketView extends BasePanelView {
                 this.preRound.visible = true
                 this.preRound.showRight(data.isRight)
             })
-            .on(`${CommandId.sc_togglePreRoundTheme}`, () => {
+            .on(`${CommandId.sc_togglePreRoundTheme}`, (data) => {
                 this.bracket.visible = false
                 this.preRound.visible = true
-                this.preRound.toggleTheme()
+                this.preRound.setTheme(data.isDark)
             })
     }
 

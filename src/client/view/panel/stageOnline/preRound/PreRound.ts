@@ -194,4 +194,14 @@ export class PreRound extends PIXI.Container {
             f.setDark(this.isDark)
         }
     }
+    setTheme(isDark) {
+        this.isDark = isDark
+        this.setDark(this.isDark)
+        for (let p of this.playerArr) {
+            p.setDark(this.isDark)
+        }
+        for (let f of this.ftArr) {
+            f.setDark(this.isDark)
+        }
+    }
 }

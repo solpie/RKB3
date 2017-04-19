@@ -316,8 +316,8 @@ class StageOnlineView extends VueBase {
         onSetPreRoundPosition(isRight) {
             this.opReq(`${CommandId.cs_setPreRoundPosition}`, { _: null, isRight: isRight })
         },
-        onTogglePreRoundTheme(isRight) {
-            this.opReq(`${CommandId.cs_togglePreRoundTheme}`, { _: null })
+        onTogglePreRoundTheme(isDark) {
+            this.opReq(`${CommandId.cs_togglePreRoundTheme}`, { _: null, isDark: isDark })
         },
         onClkBracket() {
             this.opReq(`${CommandId.cs_showBracket}`, { _: null })
