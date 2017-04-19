@@ -14,7 +14,6 @@ import { blink2 } from "../../../utils/Fx";
 declare let $;
 declare let io;
 export class BracketView extends BasePanelView {
-    // comingTitle: PIXI.Sprite;
     bracket: Bracket2017
     preRound: PreRound
     constructor(stage, gameId) {
@@ -39,15 +38,11 @@ export class BracketView extends BasePanelView {
             }
             else if (e.key == 'ArrowUp') {
                 this.preRound.toggleTheme()
-
             }
         }
-        // window.onmouseup = (e) => {
-        //     this.bracket.visible = !this.bracket.visible
-        //     this.preRound.visible = !this.preRound.visible
-        // }
         this.getPreRoundInfo(gameId)
         this.initAuto(Number(gameId));
+        this.initLocal()
         this.initBg()
     }
 
@@ -94,6 +89,23 @@ export class BracketView extends BasePanelView {
             dataType: 'json',
         });
         console.log('connected local /rkb');
+    }
+
+    initLocal() {
+        let localWs = io.connect(`/${PanelId.rkbPanel}`)
+        localWs.on('connect', (msg) => {
+            console.log('connect', window.location.host)
+        })
+            .on(`${CommandId.sc_setPreRoundPosition}`, (data) => {
+                this.bracket.visible = false
+                this.preRound.visible = true
+                this.preRound.showRight(data.isRight)
+            })
+            .on(`${CommandId.sc_togglePreRoundTheme}`, () => {
+                this.bracket.visible = false
+                this.preRound.visible = true
+                this.preRound.toggleTheme()
+            })
     }
 
     initAuto(gameId) {
@@ -205,22 +217,5 @@ export class BracketView extends BasePanelView {
             }
         }
         this.showComingIdx(comingIdx);
-
-        // for (var i = 0; i < 14; i++) {
-        //     var isClose = closeGame[i + 1];
-        //     if (!isClose) {
-        //         // if (i + 1 != comingIdx)
-        //         //     groupPosMap[i + 1].ctn.alpha = 0.3;
-        //         groupPosMap[i + 1].winHint.visible = false;
-        //     }
-        //     else {
-        //         // groupPosMap[i + 1].ctn.alpha = 1;
-        //         groupPosMap[i + 1].winHint.visible = true;
-        //         if (groupPosMap[i + 1].playerArr[0].isWin)
-        //             groupPosMap[i + 1].winHint.y = groupPosMap[i + 1].winHint["y1"];
-        //         else
-        //             groupPosMap[i + 1].winHint.y = groupPosMap[i + 1].winHint["y2"];
-        //     }
-        // }
     }
 }

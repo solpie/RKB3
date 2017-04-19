@@ -89,7 +89,12 @@ export const CommandId = {
     cs_showBracket:'',//
     sc_showBracket:'',//
     cs_hideOnlinePanel:'',//
-    sc_hideOnlinePanel:'',//
+    sc_hideOnlinePanel: '',//
+    //preround
+    cs_setPreRoundPosition:'',//
+    sc_setPreRoundPosition:'',//
+    cs_togglePreRoundTheme:'',//
+    sc_togglePreRoundTheme:'',//
     // rkb panel
     cs_resetTimer:'',
     sc_resetTimer:'',

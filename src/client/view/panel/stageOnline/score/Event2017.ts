@@ -1,3 +1,4 @@
+import { Victory2 } from './Victory2';
 import { LogoFx } from './LogoFx';
 import { getFtLogoUrl2, getFtName } from './Com2017';
 import { Champion } from './Champion';
@@ -215,5 +216,11 @@ export class Event2017 extends PIXI.Container {
     showLogoFx() {
         this.logoFx = new LogoFx()
         this.addChild(this.logoFx)
+    }
+
+    victory2: Victory2
+    showWin2(player) {
+        this.victory2 = new Victory2()
+        this.addChild(this.victory2)
     }
 }

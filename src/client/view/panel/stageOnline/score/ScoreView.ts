@@ -52,11 +52,12 @@ export class ScoreView extends BasePanelView {
                 weight: '79',
                 winAmount: "3"
             }
-            this.eventPanel.showWin(player)
-            TweenEx.delayedCall(7000, () => {
-                player.group = 'Gambia'
-                this.eventPanel.showWin(player)
-            })
+            // this.eventPanel.showWin(player)
+            // TweenEx.delayedCall(7000, () => {
+            //     player.group = 'Gambia'
+            //     this.eventPanel.showWin(player)
+            // })
+            this.eventPanel.showWin2(player)
             // this.eventPanel.showLogoFx()
 
         }

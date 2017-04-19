@@ -3743,6 +3743,10 @@
 	    sc_showBracket: '',
 	    cs_hideOnlinePanel: '',
 	    sc_hideOnlinePanel: '',
+	    cs_setPreRoundPosition: '',
+	    sc_setPreRoundPosition: '',
+	    cs_togglePreRoundTheme: '',
+	    sc_togglePreRoundTheme: '',
 	    cs_resetTimer: '',
 	    sc_resetTimer: '',
 	    cs_setTimer: '',
@@ -4292,7 +4296,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(83);
+	        this.template = __webpack_require__(84);
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.delayTime = VueBase_1.VueBase.PROP;
@@ -4392,6 +4396,12 @@
 	            },
 	            onClkToggleTheme: function (isDark) {
 	                this.opReq("" + Command_1.CommandId.cs_toggleTheme, { _: null, isDark: isDark });
+	            },
+	            onSetPreRoundPosition: function (isRight) {
+	                this.opReq("" + Command_1.CommandId.cs_setPreRoundPosition, { _: null, isRight: isRight });
+	            },
+	            onTogglePreRoundTheme: function (isRight) {
+	                this.opReq("" + Command_1.CommandId.cs_togglePreRoundTheme, { _: null });
 	            },
 	            onClkBracket: function () {
 	                this.opReq("" + Command_1.CommandId.cs_showBracket, { _: null });
@@ -4613,6 +4623,7 @@
 	};
 	var PreRound_1 = __webpack_require__(69);
 	var Bracket2017_1 = __webpack_require__(71);
+	var Command_1 = __webpack_require__(61);
 	var HupuAPI_1 = __webpack_require__(22);
 	var BasePanelView_1 = __webpack_require__(44);
 	var const_1 = __webpack_require__(43);
@@ -4645,6 +4656,7 @@
 	        };
 	        this.getPreRoundInfo(gameId);
 	        this.initAuto(Number(gameId));
+	        this.initLocal();
 	        this.initBg();
 	    }
 	    BracketView.prototype.getPreRoundInfo = function (gameId) {
@@ -4681,6 +4693,23 @@
 	            dataType: 'json',
 	        });
 	        console.log('connected local /rkb');
+	    };
+	    BracketView.prototype.initLocal = function () {
+	        var _this = this;
+	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
+	        localWs.on('connect', function (msg) {
+	            console.log('connect', window.location.host);
+	        })
+	            .on("" + Command_1.CommandId.sc_setPreRoundPosition, function (data) {
+	            _this.bracket.visible = false;
+	            _this.preRound.visible = true;
+	            _this.preRound.showRight(data.isRight);
+	        })
+	            .on("" + Command_1.CommandId.sc_togglePreRoundTheme, function () {
+	            _this.bracket.visible = false;
+	            _this.preRound.visible = true;
+	            _this.preRound.toggleTheme();
+	        });
 	    };
 	    BracketView.prototype.initAuto = function (gameId) {
 	        var _this = this;
@@ -5406,7 +5435,7 @@
 	var home_1 = __webpack_require__(16);
 	var Event2017_1 = __webpack_require__(75);
 	var TweenEx_1 = __webpack_require__(50);
-	var Score2017_1 = __webpack_require__(80);
+	var Score2017_1 = __webpack_require__(81);
 	var HupuAPI_1 = __webpack_require__(22);
 	var Command_1 = __webpack_require__(61);
 	var const_1 = __webpack_require__(43);
@@ -5423,7 +5452,6 @@
 	var ScoreView = (function (_super) {
 	    __extends(ScoreView, _super);
 	    function ScoreView(stage, $route) {
-	        var _this = this;
 	        _super.call(this, const_1.PanelId.onlinePanel);
 	        this.delayTimeMS = 0;
 	        this.isTest = false;
@@ -5436,7 +5464,7 @@
 	        this.eventPanel = new Event2017_1.Event2017(stage, darkTheme);
 	        console.log('new ScoreView');
 	        if (this.isTest) {
-	            var player_1 = {
+	            var player = {
 	                avatar: "http://w2.hoopchina.com.cn/43/6f/6a/436f6a5aa8a38e158b98830a3b5c4a4b001.jpg",
 	                group: 'Fe3O4',
 	                height: '177',
@@ -5448,11 +5476,7 @@
 	                weight: '79',
 	                winAmount: "3"
 	            };
-	            this.eventPanel.showWin(player_1);
-	            TweenEx_1.TweenEx.delayedCall(7000, function () {
-	                player_1.group = 'Gambia';
-	                _this.eventPanel.showWin(player_1);
-	            });
+	            this.eventPanel.showWin2(player);
 	        }
 	        this.initDelay();
 	        this.initLocal();
@@ -5685,10 +5709,11 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var LogoFx_1 = __webpack_require__(76);
+	var Victory2_1 = __webpack_require__(76);
+	var LogoFx_1 = __webpack_require__(77);
 	var Com2017_1 = __webpack_require__(67);
-	var Champion_1 = __webpack_require__(77);
-	var NoticeSprite_1 = __webpack_require__(78);
+	var Champion_1 = __webpack_require__(78);
+	var NoticeSprite_1 = __webpack_require__(79);
 	var BracketGroup_1 = __webpack_require__(70);
 	var JsFunc_1 = __webpack_require__(17);
 	var PixiEx_1 = __webpack_require__(46);
@@ -5851,6 +5876,10 @@
 	        this.logoFx = new LogoFx_1.LogoFx();
 	        this.addChild(this.logoFx);
 	    };
+	    Event2017.prototype.showWin2 = function (player) {
+	        this.victory2 = new Victory2_1.Victory2();
+	        this.addChild(this.victory2);
+	    };
 	    return Event2017;
 	}(PIXI.Container));
 	exports.Event2017 = Event2017;
@@ -5858,6 +5887,50 @@
 
 /***/ },
 /* 76 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var PixiEx_1 = __webpack_require__(46);
+	function polygon(g, radius, sides) {
+	    if (sides < 3)
+	        return;
+	    var a = (Math.PI * 2) / sides;
+	    g.moveTo(radius, 0);
+	    for (var i = 1; i < sides; i++) {
+	        g.lineTo(radius * Math.cos(a * i), radius * Math.sin(a * i));
+	    }
+	}
+	var Victory2 = (function (_super) {
+	    __extends(Victory2, _super);
+	    function Victory2() {
+	        _super.call(this);
+	        var g = PixiEx_1.newBitmap({ url: '/img/panel/victory2017/guide.png' });
+	        this.addChild(g);
+	        this.ctn = new PIXI.Container;
+	        this.addChild(this.ctn);
+	        this.ctn.y = 366;
+	        var ctn = this.ctn;
+	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/victory2017/bg.png' });
+	        ctn.addChild(bg);
+	        var avtFrame = new PIXI.Graphics();
+	        ctn.addChild(avtFrame);
+	        avtFrame.lineStyle(2, 0xff0000);
+	        polygon(avtFrame, 64, 6);
+	        avtFrame.x = 635;
+	        avtFrame.y = 187;
+	    }
+	    return Victory2;
+	}(PIXI.Container));
+	exports.Victory2 = Victory2;
+
+
+/***/ },
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5897,7 +5970,7 @@
 
 
 /***/ },
-/* 77 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5979,7 +6052,7 @@
 
 
 /***/ },
-/* 78 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5991,7 +6064,7 @@
 	var PixiEx_1 = __webpack_require__(46);
 	var const_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(17);
-	var ScaleSprite_1 = __webpack_require__(79);
+	var ScaleSprite_1 = __webpack_require__(80);
 	var NoticeSprite = (function (_super) {
 	    __extends(NoticeSprite, _super);
 	    function NoticeSprite() {
@@ -6102,7 +6175,7 @@
 
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -6184,14 +6257,14 @@
 
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var Com2017_1 = __webpack_require__(67);
-	var FoulText_1 = __webpack_require__(81);
+	var FoulText_1 = __webpack_require__(82);
 	var Fx_1 = __webpack_require__(56);
-	var FoulGroup_1 = __webpack_require__(82);
+	var FoulGroup_1 = __webpack_require__(83);
 	var TextTimer_1 = __webpack_require__(52);
 	var SpriteGroup_1 = __webpack_require__(55);
 	var const_1 = __webpack_require__(43);
@@ -6594,7 +6667,7 @@
 
 
 /***/ },
-/* 81 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6641,7 +6714,7 @@
 
 
 /***/ },
-/* 82 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6681,10 +6754,10 @@
 
 
 /***/ },
-/* 83 */
+/* 84 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n            <br>timeDiff:{{timeDiff}}\r\n        </h2>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n        <button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>\r\n        <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n        <label class=\"label\">比分面板:</label><br>\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n        <label class=\"label\">  冠军面板:</label><br>\r\n\r\n        <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n        <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n        <br>\r\n        <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n        <label class=\"label\">   面板颜色：</label> <br>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n        <!--公告-->\r\n        <div style=\"left: 600px;top:0px;position: absolute;\">\r\n            <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n            <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkNoticePresets(1)\">报名预置</button>\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n            <br>timeDiff:{{timeDiff}}\r\n        </h2>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n        <button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>\r\n        <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n        <label class=\"label\">比分面板:</label><br>\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n        <label class=\"label\">  冠军面板:</label><br>\r\n\r\n        <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n        <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n        <br>\r\n        <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n        <label class=\"label\">   车轮战面板设置：</label> <br>\r\n        <button class=\"button\" @click=\"onTogglePreRoundTheme()\">切换车轮战面板颜色</button>\r\n        <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n        <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n        <label class=\"label\">   面板颜色：</label> <br>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n        <!--公告-->\r\n        <div style=\"left: 600px;top:0px;position: absolute;\">\r\n            <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n            <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkNoticePresets(1)\">报名预置</button>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ }
 /******/ ]);
