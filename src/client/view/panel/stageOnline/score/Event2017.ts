@@ -1,3 +1,4 @@
+import { ScoreFx } from './ScoreFx';
 import { Victory2 } from './Victory2';
 import { LogoFx } from './LogoFx';
 import { getFtLogoUrl2, getFtName } from './Com2017';
@@ -222,5 +223,39 @@ export class Event2017 extends PIXI.Container {
     showWin2(player) {
         this.victory2 = new Victory2()
         this.addChild(this.victory2)
+    }
+
+    // fxX: number
+    // fxY: number
+    fxPoint: PIXI.Graphics
+    scoreFx: ScoreFx
+    setFxPoint(mx, my) {
+        // this.fxX = mx
+        // this.fxY = my
+        if (!this.fxPoint) {
+            this.fxPoint = new PIXI.Graphics()
+            this.fxPoint.beginFill(0xff0000)
+                .drawRect(0, 0, 5, 5)
+            this.addChild(this.fxPoint)
+        }
+
+        this.fxPoint.x = mx
+        this.fxPoint.y = my
+        this.fxPoint.visible = true
+        TweenEx.delayedCall(500, () => {
+            this.fxPoint.visible = false
+        })
+    }
+
+    showScoreFx() {
+        if (!this.scoreFx) {
+            this.scoreFx = new ScoreFx()
+            this.addChild(this.scoreFx)
+            this.scoreFx.scale.x = 
+            this.scoreFx.scale.y = .5 
+        }
+        this.scoreFx.x = this.fxPoint.x - 500*this.scoreFx.scale.x
+        this.scoreFx.y = this.fxPoint.y - 500*this.scoreFx.scale.x
+        this.scoreFx.playOne()
     }
 }

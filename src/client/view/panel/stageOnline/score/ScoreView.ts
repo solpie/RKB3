@@ -1,3 +1,4 @@
+import { encode } from 'punycode';
 import { getScorePanelUrl } from '../../../admin/home/home';
 import { Event2017 } from './Event2017';
 import { PlayerInfo } from '../../../../model/PlayerInfo';
@@ -75,6 +76,22 @@ export class ScoreView extends BasePanelView {
             this.initRemote()
         })
     }
+    initOP(view) {
+        let isCtrl;
+        window.onmouseup = (e) => {
+            if (isCtrl) {
+                view.onSetFxPoint(e.clientX,e.clientY)
+            }
+        }
+        window.onkeydown = (e) => {
+            if (e.key == 'p') {
+                isCtrl = true
+            }
+        }
+        window.onkeyup = () => {
+            isCtrl = false
+        }
+    }
     initRoom() {
         let roomIO = io.connect("tcp.lb.liangle.com:3081")
             .on('connect', (msg) => {
@@ -140,10 +157,17 @@ export class ScoreView extends BasePanelView {
                     : this.eventPanel.champion.hide()
             })
             .on(`${CommandId.sc_showNotice}`, (data) => {
-                this.eventPanel.showNotice(data.title, data.content, data.isLeft,data.isBold)
+                this.eventPanel.showNotice(data.title, data.content, data.isLeft, data.isBold)
                 data.visible ?
                     this.eventPanel.noticeSprite.show()
                     : this.eventPanel.noticeSprite.hide()
+            })
+            //score fx
+            .on(`${CommandId.sc_setFxPoint}`, (data) => {
+                this.eventPanel.setFxPoint(data.mx,data.my)
+            })
+            .on(`${CommandId.sc_playScoreFx}`, (data) => {
+                this.eventPanel.showScoreFx()
             })
     }
 

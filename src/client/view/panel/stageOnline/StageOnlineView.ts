@@ -171,6 +171,7 @@ class StageOnlineView extends VueBase {
             scoreView = new ScoreView(canvasStage, this.$route)
             if (this.isOp) {
                 this.isBold = 'normal'
+                scoreView.initOP(this)
                 scoreView.on('init', (data) => {
                     this.setSrvTime(data.t)
                     this.liveTime = DateFormat(new Date(this.srvTime), "hh:mm:ss");
@@ -319,6 +320,15 @@ class StageOnlineView extends VueBase {
         onTogglePreRoundTheme(isDark) {
             this.opReq(`${CommandId.cs_togglePreRoundTheme}`, { _: null, isDark: isDark })
         },
+
+        onSetFxPoint(mx, my) {
+            console.log(mx, my)
+            this.opReq(`${CommandId.cs_setFxPoint}`, { _: null, mx: mx, my: my })
+        },
+        onPlayScoreFx() {
+            this.opReq(`${CommandId.cs_playScoreFx}`, { _: null})
+        },
+
         onClkBracket() {
             this.opReq(`${CommandId.cs_showBracket}`, { _: null })
         }
