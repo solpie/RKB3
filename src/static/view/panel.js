@@ -3747,6 +3747,8 @@
 	    sc_setPreRoundPosition: '',
 	    cs_togglePreRoundTheme: '',
 	    sc_togglePreRoundTheme: '',
+	    cs_setBdVisible: '',
+	    sc_setBdVisible: '',
 	    cs_setFxPoint: '',
 	    sc_setFxPoint: '',
 	    cs_playScoreFx: '',
@@ -4300,7 +4302,8 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(84);
+	        this.template = __webpack_require__(85);
+	        this.actTab = VueBase_1.VueBase.PROP;
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.delayTime = VueBase_1.VueBase.PROP;
@@ -4414,6 +4417,12 @@
 	            onPlayScoreFx: function () {
 	                this.opReq("" + Command_1.CommandId.cs_playScoreFx, { _: null });
 	            },
+	            tab: function (t) {
+	                this.actTab = t;
+	            },
+	            onSetBDVisible: function (v) {
+	                this.opReq("" + Command_1.CommandId.cs_setBdVisible, { _: null, v: v });
+	            },
 	            onClkBracket: function () {
 	                this.opReq("" + Command_1.CommandId.cs_showBracket, { _: null });
 	            }
@@ -4425,6 +4434,7 @@
 	        this.isOp = this.$route.params.op == "op";
 	        this.gameId = this.$route.params.game_id;
 	        if (this.isOp) {
+	            this.actTab = 'tab1';
 	            WebJsFunc_1.dynamicLoading.css('/css/bulma.min.css');
 	        }
 	        console.log('stageOnlineView created!');
@@ -5459,7 +5469,7 @@
 	var home_1 = __webpack_require__(16);
 	var Event2017_1 = __webpack_require__(75);
 	var TweenEx_1 = __webpack_require__(50);
-	var Score2017_1 = __webpack_require__(81);
+	var Score2017_1 = __webpack_require__(82);
 	var HupuAPI_1 = __webpack_require__(22);
 	var Command_1 = __webpack_require__(61);
 	var const_1 = __webpack_require__(43);
@@ -5603,6 +5613,11 @@
 	        })
 	            .on("" + Command_1.CommandId.sc_playScoreFx, function (data) {
 	            _this.eventPanel.showScoreFx();
+	        })
+	            .on("" + Command_1.CommandId.sc_setBdVisible, function (data) {
+	            _this.eventPanel.showBd(data.v);
+	            data.v ? _this.scorePanel.hide()
+	                : _this.scorePanel.show();
 	        });
 	    };
 	    ScoreView.prototype.initRemote = function () {
@@ -5755,12 +5770,12 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var ScoreFx_1 = __webpack_require__(85);
-	var Victory2_1 = __webpack_require__(76);
-	var LogoFx_1 = __webpack_require__(77);
+	var ScoreFx_1 = __webpack_require__(76);
+	var Victory2_1 = __webpack_require__(77);
+	var LogoFx_1 = __webpack_require__(78);
 	var Com2017_1 = __webpack_require__(67);
-	var Champion_1 = __webpack_require__(78);
-	var NoticeSprite_1 = __webpack_require__(79);
+	var Champion_1 = __webpack_require__(79);
+	var NoticeSprite_1 = __webpack_require__(80);
 	var BracketGroup_1 = __webpack_require__(70);
 	var JsFunc_1 = __webpack_require__(17);
 	var PixiEx_1 = __webpack_require__(46);
@@ -5953,6 +5968,14 @@
 	        this.scoreFx.y = this.fxPoint.y - 500 * this.scoreFx.scale.x;
 	        this.scoreFx.playOne();
 	    };
+	    Event2017.prototype.showBd = function (v) {
+	        if (!this.bdBg) {
+	            this.bdBg = PixiEx_1.newBitmap({ url: '/img/panel/bd/bd1.png' });
+	            this.bdBg.y = const_1.ViewConst.STAGE_HEIGHT - 190;
+	            this.addChild(this.bdBg);
+	        }
+	        this.bdBg.visible = v;
+	    };
 	    return Event2017;
 	}(PIXI.Container));
 	exports.Event2017 = Event2017;
@@ -5960,6 +5983,50 @@
 
 /***/ },
 /* 76 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var JsFunc_1 = __webpack_require__(17);
+	var ScoreFx = (function (_super) {
+	    __extends(ScoreFx, _super);
+	    function ScoreFx() {
+	        _super.call(this);
+	        var alienImages = [];
+	        for (var i = 1; i < 11; i++) {
+	            alienImages.push('/img/fx/score/FX_' + JsFunc_1.paddy(i, 2) + '.png');
+	        }
+	        var textureArray = [];
+	        for (var i_1 = 0; i_1 < alienImages.length; i_1++) {
+	            var texture = PIXI.Texture.fromImage(alienImages[i_1]);
+	            textureArray.push(texture);
+	        }
+	        ;
+	        var mc = new PIXI.extras['AnimatedSprite'](textureArray);
+	        mc.animationSpeed = .3;
+	        mc.loop = false;
+	        this.addChild(mc);
+	        this.mc = mc;
+	        console.log('mc', mc);
+	    }
+	    ScoreFx.prototype.show = function () {
+	        this.mc.play();
+	    };
+	    ScoreFx.prototype.playOne = function () {
+	        this.mc.gotoAndStop(0);
+	        this.mc.play();
+	    };
+	    return ScoreFx;
+	}(PIXI.Container));
+	exports.ScoreFx = ScoreFx;
+
+
+/***/ },
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6003,7 +6070,7 @@
 
 
 /***/ },
-/* 77 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6043,7 +6110,7 @@
 
 
 /***/ },
-/* 78 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6125,7 +6192,7 @@
 
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6137,7 +6204,7 @@
 	var PixiEx_1 = __webpack_require__(46);
 	var const_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(17);
-	var ScaleSprite_1 = __webpack_require__(80);
+	var ScaleSprite_1 = __webpack_require__(81);
 	var NoticeSprite = (function (_super) {
 	    __extends(NoticeSprite, _super);
 	    function NoticeSprite() {
@@ -6248,7 +6315,7 @@
 
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -6330,14 +6397,14 @@
 
 
 /***/ },
-/* 81 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var Com2017_1 = __webpack_require__(67);
-	var FoulText_1 = __webpack_require__(82);
+	var FoulText_1 = __webpack_require__(83);
 	var Fx_1 = __webpack_require__(56);
-	var FoulGroup_1 = __webpack_require__(83);
+	var FoulGroup_1 = __webpack_require__(84);
 	var TextTimer_1 = __webpack_require__(52);
 	var SpriteGroup_1 = __webpack_require__(55);
 	var const_1 = __webpack_require__(43);
@@ -6740,7 +6807,7 @@
 
 
 /***/ },
-/* 82 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6787,7 +6854,7 @@
 
 
 /***/ },
-/* 83 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6827,54 +6894,10 @@
 
 
 /***/ },
-/* 84 */
+/* 85 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <!--game id:{{gameId}}-->\r\n        <!--<a class=\"button\" @click=\"onClkRank\">个人战团排行</a>-->\r\n        <!--<a class=\"button\" @click=\"onClkBracket\">八强对阵</a>\r\n        <a class=\"button\" @click=\"onClkHide\">隐藏</a>-->\r\n\r\n\r\n        <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n            <br>timeDiff:{{timeDiff}}\r\n        </h2>\r\n        <label class=\"label\">设置延时时间(秒)</label>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n            <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n        </p>\r\n\r\n        <label class=\"label\">现场时间:{{liveTime}}</label>\r\n        <label class=\"label\">面板时间:{{panelTime}}</label>\r\n        <button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>\r\n        <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n        <label class=\"label\">比分面板:</label><br>\r\n        <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n        <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n        <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n        <p class=\"control\">\r\n            <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n        </p>\r\n        <label class=\"label\">  冠军面板:</label><br>\r\n\r\n        <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n        <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n        <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n        <br>\r\n        <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n        <label class=\"label\">   车轮战面板设置：</label> <br>\r\n        <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n        <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n        <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n        <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n        <label class=\"label\">   面板颜色：</label> <br>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n        <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n        <label class=\"label\">   fx test：</label> <br>\r\n        <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        <!--公告-->\r\n        <div style=\"left: 600px;top:0px;position: absolute;\">\r\n            <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n            <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkNoticePresets(1)\">报名预置</button>\r\n        </div>\r\n    </div>\r\n</div>";
-
-/***/ },
-/* 85 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var JsFunc_1 = __webpack_require__(17);
-	var ScoreFx = (function (_super) {
-	    __extends(ScoreFx, _super);
-	    function ScoreFx() {
-	        _super.call(this);
-	        var alienImages = [];
-	        for (var i = 1; i < 11; i++) {
-	            alienImages.push('/img/fx/score/FX_' + JsFunc_1.paddy(i, 2) + '.png');
-	        }
-	        var textureArray = [];
-	        for (var i_1 = 0; i_1 < alienImages.length; i_1++) {
-	            var texture = PIXI.Texture.fromImage(alienImages[i_1]);
-	            textureArray.push(texture);
-	        }
-	        ;
-	        var mc = new PIXI.extras['AnimatedSprite'](textureArray);
-	        mc.animationSpeed = .3;
-	        mc.loop = false;
-	        this.addChild(mc);
-	        this.mc = mc;
-	        console.log('mc', mc);
-	    }
-	    ScoreFx.prototype.show = function () {
-	        this.mc.play();
-	    };
-	    ScoreFx.prototype.playOne = function () {
-	        this.mc.gotoAndStop(0);
-	        this.mc.play();
-	    };
-	    return ScoreFx;
-	}(PIXI.Container));
-	exports.ScoreFx = ScoreFx;
-
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n            <button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <button class=\"button\" @click=\"onClkNoticePresets(1)\">报名预置</button>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ }
 /******/ ]);

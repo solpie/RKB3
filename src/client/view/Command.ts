@@ -95,6 +95,8 @@ export const CommandId = {
     sc_setPreRoundPosition: '',//
     cs_togglePreRoundTheme: '',//
     sc_togglePreRoundTheme: '',//
+    cs_setBdVisible: '',//
+    sc_setBdVisible: '',//
     //fx
     cs_setFxPoint: '',//
     sc_setFxPoint: '',//

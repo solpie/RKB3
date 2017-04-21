@@ -29,6 +29,7 @@ let canvasStage
 class StageOnlineView extends VueBase {
     template = require('./stage-online.html')
     basePanelArr: BasePanelView[]
+    actTab = VueBase.PROP
     gameId = VueBase.String
     isOp = VueBase.PROP
     delayTime = VueBase.PROP
@@ -77,6 +78,7 @@ class StageOnlineView extends VueBase {
         this.isOp = this.$route.params.op == "op"
         this.gameId = this.$route.params.game_id
         if (this.isOp) {
+            this.actTab = 'tab1'
             dynamicLoading.css('/css/bulma.min.css')
         }
         console.log('stageOnlineView created!')
@@ -320,7 +322,6 @@ class StageOnlineView extends VueBase {
         onTogglePreRoundTheme(isDark) {
             this.opReq(`${CommandId.cs_togglePreRoundTheme}`, { _: null, isDark: isDark })
         },
-
         onSetFxPoint(mx, my) {
             console.log(mx, my)
             this.opReq(`${CommandId.cs_setFxPoint}`, { _: null, mx: mx, my: my })
@@ -328,7 +329,12 @@ class StageOnlineView extends VueBase {
         onPlayScoreFx() {
             this.opReq(`${CommandId.cs_playScoreFx}`, { _: null})
         },
-
+        tab(t) {
+            this.actTab = t
+        },
+        onSetBDVisible(v) {
+            this.opReq(`${CommandId.cs_setBdVisible}`, { _: null,v:v})
+        },
         onClkBracket() {
             this.opReq(`${CommandId.cs_showBracket}`, { _: null })
         }

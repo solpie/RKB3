@@ -80,7 +80,7 @@ export class ScoreView extends BasePanelView {
         let isCtrl;
         window.onmouseup = (e) => {
             if (isCtrl) {
-                view.onSetFxPoint(e.clientX,e.clientY)
+                view.onSetFxPoint(e.clientX, e.clientY)
             }
         }
         window.onkeydown = (e) => {
@@ -164,10 +164,15 @@ export class ScoreView extends BasePanelView {
             })
             //score fx
             .on(`${CommandId.sc_setFxPoint}`, (data) => {
-                this.eventPanel.setFxPoint(data.mx,data.my)
+                this.eventPanel.setFxPoint(data.mx, data.my)
             })
             .on(`${CommandId.sc_playScoreFx}`, (data) => {
                 this.eventPanel.showScoreFx()
+            })
+            .on(`${CommandId.sc_setBdVisible}`, (data) => {
+                this.eventPanel.showBd(data.v)
+                data.v ? this.scorePanel.hide()
+                    : this.scorePanel.show()
             })
     }
 

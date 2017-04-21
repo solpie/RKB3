@@ -1,72 +1,87 @@
 <div>
     <div v-if="isOp" id="opPanel" style="position: absolute;left: 100px;top:60px;width: 1000px">
-        <!--game id:{{gameId}}-->
-        <!--<a class="button" @click="onClkRank">个人战团排行</a>-->
-        <!--<a class="button" @click="onClkBracket">八强对阵</a>
-        <a class="button" @click="onClkHide">隐藏</a>-->
-
-
-        <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒
-            <br>timeDiff:{{timeDiff}}
-        </h2>
-        <label class="label">设置延时时间(秒)</label>
-        <p class="control">
-            <input class="input" type="text" onkeypress='var c = event.charCode;
+        <div class="tabs  is-boxed">
+            <ul>
+                <li v-bind:class="{ 'is-active': actTab== 'tab1'}" @click='tab("tab1")'>
+                    <a>
+                        <span>Main</span>
+                    </a>
+                </li>
+                <li v-bind:class="{ 'is-active': actTab== 'tab2'}" @click='tab("tab2")'>
+                    <a>
+                        <span>特效</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div v-if='actTab=="tab1"'>
+            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒
+                <br>timeDiff:{{timeDiff}}
+            </h2>
+            <label class="label">设置延时时间(秒)</label>
+            <p class="control">
+                <input class="input" type="text" onkeypress='var c = event.charCode;
                    return c >= 48 && c <= 57 ||c==46' placeholder="" style="width: 50px;" v-model="delayTime">
-            <button class="button" @click="onClkSetDelay">确定</button>
-        </p>
+                <button class="button" @click="onClkSetDelay">确定</button>
+            </p>
 
-        <label class="label">现场时间:{{liveTime}}</label>
-        <label class="label">面板时间:{{panelTime}}</label>
-        <button class="button" @click="onClkRenderData">刷新现场数据到面板</button><br>
-        <label class="label" style="font-size: 50px;">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>
-        <label class="label">比分面板:</label><br>
-        <button class="button" @click="onClkStartTimer">开始</button>
-        <button class="button" @click="onClkPauseTimer">暂停</button>
-        <button class="button" @click="onClkResetTimer">重置</button>
-        <button class="button" @click="onClkShowScore(true)">显示</button>
-        <button class="button" @click="onClkShowScore(false)">隐藏</button>
-        <p class="control">
-            <input class="input" type="text" onkeypress='var c = event.charCode;
+            <label class="label">现场时间:{{liveTime}}</label>
+            <label class="label">面板时间:{{panelTime}}</label>
+            <button class="button" @click="onClkRenderData">刷新现场数据到面板</button><br>
+            <label class="label" style="font-size: 50px;">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>
+            <label class="label">比分面板:</label><br>
+            <button class="button" @click="onClkStartTimer">开始</button>
+            <button class="button" @click="onClkPauseTimer">暂停</button>
+            <button class="button" @click="onClkResetTimer">重置</button>
+            <button class="button" @click="onClkShowScore(true)">显示</button>
+            <button class="button" @click="onClkShowScore(false)">隐藏</button>
+            <p class="control">
+                <input class="input" type="text" onkeypress='var c = event.charCode;
                    return c >= 48 && c <= 57 ||c==46' placeholder="" style="width: 50px;" v-model="panelTime2Set">
-            <button class="button" @click="onClkSetPanelTime(panelTime2Set)">确定</button>
-        </p>
-        <label class="label">  冠军面板:</label><br>
+                <button class="button" @click="onClkSetPanelTime(panelTime2Set)">确定</button>
+            </p>
+            <label class="label">  冠军面板:</label><br>
 
-        <input class="input" type="text" placeholder="2017上海站第二轮冠军" style="width: 250px;" v-model="championTitle">
-        <button class="button" @click="onClkLeftChampion">{{lLiveName}} 冠军</button>
-        <button class="button" @click="onClkRightChampion">{{rLiveName}} 冠军</button>
-        <button class="button" @click="onClkToggleChampionPanel(true)">显示</button>
-        <button class="button" @click="onClkToggleChampionPanel(false)">隐藏</button>
-        <br>
-        <!--<button class="button" @click="onClkRegularPlayer">剩余球员</button>-->
-        <label class="label">   车轮战面板设置：</label> <br>
-        <button class="button" @click="onTogglePreRoundTheme(true)">蓝色</button>
-        <button class="button" @click="onTogglePreRoundTheme(false)">绿色</button>
-        <button class="button" @click="onSetPreRoundPosition(false)">显示在左边</button>
-        <button class="button" @click="onSetPreRoundPosition(true)">显示在右边</button>
-        <label class="label">   面板颜色：</label> <br>
-        <button class="button" @click="onClkToggleTheme(false)">切换绿色面板</button>
-        <button class="button" @click="onClkToggleTheme(true)">切换蓝色面板</button>
-        <label class="label">   fx test：</label> <br>
-        <button class="button" @click="onPlayScoreFx()">score fx</button>
-        <!--公告-->
-        <div style="left: 600px;top:0px;position: absolute;">
-            <label class="radio">
+            <input class="input" type="text" placeholder="2017上海站第二轮冠军" style="width: 250px;" v-model="championTitle">
+            <button class="button" @click="onClkLeftChampion">{{lLiveName}} 冠军</button>
+            <button class="button" @click="onClkRightChampion">{{rLiveName}} 冠军</button>
+            <button class="button" @click="onClkToggleChampionPanel(true)">显示</button>
+            <button class="button" @click="onClkToggleChampionPanel(false)">隐藏</button>
+            <br>
+            <!--<button class="button" @click="onClkRegularPlayer">剩余球员</button>-->
+            <label class="label">   车轮战面板设置：</label> <br>
+            <button class="button" @click="onTogglePreRoundTheme(true)">蓝色</button>
+            <button class="button" @click="onTogglePreRoundTheme(false)">绿色</button>
+            <button class="button" @click="onSetPreRoundPosition(false)">显示在左边</button>
+            <button class="button" @click="onSetPreRoundPosition(true)">显示在右边</button>
+            <label class="label">   面板颜色：</label> <br>
+            <button class="button" @click="onClkToggleTheme(false)">切换绿色面板</button>
+            <button class="button" @click="onClkToggleTheme(true)">切换蓝色面板</button>
+            <label class="label">   媒体支持面板：</label> <br>
+            <button class="button" @click="onSetBDVisible(true)">显示</button>
+            <button class="button" @click="onSetBDVisible(false)">隐藏</button>
+            <!--公告-->
+            <div style="left: 600px;top:0px;position: absolute;">
+                <label class="radio">
                 <input type="radio" name="bold" value='normal' v-model='isBold' checked >
                 正常
             </label>
-            <label class="radio">
+                <label class="radio">
                 <input type="radio" name="bold" value='bold' v-model='isBold'>
                 加粗
             </label>
-            <br>
-            <input class="input" type="text" placeholder="公告" style="width: 280px;" v-model="noticeTitle">
-            <textarea style="width:580px;height:250px" v-model="noticeContent"></textarea>
-            <button class="button" @click="onClkNotice(true,true)">左边显示</button>
-            <button class="button" @click="onClkNotice(true,false)">右边显示</button>
-            <button class="button" @click="onClkNotice(false,false)">隐藏</button>
-            <button class="button" @click="onClkNoticePresets(1)">报名预置</button>
+                <br>
+                <input class="input" type="text" placeholder="公告" style="width: 280px;" v-model="noticeTitle">
+                <textarea style="width:580px;height:250px" v-model="noticeContent"></textarea>
+                <button class="button" @click="onClkNotice(true,true)">左边显示</button>
+                <button class="button" @click="onClkNotice(true,false)">右边显示</button>
+                <button class="button" @click="onClkNotice(false,false)">隐藏</button>
+                <button class="button" @click="onClkNoticePresets(1)">报名预置</button>
+            </div>
+        </div>
+        <div v-if='actTab=="tab2"'>
+            <label class="label">   fx test：</label> <br>
+            <button class="button" @click="onPlayScoreFx()">score fx</button>
         </div>
     </div>
 </div>

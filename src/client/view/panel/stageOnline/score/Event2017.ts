@@ -251,11 +251,21 @@ export class Event2017 extends PIXI.Container {
         if (!this.scoreFx) {
             this.scoreFx = new ScoreFx()
             this.addChild(this.scoreFx)
-            this.scoreFx.scale.x = 
-            this.scoreFx.scale.y = .5 
+            this.scoreFx.scale.x =
+                this.scoreFx.scale.y = .5
         }
-        this.scoreFx.x = this.fxPoint.x - 500*this.scoreFx.scale.x
-        this.scoreFx.y = this.fxPoint.y - 500*this.scoreFx.scale.x
+        this.scoreFx.x = this.fxPoint.x - 500 * this.scoreFx.scale.x
+        this.scoreFx.y = this.fxPoint.y - 500 * this.scoreFx.scale.x
         this.scoreFx.playOne()
+    }
+
+    bdBg: PIXI.Sprite
+    showBd(v) {
+        if (!this.bdBg) {
+            this.bdBg = newBitmap({ url: '/img/panel/bd/bd1.png' })
+            this.bdBg.y = ViewConst.STAGE_HEIGHT - 190
+            this.addChild(this.bdBg)
+        }
+        this.bdBg.visible = v
     }
 }
