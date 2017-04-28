@@ -61,6 +61,7 @@ class HomeView extends VueBase {
             { title: "比分面板（绿色）", url: getScorePanelUrl(gameId, false) },
             { title: "线上控制台", url: getScorePanelUrl(gameId, false,false) },
             { title: "八强面板", url: `/panel/#/ol/ob/${gameId}?panel=bracket` },
+            { title: "抽奖 id：抽奖id，k：中奖结果顺序 1 2 3...，0则前端随机抽", url: `/panel/#/ol/ob/${gameId}?panel=cj&id=5&k=0` },
             { title: "DmkLeecher", url: `/dmk` },
 
             // { title: "---------------------Final--------------------", url: `/panel/#/ol/ob/0?panel=bracket` },

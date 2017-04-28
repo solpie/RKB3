@@ -1,3 +1,4 @@
+import { Lottery } from './lottery/Lottery';
 import { noticeJoin } from './score/Com2017';
 import { getScorePanelUrl } from '../../admin/home/home';
 import { DateFormat } from '../../utils/JsFunc';
@@ -15,6 +16,7 @@ declare let io
 let rankView: RankView
 let bracketView: BracketView
 let scoreView: ScoreView
+let lottery: Lottery
 let canvasStage
 // const opReq = (cmdId: string, param: any, callback: any) => {
 //     $.ajax({
@@ -96,6 +98,13 @@ class StageOnlineView extends VueBase {
         else if (panel == "score") {
             this.showScore()
         }
+        else if (panel == "cj") {
+
+            // this.showScore()
+            let id = this.$route.query['id']
+            let k = this.$route.query['k']
+            this.showLottery(k, id)
+        }
         else {
             this.showRank()
         }
@@ -122,6 +131,11 @@ class StageOnlineView extends VueBase {
                 this.showOnly("")
             })
 
+    }
+    showLottery(k, id) {
+        if (!lottery) {
+            lottery = new Lottery(canvasStage, k, id)
+        }
     }
 
     showRank() {
@@ -327,13 +341,13 @@ class StageOnlineView extends VueBase {
             this.opReq(`${CommandId.cs_setFxPoint}`, { _: null, mx: mx, my: my })
         },
         onPlayScoreFx() {
-            this.opReq(`${CommandId.cs_playScoreFx}`, { _: null})
+            this.opReq(`${CommandId.cs_playScoreFx}`, { _: null })
         },
         tab(t) {
             this.actTab = t
         },
         onSetBDVisible(v) {
-            this.opReq(`${CommandId.cs_setBdVisible}`, { _: null,v:v})
+            this.opReq(`${CommandId.cs_setBdVisible}`, { _: null, v: v })
         },
         onClkBracket() {
             this.opReq(`${CommandId.cs_showBracket}`, { _: null })

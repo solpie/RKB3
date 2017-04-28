@@ -229,6 +229,7 @@
 	            { title: "比分面板（绿色）", url: getScorePanelUrl(gameId, false) },
 	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
+	            { title: "抽奖 id：抽奖id，k：中奖结果顺序 1 2 3...，0则前端随机抽", url: "/panel/#/ol/ob/" + gameId + "?panel=cj&id=5&k=0" },
 	            { title: "DmkLeecher", url: "/dmk" },
 	        ];
 	    };
@@ -4284,6 +4285,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var Lottery_1 = __webpack_require__(86);
 	var Com2017_1 = __webpack_require__(67);
 	var JsFunc_1 = __webpack_require__(17);
 	var Command_1 = __webpack_require__(61);
@@ -4297,6 +4299,7 @@
 	var rankView;
 	var bracketView;
 	var scoreView;
+	var lottery;
 	var canvasStage;
 	var StageOnlineView = (function (_super) {
 	    __extends(StageOnlineView, _super);
@@ -4448,6 +4451,11 @@
 	        else if (panel == "score") {
 	            this.showScore();
 	        }
+	        else if (panel == "cj") {
+	            var id = this.$route.query['id'];
+	            var k = this.$route.query['k'];
+	            this.showLottery(k, id);
+	        }
 	        else {
 	            this.showRank();
 	        }
@@ -4466,6 +4474,11 @@
 	            .on("" + Command_1.CommandId.sc_hideOnlinePanel, function (data) {
 	            _this.showOnly("");
 	        });
+	    };
+	    StageOnlineView.prototype.showLottery = function (k, id) {
+	        if (!lottery) {
+	            lottery = new Lottery_1.Lottery(canvasStage, k, id);
+	        }
 	    };
 	    StageOnlineView.prototype.showRank = function () {
 	        if (!rankView) {
@@ -6898,6 +6911,316 @@
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n            <button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <button class=\"button\" @click=\"onClkNoticePresets(1)\">报名预置</button>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
+
+/***/ },
+/* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var JsFunc_1 = __webpack_require__(17);
+	var WebJsFunc_1 = __webpack_require__(23);
+	var RollFx_1 = __webpack_require__(90);
+	var BracketGroup_1 = __webpack_require__(70);
+	var const_1 = __webpack_require__(43);
+	var PixiEx_1 = __webpack_require__(46);
+	var RandomFx_1 = __webpack_require__(87);
+	var Lottery = (function (_super) {
+	    __extends(Lottery, _super);
+	    function Lottery(parent, k, id) {
+	        var _this = this;
+	        _super.call(this);
+	        this.k = k;
+	        parent.addChild(this);
+	        var modal = new PIXI.Graphics();
+	        modal.beginFill(0, .8)
+	            .drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT);
+	        this.addChild(modal);
+	        this.fxCtn = new PIXI.Container();
+	        this.addChild(this.fxCtn);
+	        var modal2 = new PIXI.Graphics();
+	        modal2.beginFill(0, .6)
+	            .drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT);
+	        this.addChild(modal2);
+	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/lottery/bg.png' });
+	        this.addChild(bg);
+	        this.titleText = new PIXI.Text('');
+	        this.titleText.style.fontFamily = const_1.FontName.MicrosoftYahei;
+	        this.titleText.style.fill = 0xffffff;
+	        this.titleText.style.fontSize = '70px';
+	        this.titleText.style.fontWeight = 'bold';
+	        this.addChild(this.titleText);
+	        this.stateText = new PIXI.Text('START');
+	        this.stateText.style.fontFamily = const_1.FontName.MicrosoftYahei;
+	        this.stateText.style.fill = 0xffffff;
+	        this.stateText.style.fontSize = '40px';
+	        this.stateText.style.fontWeight = 'bold';
+	        this.stateText.visible = false;
+	        this.stateText.x = 905;
+	        this.stateText.y = 890;
+	        this.addChild(this.stateText);
+	        this.pinLCtn = new PIXI.Container;
+	        this.pinLCtn.x = 742;
+	        this.pinLCtn.y = 761;
+	        this.addChild(this.pinLCtn);
+	        this.pinRCtn = new PIXI.Container;
+	        this.pinRCtn.x = 1200;
+	        this.pinRCtn.y = 765;
+	        this.addChild(this.pinRCtn);
+	        this.pointL = PixiEx_1.newBitmap({ url: '/img/panel/lottery/pointL.png' });
+	        this.pointL.x = -21;
+	        this.pointL.y = -42;
+	        this.pinLCtn.addChild(this.pointL);
+	        this.pinL = PixiEx_1.newBitmap({ url: '/img/panel/lottery/pinL.png' });
+	        this.pinL.x = this.pinLCtn.x + this.pointL.x;
+	        this.pinL.y = this.pinLCtn.y + this.pointL.y;
+	        this.addChild(this.pinL);
+	        this.pointR = PixiEx_1.newBitmap({ url: '/img/panel/lottery/pointR.png' });
+	        this.pointR.x = -81;
+	        this.pointR.y = -42;
+	        this.pinRCtn.addChild(this.pointR);
+	        this.pinR = PixiEx_1.newBitmap({ url: '/img/panel/lottery/pinR.png' });
+	        this.pinR.x = this.pinRCtn.x + this.pointR.x;
+	        this.pinR.y = this.pinRCtn.y + this.pointR.y;
+	        this.addChild(this.pinR);
+	        this.fx = new RollFx_1.RollFx();
+	        this.fx.x = 785;
+	        this.fx.y = 560;
+	        this.addChild(this.fx);
+	        this.rewardCtn = new PIXI.Container;
+	        this.addChild(this.rewardCtn);
+	        window.onkeyup = function (e) {
+	            console.log(e);
+	            if (e.key == 'Enter') {
+	                console.log(e, _this);
+	                if (_this.nameArr) {
+	                }
+	            }
+	            else if (e.key == 'Down') {
+	            }
+	        };
+	        window.onmouseup = function (e) {
+	            var mx = e.clientX;
+	            var my = e.clientY;
+	            var t = _this.stateText;
+	            if (mx > t.x && mx < t.x + t.width && my > t.y && my < t.y + t.height) {
+	                _this.isRunning ? _this.stop()
+	                    : _this.start();
+	            }
+	        };
+	        this.getResult(id);
+	    }
+	    Lottery.prototype.test = function () {
+	        this.setTitle('哈登第二代ad战靴', null);
+	    };
+	    Lottery.prototype.getResult = function (id) {
+	        var _this = this;
+	        $.get(WebJsFunc_1.proxy('http://api.liangle.com/api/lot/list/' + id), function (res) {
+	            console.log(res.data);
+	            if (res.data.list && _this.k) {
+	                var resultName = '';
+	                if (Number(_this.k) == 0) {
+	                    var arr = res.data.list;
+	                    resultName = arr[Math.floor(Math.random() * arr.length)];
+	                }
+	                if (res.data.winner.length) {
+	                    resultName = res.data.winner[Number(_this.k) - 1];
+	                    resultName = JsFunc_1.cnWrap(resultName, 20, 20).replace('\n', '');
+	                }
+	                _this.setResult(res.data.list, resultName);
+	                _this.stateText.visible = true;
+	                _this.setTitle(res.data.title, res.data.img);
+	            }
+	        });
+	    };
+	    Lottery.prototype.setTitle = function (title, rewardImgArr) {
+	        var _this = this;
+	        this.titleText.text = title;
+	        BracketGroup_1.fitWidth(this.titleText, 765, 115);
+	        this.titleText.x = 960 - this.titleText.width * .5;
+	        this.titleText.y = 165 - this.titleText.height * .5;
+	        this.rewardImg = new PIXI.Sprite();
+	        this.rewardCtn.addChild(this.rewardImg);
+	        PixiEx_1.loadRes(rewardImgArr, function (img) {
+	            var avt = _this.rewardImg;
+	            avt.texture = PixiEx_1.imgToTex(img);
+	            avt.x = 960 - img.width * .5;
+	            avt.y = 460 - img.height * .5;
+	        }, true);
+	    };
+	    Lottery.prototype.rotFx = function () {
+	        var _this = this;
+	        this.rotTimer = setInterval(function () {
+	            _this.pinLCtn.rotation = (Math.random() * 30 * PIXI.DEG_TO_RAD);
+	            _this.pinRCtn.rotation = ((-25 + Math.random() * 45) * PIXI.DEG_TO_RAD);
+	        }, 50);
+	    };
+	    Lottery.prototype.setResult = function (nameArr1, name) {
+	        this.isRunning = false;
+	        var resultIdx = 1;
+	        if (!this.fxArr) {
+	            this.fxArr = [];
+	            this.nameArr = nameArr1;
+	            for (var i = 0; i < 20; i++) {
+	                var rf = new RandomFx_1.RandomFx(this.nameArr);
+	                rf.x = i * 20 + Math.random() * 100;
+	                rf.y = i * 40 + Math.random() * 100;
+	                this.fxCtn.addChild(rf);
+	                if (i == resultIdx) {
+	                    rf.result = name;
+	                    rf.resultCtn = this;
+	                    rf.nameText.style.fontSize = '50px';
+	                }
+	                this.fxArr.push(rf);
+	            }
+	        }
+	        else {
+	            this.fxArr[resultIdx].result = name;
+	        }
+	    };
+	    Lottery.prototype.reset = function (name) {
+	        this.isRunning = false;
+	    };
+	    Lottery.prototype.start = function () {
+	        for (var i = 0; i < this.fxArr.length; i++) {
+	            var f = this.fxArr[i];
+	            f.start();
+	        }
+	        this.rotFx();
+	        this.fx.playOne();
+	        this.isRunning = true;
+	        this.stateText.text = ' STOP ';
+	    };
+	    Lottery.prototype.stop = function () {
+	        for (var i = 0; i < this.fxArr.length; i++) {
+	            var f = this.fxArr[i];
+	            f.stop();
+	        }
+	        clearInterval(this.rotTimer);
+	        this.pinLCtn.rotation = (70 * PIXI.DEG_TO_RAD);
+	        this.pinRCtn.rotation = ((-65) * PIXI.DEG_TO_RAD);
+	        this.fx.stop();
+	        this.stateText.text = '  ';
+	    };
+	    return Lottery;
+	}(PIXI.Container));
+	exports.Lottery = Lottery;
+
+
+/***/ },
+/* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var BracketGroup_1 = __webpack_require__(70);
+	var const_1 = __webpack_require__(43);
+	var TweenEx_1 = __webpack_require__(50);
+	var RandomFx = (function (_super) {
+	    __extends(RandomFx, _super);
+	    function RandomFx(nameArr) {
+	        _super.call(this);
+	        this.result = '';
+	        this.nameArr = nameArr;
+	        this.nameText = new PIXI.Text('');
+	        this.nameText.style.fontFamily = const_1.FontName.MicrosoftYahei;
+	        this.nameText.style.fill = 0xffffff;
+	        this.addChild(this.nameText);
+	    }
+	    RandomFx.prototype.start = function () {
+	        var _this = this;
+	        var arr = this.nameArr;
+	        if (!this._x) {
+	            this._x = this.x;
+	            this._y = this.y;
+	        }
+	        this.alpha = 1;
+	        this.timer = setInterval(function () {
+	            var name = arr[Math.floor(Math.random() * arr.length)];
+	            _this.nameText.text = name;
+	            _this.x = _this._x + Math.random() * 100 + (_this.x) % 1000;
+	            _this.y = _this._y + Math.random() * 100;
+	            _this.scale.x =
+	                _this.scale.y = 1 + Math.random() * .8;
+	        }, 40);
+	    };
+	    RandomFx.prototype.stop = function () {
+	        var _this = this;
+	        clearInterval(this.timer);
+	        var cx = 970 - this.nameText.width * .5;
+	        var cy = 760 - this.nameText.height * .5;
+	        TweenEx_1.TweenEx.to(this, 100, { x: cx, y: cy }, function () {
+	            if (_this.result != "") {
+	                _this.nameText.text = _this.result;
+	                BracketGroup_1.fitWidth(_this.nameText, 377, 75);
+	                _this.scale.x = _this.scale.y = 1;
+	                _this.nameText.x = 970 - _this.nameText.width * .5;
+	                _this.nameText.y = 760 - _this.nameText.height * .5;
+	                if (_this.resultCtn)
+	                    _this.resultCtn.addChild(_this.nameText);
+	            }
+	            else {
+	                _this.alpha = 0;
+	            }
+	        });
+	    };
+	    return RandomFx;
+	}(PIXI.Container));
+	exports.RandomFx = RandomFx;
+
+
+/***/ },
+/* 88 */,
+/* 89 */,
+/* 90 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var JsFunc_1 = __webpack_require__(17);
+	var RollFx = (function (_super) {
+	    __extends(RollFx, _super);
+	    function RollFx() {
+	        _super.call(this);
+	        var alienImages = [];
+	        for (var i = 1; i < 11; i++) {
+	            alienImages.push('/img/fx/lottery/FX_L_' + JsFunc_1.paddy(i, 2) + '.png');
+	        }
+	        var textureArray = [];
+	        for (var i_1 = 0; i_1 < alienImages.length; i_1++) {
+	            var texture = PIXI.Texture.fromImage(alienImages[i_1]);
+	            textureArray.push(texture);
+	        }
+	        ;
+	        var mc = new PIXI.extras['AnimatedSprite'](textureArray);
+	        mc.animationSpeed = .6;
+	        mc.loop = true;
+	        this.addChild(mc);
+	        this.mc = mc;
+	    }
+	    RollFx.prototype.stop = function () {
+	        this.mc.gotoAndStop(12);
+	    };
+	    RollFx.prototype.playOne = function () {
+	        this.mc.gotoAndStop(0);
+	        this.mc.play();
+	    };
+	    return RollFx;
+	}(PIXI.Container));
+	exports.RollFx = RollFx;
+
 
 /***/ }
 /******/ ]);
