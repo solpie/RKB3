@@ -12,6 +12,11 @@
                         <span>特效</span>
                     </a>
                 </li>
+                <li v-bind:class="{ 'is-active': actTab== 'tab3'}" @click='tab("tab3")'>
+                    <a>
+                        <span>手动比分</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <div v-if='actTab=="tab1"'>
@@ -82,6 +87,10 @@
         <div v-if='actTab=="tab2"'>
             <label class="label">   fx test：</label> <br>
             <button class="button" @click="onPlayScoreFx()">score fx</button>
+        </div>
+        <div v-if='actTab=="tab3"'>
+            <button class="button" @click="onAddScore(true,1)">+1</button>
+            <button class="button" @click="onAddScore(true,-1)">-1</button>
         </div>
     </div>
 </div>

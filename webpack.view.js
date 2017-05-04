@@ -4,6 +4,7 @@ module.exports = {
     entry: {
         "admin": "./src/client/view/admin/index.ts",
         "dmk": "./src/client/view/dmkLeecher/index.ts",
+        "webDB": "./src/client/view/webDB/index.ts",
         "panel": "./src/client/view/panel/index.ts"
     },
     output: {

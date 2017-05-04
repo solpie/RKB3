@@ -351,6 +351,10 @@ class StageOnlineView extends VueBase {
         },
         onClkBracket() {
             this.opReq(`${CommandId.cs_showBracket}`, { _: null })
+        },
+        //manmual score
+        onAddScore(isLeft, dtScore) {
+
         }
     }
 }
