@@ -19,10 +19,19 @@
             </a>
             <!--<button class="button">复制地址</button>-->
         </vue>
-        command:
-        <br> /game/bracket/clear
-        <br>/game/clear/bracketIdx
-        <br>/git/pull
+        <div>
+            抽奖id（编号）:<input type="text" v-model="lotteryId" style="width: 60px"> 次序k:
+            <input type="text" v-model="lotteryIdx" style="width: 60px">
+            <a v-if='lotteryId&&lotteryIdx' class="panel-block" :href="'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx" target="_blank">
+               {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}
+            </a>
+        </div>
+
+        <p>
+            command:
+            <br> /game/bracket/clear
+            <br>/game/clear/bracketIdx
+            <br>/git/pull
     </nav>
     播放地址:<input type="text" v-model="playUrl" style="width: 1000px">
     <p>
