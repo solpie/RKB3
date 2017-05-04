@@ -141,8 +141,9 @@ app.register_blueprint(gameView, url_prefix='/game')
 from online import onlineView
 app.register_blueprint(onlineView, url_prefix='/online')
 # webDB view
-from webDB import webDBView
+from webDB import webDBView,webDBViewInitWS
 app.register_blueprint(webDBView, url_prefix='/db')
+webDBViewInitWS(socketio)
 # dmkLeecher
 namespace_dmk = '/dmk'
 

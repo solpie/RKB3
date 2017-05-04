@@ -3,6 +3,7 @@ require(`script!./../../libs/jquery.min.js`);
 require(`script!./../../libs/jquery.min.js`);
 require(`script!./../../libs/vue/vue.min.js`);
 require(`script!./../../libs/vue/vue-router.min.js`);
+require(`script!./../../libs/socket.io-1.4.5.min.js`);
 
 declare let VueRouter;
 declare let Vue;
