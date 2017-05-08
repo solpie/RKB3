@@ -36,12 +36,17 @@ def findDoc(idx):
     print(idx,doc)
     return jsonify(doc)
 
+@webDBView.route('/reload', methods=['POST'])
+def reloadDB():
+    wb.db.reload()
+    return 'ok'
+    
 @webDBView.route('/update/<idx>', methods=['POST'])
 def udpateDoc(idx):
     newDoc = request.json
-    doc = wb.db.find({'id': idx})
+    doc = wb.db.find({'id': int(idx)})
     if doc:
-        wb.db.update({'id', newDoc})
+        wb.db.update(newDoc)
     else:
         wb.db.insert(newDoc)
     return 'ok'

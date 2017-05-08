@@ -52,8 +52,8 @@
 	__webpack_require__(10);
 	__webpack_require__(12);
 	__webpack_require__(32);
-	var Navbar_1 = __webpack_require__(91);
-	var GameMonth_1 = __webpack_require__(89);
+	var Navbar_1 = __webpack_require__(90);
+	var GameMonth_1 = __webpack_require__(92);
 	var routes = [
 	    {
 	        path: '/', name: 'home',
@@ -546,7 +546,53 @@
 
 /***/ },
 
-/***/ 89:
+/***/ 78:
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.WebDBCmd = {
+	    cs_init: "",
+	    sc_init: "",
+	    cs_startTimer: "",
+	    sc_startTimer: "",
+	    cs_commit: "",
+	    sc_commit: "",
+	    cs_score: "",
+	    sc_score: "",
+	    cs_panelCreated: "",
+	    sc_panelCreated: "",
+	    cs_srvCreated: "",
+	    sc_srvCreated: ""
+	};
+	for (var k in exports.WebDBCmd) {
+	    exports.WebDBCmd[k] = k;
+	}
+
+
+/***/ },
+
+/***/ 90:
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	exports.Navbar = {
+	    props: {
+	        active: {},
+	    },
+	    template: __webpack_require__(91)
+	};
+
+
+/***/ },
+
+/***/ 91:
+/***/ function(module, exports) {
+
+	module.exports = "<nav class=\"nav has-shadow\">\r\n    <div class=\"container\">\r\n        <div class=\"nav-left\">\r\n            <a class=\"nav-item\" :class=\"{active: active === ''}\">\r\n                <i class=\"home icon\"></i>\r\n                <router-link :to=\"{ name: 'home'}\">Home</router-link>\r\n            </a>\r\n        </div>\r\n    </div>\r\n</nav>";
+
+/***/ },
+
+/***/ 92:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -555,7 +601,9 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var WebDBCmd_1 = __webpack_require__(93);
+	var PlayerInfo_1 = __webpack_require__(93);
+	var GameInfo_1 = __webpack_require__(94);
+	var WebDBCmd_1 = __webpack_require__(78);
 	var VueBase_1 = __webpack_require__(18);
 	var $post = function (url, param, callback) {
 	    $.ajax({
@@ -568,31 +616,137 @@
 	    });
 	};
 	var createTime = new Date().getTime();
+	var gameInfo;
+	var getDoc = function (callback) {
+	    $.get('/db/find/519', function (res) {
+	        if (res.length)
+	            callback(res[0]);
+	        else
+	            callback(null);
+	    });
+	};
+	var saveDoc = function (doc, cb) {
+	    $post('/db/update/519', doc, function () {
+	        if (cb)
+	            cb();
+	    });
+	};
 	var GameMonth = (function (_super) {
 	    __extends(GameMonth, _super);
 	    function GameMonth() {
 	        _super.call(this);
-	        this.template = __webpack_require__(90);
+	        this.template = __webpack_require__(95);
 	        this.db = VueBase_1.VueBase.PROP;
 	        this.isOld = VueBase_1.VueBase.PROP;
+	        this.gameArr = VueBase_1.VueBase.PROP;
+	        this.recMap = VueBase_1.VueBase.PROP;
+	        this.methods = {
+	            onAddScore: function (isLeft, dtScore) {
+	                gameInfo.score(isLeft, dtScore);
+	                var data = { _: null };
+	                if (isLeft)
+	                    data.leftScore = gameInfo.lScore;
+	                else
+	                    data.rightScore = gameInfo.rScore;
+	                $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_score, data, null);
+	            },
+	            onAddFoul: function (isLeft, dtFoul) {
+	                gameInfo.foul(isLeft, dtFoul);
+	                var data = { _: null };
+	                if (isLeft)
+	                    data.leftFoul = gameInfo.lFoul;
+	                else
+	                    data.rightFoul = gameInfo.rFoul;
+	                $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_score, data, null);
+	            },
+	            onStartTimer: function () {
+	                var data = { _: null };
+	                $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_startTimer, data, null);
+	            },
+	            onStartGame: function () {
+	            },
+	            onClearGame: function () {
+	                getDoc(function (doc) {
+	                    if (doc) {
+	                        doc['recArr'] = [];
+	                        saveDoc(doc);
+	                    }
+	                });
+	            },
+	            onCommitGame: function () {
+	                var data = { _: null };
+	                data.player = gameInfo.commit();
+	                getDoc(function (doc) {
+	                    if (doc) {
+	                        delete doc['recArr'];
+	                        var r = gameInfo.getRecData();
+	                        doc['recMap'][r.gameIdx].push(r);
+	                        console.log('save doc', doc);
+	                        saveDoc(doc);
+	                    }
+	                });
+	                $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_commit, data, null);
+	            },
+	        };
 	        VueBase_1.VueBase.initProps(this);
 	    }
+	    GameMonth.prototype.initGameInfo = function () {
+	        var _this = this;
+	        getDoc(function (doc) {
+	            if (doc) {
+	                var playerArr = [];
+	                var mapN = { '0': 'a', '1': 'b', '2': 'c', '3': 'd' };
+	                for (var i = 0; i < 16; i++) {
+	                    var p = new PlayerInfo_1.PlayerInfo();
+	                    p.id = i + 1;
+	                    p.name = mapN[Math.floor(i / 4)] + ((i % 4) + 1);
+	                    playerArr.push(p);
+	                }
+	                console.log(playerArr);
+	                gameInfo = GameInfo_1.GameInfo.create(playerArr);
+	                console.log(gameInfo.gameArr);
+	                gameInfo.start();
+	                _this.gameArr = gameInfo.gameArr;
+	                if (!doc['recMap']) {
+	                    doc['recMap'] = {};
+	                    for (var i = 0; i < 38; i++) {
+	                        doc['recMap'][i] = JSON.parse(JSON.stringify(new GameInfo_1.RecData()));
+	                    }
+	                    saveDoc(doc);
+	                }
+	                Vue.set('recMap', doc['recMap']);
+	                if (!doc['gameIdx']) {
+	                    doc['gameIdx'] = 0;
+	                    saveDoc(doc);
+	                }
+	            }
+	        });
+	    };
 	    GameMonth.prototype.created = function () {
 	        var _this = this;
-	        $.get('/db/find/519', function (res) {
-	            console.log(res);
-	        });
 	        var srvIO = io.connect('/webDB')
-	            .on('connect', function (msg) {
+	            .on('connect', function () {
 	            var url = "/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_srvCreated;
-	            console.log(msg, url);
+	            console.log(url);
 	            $post(url, { _: null, createTime: createTime }, null);
 	        })
 	            .on("" + WebDBCmd_1.WebDBCmd.sc_srvCreated, function (data) {
 	            if (createTime < data.createTime) {
 	                _this.isOld = true;
+	                srvIO.disconnect();
 	                console.log('old server!!');
 	            }
+	            else {
+	                _this.initGameInfo();
+	            }
+	        })
+	            .on("" + WebDBCmd_1.WebDBCmd.sc_panelCreated, function () {
+	            console.log('sc_panelCreated');
+	            var data = { _: null };
+	            data.winScore = gameInfo.winScore;
+	            data.gameIdx = gameInfo.gameIdx + 1;
+	            data.player = gameInfo.getPlayerData();
+	            $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_init, data, null);
 	        });
 	    };
 	    return GameMonth;
@@ -602,46 +756,160 @@
 
 /***/ },
 
-/***/ 90:
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    game month\r\n    <br>{{db}}\r\n</div>";
-
-/***/ },
-
-/***/ 91:
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	exports.Navbar = {
-	    props: {
-	        active: {},
-	    },
-	    template: __webpack_require__(92)
-	};
-
-
-/***/ },
-
-/***/ 92:
-/***/ function(module, exports) {
-
-	module.exports = "<nav class=\"nav has-shadow\">\r\n    <div class=\"container\">\r\n        <div class=\"nav-left\">\r\n            <a class=\"nav-item\" :class=\"{active: active === ''}\">\r\n                <i class=\"home icon\"></i>\r\n                <router-link :to=\"{ name: 'home'}\">Home</router-link>\r\n            </a>\r\n        </div>\r\n    </div>\r\n</nav>";
-
-/***/ },
-
 /***/ 93:
 /***/ function(module, exports) {
 
 	"use strict";
-	exports.WebDBCmd = {
-	    cs_srvCreated: "",
-	    sc_srvCreated: ""
-	};
-	for (var k in exports.WebDBCmd) {
-	    exports.WebDBCmd[k] = k;
-	}
+	var PlayerInfo = (function () {
+	    function PlayerInfo() {
+	        this.winCount = 0;
+	        this.loseCount = 0;
+	        this.beatPlayerArr = [];
+	        this.beatScore = [];
+	    }
+	    return PlayerInfo;
+	}());
+	exports.PlayerInfo = PlayerInfo;
 
+
+/***/ },
+
+/***/ 94:
+/***/ function(module, exports) {
+
+	"use strict";
+	var RecData = (function () {
+	    function RecData() {
+	        this.gameIdx = -1;
+	        this.score = [0, 0];
+	        this.foul = [0, 0];
+	        this.time = -1;
+	    }
+	    return RecData;
+	}());
+	exports.RecData = RecData;
+	var GameInfo = (function () {
+	    function GameInfo() {
+	        this.status = 0;
+	        this.winScore = 3;
+	        this.gameIdx = 0;
+	        this.gameTime = 0;
+	        this.lScore = 0;
+	        this.rScore = 0;
+	        this.lFoul = 0;
+	        this.rFoul = 0;
+	    }
+	    GameInfo.create = function (playerArr) {
+	        var gmi = new GameInfo();
+	        gmi.playerArr = playerArr;
+	        gmi.gameArr = [];
+	        var group = gmi.gameArr;
+	        for (var i = 0; i < 4; i++) {
+	            group.push([gmi.playerArr[i * 4], gmi.playerArr[i * 4 + 1]]);
+	            group.push([gmi.playerArr[i * 4 + 2], gmi.playerArr[i * 4 + 3]]);
+	        }
+	        for (var i = 0; i < 4; i++) {
+	            group.push([gmi.playerArr[i * 4 + 1], gmi.playerArr[i * 4 + 2]]);
+	            group.push([gmi.playerArr[i * 4], gmi.playerArr[i * 4 + 3]]);
+	        }
+	        for (var i = 0; i < 4; i++) {
+	            group.push([gmi.playerArr[i * 4 + 1], gmi.playerArr[i * 4 + 3]]);
+	            group.push([gmi.playerArr[i * 4], gmi.playerArr[i * 4 + 2]]);
+	        }
+	        return gmi;
+	    };
+	    GameInfo.prototype.getCurGame = function () {
+	        return this;
+	    };
+	    GameInfo.prototype.start = function () {
+	        this.recData = new RecData();
+	    };
+	    GameInfo.prototype.getPlayerData = function () {
+	        var data = {};
+	        var lPlayer = this.gameArr[this.gameIdx][0];
+	        var rPlayer = this.gameArr[this.gameIdx][1];
+	        data.left = lPlayer;
+	        data.right = rPlayer;
+	        lPlayer['leftScore'] = this.lScore;
+	        lPlayer['leftFoul'] = this.lFoul;
+	        rPlayer['rightScore'] = this.rScore;
+	        rPlayer['rightFoul'] = this.rFoul;
+	        return data;
+	    };
+	    GameInfo.prototype.score = function (isLeft, dtScore) {
+	        if (isLeft)
+	            this.lScore += dtScore;
+	        else
+	            this.rScore += dtScore;
+	    };
+	    GameInfo.prototype.foul = function (isLeft, dt) {
+	        if (isLeft)
+	            this.lFoul += dt;
+	        else
+	            this.rFoul += dt;
+	    };
+	    GameInfo.prototype.getRecData = function () {
+	        return JSON.parse(JSON.stringify(this.recData));
+	    };
+	    GameInfo.prototype.toJSON = function () {
+	        var doc = {};
+	        for (var k in this) {
+	            var o = typeof this[k];
+	            if (o != 'function') {
+	                if (k != 'playerArr') {
+	                    doc[k] = this[k];
+	                    console.log(k, o);
+	                }
+	            }
+	        }
+	        return doc;
+	    };
+	    GameInfo.prototype.commit = function () {
+	        var lPlayer = this.gameArr[this.gameIdx][0];
+	        var rPlayer = this.gameArr[this.gameIdx][1];
+	        var winner;
+	        if (this.lScore > this.rScore) {
+	            winner = lPlayer;
+	            lPlayer.winCount++;
+	            rPlayer.loseCount++;
+	            lPlayer.beatPlayerArr.push(rPlayer);
+	            lPlayer.beatScore.push(this.lScore - this.rScore);
+	        }
+	        else {
+	            winner = rPlayer;
+	            rPlayer.winCount++;
+	            lPlayer.loseCount++;
+	            rPlayer.beatPlayerArr.push(lPlayer);
+	            rPlayer.beatScore.push(this.rScore - this.lScore);
+	        }
+	        var r = this.recData;
+	        r.foul[0] = this.lFoul;
+	        r.foul[1] = this.rFoul;
+	        r.score[0] = this.lScore;
+	        r.score[1] = this.rScore;
+	        r.gameIdx = this.gameIdx;
+	        this.gameIdx++;
+	        this.gameTime = 0;
+	        this.lScore = 0;
+	        this.lFoul = 0;
+	        this.rScore = 0;
+	        this.rFoul = 0;
+	        if (this.gameIdx > (24 + 13 - 1)) {
+	            this.winScore = 5;
+	        }
+	        return winner;
+	    };
+	    return GameInfo;
+	}());
+	exports.GameInfo = GameInfo;
+
+
+/***/ },
+
+/***/ 95:
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(game,idx) in gameArr\">\r\n                    {{idx+1}} {{game[0].name }} vs {{game[1].name }}\r\n\r\n\r\n                    <!--<div v-if='recMap'>\r\n                        {{recMap[idx].score[0]}} {{recMap[idx].score[1]}}\r\n                    </div>-->\r\n                </li>\r\n                <!--<li v-for=\"(r,idx) in recMap\">\r\n                    {{r.score[0]}} {{r.score[1]}}\r\n                </li>-->\r\n            </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button>\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n        </div>\r\n        <button class=\"button\" @click=\"onStartTimer\">开始计时</button>\r\n        <button class=\"button\" @click=\"onCommitGame\">提交比赛</button>\r\n        <button class=\"button\" @click=\"onClearGame\">清除比赛数据</button>\r\n\r\n    </div>\r\n\r\n\r\n</div>";
 
 /***/ }
 

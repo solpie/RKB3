@@ -4306,7 +4306,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(88);
+	        this.template = __webpack_require__(89);
 	        this.actTab = VueBase_1.VueBase.PROP;
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
@@ -5790,10 +5790,11 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var WebDBCmd_1 = __webpack_require__(78);
 	var home_1 = __webpack_require__(16);
-	var Event2017_1 = __webpack_require__(78);
+	var Event2017_1 = __webpack_require__(79);
 	var TweenEx_1 = __webpack_require__(50);
-	var Score2017_1 = __webpack_require__(85);
+	var Score2017_1 = __webpack_require__(86);
 	var HupuAPI_1 = __webpack_require__(22);
 	var Command_1 = __webpack_require__(61);
 	var const_1 = __webpack_require__(43);
@@ -5818,6 +5819,7 @@
 	        var darkTheme = $route.query.theme == "dark";
 	        this.gameId = $route.params.game_id;
 	        this.isTest = $route.query.test == "1";
+	        var isManmual = $route.query.m = '1';
 	        this.scorePanel = new Score2017_1.Score2017(stage, darkTheme);
 	        this.eventPanel = new Event2017_1.Event2017(stage, darkTheme);
 	        console.log('new ScoreView');
@@ -5836,9 +5838,80 @@
 	            };
 	            this.eventPanel.showWin2(player);
 	        }
-	        this.initDelay();
+	        if (isManmual) {
+	            this.initManmual();
+	        }
+	        else
+	            this.initDelay();
 	        this.initLocal();
 	    }
+	    ScoreView.prototype.initManmual = function () {
+	        var _this = this;
+	        var setPlayer = function (leftPlayer, rightPlayer) {
+	            console.log(leftPlayer);
+	            _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level);
+	            _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level);
+	        };
+	        var srvIO = io.connect('/webDB')
+	            .on('connect', function () {
+	            console.log('connect manmaul!');
+	            var url = "/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_panelCreated;
+	            var param = { _: null };
+	            $.ajax({
+	                url: url,
+	                type: 'post',
+	                data: JSON.stringify(param),
+	                headers: { "Content-Type": "application/json" },
+	                dataType: 'json'
+	            });
+	        })
+	            .on("" + WebDBCmd_1.WebDBCmd.sc_init, function (data) {
+	            console.log('init', data);
+	            logEvent('init', data);
+	            _this.scorePanel.set35ScoreLight(data.winScore);
+	            _this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
+	            setPlayer(data.player.left, data.player.right);
+	            _this.scorePanel.setLeftScore(data.player.left.leftScore);
+	            _this.scorePanel.setRightScore(data.player.right.rightScore);
+	            _this.scorePanel.setLeftFoul(data.player.left.leftFoul);
+	            _this.scorePanel.setRightFoul(data.player.right.rightFoul);
+	            data.delayTimeMS = _this.delayTimeMS;
+	            var gameStatus = Number(data.status);
+	            if (data.status == 0) {
+	                var gameTime = Math.floor(data.t / 1000 - Number(data.st));
+	                _this.scorePanel.setTimer(gameTime);
+	                _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
+	            }
+	            else if (data.status == 2) {
+	                _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
+	                _this.scorePanel.resetTimer();
+	            }
+	        })
+	            .on("" + WebDBCmd_1.WebDBCmd.sc_startTimer, function (data) {
+	            _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
+	        })
+	            .on("" + WebDBCmd_1.WebDBCmd.sc_commit, function (data) {
+	            console.log('commitGame', data);
+	            var player = data.player;
+	            _this.eventPanel.showWin(player);
+	            _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
+	        })
+	            .on("" + WebDBCmd_1.WebDBCmd.sc_score, function (data) {
+	            console.log('sc_score', data);
+	            if (data.leftScore != null) {
+	                _this.scorePanel.setLeftScore(data.leftScore);
+	            }
+	            if (data.rightScore != null) {
+	                _this.scorePanel.setRightScore(data.rightScore);
+	            }
+	            if (data.rightFoul != null) {
+	                _this.scorePanel.setRightFoul(data.rightFoul);
+	            }
+	            if (data.leftFoul != null) {
+	                _this.scorePanel.setLeftFoul(data.leftFoul);
+	            }
+	        });
+	    };
 	    ScoreView.prototype.initDelay = function () {
 	        var _this = this;
 	        $.get('/online/delay/' + this.gameId, function (delay) {
@@ -5863,20 +5936,6 @@
 	        window.onkeyup = function () {
 	            isCtrl = false;
 	        };
-	    };
-	    ScoreView.prototype.initRoom = function () {
-	        var roomIO = io.connect("tcp.lb.liangle.com:3081")
-	            .on('connect', function (msg) {
-	            console.log('msg', msg);
-	            roomIO.emit('join', {
-	                room_id: 10287,
-	                match_id: 1,
-	                token: ''
-	            });
-	        })
-	            .on('wall', function (msg) {
-	            console.log('wall', msg);
-	        });
 	    };
 	    ScoreView.prototype.initDefaultPlayer = function () {
 	        var p = 'http://w1.hoopchina.com.cn/huputv/resource/img/amateur.jpg';
@@ -6086,6 +6145,30 @@
 
 /***/ },
 /* 78 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.WebDBCmd = {
+	    cs_init: "",
+	    sc_init: "",
+	    cs_startTimer: "",
+	    sc_startTimer: "",
+	    cs_commit: "",
+	    sc_commit: "",
+	    cs_score: "",
+	    sc_score: "",
+	    cs_panelCreated: "",
+	    sc_panelCreated: "",
+	    cs_srvCreated: "",
+	    sc_srvCreated: ""
+	};
+	for (var k in exports.WebDBCmd) {
+	    exports.WebDBCmd[k] = k;
+	}
+
+
+/***/ },
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6094,12 +6177,12 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var ScoreFx_1 = __webpack_require__(79);
-	var Victory2_1 = __webpack_require__(80);
-	var LogoFx_1 = __webpack_require__(81);
+	var ScoreFx_1 = __webpack_require__(80);
+	var Victory2_1 = __webpack_require__(81);
+	var LogoFx_1 = __webpack_require__(82);
 	var Com2017_1 = __webpack_require__(71);
-	var Champion_1 = __webpack_require__(82);
-	var NoticeSprite_1 = __webpack_require__(83);
+	var Champion_1 = __webpack_require__(83);
+	var NoticeSprite_1 = __webpack_require__(84);
 	var BracketGroup_1 = __webpack_require__(69);
 	var JsFunc_1 = __webpack_require__(17);
 	var PixiEx_1 = __webpack_require__(46);
@@ -6306,7 +6389,7 @@
 
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6350,7 +6433,7 @@
 
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6394,7 +6477,7 @@
 
 
 /***/ },
-/* 81 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6434,7 +6517,7 @@
 
 
 /***/ },
-/* 82 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6516,7 +6599,7 @@
 
 
 /***/ },
-/* 83 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6528,7 +6611,7 @@
 	var PixiEx_1 = __webpack_require__(46);
 	var const_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(17);
-	var ScaleSprite_1 = __webpack_require__(84);
+	var ScaleSprite_1 = __webpack_require__(85);
 	var NoticeSprite = (function (_super) {
 	    __extends(NoticeSprite, _super);
 	    function NoticeSprite() {
@@ -6639,7 +6722,7 @@
 
 
 /***/ },
-/* 84 */
+/* 85 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -6721,14 +6804,14 @@
 
 
 /***/ },
-/* 85 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var Com2017_1 = __webpack_require__(71);
-	var FoulText_1 = __webpack_require__(86);
+	var FoulText_1 = __webpack_require__(87);
 	var Fx_1 = __webpack_require__(56);
-	var FoulGroup_1 = __webpack_require__(87);
+	var FoulGroup_1 = __webpack_require__(88);
 	var TextTimer_1 = __webpack_require__(52);
 	var SpriteGroup_1 = __webpack_require__(55);
 	var const_1 = __webpack_require__(43);
@@ -7131,7 +7214,7 @@
 
 
 /***/ },
-/* 86 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7178,7 +7261,7 @@
 
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7218,10 +7301,10 @@
 
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab3'}\" @click='tab(\"tab3\")'>\r\n                    <a>\r\n                        <span>手动比分</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n            <button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <button class=\"button\" @click=\"onClkNoticePresets(1)\">报名预置</button>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n        <div v-if='actTab==\"tab3\"'>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button>\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n            <button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <button class=\"button\" @click=\"onClkNoticePresets(1)\">报名预置</button>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ }
 /******/ ]);
