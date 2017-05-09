@@ -640,6 +640,7 @@
 	        this.isOld = VueBase_1.VueBase.PROP;
 	        this.gameArr = VueBase_1.VueBase.PROP;
 	        this.recMap = VueBase_1.VueBase.PROP;
+	        this.gameInfo = VueBase_1.VueBase.PROP;
 	        this.methods = {
 	            onAddScore: function (isLeft, dtScore) {
 	                gameInfo.score(isLeft, dtScore);
@@ -665,10 +666,17 @@
 	            },
 	            onStartGame: function () {
 	            },
+	            onSetGameIdx: function (v) {
+	                gameInfo.start(this.recMap[gameInfo.gameIdx]);
+	            },
 	            onClearGame: function () {
 	                getDoc(function (doc) {
 	                    if (doc) {
-	                        doc['recArr'] = [];
+	                        for (var k in doc['recMap']) {
+	                            doc['recMap'][k].score = [0, 0];
+	                            doc['recMap'][k].foul = [0, 0];
+	                        }
+	                        doc.gameIdx = 0;
 	                        saveDoc(doc);
 	                    }
 	                });
@@ -678,9 +686,9 @@
 	                data.player = gameInfo.commit();
 	                getDoc(function (doc) {
 	                    if (doc) {
-	                        delete doc['recArr'];
 	                        var r = gameInfo.getRecData();
-	                        doc['recMap'][r.gameIdx].push(r);
+	                        doc['recMap'][r.gameIdx] = r;
+	                        doc.gameIdx = gameInfo.gameIdx;
 	                        console.log('save doc', doc);
 	                        saveDoc(doc);
 	                    }
@@ -705,20 +713,10 @@
 	                console.log(playerArr);
 	                gameInfo = GameInfo_1.GameInfo.create(playerArr);
 	                console.log(gameInfo.gameArr);
-	                gameInfo.start();
 	                _this.gameArr = gameInfo.gameArr;
-	                if (!doc['recMap']) {
-	                    doc['recMap'] = {};
-	                    for (var i = 0; i < 38; i++) {
-	                        doc['recMap'][i] = JSON.parse(JSON.stringify(new GameInfo_1.RecData()));
-	                    }
-	                    saveDoc(doc);
-	                }
-	                Vue.set('recMap', doc['recMap']);
-	                if (!doc['gameIdx']) {
-	                    doc['gameIdx'] = 0;
-	                    saveDoc(doc);
-	                }
+	                _this.recMap = doc['recMap'];
+	                gameInfo.start(_this.recMap[doc.gameIdx]);
+	                _this.gameInfo = gameInfo;
 	            }
 	        });
 	    };
@@ -781,6 +779,7 @@
 	var RecData = (function () {
 	    function RecData() {
 	        this.gameIdx = -1;
+	        this.player = ['', ''];
 	        this.score = [0, 0];
 	        this.foul = [0, 0];
 	        this.time = -1;
@@ -821,8 +820,9 @@
 	    GameInfo.prototype.getCurGame = function () {
 	        return this;
 	    };
-	    GameInfo.prototype.start = function () {
-	        this.recData = new RecData();
+	    GameInfo.prototype.start = function (r) {
+	        this.recData = r;
+	        this.gameIdx = this.recData.gameIdx;
 	    };
 	    GameInfo.prototype.getPlayerData = function () {
 	        var data = {};
@@ -909,7 +909,7 @@
 /***/ 95:
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(game,idx) in gameArr\">\r\n                    {{idx+1}} {{game[0].name }} vs {{game[1].name }}\r\n\r\n\r\n                    <!--<div v-if='recMap'>\r\n                        {{recMap[idx].score[0]}} {{recMap[idx].score[1]}}\r\n                    </div>-->\r\n                </li>\r\n                <!--<li v-for=\"(r,idx) in recMap\">\r\n                    {{r.score[0]}} {{r.score[1]}}\r\n                </li>-->\r\n            </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button>\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n        </div>\r\n        <button class=\"button\" @click=\"onStartTimer\">开始计时</button>\r\n        <button class=\"button\" @click=\"onCommitGame\">提交比赛</button>\r\n        <button class=\"button\" @click=\"onClearGame\">清除比赛数据</button>\r\n\r\n    </div>\r\n\r\n\r\n</div>";
+	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(r,idx) in recMap\">\r\n                    {{r.gameIdx+1}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}\r\n                </li>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            第{{gameInfo.gameIdx+1}}场\r\n            <span></span><br> Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button> {{gameInfo.lScore}}\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button> {{gameInfo.lFoul}}\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <br> {{gameInfo.rScore}}\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br> {{gameInfo.rFoul}}\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n        </div>\r\n        <button class=\"button\" @click=\"onStartTimer\">开始计时</button>\r\n        <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx-1)\">上一场</button>\r\n        <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx+1)\">下一场</button>\r\n        <button class=\"button\" @click=\"onCommitGame\">提交比赛</button>\r\n        <button class=\"button\" @click=\"onClearGame\">清除比赛数据</button>\r\n    </div>\r\n</div>";
 
 /***/ }
 

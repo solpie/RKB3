@@ -38,6 +38,8 @@ class GameMonth extends VueBase {
     isOld = VueBase.PROP
     gameArr = VueBase.PROP
     recMap = VueBase.PROP
+    gameInfo = VueBase.PROP
+
     constructor() {
         super();
         VueBase.initProps(this);
@@ -58,22 +60,30 @@ class GameMonth extends VueBase {
 
                 gameInfo = GameInfo.create(playerArr)
                 console.log(gameInfo.gameArr);
-                gameInfo.start()
                 this.gameArr = gameInfo.gameArr
 
 
-                if (!doc['recMap']) {
-                    doc['recMap'] = {}
-                    for (let i = 0; i < 38; i++) {
-                        doc['recMap'][i] = JSON.parse(JSON.stringify(new RecData()))
-                    }
-                    saveDoc(doc)
-                }
-                Vue.set('recMap',doc['recMap'])
-                if (!doc['gameIdx']) {
-                    doc['gameIdx'] = 0
-                    saveDoc(doc)
-                }
+                // if (!doc['recMap']) {
+                // doc['recMap'] = {}
+                // for (let i = 0; i < 38; i++) {
+                //     let r = new RecData()
+                //     let gp = gameInfo.gameArr[i]
+                //     if (gp)
+                //         r.player = [gp[0].name, gp[1].name]
+                //     r.gameIdx = i
+                //     doc['recMap'][i] = JSON.parse(JSON.stringify(r))
+                // }
+                // saveDoc(doc)
+                // }
+                // Vue.set('recMap', doc['recMap'])
+                this.recMap = doc['recMap']
+                gameInfo.start(this.recMap[doc.gameIdx])
+                this.gameInfo = gameInfo
+
+                // if (!doc['gameIdx']) {
+                //     doc['gameIdx'] = 0
+                //     saveDoc(doc)
+                // }
             }
         })
     }
@@ -133,10 +143,17 @@ class GameMonth extends VueBase {
         },
         onStartGame() {
         },
+        onSetGameIdx(v) {
+            gameInfo.start(this.recMap[gameInfo.gameIdx])
+        },
         onClearGame() {
             getDoc((doc) => {
                 if (doc) {
-                    doc['recArr'] = []
+                    for (let k in doc['recMap']) {
+                        doc['recMap'][k].score = [0, 0]
+                        doc['recMap'][k].foul = [0, 0]
+                    }
+                    doc.gameIdx = 0
                     saveDoc(doc)
                 }
             })
@@ -146,9 +163,9 @@ class GameMonth extends VueBase {
             data.player = gameInfo.commit()
             getDoc((doc) => {
                 if (doc) {
-                    delete doc['recArr']
                     let r = gameInfo.getRecData()
-                    doc['recMap'][r.gameIdx].push(r)
+                    doc['recMap'][r.gameIdx] = r
+                    doc.gameIdx = gameInfo.gameIdx
                     console.log('save doc', doc)
                     saveDoc(doc)
                 }

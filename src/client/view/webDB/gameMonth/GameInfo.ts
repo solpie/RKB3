@@ -1,6 +1,7 @@
 import { PlayerInfo } from './PlayerInfo';
 export class RecData {
     gameIdx: number = -1
+    player: Array<string> = ['', '']
     score: Array<number> = [0, 0]//1-2
     foul: Array<number> = [0, 0]//2-3
     time: number = -1
@@ -49,8 +50,9 @@ export class GameInfo {
         return this
     }
 
-    start() {
-        this.recData = new RecData()
+    start(r) {
+        this.recData = r
+        this.gameIdx = this.recData.gameIdx
     }
 
     getPlayerData() {
