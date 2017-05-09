@@ -1,3 +1,5 @@
+import { firstBy } from './thenBy';
+import { ascendingProp, descendingProp, mapToArr } from '../../utils/JsFunc';
 import { PlayerInfo } from './PlayerInfo';
 import { GameInfo, RecData } from './GameInfo';
 import { WebDBCmd } from '../../WebDBCmd';
@@ -36,9 +38,9 @@ class GameMonth extends VueBase {
     template = require('./gameMonth.html');
     db = VueBase.PROP
     isOld = VueBase.PROP
-    gameArr = VueBase.PROP
     recMap = VueBase.PROP
     gameInfo = VueBase.PROP
+    playerRank = VueBase.PROP
 
     constructor() {
         super();
@@ -60,7 +62,6 @@ class GameMonth extends VueBase {
 
                 gameInfo = GameInfo.create(playerArr)
                 console.log(gameInfo.gameArr);
-                this.gameArr = gameInfo.gameArr
 
 
                 // if (!doc['recMap']) {
@@ -77,7 +78,8 @@ class GameMonth extends VueBase {
                 // }
                 // Vue.set('recMap', doc['recMap'])
                 this.recMap = doc['recMap']
-                gameInfo.start(this.recMap[doc.gameIdx])
+                gameInfo.recMap = doc['recMap']
+                gameInfo.start(doc.gameIdx)
                 this.gameInfo = gameInfo
 
                 // if (!doc['gameIdx']) {
@@ -141,10 +143,70 @@ class GameMonth extends VueBase {
             let data: any = { _: null }
             $post(`/db/cmd/${WebDBCmd.cs_startTimer}`, data, null)
         },
+
         onStartGame() {
         },
+        onSetMaster() {
+            getDoc((doc) => {
+                let sumMap: any = {}
+                for (let k in doc['recMap']) {
+                    if (Number(k) < 24) {
+                        let r: RecData = doc['recMap'][k]
+                        if (!sumMap[r.player[0]])
+                            sumMap[r.player[0]] = { name: r.player[0], win: 0, dtScore: 0, beat: [], time: 0 }
+                        if (!sumMap[r.player[1]])
+                            sumMap[r.player[1]] = { name: r.player[1], win: 0, dtScore: 0, beat: [], time: 0 }
+                        if (r.score[0] == 0 && r.score[1] == 0) {
+                            continue;
+                        }
+                        if (r.score[0] > r.score[1]) {
+                            sumMap[r.player[0]].win++
+                            sumMap[r.player[0]].dtScore += r.score[0] - r.score[1]
+                            sumMap[r.player[0]].beat.push(r.player[1])
+                        }
+                        else {
+                            sumMap[r.player[1]].win++
+                            sumMap[r.player[1]].dtScore += r.score[1] - r.score[0]
+                            sumMap[r.player[1]].beat.push(r.player[0])
+                        }
+                        console.log(r)
+                    }
+                }
+                let playerArr = mapToArr(sumMap)
+                for (let p1 of playerArr) {
+                    for (let p2 of playerArr) {
+
+                        if (p1.win==p2.win&&p1.beat.indexOf(p2.name)>-1)
+                            p1.win += 0.1
+                    }
+                }
+                playerArr.sort(firstBy(function (v1, v2) { return v2.win - v1.win; })
+                    .thenBy(function (v1, v2) { return v2.dtScore - v1.dtScore; })
+                )
+                this.playerRank = playerArr
+                console.log(playerArr)
+            })
+        },
         onSetGameIdx(v) {
-            gameInfo.start(this.recMap[gameInfo.gameIdx])
+            gameInfo.start(v)
+        },
+        onTestGame() {
+            getDoc((doc) => {
+                if (doc) {
+
+                    for (let k in doc['recMap']) {
+                        let rd = Math.random()
+                        let s
+                        if (rd < .5) {
+                            s = [3, Math.floor(Math.random() * 3)]
+                        }
+                        else
+                            s = [Math.floor(Math.random() * 3), 3]
+                        doc['recMap'][k].score = s
+                    }
+                    saveDoc(doc)
+                }
+            })
         },
         onClearGame() {
             getDoc((doc) => {
@@ -160,10 +222,10 @@ class GameMonth extends VueBase {
         },
         onCommitGame() {
             let data: any = { _: null }
-            data.player = gameInfo.commit()
+            let r = gameInfo.commit()
+            data.player = gameInfo.lastWinner
             getDoc((doc) => {
                 if (doc) {
-                    let r = gameInfo.getRecData()
                     doc['recMap'][r.gameIdx] = r
                     doc.gameIdx = gameInfo.gameIdx
                     console.log('save doc', doc)

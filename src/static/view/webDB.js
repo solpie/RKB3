@@ -485,6 +485,205 @@
 
 /***/ },
 
+/***/ 17:
+/***/ function(module, exports) {
+
+	"use strict";
+	function ascendingProp(prop) {
+	    return function (a, b) {
+	        return a[prop] - b[prop];
+	    };
+	}
+	exports.ascendingProp = ascendingProp;
+	function descendingProp(prop) {
+	    return function (a, b) {
+	        return b[prop] - a[prop];
+	    };
+	}
+	exports.descendingProp = descendingProp;
+	function mapToSortArray(map, prop, sortFunc) {
+	    var arr = [];
+	    for (var k in map) {
+	        arr.push(map[k]);
+	    }
+	    arr.sort(sortFunc(prop));
+	    return arr;
+	}
+	exports.mapToSortArray = mapToSortArray;
+	function mapToArr(map, clone) {
+	    var a = [];
+	    for (var k in map) {
+	        a.push(map[k]);
+	    }
+	    if (clone)
+	        a = JSON.parse(JSON.stringify(a));
+	    return a;
+	}
+	exports.mapToArr = mapToArr;
+	function arrCountSame(arrA, arrB) {
+	    var n = 0;
+	    for (var i = 0; i < arrB.length; i++) {
+	        var obj = arrB[i];
+	        if (arrA.indexOf(obj) > -1) {
+	            n++;
+	        }
+	    }
+	    return n;
+	}
+	exports.arrCountSame = arrCountSame;
+	function arrUniqueFilter(el, i, a) {
+	    return i == a.indexOf(el);
+	}
+	exports.arrUniqueFilter = arrUniqueFilter;
+	function loadImg(path1, callback, onerror) {
+	    var img = new Image();
+	    img.onload = function () {
+	        callback(img);
+	    };
+	    if (onerror != null) {
+	        img.onerror = function (e) {
+	            onerror(e);
+	        };
+	    }
+	    img.src = path1;
+	}
+	exports.loadImg = loadImg;
+	function loadImgArr(pathArr, callback) {
+	    var count = pathArr.length;
+	    var imgCollection;
+	    var isArr;
+	    function onLoadImg() {
+	        count--;
+	        if (count === 0) {
+	            count = -1;
+	            callback(imgCollection);
+	        }
+	    }
+	    if (count && pathArr[0].hasOwnProperty('name') && pathArr[0].hasOwnProperty('url')) {
+	        isArr = false;
+	        imgCollection = {};
+	    }
+	    else {
+	        isArr = true;
+	        imgCollection = [];
+	    }
+	    var img;
+	    var url;
+	    for (var i = 0; i < pathArr.length; i++) {
+	        var p = pathArr[i];
+	        img = new Image();
+	        if (isArr) {
+	            imgCollection.push(img);
+	            url = p;
+	        }
+	        else {
+	            imgCollection[p.name] = img;
+	            url = p.url;
+	        }
+	        img.onload = onLoadImg;
+	        img.src = url;
+	    }
+	}
+	exports.loadImgArr = loadImgArr;
+	function combineArr(arr, num) {
+	    var r = [];
+	    (function f(t, a, n) {
+	        if (n == 0) {
+	            return r.push(t);
+	        }
+	        for (var i = 0, l = a.length; i <= l - n; i++) {
+	            f(t.concat(a[i]), a.slice(i + 1), n - 1);
+	        }
+	    })([], arr, num);
+	    return r;
+	}
+	exports.combineArr = combineArr;
+	function formatSecond(sec, minStr, secStr) {
+	    if (minStr === void 0) { minStr = ":"; }
+	    if (secStr === void 0) { secStr = ""; }
+	    var min = Math.floor(sec / 60);
+	    var s = sec % 60;
+	    var strMin = min + "";
+	    var strSec = s + "";
+	    if (min < 10)
+	        strMin = "0" + strMin;
+	    if (s < 10)
+	        strSec = "0" + strSec;
+	    return strMin + minStr + strSec + secStr;
+	}
+	exports.formatSecond = formatSecond;
+	function getLength(str) {
+	    var realLength = 0, len = str.length, charCode = -1;
+	    for (var i = 0; i < len; i++) {
+	        charCode = str.charCodeAt(i);
+	        if (charCode >= 0 && charCode <= 128)
+	            realLength += 1;
+	        else
+	            realLength += 2;
+	    }
+	    return realLength;
+	}
+	exports.getLength = getLength;
+	function cnWrap(str, len, limit) {
+	    if (limit === void 0) { limit = 0; }
+	    var str_line_length = 0;
+	    var str_len = str.length;
+	    var str_cut = new String();
+	    var str_out = '';
+	    var total_len = 0;
+	    for (var i = 0; i < str_len; i++) {
+	        if (limit != 0 && total_len > limit)
+	            break;
+	        var a = str.charAt(i);
+	        str_line_length++;
+	        total_len++;
+	        if (escape(a).length > 4) {
+	            str_line_length++;
+	            total_len++;
+	        }
+	        str_cut = str_cut.concat(a);
+	        if (str_line_length >= len) {
+	            str_out += str_cut.concat('\n');
+	            str_cut = new String();
+	            str_line_length = 0;
+	        }
+	    }
+	    str_out += str_cut;
+	    return str_out;
+	}
+	exports.cnWrap = cnWrap;
+	exports.getUrlFilename = function (url) {
+	    var a = url.split('/');
+	    var filename = a[a.length - 1];
+	    return filename;
+	};
+	exports.DateFormat = function (date, fmt) {
+	    var o = {
+	        "M+": date.getMonth() + 1,
+	        "d+": date.getDate(),
+	        "h+": date.getHours(),
+	        "m+": date.getMinutes(),
+	        "s+": date.getSeconds(),
+	        "q+": Math.floor((date.getMonth() + 3) / 3),
+	        "S": date.getMilliseconds()
+	    };
+	    if (/(y+)/.test(fmt))
+	        fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+	    for (var k in o)
+	        if (new RegExp("(" + k + ")").test(fmt))
+	            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+	    return fmt;
+	};
+	function paddy(number, p, c) {
+	    var pad_char = typeof c !== 'undefined' ? c : '0';
+	    var pad = new Array(1 + p).join(pad_char);
+	    return (pad + number).slice(-pad.length);
+	}
+	exports.paddy = paddy;
+
+
+/***/ },
+
 /***/ 18:
 /***/ function(module, exports) {
 
@@ -601,6 +800,8 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var thenBy_1 = __webpack_require__(96);
+	var JsFunc_1 = __webpack_require__(17);
 	var PlayerInfo_1 = __webpack_require__(93);
 	var GameInfo_1 = __webpack_require__(94);
 	var WebDBCmd_1 = __webpack_require__(78);
@@ -638,9 +839,9 @@
 	        this.template = __webpack_require__(95);
 	        this.db = VueBase_1.VueBase.PROP;
 	        this.isOld = VueBase_1.VueBase.PROP;
-	        this.gameArr = VueBase_1.VueBase.PROP;
 	        this.recMap = VueBase_1.VueBase.PROP;
 	        this.gameInfo = VueBase_1.VueBase.PROP;
+	        this.playerRank = VueBase_1.VueBase.PROP;
 	        this.methods = {
 	            onAddScore: function (isLeft, dtScore) {
 	                gameInfo.score(isLeft, dtScore);
@@ -666,8 +867,67 @@
 	            },
 	            onStartGame: function () {
 	            },
+	            onSetMaster: function () {
+	                var _this = this;
+	                getDoc(function (doc) {
+	                    var sumMap = {};
+	                    for (var k in doc['recMap']) {
+	                        if (Number(k) < 24) {
+	                            var r = doc['recMap'][k];
+	                            if (!sumMap[r.player[0]])
+	                                sumMap[r.player[0]] = { name: r.player[0], win: 0, dtScore: 0, beat: [], time: 0 };
+	                            if (!sumMap[r.player[1]])
+	                                sumMap[r.player[1]] = { name: r.player[1], win: 0, dtScore: 0, beat: [], time: 0 };
+	                            if (r.score[0] == 0 && r.score[1] == 0) {
+	                                continue;
+	                            }
+	                            if (r.score[0] > r.score[1]) {
+	                                sumMap[r.player[0]].win++;
+	                                sumMap[r.player[0]].dtScore += r.score[0] - r.score[1];
+	                                sumMap[r.player[0]].beat.push(r.player[1]);
+	                            }
+	                            else {
+	                                sumMap[r.player[1]].win++;
+	                                sumMap[r.player[1]].dtScore += r.score[1] - r.score[0];
+	                                sumMap[r.player[1]].beat.push(r.player[0]);
+	                            }
+	                            console.log(r);
+	                        }
+	                    }
+	                    var playerArr = JsFunc_1.mapToArr(sumMap);
+	                    for (var _i = 0, playerArr_1 = playerArr; _i < playerArr_1.length; _i++) {
+	                        var p1 = playerArr_1[_i];
+	                        for (var _a = 0, playerArr_2 = playerArr; _a < playerArr_2.length; _a++) {
+	                            var p2 = playerArr_2[_a];
+	                            if (p1.win == p2.win && p1.beat.indexOf(p2.name) > -1)
+	                                p1.win += 0.1;
+	                        }
+	                    }
+	                    playerArr.sort(thenBy_1.firstBy(function (v1, v2) { return v2.win - v1.win; })
+	                        .thenBy(function (v1, v2) { return v2.dtScore - v1.dtScore; }));
+	                    _this.playerRank = playerArr;
+	                    console.log(playerArr);
+	                });
+	            },
 	            onSetGameIdx: function (v) {
-	                gameInfo.start(this.recMap[gameInfo.gameIdx]);
+	                gameInfo.start(v);
+	            },
+	            onTestGame: function () {
+	                getDoc(function (doc) {
+	                    if (doc) {
+	                        for (var k in doc['recMap']) {
+	                            var rd = Math.random();
+	                            var s = void 0;
+	                            if (rd < .5) {
+	                                s = [3, Math.floor(Math.random() * 3)];
+	                            }
+	                            else
+	                                s = [Math.floor(Math.random() * 3), 3];
+	                            doc['recMap'][k].score = s;
+	                        }
+	                        saveDoc(doc);
+	                    }
+	                });
 	            },
 	            onClearGame: function () {
 	                getDoc(function (doc) {
@@ -683,10 +943,10 @@
 	            },
 	            onCommitGame: function () {
 	                var data = { _: null };
-	                data.player = gameInfo.commit();
+	                var r = gameInfo.commit();
+	                data.player = gameInfo.lastWinner;
 	                getDoc(function (doc) {
 	                    if (doc) {
-	                        var r = gameInfo.getRecData();
 	                        doc['recMap'][r.gameIdx] = r;
 	                        doc.gameIdx = gameInfo.gameIdx;
 	                        console.log('save doc', doc);
@@ -713,9 +973,9 @@
 	                console.log(playerArr);
 	                gameInfo = GameInfo_1.GameInfo.create(playerArr);
 	                console.log(gameInfo.gameArr);
-	                _this.gameArr = gameInfo.gameArr;
 	                _this.recMap = doc['recMap'];
-	                gameInfo.start(_this.recMap[doc.gameIdx]);
+	                gameInfo.recMap = doc['recMap'];
+	                gameInfo.start(doc.gameIdx);
 	                _this.gameInfo = gameInfo;
 	            }
 	        });
@@ -820,7 +1080,8 @@
 	    GameInfo.prototype.getCurGame = function () {
 	        return this;
 	    };
-	    GameInfo.prototype.start = function (r) {
+	    GameInfo.prototype.start = function (gameIdx) {
+	        var r = this.recMap[gameIdx];
 	        this.recData = r;
 	        this.gameIdx = this.recData.gameIdx;
 	    };
@@ -882,13 +1143,13 @@
 	            rPlayer.beatPlayerArr.push(lPlayer);
 	            rPlayer.beatScore.push(this.rScore - this.lScore);
 	        }
+	        this.lastWinner = winner;
 	        var r = this.recData;
 	        r.foul[0] = this.lFoul;
 	        r.foul[1] = this.rFoul;
 	        r.score[0] = this.lScore;
 	        r.score[1] = this.rScore;
-	        r.gameIdx = this.gameIdx;
-	        this.gameIdx++;
+	        this.start(this.gameIdx + 1);
 	        this.gameTime = 0;
 	        this.lScore = 0;
 	        this.lFoul = 0;
@@ -897,7 +1158,7 @@
 	        if (this.gameIdx > (24 + 13 - 1)) {
 	            this.winScore = 5;
 	        }
-	        return winner;
+	        return r;
 	    };
 	    return GameInfo;
 	}());
@@ -909,7 +1170,45 @@
 /***/ 95:
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(r,idx) in recMap\">\r\n                    {{r.gameIdx+1}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}\r\n                </li>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            第{{gameInfo.gameIdx+1}}场\r\n            <span></span><br> Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button> {{gameInfo.lScore}}\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button> {{gameInfo.lFoul}}\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <br> {{gameInfo.rScore}}\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br> {{gameInfo.rFoul}}\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n        </div>\r\n        <button class=\"button\" @click=\"onStartTimer\">开始计时</button>\r\n        <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx-1)\">上一场</button>\r\n        <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx+1)\">下一场</button>\r\n        <button class=\"button\" @click=\"onCommitGame\">提交比赛</button>\r\n        <button class=\"button\" @click=\"onClearGame\">清除比赛数据</button>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(r,idx) in recMap\">\r\n                    {{r.gameIdx+1}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            第{{gameInfo.gameIdx+1}}场\r\n            <span></span><br> Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button> {{gameInfo.lScore}}\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button> {{gameInfo.lFoul}}\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <br> {{gameInfo.rScore}}\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br> {{gameInfo.rFoul}}\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onStartTimer\">开始计时</button>\r\n            <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx-1)\">上一场</button>\r\n            <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx+1)\">下一场</button>\r\n            <button class=\"button\" @click=\"onCommitGame\">提交比赛</button>\r\n            <button class=\"button\" @click=\"onClearGame\">清除比赛数据</button>\r\n            <button class=\"button\" @click=\"onTestGame\">testGame</button>\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onSetMaster\">大师赛排名</button>\r\n            <div>\r\n                <li v-for=\"(p,idx) in playerRank\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                    <div v-if='idx==7'>----------</div>\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n    </div>\r\n</div>";
+
+/***/ },
+
+/***/ 96:
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.firstBy = (function () {
+	    function identity(v) { return v; }
+	    function ignoreCase(v) { return typeof (v) === "string" ? v.toLowerCase() : v; }
+	    function makeCompareFunction(f, opt) {
+	        opt = typeof (opt) === "number" ? { direction: opt } : opt || {};
+	        if (typeof (f) != "function") {
+	            var prop = f;
+	            f = function (v1) { return !!v1[prop] ? v1[prop] : ""; };
+	        }
+	        if (f.length === 1) {
+	            var uf = f;
+	            var preprocess = opt.ignoreCase ? ignoreCase : identity;
+	            f = function (v1, v2) { return preprocess(uf(v1)) < preprocess(uf(v2)) ? -1 : preprocess(uf(v1)) > preprocess(uf(v2)) ? 1 : 0; };
+	        }
+	        if (opt.direction === -1)
+	            return function (v1, v2) { return -f(v1, v2); };
+	        return f;
+	    }
+	    function tb(func, opt) {
+	        var x = typeof (this) == "function" ? this : false;
+	        var y = makeCompareFunction(func, opt);
+	        var f = x ? function (a, b) {
+	            return x(a, b) || y(a, b);
+	        }
+	            : y;
+	        f.thenBy = tb;
+	        return f;
+	    }
+	    return tb;
+	})();
+
 
 /***/ }
 

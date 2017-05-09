@@ -21,8 +21,9 @@ export class GameInfo {
     lFoul = 0
     rFoul = 0
     //save data
-    recArray: Array<RecData>
+    // recArray: Array<RecData>
     recData: RecData
+    recMap: any
     static create(playerArr) {
         let gmi = new GameInfo()
         gmi.playerArr = playerArr
@@ -50,7 +51,8 @@ export class GameInfo {
         return this
     }
 
-    start(r) {
+    start(gameIdx) {
+        let r = this.recMap[gameIdx]
         this.recData = r
         this.gameIdx = this.recData.gameIdx
     }
@@ -99,6 +101,7 @@ export class GameInfo {
         return doc
         // return JSON.parse(JSON.stringify(obj))
     }
+    lastWinner:any
     commit() {
         let lPlayer = this.gameArr[this.gameIdx][0]
         let rPlayer = this.gameArr[this.gameIdx][1]
@@ -118,14 +121,16 @@ export class GameInfo {
             rPlayer.beatPlayerArr.push(lPlayer)
             rPlayer.beatScore.push(this.rScore - this.lScore)
         }
+        this.lastWinner = winner
         let r = this.recData
         r.foul[0] = this.lFoul
         r.foul[1] = this.rFoul
         r.score[0] = this.lScore
         r.score[1] = this.rScore
-        r.gameIdx = this.gameIdx
+        // r.gameIdx = this.gameIdx
 
-        this.gameIdx++
+        // this.gameIdx++
+        this.start(this.gameIdx + 1)
         this.gameTime = 0
         this.lScore = 0
         this.lFoul = 0
@@ -136,6 +141,6 @@ export class GameInfo {
             this.winScore = 5
         }
 
-        return winner
+        return r
     }
 }

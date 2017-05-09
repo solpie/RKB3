@@ -8,6 +8,7 @@
                 </li>
             </div>
         </div>
+
         <div class="column">
             第{{gameInfo.gameIdx+1}}场
             <span></span><br> Score
@@ -28,11 +29,24 @@
             <br> {{gameInfo.rFoul}}
             <button class="button" @click="onAddFoul(false,1)">+1</button>
             <button class="button" @click="onAddFoul(false,-1)">-1</button>
+            <br>
+            <button class="button" @click="onStartTimer">开始计时</button>
+            <button class="button" @click="onSetGameIdx(gameInfo.gameIdx-1)">上一场</button>
+            <button class="button" @click="onSetGameIdx(gameInfo.gameIdx+1)">下一场</button>
+            <button class="button" @click="onCommitGame">提交比赛</button>
+            <button class="button" @click="onClearGame">清除比赛数据</button>
+            <button class="button" @click="onTestGame">testGame</button>
         </div>
-        <button class="button" @click="onStartTimer">开始计时</button>
-        <button class="button" @click="onSetGameIdx(gameInfo.gameIdx-1)">上一场</button>
-        <button class="button" @click="onSetGameIdx(gameInfo.gameIdx+1)">下一场</button>
-        <button class="button" @click="onCommitGame">提交比赛</button>
-        <button class="button" @click="onClearGame">清除比赛数据</button>
+
+        <div class="column">
+            <button class="button" @click="onSetMaster">大师赛排名</button>
+            <div>
+                <li v-for="(p,idx) in playerRank">
+                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}
+                    <div v-if='idx==7'>----------</div>
+                </li>
+            </div>
+        </div>
+
     </div>
 </div>
