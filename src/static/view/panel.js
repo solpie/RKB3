@@ -5819,7 +5819,7 @@
 	        var darkTheme = $route.query.theme == "dark";
 	        this.gameId = $route.params.game_id;
 	        this.isTest = $route.query.test == "1";
-	        var isManmual = $route.query.m = '1';
+	        var isManmual = $route.query.m == '1';
 	        this.scorePanel = new Score2017_1.Score2017(stage, darkTheme);
 	        this.eventPanel = new Event2017_1.Event2017(stage, darkTheme);
 	        console.log('new ScoreView');

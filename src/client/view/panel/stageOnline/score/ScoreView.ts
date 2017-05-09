@@ -37,7 +37,7 @@ export class ScoreView extends BasePanelView {
         this.gameId = $route.params.game_id
 
         this.isTest = $route.query.test == "1"
-        let isManmual = $route.query.m = '1'
+        let isManmual = $route.query.m == '1'
 
         this.scorePanel = new Score2017(stage, darkTheme)
         this.eventPanel = new Event2017(stage, darkTheme)
