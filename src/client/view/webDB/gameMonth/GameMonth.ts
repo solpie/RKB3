@@ -41,6 +41,7 @@ class GameMonth extends VueBase {
     recMap = VueBase.PROP
     gameInfo = VueBase.PROP
     playerRank = VueBase.PROP
+    masterBracket = VueBase.PROP
 
     constructor() {
         super();
@@ -175,8 +176,7 @@ class GameMonth extends VueBase {
                 let playerArr = mapToArr(sumMap)
                 for (let p1 of playerArr) {
                     for (let p2 of playerArr) {
-
-                        if (p1.win==p2.win&&p1.beat.indexOf(p2.name)>-1)
+                        if (p1.win == p2.win && p1.beat.indexOf(p2.name) > -1)
                             p1.win += 0.1
                     }
                 }
@@ -184,8 +184,79 @@ class GameMonth extends VueBase {
                     .thenBy(function (v1, v2) { return v2.dtScore - v1.dtScore; })
                 )
                 this.playerRank = playerArr
-                console.log(playerArr)
+
+
+                // -- -master---                
+                let groupMap: any = { 'a': [], 'b': [], 'c': [], 'd': [] }
+                for (let p3 of playerArr) {
+                    let pg = p3.name[0]
+                    if (groupMap[pg].length < 2) {
+                        groupMap[pg].push(p3)
+                    }
+                }
+
+                let m = []
+                for (let g in groupMap) {
+                    m = m.concat(groupMap[g])
+                }
+
+                let masterIdx = 24
+                doc['recMap'][masterIdx + 0].player[0] = m[0].name
+                doc['recMap'][masterIdx + 0].player[1] = m[3].name
+
+                doc['recMap'][masterIdx + 1].player[0] = m[2].name
+                doc['recMap'][masterIdx + 1].player[1] = m[1].name
+
+                doc['recMap'][masterIdx + 2].player[0] = m[4].name
+                doc['recMap'][masterIdx + 2].player[1] = m[7].name
+
+                doc['recMap'][masterIdx + 3].player[0] = m[6].name
+                doc['recMap'][masterIdx + 3].player[1] = m[5].name
+                for (let m1 of m) {
+                    console.log('master', m1.name)
+                }
+                console.log('master', m)
+                this.masterBracket = m
+                saveDoc(doc)
             })
+        },
+        onBracket() {
+            let masterIdx = 23
+            let route = (from, toWin, toLose) => {
+                from += masterIdx
+                toWin += masterIdx
+                toLose += masterIdx
+                let rFrom = this.recMap[from]
+                let rWin = this.recMap[toWin]
+                let rLose = this.recMap[toLose]
+                if (rFrom.score[0] > rFrom.score[1]) {
+                    rWin.player.push(rFrom.player[0])
+                    if (rLose)
+                        rLose.player.push(rFrom.player[1])
+                }
+                else {
+                    rWin.player.push(rFrom.player[1])
+                    if (rLose)
+                        rLose.player.push(rFrom.player[0])
+                }
+            }
+            for (let i = 5; i < 15; i++) {
+                this.recMap[i + masterIdx].player = []
+            }
+            route(1, 7, 5)
+            route(2, 7, 5)
+            route(3, 8, 6)
+            route(4, 8, 6)
+            route(5, 10, 99)
+            route(6, 9, 99)
+            route(7, 11, 9)
+            route(8, 11, 10)
+            route(9, 12, 99)
+            route(10, 12, 99)
+            route(11, 14, 13)
+            route(12, 13, 99)
+            route(13, 14, 99)
+            Vue('recMap', '1', 'recMap["1"]')
         },
         onSetGameIdx(v) {
             gameInfo.start(v)

@@ -842,6 +842,7 @@
 	        this.recMap = VueBase_1.VueBase.PROP;
 	        this.gameInfo = VueBase_1.VueBase.PROP;
 	        this.playerRank = VueBase_1.VueBase.PROP;
+	        this.masterBracket = VueBase_1.VueBase.PROP;
 	        this.methods = {
 	            onAddScore: function (isLeft, dtScore) {
 	                gameInfo.score(isLeft, dtScore);
@@ -906,8 +907,74 @@
 	                    playerArr.sort(thenBy_1.firstBy(function (v1, v2) { return v2.win - v1.win; })
 	                        .thenBy(function (v1, v2) { return v2.dtScore - v1.dtScore; }));
 	                    _this.playerRank = playerArr;
-	                    console.log(playerArr);
+	                    var groupMap = { 'a': [], 'b': [], 'c': [], 'd': [] };
+	                    for (var _b = 0, playerArr_3 = playerArr; _b < playerArr_3.length; _b++) {
+	                        var p3 = playerArr_3[_b];
+	                        var pg = p3.name[0];
+	                        if (groupMap[pg].length < 2) {
+	                            groupMap[pg].push(p3);
+	                        }
+	                    }
+	                    var m = [];
+	                    for (var g in groupMap) {
+	                        m = m.concat(groupMap[g]);
+	                    }
+	                    var masterIdx = 24;
+	                    doc['recMap'][masterIdx + 0].player[0] = m[0].name;
+	                    doc['recMap'][masterIdx + 0].player[1] = m[3].name;
+	                    doc['recMap'][masterIdx + 1].player[0] = m[2].name;
+	                    doc['recMap'][masterIdx + 1].player[1] = m[1].name;
+	                    doc['recMap'][masterIdx + 2].player[0] = m[4].name;
+	                    doc['recMap'][masterIdx + 2].player[1] = m[7].name;
+	                    doc['recMap'][masterIdx + 3].player[0] = m[6].name;
+	                    doc['recMap'][masterIdx + 3].player[1] = m[5].name;
+	                    for (var _c = 0, m_1 = m; _c < m_1.length; _c++) {
+	                        var m1 = m_1[_c];
+	                        console.log('master', m1.name);
+	                    }
+	                    console.log('master', m);
+	                    _this.masterBracket = m;
+	                    saveDoc(doc);
 	                });
+	            },
+	            onBracket: function () {
+	                var _this = this;
+	                var masterIdx = 23;
+	                var route = function (from, toWin, toLose) {
+	                    from += masterIdx;
+	                    toWin += masterIdx;
+	                    toLose += masterIdx;
+	                    var rFrom = _this.recMap[from];
+	                    var rWin = _this.recMap[toWin];
+	                    var rLose = _this.recMap[toLose];
+	                    if (rFrom.score[0] > rFrom.score[1]) {
+	                        rWin.player.push(rFrom.player[0]);
+	                        if (rLose)
+	                            rLose.player.push(rFrom.player[1]);
+	                    }
+	                    else {
+	                        rWin.player.push(rFrom.player[1]);
+	                        if (rLose)
+	                            rLose.player.push(rFrom.player[0]);
+	                    }
+	                };
+	                for (var i = 5; i < 15; i++) {
+	                    this.recMap[i + masterIdx].player = [];
+	                }
+	                route(1, 7, 5);
+	                route(2, 7, 5);
+	                route(3, 8, 6);
+	                route(4, 8, 6);
+	                route(5, 10, 99);
+	                route(6, 9, 99);
+	                route(7, 11, 9);
+	                route(8, 11, 10);
+	                route(9, 12, 99);
+	                route(10, 12, 99);
+	                route(11, 14, 13);
+	                route(12, 13, 99);
+	                route(13, 14, 99);
+	                Vue('recMap', '1', 'recMap["1"]');
 	            },
 	            onSetGameIdx: function (v) {
 	                gameInfo.start(v);
@@ -1170,7 +1237,7 @@
 /***/ 95:
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(r,idx) in recMap\">\r\n                    {{r.gameIdx+1}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            第{{gameInfo.gameIdx+1}}场\r\n            <span></span><br> Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button> {{gameInfo.lScore}}\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button> {{gameInfo.lFoul}}\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <br> {{gameInfo.rScore}}\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br> {{gameInfo.rFoul}}\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onStartTimer\">开始计时</button>\r\n            <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx-1)\">上一场</button>\r\n            <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx+1)\">下一场</button>\r\n            <button class=\"button\" @click=\"onCommitGame\">提交比赛</button>\r\n            <button class=\"button\" @click=\"onClearGame\">清除比赛数据</button>\r\n            <button class=\"button\" @click=\"onTestGame\">testGame</button>\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onSetMaster\">大师赛排名</button>\r\n            <div>\r\n                <li v-for=\"(p,idx) in playerRank\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                    <div v-if='idx==7'>----------</div>\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(r,idx) in recMap\">\r\n                    {{r.gameIdx+1}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}\r\n                    <div v-if='idx==23'>----------</div>\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            第{{gameInfo.gameIdx+1}}场 {{gameInfo.recData.player[0]}} vs {{gameInfo.recData.player[1]}}\r\n            <span></span><br> Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button> {{gameInfo.lScore}}\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button> {{gameInfo.lFoul}}\r\n            <br>\r\n            <button class=\"button\" @click=\"onStartTimer\">开始计时</button>\r\n            <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx-1)\">上一场</button>\r\n            <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx+1)\">下一场</button>\r\n            <button class=\"button\" @click=\"onCommitGame\">提交比赛</button>\r\n            <button class=\"button\" @click=\"onClearGame\">清除比赛数据</button>\r\n            <button class=\"button\" @click=\"onTestGame\">testGame</button>\r\n            <button class=\"button\" @click=\"onBracket\">bracket</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <br> {{gameInfo.rScore}}\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br> {{gameInfo.rFoul}}\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onSetMaster\">大师赛排名</button>\r\n            <div>\r\n                <li v-for=\"(p,idx) in playerRank\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                    <div v-if='idx==7'>----------</div>\r\n                </li>\r\n                <div>-----master-----</div>\r\n                <li v-for=\"(p,idx) in masterBracket\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n    </div>\r\n</div>";
 
 /***/ },
 

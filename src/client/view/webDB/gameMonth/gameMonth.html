@@ -5,12 +5,13 @@
             <div>
                 <li v-for="(r,idx) in recMap">
                     {{r.gameIdx+1}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}
+                    <div v-if='idx==23'>----------</div>
                 </li>
             </div>
         </div>
 
         <div class="column">
-            第{{gameInfo.gameIdx+1}}场
+            第{{gameInfo.gameIdx+1}}场 {{gameInfo.recData.player[0]}} vs {{gameInfo.recData.player[1]}}
             <span></span><br> Score
             <br>
             <button class="button" @click="onAddScore(true,1)">+1</button>
@@ -19,6 +20,14 @@
             <br>
             <button class="button" @click="onAddFoul(true,1)">+1</button>
             <button class="button" @click="onAddFoul(true,-1)">-1</button> {{gameInfo.lFoul}}
+            <br>
+            <button class="button" @click="onStartTimer">开始计时</button>
+            <button class="button" @click="onSetGameIdx(gameInfo.gameIdx-1)">上一场</button>
+            <button class="button" @click="onSetGameIdx(gameInfo.gameIdx+1)">下一场</button>
+            <button class="button" @click="onCommitGame">提交比赛</button>
+            <button class="button" @click="onClearGame">清除比赛数据</button>
+            <button class="button" @click="onTestGame">testGame</button>
+            <button class="button" @click="onBracket">bracket</button>
         </div>
         <div class="column">
             <br>
@@ -29,13 +38,7 @@
             <br> {{gameInfo.rFoul}}
             <button class="button" @click="onAddFoul(false,1)">+1</button>
             <button class="button" @click="onAddFoul(false,-1)">-1</button>
-            <br>
-            <button class="button" @click="onStartTimer">开始计时</button>
-            <button class="button" @click="onSetGameIdx(gameInfo.gameIdx-1)">上一场</button>
-            <button class="button" @click="onSetGameIdx(gameInfo.gameIdx+1)">下一场</button>
-            <button class="button" @click="onCommitGame">提交比赛</button>
-            <button class="button" @click="onClearGame">清除比赛数据</button>
-            <button class="button" @click="onTestGame">testGame</button>
+
         </div>
 
         <div class="column">
@@ -44,6 +47,10 @@
                 <li v-for="(p,idx) in playerRank">
                     [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}
                     <div v-if='idx==7'>----------</div>
+                </li>
+                <div>-----master-----</div>
+                <li v-for="(p,idx) in masterBracket">
+                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}
                 </li>
             </div>
         </div>
