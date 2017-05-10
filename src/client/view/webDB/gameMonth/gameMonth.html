@@ -4,8 +4,13 @@
             game list
             <div>
                 <li v-for="(r,idx) in recMap">
-                    {{r.gameIdx+1}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}
-                    <div v-if='idx==23'>----------</div>
+                    <a v-if='idx<24' href='#' @click='onSetGameIdx(idx)'>
+                        {{r.gameIdx+1}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}
+                    </a>
+                    <a v-if='idx>23' href='#' @click='onSetGameIdx(idx)'>
+                        {{r.gameIdx-23}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}
+                    </a>
+                    <div v-if='idx==23'>-----master-----</div>
                 </li>
             </div>
         </div>
