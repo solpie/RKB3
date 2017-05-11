@@ -5887,8 +5887,13 @@
 	                _this.scorePanel.resetTimer();
 	            }
 	        })
+	            .on("" + WebDBCmd_1.WebDBCmd.sc_startGame, function (data) {
+	        })
 	            .on("" + WebDBCmd_1.WebDBCmd.sc_startTimer, function (data) {
-	            _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
+	            if (data.isStart)
+	                _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
+	            else
+	                _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
 	        })
 	            .on("" + WebDBCmd_1.WebDBCmd.sc_commit, function (data) {
 	            console.log('commitGame', data);
@@ -6151,6 +6156,8 @@
 	exports.WebDBCmd = {
 	    cs_init: "",
 	    sc_init: "",
+	    cs_startGame: "",
+	    sc_startGame: "",
 	    cs_startTimer: "",
 	    sc_startTimer: "",
 	    cs_commit: "",

@@ -118,8 +118,14 @@ export class ScoreView extends BasePanelView {
                     this.scorePanel.resetTimer();
                 }
             })
+            .on(`${WebDBCmd.sc_startGame}`, (data) => {
+                
+            })
             .on(`${WebDBCmd.sc_startTimer}`, (data) => {
-                this.scorePanel.toggleTimer(TimerState.RUNNING);
+                if (data.isStart)
+                    this.scorePanel.toggleTimer(TimerState.RUNNING);
+                else
+                    this.scorePanel.toggleTimer(TimerState.PAUSE);
             })
             .on(`${WebDBCmd.sc_commit}`, (data) => {
                 console.log('commitGame', data)

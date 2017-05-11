@@ -1,17 +1,18 @@
 export class PlayerInfo{
     id: number
     name: string
+    hupuID: string
     avatar: string
     weight: number
     height: number
     groupId: number
     level: number
+    intro: string
     
-    score:number
-    winCount: number = 0
-    loseCount: number = 0
-    //
-    beatPlayerArr = []
-    //净胜分
-    beatScore = []
+
+    // fly data
+    leftScore:number
+    rightScore:number
+    leftFoul:number
+    rightFoul:number
 } 

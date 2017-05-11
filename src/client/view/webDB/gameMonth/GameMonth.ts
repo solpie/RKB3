@@ -51,25 +51,16 @@ class GameMonth extends VueBase {
     initGameInfo() {
         getDoc((doc) => {
             if (doc) {
-                let playerArr = []
-                let mapN = { '0': 'a', '1': 'b', '2': 'c', '3': 'd' }
-                for (let i = 0; i < 16; i++) {
-                    let p = new PlayerInfo()
-                    p.id = i + 1
-                    p.name = mapN[Math.floor(i / 4)] + ((i % 4) + 1)
-                    playerArr.push(p)
-                }
-                console.log(playerArr);
 
-                gameInfo = GameInfo.create(playerArr)
-                console.log(gameInfo.gameArr);
-
+                gameInfo = GameInfo.create()
+                // console.log(gameInfo.gameArr);
 
                 // if (!doc['recMap']) {
                 // doc['recMap'] = {}
+                // let gameArr = gameInfo.getGameArr()
                 // for (let i = 0; i < 38; i++) {
                 //     let r = new RecData()
-                //     let gp = gameInfo.gameArr[i]
+                //     let gp =gameArr[i]
                 //     if (gp)
                 //         r.player = [gp[0].name, gp[1].name]
                 //     r.gameIdx = i
@@ -109,10 +100,7 @@ class GameMonth extends VueBase {
             })
             .on(`${WebDBCmd.sc_panelCreated}`, () => {
                 console.log('sc_panelCreated')
-                let data: any = { _: null }
-                data.winScore = gameInfo.winScore
-                data.gameIdx = gameInfo.gameIdx + 1
-                data.player = gameInfo.getPlayerData()
+                let data: any = gameInfo.getGameData()
 
                 $post(`/db/cmd/${WebDBCmd.cs_init}`, data, null)
             })
@@ -140,12 +128,19 @@ class GameMonth extends VueBase {
                 data.rightFoul = gameInfo.rFoul
             $post(`/db/cmd/${WebDBCmd.cs_score}`, data, null)
         },
-        onStartTimer() {
-            let data: any = { _: null }
+        onStartTimer(isStart) {
+            let data: any = { _: null, isStart: isStart }
             $post(`/db/cmd/${WebDBCmd.cs_startTimer}`, data, null)
         },
-
+        renderRecMap(recMap?) {
+            if (recMap) {
+                this.recMap = gameInfo.recMap = recMap
+            }
+            Vue('recMap', '1', 'recMap["1"]')
+        },
         onStartGame() {
+            let data: any = gameInfo.getGameData()
+            $post(`/db/cmd/${WebDBCmd.cs_init}`, data, null)
         },
         onSetMaster() {
             getDoc((doc) => {
@@ -185,7 +180,6 @@ class GameMonth extends VueBase {
                 )
                 this.playerRank = playerArr
 
-
                 // -- -master---                
                 let groupMap: any = { 'a': [], 'b': [], 'c': [], 'd': [] }
                 for (let p3 of playerArr) {
@@ -217,6 +211,7 @@ class GameMonth extends VueBase {
                 }
                 console.log('master', m)
                 this.masterBracket = m
+                this.renderRecMap(doc['recMap'])
                 saveDoc(doc)
             })
         },
@@ -229,6 +224,8 @@ class GameMonth extends VueBase {
                 let rFrom = this.recMap[from]
                 let rWin = this.recMap[toWin]
                 let rLose = this.recMap[toLose]
+                if (rFrom.score[0] == 0 && rFrom.score[1] == 0) 
+                    return
                 if (rFrom.score[0] > rFrom.score[1]) {
                     rWin.player.push(rFrom.player[0])
                     if (rLose)
@@ -256,7 +253,7 @@ class GameMonth extends VueBase {
             route(11, 14, 13)
             route(12, 13, 99)
             route(13, 14, 99)
-            Vue('recMap', '1', 'recMap["1"]')
+            this.renderRecMap()
         },
         onSetGameIdx(v) {
             gameInfo.start(v)
@@ -264,27 +261,44 @@ class GameMonth extends VueBase {
         onTestGame() {
             getDoc((doc) => {
                 if (doc) {
-
                     for (let k in doc['recMap']) {
-                        let rd = Math.random()
-                        let s
-                        if (rd < .5) {
-                            s = [3, Math.floor(Math.random() * 3)]
+                        if (Number(k) < 24) {
+                            let rd = Math.random()
+                            let s
+                            if (rd < .5) {
+                                s = [3, Math.floor(Math.random() * 3)]
+                            }
+                            else
+                                s = [Math.floor(Math.random() * 3), 3]
+                            doc['recMap'][k].score = s
                         }
-                        else
-                            s = [Math.floor(Math.random() * 3), 3]
-                        doc['recMap'][k].score = s
                     }
                     saveDoc(doc)
                 }
             })
         },
-        onClearGame() {
+        onClearGame(section) {
+            let min = 0
+            let max = 38
+            if (section == 0) {
+
+            }
+            else if (section == 1) {
+                min = 24
+            }
             getDoc((doc) => {
                 if (doc) {
                     for (let k in doc['recMap']) {
-                        doc['recMap'][k].score = [0, 0]
-                        doc['recMap'][k].foul = [0, 0]
+                        let gameIdx = Number(k)
+                        if (gameIdx <= max && gameIdx >= min) {
+                            doc['recMap'][k].score = [0, 0]
+                            doc['recMap'][k].foul = [0, 0]
+
+                            if (section == 1) {
+                                doc['recMap'][k].player = ['', '']
+                            }
+                        }
+
                     }
                     doc.gameIdx = 0
                     saveDoc(doc)
@@ -305,6 +319,7 @@ class GameMonth extends VueBase {
             })
 
             $post(`/db/cmd/${WebDBCmd.cs_commit}`, data, null)
+            this.onStartGame()
         },
     }
 }

@@ -9,7 +9,8 @@ export class RecData {
 export class GameInfo {
     //static
     playerArr: Array<PlayerInfo>
-    gameArr: Array<Array<PlayerInfo>>
+    // gameArr: Array<Array<PlayerInfo>>
+    nameMapHupuId: any = {}
     //当前比赛球员
     gamePlayerArr: Array<PlayerInfo>
     status: number = 0
@@ -24,11 +25,26 @@ export class GameInfo {
     // recArray: Array<RecData>
     recData: RecData
     recMap: any
-    static create(playerArr) {
+    static create() {
         let gmi = new GameInfo()
+        let playerArr = []
+        let mapN = { '0': 'a', '1': 'b', '2': 'c', '3': 'd' }
+        for (let i = 0; i < 16; i++) {
+            let p = new PlayerInfo()
+            p.id = i + 1
+            p.name = mapN[Math.floor(i / 4)] + ((i % 4) + 1)
+            playerArr.push(p)
+            gmi.nameMapHupuId[p.name] = new PlayerInfo()
+        }
+        console.log(playerArr);
         gmi.playerArr = playerArr
-        gmi.gameArr = []
-        let group = gmi.gameArr
+
+
+        return gmi
+    }
+    getGameArr() {
+        let gmi = this
+        let group = []
 
         for (let i = 0; i < 4; i++) {
             group.push([gmi.playerArr[i * 4], gmi.playerArr[i * 4 + 1]])
@@ -44,9 +60,8 @@ export class GameInfo {
             group.push([gmi.playerArr[i * 4 + 1], gmi.playerArr[i * 4 + 3]])
             group.push([gmi.playerArr[i * 4], gmi.playerArr[i * 4 + 2]])
         }
-        return gmi
+        return group
     }
-
     getCurGame() {
         return this
     }
@@ -57,18 +72,59 @@ export class GameInfo {
         this.gameIdx = this.recData.gameIdx
     }
 
+    getPlayerInfo(groupName) {
+        return JSON.parse(JSON.stringify(this.nameMapHupuId[groupName]))
+    }
+    getGameData() {
+        let data: any = { _: null }
+        this.gameIdx == 37 ? data.winScore = 5 : data.winScore = 3
+        data.gameIdx = this.gameIdx + 1
+        data.player = this.getPlayerData()
+        return data
+    }
     getPlayerData() {
         let data: any = {}
-        let lPlayer = this.gameArr[this.gameIdx][0]
-        let rPlayer = this.gameArr[this.gameIdx][1]
+        let lName = this.recMap[this.gameIdx].player[0]
+        let rName = this.recMap[this.gameIdx].player[1]
+        let lPlayer: PlayerInfo = this.getPlayerInfo(lName)
+        let rPlayer: PlayerInfo = this.getPlayerInfo(rName)
+
+        lPlayer.name = lName
+        rPlayer.name = rName
         data.left = lPlayer
         data.right = rPlayer
-        lPlayer['leftScore'] = this.lScore
-        lPlayer['leftFoul'] = this.lFoul
+        lPlayer.leftScore = this.lScore
+        lPlayer.leftFoul = this.lFoul
 
-        rPlayer['rightScore'] = this.rScore
-        rPlayer['rightFoul'] = this.rFoul
+        rPlayer.rightScore = this.rScore
+        rPlayer.rightFoul = this.rFoul
         return data
+    }
+    buildPlayerData(doc) {
+        let sumMap: any = {}
+        for (let k in doc['recMap']) {
+            if (Number(k) < 24) {
+                let r: RecData = doc['recMap'][k]
+                if (!sumMap[r.player[0]])
+                    sumMap[r.player[0]] = { name: r.player[0], win: 0, dtScore: 0, beat: [], time: 0 }
+                if (!sumMap[r.player[1]])
+                    sumMap[r.player[1]] = { name: r.player[1], win: 0, dtScore: 0, beat: [], time: 0 }
+                if (r.score[0] == 0 && r.score[1] == 0) {
+                    continue;
+                }
+                if (r.score[0] > r.score[1]) {
+                    sumMap[r.player[0]].win++
+                    sumMap[r.player[0]].dtScore += r.score[0] - r.score[1]
+                    sumMap[r.player[0]].beat.push(r.player[1])
+                }
+                else {
+                    sumMap[r.player[1]].win++
+                    sumMap[r.player[1]].dtScore += r.score[1] - r.score[0]
+                    sumMap[r.player[1]].beat.push(r.player[0])
+                }
+                console.log(r)
+            }
+        }
     }
     score(isLeft, dtScore) {
         if (isLeft)
@@ -101,25 +157,16 @@ export class GameInfo {
         return doc
         // return JSON.parse(JSON.stringify(obj))
     }
-    lastWinner:any
+    lastWinner: any
     commit() {
-        let lPlayer = this.gameArr[this.gameIdx][0]
-        let rPlayer = this.gameArr[this.gameIdx][1]
+        let lPlayer = { name: this.recMap[this.gameIdx].player[0] }
+        let rPlayer = { name: this.recMap[this.gameIdx].player[1] }
         let winner;
         if (this.lScore > this.rScore) {
             winner = lPlayer
-            lPlayer.winCount++
-            rPlayer.loseCount++
-            lPlayer.beatPlayerArr.push(rPlayer)
-            lPlayer.beatScore.push(this.lScore - this.rScore)
         }
         else {
             winner = rPlayer
-
-            rPlayer.winCount++
-            lPlayer.loseCount++
-            rPlayer.beatPlayerArr.push(lPlayer)
-            rPlayer.beatScore.push(this.rScore - this.lScore)
         }
         this.lastWinner = winner
         let r = this.recData

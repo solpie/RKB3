@@ -752,6 +752,8 @@
 	exports.WebDBCmd = {
 	    cs_init: "",
 	    sc_init: "",
+	    cs_startGame: "",
+	    sc_startGame: "",
 	    cs_startTimer: "",
 	    sc_startTimer: "",
 	    cs_commit: "",
@@ -802,7 +804,6 @@
 	};
 	var thenBy_1 = __webpack_require__(96);
 	var JsFunc_1 = __webpack_require__(17);
-	var PlayerInfo_1 = __webpack_require__(93);
 	var GameInfo_1 = __webpack_require__(94);
 	var WebDBCmd_1 = __webpack_require__(78);
 	var VueBase_1 = __webpack_require__(18);
@@ -862,11 +863,19 @@
 	                    data.rightFoul = gameInfo.rFoul;
 	                $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_score, data, null);
 	            },
-	            onStartTimer: function () {
-	                var data = { _: null };
+	            onStartTimer: function (isStart) {
+	                var data = { _: null, isStart: isStart };
 	                $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_startTimer, data, null);
 	            },
+	            renderRecMap: function (recMap) {
+	                if (recMap) {
+	                    this.recMap = gameInfo.recMap = recMap;
+	                }
+	                Vue('recMap', '1', 'recMap["1"]');
+	            },
 	            onStartGame: function () {
+	                var data = gameInfo.getGameData();
+	                $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_init, data, null);
 	            },
 	            onSetMaster: function () {
 	                var _this = this;
@@ -934,6 +943,7 @@
 	                    }
 	                    console.log('master', m);
 	                    _this.masterBracket = m;
+	                    _this.renderRecMap(doc['recMap']);
 	                    saveDoc(doc);
 	                });
 	            },
@@ -947,6 +957,8 @@
 	                    var rFrom = _this.recMap[from];
 	                    var rWin = _this.recMap[toWin];
 	                    var rLose = _this.recMap[toLose];
+	                    if (rFrom.score[0] == 0 && rFrom.score[1] == 0)
+	                        return;
 	                    if (rFrom.score[0] > rFrom.score[1]) {
 	                        rWin.player.push(rFrom.player[0]);
 	                        if (rLose)
@@ -974,7 +986,7 @@
 	                route(11, 14, 13);
 	                route(12, 13, 99);
 	                route(13, 14, 99);
-	                Vue('recMap', '1', 'recMap["1"]');
+	                this.renderRecMap();
 	            },
 	            onSetGameIdx: function (v) {
 	                gameInfo.start(v);
@@ -983,25 +995,40 @@
 	                getDoc(function (doc) {
 	                    if (doc) {
 	                        for (var k in doc['recMap']) {
-	                            var rd = Math.random();
-	                            var s = void 0;
-	                            if (rd < .5) {
-	                                s = [3, Math.floor(Math.random() * 3)];
+	                            if (Number(k) < 24) {
+	                                var rd = Math.random();
+	                                var s = void 0;
+	                                if (rd < .5) {
+	                                    s = [3, Math.floor(Math.random() * 3)];
+	                                }
+	                                else
+	                                    s = [Math.floor(Math.random() * 3), 3];
+	                                doc['recMap'][k].score = s;
 	                            }
-	                            else
-	                                s = [Math.floor(Math.random() * 3), 3];
-	                            doc['recMap'][k].score = s;
 	                        }
 	                        saveDoc(doc);
 	                    }
 	                });
 	            },
-	            onClearGame: function () {
+	            onClearGame: function (section) {
+	                var min = 0;
+	                var max = 38;
+	                if (section == 0) {
+	                }
+	                else if (section == 1) {
+	                    min = 24;
+	                }
 	                getDoc(function (doc) {
 	                    if (doc) {
 	                        for (var k in doc['recMap']) {
-	                            doc['recMap'][k].score = [0, 0];
-	                            doc['recMap'][k].foul = [0, 0];
+	                            var gameIdx = Number(k);
+	                            if (gameIdx <= max && gameIdx >= min) {
+	                                doc['recMap'][k].score = [0, 0];
+	                                doc['recMap'][k].foul = [0, 0];
+	                                if (section == 1) {
+	                                    doc['recMap'][k].player = ['', ''];
+	                                }
+	                            }
 	                        }
 	                        doc.gameIdx = 0;
 	                        saveDoc(doc);
@@ -1021,6 +1048,7 @@
 	                    }
 	                });
 	                $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_commit, data, null);
+	                this.onStartGame();
 	            },
 	        };
 	        VueBase_1.VueBase.initProps(this);
@@ -1029,17 +1057,7 @@
 	        var _this = this;
 	        getDoc(function (doc) {
 	            if (doc) {
-	                var playerArr = [];
-	                var mapN = { '0': 'a', '1': 'b', '2': 'c', '3': 'd' };
-	                for (var i = 0; i < 16; i++) {
-	                    var p = new PlayerInfo_1.PlayerInfo();
-	                    p.id = i + 1;
-	                    p.name = mapN[Math.floor(i / 4)] + ((i % 4) + 1);
-	                    playerArr.push(p);
-	                }
-	                console.log(playerArr);
-	                gameInfo = GameInfo_1.GameInfo.create(playerArr);
-	                console.log(gameInfo.gameArr);
+	                gameInfo = GameInfo_1.GameInfo.create();
 	                _this.recMap = doc['recMap'];
 	                gameInfo.recMap = doc['recMap'];
 	                gameInfo.start(doc.gameIdx);
@@ -1067,10 +1085,7 @@
 	        })
 	            .on("" + WebDBCmd_1.WebDBCmd.sc_panelCreated, function () {
 	            console.log('sc_panelCreated');
-	            var data = { _: null };
-	            data.winScore = gameInfo.winScore;
-	            data.gameIdx = gameInfo.gameIdx + 1;
-	            data.player = gameInfo.getPlayerData();
+	            var data = gameInfo.getGameData();
 	            $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_init, data, null);
 	        });
 	    };
@@ -1087,10 +1102,6 @@
 	"use strict";
 	var PlayerInfo = (function () {
 	    function PlayerInfo() {
-	        this.winCount = 0;
-	        this.loseCount = 0;
-	        this.beatPlayerArr = [];
-	        this.beatScore = [];
 	    }
 	    return PlayerInfo;
 	}());
@@ -1100,9 +1111,10 @@
 /***/ },
 
 /***/ 94:
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var PlayerInfo_1 = __webpack_require__(93);
 	var RecData = (function () {
 	    function RecData() {
 	        this.gameIdx = -1;
@@ -1116,6 +1128,7 @@
 	exports.RecData = RecData;
 	var GameInfo = (function () {
 	    function GameInfo() {
+	        this.nameMapHupuId = {};
 	        this.status = 0;
 	        this.winScore = 3;
 	        this.gameIdx = 0;
@@ -1125,11 +1138,24 @@
 	        this.lFoul = 0;
 	        this.rFoul = 0;
 	    }
-	    GameInfo.create = function (playerArr) {
+	    GameInfo.create = function () {
 	        var gmi = new GameInfo();
+	        var playerArr = [];
+	        var mapN = { '0': 'a', '1': 'b', '2': 'c', '3': 'd' };
+	        for (var i = 0; i < 16; i++) {
+	            var p = new PlayerInfo_1.PlayerInfo();
+	            p.id = i + 1;
+	            p.name = mapN[Math.floor(i / 4)] + ((i % 4) + 1);
+	            playerArr.push(p);
+	            gmi.nameMapHupuId[p.name] = new PlayerInfo_1.PlayerInfo();
+	        }
+	        console.log(playerArr);
 	        gmi.playerArr = playerArr;
-	        gmi.gameArr = [];
-	        var group = gmi.gameArr;
+	        return gmi;
+	    };
+	    GameInfo.prototype.getGameArr = function () {
+	        var gmi = this;
+	        var group = [];
 	        for (var i = 0; i < 4; i++) {
 	            group.push([gmi.playerArr[i * 4], gmi.playerArr[i * 4 + 1]]);
 	            group.push([gmi.playerArr[i * 4 + 2], gmi.playerArr[i * 4 + 3]]);
@@ -1142,7 +1168,7 @@
 	            group.push([gmi.playerArr[i * 4 + 1], gmi.playerArr[i * 4 + 3]]);
 	            group.push([gmi.playerArr[i * 4], gmi.playerArr[i * 4 + 2]]);
 	        }
-	        return gmi;
+	        return group;
 	    };
 	    GameInfo.prototype.getCurGame = function () {
 	        return this;
@@ -1152,17 +1178,57 @@
 	        this.recData = r;
 	        this.gameIdx = this.recData.gameIdx;
 	    };
+	    GameInfo.prototype.getPlayerInfo = function (groupName) {
+	        return JSON.parse(JSON.stringify(this.nameMapHupuId[groupName]));
+	    };
+	    GameInfo.prototype.getGameData = function () {
+	        var data = { _: null };
+	        this.gameIdx == 37 ? data.winScore = 5 : data.winScore = 3;
+	        data.gameIdx = this.gameIdx + 1;
+	        data.player = this.getPlayerData();
+	        return data;
+	    };
 	    GameInfo.prototype.getPlayerData = function () {
 	        var data = {};
-	        var lPlayer = this.gameArr[this.gameIdx][0];
-	        var rPlayer = this.gameArr[this.gameIdx][1];
+	        var lName = this.recMap[this.gameIdx].player[0];
+	        var rName = this.recMap[this.gameIdx].player[1];
+	        var lPlayer = this.getPlayerInfo(lName);
+	        var rPlayer = this.getPlayerInfo(rName);
+	        lPlayer.name = lName;
+	        rPlayer.name = rName;
 	        data.left = lPlayer;
 	        data.right = rPlayer;
-	        lPlayer['leftScore'] = this.lScore;
-	        lPlayer['leftFoul'] = this.lFoul;
-	        rPlayer['rightScore'] = this.rScore;
-	        rPlayer['rightFoul'] = this.rFoul;
+	        lPlayer.leftScore = this.lScore;
+	        lPlayer.leftFoul = this.lFoul;
+	        rPlayer.rightScore = this.rScore;
+	        rPlayer.rightFoul = this.rFoul;
 	        return data;
+	    };
+	    GameInfo.prototype.buildPlayerData = function (doc) {
+	        var sumMap = {};
+	        for (var k in doc['recMap']) {
+	            if (Number(k) < 24) {
+	                var r = doc['recMap'][k];
+	                if (!sumMap[r.player[0]])
+	                    sumMap[r.player[0]] = { name: r.player[0], win: 0, dtScore: 0, beat: [], time: 0 };
+	                if (!sumMap[r.player[1]])
+	                    sumMap[r.player[1]] = { name: r.player[1], win: 0, dtScore: 0, beat: [], time: 0 };
+	                if (r.score[0] == 0 && r.score[1] == 0) {
+	                    continue;
+	                }
+	                if (r.score[0] > r.score[1]) {
+	                    sumMap[r.player[0]].win++;
+	                    sumMap[r.player[0]].dtScore += r.score[0] - r.score[1];
+	                    sumMap[r.player[0]].beat.push(r.player[1]);
+	                }
+	                else {
+	                    sumMap[r.player[1]].win++;
+	                    sumMap[r.player[1]].dtScore += r.score[1] - r.score[0];
+	                    sumMap[r.player[1]].beat.push(r.player[0]);
+	                }
+	                console.log(r);
+	            }
+	        }
 	    };
 	    GameInfo.prototype.score = function (isLeft, dtScore) {
 	        if (isLeft)
@@ -1193,22 +1259,14 @@
 	        return doc;
 	    };
 	    GameInfo.prototype.commit = function () {
-	        var lPlayer = this.gameArr[this.gameIdx][0];
-	        var rPlayer = this.gameArr[this.gameIdx][1];
+	        var lPlayer = { name: this.recMap[this.gameIdx].player[0] };
+	        var rPlayer = { name: this.recMap[this.gameIdx].player[1] };
 	        var winner;
 	        if (this.lScore > this.rScore) {
 	            winner = lPlayer;
-	            lPlayer.winCount++;
-	            rPlayer.loseCount++;
-	            lPlayer.beatPlayerArr.push(rPlayer);
-	            lPlayer.beatScore.push(this.lScore - this.rScore);
 	        }
 	        else {
 	            winner = rPlayer;
-	            rPlayer.winCount++;
-	            lPlayer.loseCount++;
-	            rPlayer.beatPlayerArr.push(lPlayer);
-	            rPlayer.beatScore.push(this.rScore - this.lScore);
 	        }
 	        this.lastWinner = winner;
 	        var r = this.recData;
@@ -1237,7 +1295,7 @@
 /***/ 95:
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(r,idx) in recMap\">\r\n                    <a v-if='idx<24' href='#' @click='onSetGameIdx(idx)'>\r\n                        {{r.gameIdx+1}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}\r\n                    </a>\r\n                    <a v-if='idx>23' href='#' @click='onSetGameIdx(idx)'>\r\n                        {{r.gameIdx-23}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}\r\n                    </a>\r\n                    <div v-if='idx==23'>-----master-----</div>\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            第{{gameInfo.gameIdx+1}}场 {{gameInfo.recData.player[0]}} vs {{gameInfo.recData.player[1]}}\r\n            <span></span><br> Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button> {{gameInfo.lScore}}\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button> {{gameInfo.lFoul}}\r\n            <br>\r\n            <button class=\"button\" @click=\"onStartTimer\">开始计时</button>\r\n            <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx-1)\">上一场</button>\r\n            <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx+1)\">下一场</button>\r\n            <button class=\"button\" @click=\"onCommitGame\">提交比赛</button>\r\n            <button class=\"button\" @click=\"onClearGame\">清除比赛数据</button>\r\n            <button class=\"button\" @click=\"onTestGame\">testGame</button>\r\n            <button class=\"button\" @click=\"onBracket\">bracket</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <br> {{gameInfo.rScore}}\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br> {{gameInfo.rFoul}}\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onSetMaster\">大师赛排名</button>\r\n            <div>\r\n                <li v-for=\"(p,idx) in playerRank\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                    <div v-if='idx==7'>----------</div>\r\n                </li>\r\n                <div>-----master-----</div>\r\n                <li v-for=\"(p,idx) in masterBracket\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(r,idx) in recMap\">\r\n                    <a v-if='idx<24' href='#' @click='onSetGameIdx(idx)'>\r\n                        {{r.gameIdx+1}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}\r\n                    </a>\r\n                    <a v-if='idx>23' href='#' @click='onSetGameIdx(idx)'>\r\n                        {{r.gameIdx-23}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}\r\n                    </a>\r\n                    <div v-if='idx==23'>-----master-----</div>\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            第{{gameInfo.gameIdx+1}}场 {{gameInfo.recData.player[0]}} vs {{gameInfo.recData.player[1]}}\r\n            <span></span><br> Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button> {{gameInfo.lScore}}\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button> {{gameInfo.lFoul}}\r\n            <br>\r\n            <button class=\"button\" @click=\"onStartGame()\">开始比赛</button>\r\n            <button class=\"button\" @click=\"onStartTimer(true)\">开始计时</button>\r\n            <button class=\"button\" @click=\"onStartTimer(false)\">暂停计时</button>\r\n            <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx-1)\">上一场</button>\r\n            <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx+1)\">下一场</button>\r\n            <button class=\"button\" @click=\"onCommitGame\">提交比赛</button>\r\n            <button class=\"button\" @click=\"onClearGame(0)\">清除比赛数据</button>\r\n            <button class=\"button\" @click=\"onClearGame(1)\">清除大师赛数据</button>\r\n            <button class=\"button\" @click=\"onTestGame\">testGame</button>\r\n            <button class=\"button\" @click=\"onBracket\">bracket</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <br> {{gameInfo.rScore}}\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br> {{gameInfo.rFoul}}\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onSetMaster\">大师赛排名</button>\r\n            <div>\r\n                <li v-for=\"(p,idx) in playerRank\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                    <div v-if='idx==7'>----------</div>\r\n                </li>\r\n                <div>-----master-----</div>\r\n                <li v-for=\"(p,idx) in masterBracket\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n    </div>\r\n</div>";
 
 /***/ },
 
