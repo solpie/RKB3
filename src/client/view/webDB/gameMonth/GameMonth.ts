@@ -317,8 +317,8 @@ class GameMonth extends VueBase {
                     saveDoc(doc)
                 }
             })
-
             $post(`/db/cmd/${WebDBCmd.cs_commit}`, data, null)
+            this.onBracket()
             this.onStartGame()
         },
     }

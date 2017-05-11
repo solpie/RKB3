@@ -1048,6 +1048,7 @@
 	                    }
 	                });
 	                $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_commit, data, null);
+	                this.onBracket();
 	                this.onStartGame();
 	            },
 	        };
