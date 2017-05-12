@@ -4493,9 +4493,9 @@
 	        this.showOnly(rankView.name);
 	    };
 	    StageOnlineView.prototype.showBracket = function () {
-	        console.log('onClkBracket');
+	        console.log('onClkBracket', this.$route.query);
 	        if (!bracketView) {
-	            bracketView = new BracketView_1.BracketView(canvasStage, this.gameId);
+	            bracketView = new BracketView_1.BracketView(canvasStage, this.gameId, this.$route);
 	            this.basePanelArr.push(bracketView);
 	        }
 	        this.showOnly(bracketView.name);
@@ -5040,6 +5040,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var WebDBCmd_1 = __webpack_require__(78);
 	var PreRound_1 = __webpack_require__(73);
 	var Bracket2017_1 = __webpack_require__(74);
 	var Command_1 = __webpack_require__(61);
@@ -5049,35 +5050,60 @@
 	var BracketGroup_1 = __webpack_require__(69);
 	var BracketView = (function (_super) {
 	    __extends(BracketView, _super);
-	    function BracketView(stage, gameId) {
+	    function BracketView(stage, gameId, $route) {
 	        var _this = this;
 	        _super.call(this, const_1.PanelId.onlinePanel);
 	        this.name = const_1.PanelId.bracketPanel;
-	        console.log("new bracket");
+	        console.log("new bracket", $route.query);
+	        var isManmaul = $route.query.m == '1';
 	        this.bracket = new Bracket2017_1.Bracket2017(stage);
-	        this.bracket.visible = false;
-	        this.preRound = new PreRound_1.PreRound(stage);
-	        window.onkeyup = function (e) {
-	            console.log(e);
-	            if (e.key == 'ArrowLeft') {
-	                _this.preRound.showRight(false);
-	            }
-	            else if (e.key == 'ArrowRight') {
-	                _this.preRound.showRight(true);
-	            }
-	            else if (e.key == 'Tab') {
-	                _this.bracket.visible = !_this.bracket.visible;
-	                _this.preRound.visible = !_this.preRound.visible;
-	            }
-	            else if (e.key == 'ArrowUp') {
-	                _this.preRound.toggleTheme();
-	            }
-	        };
-	        this.getPreRoundInfo(gameId);
-	        this.initAuto(Number(gameId));
+	        if (isManmaul)
+	            this.initManmaul();
+	        else {
+	            this.bracket.visible = false;
+	            this.preRound = new PreRound_1.PreRound(stage);
+	            window.onkeyup = function (e) {
+	                console.log(e);
+	                if (e.key == 'ArrowLeft') {
+	                    _this.preRound.showRight(false);
+	                }
+	                else if (e.key == 'ArrowRight') {
+	                    _this.preRound.showRight(true);
+	                }
+	                else if (e.key == 'Tab') {
+	                    _this.bracket.visible = !_this.bracket.visible;
+	                    _this.preRound.visible = !_this.preRound.visible;
+	                }
+	                else if (e.key == 'ArrowUp') {
+	                    _this.preRound.toggleTheme();
+	                }
+	            };
+	            this.getPreRoundInfo(gameId);
+	            this.initAuto(Number(gameId));
+	        }
 	        this.initLocal();
 	        this.initBg();
 	    }
+	    BracketView.prototype.initManmaul = function () {
+	        var _this = this;
+	        var srvIO = io.connect('/webDB')
+	            .on('connect', function () {
+	            console.log('connect manmaul!');
+	            var url = "/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_bracketCreated;
+	            var param = { _: null };
+	            $.ajax({
+	                url: url,
+	                type: 'post',
+	                data: JSON.stringify(param),
+	                headers: { "Content-Type": "application/json" },
+	                dataType: 'json'
+	            });
+	        })
+	            .on("" + WebDBCmd_1.WebDBCmd.sc_bracketInit, function (data) {
+	            delete data['_'];
+	            _this.onBracketData({ data: data });
+	        });
+	    };
 	    BracketView.prototype.getPreRoundInfo = function (gameId) {
 	        var _this = this;
 	        HupuAPI_1.getPreRoundPlayer(gameId, function (res) {
@@ -6156,6 +6182,8 @@
 	exports.WebDBCmd = {
 	    cs_init: "",
 	    sc_init: "",
+	    cs_bracketInit: "",
+	    sc_bracketInit: "",
 	    cs_startGame: "",
 	    sc_startGame: "",
 	    cs_startTimer: "",
@@ -6166,6 +6194,8 @@
 	    sc_score: "",
 	    cs_panelCreated: "",
 	    sc_panelCreated: "",
+	    cs_bracketCreated: "",
+	    sc_bracketCreated: "",
 	    cs_srvCreated: "",
 	    sc_srvCreated: ""
 	};

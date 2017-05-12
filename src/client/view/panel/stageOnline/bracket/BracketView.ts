@@ -1,3 +1,4 @@
+import { WebDBCmd } from '../../../WebDBCmd';
 import { PreRound } from '../preRound/PreRound';
 import { Bracket2017 } from './Bracket2017';
 import { TweenEx } from '../../../utils/TweenEx';
@@ -16,34 +17,60 @@ declare let io;
 export class BracketView extends BasePanelView {
     bracket: Bracket2017
     preRound: PreRound
-    constructor(stage, gameId) {
+    constructor(stage, gameId, $route) {
         super(PanelId.onlinePanel);
         this.name = PanelId.bracketPanel;
-        console.log("new bracket");
-        this.bracket = new Bracket2017(stage)
-        this.bracket.visible = false
+        console.log("new bracket", $route.query);
+        let isManmaul = $route.query.m == '1'
 
-        this.preRound = new PreRound(stage)
-        window.onkeyup = (e) => {
-            console.log(e)
-            if (e.key == 'ArrowLeft') {
-                this.preRound.showRight(false)
+        this.bracket = new Bracket2017(stage)
+
+        if (isManmaul)
+            this.initManmaul()
+        else {
+            this.bracket.visible = false
+            this.preRound = new PreRound(stage)
+            window.onkeyup = (e) => {
+                console.log(e)
+                if (e.key == 'ArrowLeft') {
+                    this.preRound.showRight(false)
+                }
+                else if (e.key == 'ArrowRight') {
+                    this.preRound.showRight(true)
+                }
+                else if (e.key == 'Tab') {
+                    this.bracket.visible = !this.bracket.visible
+                    this.preRound.visible = !this.preRound.visible
+                }
+                else if (e.key == 'ArrowUp') {
+                    this.preRound.toggleTheme()
+                }
             }
-            else if (e.key == 'ArrowRight') {
-                this.preRound.showRight(true)
-            }
-            else if (e.key == 'Tab') {
-                this.bracket.visible = !this.bracket.visible
-                this.preRound.visible = !this.preRound.visible
-            }
-            else if (e.key == 'ArrowUp') {
-                this.preRound.toggleTheme()
-            }
+            this.getPreRoundInfo(gameId)
+            this.initAuto(Number(gameId));
         }
-        this.getPreRoundInfo(gameId)
-        this.initAuto(Number(gameId));
         this.initLocal()
         this.initBg()
+    }
+
+    initManmaul() {
+        let srvIO = io.connect('/webDB')
+            .on('connect', () => {
+                console.log('connect manmaul!')
+                let url = `/db/cmd/${WebDBCmd.cs_bracketCreated}`
+                let param = { _: null }
+                $.ajax({
+                    url: url,
+                    type: 'post',
+                    data: JSON.stringify(param),
+                    headers: { "Content-Type": "application/json" },
+                    dataType: 'json'
+                });
+            })
+            .on(`${WebDBCmd.sc_bracketInit}`, (data) => {
+                delete data['_']
+                this.onBracketData({data:data});
+            })
     }
 
     getPreRoundInfo(gameId) {

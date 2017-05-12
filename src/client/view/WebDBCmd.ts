@@ -2,6 +2,8 @@ export const WebDBCmd = {
     //game month
     cs_init: ``,
     sc_init: ``,
+    cs_bracketInit: ``,
+    sc_bracketInit: ``,
     cs_startGame: ``,
     sc_startGame: ``,
     cs_startTimer: ``,
@@ -12,6 +14,8 @@ export const WebDBCmd = {
     sc_score: ``,
     cs_panelCreated: ``,
     sc_panelCreated: ``,
+    cs_bracketCreated: ``,
+    sc_bracketCreated: ``,
     //base cmd
     cs_srvCreated: ``,
     sc_srvCreated: ``

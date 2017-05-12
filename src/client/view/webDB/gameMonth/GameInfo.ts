@@ -75,6 +75,24 @@ export class GameInfo {
     getPlayerInfo(groupName) {
         return JSON.parse(JSON.stringify(this.nameMapHupuId[groupName]))
     }
+
+    getBracket() {
+        let data: any = { _: null }
+        for (let i = 24; i < 38; i++) {
+            let r = this.recMap[i]
+            data[i-23] = {
+                left: {
+                    score: r.score[0],
+                    name: r.player[0]
+                },
+                right: {
+                    score: r.score[1],
+                    name: r.player[1]
+                }
+            }
+        }
+        return data
+    }
     getGameData() {
         let data: any = { _: null }
         this.gameIdx == 37 ? data.winScore = 5 : data.winScore = 3

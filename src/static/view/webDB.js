@@ -752,6 +752,8 @@
 	exports.WebDBCmd = {
 	    cs_init: "",
 	    sc_init: "",
+	    cs_bracketInit: "",
+	    sc_bracketInit: "",
 	    cs_startGame: "",
 	    sc_startGame: "",
 	    cs_startTimer: "",
@@ -762,6 +764,8 @@
 	    sc_score: "",
 	    cs_panelCreated: "",
 	    sc_panelCreated: "",
+	    cs_bracketCreated: "",
+	    sc_bracketCreated: "",
 	    cs_srvCreated: "",
 	    sc_srvCreated: ""
 	};
@@ -1088,6 +1092,10 @@
 	            console.log('sc_panelCreated');
 	            var data = gameInfo.getGameData();
 	            $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_init, data, null);
+	        })
+	            .on("" + WebDBCmd_1.WebDBCmd.sc_bracketCreated, function () {
+	            var data = gameInfo.getBracket();
+	            $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_bracketInit, data, null);
 	        });
 	    };
 	    return GameMonth;
@@ -1181,6 +1189,23 @@
 	    };
 	    GameInfo.prototype.getPlayerInfo = function (groupName) {
 	        return JSON.parse(JSON.stringify(this.nameMapHupuId[groupName]));
+	    };
+	    GameInfo.prototype.getBracket = function () {
+	        var data = { _: null };
+	        for (var i = 24; i < 38; i++) {
+	            var r = this.recMap[i];
+	            data[i - 23] = {
+	                left: {
+	                    score: r.score[0],
+	                    name: r.player[0]
+	                },
+	                right: {
+	                    score: r.score[1],
+	                    name: r.player[1]
+	                }
+	            };
+	        }
+	        return data;
 	    };
 	    GameInfo.prototype.getGameData = function () {
 	        var data = { _: null };

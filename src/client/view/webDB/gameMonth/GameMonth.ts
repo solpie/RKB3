@@ -104,6 +104,10 @@ class GameMonth extends VueBase {
 
                 $post(`/db/cmd/${WebDBCmd.cs_init}`, data, null)
             })
+            .on(`${WebDBCmd.sc_bracketCreated}`, () => {
+                let data = gameInfo.getBracket()
+                $post(`/db/cmd/${WebDBCmd.cs_bracketInit}`, data, null)
+            })
 
         // $post('/db/update/519', { id: 519, test: 233 }, () => {
 
@@ -224,7 +228,7 @@ class GameMonth extends VueBase {
                 let rFrom = this.recMap[from]
                 let rWin = this.recMap[toWin]
                 let rLose = this.recMap[toLose]
-                if (rFrom.score[0] == 0 && rFrom.score[1] == 0) 
+                if (rFrom.score[0] == 0 && rFrom.score[1] == 0)
                     return
                 if (rFrom.score[0] > rFrom.score[1]) {
                     rWin.player.push(rFrom.player[0])

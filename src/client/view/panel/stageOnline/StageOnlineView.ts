@@ -149,9 +149,9 @@ class StageOnlineView extends VueBase {
     }
 
     showBracket() {
-        console.log('onClkBracket')
+        console.log('onClkBracket',this.$route.query)
         if (!bracketView) {
-            bracketView = new BracketView(canvasStage, this.gameId)
+            bracketView = new BracketView(canvasStage, this.gameId, this.$route)
             this.basePanelArr.push(bracketView)
         }
         this.showOnly(bracketView.name)
