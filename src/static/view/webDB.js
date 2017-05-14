@@ -731,6 +731,131 @@
 
 /***/ },
 
+/***/ 22:
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var WebJsFunc_1 = __webpack_require__(23);
+	exports.getHupuWS = function (callback) {
+	    var url = 'http://test.jrstvapi.hupu.com/zhubo/getNodeServer';
+	    $.get(WebJsFunc_1.proxy(url), function (res) {
+	        var a = JSON.parse(res);
+	        if (a && a.length) {
+	            callback(a[0]);
+	        }
+	        else
+	            console.error(url);
+	    });
+	};
+	function getPreRoundPlayer(gameId, callback) {
+	    var url = 'http://api.liangle.com/api/passerbyking/game/wheel/ready/' + gameId;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getPreRoundPlayer = getPreRoundPlayer;
+	function getAllPlayer(gameId, callback) {
+	    var url = 'http://api.liangle.com/api/passerbyking/game/players/' + gameId;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getAllPlayer = getAllPlayer;
+	function getRoundList(callback) {
+	    var url = 'http://api.liangle.com/api/passerbyking/game/list';
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getRoundList = getRoundList;
+	function getRoundRawDate(gameId, callback) {
+	    var url = 'http://api.liangle.com/api/passerbyking/game/match/' + gameId;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getRoundRawDate = getRoundRawDate;
+	var _get = function (url, callback) {
+	    $.get(url, callback);
+	};
+	exports.getPlayerDoc = function (callback) {
+	    $.get('/game/player', function (res) {
+	        callback(res);
+	    });
+	};
+	exports.updatePlayerDoc = function (playerDoc, callback) {
+	    WebJsFunc_1.$post('/game/player/update', playerDoc, callback);
+	};
+	exports.getGameInfo = function (callback) {
+	    _get('/game/', callback);
+	};
+	exports._avatar = function (filename) {
+	    return '/img/player/avatar/' + filename;
+	};
+
+
+/***/ },
+
+/***/ 23:
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.dynamicLoading = {
+	    css: function (path) {
+	        if (!path || path.length === 0) {
+	            throw new Error('argument "path" is required !');
+	        }
+	        var head = document.getElementsByTagName('head')[0];
+	        var link = document.createElement('link');
+	        link.href = path;
+	        link.rel = 'stylesheet';
+	        link.type = 'text/css';
+	        head.appendChild(link);
+	    },
+	    js: function (path) {
+	        if (!path || path.length === 0) {
+	            throw new Error('argument "path" is required !');
+	        }
+	        var head = document.getElementsByTagName('head')[0];
+	        var script = document.createElement('script');
+	        script.src = path;
+	        script.type = 'text/javascript';
+	        head.appendChild(script);
+	    }
+	};
+	exports.proxy = function (url) {
+	    return "/proxy?url=" + url;
+	};
+	var OpReq = (function () {
+	    function OpReq(io, reqFunc) {
+	        this.cmdMap = {};
+	        this.reqFunc = reqFunc;
+	        this.io = io;
+	    }
+	    OpReq.prototype.send = function (cmd, data) {
+	        var _this = this;
+	        this.reqFunc(cmd, data);
+	        if (!this.cmdMap[cmd]) {
+	            this.cmdMap[cmd] = true;
+	            return {
+	                on: function (resCmd, callback) {
+	                    _this.io.on(resCmd, function (data) {
+	                        callback(data);
+	                    });
+	                }
+	            };
+	        }
+	        return { on: function (resCmd, callback) { } };
+	    };
+	    return OpReq;
+	}());
+	exports.OpReq = OpReq;
+	exports.$post = function (url, data, callback) {
+	    $.ajax({
+	        url: url,
+	        type: 'post',
+	        data: JSON.stringify(data),
+	        headers: { "Content-Type": "application/json" },
+	        dataType: 'json',
+	        success: callback
+	    });
+	};
+
+
+/***/ },
+
 /***/ 32:
 /***/ function(module, exports, __webpack_require__) {
 
@@ -811,6 +936,7 @@
 	var GameInfo_1 = __webpack_require__(94);
 	var WebDBCmd_1 = __webpack_require__(78);
 	var VueBase_1 = __webpack_require__(18);
+	var HupuAPI_1 = __webpack_require__(22);
 	var $post = function (url, param, callback) {
 	    $.ajax({
 	        url: url,
@@ -848,6 +974,7 @@
 	        this.gameInfo = VueBase_1.VueBase.PROP;
 	        this.playerRank = VueBase_1.VueBase.PROP;
 	        this.masterBracket = VueBase_1.VueBase.PROP;
+	        this.gameInfoStr = VueBase_1.VueBase.PROP;
 	        this.methods = {
 	            onAddScore: function (isLeft, dtScore) {
 	                gameInfo.score(isLeft, dtScore);
@@ -993,7 +1120,7 @@
 	                this.renderRecMap();
 	            },
 	            onSetGameIdx: function (v) {
-	                gameInfo.start(v);
+	                this.gameInfoStr = gameInfo.start(v);
 	            },
 	            onTestGame: function () {
 	                getDoc(function (doc) {
@@ -1058,16 +1185,40 @@
 	        };
 	        VueBase_1.VueBase.initProps(this);
 	    }
-	    GameMonth.prototype.initGameInfo = function () {
+	    GameMonth.prototype.initGameInfo = function (res) {
 	        var _this = this;
+	        var playerIdArr = ['郝天佶', 'Beans吴', 'NGFNGN', 'zzz勇',
+	            'tracyld11', '雷雷雷雷子', '带伤上阵也不怕', 'lgy1993131',
+	            '平常心myd', '大霖哥666', '蔡炜少年', 'AL张雅龙',
+	            '新锐宋教练', '邓丹阿丹', '认得挖方一号', '习惯过了头'
+	        ];
+	        var playerOrderArr = [];
+	        var getData = function (name) {
+	            for (var _i = 0, _a = res.data; _i < _a.length; _i++) {
+	                var p = _a[_i];
+	                if (p.name == name) {
+	                    return p;
+	                }
+	            }
+	        };
+	        for (var _i = 0, playerIdArr_1 = playerIdArr; _i < playerIdArr_1.length; _i++) {
+	            var p = playerIdArr_1[_i];
+	            playerOrderArr.push(getData(p));
+	        }
 	        getDoc(function (doc) {
 	            if (doc) {
-	                gameInfo = GameInfo_1.GameInfo.create();
+	                console.log('getHupuPlayer', res, playerOrderArr);
+	                gameInfo = GameInfo_1.GameInfo.create(playerOrderArr);
 	                _this.recMap = doc['recMap'];
 	                gameInfo.recMap = doc['recMap'];
 	                gameInfo.start(doc.gameIdx);
 	                _this.gameInfo = gameInfo;
 	            }
+	        });
+	    };
+	    GameMonth.prototype.getHupuPlayer = function (cb) {
+	        HupuAPI_1.getAllPlayer(286, function (res) {
+	            cb(res);
 	        });
 	    };
 	    GameMonth.prototype.created = function () {
@@ -1085,7 +1236,9 @@
 	                console.log('old server!!');
 	            }
 	            else {
-	                _this.initGameInfo();
+	                _this.getHupuPlayer(function (res) {
+	                    _this.initGameInfo(res);
+	                });
 	            }
 	        })
 	            .on("" + WebDBCmd_1.WebDBCmd.sc_panelCreated, function () {
@@ -1147,16 +1300,18 @@
 	        this.lFoul = 0;
 	        this.rFoul = 0;
 	    }
-	    GameInfo.create = function () {
+	    GameInfo.create = function (playerOrderArr) {
 	        var gmi = new GameInfo();
 	        var playerArr = [];
 	        var mapN = { '0': 'a', '1': 'b', '2': 'c', '3': 'd' };
 	        for (var i = 0; i < 16; i++) {
 	            var p = new PlayerInfo_1.PlayerInfo();
 	            p.id = i + 1;
+	            p.hupuID = playerOrderArr[i].name;
 	            p.name = mapN[Math.floor(i / 4)] + ((i % 4) + 1);
+	            p.data = playerOrderArr[i];
 	            playerArr.push(p);
-	            gmi.nameMapHupuId[p.name] = new PlayerInfo_1.PlayerInfo();
+	            gmi.nameMapHupuId[p.name] = p;
 	        }
 	        console.log(playerArr);
 	        gmi.playerArr = playerArr;
@@ -1186,6 +1341,13 @@
 	        var r = this.recMap[gameIdx];
 	        this.recData = r;
 	        this.gameIdx = this.recData.gameIdx;
+	        var ln = r.player[0];
+	        var rn = r.player[1];
+	        if (this.nameMapHupuId && this.nameMapHupuId[ln])
+	            return ln + '[' + this.nameMapHupuId[ln].hupuID + '] vs '
+	                + rn + '[' + this.nameMapHupuId[rn].hupuID + ']';
+	        else
+	            return '';
 	    };
 	    GameInfo.prototype.getPlayerInfo = function (groupName) {
 	        return JSON.parse(JSON.stringify(this.nameMapHupuId[groupName]));
@@ -1220,8 +1382,13 @@
 	        var rName = this.recMap[this.gameIdx].player[1];
 	        var lPlayer = this.getPlayerInfo(lName);
 	        var rPlayer = this.getPlayerInfo(rName);
-	        lPlayer.name = lName;
-	        rPlayer.name = rName;
+	        var setV = function (p, d) {
+	            for (var k in d) {
+	                p[k] = d[k];
+	            }
+	        };
+	        setV(lPlayer, lPlayer.data);
+	        setV(rPlayer, rPlayer.data);
 	        data.left = lPlayer;
 	        data.right = rPlayer;
 	        lPlayer.leftScore = this.lScore;
@@ -1321,7 +1488,7 @@
 /***/ 95:
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(r,idx) in recMap\">\r\n                    <a v-if='idx<24' href='#' @click='onSetGameIdx(idx)'>\r\n                        {{r.gameIdx+1}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}\r\n                    </a>\r\n                    <a v-if='idx>23' href='#' @click='onSetGameIdx(idx)'>\r\n                        {{r.gameIdx-23}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}\r\n                    </a>\r\n                    <div v-if='idx==23'>-----master-----</div>\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            第{{gameInfo.gameIdx+1}}场 {{gameInfo.recData.player[0]}} vs {{gameInfo.recData.player[1]}}\r\n            <span></span><br> Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button> {{gameInfo.lScore}}\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button> {{gameInfo.lFoul}}\r\n            <br>\r\n            <button class=\"button\" @click=\"onStartGame()\">开始比赛</button>\r\n            <button class=\"button\" @click=\"onStartTimer(true)\">开始计时</button>\r\n            <button class=\"button\" @click=\"onStartTimer(false)\">暂停计时</button>\r\n            <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx-1)\">上一场</button>\r\n            <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx+1)\">下一场</button>\r\n            <button class=\"button\" @click=\"onCommitGame\">提交比赛</button>\r\n            <button class=\"button\" @click=\"onClearGame(0)\">清除比赛数据</button>\r\n            <button class=\"button\" @click=\"onClearGame(1)\">清除大师赛数据</button>\r\n            <button class=\"button\" @click=\"onTestGame\">testGame</button>\r\n            <button class=\"button\" @click=\"onBracket\">bracket</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <br> {{gameInfo.rScore}}\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br> {{gameInfo.rFoul}}\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onSetMaster\">大师赛排名</button>\r\n            <div>\r\n                <li v-for=\"(p,idx) in playerRank\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                    <div v-if='idx==7'>----------</div>\r\n                </li>\r\n                <div>-----master-----</div>\r\n                <li v-for=\"(p,idx) in masterBracket\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(r,idx) in recMap\">\r\n                    <a v-if='idx<24' href='#' @click='onSetGameIdx(idx)'>\r\n                        {{r.gameIdx+1}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}\r\n                    </a>\r\n                    <a v-if='idx>23' href='#' @click='onSetGameIdx(idx)'>\r\n                        {{r.gameIdx-23}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}\r\n                    </a>\r\n                    <div v-if='idx==23'>-----master-----</div>\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            第{{gameInfo.gameIdx+1}}场 {{gameInfoStr}}\r\n            <span></span><br> Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button> {{gameInfo.lScore}}\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button> {{gameInfo.lFoul}}\r\n            <br>\r\n            <button class=\"button\" @click=\"onStartGame()\">开始比赛</button>\r\n            <button class=\"button\" @click=\"onStartTimer(true)\">开始计时</button>\r\n            <button class=\"button\" @click=\"onStartTimer(false)\">暂停计时</button>\r\n            <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx-1)\">上一场</button>\r\n            <button class=\"button\" @click=\"onSetGameIdx(gameInfo.gameIdx+1)\">下一场</button>\r\n            <button class=\"button\" @click=\"onCommitGame\">提交比赛</button>\r\n            <button class=\"button\" @click=\"onClearGame(0)\">清除比赛数据</button>\r\n            <button class=\"button\" @click=\"onClearGame(1)\">清除大师赛数据</button>\r\n            <button class=\"button\" @click=\"onTestGame\">testGame</button>\r\n            <button class=\"button\" @click=\"onBracket\">bracket</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <br> {{gameInfo.rScore}}\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br> {{gameInfo.rFoul}}\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onSetMaster\">大师赛排名</button>\r\n            <div>\r\n                <li v-for=\"(p,idx) in playerRank\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                    <div v-if='idx==7'>----------</div>\r\n                </li>\r\n                <div>-----master-----</div>\r\n                <li v-for=\"(p,idx) in masterBracket\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n    </div>\r\n</div>";
 
 /***/ },
 

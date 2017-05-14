@@ -25,16 +25,23 @@ export class GameInfo {
     // recArray: Array<RecData>
     recData: RecData
     recMap: any
-    static create() {
+    //dyna data
+    // playerData = [{ name: '' }, { name: '' }]
+    // groupIdMap = {}
+    static create(playerOrderArr) {
+        //加赛 手动排名
         let gmi = new GameInfo()
         let playerArr = []
         let mapN = { '0': 'a', '1': 'b', '2': 'c', '3': 'd' }
+
         for (let i = 0; i < 16; i++) {
             let p = new PlayerInfo()
             p.id = i + 1
+            p.hupuID = playerOrderArr[i].name
             p.name = mapN[Math.floor(i / 4)] + ((i % 4) + 1)
+            p.data = playerOrderArr[i]
             playerArr.push(p)
-            gmi.nameMapHupuId[p.name] = new PlayerInfo()
+            gmi.nameMapHupuId[p.name] = p
         }
         console.log(playerArr);
         gmi.playerArr = playerArr
@@ -70,6 +77,14 @@ export class GameInfo {
         let r = this.recMap[gameIdx]
         this.recData = r
         this.gameIdx = this.recData.gameIdx
+        let ln = r.player[0]
+        let rn = r.player[1]
+        if (this.nameMapHupuId && this.nameMapHupuId[ln])
+            return ln + '[' + this.nameMapHupuId[ln].hupuID + '] vs '
+                + rn + '[' + this.nameMapHupuId[rn].hupuID + ']'
+        else
+            return ''
+        // this.playerData = [this.nameMapHupuId[r.player[0]], this.nameMapHupuId[r.player[1]]]
     }
 
     getPlayerInfo(groupName) {
@@ -80,7 +95,7 @@ export class GameInfo {
         let data: any = { _: null }
         for (let i = 24; i < 38; i++) {
             let r = this.recMap[i]
-            data[i-23] = {
+            data[i - 23] = {
                 left: {
                     score: r.score[0],
                     name: r.player[0]
@@ -93,6 +108,7 @@ export class GameInfo {
         }
         return data
     }
+
     getGameData() {
         let data: any = { _: null }
         this.gameIdx == 37 ? data.winScore = 5 : data.winScore = 3
@@ -100,15 +116,24 @@ export class GameInfo {
         data.player = this.getPlayerData()
         return data
     }
+
     getPlayerData() {
         let data: any = {}
         let lName = this.recMap[this.gameIdx].player[0]
         let rName = this.recMap[this.gameIdx].player[1]
+
         let lPlayer: PlayerInfo = this.getPlayerInfo(lName)
         let rPlayer: PlayerInfo = this.getPlayerInfo(rName)
 
-        lPlayer.name = lName
-        rPlayer.name = rName
+        let setV = (p,d) => {
+            for (let k in d) {
+                p[k] = d[k]
+            }
+        }
+        
+        setV(lPlayer,lPlayer.data)
+        setV(rPlayer,rPlayer.data)
+
         data.left = lPlayer
         data.right = rPlayer
         lPlayer.leftScore = this.lScore

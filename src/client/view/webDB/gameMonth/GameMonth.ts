@@ -4,6 +4,7 @@ import { PlayerInfo } from './PlayerInfo';
 import { GameInfo, RecData } from './GameInfo';
 import { WebDBCmd } from '../../WebDBCmd';
 import { VueBase } from '../../utils/VueBase';
+import { getAllPlayer } from "../../utils/HupuAPI";
 declare const $;
 declare const io;
 let $post = (url, param, callback) => {
@@ -42,19 +43,34 @@ class GameMonth extends VueBase {
     gameInfo = VueBase.PROP
     playerRank = VueBase.PROP
     masterBracket = VueBase.PROP
-
+    gameInfoStr = VueBase.PROP
     constructor() {
         super();
         VueBase.initProps(this);
     }
 
-    initGameInfo() {
+    initGameInfo(res) {
+        let playerIdArr = ['郝天佶', 'Beans吴', 'NGFNGN', 'zzz勇'
+            , 'tracyld11', '雷雷雷雷子', '带伤上阵也不怕', 'lgy1993131'
+            , '平常心myd', '大霖哥666', '蔡炜少年', 'AL张雅龙'
+            , '新锐宋教练', '邓丹阿丹', '认得挖方一号', '习惯过了头'
+        ]
+        let playerOrderArr = []
+        let getData = (name) => {
+            for (let p of res.data) {
+                if (p.name == name)
+                { return p }
+            }
+        }
+
+        for (let p of playerIdArr) {
+            playerOrderArr.push(getData(p))
+        }
         getDoc((doc) => {
             if (doc) {
-
-                gameInfo = GameInfo.create()
+                console.log('getHupuPlayer', res, playerOrderArr)
+                gameInfo = GameInfo.create(playerOrderArr)
                 // console.log(gameInfo.gameArr);
-
                 // if (!doc['recMap']) {
                 // doc['recMap'] = {}
                 // let gameArr = gameInfo.getGameArr()
@@ -81,6 +97,11 @@ class GameMonth extends VueBase {
             }
         })
     }
+    getHupuPlayer(cb) {
+        getAllPlayer(286, (res) => {
+            cb(res)
+        })
+    }
     created() {
         let srvIO = io.connect('/webDB')
             .on('connect', () => {
@@ -95,7 +116,9 @@ class GameMonth extends VueBase {
                     console.log('old server!!')
                 }
                 else {
-                    this.initGameInfo()
+                    this.getHupuPlayer((res) => {
+                        this.initGameInfo(res)
+                    })
                 }
             })
             .on(`${WebDBCmd.sc_panelCreated}`, () => {
@@ -260,7 +283,7 @@ class GameMonth extends VueBase {
             this.renderRecMap()
         },
         onSetGameIdx(v) {
-            gameInfo.start(v)
+            this.gameInfoStr = gameInfo.start(v)
         },
         onTestGame() {
             getDoc((doc) => {

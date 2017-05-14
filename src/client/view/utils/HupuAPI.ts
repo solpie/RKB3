@@ -16,6 +16,11 @@ export function getPreRoundPlayer(gameId, callback) {
     _get(proxy(url), callback)
 }
 
+export function getAllPlayer(gameId, callback) {
+    let url = 'http://api.liangle.com/api/passerbyking/game/players/' + gameId
+    _get(proxy(url), callback)
+}
+
 export function getRoundList(callback) {
     let url = 'http://api.liangle.com/api/passerbyking/game/list'
     _get(proxy(url), callback)

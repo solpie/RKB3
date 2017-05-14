@@ -1003,6 +1003,11 @@
 	    _get(WebJsFunc_1.proxy(url), callback);
 	}
 	exports.getPreRoundPlayer = getPreRoundPlayer;
+	function getAllPlayer(gameId, callback) {
+	    var url = 'http://api.liangle.com/api/passerbyking/game/players/' + gameId;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getAllPlayer = getAllPlayer;
 	function getRoundList(callback) {
 	    var url = 'http://api.liangle.com/api/passerbyking/game/list';
 	    _get(WebJsFunc_1.proxy(url), callback);

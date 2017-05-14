@@ -9,7 +9,8 @@ export class PlayerInfo{
     level: number
     intro: string
     
-
+    //
+    data:any
     // fly data
     leftScore:number
     rightScore:number
