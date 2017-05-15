@@ -71,16 +71,18 @@ export class GameInfo {
     }
 
     start(gameIdx) {
-        let r = this.recMap[gameIdx]
-        this.recData = r
-        this.gameIdx = this.recData.gameIdx
-        let ln = r.player[0]
-        let rn = r.player[1]
-        if (this.nameMapHupuId && this.nameMapHupuId[ln])
-            return ln + '[' + this.nameMapHupuId[ln].hupuID + '] vs '
-                + rn + '[' + this.nameMapHupuId[rn].hupuID + ']'
-        else
-            return ''
+        if (gameIdx < 38) {
+            let r = this.recMap[gameIdx]
+            this.recData = r
+            this.gameIdx = this.recData.gameIdx
+            let ln = r.player[0]
+            let rn = r.player[1]
+            console.log(ln, rn)
+            if (this.nameMapHupuId && this.nameMapHupuId[ln] && rn)
+                return ln + '[' + this.nameMapHupuId[ln].hupuID + '] vs '
+                    + rn + '[' + this.nameMapHupuId[rn].hupuID + ']'
+        }
+        return ''
         // this.playerData = [this.nameMapHupuId[r.player[0]], this.nameMapHupuId[r.player[1]]]
     }
 
@@ -157,7 +159,7 @@ export class GameInfo {
         return data
     }
     getWinInfo(doc, playerName) {
-        let sumMap = this.buildPlayerData(doc)
+        let sumMap = this.buildPlayerData(doc,true)
         // console.log('getWinInfo', sumMap, this.nameMapHupuId)
         for (let groupId in this.nameMapHupuId) {
             console.log(this.nameMapHupuId[groupId].hupuID, playerName)
@@ -167,10 +169,13 @@ export class GameInfo {
         }
         return { win: 0, lose: 0, score: 0 }
     }
-    buildPlayerData(doc) {
+
+    buildPlayerData(doc, isAll = false) {
         let sumMap: any = {}
+        let sumIdx;
+        isAll ? sumIdx = 99 : sumIdx = 24;
         for (let k in doc['recMap']) {
-            if (Number(k) < 24) {
+            if (Number(k) < sumIdx) {
                 let r: RecData = doc['recMap'][k]
                 if (!sumMap[r.player[0]])
                     sumMap[r.player[0]] = { name: r.player[0], win: 0, lose: 0, score: 0, dtScore: 0, beat: [], time: 0 }
@@ -230,8 +235,8 @@ export class GameInfo {
             }
         }
         return doc
-        // return JSON.parse(JSON.stringify(obj))
     }
+
     lastWinner: any
     commit() {
         let lPlayer = { name: this.recMap[this.gameIdx].player[0] }

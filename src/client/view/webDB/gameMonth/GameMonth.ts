@@ -127,8 +127,7 @@ class GameMonth extends VueBase {
                 $post(`/db/cmd/${WebDBCmd.cs_init}`, data, null)
             })
             .on(`${WebDBCmd.sc_bracketCreated}`, () => {
-                // let data = gameInfo.getBracket()
-                // $post(`/db/cmd/${WebDBCmd.cs_bracketInit}`, data, null)
+                this.routeBracket()
                 this.emitBracket()
             })
 
@@ -136,11 +135,51 @@ class GameMonth extends VueBase {
 
         // })
     }
+    routeBracket() {
+        let masterIdx = 23
+        let route = (from, toWin, toLose) => {
+            from += masterIdx
+            toWin += masterIdx
+            toLose += masterIdx
+            let rFrom = this.recMap[from]
+            let rWin = this.recMap[toWin]
+            let rLose = this.recMap[toLose]
+            if (rFrom.score[0] == 0 && rFrom.score[1] == 0)
+                return
+            if (rFrom.score[0] > rFrom.score[1]) {
+                rWin.player.push(rFrom.player[0])
+                if (rLose)
+                    rLose.player.push(rFrom.player[1])
+            }
+            else {
+                rWin.player.push(rFrom.player[1])
+                if (rLose)
+                    rLose.player.push(rFrom.player[0])
+            }
+        }
+        for (let i = 5; i < 15; i++) {
+            this.recMap[i + masterIdx].player = []
+        }
+        route(1, 7, 5)
+        route(2, 7, 5)
+        route(3, 8, 6)
+        route(4, 8, 6)
+        route(5, 10, 99)
+        route(6, 9, 99)
+        route(7, 11, 9)
+        route(8, 11, 10)
+        route(9, 12, 99)
+        route(10, 12, 99)
+        route(11, 14, 13)
+        route(12, 13, 99)
+        route(13, 14, 99)
+    }
+
     emitBracket() {
         let data = gameInfo.getBracket()
         $post(`/db/cmd/${WebDBCmd.cs_bracketInit}`, data, null)
-
     }
+
     methods = {
         onAddScore(isLeft, dtScore) {
             gameInfo.score(isLeft, dtScore)
@@ -166,8 +205,8 @@ class GameMonth extends VueBase {
         },
         renderRecMap(recMap?) {
             if (recMap) {
-                gameInfo.recMap = recMap
-                Vue.set('recMap', gameInfo.recMap)
+                this.recMap = gameInfo.recMap = recMap
+                Vue.set('recMap', '1','recMap["1"]')
             }
         },
         onStartGame() {
@@ -177,30 +216,7 @@ class GameMonth extends VueBase {
         },
         onSetMaster() {
             getDoc((doc) => {
-                let sumMap: any = {}
-                for (let k in doc['recMap']) {
-                    if (Number(k) < 24) {
-                        let r: RecData = doc['recMap'][k]
-                        if (!sumMap[r.player[0]])
-                            sumMap[r.player[0]] = { name: r.player[0], win: 0, dtScore: 0, beat: [], time: 0 }
-                        if (!sumMap[r.player[1]])
-                            sumMap[r.player[1]] = { name: r.player[1], win: 0, dtScore: 0, beat: [], time: 0 }
-                        if (r.score[0] == 0 && r.score[1] == 0) {
-                            continue;
-                        }
-                        if (r.score[0] > r.score[1]) {
-                            sumMap[r.player[0]].win++
-                            sumMap[r.player[0]].dtScore += r.score[0] - r.score[1]
-                            sumMap[r.player[0]].beat.push(r.player[1])
-                        }
-                        else {
-                            sumMap[r.player[1]].win++
-                            sumMap[r.player[1]].dtScore += r.score[1] - r.score[0]
-                            sumMap[r.player[1]].beat.push(r.player[0])
-                        }
-                        console.log(r)
-                    }
-                }
+                let sumMap: any = gameInfo.buildPlayerData(doc)
                 let playerArr = mapToArr(sumMap)
                 for (let p1 of playerArr) {
                     for (let p2 of playerArr) {
@@ -249,43 +265,7 @@ class GameMonth extends VueBase {
             })
         },
         onBracket() {
-            let masterIdx = 23
-            let route = (from, toWin, toLose) => {
-                from += masterIdx
-                toWin += masterIdx
-                toLose += masterIdx
-                let rFrom = this.recMap[from]
-                let rWin = this.recMap[toWin]
-                let rLose = this.recMap[toLose]
-                if (rFrom.score[0] == 0 && rFrom.score[1] == 0)
-                    return
-                if (rFrom.score[0] > rFrom.score[1]) {
-                    rWin.player.push(rFrom.player[0])
-                    if (rLose)
-                        rLose.player.push(rFrom.player[1])
-                }
-                else {
-                    rWin.player.push(rFrom.player[1])
-                    if (rLose)
-                        rLose.player.push(rFrom.player[0])
-                }
-            }
-            for (let i = 5; i < 15; i++) {
-                this.recMap[i + masterIdx].player = []
-            }
-            route(1, 7, 5)
-            route(2, 7, 5)
-            route(3, 8, 6)
-            route(4, 8, 6)
-            route(5, 10, 99)
-            route(6, 9, 99)
-            route(7, 11, 9)
-            route(8, 11, 10)
-            route(9, 12, 99)
-            route(10, 12, 99)
-            route(11, 14, 13)
-            route(12, 13, 99)
-            route(13, 14, 99)
+            this.routeBracket()
             this.renderRecMap()
         },
         onSetGameIdx(v) {

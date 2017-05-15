@@ -16,7 +16,13 @@
         </div>
 
         <div class="column">
-            第{{gameInfo.gameIdx+1}}场 {{gameInfoStr}}
+            <div v-if='gameInfo.gameIdx<24'>
+                小组赛第{{gameInfo.gameIdx+1}}场
+            </div>
+            <div v-else>
+                大师赛第{{gameInfo.gameIdx-23}}场
+            </div>
+            {{gameInfoStr}}
             <span></span><br> Score
             <br>
             <button class="button" @click="onAddScore(true,1)">+1</button>
@@ -44,6 +50,7 @@
         </div>
         <div class="column">
             <br>
+            <br>
             <br> {{gameInfo.rScore}}
             <button class="button" @click="onAddScore(false,1)">+1</button>
             <button class="button" @click="onAddScore(false,-1)">-1</button>
@@ -64,9 +71,8 @@
                 </li>
                 <div>-----master-----</div>
                 <li v-for="(p,idx) in masterBracket">
-                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}
                     <button class="button" @click="onAddFoul(false,-1)">↑</button>
-                    <button class="button" @click="onAddFoul(false,-1)">↓</button>
+                    <button class="button" @click="onAddFoul(false,-1)">↓</button> [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}
                 </li>
             </div>
         </div>
