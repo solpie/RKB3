@@ -69,9 +69,6 @@ export class GameInfo {
         }
         return group
     }
-    getCurGame() {
-        return this
-    }
 
     start(gameIdx) {
         let r = this.recMap[gameIdx]
@@ -88,21 +85,26 @@ export class GameInfo {
     }
 
     getPlayerInfo(groupName) {
-        return JSON.parse(JSON.stringify(this.nameMapHupuId[groupName]))
+        if (this.nameMapHupuId[groupName])
+            return JSON.parse(JSON.stringify(this.nameMapHupuId[groupName]))
+        return new PlayerInfo
     }
 
     getBracket() {
         let data: any = { _: null }
+
         for (let i = 24; i < 38; i++) {
             let r = this.recMap[i]
+            let lPlayer: PlayerInfo = this.getPlayerInfo(r.player[0])
+            let rPlayer: PlayerInfo = this.getPlayerInfo(r.player[1])
             data[i - 23] = {
                 left: {
                     score: r.score[0],
-                    name: r.player[0]
+                    name: lPlayer.hupuID
                 },
                 right: {
                     score: r.score[1],
-                    name: r.player[1]
+                    name: rPlayer.hupuID
                 }
             }
         }
@@ -111,9 +113,20 @@ export class GameInfo {
 
     getGameData() {
         let data: any = { _: null }
-        this.gameIdx == 37 ? data.winScore = 5 : data.winScore = 3
+        data.winScore = 3
+        if (this.gameIdx == 37) {//决赛
+            data.winScore = 5
+            data.matchType = 3
+        }
+        else if (this.gameIdx > 23) {//大师赛
+            data.matchType = 2
+        }
+        else {
+            data.matchType = 1
+        }
         data.gameIdx = this.gameIdx + 1
         data.player = this.getPlayerData()
+
         return data
     }
 
@@ -125,14 +138,14 @@ export class GameInfo {
         let lPlayer: PlayerInfo = this.getPlayerInfo(lName)
         let rPlayer: PlayerInfo = this.getPlayerInfo(rName)
 
-        let setV = (p,d) => {
+        let setV = (p, d) => {
             for (let k in d) {
                 p[k] = d[k]
             }
         }
-        
-        setV(lPlayer,lPlayer.data)
-        setV(rPlayer,rPlayer.data)
+
+        setV(lPlayer, lPlayer.data)
+        setV(rPlayer, rPlayer.data)
 
         data.left = lPlayer
         data.right = rPlayer
@@ -143,15 +156,26 @@ export class GameInfo {
         rPlayer.rightFoul = this.rFoul
         return data
     }
+    getWinInfo(doc, playerName) {
+        let sumMap = this.buildPlayerData(doc)
+        // console.log('getWinInfo', sumMap, this.nameMapHupuId)
+        for (let groupId in this.nameMapHupuId) {
+            console.log(this.nameMapHupuId[groupId].hupuID, playerName)
+            if (this.nameMapHupuId[groupId].hupuID == playerName) {
+                return sumMap[groupId]
+            }
+        }
+        return { win: 0, lose: 0, score: 0 }
+    }
     buildPlayerData(doc) {
         let sumMap: any = {}
         for (let k in doc['recMap']) {
             if (Number(k) < 24) {
                 let r: RecData = doc['recMap'][k]
                 if (!sumMap[r.player[0]])
-                    sumMap[r.player[0]] = { name: r.player[0], win: 0, dtScore: 0, beat: [], time: 0 }
+                    sumMap[r.player[0]] = { name: r.player[0], win: 0, lose: 0, score: 0, dtScore: 0, beat: [], time: 0 }
                 if (!sumMap[r.player[1]])
-                    sumMap[r.player[1]] = { name: r.player[1], win: 0, dtScore: 0, beat: [], time: 0 }
+                    sumMap[r.player[1]] = { name: r.player[1], win: 0, lose: 0, score: 0, dtScore: 0, beat: [], time: 0 }
                 if (r.score[0] == 0 && r.score[1] == 0) {
                     continue;
                 }
@@ -159,15 +183,23 @@ export class GameInfo {
                     sumMap[r.player[0]].win++
                     sumMap[r.player[0]].dtScore += r.score[0] - r.score[1]
                     sumMap[r.player[0]].beat.push(r.player[1])
+                    sumMap[r.player[0]].score += r.score[0]
+
+                    sumMap[r.player[1]].lose++
+                    sumMap[r.player[1]].score += r.score[1]
                 }
                 else {
                     sumMap[r.player[1]].win++
                     sumMap[r.player[1]].dtScore += r.score[1] - r.score[0]
                     sumMap[r.player[1]].beat.push(r.player[0])
+
+                    sumMap[r.player[0]].lose++
+                    sumMap[r.player[0]].score += r.score[0]
                 }
                 console.log(r)
             }
         }
+        return sumMap
     }
     score(isLeft, dtScore) {
         if (isLeft)
@@ -211,7 +243,7 @@ export class GameInfo {
         else {
             winner = rPlayer
         }
-        this.lastWinner = winner
+        this.lastWinner = this.nameMapHupuId[winner.name].data
         let r = this.recData
         r.foul[0] = this.lFoul
         r.foul[1] = this.rFoul

@@ -124,17 +124,22 @@ class GameMonth extends VueBase {
             .on(`${WebDBCmd.sc_panelCreated}`, () => {
                 console.log('sc_panelCreated')
                 let data: any = gameInfo.getGameData()
-
                 $post(`/db/cmd/${WebDBCmd.cs_init}`, data, null)
             })
             .on(`${WebDBCmd.sc_bracketCreated}`, () => {
-                let data = gameInfo.getBracket()
-                $post(`/db/cmd/${WebDBCmd.cs_bracketInit}`, data, null)
+                // let data = gameInfo.getBracket()
+                // $post(`/db/cmd/${WebDBCmd.cs_bracketInit}`, data, null)
+                this.emitBracket()
             })
 
         // $post('/db/update/519', { id: 519, test: 233 }, () => {
 
         // })
+    }
+    emitBracket() {
+        let data = gameInfo.getBracket()
+        $post(`/db/cmd/${WebDBCmd.cs_bracketInit}`, data, null)
+
     }
     methods = {
         onAddScore(isLeft, dtScore) {
@@ -161,12 +166,13 @@ class GameMonth extends VueBase {
         },
         renderRecMap(recMap?) {
             if (recMap) {
-                this.recMap = gameInfo.recMap = recMap
+                gameInfo.recMap = recMap
+                Vue.set('recMap', gameInfo.recMap)
             }
-            Vue('recMap', '1', 'recMap["1"]')
         },
         onStartGame() {
             let data: any = gameInfo.getGameData()
+            this.gameInfoStr = gameInfo.start(gameInfo.gameIdx)
             $post(`/db/cmd/${WebDBCmd.cs_init}`, data, null)
         },
         onSetMaster() {
@@ -238,8 +244,8 @@ class GameMonth extends VueBase {
                 }
                 console.log('master', m)
                 this.masterBracket = m
-                this.renderRecMap(doc['recMap'])
                 saveDoc(doc)
+                this.renderRecMap(doc['recMap'])
             })
         },
         onBracket() {
@@ -332,7 +338,20 @@ class GameMonth extends VueBase {
                 }
             })
         },
-        onCommitGame() {
+
+        onProgress() {
+
+        },
+        onSetGameResult() {
+            getDoc((doc) => {
+                let r = doc['recMap'][gameInfo.gameIdx]
+                r.score[0] = gameInfo.lScore
+                r.score[1] = gameInfo.rScore
+                saveDoc(doc)
+                this.renderRecMap()
+            })
+        },
+        onCommitGame(isSave) {
             let data: any = { _: null }
             let r = gameInfo.commit()
             data.player = gameInfo.lastWinner
@@ -340,13 +359,23 @@ class GameMonth extends VueBase {
                 if (doc) {
                     doc['recMap'][r.gameIdx] = r
                     doc.gameIdx = gameInfo.gameIdx
-                    console.log('save doc', doc)
-                    saveDoc(doc)
+                    let sum = gameInfo.getWinInfo(doc, data.player.name)
+                    data.player['winAmount'] = sum.win
+                    data.player['loseAmount'] = sum.lose
+                    data.player['roundScore'] = sum.score
+                    if (isSave) {
+                        console.log('save doc', doc)
+                        saveDoc(doc)
+                    }
+                    $post(`/db/cmd/${WebDBCmd.cs_commit}`, data, null)
+                    if (isSave) {
+                        this.onBracket()
+                        this.emitBracket()
+                        this.onStartGame()
+                    }
                 }
             })
-            $post(`/db/cmd/${WebDBCmd.cs_commit}`, data, null)
-            this.onBracket()
-            this.onStartGame()
+
         },
     }
 }

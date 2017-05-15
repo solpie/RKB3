@@ -231,6 +231,10 @@
 	            { title: "比分面板（绿色）", url: getScorePanelUrl(gameId, false) },
 	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
+	            { title: "比分面板（蓝色）", url: getScorePanelUrl(gameId, true) + '&m=1' },
+	            { title: "比分面板（绿色）", url: getScorePanelUrl(gameId, false) + '&m=1' },
+	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) + '&m=1' },
+	            { title: "八强面板", url: ("/panel/#/ol/ob/" + gameId + "?panel=bracket") + '&m=1' },
 	            { title: "DmkLeecher", url: "/dmk" },
 	        ];
 	    };

@@ -29,13 +29,18 @@
             <button class="button" @click="onStartGame()">开始比赛</button>
             <button class="button" @click="onStartTimer(true)">开始计时</button>
             <button class="button" @click="onStartTimer(false)">暂停计时</button>
-            <button class="button" @click="onSetGameIdx(gameInfo.gameIdx-1)">上一场</button>
-            <button class="button" @click="onSetGameIdx(gameInfo.gameIdx+1)">下一场</button>
-            <button class="button" @click="onCommitGame">提交比赛</button>
+            <button class="button" @click="onCommitGame(true)">提交比赛</button>
+            <br>
+            <span>加赛操作：左边选择对阵，开始比赛，提交加赛</span>
+            <button class="button" @click="onCommitGame(false)">提交加赛</button>
+            <br>
+            <button class="button" @click="onSetGameResult">修改比分</button>
+            <button class="button" @click="onBracket">bracket</button>
+            <br>
+
             <button class="button" @click="onClearGame(0)">清除比赛数据</button>
             <button class="button" @click="onClearGame(1)">清除大师赛数据</button>
             <button class="button" @click="onTestGame">testGame</button>
-            <button class="button" @click="onBracket">bracket</button>
         </div>
         <div class="column">
             <br>
@@ -50,7 +55,8 @@
         </div>
 
         <div class="column">
-            <button class="button" @click="onSetMaster">大师赛排名</button>
+            <button class="button" @click="onProgress()">小组进度</button>
+            <button class="button" @click="onSetMaster()">大师赛排名</button>
             <div>
                 <li v-for="(p,idx) in playerRank">
                     [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}
@@ -59,6 +65,8 @@
                 <div>-----master-----</div>
                 <li v-for="(p,idx) in masterBracket">
                     [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}
+                    <button class="button" @click="onAddFoul(false,-1)">↑</button>
+                    <button class="button" @click="onAddFoul(false,-1)">↓</button>
                 </li>
             </div>
         </div>
