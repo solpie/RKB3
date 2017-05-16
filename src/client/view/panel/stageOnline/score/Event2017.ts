@@ -11,6 +11,7 @@ import { proxy } from '../../../utils/WebJsFunc';
 import { imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
 import { TweenEx } from '../../../utils/TweenEx';
 import { FontName, ViewConst } from '../../../const';
+import { Group } from "./Group";
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
     pName: PIXI.Text
@@ -267,5 +268,20 @@ export class Event2017 extends PIXI.Container {
             this.addChild(this.bdBg)
         }
         this.bdBg.visible = v
+    }
+
+    groupPanel: Group
+    showGroup(data) {
+        if (!this.groupPanel) {
+            this.groupPanel = new Group(this)
+        }
+        this.groupPanel.show(data.group, data.playerArr)
+        TweenEx.delayedCall(6000, () => {
+            this.hideGroup()
+        })
+    }
+
+    hideGroup() {
+        this.groupPanel.hide()
     }
 }

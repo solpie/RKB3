@@ -8,6 +8,8 @@ export const WebDBCmd = {
     sc_startGame: ``,
     cs_showProgress: ``,
     sc_showProgress: ``,
+    cs_hideProgress: ``,
+    sc_hideProgress: ``,
     cs_startTimer: ``,
     sc_startTimer: ``,
     cs_commit: ``,

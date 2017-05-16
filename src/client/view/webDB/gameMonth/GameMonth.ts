@@ -270,7 +270,7 @@ class GameMonth extends VueBase {
             this.renderRecMap()
         },
         onSetVS(vs) {
-            
+
         },
         onSetGameIdx(v) {
             this.gameInfoStr = gameInfo.start(v)
@@ -323,8 +323,16 @@ class GameMonth extends VueBase {
             })
         },
 
-        onProgress() {
-            
+        onProgress(g) {
+            if (gameInfo.gameIdx < 24) {
+                getDoc((doc) => {
+                    let data = gameInfo.getGroup(doc, g)
+                    $post(`/db/cmd/${WebDBCmd.cs_showProgress}`, data, null)
+                })
+            }
+        },
+        onHideProgress() {
+            $post(`/db/cmd/${WebDBCmd.cs_hideProgress}`, { _: null }, null)
         },
         onSetGameResult() {
             getDoc((doc) => {

@@ -1,4 +1,5 @@
 import { PlayerInfo } from './PlayerInfo';
+import { firstBy } from "./thenBy";
 export class RecData {
     gameIdx: number = -1
     player: Array<string> = ['', '']
@@ -94,7 +95,9 @@ export class GameInfo {
     }
 
     h(name) {
-        return this.getPlayerInfo(name).hupuID.substr(0,4)
+        if (name && this.getPlayerInfo(name))
+            return this.getPlayerInfo(name).hupuID.substr(0, 4)
+        return ''
     }
 
 
@@ -164,6 +167,7 @@ export class GameInfo {
         rPlayer.rightFoul = this.rFoul
         return data
     }
+
     getWinInfo(doc, playerName) {
         let sumMap = this.buildPlayerData(doc, true)
         // console.log('getWinInfo', sumMap, this.nameMapHupuId)
@@ -174,6 +178,26 @@ export class GameInfo {
             }
         }
         return { win: 0, lose: 0, score: 0 }
+    }
+
+    getGroup(doc, group) {
+        let sumMap = this.buildPlayerData(doc)
+        let playerArr = []
+        for (let i = 0; i < 4; i++) {
+            let data = sumMap[group + (i + 1)]
+            let p = this.getPlayerInfo(data.name)
+            data.name = p.hupuID
+            data.groupId = p.data.groupId
+            data.avatar = p.data.avatar
+            //头像 战团logo
+            playerArr.push(data)
+        }
+        playerArr.sort(firstBy(function (v1, v2) { return v2.win - v1.win; })
+            .thenBy(function (v1, v2) { return v2.dtScore - v1.dtScore; })
+        )
+        console.log(playerArr)
+        
+        return { _: null, group: group, playerArr: playerArr }
     }
 
     buildPlayerData(doc, isAll = false) {

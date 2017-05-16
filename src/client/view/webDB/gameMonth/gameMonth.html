@@ -37,15 +37,26 @@
             <button class="button" @click="onStartTimer(false)">暂停计时</button>
             <button class="button" @click="onCommitGame(true)">提交比赛</button>
             <br>
+            <button class="button" @click="onProgress('a')">A组进度</button>
+            <br>
+            <button class="button" @click="onProgress('b')">B组进度</button>
+            <br>
+            <button class="button" @click="onProgress('c')">C组进度</button>
+            <br>
+            <button class="button" @click="onProgress('d')">D组进度</button>
+            <br>
+            <button class="button" @click="onHideProgress()">隐藏进度</button>
+            <br>
             <span>加赛操作：左边选择对阵，开始比赛，提交加赛</span>
             <button class="button" @click="onCommitGame(false)">提交加赛</button>
             <br>
             <button class="button" @click="onSetGameResult">修改比分</button>
-            <input v-model='vs'></input>
+            <br>
+            <input v-model='vs' style="width:80px"></input>
             <button class="button" @click="onSetVS(vs)">修改对阵</button>
+            <br>
             <button class="button" @click="onBracket">bracket</button>
             <br>
-
             <button class="button" @click="onClearGame(0)">清除比赛数据</button>
             <button class="button" @click="onClearGame(1)">清除大师赛数据</button>
             <button class="button" @click="onTestGame">testGame</button>
