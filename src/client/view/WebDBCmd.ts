@@ -6,6 +6,8 @@ export const WebDBCmd = {
     sc_bracketInit: ``,
     cs_startGame: ``,
     sc_startGame: ``,
+    cs_showProgress: ``,
+    sc_showProgress: ``,
     cs_startTimer: ``,
     sc_startTimer: ``,
     cs_commit: ``,

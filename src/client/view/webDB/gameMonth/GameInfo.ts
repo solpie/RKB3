@@ -46,7 +46,6 @@ export class GameInfo {
         console.log(playerArr);
         gmi.playerArr = playerArr
 
-
         return gmi
     }
     getGameArr() {
@@ -89,8 +88,15 @@ export class GameInfo {
     getPlayerInfo(groupName) {
         if (this.nameMapHupuId[groupName])
             return JSON.parse(JSON.stringify(this.nameMapHupuId[groupName]))
-        return new PlayerInfo
+        let p = new PlayerInfo()
+        p.hupuID = groupName
+        return p
     }
+
+    h(name) {
+        return this.getPlayerInfo(name).hupuID.substr(0,4)
+    }
+
 
     getBracket() {
         let data: any = { _: null }
@@ -159,7 +165,7 @@ export class GameInfo {
         return data
     }
     getWinInfo(doc, playerName) {
-        let sumMap = this.buildPlayerData(doc,true)
+        let sumMap = this.buildPlayerData(doc, true)
         // console.log('getWinInfo', sumMap, this.nameMapHupuId)
         for (let groupId in this.nameMapHupuId) {
             console.log(this.nameMapHupuId[groupId].hupuID, playerName)

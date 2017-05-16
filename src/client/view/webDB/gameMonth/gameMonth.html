@@ -5,10 +5,10 @@
             <div>
                 <li v-for="(r,idx) in recMap">
                     <a v-if='idx<24' href='#' @click='onSetGameIdx(idx)'>
-                        {{r.gameIdx+1}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}
+                        [{{r.player[0]+':'+r.player[1]}}] {{r.gameIdx+1}}: {{gameInfo.h(r.player[0])}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{gameInfo.h(r.player[1])}}
                     </a>
                     <a v-if='idx>23' href='#' @click='onSetGameIdx(idx)'>
-                        {{r.gameIdx-23}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}
+                        [{{r.player[0]+':'+r.player[1]}}] {{r.gameIdx-23}}: {{gameInfo.h(r.player[0])}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{gameInfo.h(r.player[1])}}
                     </a>
                     <div v-if='idx==23'>-----master-----</div>
                 </li>
@@ -41,6 +41,8 @@
             <button class="button" @click="onCommitGame(false)">提交加赛</button>
             <br>
             <button class="button" @click="onSetGameResult">修改比分</button>
+            <input v-model='vs'></input>
+            <button class="button" @click="onSetVS(vs)">修改对阵</button>
             <button class="button" @click="onBracket">bracket</button>
             <br>
 

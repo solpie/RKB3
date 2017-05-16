@@ -881,6 +881,8 @@
 	    sc_bracketInit: "",
 	    cs_startGame: "",
 	    sc_startGame: "",
+	    cs_showProgress: "",
+	    sc_showProgress: "",
 	    cs_startTimer: "",
 	    sc_startTimer: "",
 	    cs_commit: "",
@@ -975,6 +977,7 @@
 	        this.playerRank = VueBase_1.VueBase.PROP;
 	        this.masterBracket = VueBase_1.VueBase.PROP;
 	        this.gameInfoStr = VueBase_1.VueBase.PROP;
+	        this.vs = VueBase_1.VueBase.PROP;
 	        this.methods = {
 	            onAddScore: function (isLeft, dtScore) {
 	                gameInfo.score(isLeft, dtScore);
@@ -1059,6 +1062,8 @@
 	            onBracket: function () {
 	                this.routeBracket();
 	                this.renderRecMap();
+	            },
+	            onSetVS: function (vs) {
 	            },
 	            onSetGameIdx: function (v) {
 	                this.gameInfoStr = gameInfo.start(v);
@@ -1358,7 +1363,12 @@
 	    GameInfo.prototype.getPlayerInfo = function (groupName) {
 	        if (this.nameMapHupuId[groupName])
 	            return JSON.parse(JSON.stringify(this.nameMapHupuId[groupName]));
-	        return new PlayerInfo_1.PlayerInfo;
+	        var p = new PlayerInfo_1.PlayerInfo();
+	        p.hupuID = groupName;
+	        return p;
+	    };
+	    GameInfo.prototype.h = function (name) {
+	        return this.getPlayerInfo(name).hupuID.substr(0, 4);
 	    };
 	    GameInfo.prototype.getBracket = function () {
 	        var data = { _: null };
@@ -1527,7 +1537,7 @@
 /***/ 95:
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(r,idx) in recMap\">\r\n                    <a v-if='idx<24' href='#' @click='onSetGameIdx(idx)'>\r\n                        {{r.gameIdx+1}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}\r\n                    </a>\r\n                    <a v-if='idx>23' href='#' @click='onSetGameIdx(idx)'>\r\n                        {{r.gameIdx-23}}: {{r.player[0]}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{r.player[1]}}\r\n                    </a>\r\n                    <div v-if='idx==23'>-----master-----</div>\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <div v-if='gameInfo.gameIdx<24'>\r\n                小组赛第{{gameInfo.gameIdx+1}}场\r\n            </div>\r\n            <div v-else>\r\n                大师赛第{{gameInfo.gameIdx-23}}场\r\n            </div>\r\n            {{gameInfoStr}}\r\n            <span></span><br> Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button> {{gameInfo.lScore}}\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button> {{gameInfo.lFoul}}\r\n            <br>\r\n            <button class=\"button\" @click=\"onStartGame()\">开始比赛</button>\r\n            <button class=\"button\" @click=\"onStartTimer(true)\">开始计时</button>\r\n            <button class=\"button\" @click=\"onStartTimer(false)\">暂停计时</button>\r\n            <button class=\"button\" @click=\"onCommitGame(true)\">提交比赛</button>\r\n            <br>\r\n            <span>加赛操作：左边选择对阵，开始比赛，提交加赛</span>\r\n            <button class=\"button\" @click=\"onCommitGame(false)\">提交加赛</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onSetGameResult\">修改比分</button>\r\n            <button class=\"button\" @click=\"onBracket\">bracket</button>\r\n            <br>\r\n\r\n            <button class=\"button\" @click=\"onClearGame(0)\">清除比赛数据</button>\r\n            <button class=\"button\" @click=\"onClearGame(1)\">清除大师赛数据</button>\r\n            <button class=\"button\" @click=\"onTestGame\">testGame</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <br>\r\n            <br> {{gameInfo.rScore}}\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br> {{gameInfo.rFoul}}\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onProgress()\">小组进度</button>\r\n            <button class=\"button\" @click=\"onSetMaster()\">大师赛排名</button>\r\n            <div>\r\n                <li v-for=\"(p,idx) in playerRank\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                    <div v-if='idx==7'>----------</div>\r\n                </li>\r\n                <div>-----master-----</div>\r\n                <li v-for=\"(p,idx) in masterBracket\">\r\n                    <button class=\"button\" @click=\"onAddFoul(false,-1)\">↑</button>\r\n                    <button class=\"button\" @click=\"onAddFoul(false,-1)\">↓</button> [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(r,idx) in recMap\">\r\n                    <a v-if='idx<24' href='#' @click='onSetGameIdx(idx)'>\r\n                        [{{r.player[0]+':'+r.player[1]}}] {{r.gameIdx+1}}: {{gameInfo.h(r.player[0])}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{gameInfo.h(r.player[1])}}\r\n                    </a>\r\n                    <a v-if='idx>23' href='#' @click='onSetGameIdx(idx)'>\r\n                        [{{r.player[0]+':'+r.player[1]}}] {{r.gameIdx-23}}: {{gameInfo.h(r.player[0])}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{gameInfo.h(r.player[1])}}\r\n                    </a>\r\n                    <div v-if='idx==23'>-----master-----</div>\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <div v-if='gameInfo.gameIdx<24'>\r\n                小组赛第{{gameInfo.gameIdx+1}}场\r\n            </div>\r\n            <div v-else>\r\n                大师赛第{{gameInfo.gameIdx-23}}场\r\n            </div>\r\n            {{gameInfoStr}}\r\n            <span></span><br> Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button> {{gameInfo.lScore}}\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button> {{gameInfo.lFoul}}\r\n            <br>\r\n            <button class=\"button\" @click=\"onStartGame()\">开始比赛</button>\r\n            <button class=\"button\" @click=\"onStartTimer(true)\">开始计时</button>\r\n            <button class=\"button\" @click=\"onStartTimer(false)\">暂停计时</button>\r\n            <button class=\"button\" @click=\"onCommitGame(true)\">提交比赛</button>\r\n            <br>\r\n            <span>加赛操作：左边选择对阵，开始比赛，提交加赛</span>\r\n            <button class=\"button\" @click=\"onCommitGame(false)\">提交加赛</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onSetGameResult\">修改比分</button>\r\n            <input v-model='vs'></input>\r\n            <button class=\"button\" @click=\"onSetVS(vs)\">修改对阵</button>\r\n            <button class=\"button\" @click=\"onBracket\">bracket</button>\r\n            <br>\r\n\r\n            <button class=\"button\" @click=\"onClearGame(0)\">清除比赛数据</button>\r\n            <button class=\"button\" @click=\"onClearGame(1)\">清除大师赛数据</button>\r\n            <button class=\"button\" @click=\"onTestGame\">testGame</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <br>\r\n            <br> {{gameInfo.rScore}}\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br> {{gameInfo.rFoul}}\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onProgress()\">小组进度</button>\r\n            <button class=\"button\" @click=\"onSetMaster()\">大师赛排名</button>\r\n            <div>\r\n                <li v-for=\"(p,idx) in playerRank\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                    <div v-if='idx==7'>----------</div>\r\n                </li>\r\n                <div>-----master-----</div>\r\n                <li v-for=\"(p,idx) in masterBracket\">\r\n                    <button class=\"button\" @click=\"onAddFoul(false,-1)\">↑</button>\r\n                    <button class=\"button\" @click=\"onAddFoul(false,-1)\">↓</button> [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n    </div>\r\n</div>";
 
 /***/ },
 

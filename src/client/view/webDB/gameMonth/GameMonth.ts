@@ -44,6 +44,7 @@ class GameMonth extends VueBase {
     playerRank = VueBase.PROP
     masterBracket = VueBase.PROP
     gameInfoStr = VueBase.PROP
+    vs = VueBase.PROP
     constructor() {
         super();
         VueBase.initProps(this);
@@ -206,7 +207,7 @@ class GameMonth extends VueBase {
         renderRecMap(recMap?) {
             if (recMap) {
                 this.recMap = gameInfo.recMap = recMap
-                Vue.set('recMap', '1','recMap["1"]')
+                Vue.set('recMap', '1', 'recMap["1"]')
             }
         },
         onStartGame() {
@@ -268,6 +269,9 @@ class GameMonth extends VueBase {
             this.routeBracket()
             this.renderRecMap()
         },
+        onSetVS(vs) {
+            
+        },
         onSetGameIdx(v) {
             this.gameInfoStr = gameInfo.start(v)
         },
@@ -320,7 +324,7 @@ class GameMonth extends VueBase {
         },
 
         onProgress() {
-
+            
         },
         onSetGameResult() {
             getDoc((doc) => {
