@@ -95,6 +95,7 @@ class GameMonth extends VueBase {
                 //     doc['gameIdx'] = 0
                 //     saveDoc(doc)
                 // }
+                this.emitBracket()
             }
         })
     }
@@ -269,6 +270,7 @@ class GameMonth extends VueBase {
             this.routeBracket()
             this.renderRecMap()
         },
+
         onSetVS(vs) {
             //a1 a2
             if (vs) {
@@ -333,7 +335,7 @@ class GameMonth extends VueBase {
         },
 
         onProgress(g) {
-            if (gameInfo.gameIdx < 24) {
+            if (gameInfo.gameIdx < 25) {
                 getDoc((doc) => {
                     let data = gameInfo.getGroup(doc, g)
                     $post(`/db/cmd/${WebDBCmd.cs_showProgress}`, data, null)
@@ -352,7 +354,7 @@ class GameMonth extends VueBase {
                 this.renderRecMap()
             })
         },
-        onCommitGame(isSave) {
+        onCommitGame(isEmit) {
             let data: any = { _: null }
             let r = gameInfo.commit()
             data.player = gameInfo.lastWinner
@@ -364,13 +366,13 @@ class GameMonth extends VueBase {
                     data.player['winAmount'] = sum.win
                     data.player['loseAmount'] = sum.lose
                     data.player['roundScore'] = sum.score
-                    if (isSave) {
-                        console.log('save doc', doc)
-                        saveDoc(doc)
+                    console.log('save doc', doc)
+                    saveDoc(doc)
+                    if (isEmit) {
+                        $post(`/db/cmd/${WebDBCmd.cs_commit}`, data, null)
                     }
-                    $post(`/db/cmd/${WebDBCmd.cs_commit}`, data, null)
-                    if (isSave) {
-                        this.onBracket()
+                    this.onBracket()
+                    if (isEmit) {
                         this.emitBracket()
                         this.onStartGame()
                     }

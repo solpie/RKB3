@@ -119,7 +119,6 @@ export class ScoreView extends BasePanelView {
                 }
             })
             .on(`${WebDBCmd.sc_startGame}`, (data) => {
-
             })
             .on(`${WebDBCmd.sc_startTimer}`, (data) => {
                 if (data.isStart)
@@ -132,6 +131,7 @@ export class ScoreView extends BasePanelView {
                 let player = data.player
                 this.eventPanel.showWin(player)
                 this.scorePanel.toggleTimer(TimerState.PAUSE);
+                this.scorePanel.resetTimer();
             })
             .on(`${WebDBCmd.sc_score}`, (data) => {
                 console.log('sc_score', data)
@@ -150,7 +150,7 @@ export class ScoreView extends BasePanelView {
                 // gameInfo.score(data.isLeft, data.dtScore)
             })
             .on(`${WebDBCmd.sc_showProgress}`, (data) => {
-                console.log('show group ',data)
+                console.log('show group ', data)
                 this.eventPanel.showGroup(data)
             })
             .on(`${WebDBCmd.sc_hideProgress}`, (data) => {

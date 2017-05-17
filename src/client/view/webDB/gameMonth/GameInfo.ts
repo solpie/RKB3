@@ -227,6 +227,7 @@ export class GameInfo {
                     sumMap[r.player[1]].win++
                     sumMap[r.player[1]].dtScore += r.score[1] - r.score[0]
                     sumMap[r.player[1]].beat.push(r.player[0])
+                    sumMap[r.player[1]].score += r.score[1]
 
                     sumMap[r.player[0]].lose++
                     sumMap[r.player[0]].score += r.score[0]

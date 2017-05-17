@@ -4304,8 +4304,8 @@
 	var WebJsFunc_1 = __webpack_require__(23);
 	var BasePanelView_1 = __webpack_require__(44);
 	var BracketView_1 = __webpack_require__(72);
-	var RankView_1 = __webpack_require__(75);
-	var ScoreView_1 = __webpack_require__(77);
+	var RankView_1 = __webpack_require__(76);
+	var ScoreView_1 = __webpack_require__(78);
 	var rankView;
 	var bracketView;
 	var scoreView;
@@ -4315,7 +4315,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(89);
+	        this.template = __webpack_require__(90);
 	        this.actTab = VueBase_1.VueBase.PROP;
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
@@ -5049,9 +5049,9 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var WebDBCmd_1 = __webpack_require__(78);
-	var PreRound_1 = __webpack_require__(73);
-	var Bracket2017_1 = __webpack_require__(74);
+	var WebDBCmd_1 = __webpack_require__(73);
+	var PreRound_1 = __webpack_require__(74);
+	var Bracket2017_1 = __webpack_require__(75);
 	var Command_1 = __webpack_require__(61);
 	var HupuAPI_1 = __webpack_require__(22);
 	var BasePanelView_1 = __webpack_require__(44);
@@ -5268,6 +5268,40 @@
 
 /***/ },
 /* 73 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.WebDBCmd = {
+	    cs_init: "",
+	    sc_init: "",
+	    cs_bracketInit: "",
+	    sc_bracketInit: "",
+	    cs_startGame: "",
+	    sc_startGame: "",
+	    cs_showProgress: "",
+	    sc_showProgress: "",
+	    cs_hideProgress: "",
+	    sc_hideProgress: "",
+	    cs_startTimer: "",
+	    sc_startTimer: "",
+	    cs_commit: "",
+	    sc_commit: "",
+	    cs_score: "",
+	    sc_score: "",
+	    cs_panelCreated: "",
+	    sc_panelCreated: "",
+	    cs_bracketCreated: "",
+	    sc_bracketCreated: "",
+	    cs_srvCreated: "",
+	    sc_srvCreated: ""
+	};
+	for (var k in exports.WebDBCmd) {
+	    exports.WebDBCmd[k] = k;
+	}
+
+
+/***/ },
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5473,7 +5507,7 @@
 
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5571,7 +5605,7 @@
 
 
 /***/ },
-/* 75 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5583,7 +5617,7 @@
 	var PlayerInfo_1 = __webpack_require__(29);
 	var BasePanelView_1 = __webpack_require__(44);
 	var const_1 = __webpack_require__(43);
-	var FTInfo_1 = __webpack_require__(76);
+	var FTInfo_1 = __webpack_require__(77);
 	var PixiEx_1 = __webpack_require__(46);
 	var JsFunc_1 = __webpack_require__(17);
 	var RankView = (function (_super) {
@@ -5787,7 +5821,7 @@
 
 
 /***/ },
-/* 76 */
+/* 77 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -5816,7 +5850,7 @@
 
 
 /***/ },
-/* 77 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5825,11 +5859,11 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var WebDBCmd_1 = __webpack_require__(78);
+	var WebDBCmd_1 = __webpack_require__(73);
 	var home_1 = __webpack_require__(16);
 	var Event2017_1 = __webpack_require__(79);
 	var TweenEx_1 = __webpack_require__(50);
-	var Score2017_1 = __webpack_require__(86);
+	var Score2017_1 = __webpack_require__(87);
 	var HupuAPI_1 = __webpack_require__(22);
 	var Command_1 = __webpack_require__(61);
 	var const_1 = __webpack_require__(43);
@@ -5935,6 +5969,7 @@
 	            var player = data.player;
 	            _this.eventPanel.showWin(player);
 	            _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
+	            _this.scorePanel.resetTimer();
 	        })
 	            .on("" + WebDBCmd_1.WebDBCmd.sc_score, function (data) {
 	            console.log('sc_score', data);
@@ -6191,40 +6226,6 @@
 
 
 /***/ },
-/* 78 */
-/***/ function(module, exports) {
-
-	"use strict";
-	exports.WebDBCmd = {
-	    cs_init: "",
-	    sc_init: "",
-	    cs_bracketInit: "",
-	    sc_bracketInit: "",
-	    cs_startGame: "",
-	    sc_startGame: "",
-	    cs_showProgress: "",
-	    sc_showProgress: "",
-	    cs_hideProgress: "",
-	    sc_hideProgress: "",
-	    cs_startTimer: "",
-	    sc_startTimer: "",
-	    cs_commit: "",
-	    sc_commit: "",
-	    cs_score: "",
-	    sc_score: "",
-	    cs_panelCreated: "",
-	    sc_panelCreated: "",
-	    cs_bracketCreated: "",
-	    sc_bracketCreated: "",
-	    cs_srvCreated: "",
-	    sc_srvCreated: ""
-	};
-	for (var k in exports.WebDBCmd) {
-	    exports.WebDBCmd[k] = k;
-	}
-
-
-/***/ },
 /* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -6245,7 +6246,7 @@
 	var PixiEx_1 = __webpack_require__(46);
 	var TweenEx_1 = __webpack_require__(50);
 	var const_1 = __webpack_require__(43);
-	var Group_1 = __webpack_require__(97);
+	var Group_1 = __webpack_require__(86);
 	var Event2017 = (function (_super) {
 	    __extends(Event2017, _super);
 	    function Event2017(stage, isDark) {
@@ -6875,10 +6876,103 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
 	var Com2017_1 = __webpack_require__(71);
-	var FoulText_1 = __webpack_require__(87);
+	var const_1 = __webpack_require__(43);
+	var PixiEx_1 = __webpack_require__(46);
+	var Group = (function (_super) {
+	    __extends(Group, _super);
+	    function Group(parent) {
+	        _super.call(this);
+	        this.playerTextArr = [];
+	        this.avatarArr = [];
+	        this.ftArr = [];
+	        this.p = parent;
+	        var gt = this.groupText = new PIXI.Text;
+	        gt.style.fill = '#fff';
+	        gt.style.fontSize = '50px';
+	        gt.x = 345;
+	        gt.y = 170;
+	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/group/bg.png' });
+	        this.addChild(bg);
+	        bg.addChild(this.groupText);
+	        var xs = [100, 565, 835, 1080];
+	        for (var i = 0; i < 4; i++) {
+	            for (var j = 0; j < 4; j++) {
+	                var pt = new PIXI.Text;
+	                pt.x = xs[j];
+	                pt.y = 262 + i * 80;
+	                pt.style.fontSize = '35px';
+	                pt.style.fontWeight = 'bold';
+	                this.playerTextArr.push(pt);
+	                bg.addChild(pt);
+	            }
+	            var avt = new PIXI.Sprite();
+	            avt.y = 252 + i * 80;
+	            avt.x = 20;
+	            bg.addChild(avt);
+	            this.avatarArr.push(avt);
+	            var ft = new PIXI.Sprite();
+	            ft.y = avt.y;
+	            ft.x = 495;
+	            bg.addChild(ft);
+	            this.ftArr.push(ft);
+	        }
+	        bg.x = (const_1.ViewConst.STAGE_WIDTH - 1200) * .5;
+	        bg.y = const_1.ViewConst.STAGE_HEIGHT - 558;
+	    }
+	    Group.prototype.show = function (group, playerArr) {
+	        this.groupText.text = group.toLocaleUpperCase() + '组';
+	        var _loop_1 = function(i) {
+	            var p = playerArr[i];
+	            var ptName = this_1.playerTextArr[i * 4];
+	            ptName.text = p.name;
+	            var ptFt = this_1.playerTextArr[i * 4 + 1];
+	            ptFt.text = Com2017_1.getFtName(p.groupId);
+	            var ptWin = this_1.playerTextArr[i * 4 + 2];
+	            ptWin.text = p.win || (0 + "");
+	            var ptScore = this_1.playerTextArr[i * 4 + 3];
+	            ptScore.text = p.dtScore || (0 + "");
+	            var avt = this_1.avatarArr[i];
+	            PixiEx_1.loadRes(p.avatar, function (img) {
+	                avt.texture = PixiEx_1.imgToTex(img);
+	                var s = 60 / img.width;
+	                avt.scale.x = avt.scale.y = s;
+	            }, true);
+	            var ft = this_1.ftArr[i];
+	            PixiEx_1.loadRes(Com2017_1.getFtLogoUrl2(p.groupId), function (img) {
+	                ft.texture = PixiEx_1.imgToTex(img);
+	                var s = 60 / img.width;
+	                ft.scale.x = ft.scale.y = s;
+	            }, false);
+	        };
+	        var this_1 = this;
+	        for (var i = 0; i < 4; i++) {
+	            _loop_1(i);
+	        }
+	        this.p.addChild(this);
+	    };
+	    Group.prototype.hide = function () {
+	        this.p.removeChild(this);
+	    };
+	    return Group;
+	}(PIXI.Container));
+	exports.Group = Group;
+
+
+/***/ },
+/* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var Com2017_1 = __webpack_require__(71);
+	var FoulText_1 = __webpack_require__(88);
 	var Fx_1 = __webpack_require__(56);
-	var FoulGroup_1 = __webpack_require__(88);
+	var FoulGroup_1 = __webpack_require__(89);
 	var TextTimer_1 = __webpack_require__(52);
 	var SpriteGroup_1 = __webpack_require__(55);
 	var const_1 = __webpack_require__(43);
@@ -7281,7 +7375,7 @@
 
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7328,7 +7422,7 @@
 
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7368,110 +7462,10 @@
 
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n            <button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <button class=\"button\" @click=\"onClkNoticePresets(1)\">报名预置</button>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
-
-/***/ },
-/* 90 */,
-/* 91 */,
-/* 92 */,
-/* 93 */,
-/* 94 */,
-/* 95 */,
-/* 96 */,
-/* 97 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var Com2017_1 = __webpack_require__(71);
-	var const_1 = __webpack_require__(43);
-	var PixiEx_1 = __webpack_require__(46);
-	var Group = (function (_super) {
-	    __extends(Group, _super);
-	    function Group(parent) {
-	        _super.call(this);
-	        this.playerTextArr = [];
-	        this.avatarArr = [];
-	        this.ftArr = [];
-	        this.p = parent;
-	        var gt = this.groupText = new PIXI.Text;
-	        gt.style.fill = '#fff';
-	        gt.style.fontSize = '50px';
-	        gt.x = 345;
-	        gt.y = 170;
-	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/group/bg.png' });
-	        this.addChild(bg);
-	        bg.addChild(this.groupText);
-	        var xs = [100, 565, 835, 1080];
-	        for (var i = 0; i < 4; i++) {
-	            for (var j = 0; j < 4; j++) {
-	                var pt = new PIXI.Text;
-	                pt.x = xs[j];
-	                pt.y = 262 + i * 80;
-	                pt.style.fontSize = '35px';
-	                pt.style.fontWeight = 'bold';
-	                this.playerTextArr.push(pt);
-	                bg.addChild(pt);
-	            }
-	            var avt = new PIXI.Sprite();
-	            avt.y = 252 + i * 80;
-	            avt.x = 20;
-	            bg.addChild(avt);
-	            this.avatarArr.push(avt);
-	            var ft = new PIXI.Sprite();
-	            ft.y = avt.y;
-	            ft.x = 495;
-	            bg.addChild(ft);
-	            this.ftArr.push(ft);
-	        }
-	        bg.x = (const_1.ViewConst.STAGE_WIDTH - 1200) * .5;
-	        bg.y = const_1.ViewConst.STAGE_HEIGHT - 558;
-	    }
-	    Group.prototype.show = function (group, playerArr) {
-	        this.groupText.text = group.toLocaleUpperCase() + '组';
-	        var _loop_1 = function(i) {
-	            var p = playerArr[i];
-	            var ptName = this_1.playerTextArr[i * 4];
-	            ptName.text = p.name;
-	            var ptFt = this_1.playerTextArr[i * 4 + 1];
-	            ptFt.text = Com2017_1.getFtName(p.groupId);
-	            var ptWin = this_1.playerTextArr[i * 4 + 2];
-	            ptWin.text = p.win || (0 + "");
-	            var ptScore = this_1.playerTextArr[i * 4 + 3];
-	            ptScore.text = p.dtScore || (0 + "");
-	            var avt = this_1.avatarArr[i];
-	            PixiEx_1.loadRes(p.avatar, function (img) {
-	                avt.texture = PixiEx_1.imgToTex(img);
-	                var s = 60 / img.width;
-	                avt.scale.x = avt.scale.y = s;
-	            }, true);
-	            var ft = this_1.ftArr[i];
-	            PixiEx_1.loadRes(Com2017_1.getFtLogoUrl2(p.groupId), function (img) {
-	                ft.texture = PixiEx_1.imgToTex(img);
-	                var s = 60 / img.width;
-	                ft.scale.x = ft.scale.y = s;
-	            }, false);
-	        };
-	        var this_1 = this;
-	        for (var i = 0; i < 4; i++) {
-	            _loop_1(i);
-	        }
-	        this.p.addChild(this);
-	    };
-	    Group.prototype.hide = function () {
-	        this.p.removeChild(this);
-	    };
-	    return Group;
-	}(PIXI.Container));
-	exports.Group = Group;
-
 
 /***/ }
 /******/ ]);
