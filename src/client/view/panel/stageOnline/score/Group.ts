@@ -1,4 +1,4 @@
-import { getFtName } from './Com2017';
+import { getFtLineUrl, getFtlogoUrl, getFtLogoUrl2, getFtName } from './Com2017';
 import { ViewConst } from '../../../const';
 import { loadRes, newBitmap, imgToTex } from '../../../utils/PixiEx';
 export class Group extends PIXI.Container {
@@ -6,12 +6,13 @@ export class Group extends PIXI.Container {
     p: any
     playerTextArr: Array<PIXI.Text> = []
     avatarArr: Array<PIXI.Sprite> = []
+    ftArr: Array<PIXI.Sprite> = []
     constructor(parent) {
         super()
         this.p = parent
-        let modal = new PIXI.Graphics().drawRect(0, 0, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT)
-        modal.alpha = 0.8
-        this.addChild(modal)
+        // let modal = new PIXI.Graphics().drawRect(0, 0, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT)
+        // modal.alpha = 0.8
+        // this.addChild(modal)
         let gt = this.groupText = new PIXI.Text
         gt.style.fill = '#fff'
         gt.style.fontSize = '50px'
@@ -20,7 +21,7 @@ export class Group extends PIXI.Container {
         let bg = newBitmap({ url: '/img/panel/group/bg.png' })
         this.addChild(bg)
         bg.addChild(this.groupText)
-        let xs = [100, 525, 835, 990]
+        let xs = [100, 565, 835, 1080]
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 4; j++) {
                 let pt = new PIXI.Text
@@ -36,9 +37,15 @@ export class Group extends PIXI.Container {
             avt.x = 20
             bg.addChild(avt)
             this.avatarArr.push(avt)
+
+            let ft = new PIXI.Sprite()
+            ft.y = avt.y
+            ft.x = 495
+            bg.addChild(ft)
+            this.ftArr.push(ft)
         }
         bg.x = (ViewConst.STAGE_WIDTH - 1200) * .5
-        bg.y = 280
+        bg.y = ViewConst.STAGE_HEIGHT - 558
     }
 
     show(group, playerArr) {
@@ -50,18 +57,22 @@ export class Group extends PIXI.Container {
             let ptFt = this.playerTextArr[i * 4 + 1]
             ptFt.text = getFtName(p.groupId)
             let ptWin = this.playerTextArr[i * 4 + 2]
-            ptWin.text = p.win
+            ptWin.text = p.win || (0 + "")
             let ptScore = this.playerTextArr[i * 4 + 3]
-            ptScore.text = p.dtScore
+            ptScore.text = p.dtScore || (0 + "")
             let avt = this.avatarArr[i]
             loadRes(p.avatar, (img) => {
                 avt.texture = imgToTex(img)
-                // avt.width
                 let s = 60 / img.width
-                // avt.x = avt.mask.x - avt.texture.width * .5 * s
-                // avt.y = avt.mask.y - avt.texture.height * .5 * s
                 avt.scale.x = avt.scale.y = s
             }, true);
+
+            let ft = this.ftArr[i]
+            loadRes(getFtLogoUrl2(p.groupId), (img) => {
+                ft.texture = imgToTex(img)
+                let s = 60 / img.width
+                ft.scale.x = ft.scale.y = s
+            }, false);
         }
 
         this.p.addChild(this)

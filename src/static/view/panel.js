@@ -6442,14 +6442,10 @@
 	        this.bdBg.visible = v;
 	    };
 	    Event2017.prototype.showGroup = function (data) {
-	        var _this = this;
 	        if (!this.groupPanel) {
 	            this.groupPanel = new Group_1.Group(this);
 	        }
 	        this.groupPanel.show(data.group, data.playerArr);
-	        TweenEx_1.TweenEx.delayedCall(6000, function () {
-	            _this.hideGroup();
-	        });
 	    };
 	    Event2017.prototype.hideGroup = function () {
 	        this.groupPanel.hide();
@@ -7403,10 +7399,8 @@
 	        _super.call(this);
 	        this.playerTextArr = [];
 	        this.avatarArr = [];
+	        this.ftArr = [];
 	        this.p = parent;
-	        var modal = new PIXI.Graphics().drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT);
-	        modal.alpha = 0.8;
-	        this.addChild(modal);
 	        var gt = this.groupText = new PIXI.Text;
 	        gt.style.fill = '#fff';
 	        gt.style.fontSize = '50px';
@@ -7415,7 +7409,7 @@
 	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/group/bg.png' });
 	        this.addChild(bg);
 	        bg.addChild(this.groupText);
-	        var xs = [100, 525, 835, 990];
+	        var xs = [100, 565, 835, 1080];
 	        for (var i = 0; i < 4; i++) {
 	            for (var j = 0; j < 4; j++) {
 	                var pt = new PIXI.Text;
@@ -7431,9 +7425,14 @@
 	            avt.x = 20;
 	            bg.addChild(avt);
 	            this.avatarArr.push(avt);
+	            var ft = new PIXI.Sprite();
+	            ft.y = avt.y;
+	            ft.x = 495;
+	            bg.addChild(ft);
+	            this.ftArr.push(ft);
 	        }
 	        bg.x = (const_1.ViewConst.STAGE_WIDTH - 1200) * .5;
-	        bg.y = 280;
+	        bg.y = const_1.ViewConst.STAGE_HEIGHT - 558;
 	    }
 	    Group.prototype.show = function (group, playerArr) {
 	        this.groupText.text = group.toLocaleUpperCase() + '组';
@@ -7444,15 +7443,21 @@
 	            var ptFt = this_1.playerTextArr[i * 4 + 1];
 	            ptFt.text = Com2017_1.getFtName(p.groupId);
 	            var ptWin = this_1.playerTextArr[i * 4 + 2];
-	            ptWin.text = p.win;
+	            ptWin.text = p.win || (0 + "");
 	            var ptScore = this_1.playerTextArr[i * 4 + 3];
-	            ptScore.text = p.dtScore;
+	            ptScore.text = p.dtScore || (0 + "");
 	            var avt = this_1.avatarArr[i];
 	            PixiEx_1.loadRes(p.avatar, function (img) {
 	                avt.texture = PixiEx_1.imgToTex(img);
 	                var s = 60 / img.width;
 	                avt.scale.x = avt.scale.y = s;
 	            }, true);
+	            var ft = this_1.ftArr[i];
+	            PixiEx_1.loadRes(Com2017_1.getFtLogoUrl2(p.groupId), function (img) {
+	                ft.texture = PixiEx_1.imgToTex(img);
+	                var s = 60 / img.width;
+	                ft.scale.x = ft.scale.y = s;
+	            }, false);
 	        };
 	        var this_1 = this;
 	        for (var i = 0; i < 4; i++) {

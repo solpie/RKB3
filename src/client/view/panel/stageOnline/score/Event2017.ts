@@ -276,9 +276,9 @@ export class Event2017 extends PIXI.Container {
             this.groupPanel = new Group(this)
         }
         this.groupPanel.show(data.group, data.playerArr)
-        TweenEx.delayedCall(6000, () => {
-            this.hideGroup()
-        })
+        // TweenEx.delayedCall(12000, () => {
+        //     this.hideGroup()
+        // })
     }
 
     hideGroup() {

@@ -38,11 +38,9 @@
             <button class="button" @click="onCommitGame(true)">提交比赛</button>
             <br>
             <button class="button" @click="onProgress('a')">A组进度</button>
-            <br>
             <button class="button" @click="onProgress('b')">B组进度</button>
             <br>
             <button class="button" @click="onProgress('c')">C组进度</button>
-            <br>
             <button class="button" @click="onProgress('d')">D组进度</button>
             <br>
             <button class="button" @click="onHideProgress()">隐藏进度</button>
@@ -50,7 +48,7 @@
             <span>加赛操作：左边选择对阵，开始比赛，提交加赛</span>
             <button class="button" @click="onCommitGame(false)">提交加赛</button>
             <br>
-            <button class="button" @click="onSetGameResult">修改比分</button>
+            <button class="button" @click="onSetResult">修改比分</button>
             <br>
             <input v-model='vs' style="width:80px"></input>
             <button class="button" @click="onSetVS(vs)">修改对阵</button>

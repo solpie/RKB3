@@ -270,7 +270,16 @@ class GameMonth extends VueBase {
             this.renderRecMap()
         },
         onSetVS(vs) {
-
+            //a1 a2
+            if (vs) {
+                let a = vs.split(' ')
+                if (a.length == 2) {
+                    getDoc((doc) => {
+                        gameInfo.setVS(doc, a)
+                        saveDoc(doc)
+                    })
+                }
+            }
         },
         onSetGameIdx(v) {
             this.gameInfoStr = gameInfo.start(v)
@@ -334,7 +343,7 @@ class GameMonth extends VueBase {
         onHideProgress() {
             $post(`/db/cmd/${WebDBCmd.cs_hideProgress}`, { _: null }, null)
         },
-        onSetGameResult() {
+        onSetResult() {
             getDoc((doc) => {
                 let r = doc['recMap'][gameInfo.gameIdx]
                 r.score[0] = gameInfo.lScore

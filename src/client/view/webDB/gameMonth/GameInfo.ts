@@ -196,7 +196,7 @@ export class GameInfo {
             .thenBy(function (v1, v2) { return v2.dtScore - v1.dtScore; })
         )
         console.log(playerArr)
-        
+
         return { _: null, group: group, playerArr: playerArr }
     }
 
@@ -251,6 +251,12 @@ export class GameInfo {
 
     getRecData() {
         return JSON.parse(JSON.stringify(this.recData))
+    }
+
+    setVS(doc, groupNameArr) {
+        let r = doc['recMap'][this.gameIdx]
+        r.player = groupNameArr
+        console.log(r)
     }
 
     toJSON() {
