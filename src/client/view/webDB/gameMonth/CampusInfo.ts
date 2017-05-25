@@ -4,7 +4,25 @@ export class CampusInfo {
     gameIdx: number = 1
     constructor() {
     }
+    create(t) {
+        let rowArr = t.split('\n')
+        //编号 姓名 虎扑ID 性别 身份证 手机号 身高 体重
+        let dataMap = {}
+        for (let row of rowArr) {
+            let a = row.split('\t')
+            let p: any = {}
+            p.id = a[0]
+            p.name = a[1]
+            p.height = a[5]
+            p.weight = a[6]
+            dataMap[p.id] = p
+        }
 
+        // this.campusPlayer = dataMap
+        this.playerMap = dataMap
+        console.log(dataMap, rowArr)
+        return dataMap
+    }
     getData(lId, rId) {
         let data: any = { _: null }
         data.winScore = 2

@@ -196,22 +196,7 @@ class GameMonth extends VueBase {
 
     methods = {
         onCreateCampus(t) {
-            let rowArr = t.split('\n')
-            //编号 姓名 虎扑ID 性别 身份证 手机号 身高 体重
-            let dataMap = {}
-            for (let row of rowArr) {
-                let a = row.split('\t')
-                let p: any = {}
-                p.id = a[0]
-                p.name = a[1]
-                p.weight = a[5]
-                p.height = a[6]
-                dataMap[p.id] = p
-            }
-
-            this.campusPlayer = dataMap
-            campusInfo.playerMap = dataMap
-            console.log(dataMap, rowArr)
+            this.campusPlayer = campusInfo.create(t)
         },
         onStartCampus() {
             console.log('onStartCampus', campusInfo.playerMap, this.campusL, this.campusR)
