@@ -1,3 +1,4 @@
+import { CampusInfo } from './CampusInfo';
 import { firstBy } from './thenBy';
 import { ascendingProp, descendingProp, mapToArr } from '../../utils/JsFunc';
 import { PlayerInfo } from './PlayerInfo';
@@ -19,6 +20,7 @@ let $post = (url, param, callback) => {
 }
 const createTime = new Date().getTime()
 let gameInfo: GameInfo
+let campusInfo: CampusInfo = new CampusInfo
 
 const getDoc = (callback) => {
     $.get('/db/find/519', (res) => {
@@ -45,8 +47,13 @@ class GameMonth extends VueBase {
     masterBracket = VueBase.PROP
     gameInfoStr = VueBase.PROP
     vs = VueBase.PROP
+    //campus
     campusPlayer = VueBase.PROP
     campusInput = VueBase.PROP
+    campusL = VueBase.PROP
+    campusR = VueBase.PROP
+    campusWinScore = VueBase.PROP
+    campusGameIdx = VueBase.PROP
 
     constructor() {
         super();
@@ -139,6 +146,8 @@ class GameMonth extends VueBase {
         // $post('/db/update/519', { id: 519, test: 233 }, () => {
 
         // })
+        this.campusWinScore = 2
+        this.campusGameIdx = 1
     }
     routeBracket() {
         let masterIdx = 23
@@ -187,7 +196,37 @@ class GameMonth extends VueBase {
 
     methods = {
         onCreateCampus(t) {
-            console.log(t)
+            let rowArr = t.split('\n')
+            //编号 姓名 虎扑ID 性别 身份证 手机号 身高 体重
+            let dataMap = {}
+            for (let row of rowArr) {
+                let a = row.split('\t')
+                let p: any = {}
+                p.id = a[0]
+                p.name = a[1]
+                p.weight = a[5]
+                p.height = a[6]
+                dataMap[p.id] = p
+            }
+
+            this.campusPlayer = dataMap
+            campusInfo.playerMap = dataMap
+            console.log(dataMap, rowArr)
+        },
+        onStartCampus() {
+            console.log('onStartCampus', campusInfo.playerMap, this.campusL, this.campusR)
+            let data: any = campusInfo.getData(this.campusL, this.campusR)
+            // this.gameInfoStr = gameInfo.start(gameInfo.gameIdx)
+            data.winScore = this.campusWinScore
+            if (Number(data.winScore) == 5) {
+                data.matchType = 3
+            }
+            if (Number(this.campusGameIdx) > 0) {
+                campusInfo.gameIdx = data.gameIdx = Number(this.campusGameIdx)
+                this.campusGameIdx = ''
+            }
+            console.log(data)
+            $post(`/db/cmd/${WebDBCmd.cs_init}`, data, null)
         },
         onAddScore(isLeft, dtScore) {
             gameInfo.score(isLeft, dtScore)

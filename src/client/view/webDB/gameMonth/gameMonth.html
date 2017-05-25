@@ -89,15 +89,20 @@
         </div>
         <div class="column">
             校园赛
-            <li>
-            </li>
+            <br>
+            <input v-model='campusL' style="width:40px"></input>
+            <input v-model='campusR' style="width:40px"></input>
+            winScore
+            <input v-model='campusWinScore' style="width:40px"></input>
+            gameIdx<input v-model='campusGameIdx' style="width:40px"></input>
             <button class="button" @click="onStartCampus()">开始比赛</button>
+            <button class="button" @click="onCreateCampus(campusInput)">录入</button>
+            <li v-for="p in campusPlayer">
+                {{p.id}}:{{p.name}}
+            </li>
             <textarea v-model='campusInput' style="height:200px">
                 
             </textarea>
-            <button class="button" @click="onCreateCampus(campusInput)">录入</button>
-
         </div>
-
     </div>
 </div>
