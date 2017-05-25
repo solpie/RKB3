@@ -87,6 +87,17 @@
                 </li>
             </div>
         </div>
+        <div class="column">
+            校园赛
+            <li>
+            </li>
+            <button class="button" @click="onStartCampus()">开始比赛</button>
+            <textarea v-model='campusInput' style="height:200px">
+                
+            </textarea>
+            <button class="button" @click="onCreateCampus(campusInput)">录入</button>
+
+        </div>
 
     </div>
 </div>

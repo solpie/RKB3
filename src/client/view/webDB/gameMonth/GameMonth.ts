@@ -45,6 +45,9 @@ class GameMonth extends VueBase {
     masterBracket = VueBase.PROP
     gameInfoStr = VueBase.PROP
     vs = VueBase.PROP
+    campusPlayer = VueBase.PROP
+    campusInput = VueBase.PROP
+
     constructor() {
         super();
         VueBase.initProps(this);
@@ -183,6 +186,9 @@ class GameMonth extends VueBase {
     }
 
     methods = {
+        onCreateCampus(t) {
+            console.log(t)
+        },
         onAddScore(isLeft, dtScore) {
             gameInfo.score(isLeft, dtScore)
             let data: any = { _: null }

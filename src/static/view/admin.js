@@ -992,16 +992,13 @@
 	"use strict";
 	var WebJsFunc_1 = __webpack_require__(23);
 	exports.getHupuWS = function (callback) {
-	    var url = 'http://test.jrstvapi.hupu.com/zhubo/getNodeServer';
-	    $.get(WebJsFunc_1.proxy(url), function (res) {
-	        var a = JSON.parse(res);
-	        if (a && a.length) {
-	            callback(a[0]);
-	        }
-	        else
-	            console.error(url);
-	    });
+	    callback('tcp.lb.liangle.com:3081');
 	};
+	function setClientDelay(gameId, sec, callback) {
+	    var url = "http://api.liangle.com/api/passerbyking/time/diff/" + gameId + "?td=" + sec;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.setClientDelay = setClientDelay;
 	function getPreRoundPlayer(gameId, callback) {
 	    var url = 'http://api.liangle.com/api/passerbyking/game/wheel/ready/' + gameId;
 	    _get(WebJsFunc_1.proxy(url), callback);

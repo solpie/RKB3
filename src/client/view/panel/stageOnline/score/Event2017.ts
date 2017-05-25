@@ -1,3 +1,4 @@
+import { TopInfo } from './TopInfo';
 import { ScoreFx } from './ScoreFx';
 import { Victory2 } from './Victory2';
 import { LogoFx } from './LogoFx';
@@ -283,5 +284,17 @@ export class Event2017 extends PIXI.Container {
 
     hideGroup() {
         this.groupPanel.hide()
+    }
+
+
+    topInfo: TopInfo
+    showTopInfo(progressText?: string, roundText?: string) {
+        if (!this.topInfo)
+            this.topInfo = new TopInfo(this)
+        this.topInfo.setInfo(progressText, roundText)
+    }
+
+    hideTopInfo() {
+        this.topInfo.hide()
     }
 }
