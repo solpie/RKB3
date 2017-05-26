@@ -12,7 +12,10 @@ export class CampusInfo {
             let a = row.split('\t')
             let p: any = {}
             p.id = a[0]
-            p.name = a[1]
+            if (a[2] != '')
+                p.name = a[2]
+            else
+                p.name = a[1]
             p.height = a[5]
             p.weight = a[6]
             dataMap[p.id] = p
@@ -32,6 +35,7 @@ export class CampusInfo {
         // let lPlayer = this.playerMap[lId]
         // let rPlayer = this.playerMap[rId]
         // let player = {left:lPlayer,right:rPlayer}
+        data.status = 2
         data.player = { left: this.getPlayer(lId), right: this.getPlayer(rId) }
         this.gameIdx += 1
         data.gameIdx = this.gameIdx

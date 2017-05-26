@@ -96,10 +96,10 @@
             <input v-model='campusWinScore' style="width:40px"></input>
             gameIdx<input v-model='campusGameIdx' style="width:40px"></input>
             <button class="button" @click="onStartCampus()">开始比赛</button>
-            <button class="button" @click="onCreateCampus(campusInput)">录入</button>
             <li v-for="p in campusPlayer">
                 {{p.id}}:{{p.name}}
             </li>
+            <button class="button" @click="onCreateCampus(campusInput)">录入</button>
             <textarea v-model='campusInput' style="height:200px">
                 
             </textarea>
