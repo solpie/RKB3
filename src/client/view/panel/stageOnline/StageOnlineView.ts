@@ -1,3 +1,4 @@
+import { setClientDelay } from '../../utils/HupuAPI';
 import { Lottery } from './lottery/Lottery';
 import { noticeJoin } from './score/Com2017';
 import { getScorePanelUrl } from '../../admin/home/home';
@@ -35,6 +36,8 @@ class StageOnlineView extends VueBase {
     gameId = VueBase.String
     isOp = VueBase.PROP
     delayTime = VueBase.PROP
+    clientDelayTime = VueBase.PROP
+
     delayTimeShowOnly = VueBase.PROP
     liveTime = VueBase.PROP
     srvTime = 0;//服务器时间(毫秒)
@@ -351,6 +354,11 @@ class StageOnlineView extends VueBase {
         },
         onClkBracket() {
             this.opReq(`${CommandId.cs_showBracket}`, { _: null })
+        },
+        onSetClientDelay(t) {
+            setClientDelay(t, (res) => {
+                console.log(res)
+            })
         },
         //manmual score
         onAddScore(isLeft, dtScore) {

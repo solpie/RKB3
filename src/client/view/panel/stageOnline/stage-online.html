@@ -27,7 +27,15 @@
 
             <label class="label">现场时间:{{liveTime}}</label>
             <label class="label">面板时间:{{panelTime}}</label>
-            <button class="button" @click="onClkRenderData">刷新现场数据到面板</button><br>
+
+            <label class="label">自动开题延时(秒)</label>
+            <p class="control">
+                <input class="input" type="text" onkeypress='var c = event.charCode;
+                   return c >= 48 && c <= 57 ||c==46' placeholder="" style="width: 50px;" v-model="clientDelayTime">
+                <button class="button" @click="onSetClientDelay(clientDelayTime)">确定</button>
+            </p>
+
+            <!--<button class="button" @click="onClkRenderData">刷新现场数据到面板</button><br>-->
             <label class="label" style="font-size: 50px;">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>
             <label class="label">比分面板:</label><br>
             <button class="button" @click="onClkStartTimer">开始</button>

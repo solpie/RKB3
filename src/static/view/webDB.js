@@ -739,8 +739,8 @@
 	exports.getHupuWS = function (callback) {
 	    callback('tcp.lb.liangle.com:3081');
 	};
-	function setClientDelay(gameId, sec, callback) {
-	    var url = "http://api.liangle.com/api/passerbyking/time/diff/" + gameId + "?td=" + sec;
+	function setClientDelay(sec, callback) {
+	    var url = "http://api.liangle.com/api/passerbyking/time/diff?ctd=" + sec;
 	    _get(WebJsFunc_1.proxy(url), callback);
 	}
 	exports.setClientDelay = setClientDelay;

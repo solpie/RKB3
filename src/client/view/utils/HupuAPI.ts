@@ -13,8 +13,8 @@ export let getHupuWS = (callback) => {
 }
 
 //开题延时
-export function setClientDelay(gameId, sec, callback) {
-    let url = `http://api.liangle.com/api/passerbyking/time/diff/${gameId}?td=${sec}`
+export function setClientDelay( sec, callback) {
+    let url = `http://api.liangle.com/api/passerbyking/time/diff?ctd=`+sec
     _get(proxy(url), callback)
 }
 export function getPreRoundPlayer(gameId, callback) {

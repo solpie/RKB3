@@ -83,6 +83,8 @@ export const CommandId = {
     cs_autoSaveGameRec: '',//hupu 记录比赛
     cs_setDelayTime: '',//
     sc_setDelayTime: '',//
+    // cs_setClientDelayTime: '',//
+    // sc_setClientDelayTime: '',//
     //onlinePanel
     cs_showRank: '',//
     sc_showRank: '',//
