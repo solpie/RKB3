@@ -199,6 +199,10 @@ class GameMonth extends VueBase {
             this.campusPlayer = campusInfo.create(t)
         },
         onStartCampus() {
+            gameInfo.lScore = 0
+            gameInfo.rScore = 0
+            gameInfo.lFoul = 0
+            gameInfo.rFoul = 0
             console.log('onStartCampus', campusInfo.playerMap, this.campusL, this.campusR)
             let data: any = campusInfo.getData(this.campusL, this.campusR)
             // this.gameInfoStr = gameInfo.start(gameInfo.gameIdx)
