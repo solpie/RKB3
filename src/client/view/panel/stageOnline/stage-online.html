@@ -84,7 +84,11 @@
                 <button class="button" @click="onClkNotice(true,true)">左边显示</button>
                 <button class="button" @click="onClkNotice(true,false)">右边显示</button>
                 <button class="button" @click="onClkNotice(false,false)">隐藏</button>
-                <button class="button" @click="onClkNoticePresets(1)">报名预置</button>
+                <br>
+                <div v-for="(n,idx) in noticeHistory">
+                    <a @click="onClkNoticePresets(n.title,n.content)" style="font-size:35px;">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>
+                    <a @click="onDelNoticePresets(n.content)">del</a>
+                </div>
             </div>
         </div>
         <div v-if='actTab=="tab2"'>

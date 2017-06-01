@@ -1,14 +1,12 @@
-import { setClientDelay } from '../../utils/HupuAPI';
-import { Lottery } from './lottery/Lottery';
-import { noticeJoin } from './score/Com2017';
-import { getScorePanelUrl } from '../../admin/home/home';
-import { DateFormat } from '../../utils/JsFunc';
 import { CommandId } from '../../Command';
 import { PanelId } from '../../const';
+import { setClientDelay } from '../../utils/HupuAPI';
+import { DateFormat } from '../../utils/JsFunc';
 import { VueBase } from '../../utils/VueBase';
 import { dynamicLoading } from '../../utils/WebJsFunc';
 import { BasePanelView } from '../BasePanelView';
 import { BracketView } from './bracket/BracketView';
+import { Lottery } from './lottery/Lottery';
 import { RankView } from './rank/RankView';
 import { ScoreView } from './score/ScoreView';
 
@@ -62,6 +60,8 @@ class StageOnlineView extends VueBase {
     noticeTitle = VueBase.PROP
     noticeContent = VueBase.PROP
     isBold = VueBase.PROP
+    noticeHistory = VueBase.PROP
+
     opReq = (cmdId: string, param: any, callback: any) => {
         $.ajax({
             url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
@@ -152,7 +152,7 @@ class StageOnlineView extends VueBase {
     }
 
     showBracket() {
-        console.log('onClkBracket',this.$route.query)
+        console.log('onClkBracket', this.$route.query)
         if (!bracketView) {
             bracketView = new BracketView(canvasStage, this.gameId, this.$route)
             this.basePanelArr.push(bracketView)
@@ -317,18 +317,33 @@ class StageOnlineView extends VueBase {
             if (this.liveData)
                 scoreView.setScoreFoul(this.liveData)
         },
-        onClkNoticePresets(idx) {
-            let presets = { '1': noticeJoin }
-            let preset = presets[idx]
-            if (preset) {
-                this.noticeContent = preset.content
-                this.noticeTitle = preset.title
+        onClkNoticePresets(title, content) {
+            if (content) {
+                this.noticeContent = content
+                this.noticeTitle = title
             }
         },
+        onDelNoticePresets(content) {
+            let a = []
+            for (let i = 0; i < this.noticeHistory.length; i++) {
+                let n = this.noticeHistory[i];
+                if (n.content != content) {
+                    a.push(n)
+                }
+            }
+            this.noticeHistory = a
+        },
+
         onClkNotice(visible, isLeft) {
-            if (this.noticeContent)
+            if (this.noticeContent) {
+                // noticeHistory
+                if (!this.noticeHistory)
+                    this.noticeHistory = []
+                this.noticeHistory.push({ content: this.noticeContent, title: this.noticeTitle })
                 this.opReq(`${CommandId.cs_showNotice}`,
                     { _: null, title: this.noticeTitle, content: this.noticeContent, isLeft: isLeft, visible: visible, isBold: this.isBold })
+            }
+
         },
         onClkToggleTheme(isDark) {
             this.opReq(`${CommandId.cs_toggleTheme}`, { _: null, isDark: isDark })
