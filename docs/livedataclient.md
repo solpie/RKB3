@@ -34,7 +34,7 @@
 ### Event: 'init'
 
 - `leftPlayer` {Player}
-- `righPlayer` {Player}
+- `rightPlayer` {Player}
 - `gameIdx` {Number}
 - `winScore` {Number} 2球胜 5球胜... ，-1为不限制
 - `matchType` {Number} 1车轮战 2大师赛  3决赛 4单淘汰 

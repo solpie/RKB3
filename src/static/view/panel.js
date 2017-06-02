@@ -275,6 +275,13 @@
 	    };
 	}
 	exports.descendingProp = descendingProp;
+	function randomPop(arr) {
+	    var idx = Math.floor(Math.random() * arr.length);
+	    var item = arr[idx];
+	    arr.splice(idx, 1);
+	    return item;
+	}
+	exports.randomPop = randomPop;
 	function mapToSortArray(map, prop, sortFunc) {
 	    var arr = [];
 	    for (var k in map) {

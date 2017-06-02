@@ -1,3 +1,4 @@
+import { RawDayInfo } from '../rawDay/RawDayInfo';
 import { CampusInfo } from './CampusInfo';
 import { firstBy } from './thenBy';
 import { ascendingProp, descendingProp, mapToArr } from '../../utils/JsFunc';
@@ -58,8 +59,12 @@ class GameMonth extends VueBase {
     constructor() {
         super();
         VueBase.initProps(this);
-    }
 
+        this.test()
+    }
+    test() {
+        let rawday = new RawDayInfo([])
+    }
     initGameInfo(res) {
         let playerIdArr = ['郝天佶', 'Beans吴', 'NGFNGN', 'zzz勇'
             , 'tracyld11', '雷雷雷雷子', '带伤上阵也不怕', 'lgy1993131'

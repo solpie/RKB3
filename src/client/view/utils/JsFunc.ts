@@ -13,6 +13,12 @@ export function descendingProp(prop) {
         return b[prop] - a[prop];
     }
 }
+export function randomPop(arr) {
+    let idx = Math.floor(Math.random() * arr.length)
+    let item = arr[idx]
+    arr.splice(idx, 1)
+    return item
+}
 export function mapToSortArray(map, prop, sortFunc) {
     let arr = [];
     for (let k in map) {
