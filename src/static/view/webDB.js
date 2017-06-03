@@ -1776,12 +1776,42 @@
 	        var p2 = JsFunc_1.randomPop(pArr);
 	        console.log('rawday test', player, pArr);
 	    };
-	    RawDayInfo.prototype.startGame = function () {
+	    RawDayInfo.prototype.start = function (gameIdx) {
+	        if (gameIdx == 0) {
+	            this.winArr = this.playerArr.concat();
+	            this.nextArr = [];
+	        }
+	    };
+	    RawDayInfo.prototype.startGame = function (onePlayer) {
+	        this.lScore = this.rScore = 0;
+	        this.lFoul = this.rFoul = 0;
 	        var data = { _: null };
-	        data.leftPlayer = JsFunc_1.randomPop(this.playerArr);
-	        data.rightPlayer;
+	        if (onePlayer)
+	            this.leftPlayer = data.leftPlayer = onePlayer;
+	        else
+	            this.leftPlayer = data.leftPlayer = JsFunc_1.randomPop(this.winArr);
+	        this.rightPlayer = data.rightPlayer = JsFunc_1.randomPop(this.winArr);
 	    };
 	    RawDayInfo.prototype.commit = function () {
+	        if (this.lScore != 0 && this.rScore != 0) {
+	            if (this.lScore > this.rScore) {
+	                this.nextArr.push(this.leftPlayer);
+	            }
+	            else if (this.rScore > this.lScore) {
+	                this.nextArr.push(this.rightPlayer);
+	            }
+	        }
+	        if (this.winArr.length == 1) {
+	            this.startGame(this.winArr[0]);
+	        }
+	        else if (this.winArr.length == 0) {
+	            while (this.nextArr.length)
+	                this.winArr.push(this.nextArr.pop());
+	            this.startGame();
+	        }
+	        else {
+	            this.startGame();
+	        }
 	    };
 	    return RawDayInfo;
 	}());
