@@ -1,4 +1,8 @@
 export const WebDBCmd = {
+    //rawday client
+    init: '',
+    pull: ``,
+    cs_pull: ``,
     //game month
     cs_init: ``,
     sc_init: ``,

@@ -144,6 +144,10 @@ app.register_blueprint(onlineView, url_prefix='/online')
 from webDB import webDBView,webDBViewInitWS
 app.register_blueprint(webDBView, url_prefix='/db')
 webDBViewInitWS(socketio)
+# rawDay view
+from rawDay import setup as rawDaySetup
+rawDaySetup(app,socketio)
+
 # dmkLeecher
 namespace_dmk = '/dmk'
 

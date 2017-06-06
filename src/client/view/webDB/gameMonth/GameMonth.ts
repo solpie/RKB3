@@ -1,3 +1,4 @@
+import { RawDayClient } from '../rawDay/RawDayClient';
 import { RawDayInfo } from '../rawDay/RawDayInfo';
 import { CampusInfo } from './CampusInfo';
 import { firstBy } from './thenBy';
@@ -22,7 +23,7 @@ let $post = (url, param, callback) => {
 const createTime = new Date().getTime()
 let gameInfo: GameInfo
 let campusInfo: CampusInfo = new CampusInfo
-
+let rawdayInfo: RawDayInfo;
 const getDoc = (callback) => {
     $.get('/db/find/519', (res) => {
         if (res.length)
@@ -63,7 +64,7 @@ class GameMonth extends VueBase {
         this.test()
     }
     test() {
-        let rawday = new RawDayInfo([])
+        rawdayInfo = new RawDayInfo([1, 2, 3])
     }
     initGameInfo(res) {
         let playerIdArr = ['郝天佶', 'Beans吴', 'NGFNGN', 'zzz勇'
@@ -147,6 +148,9 @@ class GameMonth extends VueBase {
                 this.routeBracket()
                 this.emitBracket()
             })
+            .on(WebDBCmd.init, () => {
+                console.log('rawday init')
+            })
 
         // $post('/db/update/519', { id: 519, test: 233 }, () => {
 
@@ -203,6 +207,11 @@ class GameMonth extends VueBase {
         onCreateCampus(t) {
             this.campusPlayer = campusInfo.create(t)
         },
+        onCreateLiveData() {
+            let ld = new RawDayClient()
+            console.log('onCreateLiveData')
+            // this.campusPlayer = campusInfo.create(t)
+        },
         onStartCampus() {
             gameInfo.lScore = 0
             gameInfo.rScore = 0
@@ -251,9 +260,14 @@ class GameMonth extends VueBase {
             }
         },
         onStartGame() {
+              if (rawdayInfo) {
+                rawdayInfo.startGame()
+            }
+
             let data: any = gameInfo.getGameData()
             this.gameInfoStr = gameInfo.start(gameInfo.gameIdx)
             $post(`/db/cmd/${WebDBCmd.cs_init}`, data, null)
+          
         },
         onSetMaster() {
             getDoc((doc) => {

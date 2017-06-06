@@ -28,7 +28,7 @@
 - `_` {null} 回溯
 
 ### Event: 'drop'
-- `playerId` {Number} 弃权
+- `playerId` {Number} 弃权,场上队员弃权
 
 ## server event
 ### Event: 'init'

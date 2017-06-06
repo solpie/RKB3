@@ -5294,6 +5294,9 @@
 
 	"use strict";
 	exports.WebDBCmd = {
+	    init: '',
+	    pull: "",
+	    cs_pull: "",
 	    cs_init: "",
 	    sc_init: "",
 	    cs_bracketInit: "",
