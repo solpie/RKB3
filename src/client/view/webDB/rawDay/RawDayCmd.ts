@@ -1,9 +1,13 @@
 export const RawDayCmd = {
     //rawday client
     cs_init: '',
+    cs_start: ``,
+    cs_push: ``,
+    cs_commit: ``,
+    cs_fallback: ``,
+    cs_drop: ``,
     init: '',
     pull: ``,
-    cs_start: ``,
     cs_pull: ``,
     //base cmd
     cs_srvCreated: ``,

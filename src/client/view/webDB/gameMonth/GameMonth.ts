@@ -24,6 +24,8 @@ const createTime = new Date().getTime()
 let gameInfo: GameInfo
 let campusInfo: CampusInfo = new CampusInfo
 let rawdayInfo: RawDayInfo;
+let livedata: RawDayClient;
+
 const getDoc = (callback) => {
     $.get('/db/find/519', (res) => {
         if (res.length)
@@ -64,7 +66,7 @@ class GameMonth extends VueBase {
         this.test()
     }
     test() {
-        rawdayInfo = new RawDayInfo([1, 2, 3])
+        rawdayInfo = new RawDayInfo([])
     }
     initGameInfo(res) {
         let playerIdArr = ['郝天佶', 'Beans吴', 'NGFNGN', 'zzz勇'
@@ -209,8 +211,23 @@ class GameMonth extends VueBase {
         },
         onCreateLiveData() {
             let ld = new RawDayClient()
+            this.livedata = ld
             console.log('onCreateLiveData')
-            // this.campusPlayer = campusInfo.create(t)
+        },
+        onLiveDataStart() {
+            this.livedata.start()
+        },
+        onLiveDataPush() {
+            this.livedata.push()
+        },
+        onLiveDataCommit() {
+            this.livedata.commit()
+        },
+        onLiveDataFallback() {
+            this.livedata.fallback()
+        },
+        onLiveDataDrop() {
+            this.livedata.drop()
         },
         onStartCampus() {
             gameInfo.lScore = 0
@@ -260,14 +277,14 @@ class GameMonth extends VueBase {
             }
         },
         onStartGame() {
-              if (rawdayInfo) {
+            if (rawdayInfo) {
                 rawdayInfo.startGame()
             }
 
             let data: any = gameInfo.getGameData()
             this.gameInfoStr = gameInfo.start(gameInfo.gameIdx)
             $post(`/db/cmd/${WebDBCmd.cs_init}`, data, null)
-          
+
         },
         onSetMaster() {
             getDoc((doc) => {

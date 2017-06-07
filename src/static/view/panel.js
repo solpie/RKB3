@@ -5952,11 +5952,20 @@
 	            logEvent('init', data);
 	            _this.scorePanel.set35ScoreLight(data.winScore);
 	            _this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
-	            setPlayer(data.player.left, data.player.right);
-	            _this.scorePanel.setLeftScore(data.player.left.leftScore);
-	            _this.scorePanel.setRightScore(data.player.right.rightScore);
-	            _this.scorePanel.setLeftFoul(data.player.left.leftFoul);
-	            _this.scorePanel.setRightFoul(data.player.right.rightFoul);
+	            if (data.player) {
+	                setPlayer(data.player.left, data.player.right);
+	                _this.scorePanel.setLeftScore(data.player.left.leftScore);
+	                _this.scorePanel.setRightScore(data.player.right.rightScore);
+	                _this.scorePanel.setLeftFoul(data.player.left.leftFoul);
+	                _this.scorePanel.setRightFoul(data.player.right.rightFoul);
+	            }
+	            else {
+	                setPlayer(data.leftPlayer, data.rightPlayer);
+	                _this.scorePanel.setLeftScore(data.leftScore);
+	                _this.scorePanel.setRightScore(data.rightScore);
+	                _this.scorePanel.setLeftFoul(data.leftFoul);
+	                _this.scorePanel.setRightFoul(data.rightFoul);
+	            }
 	            data.delayTimeMS = _this.delayTimeMS;
 	            var gameStatus = Number(data.status);
 	            if (data.status == 0) {

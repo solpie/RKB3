@@ -23,19 +23,25 @@ def rawDayViewInitWS(socketio):
 
     @socketio.on('push', namespace=ns)
     def onPush(data=None):
-        emit('cs_push', broadcast=True, namespace=ns, include_self=False)
+        emit('cs_push', data, broadcast=True, namespace=ns, include_self=False)
         print('liveData [Event] push')
 
     @socketio.on('commit', namespace=ns)
     def onCommit(data=None):
+        emit('cs_commit', data, broadcast=True,
+             namespace=ns, include_self=False)
         print('liveData [Event] commit')
 
     @socketio.on('fallback', namespace=ns)
     def onFallback(data=None):
+        emit('cs_fallback', data, broadcast=True,
+             namespace=ns, include_self=False)
         print('liveData [Event] fallback')
 
     @socketio.on('drop', namespace=ns)
     def onDrop(data=None):
+        emit('cs_drop', data,
+             broadcast=True, namespace=ns, include_self=False)
         print('liveData [Event] drop')
 
 

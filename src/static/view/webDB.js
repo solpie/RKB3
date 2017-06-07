@@ -1016,6 +1016,7 @@
 	var gameInfo;
 	var campusInfo = new CampusInfo_1.CampusInfo;
 	var rawdayInfo;
+	var livedata;
 	var getDoc = function (callback) {
 	    $.get('/db/find/519', function (res) {
 	        if (res.length)
@@ -1055,7 +1056,23 @@
 	            },
 	            onCreateLiveData: function () {
 	                var ld = new RawDayClient_1.RawDayClient();
+	                this.livedata = ld;
 	                console.log('onCreateLiveData');
+	            },
+	            onLiveDataStart: function () {
+	                this.livedata.start();
+	            },
+	            onLiveDataPush: function () {
+	                this.livedata.push();
+	            },
+	            onLiveDataCommit: function () {
+	                this.livedata.commit();
+	            },
+	            onLiveDataFallback: function () {
+	                this.livedata.fallback();
+	            },
+	            onLiveDataDrop: function () {
+	                this.livedata.drop();
 	            },
 	            onStartCampus: function () {
 	                gameInfo.lScore = 0;
@@ -1272,7 +1289,7 @@
 	        this.test();
 	    }
 	    GameMonth.prototype.test = function () {
-	        rawdayInfo = new RawDayInfo_1.RawDayInfo([1, 2, 3]);
+	        rawdayInfo = new RawDayInfo_1.RawDayInfo([]);
 	    };
 	    GameMonth.prototype.initGameInfo = function (res) {
 	        var _this = this;
@@ -1772,7 +1789,7 @@
 /* 99 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(r,idx) in recMap\">\r\n                    <a v-if='idx<24' href='#' @click='onSetGameIdx(idx)'>\r\n                        [{{r.player[0]+':'+r.player[1]}}] {{r.gameIdx+1}}: {{gameInfo.h(r.player[0])}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{gameInfo.h(r.player[1])}}\r\n                    </a>\r\n                    <a v-if='idx>23' href='#' @click='onSetGameIdx(idx)'>\r\n                        [{{r.player[0]+':'+r.player[1]}}] {{r.gameIdx-23}}: {{gameInfo.h(r.player[0])}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{gameInfo.h(r.player[1])}}\r\n                    </a>\r\n                    <div v-if='idx==23'>-----master-----</div>\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <div v-if='gameInfo.gameIdx<24'>\r\n                小组赛第{{gameInfo.gameIdx+1}}场\r\n            </div>\r\n            <div v-else>\r\n                大师赛第{{gameInfo.gameIdx-23}}场\r\n            </div>\r\n            {{gameInfoStr}}\r\n            <span></span><br> Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button> {{gameInfo.lScore}}\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button> {{gameInfo.lFoul}}\r\n            <br>\r\n            <button class=\"button\" @click=\"onStartGame()\">开始比赛</button>\r\n            <button class=\"button\" @click=\"onStartTimer(true)\">开始计时</button>\r\n            <button class=\"button\" @click=\"onStartTimer(false)\">暂停计时</button>\r\n            <button class=\"button\" @click=\"onCommitGame(true)\">提交比赛</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onProgress('a')\">A组进度</button>\r\n            <button class=\"button\" @click=\"onProgress('b')\">B组进度</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onProgress('c')\">C组进度</button>\r\n            <button class=\"button\" @click=\"onProgress('d')\">D组进度</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onHideProgress()\">隐藏进度</button>\r\n            <br>\r\n            <span>加赛操作：左边选择对阵，开始比赛，提交加赛。修改对阵<br>大师赛确认对阵之后刷新本页面推送到面板</span>\r\n            <button class=\"button\" @click=\"onCommitGame(false)\">提交加赛</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onSetResult\">修改比分</button>\r\n            <br>\r\n            <input v-model='vs' style=\"width:80px\"></input>\r\n            <button class=\"button\" @click=\"onSetVS(vs)\">修改对阵</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onBracket\">bracket</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClearGame(0)\">清除比赛数据</button>\r\n            <button class=\"button\" @click=\"onClearGame(1)\">清除大师赛数据</button>\r\n            <button class=\"button\" @click=\"onTestGame\">testGame</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <br>\r\n            <br> {{gameInfo.rScore}}\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br> {{gameInfo.rFoul}}\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onProgress()\">小组进度</button>\r\n            <button class=\"button\" @click=\"onSetMaster()\">大师赛排名</button>\r\n            <div>\r\n                <li v-for=\"(p,idx) in playerRank\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                    <div v-if='idx==7'>----------</div>\r\n                </li>\r\n                <div>-----master-----</div>\r\n                <li v-for=\"(p,idx) in masterBracket\">\r\n                    <button class=\"button\" @click=\"onAddFoul(false,-1)\">↑</button>\r\n                    <button class=\"button\" @click=\"onAddFoul(false,-1)\">↓</button> [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                </li>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            校园赛\r\n            <br>\r\n            <input v-model='campusL' style=\"width:40px\"></input>\r\n            <input v-model='campusR' style=\"width:40px\"></input>\r\n            winScore\r\n            <input v-model='campusWinScore' style=\"width:40px\"></input>\r\n            gameIdx<input v-model='campusGameIdx' style=\"width:40px\"></input>\r\n            <button class=\"button\" @click=\"onStartCampus()\">开始比赛</button>\r\n            <li v-for=\"p in campusPlayer\">\r\n                {{p.id}}:{{p.name}}\r\n            </li>\r\n            <button class=\"button\" @click=\"onCreateCampus(campusInput)\">录入</button>\r\n            <button class=\"button\" @click=\"onCreateLiveData()\">LiveData</button>\r\n            <textarea v-model='campusInput' style=\"height:200px\">\r\n                \r\n            </textarea>\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(r,idx) in recMap\">\r\n                    <a v-if='idx<24' href='#' @click='onSetGameIdx(idx)'>\r\n                        [{{r.player[0]+':'+r.player[1]}}] {{r.gameIdx+1}}: {{gameInfo.h(r.player[0])}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{gameInfo.h(r.player[1])}}\r\n                    </a>\r\n                    <a v-if='idx>23' href='#' @click='onSetGameIdx(idx)'>\r\n                        [{{r.player[0]+':'+r.player[1]}}] {{r.gameIdx-23}}: {{gameInfo.h(r.player[0])}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{gameInfo.h(r.player[1])}}\r\n                    </a>\r\n                    <div v-if='idx==23'>-----master-----</div>\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <div v-if='gameInfo.gameIdx<24'>\r\n                小组赛第{{gameInfo.gameIdx+1}}场\r\n            </div>\r\n            <div v-else>\r\n                大师赛第{{gameInfo.gameIdx-23}}场\r\n            </div>\r\n            {{gameInfoStr}}\r\n            <span></span><br> Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button> {{gameInfo.lScore}}\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button> {{gameInfo.lFoul}}\r\n            <br>\r\n            <button class=\"button\" @click=\"onStartGame()\">开始比赛</button>\r\n            <button class=\"button\" @click=\"onStartTimer(true)\">开始计时</button>\r\n            <button class=\"button\" @click=\"onStartTimer(false)\">暂停计时</button>\r\n            <button class=\"button\" @click=\"onCommitGame(true)\">提交比赛</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onProgress('a')\">A组进度</button>\r\n            <button class=\"button\" @click=\"onProgress('b')\">B组进度</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onProgress('c')\">C组进度</button>\r\n            <button class=\"button\" @click=\"onProgress('d')\">D组进度</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onHideProgress()\">隐藏进度</button>\r\n            <br>\r\n            <span>加赛操作：左边选择对阵，开始比赛，提交加赛。修改对阵<br>大师赛确认对阵之后刷新本页面推送到面板</span>\r\n            <button class=\"button\" @click=\"onCommitGame(false)\">提交加赛</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onSetResult\">修改比分</button>\r\n            <br>\r\n            <input v-model='vs' style=\"width:80px\"></input>\r\n            <button class=\"button\" @click=\"onSetVS(vs)\">修改对阵</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onBracket\">bracket</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClearGame(0)\">清除比赛数据</button>\r\n            <button class=\"button\" @click=\"onClearGame(1)\">清除大师赛数据</button>\r\n            <button class=\"button\" @click=\"onTestGame\">testGame</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <br>\r\n            <br> {{gameInfo.rScore}}\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br> {{gameInfo.rFoul}}\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onProgress()\">小组进度</button>\r\n            <button class=\"button\" @click=\"onSetMaster()\">大师赛排名</button>\r\n            <div>\r\n                <li v-for=\"(p,idx) in playerRank\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                    <div v-if='idx==7'>----------</div>\r\n                </li>\r\n                <div>-----master-----</div>\r\n                <li v-for=\"(p,idx) in masterBracket\">\r\n                    <button class=\"button\" @click=\"onAddFoul(false,-1)\">↑</button>\r\n                    <button class=\"button\" @click=\"onAddFoul(false,-1)\">↓</button> [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                </li>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            校园赛\r\n            <br>\r\n            <input v-model='campusL' style=\"width:40px\"></input>\r\n            <input v-model='campusR' style=\"width:40px\"></input>\r\n            winScore\r\n            <input v-model='campusWinScore' style=\"width:40px\"></input>\r\n            gameIdx<input v-model='campusGameIdx' style=\"width:40px\"></input>\r\n            <button class=\"button\" @click=\"onStartCampus()\">开始比赛</button>\r\n            <li v-for=\"p in campusPlayer\">\r\n                {{p.id}}:{{p.name}}\r\n            </li>\r\n            <button class=\"button\" @click=\"onCreateCampus(campusInput)\">录入</button>\r\n            <button class=\"button\" @click=\"onCreateLiveData()\">LiveData</button>\r\n            <button class=\"button\" @click=\"onLiveDataStart()\">start</button>\r\n            <button class=\"button\" @click=\"onLiveDataPush()\">push</button>\r\n            <button class=\"button\" @click=\"onLiveDataCommit()\">commit</button>\r\n            <button class=\"button\" @click=\"onLiveDataFallback()\">fallback</button>\r\n            <button class=\"button\" @click=\"onLiveDataDrop()\">drop</button>\r\n            <textarea v-model='campusInput' style=\"height:200px\">\r\n                \r\n            </textarea>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 100 */
@@ -1781,6 +1798,7 @@
 	"use strict";
 	var WebDBCmd_1 = __webpack_require__(73);
 	var JsFunc_1 = __webpack_require__(17);
+	var PlayerInfo_1 = __webpack_require__(98);
 	var RawDayCmd_1 = __webpack_require__(101);
 	var srvIO;
 	var $post = function (url, param, callback) {
@@ -1795,16 +1813,28 @@
 	};
 	var RawDayInfo = (function () {
 	    function RawDayInfo(playerArr) {
+	        this.gameIdx = 1;
+	        this.winScore = 2;
+	        this.matchType = 4;
 	        this.playerArr = playerArr;
-	        this.initIO();
 	        this.test();
+	        this.initIO();
 	    }
 	    RawDayInfo.prototype.test = function () {
-	        var pArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-	        var player = JsFunc_1.randomPop(pArr);
-	        var p2 = JsFunc_1.randomPop(pArr);
-	        console.log('rawday test', player, pArr);
+	        var pArr = [];
+	        for (var i = 0; i < 32; i++) {
+	            var p = new PlayerInfo_1.PlayerInfo();
+	            p.id = i + 1;
+	            p.hupuID = 'player' + p.id;
+	            p.name = p.hupuID;
+	            p.height = 190;
+	            p.weight = 90;
+	            p.avatar = 'http://w1.hoopchina.com.cn/huputv/resource/img/amateur.jpg';
+	            pArr.push(p);
+	        }
+	        this.playerArr = pArr;
 	        this.start(0);
+	        this.startGame();
 	    };
 	    RawDayInfo.prototype.initIO = function () {
 	        var _this = this;
@@ -1813,10 +1843,25 @@
 	            console.log('livedata ws connect...');
 	        })
 	            .on('clientCon', function () {
-	            _this.startGame();
+	            _this.emit_Init();
 	        })
 	            .on(RawDayCmd_1.RawDayCmd.cs_start, function (data) {
+	            _this.onStartTimer(true);
 	            console.log('cs_start', data);
+	        })
+	            .on(RawDayCmd_1.RawDayCmd.cs_push, function (data) {
+	            _this.onPush(data);
+	            console.log('cs_push', data);
+	        })
+	            .on(RawDayCmd_1.RawDayCmd.cs_drop, function (data) {
+	            console.log('cs_drop', data);
+	        })
+	            .on(RawDayCmd_1.RawDayCmd.cs_fallback, function (data) {
+	            console.log('cs_fallback', data);
+	        })
+	            .on(RawDayCmd_1.RawDayCmd.cs_commit, function (data) {
+	            _this.onCommit();
+	            console.log('cs_commit', data);
 	        });
 	    };
 	    RawDayInfo.prototype.start = function (gameIdx) {
@@ -1839,16 +1884,21 @@
 	        data2.rightFoul = this.rFoul;
 	        data2.leftScore = this.lScore;
 	        data2.rightScore = this.rScore;
-	        $post("/rd/cmd/" + WebDBCmd_1.WebDBCmd.cs_pull, data2, null);
+	        $post("/rd/cmd/" + RawDayCmd_1.RawDayCmd.pull, data2, null);
+	        data._ = null;
+	        $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_score, data, null);
 	    };
 	    RawDayInfo.prototype.onCon = function () {
 	        if (this.leftPlayer && this.rightPlayer) {
 	            srvIO.emit('');
 	        }
 	    };
-	    RawDayInfo.prototype.onStartTimer = function () {
+	    RawDayInfo.prototype.onStartTimer = function (isStart) {
+	        var data = { _: null, isStart: isStart };
+	        $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_startTimer, data, null);
 	    };
 	    RawDayInfo.prototype.onCommit = function () {
+	        this.commit();
 	    };
 	    RawDayInfo.prototype.onFallback = function () {
 	    };
@@ -1866,14 +1916,31 @@
 	    RawDayInfo.prototype.startGame = function (onePlayer) {
 	        this.lScore = this.rScore = 0;
 	        this.lFoul = this.rFoul = 0;
-	        var data = { _: null, prefix: '' };
 	        if (onePlayer)
-	            this.leftPlayer = data.leftPlayer = onePlayer;
+	            this.leftPlayer = onePlayer;
 	        else
-	            this.leftPlayer = data.leftPlayer = JsFunc_1.randomPop(this.winArr);
-	        this.rightPlayer = data.rightPlayer = JsFunc_1.randomPop(this.winArr);
-	        console.log('startGame');
-	        $post("/rd/cmd/" + RawDayCmd_1.RawDayCmd.cs_init, data, null);
+	            this.leftPlayer = JsFunc_1.randomPop(this.winArr);
+	        this.rightPlayer = JsFunc_1.randomPop(this.winArr);
+	        console.log('startGame', this.leftPlayer, this.rightPlayer);
+	        this.emit_Init();
+	    };
+	    RawDayInfo.prototype.emit_Init = function () {
+	        var data = { _: null, prefix: '' };
+	        data.rightPlayer = this.rightPlayer;
+	        data.leftPlayer = this.leftPlayer;
+	        data.gameIdx = this.gameIdx;
+	        data.winScore = this.winScore;
+	        data.matchType = this.matchType;
+	        data.leftPlayer.score = this.lScore;
+	        data.rightPlayer.score = this.rScore;
+	        data.leftPlayer.foul = this.lFoul;
+	        data.rightPlayer.foul = this.rFoul;
+	        $post("/rd/cmd/" + RawDayCmd_1.RawDayCmd.init, data, null);
+	        data.leftScore = this.lScore;
+	        data.rightScore = this.rScore;
+	        data.leftFoul = this.lFoul;
+	        data.rightFoul = this.rFoul;
+	        $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_init, data, null);
 	    };
 	    RawDayInfo.prototype.commit = function () {
 	        if (this.lScore != 0 && this.rScore != 0) {
@@ -1883,17 +1950,18 @@
 	            else if (this.rScore > this.lScore) {
 	                this.nextArr.push(this.rightPlayer);
 	            }
-	        }
-	        if (this.winArr.length == 1) {
-	            this.startGame(this.winArr[0]);
-	        }
-	        else if (this.winArr.length == 0) {
-	            while (this.nextArr.length)
-	                this.winArr.push(this.nextArr.pop());
-	            this.startGame();
-	        }
-	        else {
-	            this.startGame();
+	            this.gameIdx++;
+	            if (this.winArr.length == 1) {
+	                this.startGame(this.winArr[0]);
+	            }
+	            else if (this.winArr.length == 0) {
+	                while (this.nextArr.length)
+	                    this.winArr.push(this.nextArr.pop());
+	                this.startGame();
+	            }
+	            else {
+	                this.startGame();
+	            }
 	        }
 	    };
 	    return RawDayInfo;
@@ -1908,9 +1976,13 @@
 	"use strict";
 	exports.RawDayCmd = {
 	    cs_init: '',
+	    cs_start: "",
+	    cs_push: "",
+	    cs_commit: "",
+	    cs_fallback: "",
+	    cs_drop: "",
 	    init: '',
 	    pull: "",
-	    cs_start: "",
 	    cs_pull: "",
 	    cs_srvCreated: "",
 	    sc_srvCreated: ""
@@ -1930,18 +2002,40 @@
 	        var srvIO = io.connect('/livedata')
 	            .on('connect', function () {
 	            console.log('RawDayClient connect', srvIO);
-	            srvIO.emit('start', { _: null });
 	        })
 	            .on('init', function (data) {
 	            console.log('sc init', data);
 	        })
 	            .on('pull', function (data) {
 	            console.log('sc pull', data);
-	        })
-	            .on('cs_start', function (data) {
-	            console.log('cs_start', data);
 	        });
+	        this.srvIO = srvIO;
 	    }
+	    RawDayClient.prototype.start = function () {
+	        this.srvIO.emit('start', {
+	            _: null
+	        });
+	    };
+	    RawDayClient.prototype.push = function () {
+	        this.srvIO.emit('push', {
+	            leftScore: 1, rightScore: 3, leftFoul: 4, rightFoul: 1
+	        });
+	    };
+	    RawDayClient.prototype.commit = function () {
+	        this.srvIO.emit('commit', {
+	            _: null
+	        });
+	    };
+	    RawDayClient.prototype.fallback = function () {
+	        this.srvIO.emit('fallback', {
+	            _: null
+	        });
+	    };
+	    RawDayClient.prototype.drop = function () {
+	        this.srvIO.emit('drop', {
+	            playerId: 2
+	        });
+	    };
 	    return RawDayClient;
 	}());
 	exports.RawDayClient = RawDayClient;

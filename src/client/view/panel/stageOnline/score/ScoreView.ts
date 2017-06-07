@@ -101,11 +101,22 @@ export class ScoreView extends BasePanelView {
                 logEvent('init', data);
                 this.scorePanel.set35ScoreLight(data.winScore);
                 this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
-                setPlayer(data.player.left, data.player.right);
-                this.scorePanel.setLeftScore(data.player.left.leftScore);
-                this.scorePanel.setRightScore(data.player.right.rightScore);
-                this.scorePanel.setLeftFoul(data.player.left.leftFoul);
-                this.scorePanel.setRightFoul(data.player.right.rightFoul);
+                if (data.player) {
+                    setPlayer(data.player.left, data.player.right);
+                    this.scorePanel.setLeftScore(data.player.left.leftScore);
+                    this.scorePanel.setRightScore(data.player.right.rightScore);
+                    this.scorePanel.setLeftFoul(data.player.left.leftFoul);
+                    this.scorePanel.setRightFoul(data.player.right.rightFoul);
+                }
+                else {
+                    setPlayer(data.leftPlayer, data.rightPlayer);
+                    this.scorePanel.setLeftScore(data.leftScore);
+                    this.scorePanel.setRightScore(data.rightScore);
+                    this.scorePanel.setLeftFoul(data.leftFoul);
+                    this.scorePanel.setRightFoul(data.rightFoul);
+                }
+
+
                 data.delayTimeMS = this.delayTimeMS
 
                 let gameStatus = Number(data.status)

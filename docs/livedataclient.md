@@ -25,7 +25,7 @@
 - `_` {null} 提交比赛
 
 ### Event: 'fallback'
-- `_` {null} 回溯
+- `playerId` {Number} 回溯球员，因误操作淘汰的球员重新比赛
 
 ### Event: 'drop'
 - `playerId` {Number} 弃权,场上队员弃权

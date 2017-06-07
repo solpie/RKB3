@@ -101,6 +101,11 @@
             </li>
             <button class="button" @click="onCreateCampus(campusInput)">录入</button>
             <button class="button" @click="onCreateLiveData()">LiveData</button>
+            <button class="button" @click="onLiveDataStart()">start</button>
+            <button class="button" @click="onLiveDataPush()">push</button>
+            <button class="button" @click="onLiveDataCommit()">commit</button>
+            <button class="button" @click="onLiveDataFallback()">fallback</button>
+            <button class="button" @click="onLiveDataDrop()">drop</button>
             <textarea v-model='campusInput' style="height:200px">
                 
             </textarea>
