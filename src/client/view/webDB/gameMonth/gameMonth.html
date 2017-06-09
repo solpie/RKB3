@@ -99,6 +99,13 @@
             <li v-for="p in campusPlayer">
                 {{p.id}}:{{p.name}}
             </li>
+            <div v-if='rawdayInfo'>
+                rawdayInfo winArr length: {{rawdayInfo.winArr.length}}
+                <li v-for="p in rawdayInfo.winArr">
+                    {{p.id}}:{{p.name}}
+                </li>
+            </div>
+
             <button class="button" @click="onCreateCampus(campusInput)">录入</button>
             <button class="button" @click="onCreateLiveData()">LiveData</button>
             <button class="button" @click="onLiveDataStart()">start</button>

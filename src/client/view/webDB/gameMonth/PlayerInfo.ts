@@ -1,5 +1,6 @@
 export class PlayerInfo{
     id: number
+    playerId: number
     name: string
     hupuID: string
     avatar: string

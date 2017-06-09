@@ -23,7 +23,7 @@ let $post = (url, param, callback) => {
 const createTime = new Date().getTime()
 let gameInfo: GameInfo
 let campusInfo: CampusInfo = new CampusInfo
-let rawdayInfo: RawDayInfo;
+let rawdayInfo: RawDayInfo = new RawDayInfo([]);
 let livedata: RawDayClient;
 
 const getDoc = (callback) => {
@@ -58,15 +58,19 @@ class GameMonth extends VueBase {
     campusR = VueBase.PROP
     campusWinScore = VueBase.PROP
     campusGameIdx = VueBase.PROP
-
+    //rawdayInfo
+    rawdayInfo= VueBase.PROP
     constructor() {
         super();
-        VueBase.initProps(this);
 
         this.test()
+        VueBase.initProps(this);
+
     }
     test() {
-        rawdayInfo = new RawDayInfo([])
+        
+        // this.rawdayInfo = rawdayInfo
+        // rawdayInfo = new RawDayInfo([])
     }
     initGameInfo(res) {
         let playerIdArr = ['郝天佶', 'Beans吴', 'NGFNGN', 'zzz勇'
@@ -212,6 +216,7 @@ class GameMonth extends VueBase {
         onCreateLiveData() {
             let ld = new RawDayClient()
             this.livedata = ld
+            this.rawdayInfo = rawdayInfo
             console.log('onCreateLiveData')
         },
         onLiveDataStart() {

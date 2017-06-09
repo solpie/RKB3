@@ -17,6 +17,7 @@ let $post = (url, param, callback) => {
 }
 export class RawDayInfo {
     winArr: Array<PlayerInfo>
+    loseArr: Array<PlayerInfo>
     nextArr: Array<PlayerInfo>
     playerArr: Array<PlayerInfo>
     recMap: any
@@ -36,6 +37,7 @@ export class RawDayInfo {
         this.playerArr = playerArr
         this.test()
         this.initIO()
+        //轮次提示
     }
 
     test() {
@@ -44,6 +46,7 @@ export class RawDayInfo {
         for (let i = 0; i < 32; i++) {
             let p = new PlayerInfo();
             p.id = i + 1
+            p.playerId = i + 1
             p.hupuID = 'player' + p.id
             p.name = p.hupuID
             p.height = 190
@@ -59,12 +62,14 @@ export class RawDayInfo {
         this.startGame()
     }
     initIO() {
+        // srvIO = io.connect(`${srvURL}/rawday`)
         srvIO = io.connect('/livedata')
             .on('connect', () => {
                 console.log('livedata ws connect...')
+                srvIO.emit('serverCon')
             })
             .on('clientCon', () => {
-                this.emit_Init()
+                this.emit_init()
                 // console.log('livedata ws connect...')
             })
             .on(RawDayCmd.cs_start, (data) => {
@@ -76,6 +81,7 @@ export class RawDayInfo {
                 console.log('cs_push', data)
             })
             .on(RawDayCmd.cs_drop, (data) => {
+                this.onDrop(data)
                 console.log('cs_drop', data)
             })
             .on(RawDayCmd.cs_fallback, (data) => {
@@ -90,6 +96,7 @@ export class RawDayInfo {
         if (gameIdx == 0) {
             this.winArr = this.playerArr.concat()
             this.nextArr = []
+            this.loseArr = []
         }
     }
     //client event
@@ -127,8 +134,16 @@ export class RawDayInfo {
         this.commit()
     }
 
-    onFallback() {
-
+    onFallback(data) {
+        let playerId = data.playerId
+        for (let i = 0; i < this.playerArr.length; i++) {
+            let p = this.playerArr[i];
+            if (p.id == playerId) {
+                this.winArr.push(p)
+                break;
+            }
+        }
+        this.startGame()
     }
 
     onDrop(data) {
@@ -136,11 +151,14 @@ export class RawDayInfo {
         for (let i = 0; i < this.winArr.length; i++) {
             let p = this.winArr[i];
             if (p.id == playerId) {
-                this.winArr.splice(i, 1)
+                let losePlayer = this.winArr.splice(i, 1)[0]
                 break;
             }
         }
-        this.startGame()
+        if (this.leftPlayer.playerId == playerId)
+            this.startGame(this.rightPlayer)
+        if (this.rightPlayer.playerId == playerId)
+            this.startGame(this.leftPlayer)
     }
     ////
     startGame(onePlayer?) {
@@ -154,9 +172,10 @@ export class RawDayInfo {
             this.leftPlayer = randomPop(this.winArr)
         this.rightPlayer = randomPop(this.winArr)
         console.log('startGame', this.leftPlayer, this.rightPlayer)
-        this.emit_Init()
+        this.emit_init()
+        this.emit_list()
     }
-    emit_Init() {
+    emit_init() {
         let data: any = { _: null, prefix: '' }
         data.rightPlayer = this.rightPlayer
         data.leftPlayer = this.leftPlayer
@@ -167,8 +186,11 @@ export class RawDayInfo {
         data.rightPlayer.score = this.rScore
         data.leftPlayer.foul = this.lFoul
         data.rightPlayer.foul = this.rFoul
+
+
         $post(`/rd/cmd/${RawDayCmd.init}`, data, null)
-        // $post(`/rd/cmd/${RawDayCmd.pull}`, { leftScore: this.lScore, rightScore: this.rScore, leftFoul: this.lFoul, rightFoul: this.rFoul }, null)
+        data.cmd = RawDayCmd.init
+        // $post( `${srvURL}/rawday`, data, null)
         // data.player = { left: this.leftPlayer, right: this.rightPlayer }
         data.leftScore = this.lScore
         data.rightScore = this.rScore
@@ -176,6 +198,28 @@ export class RawDayInfo {
         data.rightFoul = this.rFoul
         $post(`/db/cmd/${WebDBCmd.cs_init}`, data, null)
     }
+
+    emit_list() {
+        let data: any = { _: null, prefix: '' }
+        let winPlayerArr = this.winArr.concat()
+        let losePlayerArr = []
+        for (let p of this.playerArr) {
+            let isWin = false
+            for (let wp of this.winArr) {
+                if (wp.playerId == p.playerId) {
+                    isWin = true
+                }
+            }
+            if (!isWin)
+                losePlayerArr.push(p)
+        }
+        data.winPlayers = winPlayerArr
+        data.losePlayers = losePlayerArr
+        this.loseArr = losePlayerArr
+        console.log('list ', data)
+        $post(`/rd/cmd/${RawDayCmd.list}`, data, null)
+    }
+
     commit() {
         if (this.lScore != 0 && this.rScore != 0) {
             if (this.lScore > this.rScore) {
@@ -185,7 +229,7 @@ export class RawDayInfo {
                 this.nextArr.push(this.rightPlayer)
             }
             this.gameIdx++
-            
+
             if (this.winArr.length == 1) {
                 this.startGame(this.winArr[0])
             }

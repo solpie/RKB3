@@ -7,6 +7,7 @@ export const RawDayCmd = {
     cs_fallback: ``,
     cs_drop: ``,
     init: '',
+    list: '',
     pull: ``,
     cs_pull: ``,
     //base cmd

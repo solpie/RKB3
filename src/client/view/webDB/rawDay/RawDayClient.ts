@@ -1,7 +1,9 @@
 declare let io;
 export class RawDayClient {
     srvIO: any
+    testPlayerId:number
     constructor() {
+        // let srvIO = io.connect('http://port-3000.meican-rkb.codeanyapp.com/rawday')
         let srvIO = io.connect('/livedata')
             // .on('connection', (socket) => {
             //     socket.emit('start',  { _: null });
@@ -9,11 +11,13 @@ export class RawDayClient {
             //     // srvIO.emit('start', { _: null })
             // })
             .on('connect', () => {
+
                 console.log('RawDayClient connect', srvIO)
                 // srvIO.emit('start', { _: null });
             })
             .on('init', (data) => {
                 console.log('sc init', data)
+                this.testPlayerId = data.leftPlayer.playerId
             })
             .on('pull', (data) => {
                 console.log('sc pull', data)
@@ -44,13 +48,14 @@ export class RawDayClient {
 
     fallback() {
         this.srvIO.emit('fallback', {
-            _: null
+            // _: null
+            playerId:this.testPlayerId
         })
     }
 
     drop() {
         this.srvIO.emit('drop', {
-            playerId: 2
+            playerId: this.testPlayerId
         })
     }
 }
