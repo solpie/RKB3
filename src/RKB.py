@@ -24,11 +24,11 @@ def loadConf():
     serverConf["db"] = str(
         config.get('db', 'path')).split(",")
     print("serverConf:", serverConf)
-    serverConf["views"] = ["admin", "panel", 'dmk','webDB']
+    serverConf["views"] = ["admin", "panel", 'dmk', 'webDB']
 loadConf()
 
 # web server
-from flask import Flask, render_template, session, request, make_response, redirect
+from flask import Flask, render_template, session, request, make_response, redirect, jsonify
 from flask_socketio import SocketIO, emit, disconnect
 
 # Set this variable to "threading", "eventlet" or "gevent" to test the
@@ -36,8 +36,6 @@ from flask_socketio import SocketIO, emit, disconnect
 # the best option based on installed packages.
 from engineio import async_eventlet
 async_mode = "eventlet"
-
-
 app = Flask(__name__, static_url_path='')
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, async_mode=async_mode)
@@ -91,8 +89,13 @@ def proxy():
 
     if request.method == "POST":
         url = request.values.get("url")
-        r = requests.post(url, headers=req_headers)
-        return 'ok'
+        print(request.json)
+        r = requests.post(url, request.json)
+        if r.headers['Content-Type'].find('json') > -1:
+            c = r.json()
+        else:
+            c = r.text
+        return jsonify({'Content-Type': r.headers['Content-Type'], 'content': c})
 # auto git pull
 import os
 from subprocess import Popen, PIPE
@@ -141,12 +144,12 @@ app.register_blueprint(gameView, url_prefix='/game')
 from online import onlineView
 app.register_blueprint(onlineView, url_prefix='/online')
 # webDB view
-from webDB import webDBView,webDBViewInitWS
+from webDB import webDBView, webDBViewInitWS
 app.register_blueprint(webDBView, url_prefix='/db')
 webDBViewInitWS(socketio)
 # rawDay view
 from rawDay import setup as rawDaySetup
-rawDaySetup(app,socketio)
+rawDaySetup(app, socketio)
 
 # dmkLeecher
 namespace_dmk = '/dmk'

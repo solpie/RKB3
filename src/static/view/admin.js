@@ -580,7 +580,7 @@
 	            _this.gameDataArr = [];
 	            for (var i = 0; i < gameDataArr.length; i++) {
 	                var gameData = gameDataArr[gameDataArr.length - 1 - i];
-	                if (Number(gameData.id) > 270) {
+	                if (Number(gameData.id) > 300) {
 	                    gameData.text = "[" + gameData.id + "]:" + gameData.title;
 	                    gameData.value = gameData.id;
 	                    _this.gameDataArr.push(gameData);
@@ -1001,11 +1001,18 @@
 	exports.getHupuWS = function (callback) {
 	    callback('tcp.lb.liangle.com:3081');
 	};
-	function setClientDelay(sec, callback) {
-	    var url = "http://api.liangle.com/api/passerbyking/time/diff?ctd=" + sec;
-	    _get(WebJsFunc_1.proxy(url), callback);
+	function setClientDelay(gameId, sec, callback) {
+	    var url = "http://pre.liangle.com/api/pbk/event/delay/" + gameId;
+	    var data = { ':game_id': gameId + "", ctd: sec + '' };
+	    console.log(setClientDelay, data);
+	    WebJsFunc_1.$post(WebJsFunc_1.proxy(url), data, callback);
 	}
 	exports.setClientDelay = setClientDelay;
+	function getClientDelay(gameId, callback) {
+	    var url = "http://pre.liangle.com/api/pbk/event/delay/" + gameId;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getClientDelay = getClientDelay;
 	function getPreRoundPlayer(gameId, callback) {
 	    var url = 'http://api.liangle.com/api/passerbyking/game/wheel/ready/' + gameId;
 	    _get(WebJsFunc_1.proxy(url), callback);

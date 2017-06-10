@@ -194,20 +194,6 @@ export class ScoreView extends BasePanelView {
             isCtrl = false
         }
     }
-    // initRoom() {
-    //     let roomIO = io.connect("tcp.lb.liangle.com:3081")
-    //         .on('connect', (msg) => {
-    //             console.log('msg', msg)
-    //             roomIO.emit('join', {
-    //                 room_id: 10287,
-    //                 match_id: 1,
-    //                 token: ''
-    //             })
-    //         })
-    //         .on('wall', (msg) => {
-    //             console.log('wall', msg)
-    //         })
-    // }
 
     initDefaultPlayer() {
         let p = 'http://w1.hoopchina.com.cn/huputv/resource/img/amateur.jpg'

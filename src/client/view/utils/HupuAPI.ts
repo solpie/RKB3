@@ -13,8 +13,15 @@ export let getHupuWS = (callback) => {
 }
 
 //开题延时
-export function setClientDelay( sec, callback) {
-    let url = `http://api.liangle.com/api/passerbyking/time/diff?ctd=`+sec
+export function setClientDelay(gameId, sec, callback) {
+    let url = `http://pre.liangle.com/api/pbk/event/delay/` + gameId
+    let data = { ':game_id': gameId+"", ctd: sec + '' }
+    console.log(setClientDelay, data)
+    $post(proxy(url), data, callback)
+}
+
+export function getClientDelay(gameId, callback) {
+    let url = `http://pre.liangle.com/api/pbk/event/delay/` + gameId
     _get(proxy(url), callback)
 }
 export function getPreRoundPlayer(gameId, callback) {

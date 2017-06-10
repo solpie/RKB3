@@ -27,6 +27,7 @@
         "start": "cd src&&python RKB.py",
         "app": "cd src&&python RKB.py",
         "build": "pyinstaller src/RKB.py -F --upx-dir c:/bin/upx391w --noupx",
+        "pack": "pyinstaller RKB.spec -F --upx-dir c:/bin/upx391w --noupx",
         "watch": "webpack --watch --progress --profile --colors --display-error-details --display-cached --config webpack.view.js",
         "view-build": "webpack --progress --profile --colors --disZplay-error-details --display-cached --config webpack.view.js",
         "test": "echo \"Error: no test specified\" && exit 1"

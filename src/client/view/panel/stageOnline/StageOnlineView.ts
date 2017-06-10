@@ -1,6 +1,8 @@
+import { setInterval } from 'timers';
+import { type } from 'os';
 import { CommandId } from '../../Command';
 import { PanelId } from '../../const';
-import { setClientDelay } from '../../utils/HupuAPI';
+import { getClientDelay, setClientDelay } from '../../utils/HupuAPI';
 import { DateFormat } from '../../utils/JsFunc';
 import { VueBase } from '../../utils/VueBase';
 import { dynamicLoading } from '../../utils/WebJsFunc';
@@ -34,7 +36,10 @@ class StageOnlineView extends VueBase {
     gameId = VueBase.String
     isOp = VueBase.PROP
     delayTime = VueBase.PROP
+    //开题延时输入
     clientDelayTime = VueBase.PROP
+    //服务端
+    clientDelayTimeSrv = VueBase.PROP
 
     delayTimeShowOnly = VueBase.PROP
     liveTime = VueBase.PROP
@@ -193,6 +198,8 @@ class StageOnlineView extends VueBase {
                 scoreView.initOP(this)
                 scoreView.on('init', (data) => {
                     this.setSrvTime(data.t)
+                    // this.getClientDelayTime()
+                    this.onGetClientDelay()
                     this.liveTime = DateFormat(new Date(this.srvTime), "hh:mm:ss");
                     this.delayTimeShowOnly = data.delayTimeMS / 1000
                     let d = {
@@ -245,10 +252,16 @@ class StageOnlineView extends VueBase {
             showBp.show()
     }
     onTick() {
-        console.log("onTick");
+        // console.log("onTick");
         this.srvTime += 1000;
         this.liveTime = DateFormat(new Date(this.srvTime), "hh:mm:ss");
         this.panelTime = DateFormat(new Date(this.srvTime - this.getView('score').delayTimeMS), "hh:mm:ss");
+    }
+    onGetClientDelay() {
+        getClientDelay(this.gameId, (res) => {
+            console.log(res)
+            this.clientDelayTimeSrv = res.data.delay
+        })
     }
     setSrvTime(t) {
         console.log("isRunning:", this.isTimerRunning, this.onTick, t);
@@ -371,8 +384,9 @@ class StageOnlineView extends VueBase {
             this.opReq(`${CommandId.cs_showBracket}`, { _: null })
         },
         onSetClientDelay(t) {
-            setClientDelay(t, (res) => {
-                console.log(res)
+            setClientDelay(this.gameId, t, (res) => {
+                console.log('setClientDelay', res)
+                this.onGetClientDelay()
             })
         },
         //manmual score
