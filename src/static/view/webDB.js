@@ -1542,6 +1542,7 @@
 	            console.log('cs_drop', data);
 	        })
 	            .on(RawDayCmd_1.RawDayCmd.cs_fallback, function (data) {
+	            _this.onFallback(data);
 	            console.log('cs_fallback', data);
 	        })
 	            .on(RawDayCmd_1.RawDayCmd.cs_commit, function (data) {

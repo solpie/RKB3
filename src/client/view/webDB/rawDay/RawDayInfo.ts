@@ -86,6 +86,7 @@ export class RawDayInfo {
                 console.log('cs_drop', data)
             })
             .on(RawDayCmd.cs_fallback, (data) => {
+                this.onFallback(data)
                 console.log('cs_fallback', data)
             })
             .on(RawDayCmd.cs_commit, (data) => {
@@ -93,6 +94,7 @@ export class RawDayInfo {
                 console.log('cs_commit', data)
             })
     }
+
     start(gameIdx) {
         if (gameIdx == 0) {
             this.winArr = this.playerArr.concat()
@@ -176,6 +178,7 @@ export class RawDayInfo {
         this.emit_init()
         this.emit_list()
     }
+
     emit_init() {
         let data: any = { _: null, prefix: '' }
         data.rightPlayer = this.rightPlayer

@@ -41,14 +41,17 @@
 
 初始化记分。重连ws，下一场比赛，回溯比赛推送
 
+### Event: 'list'
+- `losePlayers` {Array<Player>} 败者组球员列表，看是否淘汰、复活用
+- `winPlayers` {Array<Player>} 胜者组球员列表，看是否淘汰、复活用
+
 
 ### Event: 'pull'
 - `leftScore` {Number}
 - `rightScore` {Number}
 - `leftFoul` {Number}
 - `righFoul` {Number}
+
 线上修改比分犯规推送
 
-### Event: 'list'
-- `losePlayers` {Array<Player>} 败者组球员列表，看是否淘汰、复活用
-- `winPlayers` {Array<Player>} 胜者组球员列表，看是否淘汰、复活用
+
