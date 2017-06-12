@@ -66,10 +66,11 @@ export class RawDayInfo {
         srvIO = io.connect('/livedata')
             .on('connect', () => {
                 console.log('livedata ws connect...')
-                srvIO.emit('serverCon')
+                // srvIO.emit('serverCon')
             })
             .on('clientCon', () => {
                 this.emit_init()
+                this.emit_list()
                 // console.log('livedata ws connect...')
             })
             .on(RawDayCmd.cs_start, (data) => {
@@ -101,13 +102,13 @@ export class RawDayInfo {
     }
     //client event
     onPush(data) {
-        if (data.leftScore)
+        if (data.leftScore!=null)
             this.lScore = data.leftScore
-        if (data.rightScore)
+        if (data.rightScore!=null)
             this.rScore = data.rightScore
-        if (data.rightFoul)
+        if (data.rightFoul!=null)
             this.rFoul = data.rightFoul
-        if (data.leftFoul)
+        if (data.leftFoul!=null)
             this.lFoul = data.leftFoul
 
         let data2: any = { _: null, prefix: '' }
@@ -197,6 +198,7 @@ export class RawDayInfo {
         data.leftFoul = this.lFoul
         data.rightFoul = this.rFoul
         $post(`/db/cmd/${WebDBCmd.cs_init}`, data, null)
+        console.log('emit init')
     }
 
     emit_list() {
@@ -221,7 +223,7 @@ export class RawDayInfo {
     }
 
     commit() {
-        if (this.lScore != 0 && this.rScore != 0) {
+        if (this.lScore != 0 || this.rScore != 0) {
             if (this.lScore > this.rScore) {
                 this.nextArr.push(this.leftPlayer)
             }

@@ -1524,10 +1524,10 @@
 	        srvIO = io.connect('/livedata')
 	            .on('connect', function () {
 	            console.log('livedata ws connect...');
-	            srvIO.emit('serverCon');
 	        })
 	            .on('clientCon', function () {
 	            _this.emit_init();
+	            _this.emit_list();
 	        })
 	            .on(RawDayCmd_1.RawDayCmd.cs_start, function (data) {
 	            _this.onStartTimer(true);
@@ -1557,13 +1557,13 @@
 	        }
 	    };
 	    RawDayInfo.prototype.onPush = function (data) {
-	        if (data.leftScore)
+	        if (data.leftScore != null)
 	            this.lScore = data.leftScore;
-	        if (data.rightScore)
+	        if (data.rightScore != null)
 	            this.rScore = data.rightScore;
-	        if (data.rightFoul)
+	        if (data.rightFoul != null)
 	            this.rFoul = data.rightFoul;
-	        if (data.leftFoul)
+	        if (data.leftFoul != null)
 	            this.lFoul = data.leftFoul;
 	        var data2 = { _: null, prefix: '' };
 	        data2.leftFoul = this.lFoul;
@@ -1641,6 +1641,7 @@
 	        data.leftFoul = this.lFoul;
 	        data.rightFoul = this.rFoul;
 	        $post("/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_init, data, null);
+	        console.log('emit init');
 	    };
 	    RawDayInfo.prototype.emit_list = function () {
 	        var data = { _: null, prefix: '' };
@@ -1665,7 +1666,7 @@
 	        $post("/rd/cmd/" + RawDayCmd_1.RawDayCmd.list, data, null);
 	    };
 	    RawDayInfo.prototype.commit = function () {
-	        if (this.lScore != 0 && this.rScore != 0) {
+	        if (this.lScore != 0 || this.rScore != 0) {
 	            if (this.lScore > this.rScore) {
 	                this.nextArr.push(this.leftPlayer);
 	            }

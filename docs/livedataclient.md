@@ -47,10 +47,8 @@
 - `rightScore` {Number}
 - `leftFoul` {Number}
 - `righFoul` {Number}
+线上修改比分犯规推送
 
 ### Event: 'list'
 - `losePlayers` {Array<Player>} 败者组球员列表，看是否淘汰、复活用
 - `winPlayers` {Array<Player>} 胜者组球员列表，看是否淘汰、复活用
-
-
-线上修改比分犯规推送
