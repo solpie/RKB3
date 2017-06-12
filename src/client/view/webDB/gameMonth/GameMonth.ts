@@ -59,7 +59,7 @@ class GameMonth extends VueBase {
     campusWinScore = VueBase.PROP
     campusGameIdx = VueBase.PROP
     //rawdayInfo
-    rawdayInfo= VueBase.PROP
+    rawdayInfo = VueBase.PROP
     constructor() {
         super();
 
@@ -68,7 +68,7 @@ class GameMonth extends VueBase {
 
     }
     test() {
-        
+
         // this.rawdayInfo = rawdayInfo
         // rawdayInfo = new RawDayInfo([])
     }
@@ -219,20 +219,8 @@ class GameMonth extends VueBase {
             this.rawdayInfo = rawdayInfo
             console.log('onCreateLiveData')
         },
-        onLiveDataStart() {
-            this.livedata.start()
-        },
-        onLiveDataPush() {
-            this.livedata.push()
-        },
-        onLiveDataCommit() {
-            this.livedata.commit()
-        },
-        onLiveDataFallback() {
-            this.livedata.fallback()
-        },
-        onLiveDataDrop() {
-            this.livedata.drop()
+        onLiveData(event) {
+            rawdayInfo.onEvent(event)
         },
         onStartCampus() {
             gameInfo.lScore = 0

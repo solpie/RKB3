@@ -107,12 +107,13 @@
             </div>
 
             <button class="button" @click="onCreateCampus(campusInput)">录入</button>
-            <button class="button" @click="onCreateLiveData()">LiveData</button>
-            <button class="button" @click="onLiveDataStart()">start</button>
-            <button class="button" @click="onLiveDataPush()">push</button>
-            <button class="button" @click="onLiveDataCommit()">commit</button>
-            <button class="button" @click="onLiveDataFallback()">fallback</button>
-            <button class="button" @click="onLiveDataDrop()">drop</button>
+            <button class="button" @click="onLiveData('emitInfo')">emitInit</button>
+            <button class="button" @click="onLiveData('createClient')">LiveData</button>
+            <button class="button" @click="onLiveData('rdcStart')">start</button>
+            <button class="button" @click="onLiveData('rdcPush')">push</button>
+            <button class="button" @click="onLiveData('rdcCommit')">commit</button>
+            <button class="button" @click="onLiveData('rdcFallback')">fallback</button>
+            <button class="button" @click="onLiveData('rdcDrop')">drop</button>
             <textarea v-model='campusInput' style="height:200px">
                 
             </textarea>

@@ -1,3 +1,4 @@
+import { RawDayClient } from './RawDayClient';
 import { WebDBCmd } from '../../WebDBCmd';
 import { randomPop } from '../../utils/JsFunc';
 import { PlayerInfo } from '../gameMonth/PlayerInfo';
@@ -5,6 +6,7 @@ import { RawDayCmd } from "./RawDayCmd";
 declare let $;
 declare let io;
 let srvIO;
+let rawDayClient: RawDayClient;
 let $post = (url, param, callback) => {
     $.ajax({
         url: url,
@@ -104,13 +106,13 @@ export class RawDayInfo {
     }
     //client event
     onPush(data) {
-        if (data.leftScore!=null)
+        if (data.leftScore != null)
             this.lScore = data.leftScore
-        if (data.rightScore!=null)
+        if (data.rightScore != null)
             this.rScore = data.rightScore
-        if (data.rightFoul!=null)
+        if (data.rightFoul != null)
             this.rFoul = data.rightFoul
-        if (data.leftFoul!=null)
+        if (data.leftFoul != null)
             this.lFoul = data.leftFoul
 
         let data2: any = { _: null, prefix: '' }
@@ -175,6 +177,31 @@ export class RawDayInfo {
             this.leftPlayer = randomPop(this.winArr)
         this.rightPlayer = randomPop(this.winArr)
         console.log('startGame', this.leftPlayer, this.rightPlayer)
+        this.emit_init()
+        this.emit_list()
+    }
+    onEvent(event) {
+        if (event == 'emitInfo') {
+            this.emitInfo()
+        }
+        else if (event == 'createClient') {
+            rawDayClient = new RawDayClient()
+        }
+        else if (rawDayClient) {
+            if (event == 'rdcStart')
+                rawDayClient.start()
+            else if (event == 'rdcPush')
+                rawDayClient.push()
+            else if (event == 'rdcCommit')
+                rawDayClient.commit()
+            else if (event == 'rdcFallback')
+                rawDayClient.fallback()
+            else if (event == 'rdcDrop')
+                rawDayClient.drop()
+        }
+
+    }
+    emitInfo() {
         this.emit_init()
         this.emit_list()
     }
