@@ -1586,21 +1586,53 @@
 	                break;
 	            }
 	        }
+	        this.winArr.push(this.leftPlayer);
+	        this.winArr.push(this.rightPlayer);
+	        this.nextArr = this.popPlayer(this.nextArr, this.leftPlayer.id);
+	        this.nextArr = this.popPlayer(this.nextArr, this.rightPlayer.id);
+	        this.nextArr = this.fixArray(this.nextArr);
+	        this.winArr = this.fixArray(this.winArr);
 	        this.startGame();
+	    };
+	    RawDayInfo.prototype.fixArray = function (arr) {
+	        var map = {};
+	        var a = [];
+	        for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
+	            var p = arr_1[_i];
+	            if (!map[p.id]) {
+	                map[p.id] = p;
+	                a.push(p);
+	            }
+	        }
+	        return a;
+	    };
+	    RawDayInfo.prototype.popPlayer = function (arr, id) {
+	        var a = [];
+	        for (var _i = 0, arr_2 = arr; _i < arr_2.length; _i++) {
+	            var p = arr_2[_i];
+	            if (id != p.id) {
+	                a.push(p);
+	            }
+	        }
+	        return a;
 	    };
 	    RawDayInfo.prototype.onDrop = function (data) {
 	        var playerId = data.playerId;
 	        for (var i = 0; i < this.winArr.length; i++) {
 	            var p = this.winArr[i];
 	            if (p.id == playerId) {
+	                console.log('winArr', this.winArr.length, this.winArr);
 	                var losePlayer = this.winArr.splice(i, 1)[0];
+	                console.log('winArr', this.winArr.length, this.winArr);
 	                break;
 	            }
 	        }
 	        if (this.leftPlayer.playerId == playerId)
 	            this.startGame(this.rightPlayer);
-	        if (this.rightPlayer.playerId == playerId)
+	        else if (this.rightPlayer.playerId == playerId)
 	            this.startGame(this.leftPlayer);
+	        else
+	            this.emitInfo();
 	    };
 	    RawDayInfo.prototype.startGame = function (onePlayer) {
 	        this.lScore = this.rScore = 0;
@@ -1611,8 +1643,7 @@
 	            this.leftPlayer = JsFunc_1.randomPop(this.winArr);
 	        this.rightPlayer = JsFunc_1.randomPop(this.winArr);
 	        console.log('startGame', this.leftPlayer, this.rightPlayer);
-	        this.emit_init();
-	        this.emit_list();
+	        this.emitInfo();
 	    };
 	    RawDayInfo.prototype.onEvent = function (event) {
 	        if (event == 'emitInfo') {
@@ -1671,8 +1702,10 @@
 	                    isWin = true;
 	                }
 	            }
-	            if (!isWin)
-	                losePlayerArr.push(p);
+	            if (!isWin) {
+	                if (p.id != this.leftPlayer.id && p.id != this.rightPlayer.id)
+	                    losePlayerArr.push(p);
+	            }
 	        }
 	        data.winPlayers = winPlayerArr;
 	        data.losePlayers = losePlayerArr;

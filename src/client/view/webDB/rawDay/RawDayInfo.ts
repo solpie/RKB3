@@ -1,6 +1,6 @@
 import { RawDayClient } from './RawDayClient';
 import { WebDBCmd } from '../../WebDBCmd';
-import { randomPop } from '../../utils/JsFunc';
+import { arrUniqueFilter, mapToArr, randomPop } from '../../utils/JsFunc';
 import { PlayerInfo } from '../gameMonth/PlayerInfo';
 import { RawDayCmd } from "./RawDayCmd";
 declare let $;
@@ -148,22 +148,53 @@ export class RawDayInfo {
                 break;
             }
         }
+        this.winArr.push(this.leftPlayer)
+        this.winArr.push(this.rightPlayer)
+        this.nextArr = this.popPlayer(this.nextArr,this.leftPlayer.id)
+        this.nextArr = this.popPlayer(this.nextArr,this.rightPlayer.id)
+        this.nextArr = this.fixArray(this.nextArr)
+        this.winArr = this.fixArray(this.winArr)
         this.startGame()
     }
 
+    fixArray(arr) {
+        let map: any = {}
+        let a = []
+        for (let p of arr) {
+            if (!map[p.id]) {
+                map[p.id] = p
+                a.push(p)
+            }
+        }
+        return a
+        // mapToArr()
+    }
+    popPlayer(arr, id) {
+        let a = []
+        for (let p of arr) {
+            if (id!=p.id) {
+                a.push(p)
+            }
+        }
+        return a
+    }
     onDrop(data) {
         let playerId = data.playerId
         for (let i = 0; i < this.winArr.length; i++) {
             let p = this.winArr[i];
             if (p.id == playerId) {
+                console.log('winArr', this.winArr.length, this.winArr);
                 let losePlayer = this.winArr.splice(i, 1)[0]
+                console.log('winArr', this.winArr.length, this.winArr);
                 break;
             }
         }
         if (this.leftPlayer.playerId == playerId)
             this.startGame(this.rightPlayer)
-        if (this.rightPlayer.playerId == playerId)
+        else if (this.rightPlayer.playerId == playerId)
             this.startGame(this.leftPlayer)
+        else
+            this.emitInfo()
     }
     ////
     startGame(onePlayer?) {
@@ -177,8 +208,7 @@ export class RawDayInfo {
             this.leftPlayer = randomPop(this.winArr)
         this.rightPlayer = randomPop(this.winArr)
         console.log('startGame', this.leftPlayer, this.rightPlayer)
-        this.emit_init()
-        this.emit_list()
+        this.emitInfo()
     }
     onEvent(event) {
         if (event == 'emitInfo') {
@@ -201,6 +231,7 @@ export class RawDayInfo {
         }
 
     }
+
     emitInfo() {
         this.emit_init()
         this.emit_list()
@@ -242,8 +273,10 @@ export class RawDayInfo {
                     isWin = true
                 }
             }
-            if (!isWin)
-                losePlayerArr.push(p)
+            if (!isWin) {
+                if (p.id != this.leftPlayer.id && p.id != this.rightPlayer.id)
+                    losePlayerArr.push(p)
+            }
         }
         data.winPlayers = winPlayerArr
         data.losePlayers = losePlayerArr
