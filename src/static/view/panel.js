@@ -6193,6 +6193,7 @@
 	    function ScoreView(stage, $route) {
 	        _super.call(this, const_1.PanelId.onlinePanel);
 	        this.delayTimeMS = 0;
+	        this.delayTd = 0;
 	        this.isTest = false;
 	        this.$route = $route;
 	        this.name = const_1.PanelId.scorePanel;
@@ -6460,6 +6461,10 @@
 	                    console.log('timeStart', data);
 	                    _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
 	                };
+	                eventMap['timeDiff'] = function () {
+	                    console.log('timeDiff', data);
+	                    _this.delayTd = Number(data.td) * 1000;
+	                };
 	                eventMap['startGame'] = function () {
 	                    console.log('startGame', data);
 	                    logEvent('startGame', data);
@@ -6479,7 +6484,7 @@
 	                };
 	                if (eventMap[event]) {
 	                    isRunning = true;
-	                    var d = _this.delayTimeMS;
+	                    var d = _this.delayTimeMS + _this.delayTd;
 	                    logEvent(event, 'delay', d, data);
 	                    if (event == 'init')
 	                        d = 0;

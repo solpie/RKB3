@@ -23,6 +23,7 @@ export class ScoreView extends BasePanelView {
     eventPanel: Event2017
 
     delayTimeMS = 0
+    delayTd = 0
     gameId: any
     isTest = false
     $route: any
@@ -360,6 +361,11 @@ export class ScoreView extends BasePanelView {
                     console.log('timeStart', data);
                     this.scorePanel.toggleTimer(TimerState.RUNNING);
                 }
+                eventMap['timeDiff'] = () => {
+                    console.log('timeDiff', data);
+                    this.delayTd = Number(data.td) * 1000
+                    // this.scorePanel.toggleTimer(TimerState.RUNNING);
+                }
                 eventMap['startGame'] = () => {
                     console.log('startGame', data);
                     logEvent('startGame', data)
@@ -382,7 +388,7 @@ export class ScoreView extends BasePanelView {
                 };
                 if (eventMap[event]) {
                     isRunning = true
-                    let d = this.delayTimeMS;
+                    let d = this.delayTimeMS + this.delayTd;
                     logEvent(event, 'delay', d, data)
                     if (event == 'init')
                         d = 0
