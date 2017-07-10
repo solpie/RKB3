@@ -1,16 +1,22 @@
 import { TopInfo } from './TopInfo';
 import { ScoreFx } from './ScoreFx';
 import { Victory2 } from './Victory2';
-import { LogoFx } from './LogoFx';
-import { getFtLogoUrl2, getFtName } from './Com2017';
-import { Champion } from './Champion';
-import { NoticeSprite } from './NoticeSprite';
-import { ScaleSprite } from '../../../utils/ScaleSprite';
-import { fitWidth } from '../bracket/BracketGroup';
+import { FontName, ViewConst } from '../../../const';
 import { cnWrap, loadImg } from '../../../utils/JsFunc';
-import { proxy } from '../../../utils/WebJsFunc';
 import { imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
+import { ScaleSprite } from '../../../utils/ScaleSprite';
 import { TweenEx } from '../../../utils/TweenEx';
+import { proxy } from '../../../utils/WebJsFunc';
+import { fitWidth } from '../bracket/BracketGroup';
+import { Champion } from './Champion';
+import { getFtLogoUrl2, getFtName } from './Com2017';
+import { Group } from './Group';
+import { LogoFx } from './LogoFx';
+import { NoticeSprite } from './NoticeSprite';
+import { Ranking } from './Ranking';
+import { ScoreFx } from './ScoreFx';
+import { TopInfo } from './TopInfo';
+import { Victory2 } from './Victory2';
 import { FontName, ViewConst } from '../../../const';
 import { Group } from "./Group";
 export class Event2017 extends PIXI.Container {
@@ -296,5 +302,15 @@ export class Event2017 extends PIXI.Container {
 
     hideTopInfo() {
         this.topInfo.hide()
+    }
+
+    ranking: Ranking
+    showRanking(data) {
+        if (!this.ranking) {
+            this.ranking = new Ranking(this)
+        }
+        data.visible ?
+            this.ranking.show(data)
+            : this.ranking.hide()
     }
 }

@@ -18,7 +18,8 @@ export class Victory2 extends PIXI.Container {
         this.ctn.y = 366
         let ctn = this.ctn
 
-        //
+        
+        //  
         let bg = newBitmap({ url: '/img/panel/victory2017/bg.png' })
         ctn.addChild(bg)
         //605 58

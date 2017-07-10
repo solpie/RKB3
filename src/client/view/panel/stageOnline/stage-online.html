@@ -37,6 +37,11 @@
 
             <!--<button class="button" @click="onClkRenderData">刷新现场数据到面板</button><br>-->
             <label class="label" style="font-size: 50px;">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>
+            <label class="label">实力榜:</label><br>
+            <button class="button" @click="onShowRanking(true,true)">显示总榜</button>
+            <button class="button" @click="onShowRanking(true,false)">显示本场</button>
+            <button class="button" @click="onShowRanking(false)">隐藏</button>
+
             <label class="label">比分面板:</label><br>
             <button class="button" @click="onClkStartTimer">开始</button>
             <button class="button" @click="onClkPauseTimer">暂停</button>
@@ -49,7 +54,6 @@
                 <button class="button" @click="onClkSetPanelTime(panelTime2Set)">确定</button>
             </p>
             <label class="label">  冠军面板:</label><br>
-
             <input class="input" type="text" placeholder="2017上海站第二轮冠军" style="width: 250px;" v-model="championTitle">
             <button class="button" @click="onClkLeftChampion">{{lLiveName}} 冠军</button>
             <button class="button" @click="onClkRightChampion">{{rLiveName}} 冠军</button>

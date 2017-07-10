@@ -251,6 +251,9 @@ export class ScoreView extends BasePanelView {
                     this.eventPanel.noticeSprite.show()
                     : this.eventPanel.noticeSprite.hide()
             })
+            .on(`${CommandId.sc_showRanking}`, (data) => {
+                this.eventPanel.showRanking(data)
+            })
             //score fx
             .on(`${CommandId.sc_setFxPoint}`, (data) => {
                 this.eventPanel.setFxPoint(data.mx, data.my)

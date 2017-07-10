@@ -25,31 +25,6 @@ export const CommandId = {
     cs_updateRightSkill: '',
     updateRightSkill: '',
 
-    // stageFadeOut:'',
-    // cs_fadeOut:'',
-    // playerScore:'',
-    // cs_playerScore:'',
-    // stageFadeIn:'',
-    // cs_stageFadeIn:'',
-    // moveStagePanel:'',
-    // cs_moveStagePanel:'',//1000020
-    // updatePlayer:'',
-    // cs_updatePlayer:'',
-    // updatePlayerAll:'',
-    // cs_changeColor:'',//红蓝交换
-    // cs_updatePlayerAll:'',
-    // cs_updatePlayerBackNum:'',
-    // updatePlayerBackNum:'',
-    // fadeInNotice:'',//小喇叭
-    // cs_fadeInNotice:'',
-    // cs_resetGame:'',//重置game
-    // cs_toggleDmk:'',//弹幕助手
-    // toggleDmk:'',
-    // resetGame:'',//
-    // cs_unLimitScore:'',//不限制比分显示
-    // unLimitScore:'',//不限制比分显示
-    // cs_updatePlayerState:'',//更新状态
-    // updatePlayerState:'',
 
     cs_setGameIdx: '',//设置比赛场次
     setGameIdx: '',
@@ -163,6 +138,9 @@ export const CommandId = {
     sc_showNotice: '',
     cs_showChampion: '',
     sc_showChampion: '',
+    //实力榜
+    cs_showRanking: '',
+    sc_showRanking: '',
     cs_toggleScorePanel: '',
     sc_toggleScorePanel: '',
     cs_toggleChampionPanel: '',
