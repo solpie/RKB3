@@ -89,8 +89,14 @@ def proxy():
 
     if request.method == "POST":
         url = request.values.get("url")
-        print(request.json)
-        r = requests.post(url, request.json)
+        dat = dict()
+        # for k in request.json:
+        #     dat[k] = request.json[k]
+        #     print(k)
+
+        print(request.json, dat)
+        r = requests.post(url, json=request.json, headers={
+                          'Content-type': 'application/json'})
         if r.headers['Content-Type'].find('json') > -1:
             c = r.json()
         else:

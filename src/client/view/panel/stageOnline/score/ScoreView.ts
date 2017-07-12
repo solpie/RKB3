@@ -1,16 +1,17 @@
 import { WebDBCmd } from '../../../WebDBCmd';
 import { encode } from 'punycode';
-import { getScorePanelUrl } from '../../../admin/home/home';
 import { Event2017 } from './Event2017';
 import { PlayerInfo } from '../../../../model/PlayerInfo';
-import { TweenEx } from '../../../utils/TweenEx';
-import { Score2017 } from './Score2017';
-import { getHupuWS } from '../../../utils/HupuAPI';
-import { ScorePanel2 } from './ScorePanel2';
 import { CommandId } from '../../../Command';
-// import { initIO } from '../../../../router/PanelRouter';
 import { PanelId, TimerState } from '../../../const';
+import { getHupuWS } from '../../../utils/HupuAPI';
+import { TweenEx } from '../../../utils/TweenEx';
 import { BasePanelView } from '../../BasePanelView';
+import { RankingData } from './RankingData';
+import { Score2017 } from './Score2017';
+import { ScorePanel2 } from './ScorePanel2';
+import { getScorePanelUrl } from "../../../admin/home/home";
+// import { initIO } from '../../../../router/PanelRouter';
 declare let io;
 declare let $;
 function logEvent(...a) {
@@ -21,6 +22,7 @@ function logEvent(...a) {
 export class ScoreView extends BasePanelView {
     scorePanel: Score2017
     eventPanel: Event2017
+    rankingData: RankingData
 
     delayTimeMS = 0
     delayTd = 0
@@ -42,6 +44,7 @@ export class ScoreView extends BasePanelView {
 
         this.scorePanel = new Score2017(stage, darkTheme)
         this.eventPanel = new Event2017(stage, darkTheme)
+
         console.log('new ScoreView')
         if (this.isTest) {
             // let player = {
@@ -80,6 +83,8 @@ export class ScoreView extends BasePanelView {
         let setPlayer = (leftPlayer, rightPlayer) => {
             console.log(leftPlayer)
             // player level 0 其他 1 至少一个胜场  2 大师赛 3冠军
+            let rankingData = this.rankingData.getPlayerData(leftPlayer.name)
+            console.log('rankingData', rankingData);
             this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level)
             this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level)
         };
@@ -176,7 +181,9 @@ export class ScoreView extends BasePanelView {
             if (delay)
                 this.delayTimeMS = Number(delay) * 1000
             console.log('/online/delay/' + this.delayTimeMS)
-            this.initRemote()
+            this.rankingData = new RankingData(this.gameId, _ => {
+                this.initRemote()
+            })
         })
     }
     initOP(view) {
@@ -275,9 +282,12 @@ export class ScoreView extends BasePanelView {
             let remoteIO = io.connect(hupuWsUrl);
             let setPlayer = (leftPlayer, rightPlayer) => {
                 console.log(leftPlayer)
+                let leftRankingData = this.rankingData.getPlayerData(leftPlayer.name)
+                let rightRankingData = this.rankingData.getPlayerData(rightPlayer.name)
+                console.log('rankingData', leftRankingData, rightRankingData);
                 // player level 0 其他 1 至少一个胜场  2 大师赛 3冠军
-                this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level)
-                this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level)
+                this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level,leftRankingData.text)
+                this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level,rightRankingData.text)
             };
 
             remoteIO.on('connect', () => {

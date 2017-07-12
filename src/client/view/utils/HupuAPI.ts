@@ -15,7 +15,7 @@ export let getHupuWS = (callback) => {
 //开题延时
 export function setClientDelay(gameId, sec, callback) {
     let url = `http://pre.liangle.com/api/pbk/event/delay/` + gameId
-    let data = { ':game_id': gameId+"", ctd: sec + '' }
+    let data = { ':game_id': gameId + "", ctd: sec + '' }
     console.log(setClientDelay, data)
     $post(proxy(url), data, callback)
 }
@@ -41,6 +41,19 @@ export function getRoundList(callback) {
 export function getRoundRawDate(gameId, callback) {
     let url = 'http://api.liangle.com/api/passerbyking/game/match/' + gameId
     _get(proxy(url), callback)
+}
+//实力榜
+export function getRanking(gameId, callback) {
+    let url = 'http://lrw-test5.smartcourt.cn/getRanking'
+    let data = { page: 1, pageSize: 10 }
+    $post(proxy(url), data, callback)
+}
+
+export function getCurRanking(hupuIdArr, callback) {
+    let url = 'http://lrw-test5.smartcourt.cn/queryUsersRanking'
+    let data = hupuIdArr
+    // let data = { userids: hupuIdArr }
+    $post(proxy(url), data, callback)
 }
 
 let _get = (url, callback) => {

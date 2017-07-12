@@ -390,7 +390,7 @@ class StageOnlineView extends VueBase {
             })
         },
         onShowRanking(visible, isTotal?) {
-            this.opReq(`${CommandId.cs_showRanking}`, { _: null, visible: visible, isTotal: isTotal })
+            this.opReq(`${CommandId.cs_showRanking}`, { _: null, visible: visible, isTotal: isTotal, gameId: this.gameId })
         },
         //manmual score
         onAddScore(isLeft, dtScore) {

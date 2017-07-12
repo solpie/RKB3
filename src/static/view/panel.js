@@ -554,6 +554,18 @@
 	    _get(WebJsFunc_1.proxy(url), callback);
 	}
 	exports.getRoundRawDate = getRoundRawDate;
+	function getRanking(gameId, callback) {
+	    var url = 'http://lrw-test5.smartcourt.cn/getRanking';
+	    var data = { page: 1, pageSize: 10 };
+	    WebJsFunc_1.$post(WebJsFunc_1.proxy(url), data, callback);
+	}
+	exports.getRanking = getRanking;
+	function getCurRanking(hupuIdArr, callback) {
+	    var url = 'http://lrw-test5.smartcourt.cn/queryUsersRanking';
+	    var data = hupuIdArr;
+	    WebJsFunc_1.$post(WebJsFunc_1.proxy(url), data, callback);
+	}
+	exports.getCurRanking = getCurRanking;
 	var _get = function (url, callback) {
 	    $.get(url, callback);
 	};
@@ -4325,7 +4337,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(93);
+	        this.template = __webpack_require__(94);
 	        this.actTab = VueBase_1.VueBase.PROP;
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
@@ -4472,7 +4484,7 @@
 	                });
 	            },
 	            onShowRanking: function (visible, isTotal) {
-	                this.opReq("" + Command_1.CommandId.cs_showRanking, { _: null, visible: visible, isTotal: isTotal });
+	                this.opReq("" + Command_1.CommandId.cs_showRanking, { _: null, visible: visible, isTotal: isTotal, gameId: this.gameId });
 	            },
 	            onAddScore: function (isLeft, dtScore) {
 	            }
@@ -6172,14 +6184,15 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var WebDBCmd_1 = __webpack_require__(70);
-	var home_1 = __webpack_require__(16);
 	var Event2017_1 = __webpack_require__(81);
-	var TweenEx_1 = __webpack_require__(50);
-	var Score2017_1 = __webpack_require__(90);
-	var HupuAPI_1 = __webpack_require__(22);
 	var Command_1 = __webpack_require__(61);
 	var const_1 = __webpack_require__(43);
+	var HupuAPI_1 = __webpack_require__(22);
+	var TweenEx_1 = __webpack_require__(50);
 	var BasePanelView_1 = __webpack_require__(44);
+	var RankingData_1 = __webpack_require__(106);
+	var Score2017_1 = __webpack_require__(91);
+	var home_1 = __webpack_require__(16);
 	function logEvent() {
 	    var a = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
@@ -6219,6 +6232,8 @@
 	        var _this = this;
 	        var setPlayer = function (leftPlayer, rightPlayer) {
 	            console.log(leftPlayer);
+	            var rankingData = _this.rankingData.getPlayerData(leftPlayer.name);
+	            console.log('rankingData', rankingData);
 	            _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level);
 	            _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level);
 	        };
@@ -6310,7 +6325,9 @@
 	            if (delay)
 	                _this.delayTimeMS = Number(delay) * 1000;
 	            console.log('/online/delay/' + _this.delayTimeMS);
-	            _this.initRemote();
+	            _this.rankingData = new RankingData_1.RankingData(_this.gameId, function (_) {
+	                _this.initRemote();
+	            });
 	        });
 	    };
 	    ScoreView.prototype.initOP = function (view) {
@@ -6405,8 +6422,11 @@
 	            var remoteIO = io.connect(hupuWsUrl);
 	            var setPlayer = function (leftPlayer, rightPlayer) {
 	                console.log(leftPlayer);
-	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level);
-	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level);
+	                var leftRankingData = _this.rankingData.getPlayerData(leftPlayer.name);
+	                var rightRankingData = _this.rankingData.getPlayerData(rightPlayer.name);
+	                console.log('rankingData', leftRankingData, rightRankingData);
+	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level, leftRankingData.text);
+	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level, rightRankingData.text);
 	            };
 	            remoteIO.on('connect', function () {
 	                console.log('hupuAuto socket connected', hupuWsUrl);
@@ -6552,20 +6572,20 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var TopInfo_1 = __webpack_require__(82);
-	var ScoreFx_1 = __webpack_require__(83);
-	var Victory2_1 = __webpack_require__(84);
-	var const_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(17);
 	var PixiEx_1 = __webpack_require__(46);
 	var TweenEx_1 = __webpack_require__(50);
 	var BracketGroup_1 = __webpack_require__(73);
-	var Champion_1 = __webpack_require__(86);
+	var Champion_1 = __webpack_require__(82);
 	var Com2017_1 = __webpack_require__(72);
-	var Group_1 = __webpack_require__(89);
-	var LogoFx_1 = __webpack_require__(85);
-	var NoticeSprite_1 = __webpack_require__(87);
-	var Ranking_1 = __webpack_require__(105);
+	var LogoFx_1 = __webpack_require__(83);
+	var NoticeSprite_1 = __webpack_require__(84);
+	var Ranking_1 = __webpack_require__(86);
+	var ScoreFx_1 = __webpack_require__(87);
+	var TopInfo_1 = __webpack_require__(88);
+	var Victory2_1 = __webpack_require__(89);
+	var const_1 = __webpack_require__(43);
+	var Group_1 = __webpack_require__(90);
 	var Event2017 = (function (_super) {
 	    __extends(Event2017, _super);
 	    function Event2017(stage, isDark) {
@@ -6801,183 +6821,6 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var PixiEx_1 = __webpack_require__(46);
-	var HupuAPI_1 = __webpack_require__(22);
-	var TopInfo = (function (_super) {
-	    __extends(TopInfo, _super);
-	    function TopInfo(parent) {
-	        var _this = this;
-	        _super.call(this);
-	        parent.addChild(this);
-	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/score2017/top.png' });
-	        this.addChild(bg);
-	        var progressText = new PIXI.Text;
-	        progressText.style.fill = '#fff';
-	        progressText.style.fontSize = '40px';
-	        this.addChild(progressText);
-	        var roundText = new PIXI.Text;
-	        roundText.style.fill = '#fff';
-	        roundText.style.fontSize = '40px';
-	        this.addChild(roundText);
-	        var gameId;
-	        this.setInfo = function (t, r) {
-	            console.log('setProgressInfo');
-	            if (!t) {
-	                HupuAPI_1.getPreRoundPlayer(gameId, function (res) {
-	                });
-	            }
-	            else
-	                progressText.text = t;
-	            roundText.text = r;
-	            _this.visible = true;
-	        };
-	        this.hide = function () {
-	            _this.visible = false;
-	        };
-	    }
-	    return TopInfo;
-	}(PIXI.Container));
-	exports.TopInfo = TopInfo;
-
-
-/***/ },
-/* 83 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var JsFunc_1 = __webpack_require__(17);
-	var ScoreFx = (function (_super) {
-	    __extends(ScoreFx, _super);
-	    function ScoreFx() {
-	        _super.call(this);
-	        var alienImages = [];
-	        for (var i = 1; i < 11; i++) {
-	            alienImages.push('/img/fx/score/FX_' + JsFunc_1.paddy(i, 2) + '.png');
-	        }
-	        var textureArray = [];
-	        for (var i_1 = 0; i_1 < alienImages.length; i_1++) {
-	            var texture = PIXI.Texture.fromImage(alienImages[i_1]);
-	            textureArray.push(texture);
-	        }
-	        ;
-	        var mc = new PIXI.extras['AnimatedSprite'](textureArray);
-	        mc.animationSpeed = .3;
-	        mc.loop = false;
-	        this.addChild(mc);
-	        this.mc = mc;
-	        console.log('mc', mc);
-	    }
-	    ScoreFx.prototype.show = function () {
-	        this.mc.play();
-	    };
-	    ScoreFx.prototype.playOne = function () {
-	        this.mc.gotoAndStop(0);
-	        this.mc.play();
-	    };
-	    return ScoreFx;
-	}(PIXI.Container));
-	exports.ScoreFx = ScoreFx;
-
-
-/***/ },
-/* 84 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var PixiEx_1 = __webpack_require__(46);
-	function polygon(g, radius, sides) {
-	    if (sides < 3)
-	        return;
-	    var a = (Math.PI * 2) / sides;
-	    g.moveTo(radius, 0);
-	    for (var i = 1; i < sides; i++) {
-	        g.lineTo(radius * Math.cos(a * i), radius * Math.sin(a * i));
-	    }
-	}
-	var Victory2 = (function (_super) {
-	    __extends(Victory2, _super);
-	    function Victory2() {
-	        _super.call(this);
-	        var g = PixiEx_1.newBitmap({ url: '/img/panel/victory2017/guide.png' });
-	        this.addChild(g);
-	        this.ctn = new PIXI.Container;
-	        this.addChild(this.ctn);
-	        this.ctn.y = 366;
-	        var ctn = this.ctn;
-	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/victory2017/bg.png' });
-	        ctn.addChild(bg);
-	        var avtFrame = new PIXI.Graphics();
-	        ctn.addChild(avtFrame);
-	        avtFrame.lineStyle(2, 0xff0000);
-	        polygon(avtFrame, 64, 6);
-	        avtFrame.x = 635;
-	        avtFrame.y = 187;
-	    }
-	    return Victory2;
-	}(PIXI.Container));
-	exports.Victory2 = Victory2;
-
-
-/***/ },
-/* 85 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var JsFunc_1 = __webpack_require__(17);
-	var LogoFx = (function (_super) {
-	    __extends(LogoFx, _super);
-	    function LogoFx() {
-	        _super.call(this);
-	        var alienImages = [];
-	        for (var i = 1; i < 19; i++) {
-	            alienImages.push('/img/panel/logo/logo_' + JsFunc_1.paddy(i, 5) + '.png');
-	        }
-	        var textureArray = [];
-	        for (var i_1 = 0; i_1 < alienImages.length; i_1++) {
-	            var texture = PIXI.Texture.fromImage(alienImages[i_1]);
-	            textureArray.push(texture);
-	        }
-	        ;
-	        var mc = new PIXI.extras['AnimatedSprite'](textureArray);
-	        mc.animationSpeed = .3;
-	        mc.scale.x = mc.scale.y = 2;
-	        mc.play();
-	        this.addChild(mc);
-	        console.log('mc', mc);
-	    }
-	    LogoFx.prototype.show = function () {
-	        this.mc.play();
-	    };
-	    return LogoFx;
-	}(PIXI.Container));
-	exports.LogoFx = LogoFx;
-
-
-/***/ },
-/* 86 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
 	var Com2017_1 = __webpack_require__(72);
 	var JsFunc_1 = __webpack_require__(17);
 	var const_1 = __webpack_require__(43);
@@ -7051,7 +6894,47 @@
 
 
 /***/ },
-/* 87 */
+/* 83 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var JsFunc_1 = __webpack_require__(17);
+	var LogoFx = (function (_super) {
+	    __extends(LogoFx, _super);
+	    function LogoFx() {
+	        _super.call(this);
+	        var alienImages = [];
+	        for (var i = 1; i < 19; i++) {
+	            alienImages.push('/img/panel/logo/logo_' + JsFunc_1.paddy(i, 5) + '.png');
+	        }
+	        var textureArray = [];
+	        for (var i_1 = 0; i_1 < alienImages.length; i_1++) {
+	            var texture = PIXI.Texture.fromImage(alienImages[i_1]);
+	            textureArray.push(texture);
+	        }
+	        ;
+	        var mc = new PIXI.extras['AnimatedSprite'](textureArray);
+	        mc.animationSpeed = .3;
+	        mc.scale.x = mc.scale.y = 2;
+	        mc.play();
+	        this.addChild(mc);
+	        console.log('mc', mc);
+	    }
+	    LogoFx.prototype.show = function () {
+	        this.mc.play();
+	    };
+	    return LogoFx;
+	}(PIXI.Container));
+	exports.LogoFx = LogoFx;
+
+
+/***/ },
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7063,7 +6946,7 @@
 	var PixiEx_1 = __webpack_require__(46);
 	var const_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(17);
-	var ScaleSprite_1 = __webpack_require__(88);
+	var ScaleSprite_1 = __webpack_require__(85);
 	var NoticeSprite = (function (_super) {
 	    __extends(NoticeSprite, _super);
 	    function NoticeSprite() {
@@ -7174,7 +7057,7 @@
 
 
 /***/ },
-/* 88 */
+/* 85 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -7256,7 +7139,396 @@
 
 
 /***/ },
+/* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var const_1 = __webpack_require__(43);
+	var HupuAPI_1 = __webpack_require__(22);
+	var JsFunc_1 = __webpack_require__(17);
+	var PixiEx_1 = __webpack_require__(46);
+	var Ranking = (function (_super) {
+	    __extends(Ranking, _super);
+	    function Ranking(parent) {
+	        _super.call(this);
+	        this.colorSeg = ['#e9591f',
+	            '#4860f6',
+	            '#f4cf1f',
+	            '#1ccdf3',
+	            '#6736f8'];
+	        this.frameArr = [];
+	        this._isLoad = false;
+	        this._texMap = {};
+	        this.ctn = parent;
+	        var back = new PIXI.Graphics();
+	        back.beginFill(0, .7)
+	            .drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH * .5, const_1.ViewConst.STAGE_HEIGHT);
+	        this.addChild(back);
+	        var bg = new PIXI.Sprite();
+	        this.bg = bg;
+	        bg.x = 150;
+	        this.addChild(bg);
+	        var ts = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '45px', fill: "#fff",
+	            fontWeight: 'bold'
+	        };
+	        this.titleText = new PIXI.Text('球员实力榜', ts);
+	        this.titleText.x = 236;
+	        this.titleText.y = 54;
+	        bg.addChild(this.titleText);
+	        this.playerTextArr = [];
+	        this.dtSpArr = [];
+	        this.circleSpArr = [];
+	        this.dtTextArr = [];
+	        this.avtSpArr = [];
+	        var ns = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '30px', fill: "#454545",
+	        };
+	        var dts = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '35px', fill: "#f00",
+	        };
+	        for (var i = 0; i < 10; i++) {
+	            var t = new PIXI.Text('', ns);
+	            t.x = 150;
+	            t.y = 155 + i * 92;
+	            this.playerTextArr.push(t);
+	            bg.addChild(t);
+	            var sp = new PIXI.Sprite();
+	            sp.x = 538 + 45;
+	            sp.y = t.y + 10;
+	            bg.addChild(sp);
+	            this.dtSpArr.push(sp);
+	            var dtText = new PIXI.Text('2', dts);
+	            dtText.x = 610;
+	            dtText.y = t.y + -5;
+	            bg.addChild(dtText);
+	            this.dtTextArr.push(dtText);
+	            var c = new PIXI.Graphics();
+	            c.beginFill(0xffff00)
+	                .drawRect(0, 0, 68, 68);
+	            c.x = 460;
+	            c.y = t.y + -15;
+	            this.frameArr.push(c);
+	            bg.addChild(c);
+	            this.x = const_1.ViewConst.STAGE_WIDTH * .5;
+	            var avt = new PIXI.Sprite();
+	            avt.x = c.x + 6;
+	            avt.y = c.y + 6;
+	            this.avtSpArr.push(avt);
+	            bg.addChild(avt);
+	        }
+	    }
+	    Ranking.prototype._fillSp = function (data) {
+	        for (var i = 0; i < 10; i++) {
+	            var dtSp = this.dtSpArr[i];
+	            var dtRanking = this.dtTextArr[i];
+	            var frame = this.frameArr[i];
+	            var playerText = this.playerTextArr[i];
+	            if (data.playerArr[i]) {
+	                var pd = data.playerArr[i];
+	                playerText.text = pd.playerName;
+	                pd.waveRanking = Number(pd.waveRanking);
+	                if (pd.waveRanking < 0) {
+	                    dtSp.texture = this.texDown;
+	                    dtRanking.text = pd.waveRanking + "";
+	                    dtRanking.style.fill = '#ff0000';
+	                }
+	                else if (pd.waveRanking > 0) {
+	                    dtSp.texture = this.texUp;
+	                    dtRanking.text = pd.waveRanking + "";
+	                    dtRanking.style.fill = '#00ff00';
+	                }
+	                else {
+	                    dtSp.texture = this.texFlat;
+	                    dtRanking.text = "";
+	                    dtRanking.style.fill = '#00ff00';
+	                }
+	            }
+	        }
+	    };
+	    Ranking.prototype._loadTex = function (callback) {
+	        var _this = this;
+	        if (!this._isLoad) {
+	            var imgArr = [
+	                { name: 'rankingDown', url: '/img/panel/score2017/rankingDown.png' },
+	                { name: 'rankingFlat', url: '/img/panel/score2017/rankingFlat.png' },
+	                { name: 'rankingUp', url: '/img/panel/score2017/rankingUp.png' },
+	                { name: 'bg', url: '/img/panel/score2017/rankingBg.png' },
+	            ];
+	            JsFunc_1.loadImgArr(imgArr, function (res) {
+	                _this._isLoad = true;
+	                _this.bg.texture = PixiEx_1.imgToTex(res['bg']);
+	                _this.texDown = PixiEx_1.imgToTex(res['rankingDown']);
+	                _this.texUp = PixiEx_1.imgToTex(res['rankingUp']);
+	                _this.texFlat = PixiEx_1.imgToTex(res['rankingFlat']);
+	                callback();
+	            });
+	        }
+	        else {
+	            callback();
+	        }
+	    };
+	    Ranking.prototype._renderData = function (data) {
+	        for (var i = 0; i < 10; i++) {
+	            var dtSp = this.dtSpArr[i];
+	            dtSp.texture = this.texDown;
+	            var dtRanking = this.dtTextArr[i];
+	            var playerText = this.playerTextArr[i];
+	            if (data.playerArr[i]) {
+	                var pd = data.playerArr[i];
+	                playerText.text = pd.playerName;
+	                pd.waveRanking = Number(pd.waveRanking);
+	                if (pd.waveRanking < 0) {
+	                    dtSp.texture = this.texDown;
+	                    dtRanking.text = pd.waveRanking + "";
+	                    dtRanking.style.fill = '#ff0000';
+	                }
+	                else if (pd.waveRanking > 0) {
+	                    dtSp.texture = this.texUp;
+	                    dtRanking.text = pd.waveRanking + "";
+	                    dtRanking.style.fill = '#00ff00';
+	                }
+	                else {
+	                    dtSp.texture = this.texFlat;
+	                    dtRanking.text = "";
+	                    dtRanking.style.fill = '#00ff00';
+	                }
+	            }
+	        }
+	        for (var i = 0; i < 10; i++) {
+	            var avtUrl = 'http://w1.hoopchina.com.cn/huputv/resource/img/amateur.jpg';
+	            this._loadAvt(this.avtSpArr[i], avtUrl);
+	        }
+	        this.ctn.addChild(this);
+	    };
+	    Ranking.prototype.show = function (data) {
+	        var _this = this;
+	        this._loadTex(function (_) {
+	            if (data.isTotal) {
+	                _this.titleText.text = '球员实力榜';
+	                _this._loadTop10player(data);
+	            }
+	            else {
+	                _this.titleText.text = '本场实力榜';
+	                _this._loadCurPlayerData(data);
+	            }
+	        });
+	    };
+	    Ranking.prototype._loadTop10player = function (data) {
+	        var _this = this;
+	        if (!this._top10playerDataArr)
+	            HupuAPI_1.getRanking(1, function (res) {
+	                console.log('get ranking', res);
+	                _this._top10playerDataArr = data.playerArr = res.content.data.rankings;
+	                _this._renderData(data);
+	            });
+	        else {
+	            data.playerArr = this._top10playerDataArr;
+	            this._renderData(data);
+	        }
+	    };
+	    Ranking.prototype._loadCurPlayerData = function (data) {
+	        var _this = this;
+	        if (!this._curPlayerDataArr) {
+	            var gameId = data.gameId;
+	            HupuAPI_1.getAllPlayer(gameId, function (res2) {
+	                console.log(res2);
+	                var playerArr = res2.data;
+	                var hupuIdArr = [];
+	                for (var i = 0; i < playerArr.length; i++) {
+	                    var obj = playerArr[i];
+	                    hupuIdArr.push(obj.player_id);
+	                }
+	                console.log('hupuIdArr', hupuIdArr);
+	                HupuAPI_1.getCurRanking(hupuIdArr, function (res) {
+	                    console.log('getCurRanking2', res);
+	                    _this._curPlayerDataArr = res.content.data.rankings;
+	                    data.playerArr = _this._curPlayerDataArr;
+	                    _this._renderData(data);
+	                });
+	            });
+	        }
+	        else {
+	            data.playerArr = this._curPlayerDataArr;
+	            this._renderData(data);
+	        }
+	    };
+	    Ranking.prototype.getPlayerData = function (hupuId) {
+	        for (var _i = 0, _a = this._curPlayerDataArr; _i < _a.length; _i++) {
+	            var playerData = _a[_i];
+	            if (hupuId == playerData.playName) {
+	                return playerData;
+	            }
+	        }
+	        return { sortId: -1 };
+	    };
+	    Ranking.prototype._loadAvt = function (avt, url) {
+	        var _this = this;
+	        if (!this._texMap[url])
+	            PixiEx_1.loadRes(url, function (img) {
+	                _this._texMap[url] = avt.texture = PixiEx_1.imgToTex(img);
+	                var s = 56 / img.width;
+	                avt.scale.x = avt.scale.y = s;
+	            }, true);
+	        else
+	            avt.texture = this._texMap[url];
+	    };
+	    Ranking.prototype.hide = function () {
+	        if (this.parent)
+	            this.parent.removeChild(this);
+	    };
+	    return Ranking;
+	}(PIXI.Container));
+	exports.Ranking = Ranking;
+
+
+/***/ },
+/* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var JsFunc_1 = __webpack_require__(17);
+	var ScoreFx = (function (_super) {
+	    __extends(ScoreFx, _super);
+	    function ScoreFx() {
+	        _super.call(this);
+	        var alienImages = [];
+	        for (var i = 1; i < 11; i++) {
+	            alienImages.push('/img/fx/score/FX_' + JsFunc_1.paddy(i, 2) + '.png');
+	        }
+	        var textureArray = [];
+	        for (var i_1 = 0; i_1 < alienImages.length; i_1++) {
+	            var texture = PIXI.Texture.fromImage(alienImages[i_1]);
+	            textureArray.push(texture);
+	        }
+	        ;
+	        var mc = new PIXI.extras['AnimatedSprite'](textureArray);
+	        mc.animationSpeed = .3;
+	        mc.loop = false;
+	        this.addChild(mc);
+	        this.mc = mc;
+	        console.log('mc', mc);
+	    }
+	    ScoreFx.prototype.show = function () {
+	        this.mc.play();
+	    };
+	    ScoreFx.prototype.playOne = function () {
+	        this.mc.gotoAndStop(0);
+	        this.mc.play();
+	    };
+	    return ScoreFx;
+	}(PIXI.Container));
+	exports.ScoreFx = ScoreFx;
+
+
+/***/ },
+/* 88 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var PixiEx_1 = __webpack_require__(46);
+	var HupuAPI_1 = __webpack_require__(22);
+	var TopInfo = (function (_super) {
+	    __extends(TopInfo, _super);
+	    function TopInfo(parent) {
+	        var _this = this;
+	        _super.call(this);
+	        parent.addChild(this);
+	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/score2017/top.png' });
+	        this.addChild(bg);
+	        var progressText = new PIXI.Text;
+	        progressText.style.fill = '#fff';
+	        progressText.style.fontSize = '40px';
+	        this.addChild(progressText);
+	        var roundText = new PIXI.Text;
+	        roundText.style.fill = '#fff';
+	        roundText.style.fontSize = '40px';
+	        this.addChild(roundText);
+	        var gameId;
+	        this.setInfo = function (t, r) {
+	            console.log('setProgressInfo');
+	            if (!t) {
+	                HupuAPI_1.getPreRoundPlayer(gameId, function (res) {
+	                });
+	            }
+	            else
+	                progressText.text = t;
+	            roundText.text = r;
+	            _this.visible = true;
+	        };
+	        this.hide = function () {
+	            _this.visible = false;
+	        };
+	    }
+	    return TopInfo;
+	}(PIXI.Container));
+	exports.TopInfo = TopInfo;
+
+
+/***/ },
 /* 89 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var PixiEx_1 = __webpack_require__(46);
+	function polygon(g, radius, sides) {
+	    if (sides < 3)
+	        return;
+	    var a = (Math.PI * 2) / sides;
+	    g.moveTo(radius, 0);
+	    for (var i = 1; i < sides; i++) {
+	        g.lineTo(radius * Math.cos(a * i), radius * Math.sin(a * i));
+	    }
+	}
+	var Victory2 = (function (_super) {
+	    __extends(Victory2, _super);
+	    function Victory2() {
+	        _super.call(this);
+	        var g = PixiEx_1.newBitmap({ url: '/img/panel/victory2017/guide.png' });
+	        this.addChild(g);
+	        this.ctn = new PIXI.Container;
+	        this.addChild(this.ctn);
+	        this.ctn.y = 366;
+	        var ctn = this.ctn;
+	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/victory2017/bg.png' });
+	        ctn.addChild(bg);
+	        var avtFrame = new PIXI.Graphics();
+	        ctn.addChild(avtFrame);
+	        avtFrame.lineStyle(2, 0xff0000);
+	        polygon(avtFrame, 64, 6);
+	        avtFrame.x = 635;
+	        avtFrame.y = 187;
+	    }
+	    return Victory2;
+	}(PIXI.Container));
+	exports.Victory2 = Victory2;
+
+
+/***/ },
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7349,14 +7621,14 @@
 
 
 /***/ },
-/* 90 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var Com2017_1 = __webpack_require__(72);
-	var FoulText_1 = __webpack_require__(91);
+	var FoulText_1 = __webpack_require__(92);
 	var Fx_1 = __webpack_require__(56);
-	var FoulGroup_1 = __webpack_require__(92);
+	var FoulGroup_1 = __webpack_require__(93);
 	var TextTimer_1 = __webpack_require__(52);
 	var SpriteGroup_1 = __webpack_require__(55);
 	var const_1 = __webpack_require__(43);
@@ -7528,6 +7800,14 @@
 	        rpi.y = lpi.y;
 	        this.rPlayerInfo = rpi;
 	        ctn.addChild(rpi);
+	        var lpr = new PIXI.Text("", pis);
+	        lpr.y = 258;
+	        this.lPlayerRanking = lpr;
+	        ctn.addChild(lpr);
+	        var rpr = new PIXI.Text("", pis);
+	        rpr.y = lpr.y;
+	        this.rPlayerRanking = rpr;
+	        ctn.addChild(rpr);
 	        var lm = new PIXI.Graphics()
 	            .beginFill(0xff0000);
 	        polygon(lm, 63, 6);
@@ -7672,8 +7952,9 @@
 	        label.text = name;
 	        label.y = 280 - label.height * .5;
 	    };
-	    Score2017.prototype.setLeftPlayerInfo = function (name, avatar, weight, height, ftId, level) {
+	    Score2017.prototype.setLeftPlayerInfo = function (name, avatar, weight, height, ftId, level, rankingText) {
 	        var _this = this;
+	        if (rankingText === void 0) { rankingText = '定位中'; }
 	        this._lFtId = ftId;
 	        this._loadFrame(level, this.lFrame);
 	        this.lPlayerName.text = name;
@@ -7690,10 +7971,12 @@
 	            height = 0;
 	        if (!weight)
 	            weight = 0;
-	        this.lPlayerInfo.text = height + 'CM ' + weight + "KG";
+	        this.lPlayerInfo.text = height + 'CM ' + weight + "KG ";
 	        this.lPlayerInfo.x = 500 - this.lPlayerInfo.width;
+	        this.lPlayerRanking.text = rankingText;
 	        this._fixFtName(this.lFtName, Com2017_1.getFtName(ftId));
 	        this.lFtName.x = 630 - this.lFtName.width * .5;
+	        this.lPlayerRanking.x = 510 - this.lPlayerRanking.width;
 	    };
 	    Score2017.prototype._loadFrame = function (level, frame) {
 	        var _this = this;
@@ -7712,8 +7995,9 @@
 	        else
 	            frame.visible = false;
 	    };
-	    Score2017.prototype.setRightPlayerInfo = function (name, avatar, weight, height, ftId, level) {
+	    Score2017.prototype.setRightPlayerInfo = function (name, avatar, weight, height, ftId, level, rankingText) {
 	        var _this = this;
+	        if (rankingText === void 0) { rankingText = '定位中'; }
 	        this._rFtId = ftId;
 	        this._loadFrame(level, this.rFrame);
 	        this.rPlayerName.text = name;
@@ -7729,9 +8013,11 @@
 	            height = 0;
 	        if (!weight)
 	            weight = 0;
-	        this.rPlayerInfo.text = height + 'CM ' + weight + "KG";
+	        this.rPlayerInfo.text = height + 'CM ' + weight + "KG ";
 	        this._fixFtName(this.rFtName, Com2017_1.getFtName(ftId));
 	        this.rFtName.x = 1293 - this.rFtName.width * .5;
+	        this.rPlayerRanking.text = rankingText;
+	        this.rPlayerRanking.x = 1410;
 	    };
 	    Score2017.prototype.getPlayerInfo = function (isLeft) {
 	        var player = {};
@@ -7759,7 +8045,7 @@
 
 
 /***/ },
-/* 91 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7806,7 +8092,7 @@
 
 
 /***/ },
-/* 92 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7846,13 +8132,12 @@
 
 
 /***/ },
-/* 93 */
+/* 94 */
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true)\">显示总榜</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,false)\">显示本场</button>\r\n            <button class=\"button\" @click=\"onShowRanking(false)\">隐藏</button>\r\n\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ },
-/* 94 */,
 /* 95 */,
 /* 96 */,
 /* 97 */,
@@ -7863,134 +8148,64 @@
 /* 102 */,
 /* 103 */,
 /* 104 */,
-/* 105 */
+/* 105 */,
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var const_1 = __webpack_require__(43);
-	var JsFunc_1 = __webpack_require__(17);
-	var PixiEx_1 = __webpack_require__(46);
-	var Ranking = (function (_super) {
-	    __extends(Ranking, _super);
-	    function Ranking(parent) {
-	        _super.call(this);
-	        this.ctn = parent;
-	        var back = new PIXI.Graphics();
-	        back.beginFill(0, .7)
-	            .drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH * .5, const_1.ViewConst.STAGE_HEIGHT);
-	        this.addChild(back);
-	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/score2017/rankingBg.png' });
-	        bg.x = 150;
-	        this.addChild(bg);
-	        var ts = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '45px', fill: "#fff",
-	            fontWeight: 'bold'
-	        };
-	        this.titleText = new PIXI.Text('球员实力榜', ts);
-	        this.titleText.x = 236;
-	        this.titleText.y = 54;
-	        bg.addChild(this.titleText);
-	        this.playerTextArr = [];
-	        this.dtSpArr = [];
-	        this.circleSpArr = [];
-	        this.dtTextArr = [];
-	        this.avtSpArr = [];
-	        var ns = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '30px', fill: "#454545",
-	            fontWeight: 'bold'
-	        };
-	        var dts = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '35px', fill: "#f00",
-	        };
-	        for (var i = 0; i < 10; i++) {
-	            var t = new PIXI.Text('安云鹏', ns);
-	            t.x = 150;
-	            t.y = 155 + i * 92;
-	            this.playerTextArr.push(t);
-	            bg.addChild(t);
-	            var sp = new PIXI.Sprite();
-	            sp.x = 538 + 45;
-	            sp.y = t.y + 10;
-	            bg.addChild(sp);
-	            this.dtSpArr.push(sp);
-	            var dtText = new PIXI.Text('2', dts);
-	            dtText.x = 610;
-	            dtText.y = t.y + -5;
-	            bg.addChild(dtText);
-	            this.dtTextArr.push(dtText);
-	            var c = new PIXI.Graphics();
-	            c.beginFill(0xffff00)
-	                .drawCircle(34, 34, 34);
-	            c.x = 460;
-	            c.y = t.y + -15;
-	            bg.addChild(c);
-	            this.x = const_1.ViewConst.STAGE_WIDTH * .5;
-	            var avtMask = new PIXI.Graphics();
-	            avtMask.beginFill(0xff0000)
-	                .drawCircle(28, 28, 28);
-	            avtMask.x = c.x + 6;
-	            avtMask.y = c.y + 6;
-	            bg.addChild(avtMask);
-	            var avt = new PIXI.Sprite();
-	            avt.x = c.x + 6;
-	            avt.y = c.y + 6;
-	            avt.mask = avtMask;
-	            this.avtSpArr.push(avt);
-	            bg.addChild(avt);
-	        }
-	    }
-	    Ranking.prototype._fillSp = function (data) {
-	        for (var i = 0; i < 10; i++) {
-	            var dtSp = this.dtSpArr[i];
-	            dtSp.texture = this.texDown;
-	        }
-	    };
-	    Ranking.prototype.show = function (data) {
+	var HupuAPI_1 = __webpack_require__(22);
+	var RankingData = (function () {
+	    function RankingData(gameId, callback) {
 	        var _this = this;
-	        data.isTotal ?
-	            this.titleText.text = '球员实力榜'
-	            : this.titleText.text = '球员实力榜';
-	        if (!this.texDown)
-	            JsFunc_1.loadImg('/img/panel/score2017/rankingDown.png', function (img) {
-	                _this.texDown = PixiEx_1.imgToTex(img);
-	                _this._fillSp(data);
+	        this._loadCurPlayerData(gameId, function (_) {
+	            _this._loadTop10player(function (_) {
+	                callback();
 	            });
-	        else
-	            this._fillSp(data);
-	        if (!this.texUp)
-	            JsFunc_1.loadImg('/img/panel/score2017/rankingUp.png', function (img) {
-	                _this.texUp = PixiEx_1.imgToTex(img);
-	                _this._fillSp(data);
+	        });
+	    }
+	    RankingData.prototype._loadCurPlayerData = function (gameId, callback) {
+	        var _this = this;
+	        if (!this._curPlayerDataArr) {
+	            HupuAPI_1.getAllPlayer(gameId, function (res2) {
+	                console.log(res2);
+	                var playerArr = res2.data;
+	                var hupuIdArr = [];
+	                for (var i = 0; i < playerArr.length; i++) {
+	                    var obj = playerArr[i];
+	                    hupuIdArr.push(obj.player_id);
+	                }
+	                console.log('hupuIdArr', hupuIdArr);
+	                HupuAPI_1.getCurRanking(hupuIdArr, function (res) {
+	                    console.log('getCurRanking2', res);
+	                    _this._curPlayerDataArr = res.content.data.rankings;
+	                    callback();
+	                });
 	            });
-	        else
-	            this._fillSp(data);
-	        for (var i = 0; i < 10; i++) {
-	            var avtUrl = 'http://w1.hoopchina.com.cn/huputv/resource/img/amateur.jpg';
-	            this._loadAvt(this.avtSpArr[i], avtUrl);
 	        }
-	        this.ctn.addChild(this);
 	    };
-	    Ranking.prototype._loadAvt = function (avt, url) {
-	        PixiEx_1.loadRes(url, function (img) {
-	            avt.texture = PixiEx_1.imgToTex(img);
-	            var s = 56 / img.width;
-	            avt.scale.x = avt.scale.y = s;
-	        }, true);
+	    RankingData.prototype._loadTop10player = function (callback) {
+	        var _this = this;
+	        if (!this._top10playerDataArr)
+	            HupuAPI_1.getRanking(1, function (res) {
+	                console.log('get ranking', res);
+	                _this._top10playerDataArr = res.content.data.rankings;
+	                callback();
+	            });
 	    };
-	    Ranking.prototype.hide = function () {
-	        this.ctn.removeChild(this);
+	    RankingData.prototype.getPlayerData = function (hupuId) {
+	        console.log('get player Data', this._curPlayerDataArr);
+	        for (var _i = 0, _a = this._curPlayerDataArr; _i < _a.length; _i++) {
+	            var playerData = _a[_i];
+	            if (hupuId == playerData.playerName) {
+	                playerData.text = '实力榜' + playerData.sortId + "名";
+	                return playerData;
+	            }
+	        }
+	        return { sortId: -1, text: '实力榜定位中' };
 	    };
-	    return Ranking;
-	}(PIXI.Container));
-	exports.Ranking = Ranking;
+	    return RankingData;
+	}());
+	exports.RankingData = RankingData;
 
 
 /***/ }
