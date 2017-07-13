@@ -79,7 +79,7 @@ def proxy():
         for h in serverConf["resHeaders"]:
             res_headers[h] = r.headers[h]
 
-        if 'image' in res_headers["Content-Type"]:
+        if 'image' in res_headers["Content-Type"] or 'img' in res_headers["Content-Type"]:
             encoded_string = b"data:image/png;base64," + \
                 base64.b64encode(r.content)
             return encoded_string

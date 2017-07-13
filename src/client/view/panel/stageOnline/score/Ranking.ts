@@ -3,6 +3,7 @@ import { getAllPlayer, getCurRanking, getRanking, getRoundList } from '../../../
 import { loadImg, loadImgArr } from '../../../utils/JsFunc';
 import { imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
 import { proxy } from '../../../utils/WebJsFunc';
+import { RankingData } from './RankingData';
 
 export class Ranking extends PIXI.Container {
     ctn: any
@@ -23,8 +24,10 @@ export class Ranking extends PIXI.Container {
         '#6736f8']//1-10   11-30  31-100 100-300 300-
     frameArr: Array<PIXI.Graphics> = []
     //内框 颜色 身高 体重 实力榜排名
-    constructor(parent: any) {
+    rankingData: RankingData
+    constructor(parent: any, rankingData) {
         super()
+        this.rankingData = rankingData
         this.ctn = parent
         let back = new PIXI.Graphics()
         back.beginFill(0, .7)
@@ -56,8 +59,8 @@ export class Ranking extends PIXI.Container {
         let ns = {
             fontFamily: FontName.MicrosoftYahei,
             fontSize: '30px', fill: "#454545",
-            // fontWeight: 'bold'
         }
+
         let dts = {
             fontFamily: FontName.MicrosoftYahei,
             fontSize: '35px', fill: "#f00",
@@ -83,7 +86,7 @@ export class Ranking extends PIXI.Container {
             this.dtTextArr.push(dtText)
 
             let c = new PIXI.Graphics()
-            c.beginFill(0xffff00)
+            c.beginFill(0xe9591f)
                 .drawRect(0, 0, 68, 68)
             // .drawCircle(34, 34, 34)
             c.x = 460
@@ -92,10 +95,18 @@ export class Ranking extends PIXI.Container {
             bg.addChild(c)
             this.x = ViewConst.STAGE_WIDTH * .5
 
+            let avtMask = new PIXI.Graphics()
+            avtMask.beginFill(0xff0000)
+                .drawRect(0, 0, 56, 56)
+            avtMask.x = c.x + 6
+            avtMask.y = c.y + 6
+            bg.addChild(avtMask)
+            // bg.addChild(avtMask)
+
             let avt = new PIXI.Sprite()
             avt.x = c.x + 6
             avt.y = c.y + 6
-            // avt.mask = avtMask
+            avt.mask = avtMask
             this.avtSpArr.push(avt)
             bg.addChild(avt)
         }
@@ -150,10 +161,8 @@ export class Ranking extends PIXI.Container {
                 callback()
             })
         }
-        else {
+        else
             callback()
-        }
-
     }
 
     _renderData(data) {
@@ -182,13 +191,15 @@ export class Ranking extends PIXI.Container {
                     dtRanking.text = ""
                     dtRanking.style.fill = '#00ff00'
                 }
+                this._loadAvt(this.avtSpArr[i], pd.photoUrl)
+
             }
         }
         // let avtUrlArr = []
-        for (let i = 0; i < 10; i++) {
-            let avtUrl = 'http://w1.hoopchina.com.cn/huputv/resource/img/amateur.jpg'
-            this._loadAvt(this.avtSpArr[i], avtUrl)
-        }
+        // for (let i = 0; i < 10; i++) {
+        //     let avtUrl = 'http://w1.hoopchina.com.cn/huputv/resource/img/amateur.jpg'
+        //     this._loadAvt(this.avtSpArr[i], avtUrl)
+        // }
         this.ctn.addChild(this)
     }
 
@@ -196,64 +207,15 @@ export class Ranking extends PIXI.Container {
         this._loadTex(_ => {
             if (data.isTotal) {
                 this.titleText.text = '球员实力榜'
-                this._loadTop10player(data)
+                data.playerArr = this.rankingData.top10
+                this._renderData(data)
             }
             else {
                 this.titleText.text = '本场实力榜'
-                this._loadCurPlayerData(data)
+                this._renderData(data)
             }
         })
     }
-    _loadTop10player(data) {
-        if (!this._top10playerDataArr)
-            getRanking(1, res => {
-                console.log('get ranking', res);
-                this._top10playerDataArr = data.playerArr = res.content.data.rankings
-                this._renderData(data)
-            })
-        else {
-            data.playerArr = this._top10playerDataArr
-            this._renderData(data)
-        }
-    }
-    
-    _loadCurPlayerData(data) {
-        if (!this._curPlayerDataArr) {
-            let gameId = data.gameId
-            getAllPlayer(gameId, res2 => {
-                console.log(res2);
-                // var data = res2.data;
-                let playerArr = res2.data
-                let hupuIdArr = []
-                for (var i = 0; i < playerArr.length; i++) {
-                    var obj = playerArr[i];
-                    hupuIdArr.push(obj.player_id)
-                }
-                console.log('hupuIdArr', hupuIdArr);
-                getCurRanking(hupuIdArr, res => {
-                    console.log('getCurRanking2', res);
-                    this._curPlayerDataArr = res.content.data.rankings
-                    data.playerArr = this._curPlayerDataArr
-                    this._renderData(data)
-                })
-            })
-        }
-        else {
-            data.playerArr = this._curPlayerDataArr
-            this._renderData(data)
-        }
-    }
-
-    getPlayerData(hupuId) {
-        for (let playerData of this._curPlayerDataArr) {
-            if (hupuId == playerData.playName) {
-                return playerData
-            }
-        }
-        return { sortId: -1 }
-    }
-
-
 
     _texMap = {}
     _loadAvt(avt, url) {

@@ -19,16 +19,6 @@ let bracketView: BracketView
 let scoreView: ScoreView
 let lottery: Lottery
 let canvasStage
-// const opReq = (cmdId: string, param: any, callback: any) => {
-//     $.ajax({
-//         url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
-//         type: 'post',
-//         data: JSON.stringify(param),
-//         headers: { "Content-Type": "application/json" },
-//         dataType: 'json',
-//         success: callback
-//     });
-// }
 class StageOnlineView extends VueBase {
     template = require('./stage-online.html')
     basePanelArr: BasePanelView[]

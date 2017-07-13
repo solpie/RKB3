@@ -554,7 +554,7 @@
 	    _get(WebJsFunc_1.proxy(url), callback);
 	}
 	exports.getRoundRawDate = getRoundRawDate;
-	function getRanking(gameId, callback) {
+	function getRanking(callback) {
 	    var url = 'http://lrw-test5.smartcourt.cn/getRanking';
 	    var data = { page: 1, pageSize: 10 };
 	    WebJsFunc_1.$post(WebJsFunc_1.proxy(url), data, callback);
@@ -4337,7 +4337,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(94);
+	        this.template = __webpack_require__(95);
 	        this.actTab = VueBase_1.VueBase.PROP;
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
@@ -6190,8 +6190,8 @@
 	var HupuAPI_1 = __webpack_require__(22);
 	var TweenEx_1 = __webpack_require__(50);
 	var BasePanelView_1 = __webpack_require__(44);
-	var RankingData_1 = __webpack_require__(106);
-	var Score2017_1 = __webpack_require__(91);
+	var RankingData_1 = __webpack_require__(91);
+	var Score2017_1 = __webpack_require__(92);
 	var home_1 = __webpack_require__(16);
 	function logEvent() {
 	    var a = [];
@@ -6232,8 +6232,6 @@
 	        var _this = this;
 	        var setPlayer = function (leftPlayer, rightPlayer) {
 	            console.log(leftPlayer);
-	            var rankingData = _this.rankingData.getPlayerData(leftPlayer.name);
-	            console.log('rankingData', rankingData);
 	            _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level);
 	            _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level);
 	        };
@@ -6401,7 +6399,7 @@
 	                : _this.eventPanel.noticeSprite.hide();
 	        })
 	            .on("" + Command_1.CommandId.sc_showRanking, function (data) {
-	            _this.eventPanel.showRanking(data);
+	            _this.eventPanel.showRanking(data, _this.rankingData);
 	        })
 	            .on("" + Command_1.CommandId.sc_setFxPoint, function (data) {
 	            _this.eventPanel.setFxPoint(data.mx, data.my);
@@ -6798,9 +6796,9 @@
 	    Event2017.prototype.hideTopInfo = function () {
 	        this.topInfo.hide();
 	    };
-	    Event2017.prototype.showRanking = function (data) {
+	    Event2017.prototype.showRanking = function (data, rankingData) {
 	        if (!this.ranking) {
-	            this.ranking = new Ranking_1.Ranking(this);
+	            this.ranking = new Ranking_1.Ranking(this, rankingData);
 	        }
 	        data.visible ?
 	            this.ranking.show(data)
@@ -7149,12 +7147,11 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var const_1 = __webpack_require__(43);
-	var HupuAPI_1 = __webpack_require__(22);
 	var JsFunc_1 = __webpack_require__(17);
 	var PixiEx_1 = __webpack_require__(46);
 	var Ranking = (function (_super) {
 	    __extends(Ranking, _super);
-	    function Ranking(parent) {
+	    function Ranking(parent, rankingData) {
 	        _super.call(this);
 	        this.colorSeg = ['#e9591f',
 	            '#4860f6',
@@ -7164,6 +7161,7 @@
 	        this.frameArr = [];
 	        this._isLoad = false;
 	        this._texMap = {};
+	        this.rankingData = rankingData;
 	        this.ctn = parent;
 	        var back = new PIXI.Graphics();
 	        back.beginFill(0, .7)
@@ -7212,16 +7210,23 @@
 	            bg.addChild(dtText);
 	            this.dtTextArr.push(dtText);
 	            var c = new PIXI.Graphics();
-	            c.beginFill(0xffff00)
+	            c.beginFill(0xe9591f)
 	                .drawRect(0, 0, 68, 68);
 	            c.x = 460;
 	            c.y = t.y + -15;
 	            this.frameArr.push(c);
 	            bg.addChild(c);
 	            this.x = const_1.ViewConst.STAGE_WIDTH * .5;
+	            var avtMask = new PIXI.Graphics();
+	            avtMask.beginFill(0xff0000)
+	                .drawRect(0, 0, 56, 56);
+	            avtMask.x = c.x + 6;
+	            avtMask.y = c.y + 6;
+	            bg.addChild(avtMask);
 	            var avt = new PIXI.Sprite();
 	            avt.x = c.x + 6;
 	            avt.y = c.y + 6;
+	            avt.mask = avtMask;
 	            this.avtSpArr.push(avt);
 	            bg.addChild(avt);
 	        }
@@ -7272,9 +7277,8 @@
 	                callback();
 	            });
 	        }
-	        else {
+	        else
 	            callback();
-	        }
 	    };
 	    Ranking.prototype._renderData = function (data) {
 	        for (var i = 0; i < 10; i++) {
@@ -7301,11 +7305,8 @@
 	                    dtRanking.text = "";
 	                    dtRanking.style.fill = '#00ff00';
 	                }
+	                this._loadAvt(this.avtSpArr[i], pd.photoUrl);
 	            }
-	        }
-	        for (var i = 0; i < 10; i++) {
-	            var avtUrl = 'http://w1.hoopchina.com.cn/huputv/resource/img/amateur.jpg';
-	            this._loadAvt(this.avtSpArr[i], avtUrl);
 	        }
 	        this.ctn.addChild(this);
 	    };
@@ -7314,61 +7315,14 @@
 	        this._loadTex(function (_) {
 	            if (data.isTotal) {
 	                _this.titleText.text = '球员实力榜';
-	                _this._loadTop10player(data);
+	                data.playerArr = _this.rankingData.top10;
+	                _this._renderData(data);
 	            }
 	            else {
 	                _this.titleText.text = '本场实力榜';
-	                _this._loadCurPlayerData(data);
+	                _this._renderData(data);
 	            }
 	        });
-	    };
-	    Ranking.prototype._loadTop10player = function (data) {
-	        var _this = this;
-	        if (!this._top10playerDataArr)
-	            HupuAPI_1.getRanking(1, function (res) {
-	                console.log('get ranking', res);
-	                _this._top10playerDataArr = data.playerArr = res.content.data.rankings;
-	                _this._renderData(data);
-	            });
-	        else {
-	            data.playerArr = this._top10playerDataArr;
-	            this._renderData(data);
-	        }
-	    };
-	    Ranking.prototype._loadCurPlayerData = function (data) {
-	        var _this = this;
-	        if (!this._curPlayerDataArr) {
-	            var gameId = data.gameId;
-	            HupuAPI_1.getAllPlayer(gameId, function (res2) {
-	                console.log(res2);
-	                var playerArr = res2.data;
-	                var hupuIdArr = [];
-	                for (var i = 0; i < playerArr.length; i++) {
-	                    var obj = playerArr[i];
-	                    hupuIdArr.push(obj.player_id);
-	                }
-	                console.log('hupuIdArr', hupuIdArr);
-	                HupuAPI_1.getCurRanking(hupuIdArr, function (res) {
-	                    console.log('getCurRanking2', res);
-	                    _this._curPlayerDataArr = res.content.data.rankings;
-	                    data.playerArr = _this._curPlayerDataArr;
-	                    _this._renderData(data);
-	                });
-	            });
-	        }
-	        else {
-	            data.playerArr = this._curPlayerDataArr;
-	            this._renderData(data);
-	        }
-	    };
-	    Ranking.prototype.getPlayerData = function (hupuId) {
-	        for (var _i = 0, _a = this._curPlayerDataArr; _i < _a.length; _i++) {
-	            var playerData = _a[_i];
-	            if (hupuId == playerData.playName) {
-	                return playerData;
-	            }
-	        }
-	        return { sortId: -1 };
 	    };
 	    Ranking.prototype._loadAvt = function (avt, url) {
 	        var _this = this;
@@ -7625,10 +7579,89 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var HupuAPI_1 = __webpack_require__(22);
+	var RankingData = (function () {
+	    function RankingData(gameId, callback) {
+	        var _this = this;
+	        this.colorSeg = ['#e9591f',
+	            '#4860f6',
+	            '#f4cf1f',
+	            '#1ccdf3',
+	            '#6736f8'];
+	        this._loadCurPlayerData(gameId, function (_) {
+	            _this._loadTop10player(function (_) {
+	                callback();
+	            });
+	        });
+	    }
+	    RankingData.prototype._loadCurPlayerData = function (gameId, callback) {
+	        var _this = this;
+	        if (!this._curPlayerDataArr) {
+	            HupuAPI_1.getAllPlayer(gameId, function (res2) {
+	                console.log(res2);
+	                var playerArr = res2.data;
+	                var hupuIdArr = [];
+	                for (var i = 0; i < playerArr.length; i++) {
+	                    var obj = playerArr[i];
+	                    hupuIdArr.push(obj.player_id);
+	                }
+	                console.log('hupuIdArr', hupuIdArr);
+	                HupuAPI_1.getCurRanking(hupuIdArr, function (res) {
+	                    console.log('getCurRanking2', res);
+	                    _this._curPlayerDataArr = res.content.data.rankings;
+	                    callback();
+	                });
+	            });
+	        }
+	    };
+	    RankingData.prototype._loadTop10player = function (callback) {
+	        var _this = this;
+	        if (!this._top10playerDataArr)
+	            HupuAPI_1.getRanking(function (res) {
+	                console.log('Top10player', res);
+	                _this._top10playerDataArr = res.content.data.rankings;
+	                callback();
+	            });
+	    };
+	    Object.defineProperty(RankingData.prototype, "top10", {
+	        get: function () {
+	            return this._top10playerDataArr;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(RankingData.prototype, "cur10", {
+	        get: function () {
+	            return this._curPlayerDataArr;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    RankingData.prototype.getPlayerData = function (hupuId) {
+	        console.log('get player Data', this._curPlayerDataArr);
+	        for (var _i = 0, _a = this._curPlayerDataArr; _i < _a.length; _i++) {
+	            var playerData = _a[_i];
+	            if (hupuId == playerData.playerName) {
+	                playerData.text = '实力榜' + playerData.sortId + "名";
+	                return playerData;
+	            }
+	        }
+	        return { sortId: -1, text: '实力榜定位中' };
+	    };
+	    return RankingData;
+	}());
+	exports.RankingData = RankingData;
+
+
+/***/ },
+/* 92 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
 	var Com2017_1 = __webpack_require__(72);
-	var FoulText_1 = __webpack_require__(92);
+	var FoulText_1 = __webpack_require__(93);
 	var Fx_1 = __webpack_require__(56);
-	var FoulGroup_1 = __webpack_require__(93);
+	var FoulGroup_1 = __webpack_require__(94);
 	var TextTimer_1 = __webpack_require__(52);
 	var SpriteGroup_1 = __webpack_require__(55);
 	var const_1 = __webpack_require__(43);
@@ -8045,7 +8078,7 @@
 
 
 /***/ },
-/* 92 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8092,7 +8125,7 @@
 
 
 /***/ },
-/* 93 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8132,81 +8165,10 @@
 
 
 /***/ },
-/* 94 */
+/* 95 */
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true)\">显示总榜</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,false)\">显示本场</button>\r\n            <button class=\"button\" @click=\"onShowRanking(false)\">隐藏</button>\r\n\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
-
-/***/ },
-/* 95 */,
-/* 96 */,
-/* 97 */,
-/* 98 */,
-/* 99 */,
-/* 100 */,
-/* 101 */,
-/* 102 */,
-/* 103 */,
-/* 104 */,
-/* 105 */,
-/* 106 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var HupuAPI_1 = __webpack_require__(22);
-	var RankingData = (function () {
-	    function RankingData(gameId, callback) {
-	        var _this = this;
-	        this._loadCurPlayerData(gameId, function (_) {
-	            _this._loadTop10player(function (_) {
-	                callback();
-	            });
-	        });
-	    }
-	    RankingData.prototype._loadCurPlayerData = function (gameId, callback) {
-	        var _this = this;
-	        if (!this._curPlayerDataArr) {
-	            HupuAPI_1.getAllPlayer(gameId, function (res2) {
-	                console.log(res2);
-	                var playerArr = res2.data;
-	                var hupuIdArr = [];
-	                for (var i = 0; i < playerArr.length; i++) {
-	                    var obj = playerArr[i];
-	                    hupuIdArr.push(obj.player_id);
-	                }
-	                console.log('hupuIdArr', hupuIdArr);
-	                HupuAPI_1.getCurRanking(hupuIdArr, function (res) {
-	                    console.log('getCurRanking2', res);
-	                    _this._curPlayerDataArr = res.content.data.rankings;
-	                    callback();
-	                });
-	            });
-	        }
-	    };
-	    RankingData.prototype._loadTop10player = function (callback) {
-	        var _this = this;
-	        if (!this._top10playerDataArr)
-	            HupuAPI_1.getRanking(1, function (res) {
-	                console.log('get ranking', res);
-	                _this._top10playerDataArr = res.content.data.rankings;
-	                callback();
-	            });
-	    };
-	    RankingData.prototype.getPlayerData = function (hupuId) {
-	        console.log('get player Data', this._curPlayerDataArr);
-	        for (var _i = 0, _a = this._curPlayerDataArr; _i < _a.length; _i++) {
-	            var playerData = _a[_i];
-	            if (hupuId == playerData.playerName) {
-	                playerData.text = '实力榜' + playerData.sortId + "名";
-	                return playerData;
-	            }
-	        }
-	        return { sortId: -1, text: '实力榜定位中' };
-	    };
-	    return RankingData;
-	}());
-	exports.RankingData = RankingData;
-
 
 /***/ }
 /******/ ]);

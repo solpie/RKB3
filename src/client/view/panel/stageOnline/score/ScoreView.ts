@@ -83,8 +83,6 @@ export class ScoreView extends BasePanelView {
         let setPlayer = (leftPlayer, rightPlayer) => {
             console.log(leftPlayer)
             // player level 0 其他 1 至少一个胜场  2 大师赛 3冠军
-            let rankingData = this.rankingData.getPlayerData(leftPlayer.name)
-            console.log('rankingData', rankingData);
             this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level)
             this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level)
         };
@@ -259,7 +257,7 @@ export class ScoreView extends BasePanelView {
                     : this.eventPanel.noticeSprite.hide()
             })
             .on(`${CommandId.sc_showRanking}`, (data) => {
-                this.eventPanel.showRanking(data)
+                this.eventPanel.showRanking(data, this.rankingData)
             })
             //score fx
             .on(`${CommandId.sc_setFxPoint}`, (data) => {
@@ -286,8 +284,8 @@ export class ScoreView extends BasePanelView {
                 let rightRankingData = this.rankingData.getPlayerData(rightPlayer.name)
                 console.log('rankingData', leftRankingData, rightRankingData);
                 // player level 0 其他 1 至少一个胜场  2 大师赛 3冠军
-                this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level,leftRankingData.text)
-                this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level,rightRankingData.text)
+                this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level, leftRankingData.text)
+                this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level, rightRankingData.text)
             };
 
             remoteIO.on('connect', () => {

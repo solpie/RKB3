@@ -43,7 +43,7 @@ export function getRoundRawDate(gameId, callback) {
     _get(proxy(url), callback)
 }
 //实力榜
-export function getRanking(gameId, callback) {
+export function getRanking( callback) {
     let url = 'http://lrw-test5.smartcourt.cn/getRanking'
     let data = { page: 1, pageSize: 10 }
     $post(proxy(url), data, callback)

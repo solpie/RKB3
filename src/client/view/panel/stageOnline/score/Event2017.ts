@@ -300,14 +300,12 @@ export class Event2017 extends PIXI.Container {
     }
 
     ranking: Ranking
-    showRanking(data) {
+    showRanking(data, rankingData) {
         if (!this.ranking) {
-            this.ranking = new Ranking(this)
+            this.ranking = new Ranking(this, rankingData)
         }
         data.visible ?
             this.ranking.show(data)
             : this.ranking.hide()
     }
-    
-    
 }

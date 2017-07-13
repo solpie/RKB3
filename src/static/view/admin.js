@@ -1029,7 +1029,7 @@
 	    _get(WebJsFunc_1.proxy(url), callback);
 	}
 	exports.getRoundRawDate = getRoundRawDate;
-	function getRanking(gameId, callback) {
+	function getRanking(callback) {
 	    var url = 'http://lrw-test5.smartcourt.cn/getRanking';
 	    var data = { page: 1, pageSize: 10 };
 	    WebJsFunc_1.$post(WebJsFunc_1.proxy(url), data, callback);
