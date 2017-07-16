@@ -120,15 +120,15 @@ export class Ranking extends PIXI.Container {
             if (data.playerArr[i]) {
                 let pd = data.playerArr[i]
                 playerText.text = pd.playerName
-                pd.waveRanking = Number(pd.waveRanking)
-                if (pd.waveRanking < 0) {
+                pd.dtRanking = Number(pd.dtRanking)
+                if (pd.dtRanking < 0) {
                     dtSp.texture = this.texDown
-                    dtRanking.text = pd.waveRanking + ""
+                    dtRanking.text = pd.dtRanking + ""
                     dtRanking.style.fill = '#ff0000'
                 }
-                else if (pd.waveRanking > 0) {
+                else if (pd.dtRanking > 0) {
                     dtSp.texture = this.texUp
-                    dtRanking.text = pd.waveRanking + ""
+                    dtRanking.text = pd.dtRanking + ""
                     dtRanking.style.fill = '#33cf14'
                 }
                 else {
@@ -175,15 +175,15 @@ export class Ranking extends PIXI.Container {
             if (data.playerArr[i]) {
                 let pd = data.playerArr[i]
                 playerText.text = pd.playerName
-                pd.waveRanking = Number(pd.waveRanking)
-                if (pd.waveRanking < 0) {
+                pd.dtRanking = Number(pd.dtRanking)
+                if (pd.dtRanking < 0) {
                     dtSp.texture = this.texDown
-                    dtRanking.text = pd.waveRanking + ""
+                    dtRanking.text = pd.dtRanking + ""
                     dtRanking.style.fill = '#ff0000'
                 }
-                else if (pd.waveRanking > 0) {
+                else if (pd.dtRanking > 0) {
                     dtSp.texture = this.texUp
-                    dtRanking.text = pd.waveRanking + ""
+                    dtRanking.text = pd.dtRanking + ""
                     dtRanking.style.fill = '#33cf14'
                 }
                 else {

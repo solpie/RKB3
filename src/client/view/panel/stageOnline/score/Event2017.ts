@@ -213,6 +213,7 @@ export class Event2017 extends PIXI.Container {
             this.champion = new Champion()
             this.addChild(this.champion)
         }
+        console.log('champion',player);
         this.champion.setChampion(title, player.name, player.info, player.ftId)
     }
 

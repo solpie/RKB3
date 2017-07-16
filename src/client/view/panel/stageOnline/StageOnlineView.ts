@@ -49,6 +49,8 @@ class StageOnlineView extends VueBase {
     rLiveFoul = VueBase.PROP
     rLiveName = VueBase.PROP
     liveData: any
+    //实力榜
+    inputDate = VueBase.PROP
     //冠军 面板
     championTitle = VueBase.PROP
     //公告
@@ -381,6 +383,17 @@ class StageOnlineView extends VueBase {
         },
         onShowRanking(visible, isTotal?) {
             this.opReq(`${CommandId.cs_showRanking}`, { _: null, visible: visible, isTotal: isTotal, gameId: this.gameId })
+        },
+        onShowDateRanking(date) {
+            $.get('/online/ranking/top10/' + date, res => {
+                console.log('Top10player', date);
+                let playerArr: Array<any> = res.top10
+                let idx = 1
+                for (let p of playerArr) {
+                    console.log("#" + idx, "*",p.dtRanking, p.playerName);
+                    idx++
+                }
+            })
         },
         //manmual score
         onAddScore(isLeft, dtScore) {

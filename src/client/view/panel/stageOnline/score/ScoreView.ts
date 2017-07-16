@@ -184,6 +184,8 @@ export class ScoreView extends BasePanelView {
             if (delay)
                 this.delayTimeMS = Number(delay) * 1000
             console.log('/online/delay/' + this.delayTimeMS)
+            // this.initRemote()
+                // alert('rankingData')
             this.rankingData = new RankingData(this.gameId, _ => {
                 this.initRemote()
             })

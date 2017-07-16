@@ -38,8 +38,9 @@
             <!--<button class="button" @click="onClkRenderData">刷新现场数据到面板</button><br>-->
             <label class="label" style="font-size: 50px;">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>
             <label class="label">实力榜:</label><br>
+            <input class="input" type="text" style="width: 110px;" v-model="inputDate">
             <button class="button" @click="onShowRanking(true,true)">显示总榜</button>
-            <button class="button" @click="onShowRanking(true,false)">显示本场</button>
+            <button class="button" @click="onShowDateRanking(inputDate)">查询日期</button>
             <button class="button" @click="onShowRanking(false)">隐藏</button>
 
             <label class="label">比分面板:</label><br>

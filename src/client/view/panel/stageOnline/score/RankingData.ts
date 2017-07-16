@@ -10,9 +10,12 @@ export class RankingData {
     todayDate: string
     constructor(gameId, callback) {
         this.todayDate
-        let d = new Date()
-        this.todayDate = d.toLocaleFormat('%Y-%m-%d')
-        console.log('today',this.todayDate);
+        // let d = new Date()
+        this.todayDate = '2017-07-16'
+        // this.todayDate = d['toLocaleFormat']('%Y-%m-%d')
+        // alert('this.todayDate' + this.todayDate)
+
+        console.log('today', this.todayDate);
         this._loadCurPlayerData2(gameId, _ => {
             this._loadTop10player2(_ => {
                 callback()
@@ -26,14 +29,19 @@ export class RankingData {
                 console.log(res2);
                 let playerArr = res2.data
                 let hupuIdArr = []
+                let playerIdArr = []
                 for (var i = 0; i < playerArr.length; i++) {
                     var obj = playerArr[i];
                     hupuIdArr.push(obj.name)
+                    playerIdArr.push(obj.player_id)
                 }
                 console.log('hupuIdArr', hupuIdArr);
-                $post('/online/ranking/list', { date:  this.todayDate, playerNameArr: hupuIdArr }, res => {
+                $post('/online/ranking/list', { date: this.todayDate, playerIdArr: playerIdArr }, res => {
                     console.log('getCurRanking2', res);
-                    this._curPlayerDataArr = res
+                    // for (let p of res.playerArr) {
+                    //     // p.sortId = p.ranking
+                    // }
+                    this._curPlayerDataArr = res.playerArr
                     callback()
                 })
             })
@@ -43,7 +51,7 @@ export class RankingData {
     _top10playerDataArr: any
     _loadTop10player2(callback) {
         if (!this._top10playerDataArr)
-            $.get('/online/ranking/top10/' +  this.todayDate, res => {
+            $.get('/online/ranking/top10/' + this.todayDate, res => {
                 console.log('Top10player', res);
                 this._top10playerDataArr = res.top10
                 callback()
@@ -57,20 +65,22 @@ export class RankingData {
     get cur10() {
         return this._curPlayerDataArr
     }
+
     getPlayerData(hupuId) {
-        console.log('get player Data', this._curPlayerDataArr);
+        console.log('get player ranking Data', hupuId, this._curPlayerDataArr);
         for (let playerData of this._curPlayerDataArr) {
             if (hupuId == playerData.playerName) {
-                playerData.text = '实力榜' + playerData.sortId + "名"
-                if (playerData.sortId > 300)
+                console.log('find player', hupuId);
+                playerData.text = '实力榜' + playerData.ranking + "名"
+                if (playerData.ranking > 300)
                     playerData.color = this.colorSeg[4]
-                else if (playerData.sortId > 100)
+                else if (playerData.ranking > 100)
                     playerData.color = this.colorSeg[3]
-                else if (playerData.sortId > 30)
+                else if (playerData.ranking > 30)
                     playerData.color = this.colorSeg[2]
-                else if (playerData.sortId > 10)
+                else if (playerData.ranking > 10)
                     playerData.color = this.colorSeg[1]
-                else if (playerData.sortId > 0)
+                else if (playerData.ranking > 0)
                     playerData.color = this.colorSeg[0]
                 else {
                     playerData.text = "实力榜定位中"
@@ -80,6 +90,6 @@ export class RankingData {
                 return playerData
             }
         }
-        return { sortId: -1, text: '实力榜定位中' }
+        return { ranking: -1, text: '实力榜定位中' }
     }
 }

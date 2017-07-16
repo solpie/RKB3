@@ -492,12 +492,12 @@ export class ScoreM2 {
         let player: any = {}
         if (isLeft) {
             player.name = this.lPlayerName.text
-            player.info = this.lPlayerHeight.text
+            player.info = this.lPlayerHeight.text + ' CM ' + this.lPlayerWeight.text + ' KG'
             player.ftId = this._lFtId
         }
         else {
             player.name = this.rPlayerName.text
-            player.info = this.rPlayerHeight.text
+            player.info = this.rPlayerHeight.text + ' CM ' + this.rPlayerWeight.text + ' KG'
             player.ftId = this._rFtId
         }
         return player

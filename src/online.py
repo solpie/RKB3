@@ -25,16 +25,17 @@ class rankingData(object):
         self.db = BaseDB('./db/rankingData.db')
 rd = rankingData()
 
-from rankingData import getTop10, getPlayerArrByPlayerName
+from rankingData import getTop10, getPlayerArrByPlayerId,getPlayerArrByPlayerName
 
 
 @onlineView.route('/ranking/list', methods=["POST"])
 def getPlayerArr():
     req = request.json
     date =req['date']
-    playerNameArr =req['playerNameArr']
-    print('date', date, playerNameArr)
-    playerArr = getPlayerArrByPlayerName(date, playerNameArr)
+    # playerNameArr =req['playerNameArr']
+    playerIdArr = req['playerIdArr']
+    print('date', date)
+    playerArr = getPlayerArrByPlayerId(date, playerIdArr)
     return jsonify({'date': date, 'playerArr': playerArr})
 
 

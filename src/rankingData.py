@@ -77,6 +77,17 @@ def getPlayerArrByPlayerName(dateStr,playerNameArr):
                     a.append(p)
     return a
 
+def getPlayerArrByPlayerId(dateStr,playerNameArr):
+    doc = rd.db.find({'date': dateStr})
+    a = []
+    if len(doc) > 0:
+        playerArr = playerFilter(doc[0]['raw'])
+        for pQuery in playerNameArr:
+            for p in playerArr:
+                if str(p['userId']) == str(pQuery):
+                    a.append(p)
+    return a
+
 def getTop10(dateStr=None):
     if dateStr:
         today = datetime.datetime.strptime(dateStr, "%Y-%m-%d").date()
