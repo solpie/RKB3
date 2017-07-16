@@ -580,7 +580,7 @@
 	            _this.gameDataArr = [];
 	            for (var i = 0; i < gameDataArr.length; i++) {
 	                var gameData = gameDataArr[gameDataArr.length - 1 - i];
-	                if (Number(gameData.id) > 400) {
+	                if (Number(gameData.id) > 370) {
 	                    gameData.text = "[" + gameData.id + "]:" + gameData.title;
 	                    gameData.value = gameData.id;
 	                    _this.gameDataArr.push(gameData);
@@ -1030,13 +1030,13 @@
 	}
 	exports.getRoundRawDate = getRoundRawDate;
 	function getRanking(callback) {
-	    var url = 'http://lrw-test5.smartcourt.cn/getRanking';
-	    var data = { page: 1, pageSize: 10 };
+	    var url = 'http://lrw.smartcourt.cn/getRanking';
+	    var data = { page: 1, pageSize: 100 };
 	    WebJsFunc_1.$post(WebJsFunc_1.proxy(url), data, callback);
 	}
 	exports.getRanking = getRanking;
 	function getCurRanking(hupuIdArr, callback) {
-	    var url = 'http://lrw-test5.smartcourt.cn/queryUsersRanking';
+	    var url = 'http://lrw.smartcourt.cn/queryUsersRanking';
 	    var data = hupuIdArr;
 	    WebJsFunc_1.$post(WebJsFunc_1.proxy(url), data, callback);
 	}

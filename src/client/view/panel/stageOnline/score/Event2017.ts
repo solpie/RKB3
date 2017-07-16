@@ -1,19 +1,19 @@
+import { FontName, ViewConst } from '../../../const';
 import { cnWrap, loadImg } from '../../../utils/JsFunc';
 import { imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
-import { ScaleSprite } from '../../../utils/ScaleSprite';
 import { TweenEx } from '../../../utils/TweenEx';
-import { proxy } from '../../../utils/WebJsFunc';
 import { fitWidth } from '../bracket/BracketGroup';
 import { Champion } from './Champion';
 import { getFtLogoUrl2, getFtName } from './Com2017';
+import { Group } from './Group';
 import { LogoFx } from './LogoFx';
 import { NoticeSprite } from './NoticeSprite';
 import { Ranking } from './Ranking';
 import { ScoreFx } from './ScoreFx';
 import { TopInfo } from './TopInfo';
-import { Victory2 } from './Victory2';
-import { FontName, ViewConst } from '../../../const';
-import { Group } from "./Group";
+import { VictoryM2 } from './VictoryM2';
+import { Victory2 } from "./Victory2";
+
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
     pName: PIXI.Text
@@ -222,11 +222,11 @@ export class Event2017 extends PIXI.Container {
         this.addChild(this.logoFx)
     }
 
-    victory2: Victory2
-    showWin2(player) {
-        this.victory2 = new Victory2()
-        this.addChild(this.victory2)
-    }
+    // victory2: Victory2
+    // showWin2(player) {
+    //     this.victory2 = new Victory2()
+    //     this.addChild(this.victory2)
+    // }
 
     // fxX: number
     // fxY: number
@@ -307,5 +307,21 @@ export class Event2017 extends PIXI.Container {
         data.visible ?
             this.ranking.show(data)
             : this.ranking.hide()
+    }
+
+    victoryM2: VictoryM2
+    showVictory(data) {
+        if (!this.victoryM2) {
+            this.victoryM2 = new VictoryM2()
+            this.victoryM2.create(this)
+        }
+        let d: any = {}
+        for (let k in data) {
+            d['k'] = data['k']
+        }
+        console.log(data)
+        d.rec = { win: data.winAmount, lose: data.loseAmount }
+        d.winner = data
+        this.victoryM2.show(d)
     }
 }

@@ -1,5 +1,6 @@
 import { loadImg } from "./JsFunc";
 import { proxy } from "./WebJsFunc";
+import { ViewConst } from "../const";
 export function imgToTex(img): PIXI.Texture {
     return new PIXI.Texture(new PIXI.BaseTexture(img))
 }
@@ -213,4 +214,15 @@ export let setPivot = (obj, x, y) => {
 export let PIXI_MOUSE_EVENT = {
     mousedown: 'mousedown',
     click: 'click',
+}
+
+export const newModal = (alpha = 0.8, width?, height?) => {
+    if (!width)
+        width = ViewConst.STAGE_WIDTH
+    if (!height)
+        height = ViewConst.STAGE_HEIGHT
+    let m = new PIXI.Graphics()
+    m.drawRect(0, 0, width, height)
+        .alpha = alpha
+    return m
 }

@@ -44,13 +44,13 @@ export function getRoundRawDate(gameId, callback) {
 }
 //实力榜
 export function getRanking( callback) {
-    let url = 'http://lrw-test5.smartcourt.cn/getRanking'
-    let data = { page: 1, pageSize: 10 }
+    let url = 'http://lrw.smartcourt.cn/getRanking'
+    let data = { page: 1, pageSize: 100 }
     $post(proxy(url), data, callback)
 }
 
 export function getCurRanking(hupuIdArr, callback) {
-    let url = 'http://lrw-test5.smartcourt.cn/queryUsersRanking'
+    let url = 'http://lrw.smartcourt.cn/queryUsersRanking'
     let data = hupuIdArr
     // let data = { userids: hupuIdArr }
     $post(proxy(url), data, callback)

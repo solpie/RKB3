@@ -70,10 +70,9 @@ def proxy():
     url = ""
     if request.method == "GET":
         url = request.args.get('url', '')
+        print('proxy get ',url)
         r = requests.get(url, headers=req_headers)
         res = make_response(r.content)
-    # if request.method == "POST":
-    #     r = requests.post(url, headers=req_headers)
 
         res_headers = dict()
         for h in serverConf["resHeaders"]:
@@ -85,22 +84,19 @@ def proxy():
             return encoded_string
 
         res.headers = res_headers
+        r.close()
         return res
 
     if request.method == "POST":
         url = request.values.get("url")
-        dat = dict()
-        # for k in request.json:
-        #     dat[k] = request.json[k]
-        #     print(k)
-
-        print(request.json, dat)
+        print(request.json)
         r = requests.post(url, json=request.json, headers={
-                          'Content-type': 'application/json'})
+                        'Content-type': 'application/json'})
         if r.headers['Content-Type'].find('json') > -1:
             c = r.json()
         else:
             c = r.text
+        r.close()
         return jsonify({'Content-Type': r.headers['Content-Type'], 'content': c})
 # auto git pull
 import os
@@ -117,17 +113,14 @@ def git(param):
 
 # panel router
 
-from game import actModel
-
-
 @app.route('/panel/online/<cmd>', methods=['POST'])
 def on_panel_cmd(cmd):
     print(cmd, request.json)
     if '_' in request.json:
         emit(cmd.replace('cs_', 'sc_'), request.json,
              broadcast=True, namespace=namespace_rkb)
-    else:
-        actModel.onCmd(cmd, request.json)
+    # else:
+    #     actModel.onCmd(cmd, request.json)
     return 'ok'
 
 namespace_rkb = '/rkb'
@@ -142,10 +135,6 @@ def client_connect():
 def test_disconnect():
     print('Client disconnected', request.sid)
 
-# gameView
-from game import gameView
-
-app.register_blueprint(gameView, url_prefix='/game')
 # onlineView
 from online import onlineView
 app.register_blueprint(onlineView, url_prefix='/online')

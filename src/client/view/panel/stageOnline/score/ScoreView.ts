@@ -1,7 +1,9 @@
 import { WebDBCmd } from '../../../WebDBCmd';
 import { encode } from 'punycode';
+import { isBoolean } from 'util';
 import { Event2017 } from './Event2017';
 import { PlayerInfo } from '../../../../model/PlayerInfo';
+import { getScorePanelUrl } from '../../../admin/home/home';
 import { CommandId } from '../../../Command';
 import { PanelId, TimerState } from '../../../const';
 import { getHupuWS } from '../../../utils/HupuAPI';
@@ -9,8 +11,8 @@ import { TweenEx } from '../../../utils/TweenEx';
 import { BasePanelView } from '../../BasePanelView';
 import { RankingData } from './RankingData';
 import { Score2017 } from './Score2017';
+import { ScoreM2 } from './ScoreM2';
 import { ScorePanel2 } from './ScorePanel2';
-import { getScorePanelUrl } from "../../../admin/home/home";
 // import { initIO } from '../../../../router/PanelRouter';
 declare let io;
 declare let $;
@@ -20,7 +22,7 @@ function logEvent(...a) {
     console.info(t, a)
 }
 export class ScoreView extends BasePanelView {
-    scorePanel: Score2017
+    scorePanel: any
     eventPanel: Event2017
     rankingData: RankingData
 
@@ -29,7 +31,7 @@ export class ScoreView extends BasePanelView {
     gameId: any
     isTest = false
     $route: any
-
+    isM2: Boolean
 
     constructor(stage: PIXI.Container, $route) {
         super(PanelId.onlinePanel)
@@ -41,8 +43,12 @@ export class ScoreView extends BasePanelView {
 
         this.isTest = $route.query.test == "1"
         let isManmual = $route.query.m == '1'
-
-        this.scorePanel = new Score2017(stage, darkTheme)
+        let m2 = $route.query.m2 == '1'
+        this.isM2 = m2
+        if (m2)
+            this.scorePanel = new ScoreM2(stage, darkTheme)
+        else
+            this.scorePanel = new Score2017(stage, darkTheme)
         this.eventPanel = new Event2017(stage, darkTheme)
 
         console.log('new ScoreView')
@@ -119,7 +125,6 @@ export class ScoreView extends BasePanelView {
                     this.scorePanel.setLeftFoul(data.leftFoul);
                     this.scorePanel.setRightFoul(data.rightFoul);
                 }
-
 
                 data.delayTimeMS = this.delayTimeMS
 
@@ -284,12 +289,12 @@ export class ScoreView extends BasePanelView {
                 let rightRankingData = this.rankingData.getPlayerData(rightPlayer.name)
                 console.log('rankingData', leftRankingData, rightRankingData);
                 // player level 0 其他 1 至少一个胜场  2 大师赛 3冠军
-                this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level, leftRankingData.text)
-                this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level, rightRankingData.text)
+                this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level, leftRankingData)
+                this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level, rightRankingData)
             };
 
             remoteIO.on('connect', () => {
-                console.log('hupuAuto socket connected', hupuWsUrl);
+                console.log('hupuAuto socket connected', hupuWsUrl, this.gameId);
                 remoteIO.emit('passerbyking', {
                     game_id: this.gameId,
                     page: 'score'
@@ -393,8 +398,10 @@ export class ScoreView extends BasePanelView {
                     console.log('commitGame', data)
                     logEvent('commitGame', data)
                     let player = data.player
-
-                    this.eventPanel.showWin(player)
+                    if (this.isM2)
+                        this.eventPanel.showVictory(player)
+                    else
+                        this.eventPanel.showWin(player)
                     this.scorePanel.toggleTimer(TimerState.PAUSE);
                 };
                 if (eventMap[event]) {

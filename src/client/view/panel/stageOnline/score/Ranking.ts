@@ -74,13 +74,13 @@ export class Ranking extends PIXI.Container {
             bg.addChild(t)
 
             let sp = new PIXI.Sprite()
-            sp.x = 538 + 45
+            sp.x = 538 + 15
             sp.y = t.y + 10
             bg.addChild(sp)
             this.dtSpArr.push(sp)
 
             let dtText = new PIXI.Text('2', dts)
-            dtText.x = 610
+            dtText.x = 610 - 30
             dtText.y = t.y + -5
             bg.addChild(dtText)
             this.dtTextArr.push(dtText)
@@ -129,12 +129,12 @@ export class Ranking extends PIXI.Container {
                 else if (pd.waveRanking > 0) {
                     dtSp.texture = this.texUp
                     dtRanking.text = pd.waveRanking + ""
-                    dtRanking.style.fill = '#00ff00'
+                    dtRanking.style.fill = '#33cf14'
                 }
                 else {
                     dtSp.texture = this.texFlat
                     dtRanking.text = ""
-                    dtRanking.style.fill = '#00ff00'
+                    dtRanking.style.fill = '#33cf14'
                 }
             }
         }
@@ -184,22 +184,17 @@ export class Ranking extends PIXI.Container {
                 else if (pd.waveRanking > 0) {
                     dtSp.texture = this.texUp
                     dtRanking.text = pd.waveRanking + ""
-                    dtRanking.style.fill = '#00ff00'
+                    dtRanking.style.fill = '#33cf14'
                 }
                 else {
                     dtSp.texture = this.texFlat
                     dtRanking.text = ""
-                    dtRanking.style.fill = '#00ff00'
+                    dtRanking.style.fill = '#33cf14'
                 }
                 this._loadAvt(this.avtSpArr[i], pd.photoUrl)
 
             }
         }
-        // let avtUrlArr = []
-        // for (let i = 0; i < 10; i++) {
-        //     let avtUrl = 'http://w1.hoopchina.com.cn/huputv/resource/img/amateur.jpg'
-        //     this._loadAvt(this.avtSpArr[i], avtUrl)
-        // }
         this.ctn.addChild(this)
     }
 
@@ -212,6 +207,7 @@ export class Ranking extends PIXI.Container {
             }
             else {
                 this.titleText.text = '本场实力榜'
+                data.playerArr = this.rankingData.cur10
                 this._renderData(data)
             }
         })

@@ -88,6 +88,9 @@ export class Score2017 {
 
     _tex = {}
     ctn: PIXI.DisplayObject
+
+    lRankingFrame: PIXI.Graphics
+    rRankingFrame: PIXI.Graphics
     constructor(stage: PIXI.Container, isDark = false) {
         this.stage = stage
         if (isDark)
@@ -250,18 +253,35 @@ export class Score2017 {
 
         let lm = new PIXI.Graphics()
             .beginFill(0xff0000)
-        polygon(lm, 63, 6)
+        polygon(lm, 58, 6)
         lm.x = 628
         lm.y = 193
-        ctn.addChild(lm)
 
         let rm = new PIXI.Graphics()
             .beginFill(0xff0000)
-        polygon(rm, 63, 6)
+        polygon(rm, 58, 6)
         rm.x = 1294
         rm.y = lm.y
-        ctn.addChild(rm)
 
+
+        let lRankingFrame = new PIXI.Graphics()
+            .beginFill(0xff0000)
+        polygon(lRankingFrame, 63, 6)
+        lRankingFrame.x = 628
+        lRankingFrame.y = 193
+        ctn.addChild(lRankingFrame)
+
+        let rRankingFrame = new PIXI.Graphics()
+            .beginFill(0xff0000)
+        polygon(rRankingFrame, 63, 6)
+        rRankingFrame.x = 1294
+        rRankingFrame.y = lRankingFrame.y
+        ctn.addChild(rRankingFrame)
+        lRankingFrame.alpha = rRankingFrame.alpha = 0
+        this.lRankingFrame = lRankingFrame
+        this.rRankingFrame = rRankingFrame
+        ctn.addChild(rm)
+        ctn.addChild(lm)
         let la = new PIXI.Sprite()
         la.x = lm.x
         la.y = lm.y
@@ -418,7 +438,7 @@ export class Score2017 {
         label.y = 280 - label.height * .5
     }
     //player
-    setLeftPlayerInfo(name: string, avatar: string, weight, height, ftId: string, level: Number, rankingText: string = '定位中') {
+    setLeftPlayerInfo(name: string, avatar: string, weight, height, ftId: string, level: Number, rankingData?: any) {
         this._lFtId = ftId
         this._loadFrame(level, this.lFrame)
         //cm kg
@@ -441,7 +461,18 @@ export class Score2017 {
             weight = 0
         this.lPlayerInfo.text = height + 'CM ' + weight + "KG "
         this.lPlayerInfo.x = 500 - this.lPlayerInfo.width
-        this.lPlayerRanking.text = rankingText
+
+        if (rankingData) {
+            this.lPlayerRanking.text = rankingData.text
+            if (rankingData.color) {
+                this.lRankingFrame.beginFill(rankingData.color)
+                polygon(this.lRankingFrame, 63, 6)
+                this.lRankingFrame.alpha = 1
+            }
+            else
+                this.lRankingFrame.alpha = 0
+        }
+
         // this.lFtName.text = ft
         this._fixFtName(this.lFtName, getFtName(ftId))
         this.lFtName.x = 630 - this.lFtName.width * .5
@@ -464,7 +495,7 @@ export class Score2017 {
         else
             frame.visible = false
     }
-    setRightPlayerInfo(name: string, avatar: string, weight, height, ftId: string, level: Number, rankingText: string = '定位中') {
+    setRightPlayerInfo(name: string, avatar: string, weight, height, ftId: string, level: Number, rankingData?: any) {
         this._rFtId = ftId
         this._loadFrame(level, this.rFrame)
 
@@ -487,8 +518,18 @@ export class Score2017 {
         // this.rFtName.text = ft
         this._fixFtName(this.rFtName, getFtName(ftId))
         this.rFtName.x = 1293 - this.rFtName.width * .5
-        this.rPlayerRanking.text = rankingText
         this.rPlayerRanking.x = 1410
+
+        if (rankingData) {
+            this.rPlayerRanking.text = rankingData.text
+            if (rankingData.color) {
+                this.rRankingFrame.beginFill(rankingData.color)
+                polygon(this.rRankingFrame, 63, 6)
+                this.rRankingFrame.alpha = 1
+            }
+            else
+                this.rRankingFrame.alpha = 0
+        }
     }
     getPlayerInfo(isLeft) {
         let player: any = {}
