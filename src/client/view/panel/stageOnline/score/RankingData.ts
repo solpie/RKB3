@@ -1,3 +1,4 @@
+import { paddy } from '../../../utils/JsFunc';
 import { getAllPlayer, getCurRanking, getRanking } from "../../../utils/HupuAPI";
 import { $post } from "../../../utils/WebJsFunc";
 declare let $
@@ -8,10 +9,14 @@ export class RankingData {
         0x1ccdf3,
         0x6736f8]//1-10   11-30  31-100 101-300 301-
     todayDate: string
+    get todayStr() {
+        let d = new Date()
+        let s = d.getFullYear() + "-" + paddy(d.getMonth() + 1, 2) + "-" + paddy(d.getDate(), 2)
+        return s
+    }
     constructor(gameId, callback) {
-        this.todayDate
         // let d = new Date()
-        this.todayDate = '2017-07-16'
+        this.todayDate = this.todayStr
         // this.todayDate = d['toLocaleFormat']('%Y-%m-%d')
         // alert('this.todayDate' + this.todayDate)
 
@@ -66,11 +71,11 @@ export class RankingData {
         return this._curPlayerDataArr
     }
 
-    getPlayerData(hupuId) {
-        console.log('get player ranking Data', hupuId, this._curPlayerDataArr);
+    getPlayerData(playerId) {
+        console.log('get cur player ranking Data', playerId, this._curPlayerDataArr);
         for (let playerData of this._curPlayerDataArr) {
-            if (hupuId == playerData.playerName) {
-                console.log('find player', hupuId);
+            if (playerId == playerData.userId) {
+                console.log('find player', playerData.playerName, playerId);
                 playerData.text = '实力榜' + playerData.ranking + "名"
                 if (playerData.ranking > 300)
                     playerData.color = this.colorSeg[4]
@@ -86,7 +91,6 @@ export class RankingData {
                     playerData.text = "实力榜定位中"
                     playerData.color = this.colorSeg[4]
                 }
-
                 return playerData
             }
         }

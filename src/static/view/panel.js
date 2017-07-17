@@ -4499,13 +4499,25 @@
 	            onShowRanking: function (visible, isTotal) {
 	                this.opReq("" + Command_1.CommandId.cs_showRanking, { _: null, visible: visible, isTotal: isTotal, gameId: this.gameId });
 	            },
+	            onShowPlayerRanking: function (playerId) {
+	                $.get('/online/ranking/top10/' + playerId, function (res) {
+	                    console.log('Top10player', playerId);
+	                    var playerArr = res.top10;
+	                    var idx = 1;
+	                    for (var _i = 0, playerArr_1 = playerArr; _i < playerArr_1.length; _i++) {
+	                        var p = playerArr_1[_i];
+	                        console.log("#" + idx, "*", p.dtRanking, p.playerName);
+	                        idx++;
+	                    }
+	                });
+	            },
 	            onShowDateRanking: function (date) {
 	                $.get('/online/ranking/top10/' + date, function (res) {
 	                    console.log('Top10player', date);
 	                    var playerArr = res.top10;
 	                    var idx = 1;
-	                    for (var _i = 0, playerArr_1 = playerArr; _i < playerArr_1.length; _i++) {
-	                        var p = playerArr_1[_i];
+	                    for (var _i = 0, playerArr_2 = playerArr; _i < playerArr_2.length; _i++) {
+	                        var p = playerArr_2[_i];
 	                        console.log("#" + idx, "*", p.dtRanking, p.playerName);
 	                        idx++;
 	                    }
@@ -6208,7 +6220,6 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var WebDBCmd_1 = __webpack_require__(70);
 	var Event2017_1 = __webpack_require__(81);
 	var home_1 = __webpack_require__(16);
 	var Command_1 = __webpack_require__(61);
@@ -6260,93 +6271,6 @@
 	        this.initLocal();
 	    }
 	    ScoreView.prototype.initManmual = function () {
-	        var _this = this;
-	        var setPlayer = function (leftPlayer, rightPlayer) {
-	            console.log(leftPlayer);
-	            _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level);
-	            _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level);
-	        };
-	        var srvIO = io.connect('/webDB')
-	            .on('connect', function () {
-	            console.log('connect manmaul!');
-	            var url = "/db/cmd/" + WebDBCmd_1.WebDBCmd.cs_panelCreated;
-	            var param = { _: null };
-	            $.ajax({
-	                url: url,
-	                type: 'post',
-	                data: JSON.stringify(param),
-	                headers: { "Content-Type": "application/json" },
-	                dataType: 'json'
-	            });
-	        })
-	            .on("" + WebDBCmd_1.WebDBCmd.sc_init, function (data) {
-	            console.log('init', data);
-	            logEvent('init', data);
-	            _this.scorePanel.set35ScoreLight(data.winScore);
-	            _this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
-	            if (data.player) {
-	                setPlayer(data.player.left, data.player.right);
-	                _this.scorePanel.setLeftScore(data.player.left.leftScore);
-	                _this.scorePanel.setRightScore(data.player.right.rightScore);
-	                _this.scorePanel.setLeftFoul(data.player.left.leftFoul);
-	                _this.scorePanel.setRightFoul(data.player.right.rightFoul);
-	            }
-	            else {
-	                setPlayer(data.leftPlayer, data.rightPlayer);
-	                _this.scorePanel.setLeftScore(data.leftScore);
-	                _this.scorePanel.setRightScore(data.rightScore);
-	                _this.scorePanel.setLeftFoul(data.leftFoul);
-	                _this.scorePanel.setRightFoul(data.rightFoul);
-	            }
-	            data.delayTimeMS = _this.delayTimeMS;
-	            var gameStatus = Number(data.status);
-	            if (data.status == 0) {
-	                var gameTime = Math.floor(data.t / 1000 - Number(data.st));
-	                _this.scorePanel.setTimer(gameTime);
-	                _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
-	            }
-	            else if (data.status == 2) {
-	                _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
-	                _this.scorePanel.resetTimer();
-	            }
-	        })
-	            .on("" + WebDBCmd_1.WebDBCmd.sc_startGame, function (data) {
-	        })
-	            .on("" + WebDBCmd_1.WebDBCmd.sc_startTimer, function (data) {
-	            if (data.isStart)
-	                _this.scorePanel.toggleTimer(const_1.TimerState.RUNNING);
-	            else
-	                _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
-	        })
-	            .on("" + WebDBCmd_1.WebDBCmd.sc_commit, function (data) {
-	            console.log('commitGame', data);
-	            var player = data.player;
-	            _this.eventPanel.showWin(player);
-	            _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
-	            _this.scorePanel.resetTimer();
-	        })
-	            .on("" + WebDBCmd_1.WebDBCmd.sc_score, function (data) {
-	            console.log('sc_score', data);
-	            if (data.leftScore != null) {
-	                _this.scorePanel.setLeftScore(data.leftScore);
-	            }
-	            if (data.rightScore != null) {
-	                _this.scorePanel.setRightScore(data.rightScore);
-	            }
-	            if (data.rightFoul != null) {
-	                _this.scorePanel.setRightFoul(data.rightFoul);
-	            }
-	            if (data.leftFoul != null) {
-	                _this.scorePanel.setLeftFoul(data.leftFoul);
-	            }
-	        })
-	            .on("" + WebDBCmd_1.WebDBCmd.sc_showProgress, function (data) {
-	            console.log('show group ', data);
-	            _this.eventPanel.showGroup(data);
-	        })
-	            .on("" + WebDBCmd_1.WebDBCmd.sc_hideProgress, function (data) {
-	            _this.eventPanel.hideGroup();
-	        });
 	    };
 	    ScoreView.prototype.initDelay = function () {
 	        var _this = this;
@@ -6451,8 +6375,8 @@
 	            var remoteIO = io.connect(hupuWsUrl);
 	            var setPlayer = function (leftPlayer, rightPlayer) {
 	                console.log(leftPlayer);
-	                var leftRankingData = _this.rankingData.getPlayerData(leftPlayer.name);
-	                var rightRankingData = _this.rankingData.getPlayerData(rightPlayer.name);
+	                var leftRankingData = _this.rankingData.getPlayerData(leftPlayer.player_id);
+	                var rightRankingData = _this.rankingData.getPlayerData(rightPlayer.player_id);
 	                console.log('rankingData', leftRankingData, rightRankingData);
 	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level, leftRankingData);
 	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level, rightRankingData);
@@ -7762,6 +7686,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var JsFunc_1 = __webpack_require__(17);
 	var HupuAPI_1 = __webpack_require__(22);
 	var WebJsFunc_1 = __webpack_require__(23);
 	var RankingData = (function () {
@@ -7772,8 +7697,7 @@
 	            0xf4cf1f,
 	            0x1ccdf3,
 	            0x6736f8];
-	        this.todayDate;
-	        this.todayDate = '2017-07-16';
+	        this.todayDate = this.todayStr;
 	        console.log('today', this.todayDate);
 	        this._loadCurPlayerData2(gameId, function (_) {
 	            _this._loadTop10player2(function (_) {
@@ -7781,6 +7705,15 @@
 	            });
 	        });
 	    }
+	    Object.defineProperty(RankingData.prototype, "todayStr", {
+	        get: function () {
+	            var d = new Date();
+	            var s = d.getFullYear() + "-" + JsFunc_1.paddy(d.getMonth() + 1, 2) + "-" + JsFunc_1.paddy(d.getDate(), 2);
+	            return s;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
 	    RankingData.prototype._loadCurPlayerData2 = function (gameId, callback) {
 	        var _this = this;
 	        if (!this._curPlayerDataArr) {
@@ -7826,12 +7759,12 @@
 	        enumerable: true,
 	        configurable: true
 	    });
-	    RankingData.prototype.getPlayerData = function (hupuId) {
-	        console.log('get player ranking Data', hupuId, this._curPlayerDataArr);
+	    RankingData.prototype.getPlayerData = function (playerId) {
+	        console.log('get cur player ranking Data', playerId, this._curPlayerDataArr);
 	        for (var _i = 0, _a = this._curPlayerDataArr; _i < _a.length; _i++) {
 	            var playerData = _a[_i];
-	            if (hupuId == playerData.playerName) {
-	                console.log('find player', hupuId);
+	            if (playerId == playerData.userId) {
+	                console.log('find player', playerData.playerName, playerId);
 	                playerData.text = '实力榜' + playerData.ranking + "名";
 	                if (playerData.ranking > 300)
 	                    playerData.color = this.colorSeg[4];
@@ -8840,7 +8773,7 @@
 /* 98 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">实力榜:</label><br>\r\n            <input class=\"input\" type=\"text\" style=\"width: 110px;\" v-model=\"inputDate\">\r\n            <button class=\"button\" @click=\"onShowRanking(true,true)\">显示总榜</button>\r\n            <button class=\"button\" @click=\"onShowDateRanking(inputDate)\">查询日期</button>\r\n            <button class=\"button\" @click=\"onShowRanking(false)\">隐藏</button>\r\n\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">实力榜:</label><br>\r\n            <input class=\"input\" type=\"text\" style=\"width: 110px;\" v-model=\"inputDate\">\r\n            <button class=\"button\" @click=\"onShowRanking(true,true)\">显示总榜</button>\r\n            <button class=\"button\" @click=\"onShowDateRanking(inputDate)\">查询日期</button>\r\n            <button class=\"button\" @click=\"onShowPlayerRanking(inputDate)\">查询PlayerId</button>\r\n            <button class=\"button\" @click=\"onShowRanking(false)\">隐藏</button>\r\n\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ }
 /******/ ]);

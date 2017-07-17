@@ -3,6 +3,7 @@ from jsonDB import BaseDB
 
 
 class rankingData(object):
+
     def __init__(self):
         self.db = BaseDB('./db/rankingData.db')
 rd = rankingData()
@@ -67,7 +68,8 @@ def playerFilter(playerArr):
     print('min', minSortId, 'max', maxSortId)
     return playerArrFilter
 
-def getPlayerArrByPlayerName(dateStr,playerNameArr):
+
+def getPlayerArrByPlayerName(dateStr, playerNameArr):
     doc = rd.db.find({'date': dateStr})
     a = []
     if len(doc) > 0:
@@ -77,7 +79,8 @@ def getPlayerArrByPlayerName(dateStr,playerNameArr):
                     a.append(p)
     return a
 
-def getPlayerArrByPlayerId(dateStr,playerNameArr):
+
+def getPlayerArrByPlayerId(dateStr, playerNameArr):
     doc = rd.db.find({'date': dateStr})
     a = []
     if len(doc) > 0:
@@ -87,6 +90,7 @@ def getPlayerArrByPlayerId(dateStr,playerNameArr):
                 if str(p['userId']) == str(pQuery):
                     a.append(p)
     return a
+
 
 def getTop10(dateStr=None):
     if dateStr:
@@ -101,6 +105,8 @@ def getTop10(dateStr=None):
     doc = rd.db.find({'date': dateIdx})
     if len(doc) > 0:
         todayRes = doc[0]['raw']
+    else:
+        todayRes = getFullRanking(dateStr)
     # else:
     # todayRes = getFullRanking(dateIdx)
     count = len(todayRes)
@@ -113,10 +119,26 @@ def getTop10(dateStr=None):
     for p in top10:
         for py in yesterdayRanking:
             if p['playerName'] == py['playerName']:
-                print(p['ranking'], py['ranking'], py['playerName'])
+                print(p['ranking'], py['ranking'],
+                      py['playerName'], py['userId'])
                 p['dtRanking'] = py['ranking'] - p['ranking']
     # print(len(yesterdayRes))
     return top10
+
+
+def getRankingHistory(playerId, fromDate, pre):
+    fd = datetime.datetime.strptime(fromDate, "%Y-%m-%d").date()
+    for i in range(0, pre):
+        pd = fd - datetime.timedelta(pre - i - 1)
+        pdStr = pd.strftime("%Y-%m-%d")
+        doc = rd.db.find({'date': pdStr})
+        # print(pdStr)
+        if len(doc) > 0:
+            playerArr = doc[0]['raw']
+            for p in playerArr:
+                if str(p['userId']) == str(playerId):
+                    print(pdStr, p['playerName'],'playCount:',p['playCount'],'sortId', p['sortId'])
+                    break
 
 
 def downloadAll():
@@ -134,10 +156,11 @@ if __name__ == '__main__':
     # start 7 10
     # updateRanking('2017-07-14')
     # getTop10('2017-07-10')
-    getTop10('2017-07-11')
-    getTop10('2017-07-12')
-    getTop10('2017-07-13')
-    getTop10('2017-07-14')
-    getTop10('2017-07-15')
-    getTop10('2017-07-16')
+    # getTop10('2017-07-11')
+    # getTop10('2017-07-12')
+    # getTop10('2017-07-13')
+    # getTop10('2017-07-14')
+    # getTop10('2017-07-15')
+    # getTop10('2017-07-16')
+    getRankingHistory(564, '2017-07-17', 3)
     # downloadAll()

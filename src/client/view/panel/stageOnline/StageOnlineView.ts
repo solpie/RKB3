@@ -384,13 +384,24 @@ class StageOnlineView extends VueBase {
         onShowRanking(visible, isTotal?) {
             this.opReq(`${CommandId.cs_showRanking}`, { _: null, visible: visible, isTotal: isTotal, gameId: this.gameId })
         },
+        onShowPlayerRanking(playerId) {
+            $.get('/online/ranking/top10/' + playerId, res => {
+                console.log('Top10player', playerId);
+                let playerArr: Array<any> = res.top10
+                let idx = 1
+                for (let p of playerArr) {
+                    console.log("#" + idx, "*", p.dtRanking, p.playerName);
+                    idx++
+                }
+            })
+        },
         onShowDateRanking(date) {
             $.get('/online/ranking/top10/' + date, res => {
                 console.log('Top10player', date);
                 let playerArr: Array<any> = res.top10
                 let idx = 1
                 for (let p of playerArr) {
-                    console.log("#" + idx, "*",p.dtRanking, p.playerName);
+                    console.log("#" + idx, "*", p.dtRanking, p.playerName);
                     idx++
                 }
             })
