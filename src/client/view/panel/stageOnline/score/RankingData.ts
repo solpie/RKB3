@@ -2,12 +2,13 @@ import { paddy } from '../../../utils/JsFunc';
 import { getAllPlayer, getCurRanking, getRanking } from "../../../utils/HupuAPI";
 import { $post } from "../../../utils/WebJsFunc";
 declare let $
+const colorSeg = [0xe96b1f,
+    0x6736f8,
+    0x4860f6,
+    0x7bb746,
+    0xdadbde]//1-10   11-30  31-100 101-300 301-
 export class RankingData {
-    colorSeg = [0xe9591f,
-        0x4860f6,
-        0xf4cf1f,
-        0x1ccdf3,
-        0x6736f8]//1-10   11-30  31-100 101-300 301-
+
     todayDate: string
     get todayStr() {
         let d = new Date()
@@ -70,30 +71,45 @@ export class RankingData {
     get cur10() {
         return this._curPlayerDataArr
     }
-
+    static getPlayerColor(ranking) {
+        ranking = Number(ranking)
+        let color = colorSeg[4]
+        if (ranking > 300)
+            color = colorSeg[4]
+        else if (ranking > 100)
+            color = colorSeg[3]
+        else if (ranking > 30)
+            color = colorSeg[2]
+        else if (ranking > 10)
+            color = colorSeg[1]
+        else if (ranking > 0)
+            color = colorSeg[0]
+        return color
+    }
     getPlayerData(playerId) {
         console.log('get cur player ranking Data', playerId, this._curPlayerDataArr);
         for (let playerData of this._curPlayerDataArr) {
             if (playerId == playerData.userId) {
                 console.log('find player', playerData.playerName, playerId);
-                playerData.text = '实力榜' + playerData.ranking + "名"
+                // playerData.text = '实力榜' + playerData.ranking + "名"
+                playerData.text = playerData.ranking + ""
                 if (playerData.ranking > 300)
-                    playerData.color = this.colorSeg[4]
+                    playerData.color = colorSeg[4]
                 else if (playerData.ranking > 100)
-                    playerData.color = this.colorSeg[3]
+                    playerData.color = colorSeg[3]
                 else if (playerData.ranking > 30)
-                    playerData.color = this.colorSeg[2]
+                    playerData.color = colorSeg[2]
                 else if (playerData.ranking > 10)
-                    playerData.color = this.colorSeg[1]
+                    playerData.color = colorSeg[1]
                 else if (playerData.ranking > 0)
-                    playerData.color = this.colorSeg[0]
+                    playerData.color = colorSeg[0]
                 else {
-                    playerData.text = "实力榜定位中"
-                    playerData.color = this.colorSeg[4]
+                    playerData.text = "定位中"
+                    playerData.color = colorSeg[4]
                 }
                 return playerData
             }
         }
-        return { ranking: -1, text: '实力榜定位中' }
+        return { ranking: -1, text: '定位中', color: colorSeg[4] }
     }
 }

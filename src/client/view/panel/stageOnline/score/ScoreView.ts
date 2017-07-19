@@ -11,7 +11,7 @@ import { TweenEx } from '../../../utils/TweenEx';
 import { BasePanelView } from '../../BasePanelView';
 import { RankingData } from './RankingData';
 import { Score2017 } from './Score2017';
-import { ScoreM2 } from './ScoreM2';
+import { ScoreM3 } from './ScoreM2';
 import { ScorePanel2 } from './ScorePanel2';
 // import { initIO } from '../../../../router/PanelRouter';
 declare let io;
@@ -46,7 +46,7 @@ export class ScoreView extends BasePanelView {
         let m2 = $route.query.m2 == '1'
         this.isM2 = m2
         if (m2)
-            this.scorePanel = new ScoreM2(stage, darkTheme)
+            this.scorePanel = new ScoreM3(stage, darkTheme)
         else
             this.scorePanel = new Score2017(stage, darkTheme)
         this.eventPanel = new Event2017(stage, darkTheme)

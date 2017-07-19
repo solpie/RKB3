@@ -115,7 +115,7 @@ def getTop10(dateStr=None):
     if len(doc) > 0:
         yesterdayRes = doc[0]['raw']
     yesterdayRanking = playerFilter(yesterdayRes)
-    top10 = todayRanking[0:10]
+    top10 = todayRanking[0:99]
     for p in top10:
         for py in yesterdayRanking:
             if p['playerName'] == py['playerName']:

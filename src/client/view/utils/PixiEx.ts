@@ -112,6 +112,10 @@ export class BitmapText extends PIXI.Container {
     set text(v: string) {
         var digiIdx = 0
         var num = v.charAt(digiIdx)
+        for (let i in this.digis) {
+            let df = this.digis[i]
+            df.visible = false
+        }
         while (num != '') {
             let idx = this.animations[num]
             if (idx > -1) {
@@ -126,6 +130,8 @@ export class BitmapText extends PIXI.Container {
                     this.digis[digiIdx] = this._makeFrame(this._frameWidth, this._frameHeight)
                 }
                 let digiFrame = this.digis[digiIdx]
+                digiFrame.visible = true
+
                 digiFrame.x = digiIdx * this._frameWidth
                 digiFrame['idx'] = digiIdx
                 digiFrame['sp'].x = - ofsX
@@ -225,4 +231,13 @@ export const newModal = (alpha = 0.8, width?, height?) => {
     m.drawRect(0, 0, width, height)
         .alpha = alpha
     return m
+}
+
+export function polygon(g: PIXI.Graphics, radius, sides) {
+    if (sides < 3) return;
+    var a = (Math.PI * 2) / sides;
+    g.moveTo(radius, 0);
+    for (var i = 1; i < sides; i++) {
+        g.lineTo(radius * Math.cos(a * i), radius * Math.sin(a * i));
+    }
 }

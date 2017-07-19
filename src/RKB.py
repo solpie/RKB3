@@ -81,6 +81,8 @@ def proxy():
         if 'image' in res_headers["Content-Type"] or 'img' in res_headers["Content-Type"]:
             encoded_string = b"data:image/png;base64," + \
                 base64.b64encode(r.content)
+            # with open('./cache/') as target:
+            #     pass
             return encoded_string
 
         res.headers = res_headers

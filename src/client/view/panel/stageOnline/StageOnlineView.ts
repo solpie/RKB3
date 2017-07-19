@@ -19,6 +19,7 @@ let bracketView: BracketView
 let scoreView: ScoreView
 let lottery: Lottery
 let canvasStage
+
 class StageOnlineView extends VueBase {
     template = require('./stage-online.html')
     basePanelArr: BasePanelView[]
@@ -381,8 +382,8 @@ class StageOnlineView extends VueBase {
                 this.onGetClientDelay()
             })
         },
-        onShowRanking(visible, isTotal?) {
-            this.opReq(`${CommandId.cs_showRanking}`, { _: null, visible: visible, isTotal: isTotal, gameId: this.gameId })
+        onShowRanking(visible, isTotal?, page = 1) {
+            this.opReq(`${CommandId.cs_showRanking}`, { _: null, visible: visible, page:page,isTotal: isTotal, gameId: this.gameId })
         },
         onShowPlayerRanking(playerId) {
             $.get('/online/ranking/top10/' + playerId, res => {
