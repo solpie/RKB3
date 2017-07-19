@@ -5,8 +5,8 @@ declare let $
 const colorSeg = [0xe96b1f,
     0x6736f8,
     0x4860f6,
-    0x7bb746,
-    0xdadbde]//1-10   11-30  31-100 101-300 301-
+    0x599b1e,
+    0xa3a8b5]//1-10   11-30  31-100 101-300 301-
 export class RankingData {
 
     todayDate: string
@@ -104,12 +104,12 @@ export class RankingData {
                 else if (playerData.ranking > 0)
                     playerData.color = colorSeg[0]
                 else {
-                    playerData.text = "定位中"
+                    playerData.text = "冲榜"
                     playerData.color = colorSeg[4]
                 }
                 return playerData
             }
         }
-        return { ranking: -1, text: '定位中', color: colorSeg[4] }
+        return { ranking: -1, text: '冲榜', color: colorSeg[4] }
     }
 }

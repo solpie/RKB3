@@ -1,3 +1,4 @@
+import { imgLoader } from '../../utils/ImgLoader';
 import { setInterval } from 'timers';
 import { type } from 'os';
 import { CommandId } from '../../Command';
@@ -19,7 +20,7 @@ let bracketView: BracketView
 let scoreView: ScoreView
 let lottery: Lottery
 let canvasStage
-
+imgLoader
 class StageOnlineView extends VueBase {
     template = require('./stage-online.html')
     basePanelArr: BasePanelView[]

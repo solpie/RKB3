@@ -18,11 +18,6 @@ export class Ranking extends PIXI.Container {
     texUp: PIXI.Texture
     texFlat: PIXI.Texture
     texDigi: PIXI.Texture
-    colorSeg = ['#e9591f',
-        '#4860f6',
-        '#f4cf1f',
-        '#1ccdf3',
-        '#6736f8']//1-10   11-30  31-100 100-300 300-
     frameArr: Array<PIXI.Graphics> = []
     //内框 颜色 身高 体重 实力榜排名
     rankingData: RankingData
@@ -144,17 +139,17 @@ export class Ranking extends PIXI.Container {
     }
 
     _texMap = {}
-    _loadAvt(avt, url, width = 84) {
+    _loadAvt(avt, url, height = 89) {
         if (!this._texMap[url])
             loadRes(url, (img) => {
-                let s = width / img.width
+                let s = height / img.height
                 avt.scale.x = avt.scale.y = s
                 if (img)
                     this._texMap[url] = imgToTex(img)
                 avt.texture = imgToTex(img)
             }, true);
         else {
-            let s = width / this._texMap[url].width
+            let s = height / this._texMap[url].height
             avt.texture = this._texMap[url]
             avt.scale.x = avt.scale.y = s
         }

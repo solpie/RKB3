@@ -1,3 +1,4 @@
+import { imgLoader } from '../../../utils/ImgLoader';
 import { imgToTex, loadRes, newBitmap, newModal, newWhiteMask } from '../../../utils/PixiEx';
 import { TextEx, TextMaker } from "../../../utils/TextMaker";
 import { FontName } from "../../../const";
@@ -66,19 +67,20 @@ export class VictoryM2 extends PIXI.Container {
         this.infoText.text = win.height + 'cm / ' + win.weight + 'kg / ' + (win.age || '28') + '岁'
         this.locationText.text = win.school
         console.log('show victory', param)
-
-        loadRes(win.avatar, img => {
-            let s = 230 / img.width
-            this.avt.texture = imgToTex(img)
+        imgLoader.loadTex(win.avatar, tex => {
+            let s = 230 / tex.width
+            this.avt.texture = tex
             this.avt.scale.x = this.avt.scale.y = s
 
             this.ctn.addChild(this)
-            TweenEx.delayedCall(4000, _ => {
-                this.hide()
-            })
-        }, true);
 
+        })
+        TweenEx.delayedCall(4000, _ => {
+            this.hide()
+        })
+        // loadRes(win.avatar, img => {
 
+        // }, true);
     }
 
     hide() {

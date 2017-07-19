@@ -161,8 +161,8 @@
 	    if (isOb)
 	        op = 'ob';
 	    if (isDark)
-	        return "/panel/#/ol/" + op + "/" + gameId + "?panel=score&theme=dark";
-	    return "/panel/#/ol/" + op + "/" + gameId + "?panel=score";
+	        return "/panel/#/ol/" + op + "/" + gameId + "?panel=score&m2=1&theme=dark";
+	    return "/panel/#/ol/" + op + "/" + gameId + "?panel=score&m2=1";
 	}
 	exports.getScorePanelUrl = getScorePanelUrl;
 	var HomeView = (function (_super) {
@@ -227,8 +227,7 @@
 	    };
 	    HomeView.prototype.updateLinks = function (gameId) {
 	        this.links = [
-	            { title: "比分面板（蓝色）", url: getScorePanelUrl(gameId, true) },
-	            { title: "比分面板（绿色）", url: getScorePanelUrl(gameId, false) },
+	            { title: "比分面板（M2）", url: getScorePanelUrl(gameId, false) },
 	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
 	            { title: "DmkLeecher", url: "/dmk" },
@@ -4343,6 +4342,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var ImgLoader_1 = __webpack_require__(111);
 	var timers_1 = __webpack_require__(67);
 	var Command_1 = __webpack_require__(61);
 	var const_1 = __webpack_require__(43);
@@ -4360,6 +4360,7 @@
 	var scoreView;
 	var lottery;
 	var canvasStage;
+	ImgLoader_1.imgLoader;
 	var StageOnlineView = (function (_super) {
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
@@ -7232,11 +7233,6 @@
 	    __extends(Ranking, _super);
 	    function Ranking(parent, rankingData) {
 	        _super.call(this);
-	        this.colorSeg = ['#e9591f',
-	            '#4860f6',
-	            '#f4cf1f',
-	            '#1ccdf3',
-	            '#6736f8'];
 	        this.frameArr = [];
 	        this._isLoad = false;
 	        this._texMap = {};
@@ -7341,19 +7337,19 @@
 	            }
 	        });
 	    };
-	    Ranking.prototype._loadAvt = function (avt, url, width) {
+	    Ranking.prototype._loadAvt = function (avt, url, height) {
 	        var _this = this;
-	        if (width === void 0) { width = 84; }
+	        if (height === void 0) { height = 89; }
 	        if (!this._texMap[url])
 	            PixiEx_1.loadRes(url, function (img) {
-	                var s = width / img.width;
+	                var s = height / img.height;
 	                avt.scale.x = avt.scale.y = s;
 	                if (img)
 	                    _this._texMap[url] = PixiEx_1.imgToTex(img);
 	                avt.texture = PixiEx_1.imgToTex(img);
 	            }, true);
 	        else {
-	            var s = width / this._texMap[url].width;
+	            var s = height / this._texMap[url].height;
 	            avt.texture = this._texMap[url];
 	            avt.scale.x = avt.scale.y = s;
 	        }
@@ -7560,8 +7556,8 @@
 	var colorSeg = [0xe96b1f,
 	    0x6736f8,
 	    0x4860f6,
-	    0x7bb746,
-	    0xdadbde];
+	    0x599b1e,
+	    0xa3a8b5];
 	var RankingData = (function () {
 	    function RankingData(gameId, callback) {
 	        var _this = this;
@@ -7660,13 +7656,13 @@
 	                else if (playerData.ranking > 0)
 	                    playerData.color = colorSeg[0];
 	                else {
-	                    playerData.text = "定位中";
+	                    playerData.text = "冲榜";
 	                    playerData.color = colorSeg[4];
 	                }
 	                return playerData;
 	            }
 	        }
-	        return { ranking: -1, text: '定位中', color: colorSeg[4] };
+	        return { ranking: -1, text: '冲榜', color: colorSeg[4] };
 	    };
 	    return RankingData;
 	}());
@@ -7776,6 +7772,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var ImgLoader_1 = __webpack_require__(111);
 	var PixiEx_1 = __webpack_require__(46);
 	var TextMaker_1 = __webpack_require__(93);
 	var const_1 = __webpack_require__(43);
@@ -7831,15 +7828,15 @@
 	        this.infoText.text = win.height + 'cm / ' + win.weight + 'kg / ' + (win.age || '28') + '岁';
 	        this.locationText.text = win.school;
 	        console.log('show victory', param);
-	        PixiEx_1.loadRes(win.avatar, function (img) {
-	            var s = 230 / img.width;
-	            _this.avt.texture = PixiEx_1.imgToTex(img);
+	        ImgLoader_1.imgLoader.loadTex(win.avatar, function (tex) {
+	            var s = 230 / tex.width;
+	            _this.avt.texture = tex;
 	            _this.avt.scale.x = _this.avt.scale.y = s;
 	            _this.ctn.addChild(_this);
-	            TweenEx_1.TweenEx.delayedCall(4000, function (_) {
-	                _this.hide();
-	            });
-	        }, true);
+	        });
+	        TweenEx_1.TweenEx.delayedCall(4000, function (_) {
+	            _this.hide();
+	        });
 	    };
 	    VictoryM2.prototype.hide = function () {
 	        if (this.parent)
@@ -8494,6 +8491,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var ImgLoader_1 = __webpack_require__(111);
 	var PixiEx_1 = __webpack_require__(46);
 	var TextTimer_1 = __webpack_require__(52);
 	var const_1 = __webpack_require__(43);
@@ -8614,12 +8612,12 @@
 	        this.winScoreText = winScoreText;
 	        var gis = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '18px', fill: "#fff",
+	            fontSize: '24px', fill: "#fff",
 	            fontWeight: 'bold'
 	        };
 	        var gi = new PIXI.Text("", gis);
 	        this.gameIdx = gi;
-	        gi.x = 915;
+	        gi.x = 908;
 	        gi.y = 68;
 	        ctn.addChild(gi);
 	        var pns = {
@@ -8682,12 +8680,12 @@
 	        rAvatar.mask = rm;
 	        ctn.addChild(rm);
 	        var rRankingColor = new PIXI.Graphics();
-	        this._drawRankingColor(rRankingColor, 0xff0000);
+	        this._drawRankingColor(rRankingColor, 0xdddddd);
 	        rRankingColor.x = rm.x + 45;
 	        rRankingColor.y = lm.y + 120;
 	        ctn.addChild(rRankingColor);
 	        var lRankingColor = new PIXI.Graphics();
-	        this._drawRankingColor(lRankingColor, 0xff0000);
+	        this._drawRankingColor(lRankingColor, 0xdddddd);
 	        lRankingColor.x = lm.x + 45;
 	        lRankingColor.y = lm.y + 120;
 	        this.lRankingColor = lRankingColor;
@@ -8695,15 +8693,13 @@
 	        ctn.addChild(lRankingColor);
 	        var rs = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '26px', fill: "#fff",
+	            fontSize: '35px', fill: "#fff",
 	        };
-	        var lRankingText = new PIXI.Text("99", rs);
-	        lRankingText.x = lRankingColor.x + 20;
-	        lRankingText.y = lRankingColor.y + 15;
+	        var lRankingText = new PIXI.Text("", rs);
+	        lRankingText.y = lRankingColor.y + 5;
 	        ctn.addChild(lRankingText);
 	        this.lRankingText = lRankingText;
-	        var rRankingText = new PIXI.Text("99", rs);
-	        rRankingText.x = rRankingColor.x + 20;
+	        var rRankingText = new PIXI.Text("", rs);
 	        rRankingText.y = lRankingText.y;
 	        ctn.addChild(rRankingText);
 	        this.rRankingText = rRankingText;
@@ -8727,8 +8723,9 @@
 	            this.gameIdx.text = '车轮战' + JsFunc_1.paddy(gameIdx, 2) + '场';
 	        }
 	        else if (matchType == 3) {
-	            this.gameIdx.text = '     决赛';
+	            this.gameIdx.text = '决赛';
 	        }
+	        this.gameIdx.x = 962 - this.gameIdx.width * .5;
 	    };
 	    ScoreM3.prototype._showWinScore = function () {
 	        var _this = this;
@@ -8808,14 +8805,14 @@
 	        this.lPlayerName.text = name;
 	        this.cutName(this.lPlayerName, this._NAME_WIDTH);
 	        this.lPlayerName.x = 604 - this.lPlayerName.width;
-	        PixiEx_1.loadRes(avatar, function (img) {
+	        ImgLoader_1.imgLoader.loadTex(avatar, function (tex) {
 	            var avt = _this.lAvatar;
-	            avt.texture = PixiEx_1.imgToTex(img);
-	            var s = 190 / img.width;
+	            avt.texture = tex;
+	            var s = 190 / tex.width;
 	            avt.x = avt.mask.x;
 	            avt.y = avt.mask.y;
 	            avt.scale.x = avt.scale.y = s;
-	        }, true);
+	        });
 	        this.lPlayerHeight.text = height;
 	        this.lPlayerWeight.text = weight;
 	        this.lPlayerHeight.x = 390 - this.lPlayerHeight.width;
@@ -8823,7 +8820,7 @@
 	        console.log('lPlayer ranking data', rankingData);
 	        this._drawRankingColor(this.lRankingColor, rankingData.color);
 	        this.lRankingText.text = rankingData.text;
-	        this.lRankingText.x = 690 - this.lRankingText.width * .5;
+	        this.lRankingText.x = 693 - this.lRankingText.width * .5;
 	    };
 	    ScoreM3.prototype._loadFrame = function (level, frame) {
 	    };
@@ -8833,21 +8830,21 @@
 	        this._loadFrame(level, this.rFrame);
 	        this.rPlayerName.text = name;
 	        this.cutName(this.rPlayerName, this._NAME_WIDTH);
-	        PixiEx_1.loadRes(avatar, function (img) {
+	        ImgLoader_1.imgLoader.loadTex(avatar, function (tex) {
 	            var avt = _this.rAvatar;
-	            avt.texture = PixiEx_1.imgToTex(img);
-	            var s = 190 / img.width;
+	            avt.texture = tex;
+	            var s = 190 / tex.width;
 	            avt.x = avt.mask.x;
 	            avt.y = avt.mask.y;
 	            avt.scale.x = avt.scale.y = s;
-	        }, true);
+	        });
 	        this.rPlayerHeight.text = height;
 	        this.rPlayerWeight.text = weight;
 	        this.rPlayerHeight.x = 1420 - this.rPlayerHeight.width;
 	        this.rPlayerWeight.x = 1558 - this.rPlayerWeight.width;
 	        this._drawRankingColor(this.rRankingColor, rankingData.color);
 	        this.rRankingText.text = rankingData.text;
-	        this.rRankingText.x = 1234 - this.rRankingText.width * .5;
+	        this.rRankingText.x = 1235 - this.rRankingText.width * .5;
 	    };
 	    ScoreM3.prototype.getPlayerInfo = function (isLeft) {
 	        var player = {};
@@ -8913,7 +8910,44 @@
 /* 99 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">实力榜:</label><br>\r\n            <input class=\"input\" type=\"text\" style=\"width: 110px;\" v-model=\"inputDate\">\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,1)\">显示总榜</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,2)\">显示总榜2</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,3)\">显示总榜3</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,4)\">显示总榜4</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,5)\">显示总榜5</button>\r\n            <button class=\"button\" @click=\"onShowDateRanking(inputDate)\">查询日期</button>\r\n            <button class=\"button\" @click=\"onShowPlayerRanking(inputDate)\">查询PlayerId</button>\r\n            <button class=\"button\" @click=\"onShowRanking(false)\">隐藏</button>\r\n\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">实力榜:</label><br>\r\n            <input class=\"input\" type=\"text\" style=\"width: 110px;\" v-model=\"inputDate\">\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,1)\">显示总榜</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,2)\">显示总榜2</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,3)\">显示总榜3</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,4)\">显示总榜4</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,5)\">显示总榜5</button>\r\n            <button class=\"button\" @click=\"onShowDateRanking(inputDate)\">查询日期</button>\r\n            <button class=\"button\" @click=\"onShowPlayerRanking(inputDate)\">查询PlayerId</button>\r\n            <button class=\"button\" @click=\"onShowRanking(false)\">隐藏</button>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
+
+/***/ },
+/* 100 */,
+/* 101 */,
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */,
+/* 111 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var PixiEx_1 = __webpack_require__(46);
+	var ImgLoader = (function () {
+	    function ImgLoader() {
+	        this._texMap = {};
+	    }
+	    ImgLoader.prototype.loadTex = function (url, callback) {
+	        var _this = this;
+	        if (!this._texMap[url]) {
+	            PixiEx_1.loadRes(url, function (img) {
+	                _this._texMap[url] = PixiEx_1.imgToTex(img);
+	                callback(_this._texMap[url]);
+	            }, true);
+	        }
+	        else
+	            callback(this._texMap[url]);
+	    };
+	    return ImgLoader;
+	}());
+	exports.imgLoader = window['imgLoader'] = new ImgLoader();
+
 
 /***/ }
 /******/ ]);

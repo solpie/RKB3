@@ -1,3 +1,4 @@
+import { imgLoader } from '../../../utils/ImgLoader';
 import { getFtName } from './Com2017';
 import { FoulText } from './FoulText';
 import { FoulGroup } from './FoulGroup';
@@ -97,8 +98,8 @@ export class ScoreM3 {
         bg.addChild(ctn)
         ctn.y = ViewConst.STAGE_HEIGHT - 300
         bg.scale.x = bg.scale.y = .87
-        bg.x =122
-        bg.y =146
+        bg.x = 122
+        bg.y = 146
         ////////
 
         this.gameSection = new PIXI.Sprite
@@ -200,12 +201,12 @@ export class ScoreM3 {
 
         let gis = {
             fontFamily: FontName.MicrosoftYahei,
-            fontSize: '18px', fill: "#fff",
+            fontSize: '24px', fill: "#fff",
             fontWeight: 'bold'
         }
         let gi = new PIXI.Text("", gis)
         this.gameIdx = gi
-        gi.x = 915
+        gi.x = 908
         gi.y = 68
         ctn.addChild(gi)
 
@@ -288,13 +289,13 @@ export class ScoreM3 {
         ctn.addChild(rm)
 
         let rRankingColor = new PIXI.Graphics()
-        this._drawRankingColor(rRankingColor, 0xff0000)
+        this._drawRankingColor(rRankingColor, 0xdddddd)
         rRankingColor.x = rm.x + 45
         rRankingColor.y = lm.y + 120
         ctn.addChild(rRankingColor)
 
         let lRankingColor = new PIXI.Graphics()
-        this._drawRankingColor(lRankingColor, 0xff0000)
+        this._drawRankingColor(lRankingColor, 0xdddddd)
         lRankingColor.x = lm.x + 45
         lRankingColor.y = lm.y + 120
         this.lRankingColor = lRankingColor
@@ -303,21 +304,19 @@ export class ScoreM3 {
 
         let rs = {
             fontFamily: FontName.MicrosoftYahei,
-            fontSize: '26px', fill: "#fff",
+            fontSize: '35px', fill: "#fff",
         }
-        let lRankingText = new PIXI.Text("99", rs)
-        lRankingText.x = lRankingColor.x + 20
-        lRankingText.y = lRankingColor.y + 15
+        let lRankingText = new PIXI.Text("", rs)
+        // lRankingText.x = lRankingColor.x + 26
+        lRankingText.y = lRankingColor.y + 5
         ctn.addChild(lRankingText)
         this.lRankingText = lRankingText
 
-        let rRankingText = new PIXI.Text("99", rs)
-        rRankingText.x = rRankingColor.x + 20
+        let rRankingText = new PIXI.Text("", rs)
+        // rRankingText.x = rRankingColor.x + 22
         rRankingText.y = lRankingText.y
         ctn.addChild(rRankingText)
         this.rRankingText = rRankingText
-
-
     }
 
     _drawRankingColor(g: PIXI.Graphics, col) {
@@ -342,8 +341,9 @@ export class ScoreM3 {
             this.gameIdx.text = '车轮战' + paddy(gameIdx, 2) + '场'
         }
         else if (matchType == 3) {
-            this.gameIdx.text = '     决赛'
+            this.gameIdx.text = '决赛'
         }
+        this.gameIdx.x = 962 - this.gameIdx.width * .5
     }
     _showWinScore() {
         this.winScoreText.visible = true
@@ -445,14 +445,23 @@ export class ScoreM3 {
         this.lPlayerName.text = name
         this.cutName(this.lPlayerName, this._NAME_WIDTH)
         this.lPlayerName.x = 604 - this.lPlayerName.width
-        loadRes(avatar, (img) => {
+        // loadRes(avatar, (img) => {
+        //     let avt = this.lAvatar
+        //     avt.texture = imgToTex(img)
+        //     let s = 190 / img.width
+        //     avt.x = avt.mask.x// - avt.texture.width * .5 * s
+        //     avt.y = avt.mask.y// - avt.texture.height * .5 * s
+        //     avt.scale.x = avt.scale.y = s
+        // }, true);
+
+        imgLoader.loadTex(avatar, tex => {
             let avt = this.lAvatar
-            avt.texture = imgToTex(img)
-            let s = 190 / img.width
+            avt.texture = tex
+            let s = 190 / tex.width
             avt.x = avt.mask.x// - avt.texture.width * .5 * s
             avt.y = avt.mask.y// - avt.texture.height * .5 * s
             avt.scale.x = avt.scale.y = s
-        }, true);
+        })
         this.lPlayerHeight.text = height
         this.lPlayerWeight.text = weight
         // this._setHeightWeight(height, weight, this.lPlayerHeight)
@@ -463,21 +472,10 @@ export class ScoreM3 {
         console.log('lPlayer ranking data', rankingData);
         this._drawRankingColor(this.lRankingColor, rankingData.color)
         this.lRankingText.text = rankingData.text
-        this.lRankingText.x = 690 - this.lRankingText.width * .5
+        this.lRankingText.x = 693 - this.lRankingText.width * .5
         // this.lRankingColor.beginFill()
     }
 
-    // private _loadFt(ftId, sp) {
-    //     let ftImg = '/img/panel/score/m2/' + ftId + '.png'
-    //     if (!this._texFt[ftImg]) {
-    //         loadImg(ftImg, img => {
-    //             this._texFt[ftImg] = img
-    //             sp.texture = imgToTex(img)
-    //         })
-    //     }
-    //     else
-    //         sp.texture = imgToTex(this._texFt[ftImg])
-    // }
     _loadFrame(level, frame: PIXI.Sprite) {
     }
 
@@ -489,14 +487,15 @@ export class ScoreM3 {
 
         this.rPlayerName.text = name
         this.cutName(this.rPlayerName, this._NAME_WIDTH)
-        loadRes(avatar, (img) => {
+        // loadRes(avatar, (img) => {
+        imgLoader.loadTex(avatar, tex => {
             let avt = this.rAvatar
-            avt.texture = imgToTex(img)
-            let s = 190 / img.width
+            avt.texture = tex
+            let s = 190 / tex.width
             avt.x = avt.mask.x //- avt.texture.width * .5 * s
             avt.y = avt.mask.y //- avt.texture.height * .5 * s
             avt.scale.x = avt.scale.y = s
-        }, true);
+        });
 
         this.rPlayerHeight.text = height
         this.rPlayerWeight.text = weight
@@ -507,7 +506,7 @@ export class ScoreM3 {
         // this.rFtName.x = 1293 - this.rFtName.width * .5
         this._drawRankingColor(this.rRankingColor, rankingData.color)
         this.rRankingText.text = rankingData.text
-        this.rRankingText.x = 1234 - this.rRankingText.width * .5
+        this.rRankingText.x = 1235 - this.rRankingText.width * .5
 
     }
     getPlayerInfo(isLeft) {
