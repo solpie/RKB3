@@ -6,7 +6,7 @@ import { PanelId } from '../../const';
 import { getClientDelay, setClientDelay } from '../../utils/HupuAPI';
 import { DateFormat } from '../../utils/JsFunc';
 import { VueBase } from '../../utils/VueBase';
-import { dynamicLoading } from '../../utils/WebJsFunc';
+import { dynamicLoading, $post } from '../../utils/WebJsFunc';
 import { BasePanelView } from '../BasePanelView';
 import { BracketView } from './bracket/BracketView';
 import { Lottery } from './lottery/Lottery';
@@ -384,16 +384,26 @@ class StageOnlineView extends VueBase {
             })
         },
         onShowRanking(visible, isTotal?, page = 1) {
-            this.opReq(`${CommandId.cs_showRanking}`, { _: null, visible: visible, page:page,isTotal: isTotal, gameId: this.gameId })
+            this.opReq(`${CommandId.cs_showRanking}`, { _: null, visible: visible, page: page, isTotal: isTotal, gameId: this.gameId })
         },
         onShowPlayerRanking(playerId) {
-            $.get('/online/ranking/top10/' + playerId, res => {
-                console.log('Top10player', playerId);
-                let playerArr: Array<any> = res.top10
-                let idx = 1
-                for (let p of playerArr) {
-                    console.log("#" + idx, "*", p.dtRanking, p.playerName);
-                    idx++
+            $post('/online/ranking/raw', { date: '2017-07-20' }, res => {
+                console.log('Top10player', playerId, res.doc);
+                if (res.doc.length > 0) {
+                    let playerArr = res.doc[0]['raw']
+                    let playerArr2 = []
+                    let ranking = 1
+                    for (let p of playerArr) {
+                        if (p.playerName && Number(p.playCount)) {
+                            p.rinking = ranking
+                            playerArr2.push(p)
+                            ranking += 1
+                        }
+                    }
+                    for (let p of playerArr2) {
+                        if (p.playerName.search(playerId) > -1)
+                            console.log("#", "*", p.sortId, p.playerName);
+                    }
                 }
             })
         },

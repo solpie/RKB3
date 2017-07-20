@@ -92,7 +92,16 @@ def getPlayerArrByPlayerId(dateStr, playerNameArr):
     return a
 
 
-def getTop10(dateStr=None):
+def printTop10(playerArr):
+    idx = 0
+    for pt in playerArr:
+        print('sortId', pt['sortId'], '参加', pt['playCount'], pt['playerName'])
+        idx += 1
+        if idx > 9:
+            break
+
+
+def getTop10(dateStr=None, count=99):
     if dateStr:
         today = datetime.datetime.strptime(dateStr, "%Y-%m-%d").date()
     else:
@@ -109,7 +118,7 @@ def getTop10(dateStr=None):
         todayRes = getFullRanking(dateStr)
     # else:
     # todayRes = getFullRanking(dateIdx)
-    count = len(todayRes)
+    printTop10(todayRes)
     todayRanking = playerFilter(todayRes)
     doc = rd.db.find({'date': yesterdayDateIdx})
     if len(doc) > 0:
@@ -137,7 +146,8 @@ def getRankingHistory(playerId, fromDate, pre):
             playerArr = doc[0]['raw']
             for p in playerArr:
                 if str(p['userId']) == str(playerId):
-                    print(pdStr, p['playerName'],'playCount:',p['playCount'],'sortId', p['sortId'])
+                    print(pdStr, p['playerName'], 'playCount:',
+                          p['playCount'], 'sortId', p['sortId'])
                     break
 
 

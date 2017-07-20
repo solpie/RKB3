@@ -480,7 +480,7 @@ export class ScoreM3 {
     }
 
 
-    _NAME_WIDTH = 176
+    _NAME_WIDTH = 250
     setRightPlayerInfo(name: string, avatar: string, weight, height, ftId: string, level: Number, rankingData: any) {
         this._rFtId = ftId
         this._loadFrame(level, this.rFrame)
