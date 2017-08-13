@@ -47,6 +47,13 @@ def getPlayer():
     print('date', date, len(doc))
     return jsonify({'date': date, 'doc': doc})
 
+@onlineView.route('/ranking/remove', methods=["POST"])
+def removeRaw():
+    req = request.json
+    date = req['date']
+    doc = rd.db.remove({'date': date})
+    return 'ok'
+
 
 @onlineView.route('/ranking/top10/<date>', methods=["GET"])
 def getRanking(date):

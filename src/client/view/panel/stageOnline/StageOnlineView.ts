@@ -1,3 +1,4 @@
+import { removeRanking } from './score/RankingData';
 import { imgLoader } from '../../utils/ImgLoader';
 import { setInterval } from 'timers';
 import { type } from 'os';
@@ -387,14 +388,14 @@ class StageOnlineView extends VueBase {
             this.opReq(`${CommandId.cs_showRanking}`, { _: null, visible: visible, page: page, isTotal: isTotal, gameId: this.gameId })
         },
         onShowPlayerRanking(playerId) {
-            $post('/online/ranking/raw', { date: '2017-07-20' }, res => {
+            $post('/online/ranking/raw', { date: '2017-07-19' }, res => {
                 console.log('Top10player', playerId, res.doc);
                 if (res.doc.length > 0) {
                     let playerArr = res.doc[0]['raw']
                     let playerArr2 = []
                     let ranking = 1
                     for (let p of playerArr) {
-                        if (p.playerName && Number(p.playCount)) {
+                        if (p.playerName && Number(p.playCount) > 3) {
                             p.rinking = ranking
                             playerArr2.push(p)
                             ranking += 1
@@ -417,6 +418,9 @@ class StageOnlineView extends VueBase {
                     idx++
                 }
             })
+        },
+        onRemoveRanking(date) {
+            removeRanking(date)
         },
         //manmual score
         onAddScore(isLeft, dtScore) {

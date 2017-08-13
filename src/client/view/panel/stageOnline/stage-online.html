@@ -44,9 +44,10 @@
             <button class="button" @click="onShowRanking(true,true,3)">显示总榜3</button>
             <button class="button" @click="onShowRanking(true,true,4)">显示总榜4</button>
             <button class="button" @click="onShowRanking(true,true,5)">显示总榜5</button>
+            <button class="button" @click="onShowRanking(false)">隐藏</button>
             <button class="button" @click="onShowDateRanking(inputDate)">查询日期</button>
             <button class="button" @click="onShowPlayerRanking(inputDate)">查询Player</button>
-            <button class="button" @click="onShowRanking(false)">隐藏</button>
+            <button class="button" @click="onRemoveRanking(inputDate)">删除日期</button>
             <label class="label">比分面板:</label><br>
             <button class="button" @click="onClkStartTimer">开始</button>
             <button class="button" @click="onClkPauseTimer">暂停</button>

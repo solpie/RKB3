@@ -4342,8 +4342,9 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var ImgLoader_1 = __webpack_require__(67);
-	var timers_1 = __webpack_require__(68);
+	var RankingData_1 = __webpack_require__(67);
+	var ImgLoader_1 = __webpack_require__(68);
+	var timers_1 = __webpack_require__(69);
 	var Command_1 = __webpack_require__(61);
 	var const_1 = __webpack_require__(43);
 	var HupuAPI_1 = __webpack_require__(22);
@@ -4351,10 +4352,10 @@
 	var VueBase_1 = __webpack_require__(18);
 	var WebJsFunc_1 = __webpack_require__(23);
 	var BasePanelView_1 = __webpack_require__(44);
-	var BracketView_1 = __webpack_require__(70);
-	var Lottery_1 = __webpack_require__(76);
-	var RankView_1 = __webpack_require__(79);
-	var ScoreView_1 = __webpack_require__(81);
+	var BracketView_1 = __webpack_require__(71);
+	var Lottery_1 = __webpack_require__(77);
+	var RankView_1 = __webpack_require__(80);
+	var ScoreView_1 = __webpack_require__(82);
 	var rankView;
 	var bracketView;
 	var scoreView;
@@ -4517,7 +4518,7 @@
 	                this.opReq("" + Command_1.CommandId.cs_showRanking, { _: null, visible: visible, page: page, isTotal: isTotal, gameId: this.gameId });
 	            },
 	            onShowPlayerRanking: function (playerId) {
-	                WebJsFunc_1.$post('/online/ranking/raw', { date: '2017-07-20' }, function (res) {
+	                WebJsFunc_1.$post('/online/ranking/raw', { date: '2017-07-19' }, function (res) {
 	                    console.log('Top10player', playerId, res.doc);
 	                    if (res.doc.length > 0) {
 	                        var playerArr = res.doc[0]['raw'];
@@ -4525,7 +4526,7 @@
 	                        var ranking = 1;
 	                        for (var _i = 0, playerArr_1 = playerArr; _i < playerArr_1.length; _i++) {
 	                            var p = playerArr_1[_i];
-	                            if (p.playerName && Number(p.playCount)) {
+	                            if (p.playerName && Number(p.playCount) > 3) {
 	                                p.rinking = ranking;
 	                                playerArr2.push(p);
 	                                ranking += 1;
@@ -4550,6 +4551,9 @@
 	                        idx++;
 	                    }
 	                });
+	            },
+	            onRemoveRanking: function (date) {
+	                RankingData_1.removeRanking(date);
 	            },
 	            onAddScore: function (isLeft, dtScore) {
 	            }
@@ -4740,6 +4744,136 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var JsFunc_1 = __webpack_require__(17);
+	var HupuAPI_1 = __webpack_require__(22);
+	var WebJsFunc_1 = __webpack_require__(23);
+	exports.removeRanking = function (date) {
+	    WebJsFunc_1.$post('/online/ranking/remove', { date: date }, function (res) {
+	        console.log('remove', date, res);
+	    });
+	};
+	var colorSeg = [0xe96b1f,
+	    0x6736f8,
+	    0x4860f6,
+	    0x599b1e,
+	    0xa3a8b5];
+	var RankingData = (function () {
+	    function RankingData(gameId, callback) {
+	        var _this = this;
+	        this.todayDate = this.todayStr;
+	        this.todayDate = '2017-07-31';
+	        console.log('today', this.todayDate);
+	        this._loadCurPlayerData2(gameId, function (_) {
+	            _this._loadTop10player2(function (_) {
+	                callback();
+	            });
+	        });
+	    }
+	    Object.defineProperty(RankingData.prototype, "todayStr", {
+	        get: function () {
+	            var d = new Date();
+	            var s = d.getFullYear() + "-" + JsFunc_1.paddy(d.getMonth() + 1, 2) + "-" + JsFunc_1.paddy(d.getDate(), 2);
+	            return s;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    RankingData.prototype._loadCurPlayerData2 = function (gameId, callback) {
+	        var _this = this;
+	        if (!this._curPlayerDataArr) {
+	            HupuAPI_1.getAllPlayer(gameId, function (res2) {
+	                console.log(res2);
+	                var playerArr = res2.data;
+	                var hupuIdArr = [];
+	                var playerIdArr = [];
+	                for (var i = 0; i < playerArr.length; i++) {
+	                    var obj = playerArr[i];
+	                    hupuIdArr.push(obj.name);
+	                    playerIdArr.push(obj.player_id);
+	                }
+	                console.log('hupuIdArr', hupuIdArr);
+	                WebJsFunc_1.$post('/online/ranking/list', { date: _this.todayDate, playerIdArr: playerIdArr }, function (res) {
+	                    console.log('getCurRanking2', res);
+	                    _this._curPlayerDataArr = res.playerArr;
+	                    callback();
+	                });
+	            });
+	        }
+	    };
+	    RankingData.prototype._loadTop10player2 = function (callback) {
+	        var _this = this;
+	        if (!this._top10playerDataArr)
+	            $.get('/online/ranking/top10/' + this.todayDate, function (res) {
+	                console.log('Top10player', res);
+	                _this._top10playerDataArr = res.top10;
+	                callback();
+	            });
+	    };
+	    Object.defineProperty(RankingData.prototype, "top10", {
+	        get: function () {
+	            return this._top10playerDataArr;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(RankingData.prototype, "cur10", {
+	        get: function () {
+	            return this._curPlayerDataArr;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    RankingData.getPlayerColor = function (ranking) {
+	        ranking = Number(ranking);
+	        var color = colorSeg[4];
+	        if (ranking > 300)
+	            color = colorSeg[4];
+	        else if (ranking > 100)
+	            color = colorSeg[3];
+	        else if (ranking > 30)
+	            color = colorSeg[2];
+	        else if (ranking > 10)
+	            color = colorSeg[1];
+	        else if (ranking > 0)
+	            color = colorSeg[0];
+	        return color;
+	    };
+	    RankingData.prototype.getPlayerData = function (playerId) {
+	        console.log('get cur player ranking Data', playerId, this._curPlayerDataArr);
+	        for (var _i = 0, _a = this._curPlayerDataArr; _i < _a.length; _i++) {
+	            var playerData = _a[_i];
+	            if (playerId == playerData.userId) {
+	                console.log('find player', playerData.playerName, playerId);
+	                playerData.text = playerData.ranking + "";
+	                if (playerData.ranking > 300)
+	                    playerData.color = colorSeg[4];
+	                else if (playerData.ranking > 100)
+	                    playerData.color = colorSeg[3];
+	                else if (playerData.ranking > 30)
+	                    playerData.color = colorSeg[2];
+	                else if (playerData.ranking > 10)
+	                    playerData.color = colorSeg[1];
+	                else if (playerData.ranking > 0)
+	                    playerData.color = colorSeg[0];
+	                else {
+	                    playerData.text = "冲榜";
+	                    playerData.color = colorSeg[4];
+	                }
+	                return playerData;
+	            }
+	        }
+	        return { ranking: -1, text: '冲榜', color: colorSeg[4] };
+	    };
+	    return RankingData;
+	}());
+	exports.RankingData = RankingData;
+
+
+/***/ },
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
 	var PixiEx_1 = __webpack_require__(46);
 	var ImgLoader = (function () {
 	    function ImgLoader() {
@@ -4762,10 +4896,10 @@
 
 
 /***/ },
-/* 68 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(69).nextTick;
+	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(70).nextTick;
 	var apply = Function.prototype.apply;
 	var slice = Array.prototype.slice;
 	var immediateIds = {};
@@ -4841,10 +4975,10 @@
 	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
 	  delete immediateIds[id];
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(68).setImmediate, __webpack_require__(68).clearImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(69).setImmediate, __webpack_require__(69).clearImmediate))
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -5030,7 +5164,7 @@
 
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5039,14 +5173,14 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var WebDBCmd_1 = __webpack_require__(71);
-	var PreRound_1 = __webpack_require__(72);
-	var Bracket2017_1 = __webpack_require__(75);
+	var WebDBCmd_1 = __webpack_require__(72);
+	var PreRound_1 = __webpack_require__(73);
+	var Bracket2017_1 = __webpack_require__(76);
 	var Command_1 = __webpack_require__(61);
 	var HupuAPI_1 = __webpack_require__(22);
 	var BasePanelView_1 = __webpack_require__(44);
 	var const_1 = __webpack_require__(43);
-	var BracketGroup_1 = __webpack_require__(74);
+	var BracketGroup_1 = __webpack_require__(75);
 	var BracketView = (function (_super) {
 	    __extends(BracketView, _super);
 	    function BracketView(stage, gameId, $route) {
@@ -5257,7 +5391,7 @@
 
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -5294,7 +5428,7 @@
 
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5303,9 +5437,9 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Com2017_1 = __webpack_require__(73);
+	var Com2017_1 = __webpack_require__(74);
 	var JsFunc_1 = __webpack_require__(17);
-	var BracketGroup_1 = __webpack_require__(74);
+	var BracketGroup_1 = __webpack_require__(75);
 	var const_1 = __webpack_require__(43);
 	var PixiEx_1 = __webpack_require__(46);
 	var skinConf = {
@@ -5500,7 +5634,7 @@
 
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -5541,7 +5675,7 @@
 
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5614,7 +5748,7 @@
 
 
 /***/ },
-/* 75 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5624,7 +5758,7 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var JsFunc_1 = __webpack_require__(17);
-	var BracketGroup_1 = __webpack_require__(74);
+	var BracketGroup_1 = __webpack_require__(75);
 	var TweenEx_1 = __webpack_require__(50);
 	var Fx_1 = __webpack_require__(56);
 	var const_1 = __webpack_require__(43);
@@ -5712,7 +5846,7 @@
 
 
 /***/ },
-/* 76 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5723,11 +5857,11 @@
 	};
 	var JsFunc_1 = __webpack_require__(17);
 	var WebJsFunc_1 = __webpack_require__(23);
-	var RollFx_1 = __webpack_require__(77);
-	var BracketGroup_1 = __webpack_require__(74);
+	var RollFx_1 = __webpack_require__(78);
+	var BracketGroup_1 = __webpack_require__(75);
 	var const_1 = __webpack_require__(43);
 	var PixiEx_1 = __webpack_require__(46);
-	var RandomFx_1 = __webpack_require__(78);
+	var RandomFx_1 = __webpack_require__(79);
 	var Lottery = (function (_super) {
 	    __extends(Lottery, _super);
 	    function Lottery(parent, k, id) {
@@ -5911,7 +6045,7 @@
 
 
 /***/ },
-/* 77 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5954,7 +6088,7 @@
 
 
 /***/ },
-/* 78 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5963,7 +6097,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var BracketGroup_1 = __webpack_require__(74);
+	var BracketGroup_1 = __webpack_require__(75);
 	var const_1 = __webpack_require__(43);
 	var TweenEx_1 = __webpack_require__(50);
 	var RandomFx = (function (_super) {
@@ -6020,7 +6154,7 @@
 
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6032,7 +6166,7 @@
 	var PlayerInfo_1 = __webpack_require__(29);
 	var BasePanelView_1 = __webpack_require__(44);
 	var const_1 = __webpack_require__(43);
-	var FTInfo_1 = __webpack_require__(80);
+	var FTInfo_1 = __webpack_require__(81);
 	var PixiEx_1 = __webpack_require__(46);
 	var JsFunc_1 = __webpack_require__(17);
 	var RankView = (function (_super) {
@@ -6236,7 +6370,7 @@
 
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -6265,7 +6399,7 @@
 
 
 /***/ },
-/* 81 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6274,14 +6408,14 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Event2017_1 = __webpack_require__(82);
+	var Event2017_1 = __webpack_require__(83);
 	var home_1 = __webpack_require__(16);
 	var Command_1 = __webpack_require__(61);
 	var const_1 = __webpack_require__(43);
 	var HupuAPI_1 = __webpack_require__(22);
 	var TweenEx_1 = __webpack_require__(50);
 	var BasePanelView_1 = __webpack_require__(44);
-	var RankingData_1 = __webpack_require__(90);
+	var RankingData_1 = __webpack_require__(67);
 	var Score2017_1 = __webpack_require__(95);
 	var ScoreM2_1 = __webpack_require__(98);
 	function logEvent() {
@@ -6573,7 +6707,7 @@
 
 
 /***/ },
-/* 82 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6586,13 +6720,13 @@
 	var JsFunc_1 = __webpack_require__(17);
 	var PixiEx_1 = __webpack_require__(46);
 	var TweenEx_1 = __webpack_require__(50);
-	var BracketGroup_1 = __webpack_require__(74);
-	var Champion_1 = __webpack_require__(83);
-	var Com2017_1 = __webpack_require__(73);
-	var Group_1 = __webpack_require__(84);
-	var LogoFx_1 = __webpack_require__(85);
-	var NoticeSprite_1 = __webpack_require__(86);
-	var Ranking_1 = __webpack_require__(88);
+	var BracketGroup_1 = __webpack_require__(75);
+	var Champion_1 = __webpack_require__(84);
+	var Com2017_1 = __webpack_require__(74);
+	var Group_1 = __webpack_require__(85);
+	var LogoFx_1 = __webpack_require__(86);
+	var NoticeSprite_1 = __webpack_require__(87);
+	var Ranking_1 = __webpack_require__(89);
 	var ScoreFx_1 = __webpack_require__(91);
 	var TopInfo_1 = __webpack_require__(92);
 	var VictoryM2_1 = __webpack_require__(93);
@@ -6833,7 +6967,7 @@
 
 
 /***/ },
-/* 83 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6842,7 +6976,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Com2017_1 = __webpack_require__(73);
+	var Com2017_1 = __webpack_require__(74);
 	var JsFunc_1 = __webpack_require__(17);
 	var const_1 = __webpack_require__(43);
 	var PixiEx_1 = __webpack_require__(46);
@@ -6915,7 +7049,7 @@
 
 
 /***/ },
-/* 84 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6924,7 +7058,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Com2017_1 = __webpack_require__(73);
+	var Com2017_1 = __webpack_require__(74);
 	var const_1 = __webpack_require__(43);
 	var PixiEx_1 = __webpack_require__(46);
 	var Group = (function (_super) {
@@ -7008,7 +7142,7 @@
 
 
 /***/ },
-/* 85 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7048,7 +7182,7 @@
 
 
 /***/ },
-/* 86 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7060,7 +7194,7 @@
 	var PixiEx_1 = __webpack_require__(46);
 	var const_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(17);
-	var ScaleSprite_1 = __webpack_require__(87);
+	var ScaleSprite_1 = __webpack_require__(88);
 	var NoticeSprite = (function (_super) {
 	    __extends(NoticeSprite, _super);
 	    function NoticeSprite() {
@@ -7171,7 +7305,7 @@
 
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -7253,7 +7387,7 @@
 
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7265,7 +7399,7 @@
 	var const_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(17);
 	var PixiEx_1 = __webpack_require__(46);
-	var RankingItem_1 = __webpack_require__(89);
+	var RankingItem_1 = __webpack_require__(90);
 	var Ranking = (function (_super) {
 	    __extends(Ranking, _super);
 	    function Ranking(parent, rankingData) {
@@ -7401,7 +7535,7 @@
 
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7410,7 +7544,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var RankingData_1 = __webpack_require__(90);
+	var RankingData_1 = __webpack_require__(67);
 	var JsFunc_1 = __webpack_require__(17);
 	var PixiEx_1 = __webpack_require__(46);
 	var const_1 = __webpack_require__(43);
@@ -7583,130 +7717,6 @@
 
 
 /***/ },
-/* 90 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var JsFunc_1 = __webpack_require__(17);
-	var HupuAPI_1 = __webpack_require__(22);
-	var WebJsFunc_1 = __webpack_require__(23);
-	var colorSeg = [0xe96b1f,
-	    0x6736f8,
-	    0x4860f6,
-	    0x599b1e,
-	    0xa3a8b5];
-	var RankingData = (function () {
-	    function RankingData(gameId, callback) {
-	        var _this = this;
-	        this.todayDate = this.todayStr;
-	        console.log('today', this.todayDate);
-	        this._loadCurPlayerData2(gameId, function (_) {
-	            _this._loadTop10player2(function (_) {
-	                callback();
-	            });
-	        });
-	    }
-	    Object.defineProperty(RankingData.prototype, "todayStr", {
-	        get: function () {
-	            var d = new Date();
-	            var s = d.getFullYear() + "-" + JsFunc_1.paddy(d.getMonth() + 1, 2) + "-" + JsFunc_1.paddy(d.getDate(), 2);
-	            return s;
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    RankingData.prototype._loadCurPlayerData2 = function (gameId, callback) {
-	        var _this = this;
-	        if (!this._curPlayerDataArr) {
-	            HupuAPI_1.getAllPlayer(gameId, function (res2) {
-	                console.log(res2);
-	                var playerArr = res2.data;
-	                var hupuIdArr = [];
-	                var playerIdArr = [];
-	                for (var i = 0; i < playerArr.length; i++) {
-	                    var obj = playerArr[i];
-	                    hupuIdArr.push(obj.name);
-	                    playerIdArr.push(obj.player_id);
-	                }
-	                console.log('hupuIdArr', hupuIdArr);
-	                WebJsFunc_1.$post('/online/ranking/list', { date: _this.todayDate, playerIdArr: playerIdArr }, function (res) {
-	                    console.log('getCurRanking2', res);
-	                    _this._curPlayerDataArr = res.playerArr;
-	                    callback();
-	                });
-	            });
-	        }
-	    };
-	    RankingData.prototype._loadTop10player2 = function (callback) {
-	        var _this = this;
-	        if (!this._top10playerDataArr)
-	            $.get('/online/ranking/top10/' + this.todayDate, function (res) {
-	                console.log('Top10player', res);
-	                _this._top10playerDataArr = res.top10;
-	                callback();
-	            });
-	    };
-	    Object.defineProperty(RankingData.prototype, "top10", {
-	        get: function () {
-	            return this._top10playerDataArr;
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    Object.defineProperty(RankingData.prototype, "cur10", {
-	        get: function () {
-	            return this._curPlayerDataArr;
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    RankingData.getPlayerColor = function (ranking) {
-	        ranking = Number(ranking);
-	        var color = colorSeg[4];
-	        if (ranking > 300)
-	            color = colorSeg[4];
-	        else if (ranking > 100)
-	            color = colorSeg[3];
-	        else if (ranking > 30)
-	            color = colorSeg[2];
-	        else if (ranking > 10)
-	            color = colorSeg[1];
-	        else if (ranking > 0)
-	            color = colorSeg[0];
-	        return color;
-	    };
-	    RankingData.prototype.getPlayerData = function (playerId) {
-	        console.log('get cur player ranking Data', playerId, this._curPlayerDataArr);
-	        for (var _i = 0, _a = this._curPlayerDataArr; _i < _a.length; _i++) {
-	            var playerData = _a[_i];
-	            if (playerId == playerData.userId) {
-	                console.log('find player', playerData.playerName, playerId);
-	                playerData.text = playerData.ranking + "";
-	                if (playerData.ranking > 300)
-	                    playerData.color = colorSeg[4];
-	                else if (playerData.ranking > 100)
-	                    playerData.color = colorSeg[3];
-	                else if (playerData.ranking > 30)
-	                    playerData.color = colorSeg[2];
-	                else if (playerData.ranking > 10)
-	                    playerData.color = colorSeg[1];
-	                else if (playerData.ranking > 0)
-	                    playerData.color = colorSeg[0];
-	                else {
-	                    playerData.text = "冲榜";
-	                    playerData.color = colorSeg[4];
-	                }
-	                return playerData;
-	            }
-	        }
-	        return { ranking: -1, text: '冲榜', color: colorSeg[4] };
-	    };
-	    return RankingData;
-	}());
-	exports.RankingData = RankingData;
-
-
-/***/ },
 /* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -7809,7 +7819,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var ImgLoader_1 = __webpack_require__(67);
+	var ImgLoader_1 = __webpack_require__(68);
 	var PixiEx_1 = __webpack_require__(46);
 	var TextMaker_1 = __webpack_require__(94);
 	var const_1 = __webpack_require__(43);
@@ -7986,7 +7996,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var Com2017_1 = __webpack_require__(73);
+	var Com2017_1 = __webpack_require__(74);
 	var FoulText_1 = __webpack_require__(96);
 	var Fx_1 = __webpack_require__(56);
 	var FoulGroup_1 = __webpack_require__(97);
@@ -8528,7 +8538,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var ImgLoader_1 = __webpack_require__(67);
+	var ImgLoader_1 = __webpack_require__(68);
 	var PixiEx_1 = __webpack_require__(46);
 	var TextTimer_1 = __webpack_require__(52);
 	var const_1 = __webpack_require__(43);
@@ -8947,7 +8957,7 @@
 /* 100 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">实力榜:</label><br>\r\n            <input class=\"input\" type=\"text\" style=\"width: 110px;\" v-model=\"inputDate\">\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,1)\">显示总榜1</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,2)\">显示总榜2</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,3)\">显示总榜3</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,4)\">显示总榜4</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,5)\">显示总榜5</button>\r\n            <button class=\"button\" @click=\"onShowDateRanking(inputDate)\">查询日期</button>\r\n            <button class=\"button\" @click=\"onShowPlayerRanking(inputDate)\">查询Player</button>\r\n            <button class=\"button\" @click=\"onShowRanking(false)\">隐藏</button>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">实力榜:</label><br>\r\n            <input class=\"input\" type=\"text\" style=\"width: 110px;\" v-model=\"inputDate\">\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,1)\">显示总榜1</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,2)\">显示总榜2</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,3)\">显示总榜3</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,4)\">显示总榜4</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,5)\">显示总榜5</button>\r\n            <button class=\"button\" @click=\"onShowRanking(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onShowDateRanking(inputDate)\">查询日期</button>\r\n            <button class=\"button\" @click=\"onShowPlayerRanking(inputDate)\">查询Player</button>\r\n            <button class=\"button\" @click=\"onRemoveRanking(inputDate)\">删除日期</button>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ }
 /******/ ]);

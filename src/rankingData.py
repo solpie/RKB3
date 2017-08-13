@@ -101,18 +101,18 @@ def printTop10(playerArr):
             break
 
 
-def getTop10(dateStr=None, count=99):
+def getTop10(dateStr=None, count=99, force=False, timeDelta=1):
     if dateStr:
         today = datetime.datetime.strptime(dateStr, "%Y-%m-%d").date()
     else:
         today = datetime.datetime.today()
-    yesterday = today - datetime.timedelta(1)
+    yesterday = today - datetime.timedelta(timeDelta)
     dateIdx = today.strftime('%Y-%m-%d')
     yesterdayDateIdx = yesterday.strftime('%Y-%m-%d')
     print(dateIdx, yesterdayDateIdx)
 
     doc = rd.db.find({'date': dateIdx})
-    if len(doc) > 0:
+    if len(doc) > 0 and not force:
         todayRes = doc[0]['raw']
     else:
         todayRes = getFullRanking(dateStr)
@@ -121,18 +121,22 @@ def getTop10(dateStr=None, count=99):
     printTop10(todayRes)
     todayRanking = playerFilter(todayRes)
     doc = rd.db.find({'date': yesterdayDateIdx})
-    if len(doc) > 0:
+    if len(doc) > 0 and not force:
         yesterdayRes = doc[0]['raw']
+    else:
+        yesterdayRes = getFullRanking(yesterdayDateIdx)
     yesterdayRanking = playerFilter(yesterdayRes)
-    top10 = todayRanking[0:99]
+    top10 = todayRanking[0:count]
     for p in top10:
         for py in yesterdayRanking:
             if p['playerName'] == py['playerName']:
-                print(p['ranking'], py['ranking'],
+                print(p['ranking'], py['ranking'], 'sortId', p['sortId'],
                       py['playerName'], py['userId'])
                 p['dtRanking'] = py['ranking'] - p['ranking']
     # print(len(yesterdayRes))
     return top10
+
+# def getTop10(dateStr=None,yesterDayStr=None)
 
 
 def getRankingHistory(playerId, fromDate, pre):
@@ -149,6 +153,32 @@ def getRankingHistory(playerId, fromDate, pre):
                     print(pdStr, p['playerName'], 'playCount:',
                           p['playCount'], 'sortId', p['sortId'])
                     break
+
+import hashlib
+
+import time
+
+
+def genRanking(dateStr):
+    #date in second
+    url = 'http://lrw.smartcourt.cn/makeRanking'
+    d = datetime.datetime.strptime(dateStr, "%Y-%m-%d").date()
+    # d = datetime.datetime.today()
+    t = int(time.mktime(d.timetuple()))
+    print('date', d)
+    print('t', t)
+    data = ('appId=liangle&t=' + str(t) +
+            'P@#m5Nj$F7Q9*0^T1l#0*Y8c$en').encode()
+    print('sign', data)
+    # data = 'appId=liangle&t=1500356952P@#m5Nj$F7Q9*0^T1l#0*Y8c$en'.encode()
+    hash_md5 = hashlib.md5(data)
+    sign = hash_md5.hexdigest()
+    print(sign)
+    r = requests.post(
+        url, json={'appId': 'liangle', 'sign': sign, 't': t})
+    r.close()
+    res = r.json()
+    print(res)
 
 
 def downloadAll():
@@ -170,7 +200,10 @@ if __name__ == '__main__':
     # getTop10('2017-07-12')
     # getTop10('2017-07-13')
     # getTop10('2017-07-14')
+    # getFullRanking('2017-07-21')
     # getTop10('2017-07-15')
-    # getTop10('2017-07-16')
-    getRankingHistory(564, '2017-07-17', 3)
+    # getTop10('2017-07-20', 99, True)
+    getTop10('2017-07-31', 399, False, 10)
+    # genRanking('2017-07-30')
+    # getRankingHistory(564, '2017-07-17', 3)
     # downloadAll()

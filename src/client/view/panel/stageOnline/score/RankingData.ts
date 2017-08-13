@@ -2,6 +2,12 @@ import { paddy } from '../../../utils/JsFunc';
 import { getAllPlayer, getCurRanking, getRanking } from "../../../utils/HupuAPI";
 import { $post } from "../../../utils/WebJsFunc";
 declare let $
+
+export const removeRanking = (date) => {
+    $post('/online/ranking/remove', { date: date }, res => {
+        console.log('remove', date, res);
+    })
+}
 const colorSeg = [0xe96b1f,
     0x6736f8,
     0x4860f6,
@@ -18,9 +24,9 @@ export class RankingData {
     constructor(gameId, callback) {
         // let d = new Date()
         this.todayDate = this.todayStr
+        this.todayDate = '2017-07-31'
         // this.todayDate = d['toLocaleFormat']('%Y-%m-%d')
         // alert('this.todayDate' + this.todayDate)
-
         console.log('today', this.todayDate);
         this._loadCurPlayerData2(gameId, _ => {
             this._loadTop10player2(_ => {
