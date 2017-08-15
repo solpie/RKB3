@@ -212,7 +212,7 @@
 	            _this.gameDataArr = [];
 	            for (var i = 0; i < gameDataArr.length; i++) {
 	                var gameData = gameDataArr[gameDataArr.length - 1 - i];
-	                if (Number(gameData.id) > 370) {
+	                if (Number(gameData.id) > 421) {
 	                    gameData.text = "[" + gameData.id + "]:" + gameData.title;
 	                    gameData.value = gameData.id;
 	                    _this.gameDataArr.push(gameData);
@@ -6563,8 +6563,12 @@
 	            var remoteIO = io.connect(hupuWsUrl);
 	            var setPlayer = function (leftPlayer, rightPlayer) {
 	                console.log(leftPlayer);
-	                var leftRankingData = _this.rankingData.getPlayerData(leftPlayer.player_id);
-	                var rightRankingData = _this.rankingData.getPlayerData(rightPlayer.player_id);
+	                var leftRankingData;
+	                var rightRankingData;
+	                if (_this.rankingData) {
+	                    leftRankingData = _this.rankingData.getPlayerData(leftPlayer.player_id);
+	                    rightRankingData = _this.rankingData.getPlayerData(rightPlayer.player_id);
+	                }
 	                console.log('rankingData', leftRankingData, rightRankingData);
 	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level, leftRankingData);
 	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level, rightRankingData);
@@ -8573,6 +8577,8 @@
 	        if (isDark === void 0) { isDark = false; }
 	        this._tex = {};
 	        this._texFt = {};
+	        this.winSectionArr = [7, 8];
+	        this.loseSectionArr = [5, 6, 9, 10, 12];
 	        this._NAME_WIDTH = 250;
 	        this.stage = stage;
 	        if (isDark)
@@ -8764,7 +8770,18 @@
 	    ScoreM3.prototype.setGameIdx = function (gameIdx, matchType) {
 	        console.log('isMaster', matchType);
 	        if (matchType == 2) {
-	            this.gameIdx.text = '大师赛' + JsFunc_1.paddy(gameIdx, 2) + '场';
+	            if (this.winSectionArr.indexOf(gameIdx) > -1)
+	                this.gameIdx.text = '胜者组' + JsFunc_1.paddy(gameIdx, 2) + '场';
+	            else if (this.loseSectionArr.indexOf(gameIdx) > -1)
+	                this.gameIdx.text = '败者组' + JsFunc_1.paddy(gameIdx, 2) + '场';
+	            else if (gameIdx == 11)
+	                this.gameIdx.text = '胜者组决赛';
+	            else if (gameIdx == 13)
+	                this.gameIdx.text = '败者组决赛';
+	            else if (gameIdx == 14)
+	                this.gameIdx.text = '决赛';
+	            else
+	                this.gameIdx.text = '大师赛' + JsFunc_1.paddy(gameIdx, 2) + '场';
 	        }
 	        else if (matchType == 1) {
 	            this.gameIdx.text = '车轮战' + JsFunc_1.paddy(gameIdx, 2) + '场';

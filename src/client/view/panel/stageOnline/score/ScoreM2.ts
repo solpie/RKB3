@@ -330,12 +330,24 @@ export class ScoreM3 {
     set35ScoreLight(winScore) {
         this.winScoreText.text = winScore + '球胜'
     }
-
+    winSectionArr = [7, 8]
+    loseSectionArr = [5, 6, 9, 10, 12]
     //1 车轮 2 大师 3 决赛    
     setGameIdx(gameIdx, matchType) {
         console.log('isMaster', matchType)
         if (matchType == 2) {
-            this.gameIdx.text = '大师赛' + paddy(gameIdx, 2) + '场'
+            if (this.winSectionArr.indexOf(gameIdx) > -1)
+                this.gameIdx.text = '胜者组' + paddy(gameIdx, 2) + '场'
+            else if (this.loseSectionArr.indexOf(gameIdx) > -1)
+                this.gameIdx.text = '败者组' + paddy(gameIdx, 2) + '场'
+            else if (gameIdx == 11)
+                this.gameIdx.text = '胜者组决赛'
+            else if (gameIdx == 13)
+                this.gameIdx.text = '败者组决赛'
+            else if (gameIdx == 14)
+                this.gameIdx.text = '决赛'
+            else
+                this.gameIdx.text = '大师赛' + paddy(gameIdx, 2) + '场'
         }
         else if (matchType == 1) {
             this.gameIdx.text = '车轮战' + paddy(gameIdx, 2) + '场'
@@ -419,6 +431,7 @@ export class ScoreM3 {
         this.setLeftFoul(0);
         this.setRightFoul(0);
     }
+
     _fixFtName(label: PIXI.Text, name: string) {
         if (name.toUpperCase() == "GREENLIGHT") {
             name = "GREENLIGHT"
@@ -445,14 +458,6 @@ export class ScoreM3 {
         this.lPlayerName.text = name
         this.cutName(this.lPlayerName, this._NAME_WIDTH)
         this.lPlayerName.x = 604 - this.lPlayerName.width
-        // loadRes(avatar, (img) => {
-        //     let avt = this.lAvatar
-        //     avt.texture = imgToTex(img)
-        //     let s = 190 / img.width
-        //     avt.x = avt.mask.x// - avt.texture.width * .5 * s
-        //     avt.y = avt.mask.y// - avt.texture.height * .5 * s
-        //     avt.scale.x = avt.scale.y = s
-        // }, true);
 
         imgLoader.loadTex(avatar, tex => {
             let avt = this.lAvatar

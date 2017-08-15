@@ -81,102 +81,8 @@ export class ScoreView extends BasePanelView {
         else
             this.initDelay()
         this.initLocal()
-
-        // if (this.isTest)
-        //     this.initRoom()
     }
     initManmual() {
-        // let setPlayer = (leftPlayer, rightPlayer) => {
-        //     console.log(leftPlayer)
-        //     // player level 0 其他 1 至少一个胜场  2 大师赛 3冠军
-        //     this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level)
-        //     this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level)
-        // };
-
-        // let srvIO = io.connect('/webDB')
-        //     .on('connect', () => {
-        //         console.log('connect manmaul!')
-        //         let url = `/db/cmd/${WebDBCmd.cs_panelCreated}`
-        //         let param = { _: null }
-        //         $.ajax({
-        //             url: url,
-        //             type: 'post',
-        //             data: JSON.stringify(param),
-        //             headers: { "Content-Type": "application/json" },
-        //             dataType: 'json'
-        //         });
-        //     })
-        //     .on(`${WebDBCmd.sc_init}`, (data) => {
-        //         console.log('init', data);
-        //         logEvent('init', data);
-        //         this.scorePanel.set35ScoreLight(data.winScore);
-        //         this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
-        //         if (data.player) {
-        //             setPlayer(data.player.left, data.player.right);
-        //             this.scorePanel.setLeftScore(data.player.left.leftScore);
-        //             this.scorePanel.setRightScore(data.player.right.rightScore);
-        //             this.scorePanel.setLeftFoul(data.player.left.leftFoul);
-        //             this.scorePanel.setRightFoul(data.player.right.rightFoul);
-        //         }
-        //         else {
-        //             setPlayer(data.leftPlayer, data.rightPlayer);
-        //             this.scorePanel.setLeftScore(data.leftScore);
-        //             this.scorePanel.setRightScore(data.rightScore);
-        //             this.scorePanel.setLeftFoul(data.leftFoul);
-        //             this.scorePanel.setRightFoul(data.rightFoul);
-        //         }
-
-        //         data.delayTimeMS = this.delayTimeMS
-
-        //         let gameStatus = Number(data.status)
-        //         if (data.status == 0) {//status字段吧 0 进行中 1已结束 2 ready
-        //             let gameTime = Math.floor(data.t / 1000 - Number(data.st))
-        //             this.scorePanel.setTimer(gameTime)
-        //             this.scorePanel.toggleTimer(TimerState.RUNNING);
-        //         }
-        //         else if (data.status == 2) {
-        //             this.scorePanel.toggleTimer(TimerState.PAUSE);
-        //             this.scorePanel.resetTimer();
-        //         }
-        //     })
-        //     .on(`${WebDBCmd.sc_startGame}`, (data) => {
-        //     })
-        //     .on(`${WebDBCmd.sc_startTimer}`, (data) => {
-        //         if (data.isStart)
-        //             this.scorePanel.toggleTimer(TimerState.RUNNING);
-        //         else
-        //             this.scorePanel.toggleTimer(TimerState.PAUSE);
-        //     })
-        //     .on(`${WebDBCmd.sc_commit}`, (data) => {
-        //         console.log('commitGame', data)
-        //         let player = data.player
-        //         this.eventPanel.showWin(player)
-        //         this.scorePanel.toggleTimer(TimerState.PAUSE);
-        //         this.scorePanel.resetTimer();
-        //     })
-        //     .on(`${WebDBCmd.sc_score}`, (data) => {
-        //         console.log('sc_score', data)
-        //         if (data.leftScore != null) {
-        //             this.scorePanel.setLeftScore(data.leftScore);
-        //         }
-        //         if (data.rightScore != null) {
-        //             this.scorePanel.setRightScore(data.rightScore);
-        //         }
-        //         if (data.rightFoul != null) {
-        //             this.scorePanel.setRightFoul(data.rightFoul);
-        //         }
-        //         if (data.leftFoul != null) {
-        //             this.scorePanel.setLeftFoul(data.leftFoul);
-        //         }
-        //         // gameInfo.score(data.isLeft, data.dtScore)
-        //     })
-        //     .on(`${WebDBCmd.sc_showProgress}`, (data) => {
-        //         console.log('show group ', data)
-        //         this.eventPanel.showGroup(data)
-        //     })
-        //     .on(`${WebDBCmd.sc_hideProgress}`, (data) => {
-        //         this.eventPanel.hideGroup()
-        //     })
     }
     initDelay() {
         $.get('/online/delay/' + this.gameId, (delay) => {
@@ -185,7 +91,7 @@ export class ScoreView extends BasePanelView {
                 this.delayTimeMS = Number(delay) * 1000
             console.log('/online/delay/' + this.delayTimeMS)
             // this.initRemote()
-                // alert('rankingData')
+            // alert('rankingData')
             this.rankingData = new RankingData(this.gameId, _ => {
                 this.initRemote()
             })
@@ -287,8 +193,12 @@ export class ScoreView extends BasePanelView {
             let remoteIO = io.connect(hupuWsUrl);
             let setPlayer = (leftPlayer, rightPlayer) => {
                 console.log(leftPlayer)
-                let leftRankingData = this.rankingData.getPlayerData(leftPlayer.player_id)
-                let rightRankingData = this.rankingData.getPlayerData(rightPlayer.player_id)
+                let leftRankingData;
+                let rightRankingData;
+                if (this.rankingData) {
+                    leftRankingData = this.rankingData.getPlayerData(leftPlayer.player_id)
+                    rightRankingData = this.rankingData.getPlayerData(rightPlayer.player_id)
+                }
                 console.log('rankingData', leftRankingData, rightRankingData);
                 // player level 0 其他 1 至少一个胜场  2 大师赛 3冠军
                 this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level, leftRankingData)
