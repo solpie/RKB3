@@ -6638,7 +6638,7 @@
 	                    console.log('startGame', data);
 	                    logEvent('startGame', data);
 	                    _this.scorePanel.set35ScoreLight(data.winScore);
-	                    _this.scorePanel.setGameIdx(data.gameIdx, Number(data.matchType));
+	                    _this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
 	                    setPlayer(data.player.left, data.player.right);
 	                    _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
 	                    _this.scorePanel.resetScore();
@@ -8768,7 +8768,7 @@
 	        this.winScoreText.text = winScore + '球胜';
 	    };
 	    ScoreM3.prototype.setGameIdx = function (gameIdx, matchType) {
-	        console.log('isMaster', matchType);
+	        console.log('isMaster', matchType, gameIdx);
 	        if (matchType == 2) {
 	            if (this.winSectionArr.indexOf(gameIdx) > -1)
 	                this.gameIdx.text = '胜者组' + JsFunc_1.paddy(gameIdx, 2) + '场';
