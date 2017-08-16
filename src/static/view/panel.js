@@ -8768,6 +8768,7 @@
 	        this.winScoreText.text = winScore + '球胜';
 	    };
 	    ScoreM3.prototype.setGameIdx = function (gameIdx, matchType) {
+	        gameIdx = Number(gameIdx);
 	        console.log('isMaster', matchType, gameIdx);
 	        if (matchType == 2) {
 	            if (this.winSectionArr.indexOf(gameIdx) > -1)

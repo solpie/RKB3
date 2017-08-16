@@ -334,6 +334,7 @@ export class ScoreM3 {
     loseSectionArr = [5, 6, 9, 10, 12]
     //1 车轮 2 大师 3 决赛    
     setGameIdx(gameIdx, matchType) {
+        gameIdx = Number(gameIdx)
         console.log('isMaster', matchType,gameIdx)
         if (matchType == 2) {
             if (this.winSectionArr.indexOf(gameIdx) > -1)
