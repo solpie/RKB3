@@ -1,3 +1,4 @@
+import { NameArr } from '../score/NameArr';
 import { cnWrap } from '../../../utils/JsFunc';
 import { proxy } from '../../../utils/WebJsFunc';
 import { RollFx } from './RollFx';
@@ -169,7 +170,9 @@ export class Lottery extends PIXI.Container {
                     resultName = cnWrap(resultName, 20, 20).replace('\n', '')
                 }
                 // this.resultPreviewText.text = resultName
-                this.setResult(res.data.list, resultName)
+                let na = NameArr
+                resultName = '蔡国庆'
+                this.setResult(na, resultName)
                 this.stateText.visible = true
                 this.setTitle(res.data.title, res.data.img)
             }
