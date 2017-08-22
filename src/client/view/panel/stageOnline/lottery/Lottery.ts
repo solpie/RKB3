@@ -27,10 +27,12 @@ export class Lottery extends PIXI.Container {
     rewardCtn: PIXI.Container
     //中奖次序
     k: number
+
+    id: any
     constructor(parent, k, id) {
         super()
         this.k = k
-
+        this.id = id
         parent.addChild(this)
         let modal = new PIXI.Graphics()
         modal.beginFill(0, .8)
@@ -154,7 +156,7 @@ export class Lottery extends PIXI.Container {
         // this.setResult(nameArr, '东南西北抽中东南西北抽中')
         this.setTitle('哈登第二代ad战靴', null)
     }
-    getResult(id) {
+    getResult(id, callback?) {
         //http
         $.get(proxy('http://api.liangle.com/api/lot/list/' + id), (res) => {
             console.log(res.data)
@@ -172,6 +174,8 @@ export class Lottery extends PIXI.Container {
                 this.setResult(res.data.list, resultName)
                 this.stateText.visible = true
                 this.setTitle(res.data.title, res.data.img)
+                if (callback)
+                    callback()
             }
         })
     }
@@ -229,15 +233,17 @@ export class Lottery extends PIXI.Container {
     }
 
     start() {
-        for (var i = 0; i < this.fxArr.length; i++) {
-            var f = this.fxArr[i];
-            f.start()
-        }
-        this.rotFx()
-        this.fx.playOne()
+        this.getResult(this.id, _ => {
+            for (var i = 0; i < this.fxArr.length; i++) {
+                var f = this.fxArr[i];
+                f.start()
+            }
+            this.rotFx()
+            this.fx.playOne()
 
-        this.isRunning = true
-        this.stateText.text = ' STOP '
+            this.isRunning = true
+            this.stateText.text = ' STOP '
+        })
     }
 
     stop() {

@@ -5868,6 +5868,7 @@
 	        var _this = this;
 	        _super.call(this);
 	        this.k = k;
+	        this.id = id;
 	        parent.addChild(this);
 	        var modal = new PIXI.Graphics();
 	        modal.beginFill(0, .8)
@@ -5950,7 +5951,7 @@
 	    Lottery.prototype.test = function () {
 	        this.setTitle('哈登第二代ad战靴', null);
 	    };
-	    Lottery.prototype.getResult = function (id) {
+	    Lottery.prototype.getResult = function (id, callback) {
 	        var _this = this;
 	        $.get(WebJsFunc_1.proxy('http://api.liangle.com/api/lot/list/' + id), function (res) {
 	            console.log(res.data);
@@ -5967,6 +5968,8 @@
 	                _this.setResult(res.data.list, resultName);
 	                _this.stateText.visible = true;
 	                _this.setTitle(res.data.title, res.data.img);
+	                if (callback)
+	                    callback();
 	            }
 	        });
 	    };
@@ -6019,14 +6022,17 @@
 	        this.isRunning = false;
 	    };
 	    Lottery.prototype.start = function () {
-	        for (var i = 0; i < this.fxArr.length; i++) {
-	            var f = this.fxArr[i];
-	            f.start();
-	        }
-	        this.rotFx();
-	        this.fx.playOne();
-	        this.isRunning = true;
-	        this.stateText.text = ' STOP ';
+	        var _this = this;
+	        this.getResult(this.id, function (_) {
+	            for (var i = 0; i < _this.fxArr.length; i++) {
+	                var f = _this.fxArr[i];
+	                f.start();
+	            }
+	            _this.rotFx();
+	            _this.fx.playOne();
+	            _this.isRunning = true;
+	            _this.stateText.text = ' STOP ';
+	        });
 	    };
 	    Lottery.prototype.stop = function () {
 	        for (var i = 0; i < this.fxArr.length; i++) {
