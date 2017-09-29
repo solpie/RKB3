@@ -5561,14 +5561,13 @@
 	            this.ftMap[f.ftId] = f;
 	            f.x = 51 + i * 50;
 	            f.y = 20;
-	            this.addChild(f);
 	            this.ftArr.push(f);
 	        }
 	        this.playerLeftText = new PIXI.Text();
-	        this.playerLeftText.y = 90;
+	        this.playerLeftText.y = 100;
 	        var s = this.playerLeftText.style;
 	        s.fontFamily = const_1.FontName.MicrosoftYahei;
-	        s.fontSize = '50px';
+	        s.fontSize = '40px';
 	        s.fontWeight = 'bold';
 	        s.fill = '#2cfff8';
 	        this.addChild(this.playerLeftText);
