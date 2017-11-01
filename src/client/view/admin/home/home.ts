@@ -23,6 +23,8 @@ class HomeView extends VueBase {
     iosParam = VueBase.Dict;
     rmtpUrl = VueBase.String;
     playUrl = VueBase.String;
+    rmtpUrl2 = VueBase.String;
+    playUrl2 = VueBase.String;
     lotteryId = VueBase.PROP;
     lotteryIdx = VueBase.PROP;
     qrcode;
@@ -108,6 +110,10 @@ class HomeView extends VueBase {
                 this.rmtpUrl = p.url + "/" + p.stream
                 this.playUrl = res1.data.stream.play
                 this.genQRCode()
+
+                p = res1.data.stream2.publish
+                this.rmtpUrl2 = p.url + "/" + p.stream
+                this.playUrl2 = res1.data.stream2.play
             });
         },
         onClkQRCode() {

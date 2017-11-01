@@ -546,6 +546,8 @@
 	        this.iosParam = VueBase_1.VueBase.Dict;
 	        this.rmtpUrl = VueBase_1.VueBase.String;
 	        this.playUrl = VueBase_1.VueBase.String;
+	        this.rmtpUrl2 = VueBase_1.VueBase.String;
+	        this.playUrl2 = VueBase_1.VueBase.String;
 	        this.lotteryId = VueBase_1.VueBase.PROP;
 	        this.lotteryIdx = VueBase_1.VueBase.PROP;
 	        this.watch = {
@@ -562,6 +564,9 @@
 	                    _this.rmtpUrl = p.url + "/" + p.stream;
 	                    _this.playUrl = res1.data.stream.play;
 	                    _this.genQRCode();
+	                    p = res1.data.stream2.publish;
+	                    _this.rmtpUrl2 = p.url + "/" + p.stream;
+	                    _this.playUrl2 = res1.data.stream2.play;
 	                });
 	            },
 	            onClkQRCode: function () {
@@ -876,7 +881,7 @@
 /* 19 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <nav class=\"panel\">\r\n        <p class=\"panel-heading\">\r\n            直播面板op入口 Game ID: {{ selected }}\r\n            <span class=\"select\">\r\n                <select v-model=\"selected\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n        </p>\r\n        <vue v-for=\"link in links\">\r\n            <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                <span class=\"panel-icon\">\r\n            <i class=\"fa fa-book\"></i>\r\n            </span> {{link.url}}\r\n                <br> {{link.title}}\r\n            </a>\r\n            <!--<button class=\"button\">复制地址</button>-->\r\n        </vue>\r\n        <div>\r\n            抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n            <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n            <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n               {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n            </a>\r\n        </div>\r\n\r\n        <p>\r\n            command:\r\n            <br> /game/bracket/clear\r\n            <br>/game/clear/bracketIdx\r\n            <br>/git/pull\r\n    </nav>\r\n    播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n    <p>\r\n        推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n            <div id=\"qrcode\"></div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <nav class=\"panel\">\r\n        <p class=\"panel-heading\">\r\n            直播面板op入口 Game ID: {{ selected }}\r\n            <span class=\"select\">\r\n                <select v-model=\"selected\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n        </p>\r\n        <vue v-for=\"link in links\">\r\n            <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                <span class=\"panel-icon\">\r\n            <i class=\"fa fa-book\"></i>\r\n            </span> {{link.url}}\r\n                <br> {{link.title}}\r\n            </a>\r\n            <!--<button class=\"button\">复制地址</button>-->\r\n        </vue>\r\n        <div>\r\n            抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n            <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n            <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n               {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n            </a>\r\n        </div>\r\n\r\n        <p>\r\n            command:\r\n            <br> /game/bracket/clear\r\n            <br>/game/clear/bracketIdx\r\n            <br>/git/pull\r\n    </nav>\r\n    播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n    <p>\r\n        推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            播放地址2:<input type=\"text\" v-model=\"playUrl2\" style=\"width: 1000px\">\r\n            <p>\r\n                推流地址2:<input type=\"text\" v-model=\"rmtpUrl2\" style=\"width: 1000px\">\r\n                <p>\r\n                    <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n                    <div id=\"qrcode\"></div>\r\n</div>";
 
 /***/ },
 /* 20 */

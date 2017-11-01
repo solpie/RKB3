@@ -37,6 +37,10 @@
     <p>
         推流地址:<input type="text" v-model="rmtpUrl" style="width: 1000px">
         <p>
-            <button class="button is-primary" @click="onClkQRCode">生成IOS二维码</button> {{iosParam | json}}
-            <div id="qrcode"></div>
+            播放地址2:<input type="text" v-model="playUrl2" style="width: 1000px">
+            <p>
+                推流地址2:<input type="text" v-model="rmtpUrl2" style="width: 1000px">
+                <p>
+                    <button class="button is-primary" @click="onClkQRCode">生成IOS二维码</button> {{iosParam | json}}
+                    <div id="qrcode"></div>
 </div>
