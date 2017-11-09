@@ -7029,7 +7029,6 @@
 	        this.addChild(t);
 	        this.playerInfo = t;
 	        this.ftLogo = new PIXI.Sprite();
-	        this.addChild(this.ftLogo);
 	    }
 	    Champion.prototype.setChampion = function (title, name, info, ftId) {
 	        var _this = this;

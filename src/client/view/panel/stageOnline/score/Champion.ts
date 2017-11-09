@@ -50,7 +50,7 @@ export class Champion extends PIXI.Container {
         this.playerInfo = t
 
         this.ftLogo = new PIXI.Sprite()
-        this.addChild(this.ftLogo)
+        // this.addChild(this.ftLogo)
     }
 
     setChampion(title, name, info, ftId) {
