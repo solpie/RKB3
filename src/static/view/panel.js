@@ -8722,7 +8722,7 @@
 	        ctn.addChild(rWeight);
 	        var hupuIDstyle = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '25px', fill: this.skin.fontColor,
+	            fontSize: '25px', fill: "#ddd",
 	            fontWeight: 'bold',
 	        };
 	        var lHupuID = new PIXI.Text("", hupuIDstyle);
@@ -8981,7 +8981,7 @@
 	        this.hasHint = true;
 	        var fts = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '40px', fill: "#fff",
+	            fontSize: '40px', fill: "#ddd",
 	            fontWeight: 'bold'
 	        };
 	        var l = new PIXI.Text('', fts);

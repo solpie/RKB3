@@ -172,7 +172,6 @@ export class Score2017 {
         ctn.addChild(rft)
         this.rFoulText = rft
 
-
         let tts = {
             fontFamily: FontName.MicrosoftYahei,
             fontSize: '30px', fill: "#fff",
@@ -217,6 +216,7 @@ export class Score2017 {
             strokeThickness: 2,
             fontWeight: 'bold'
         }
+
         let lpn = new PIXI.Text("", pns)
         lpn.y = 155
         this.lPlayerName = lpn
@@ -250,7 +250,6 @@ export class Score2017 {
         this.rPlayerRanking = rpr
         ctn.addChild(rpr)
 
-
         let lm = new PIXI.Graphics()
             .beginFill(0xff0000)
         polygon(lm, 58, 6)
@@ -262,7 +261,6 @@ export class Score2017 {
         polygon(rm, 58, 6)
         rm.x = 1294
         rm.y = lm.y
-
 
         let lRankingFrame = new PIXI.Graphics()
             .beginFill(0xff0000)
@@ -282,6 +280,7 @@ export class Score2017 {
         this.rRankingFrame = rRankingFrame
         ctn.addChild(rm)
         ctn.addChild(lm)
+
         let la = new PIXI.Sprite()
         la.x = lm.x
         la.y = lm.y
@@ -295,7 +294,6 @@ export class Score2017 {
         ra.mask = rm
         this.rAvatar = ra
         ctn.addChild(this.rAvatar)
-
 
         let ftns = {
             fontFamily: FontName.MicrosoftYahei,

@@ -164,12 +164,12 @@ export class ScoreM3 {
         ctn.addChild(rft)
         this.rFoulText = rft
 
-
         let tts = {
             fontFamily: FontName.MicrosoftYahei,
             fontSize: '30px', fill: "#fff",
             fontWeight: 'bold'
         }
+        
         let t = new TextTimer('', tts)
         ctn.addChild(t)
         t.x = 919
@@ -250,7 +250,7 @@ export class ScoreM3 {
 
         let hupuIDstyle = {
             fontFamily: FontName.MicrosoftYahei,
-            fontSize: '25px', fill: this.skin.fontColor,
+            fontSize: '25px', fill: "#ddd",
             // stroke: '#000',
             // strokeThickness: 2,
             fontWeight: 'bold',
@@ -280,8 +280,6 @@ export class ScoreM3 {
         lm.y = 76
         lAvatar.mask = lm
         ctn.addChild(lm)
-
-
 
         let rAvatar = new PIXI.Sprite()
         rAvatar.x = 1138
