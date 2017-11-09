@@ -10,6 +10,7 @@ export let getHupuWS = (callback) => {
     //     else console.error(url);
     // })
     callback('tcp.lb.liangle.com:3081')
+    // callback('tcp.lb.liangle.com:3081')
 }
 
 //开题延时

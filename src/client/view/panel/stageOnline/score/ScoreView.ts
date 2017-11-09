@@ -116,8 +116,8 @@ export class ScoreView extends BasePanelView {
 
     initDefaultPlayer() {
         let p = 'http://w1.hoopchina.com.cn/huputv/resource/img/amateur.jpg'
-        this.scorePanel.setLeftPlayerInfo('Player 1', p, 78, 178, '', 0)
-        this.scorePanel.setRightPlayerInfo('Player 1', p, 78, 178, '', 0)
+        // this.scorePanel.setLeftPlayerInfo('Player 1', p, 78, 178, '', 0)
+        // this.scorePanel.setRightPlayerInfo('Player 1', p, 78, 178, '', 0)
     }
 
     initLocal() {
@@ -201,8 +201,22 @@ export class ScoreView extends BasePanelView {
                 }
                 console.log('rankingData', leftRankingData, rightRankingData);
                 // player level 0 其他 1 至少一个胜场  2 大师赛 3冠军
-                this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level, leftRankingData)
-                this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level, rightRankingData)
+                this.scorePanel.setLeftPlayerInfo(
+                    leftPlayer.name,
+                    leftPlayer.avatar,
+                    leftPlayer.weight,
+                    leftPlayer.height,
+                    leftPlayer.nickname,
+                    leftPlayer.level,
+                    leftRankingData)
+                this.scorePanel.setRightPlayerInfo(
+                    rightPlayer.name,
+                    rightPlayer.avatar,
+                    rightPlayer.weight,
+                    rightPlayer.height,
+                    rightPlayer.nickname,
+                    rightPlayer.level,
+                    rightRankingData)
             };
 
             remoteIO.on('connect', () => {

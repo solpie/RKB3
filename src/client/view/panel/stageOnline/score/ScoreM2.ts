@@ -60,9 +60,12 @@ export class ScoreM3 {
     gameIdx: PIXI.Text
 
     lPlayerName: PIXI.Text
+    lPlayerHupuID: PIXI.Text
     lPlayerHeight: PIXI.Text
     lPlayerWeight: PIXI.Text
+
     rPlayerName: PIXI.Text
+    rPlayerHupuID: PIXI.Text
     rPlayerHeight: PIXI.Text
     rPlayerWeight: PIXI.Text
 
@@ -132,7 +135,7 @@ export class ScoreM3 {
             // leftScoreNum.frameWidth = 56
             this.leftScoreText = lScoreNum
             lScoreNum.x = 808
-            lScoreNum.y = 110
+            lScoreNum.y = 90
             lScoreNum.align = 'center'
             ctn.addChild(lScoreNum as any)
 
@@ -147,33 +150,15 @@ export class ScoreM3 {
             ctn.addChild(rScoreNum as any)
         })
 
-        // let lf = new FoulGroup({ dir: Direction.e, invert: 29, img: this.skin.foul, count: 4 })
-        // // ctn.addChild(lf)
-        // lf.x = 771
-        // lf.y = 262
-        // this.leftFoul = lf
-
-        // let rf = new FoulGroup({ dir: Direction.w, invert: 29, img: this.skin.foul, count: 4 })
-        // // ctn.addChild(rf)
-        // rf.x = 1137
-        // rf.y = lf.y
-        // this.rightFoul = rf
-        // this.setGameIdx(1,true)
-
-        // let fts = {
-        //     fontFamily: FontName.MicrosoftYahei,
-        //     fontSize: '30px', fill: "#fff",
-        //     fontWeight: 'bold'
-        // }
         let lft = new FoulTextM2(this.skin.foulHint)
-        lft.x = 510
-        lft.y = 192
+        lft.x = 780
+        lft.y = 200
         lft.setFoul(0)
         ctn.addChild(lft)
         this.lFoulText = lft
 
         let rft = new FoulTextM2(this.skin.foulHint)
-        rft.x = 1464
+        rft.x = 1045
         rft.y = lft.y
         rft.setFoul(0)
         ctn.addChild(rft)
@@ -262,6 +247,28 @@ export class ScoreM3 {
         ctn.addChild(rWeight)
 
 
+
+        let hupuIDstyle = {
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '25px', fill: this.skin.fontColor,
+            // stroke: '#000',
+            // strokeThickness: 2,
+            fontWeight: 'bold',
+        }
+
+        let lHupuID = new PIXI.Text("", hupuIDstyle)
+        lHupuID.y = 200
+        lHupuID.text = ''
+        lHupuID.x = 595 - lHupuID.width
+        this.lPlayerHupuID = lHupuID
+        ctn.addChild(lHupuID)
+
+        let rHupuID = new PIXI.Text("", hupuIDstyle)
+        rHupuID.y = lHupuID.y
+        rHupuID.x = 1320
+        this.rPlayerHupuID = rHupuID
+        ctn.addChild(rHupuID)
+
         let lAvatar = new PIXI.Sprite()
         lAvatar.x = 595
         lAvatar.y = 76
@@ -335,7 +342,7 @@ export class ScoreM3 {
     //1 车轮 2 大师 3 决赛    
     setGameIdx(gameIdx, matchType) {
         gameIdx = Number(gameIdx)
-        console.log('isMaster', matchType,gameIdx)
+        console.log('isMaster', matchType, gameIdx)
         if (matchType == 2) {
             if (this.winSectionArr.indexOf(gameIdx) > -1)
                 this.gameIdx.text = '胜者组' + paddy(gameIdx, 2) + '场'
@@ -452,8 +459,11 @@ export class ScoreM3 {
         }
     }
     //player
-    setLeftPlayerInfo(name: string, avatar: string, weight, height, ftId: string, level: Number, rankingData: any) {
-        this._lFtId = ftId
+    setLeftPlayerInfo(name: string, avatar: string, weight, height, nickName: string, level: Number, rankingData: any) {
+        this.lPlayerHupuID.text = nickName
+        this.lPlayerHupuID.x = 595 -  this.lPlayerHupuID.width
+        this.cutName(this.lPlayerHupuID, this._NAME_WIDTH)
+
         this._loadFrame(level, this.lFrame)
         //cm kg
         this.lPlayerName.text = name
@@ -487,8 +497,10 @@ export class ScoreM3 {
 
 
     _NAME_WIDTH = 250
-    setRightPlayerInfo(name: string, avatar: string, weight, height, ftId: string, level: Number, rankingData: any) {
-        this._rFtId = ftId
+    setRightPlayerInfo(name: string, avatar: string, weight, height, nickName: string, level: Number, rankingData: any) {
+        // this._rFtId = ftId
+        this.rPlayerHupuID.text = nickName
+        this.cutName(this.rPlayerHupuID, this._NAME_WIDTH)
         this._loadFrame(level, this.rFrame)
 
         this.rPlayerName.text = name

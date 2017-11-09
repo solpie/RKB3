@@ -217,7 +217,7 @@
 	            _this.gameDataArr = [];
 	            for (var i = 0; i < gameDataArr.length; i++) {
 	                var gameData = gameDataArr[gameDataArr.length - 1 - i];
-	                if (Number(gameData.id) > 421) {
+	                if (Number(gameData.id) > 490) {
 	                    gameData.text = "[" + gameData.id + "]:" + gameData.title;
 	                    gameData.value = gameData.id;
 	                    _this.gameDataArr.push(gameData);
@@ -6499,8 +6499,6 @@
 	    };
 	    ScoreView.prototype.initDefaultPlayer = function () {
 	        var p = 'http://w1.hoopchina.com.cn/huputv/resource/img/amateur.jpg';
-	        this.scorePanel.setLeftPlayerInfo('Player 1', p, 78, 178, '', 0);
-	        this.scorePanel.setRightPlayerInfo('Player 1', p, 78, 178, '', 0);
 	    };
 	    ScoreView.prototype.initLocal = function () {
 	        var _this = this;
@@ -6580,8 +6578,8 @@
 	                    rightRankingData = _this.rankingData.getPlayerData(rightPlayer.player_id);
 	                }
 	                console.log('rankingData', leftRankingData, rightRankingData);
-	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.groupId, leftPlayer.level, leftRankingData);
-	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.groupId, rightPlayer.level, rightRankingData);
+	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.nickname, leftPlayer.level, leftRankingData);
+	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.nickname, rightPlayer.level, rightRankingData);
 	            };
 	            remoteIO.on('connect', function () {
 	                console.log('hupuAuto socket connected', hupuWsUrl, _this.gameId);
@@ -8632,7 +8630,7 @@
 	            var lScoreNum = new PixiEx_1.BitmapText(sheet);
 	            _this.leftScoreText = lScoreNum;
 	            lScoreNum.x = 808;
-	            lScoreNum.y = 110;
+	            lScoreNum.y = 90;
 	            lScoreNum.align = 'center';
 	            ctn.addChild(lScoreNum);
 	            var rScoreNum = new PixiEx_1.BitmapText(sheet);
@@ -8645,13 +8643,13 @@
 	            ctn.addChild(rScoreNum);
 	        });
 	        var lft = new FoulTextM2_1.FoulTextM2(this.skin.foulHint);
-	        lft.x = 510;
-	        lft.y = 192;
+	        lft.x = 780;
+	        lft.y = 200;
 	        lft.setFoul(0);
 	        ctn.addChild(lft);
 	        this.lFoulText = lft;
 	        var rft = new FoulTextM2_1.FoulTextM2(this.skin.foulHint);
-	        rft.x = 1464;
+	        rft.x = 1045;
 	        rft.y = lft.y;
 	        rft.setFoul(0);
 	        ctn.addChild(rft);
@@ -8722,6 +8720,22 @@
 	        rWeight.y = lHeight.y;
 	        this.rPlayerWeight = rWeight;
 	        ctn.addChild(rWeight);
+	        var hupuIDstyle = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '25px', fill: this.skin.fontColor,
+	            fontWeight: 'bold',
+	        };
+	        var lHupuID = new PIXI.Text("", hupuIDstyle);
+	        lHupuID.y = 200;
+	        lHupuID.text = '';
+	        lHupuID.x = 595 - lHupuID.width;
+	        this.lPlayerHupuID = lHupuID;
+	        ctn.addChild(lHupuID);
+	        var rHupuID = new PIXI.Text("", hupuIDstyle);
+	        rHupuID.y = lHupuID.y;
+	        rHupuID.x = 1320;
+	        this.rPlayerHupuID = rHupuID;
+	        ctn.addChild(rHupuID);
 	        var lAvatar = new PIXI.Sprite();
 	        lAvatar.x = 595;
 	        lAvatar.y = 76;
@@ -8873,9 +8887,11 @@
 	            this.cutName(n, width);
 	        }
 	    };
-	    ScoreM3.prototype.setLeftPlayerInfo = function (name, avatar, weight, height, ftId, level, rankingData) {
+	    ScoreM3.prototype.setLeftPlayerInfo = function (name, avatar, weight, height, nickName, level, rankingData) {
 	        var _this = this;
-	        this._lFtId = ftId;
+	        this.lPlayerHupuID.text = nickName;
+	        this.lPlayerHupuID.x = 595 - this.lPlayerHupuID.width;
+	        this.cutName(this.lPlayerHupuID, this._NAME_WIDTH);
 	        this._loadFrame(level, this.lFrame);
 	        this.lPlayerName.text = name;
 	        this.cutName(this.lPlayerName, this._NAME_WIDTH);
@@ -8899,9 +8915,10 @@
 	    };
 	    ScoreM3.prototype._loadFrame = function (level, frame) {
 	    };
-	    ScoreM3.prototype.setRightPlayerInfo = function (name, avatar, weight, height, ftId, level, rankingData) {
+	    ScoreM3.prototype.setRightPlayerInfo = function (name, avatar, weight, height, nickName, level, rankingData) {
 	        var _this = this;
-	        this._rFtId = ftId;
+	        this.rPlayerHupuID.text = nickName;
+	        this.cutName(this.rPlayerHupuID, this._NAME_WIDTH);
 	        this._loadFrame(level, this.rFrame);
 	        this.rPlayerName.text = name;
 	        this.cutName(this.rPlayerName, this._NAME_WIDTH);
