@@ -50,7 +50,8 @@ export class Champion extends PIXI.Container {
         this.playerInfo = t
 
         this.ftLogo = new PIXI.Sprite()
-        // this.addChild(this.ftLogo)
+        this.ftLogo.alpha = 0
+        this.addChild(this.ftLogo)
     }
 
     setChampion(title, name, info, ftId) {
@@ -61,14 +62,16 @@ export class Champion extends PIXI.Container {
         this.rLight.x = this.title.x + this.title.width + 10
         this.playerName.text = name
         this.playerName.x = .5 * (w - this.playerName.width)
-        this.playerInfo.text = getFtName(ftId) + " | " + info
-        loadImg(getFtLogoUrl2(ftId), (img) => {
-            this.ftLogo.x = .5 * (w - (65 + this.playerInfo.width))
-            this.playerInfo.x = this.ftLogo.x + 65
-            this.ftLogo.y = this.playerInfo.y - 3
-            this.ftLogo.texture = imgToTex(img)
-            this.ftLogo.width = this.ftLogo.height = 42
-        })
+        this.playerInfo.text = info
+        this.playerInfo.x = 960 - this.playerInfo.width * .5
+        // this.playerInfo.text = getFtName(ftId) + " | " + info
+        // loadImg(getFtLogoUrl2(ftId), (img) => {
+        //     this.ftLogo.x = .5 * (w - (65 + this.playerInfo.width))
+        //     this.playerInfo.x = this.ftLogo.x + 65
+        //     this.ftLogo.y = this.playerInfo.y - 3
+        //     this.ftLogo.texture = imgToTex(img)
+        //     this.ftLogo.width = this.ftLogo.height = 42
+        // })
     }
 
     show() {

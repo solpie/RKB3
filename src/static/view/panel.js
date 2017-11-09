@@ -6988,8 +6988,6 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Com2017_1 = __webpack_require__(74);
-	var JsFunc_1 = __webpack_require__(17);
 	var const_1 = __webpack_require__(43);
 	var PixiEx_1 = __webpack_require__(46);
 	var Champion = (function (_super) {
@@ -7029,9 +7027,10 @@
 	        this.addChild(t);
 	        this.playerInfo = t;
 	        this.ftLogo = new PIXI.Sprite();
+	        this.ftLogo.alpha = 0;
+	        this.addChild(this.ftLogo);
 	    }
 	    Champion.prototype.setChampion = function (title, name, info, ftId) {
-	        var _this = this;
 	        var w = const_1.ViewConst.STAGE_WIDTH;
 	        this.title.text = title;
 	        this.title.x = .5 * (w - this.title.width);
@@ -7039,14 +7038,8 @@
 	        this.rLight.x = this.title.x + this.title.width + 10;
 	        this.playerName.text = name;
 	        this.playerName.x = .5 * (w - this.playerName.width);
-	        this.playerInfo.text = Com2017_1.getFtName(ftId) + " | " + info;
-	        JsFunc_1.loadImg(Com2017_1.getFtLogoUrl2(ftId), function (img) {
-	            _this.ftLogo.x = .5 * (w - (65 + _this.playerInfo.width));
-	            _this.playerInfo.x = _this.ftLogo.x + 65;
-	            _this.ftLogo.y = _this.playerInfo.y - 3;
-	            _this.ftLogo.texture = PixiEx_1.imgToTex(img);
-	            _this.ftLogo.width = _this.ftLogo.height = 42;
-	        });
+	        this.playerInfo.text = info;
+	        this.playerInfo.x = 960 - this.playerInfo.width * .5;
 	    };
 	    Champion.prototype.show = function () {
 	        this.visible = true;
