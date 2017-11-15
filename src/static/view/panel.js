@@ -6661,6 +6661,7 @@
 	                    else
 	                        _this.eventPanel.showWin(player);
 	                    _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
+	                    _this.scorePanel.resetScore();
 	                };
 	                if (eventMap[event]) {
 	                    isRunning = true;

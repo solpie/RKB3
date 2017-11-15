@@ -329,6 +329,7 @@ export class ScoreView extends BasePanelView {
                     else
                         this.eventPanel.showWin(player)
                     this.scorePanel.toggleTimer(TimerState.PAUSE);
+                    this.scorePanel.resetScore();
                 };
                 if (eventMap[event]) {
                     isRunning = true
