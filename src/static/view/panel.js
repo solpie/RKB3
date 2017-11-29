@@ -6573,10 +6573,13 @@
 	                console.log(leftPlayer);
 	                var leftRankingData;
 	                var rightRankingData;
-	                if (_this.rankingData) {
-	                    leftRankingData = _this.rankingData.getPlayerData(leftPlayer.player_id);
-	                    rightRankingData = _this.rankingData.getPlayerData(rightPlayer.player_id);
-	                }
+	                var colorSeg = [0xe96b1f,
+	                    0x6736f8,
+	                    0x4860f6,
+	                    0x599b1e,
+	                    0xa3a8b5];
+	                leftRankingData = { ranking: leftPlayer.powerRank, text: '冲榜', color: colorSeg[leftPlayer.powerRankType - 1] };
+	                rightRankingData = { ranking: rightPlayer.powerRank, text: '冲榜', color: colorSeg[rightPlayer.powerRankType - 1] };
 	                console.log('rankingData', leftRankingData, rightRankingData);
 	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.nickname, leftPlayer.level, leftRankingData);
 	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.nickname, rightPlayer.level, rightRankingData);
@@ -7877,7 +7880,7 @@
 	        this.winLoseText.text = param.rec.win + '胜' + param.rec.lose + '负';
 	        var win = param.winner;
 	        this.nameText.text = win.name;
-	        this.infoText.text = win.height + 'cm / ' + win.weight + 'kg / ' + (win.age || '28') + '岁';
+	        this.infoText.text = win.height + 'cm / ' + win.weight + 'kg / ' + (win.age || '18') + '岁';
 	        this.locationText.text = win.school;
 	        console.log('show victory', param);
 	        ImgLoader_1.imgLoader.loadTex(win.avatar, function (tex) {

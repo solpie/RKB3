@@ -195,10 +195,17 @@ export class ScoreView extends BasePanelView {
                 console.log(leftPlayer)
                 let leftRankingData;
                 let rightRankingData;
-                if (this.rankingData) {
-                    leftRankingData = this.rankingData.getPlayerData(leftPlayer.player_id)
-                    rightRankingData = this.rankingData.getPlayerData(rightPlayer.player_id)
-                }
+                let colorSeg = [0xe96b1f,
+                    0x6736f8,
+                    0x4860f6,
+                    0x599b1e,
+                    0xa3a8b5]
+                leftRankingData = { ranking: leftPlayer.powerRank, text: '冲榜', color: colorSeg[leftPlayer.powerRankType - 1] }
+                rightRankingData = { ranking: rightPlayer.powerRank, text: '冲榜', color: colorSeg[rightPlayer.powerRankType - 1] }
+                // if (this.rankingData) {
+                // leftRankingData = this.rankingData.getPlayerData(leftPlayer.player_id)
+                //     rightRankingData = this.rankingData.getPlayerData(rightPlayer.player_id)
+                // }
                 console.log('rankingData', leftRankingData, rightRankingData);
                 // player level 0 其他 1 至少一个胜场  2 大师赛 3冠军
                 this.scorePanel.setLeftPlayerInfo(
