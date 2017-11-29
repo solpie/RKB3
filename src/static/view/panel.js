@@ -6577,13 +6577,18 @@
 	                    0x6736f8,
 	                    0x4860f6,
 	                    0x599b1e,
-	                    0xa3a8b5];
+	                    0xa3a8b5,
+	                    0xa3a8b5,
+	                ];
 	                leftRankingData = { ranking: leftPlayer.powerRank, text: '冲榜', color: colorSeg[leftPlayer.powerRankType - 1] };
 	                rightRankingData = { ranking: rightPlayer.powerRank, text: '冲榜', color: colorSeg[rightPlayer.powerRankType - 1] };
 	                console.log('rankingData', leftRankingData, rightRankingData);
 	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.nickname, leftPlayer.level, leftRankingData);
 	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.nickname, rightPlayer.level, rightRankingData);
 	            };
+	            remoteIO.on('error', function (e) {
+	                console.log('connect_error', e);
+	            });
 	            remoteIO.on('connect', function () {
 	                console.log('hupuAuto socket connected', hupuWsUrl, _this.gameId);
 	                remoteIO.emit('passerbyking', {

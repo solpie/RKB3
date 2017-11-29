@@ -199,7 +199,10 @@ export class ScoreView extends BasePanelView {
                     0x6736f8,
                     0x4860f6,
                     0x599b1e,
-                    0xa3a8b5]
+                    0xa3a8b5,
+                    0xa3a8b5,
+                ]
+                // powerRankType  1.大魔王，2.精英，3.实力选手，4.路人，5.新秀，6.冲榜
                 leftRankingData = { ranking: leftPlayer.powerRank, text: '冲榜', color: colorSeg[leftPlayer.powerRankType - 1] }
                 rightRankingData = { ranking: rightPlayer.powerRank, text: '冲榜', color: colorSeg[rightPlayer.powerRankType - 1] }
                 // if (this.rankingData) {
@@ -226,6 +229,10 @@ export class ScoreView extends BasePanelView {
                     rightRankingData)
             };
 
+            remoteIO.on('error', (e) => {
+                console.log('connect_error',e);
+            })
+            
             remoteIO.on('connect', () => {
                 console.log('hupuAuto socket connected', hupuWsUrl, this.gameId);
                 remoteIO.emit('passerbyking', {
