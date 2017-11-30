@@ -191,10 +191,7 @@ export class ScoreView extends BasePanelView {
         let isRunning = false
         getHupuWS((hupuWsUrl) => {
             let remoteIO = io.connect(hupuWsUrl);
-            let setPlayer = (leftPlayer, rightPlayer) => {
-                console.log(leftPlayer)
-                let leftRankingData;
-                let rightRankingData;
+            let getRankData = (p) => {
                 let colorSeg = [0xe96b1f,
                     0x6736f8,
                     0x4860f6,
@@ -202,9 +199,21 @@ export class ScoreView extends BasePanelView {
                     0xa3a8b5,
                     0xa3a8b5,
                 ]
+                if (p.powerRank > 4) {
+                    return { ranking: p.powerRank, text: '冲榜', color: colorSeg[p.powerRankType - 1] }
+                }
+                else
+                    return { ranking: p.powerRank, text: '' + p.powerRank, color: colorSeg[p.powerRankType - 1] }
+            }
+            let setPlayer = (leftPlayer, rightPlayer) => {
+                console.log(leftPlayer)
+                let leftRankingData;
+                let rightRankingData;
+
                 // powerRankType  1.大魔王，2.精英，3.实力选手，4.路人，5.新秀，6.冲榜
-                leftRankingData = { ranking: leftPlayer.powerRank, text: '冲榜', color: colorSeg[leftPlayer.powerRankType - 1] }
-                rightRankingData = { ranking: rightPlayer.powerRank, text: '冲榜', color: colorSeg[rightPlayer.powerRankType - 1] }
+
+                leftRankingData = getRankData(leftPlayer)
+                rightRankingData = getRankData(rightPlayer)
                 // if (this.rankingData) {
                 // leftRankingData = this.rankingData.getPlayerData(leftPlayer.player_id)
                 //     rightRankingData = this.rankingData.getPlayerData(rightPlayer.player_id)
@@ -230,9 +239,9 @@ export class ScoreView extends BasePanelView {
             };
 
             remoteIO.on('error', (e) => {
-                console.log('connect_error',e);
+                console.log('connect_error', e);
             })
-            
+
             remoteIO.on('connect', () => {
                 console.log('hupuAuto socket connected', hupuWsUrl, this.gameId);
                 remoteIO.emit('passerbyking', {

@@ -6569,10 +6569,7 @@
 	        var isRunning = false;
 	        HupuAPI_1.getHupuWS(function (hupuWsUrl) {
 	            var remoteIO = io.connect(hupuWsUrl);
-	            var setPlayer = function (leftPlayer, rightPlayer) {
-	                console.log(leftPlayer);
-	                var leftRankingData;
-	                var rightRankingData;
+	            var getRankData = function (p) {
 	                var colorSeg = [0xe96b1f,
 	                    0x6736f8,
 	                    0x4860f6,
@@ -6580,8 +6577,18 @@
 	                    0xa3a8b5,
 	                    0xa3a8b5,
 	                ];
-	                leftRankingData = { ranking: leftPlayer.powerRank, text: '冲榜', color: colorSeg[leftPlayer.powerRankType - 1] };
-	                rightRankingData = { ranking: rightPlayer.powerRank, text: '冲榜', color: colorSeg[rightPlayer.powerRankType - 1] };
+	                if (p.powerRank > 4) {
+	                    return { ranking: p.powerRank, text: '冲榜', color: colorSeg[p.powerRankType - 1] };
+	                }
+	                else
+	                    return { ranking: p.powerRank, text: '' + p.powerRank, color: colorSeg[p.powerRankType - 1] };
+	            };
+	            var setPlayer = function (leftPlayer, rightPlayer) {
+	                console.log(leftPlayer);
+	                var leftRankingData;
+	                var rightRankingData;
+	                leftRankingData = getRankData(leftPlayer);
+	                rightRankingData = getRankData(rightPlayer);
 	                console.log('rankingData', leftRankingData, rightRankingData);
 	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.nickname, leftPlayer.level, leftRankingData);
 	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.nickname, rightPlayer.level, rightRankingData);
