@@ -199,8 +199,10 @@ export class ScoreView extends BasePanelView {
                     0xa3a8b5,
                     0xa3a8b5,
                 ]
-                if (p.powerRank > 4) {
-                    return { ranking: p.powerRank, text: '冲榜', color: colorSeg[p.powerRankType - 1] }
+                if (p.powerRankType == 0 || p.powerRank == 0)
+                    return { ranking: p.powerRank, text: '冲榜', color: colorSeg[5] }
+                else if (p.powerRankType > 4) {
+                    return { ranking: p.powerRank, text: '冲榜', color: colorSeg[5] }
                 }
                 else
                     return { ranking: p.powerRank, text: '' + p.powerRank, color: colorSeg[p.powerRankType - 1] }
