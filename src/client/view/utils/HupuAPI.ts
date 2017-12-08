@@ -9,7 +9,7 @@ export let getHupuWS = (callback) => {
     //     }
     //     else console.error(url);
     // })
-    let ws = '192.168.11.108:3080'
+    let ws = 'tcp.lb.liangle.com:3081'
     console.log('ws:', ws);
     callback(ws)
     // callback('tcp.lb.liangle.com:3081')

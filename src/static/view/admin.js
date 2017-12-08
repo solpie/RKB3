@@ -999,7 +999,7 @@
 	"use strict";
 	var WebJsFunc_1 = __webpack_require__(23);
 	exports.getHupuWS = function (callback) {
-	    var ws = '192.168.11.108:3080';
+	    var ws = 'tcp.lb.liangle.com:3081';
 	    console.log('ws:', ws);
 	    callback(ws);
 	};
