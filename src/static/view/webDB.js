@@ -737,7 +737,9 @@
 	"use strict";
 	var WebJsFunc_1 = __webpack_require__(23);
 	exports.getHupuWS = function (callback) {
-	    callback('tcp.lb.liangle.com:3081');
+	    var ws = '192.168.11.108:3080';
+	    console.log('ws:', ws);
+	    callback(ws);
 	};
 	function setClientDelay(gameId, sec, callback) {
 	    var url = "http://pre.liangle.com/api/pbk/event/delay/" + gameId;
@@ -783,6 +785,11 @@
 	    WebJsFunc_1.$post(WebJsFunc_1.proxy(url), data, callback);
 	}
 	exports.getCurRanking = getCurRanking;
+	function getGroupData(gameId, callback) {
+	    var url = 'http://api.liangle.com/api/passerbyking/game/group/' + gameId;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getGroupData = getGroupData;
 	var _get = function (url, callback) {
 	    $.get(url, callback);
 	};

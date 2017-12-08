@@ -75,16 +75,18 @@ export class ScoreView extends BasePanelView {
             // this.eventPanel.showLogoFx()
 
         }
-        if (isManmual) {
-            this.initManmual()
-        }
-        else
-            this.initDelay()
+        // if (isManmual) {
+        //     this.initManmual()
+        // }
+        // else
+        this.initDelay()
         this.initLocal()
     }
     initManmual() {
     }
     initDelay() {
+        console.log('initDelay')
+
         $.get('/online/delay/' + this.gameId, (delay) => {
             // this.delayTimeShowOnly = delay
             if (delay)
@@ -92,10 +94,10 @@ export class ScoreView extends BasePanelView {
             console.log('/online/delay/' + this.delayTimeMS)
             // this.initRemote()
             // alert('rankingData')
-            this.rankingData = new RankingData(this.gameId, _ => {
-                this.initRemote()
-            })
+            // this.rankingData = new RankingData(this.gameId, _ => {
+            // })
         })
+        this.initRemote()
     }
     initOP(view) {
         let isCtrl;
@@ -170,7 +172,7 @@ export class ScoreView extends BasePanelView {
                     : this.eventPanel.noticeSprite.hide()
             })
             .on(`${CommandId.sc_showRanking}`, (data) => {
-                this.eventPanel.showRanking(data, this.rankingData)
+                // this.eventPanel.showRanking(data, this.rankingData)
             })
             //score fx
             .on(`${CommandId.sc_setFxPoint}`, (data) => {

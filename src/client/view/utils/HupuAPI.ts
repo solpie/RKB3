@@ -9,7 +9,9 @@ export let getHupuWS = (callback) => {
     //     }
     //     else console.error(url);
     // })
-    callback('tcp.lb.liangle.com:3081')
+    let ws = '192.168.11.108:3080'
+    console.log('ws:', ws);
+    callback(ws)
     // callback('tcp.lb.liangle.com:3081')
 }
 
@@ -44,7 +46,7 @@ export function getRoundRawDate(gameId, callback) {
     _get(proxy(url), callback)
 }
 //实力榜
-export function getRanking( callback) {
+export function getRanking(callback) {
     let url = 'http://lrw.smartcourt.cn/getRanking'
     let data = { page: 1, pageSize: 100 }
     $post(proxy(url), data, callback)
@@ -55,6 +57,10 @@ export function getCurRanking(hupuIdArr, callback) {
     let data = hupuIdArr
     // let data = { userids: hupuIdArr }
     $post(proxy(url), data, callback)
+}
+export function getGroupData(gameId, callback) {
+    let url = 'http://api.liangle.com/api/passerbyking/game/group/' + gameId
+    _get(proxy(url), callback)
 }
 
 let _get = (url, callback) => {

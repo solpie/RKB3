@@ -524,7 +524,9 @@
 	"use strict";
 	var WebJsFunc_1 = __webpack_require__(23);
 	exports.getHupuWS = function (callback) {
-	    callback('tcp.lb.liangle.com:3081');
+	    var ws = '192.168.11.108:3080';
+	    console.log('ws:', ws);
+	    callback(ws);
 	};
 	function setClientDelay(gameId, sec, callback) {
 	    var url = "http://pre.liangle.com/api/pbk/event/delay/" + gameId;
@@ -570,6 +572,11 @@
 	    WebJsFunc_1.$post(WebJsFunc_1.proxy(url), data, callback);
 	}
 	exports.getCurRanking = getCurRanking;
+	function getGroupData(gameId, callback) {
+	    var url = 'http://api.liangle.com/api/passerbyking/game/group/' + gameId;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getGroupData = getGroupData;
 	var _get = function (url, callback) {
 	    $.get(url, callback);
 	};
@@ -4361,10 +4368,12 @@
 	var Lottery_1 = __webpack_require__(77);
 	var RankView_1 = __webpack_require__(80);
 	var ScoreView_1 = __webpack_require__(82);
+	var GroupSp_1 = __webpack_require__(112);
 	var rankView;
 	var bracketView;
 	var scoreView;
 	var lottery;
+	var groupSp;
 	var canvasStage;
 	ImgLoader_1.imgLoader;
 	var StageOnlineView = (function (_super) {
@@ -4589,6 +4598,9 @@
 	            var k = this.$route.query['k'];
 	            this.showLottery(k, id);
 	        }
+	        else if (panel == "group") {
+	            this.showGroup();
+	        }
 	        else {
 	            this.showRank();
 	        }
@@ -4612,6 +4624,10 @@
 	        if (!lottery) {
 	            lottery = new Lottery_1.Lottery(canvasStage, k, id);
 	        }
+	    };
+	    StageOnlineView.prototype.showGroup = function () {
+	        if (!groupSp)
+	            groupSp = new GroupSp_1.GroupSp(canvasStage, this.gameId);
 	    };
 	    StageOnlineView.prototype.showRank = function () {
 	        if (!rankView) {
@@ -6425,7 +6441,6 @@
 	var HupuAPI_1 = __webpack_require__(22);
 	var TweenEx_1 = __webpack_require__(50);
 	var BasePanelView_1 = __webpack_require__(44);
-	var RankingData_1 = __webpack_require__(67);
 	var Score2017_1 = __webpack_require__(95);
 	var ScoreM2_1 = __webpack_require__(98);
 	function logEvent() {
@@ -6461,25 +6476,20 @@
 	        if (this.isTest) {
 	            this.eventPanel.showTopInfo();
 	        }
-	        if (isManmual) {
-	            this.initManmual();
-	        }
-	        else
-	            this.initDelay();
+	        this.initDelay();
 	        this.initLocal();
 	    }
 	    ScoreView.prototype.initManmual = function () {
 	    };
 	    ScoreView.prototype.initDelay = function () {
 	        var _this = this;
+	        console.log('initDelay');
 	        $.get('/online/delay/' + this.gameId, function (delay) {
 	            if (delay)
 	                _this.delayTimeMS = Number(delay) * 1000;
 	            console.log('/online/delay/' + _this.delayTimeMS);
-	            _this.rankingData = new RankingData_1.RankingData(_this.gameId, function (_) {
-	                _this.initRemote();
-	            });
 	        });
+	        this.initRemote();
 	    };
 	    ScoreView.prototype.initOP = function (view) {
 	        var isCtrl;
@@ -6550,7 +6560,6 @@
 	                : _this.eventPanel.noticeSprite.hide();
 	        })
 	            .on("" + Command_1.CommandId.sc_showRanking, function (data) {
-	            _this.eventPanel.showRanking(data, _this.rankingData);
 	        })
 	            .on("" + Command_1.CommandId.sc_setFxPoint, function (data) {
 	            _this.eventPanel.setFxPoint(data.mx, data.my);
@@ -8821,6 +8830,9 @@
 	        else if (matchType == 1) {
 	            this.gameIdx.text = '车轮战' + JsFunc_1.paddy(gameIdx, 2) + '场';
 	        }
+	        else if (matchType == 4) {
+	            this.gameIdx.text = '小组赛' + JsFunc_1.paddy(gameIdx, 2) + '场';
+	        }
 	        else if (matchType == 3) {
 	            this.gameIdx.text = '决赛';
 	        }
@@ -9013,6 +9025,271 @@
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">实力榜:</label><br>\r\n            <input class=\"input\" type=\"text\" style=\"width: 110px;\" v-model=\"inputDate\">\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,1)\">显示总榜1</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,2)\">显示总榜2</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,3)\">显示总榜3</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,4)\">显示总榜4</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,5)\">显示总榜5</button>\r\n            <button class=\"button\" @click=\"onShowRanking(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onShowDateRanking(inputDate)\">查询日期</button>\r\n            <button class=\"button\" @click=\"onShowPlayerRanking(inputDate)\">查询Player</button>\r\n            <button class=\"button\" @click=\"onRemoveRanking(inputDate)\">删除日期</button>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
+
+/***/ },
+/* 101 */,
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */,
+/* 111 */,
+/* 112 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var timers_1 = __webpack_require__(69);
+	var PixiEx_1 = __webpack_require__(46);
+	var const_1 = __webpack_require__(43);
+	var HupuAPI_1 = __webpack_require__(22);
+	var thenBy_1 = __webpack_require__(113);
+	var ImgLoader_1 = __webpack_require__(68);
+	var Row1 = (function (_super) {
+	    __extends(Row1, _super);
+	    function Row1() {
+	        _super.call(this);
+	        var rs = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '25px', fill: "#8696b7",
+	        };
+	        this.rankText = new PIXI.Text('', rs);
+	        this.rankText.style.fill = '#ccc';
+	        this.rankText.x = 0;
+	        this.rankText.y = 0;
+	        this.addChild(this.rankText);
+	        this.nameText = new PIXI.Text('', rs);
+	        this.nameText.x = 120;
+	        this.nameText.y = this.rankText.y;
+	        this.addChild(this.nameText);
+	        this.winText = new PIXI.Text('', rs);
+	        this.winText.x = 160;
+	        this.winText.y = this.rankText.y;
+	        this.addChild(this.winText);
+	        this.loseText = new PIXI.Text('', rs);
+	        this.loseText.x = 160;
+	        this.loseText.y = this.rankText.y;
+	        this.addChild(this.loseText);
+	        this.scoreText = new PIXI.Text('', rs);
+	        this.scoreText.x = 160;
+	        this.scoreText.y = this.rankText.y;
+	        this.addChild(this.scoreText);
+	    }
+	    Row1.prototype._setSize = function (s) {
+	        this.rankText.style.fontSize = s + 'px';
+	        this.nameText.style.fontSize = s + 'px';
+	        this.winText.style.fontSize = s + 'px';
+	        this.loseText.style.fontSize = s + 'px';
+	        this.scoreText.style.fontSize = s + 'px';
+	    };
+	    Row1.prototype.setData = function (data) {
+	        if (data.isBig) {
+	            this.rankText.text = data.rank + '';
+	            this.rankText.x = 40 - this.rankText.width;
+	            this.nameText.text = data.name;
+	            this.nameText.x = 95 - (this.nameText.width * .5);
+	            this.winText.text = data.win + '';
+	            this.winText.x = 183 - (this.winText.width * .5);
+	            this.loseText.text = data.lose + '';
+	            this.loseText.x = 222 - (this.loseText.width * .5);
+	            this.scoreText.text = data.score + '';
+	            this.scoreText.x = 278 - (this.scoreText.width * .5);
+	            this._setSize(30);
+	        }
+	        else {
+	            this._setSize(25);
+	            this.rankText.text = data.rank + '';
+	            this.rankText.x = 40 - this.rankText.width;
+	            this.nameText.text = data.name;
+	            this.nameText.x = 105 - (this.nameText.width * .5);
+	            this.winText.text = data.win + '';
+	            this.winText.x = 183 - (this.winText.width * .5);
+	            this.loseText.text = data.lose + '';
+	            this.loseText.x = 222 - (this.loseText.width * .5);
+	            this.scoreText.text = data.score + '';
+	            this.scoreText.x = 278 - (this.scoreText.width * .5);
+	        }
+	    };
+	    return Row1;
+	}(PIXI.Container));
+	var G1 = (function (_super) {
+	    __extends(G1, _super);
+	    function G1() {
+	        _super.call(this);
+	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/group/groupBg.png' });
+	        this.addChild(bg);
+	        this.avt = new PIXI.Sprite();
+	        bg.addChild(this.avt);
+	        this.avt.x = 10;
+	        this.avt.y = 10;
+	        var avtMask = new PIXI.Graphics();
+	        avtMask.beginFill(0xffff00).drawRect(0, 0, 70 / 0.8, 70 / 0.8);
+	        avtMask.x = 20;
+	        avtMask.y = 22;
+	        bg.addChild(avtMask);
+	        this.avt.mask = avtMask;
+	        var fg = PixiEx_1.newBitmap({ url: '/img/panel/group/groupFg.png' });
+	        this.addChild(fg);
+	        bg.scale.x = bg.scale.y =
+	            fg.scale.x = fg.scale.y =
+	                0.8;
+	        var rs = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '28px', fill: "#BABABA",
+	        };
+	        this.groupText = new PIXI.Text('GROUP A', rs);
+	        this.groupText.x = 140;
+	        this.groupText.y = 14;
+	        this.addChild(this.groupText);
+	        this.playerRowArr = [];
+	        for (var i = 0; i < 3; i++) {
+	            var r = new Row1();
+	            r.y = 90 + i * 50;
+	            r.x = 50;
+	            r.setData({
+	                isBig: i == 0,
+	                rank: i, name: "", win: 0, lose: 0, score: 0
+	            });
+	            this.addChild(r);
+	            this.playerRowArr.push(r);
+	        }
+	        this.playerRowArr[1].y += 7;
+	        this.playerRowArr[2].y += 4;
+	    }
+	    G1.prototype.setData = function (data) {
+	        var _this = this;
+	        this.groupText.text = 'GROUP ' + data.group;
+	        if (data.playerArr) {
+	            var playerArr = data.playerArr;
+	            var orderArr = [];
+	            for (var _i = 0, playerArr_1 = playerArr; _i < playerArr_1.length; _i++) {
+	                var p = playerArr_1[_i];
+	                var pd = p.player;
+	                var pData = {
+	                    name: pd.name,
+	                    avatar: pd.avatar,
+	                    win: pd.stats.match_win,
+	                    lose: pd.stats.match_lose,
+	                    rank: pd.powerRank,
+	                    score: pd.stats.net_score
+	                };
+	                orderArr.push(pData);
+	            }
+	            console.log(orderArr);
+	            orderArr = orderArr.sort(thenBy_1.firstBy(function (v1, v2) { return v2.win - v1.win; })
+	                .thenBy(function (v1, v2) { return v2.score - v1.score; }));
+	            var loadAvt = function (url) {
+	                ImgLoader_1.imgLoader.loadTex(url, function (tex) {
+	                    var avt = _this.avt;
+	                    avt.texture = tex;
+	                    var s = (70 / 0.8) / tex.width;
+	                    avt.x = avt.mask.x;
+	                    avt.y = avt.mask.y;
+	                    avt.scale.x = avt.scale.y = s;
+	                });
+	            };
+	            for (var i = 0; i < this.playerRowArr.length; i++) {
+	                var pra = this.playerRowArr[i];
+	                orderArr[i].isBig = (i == 0);
+	                if (orderArr[i].isBig) {
+	                    loadAvt(orderArr[i].avatar);
+	                }
+	                pra.setData(orderArr[i]);
+	            }
+	        }
+	    };
+	    return G1;
+	}(PIXI.Container));
+	var GroupSp = (function (_super) {
+	    __extends(GroupSp, _super);
+	    function GroupSp(parent, gameId) {
+	        var _this = this;
+	        _super.call(this);
+	        this.groupArr = [];
+	        this.gameId = gameId;
+	        parent.addChild(this);
+	        this.addChild(PixiEx_1.newModal(0.8));
+	        var gArr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+	        for (var i = 0; i < 8; i++) {
+	            var g1 = new G1();
+	            if (i < 4) {
+	                g1.x = 50 + i * 480;
+	                g1.y = 100;
+	            }
+	            else {
+	                g1.x = 50 + (i - 4) * 480;
+	                g1.y = 500;
+	            }
+	            g1.setData({ group: gArr[i] });
+	            this.groupArr.push(g1);
+	            this.addChild(g1);
+	        }
+	        console.log('show GroupSp');
+	        this.updateData();
+	        timers_1.setInterval(function (_) {
+	            _this.updateData();
+	        }, 3000);
+	    }
+	    GroupSp.prototype.updateData = function () {
+	        var _this = this;
+	        var gameId;
+	        HupuAPI_1.getGroupData(this.gameId, function (res) {
+	            for (var groupName in res.data) {
+	                var idx = groupName.charCodeAt(0) - 65;
+	                var g1 = _this.groupArr[idx];
+	                g1.setData({ group: groupName, playerArr: res.data[groupName] });
+	            }
+	        });
+	    };
+	    return GroupSp;
+	}(PIXI.Container));
+	exports.GroupSp = GroupSp;
+
+
+/***/ },
+/* 113 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.firstBy = (function () {
+	    function identity(v) { return v; }
+	    function ignoreCase(v) { return typeof (v) === "string" ? v.toLowerCase() : v; }
+	    function makeCompareFunction(f, opt) {
+	        opt = typeof (opt) === "number" ? { direction: opt } : opt || {};
+	        if (typeof (f) != "function") {
+	            var prop = f;
+	            f = function (v1) { return !!v1[prop] ? v1[prop] : ""; };
+	        }
+	        if (f.length === 1) {
+	            var uf = f;
+	            var preprocess = opt.ignoreCase ? ignoreCase : identity;
+	            f = function (v1, v2) { return preprocess(uf(v1)) < preprocess(uf(v2)) ? -1 : preprocess(uf(v1)) > preprocess(uf(v2)) ? 1 : 0; };
+	        }
+	        if (opt.direction === -1)
+	            return function (v1, v2) { return -f(v1, v2); };
+	        return f;
+	    }
+	    function tb(func, opt) {
+	        var x = typeof (this) == "function" ? this : false;
+	        var y = makeCompareFunction(func, opt);
+	        var f = x ? function (a, b) {
+	            return x(a, b) || y(a, b);
+	        }
+	            : y;
+	        f.thenBy = tb;
+	        return f;
+	    }
+	    return tb;
+	})();
+
 
 /***/ }
 /******/ ]);

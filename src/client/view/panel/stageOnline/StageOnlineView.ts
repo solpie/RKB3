@@ -13,6 +13,7 @@ import { BracketView } from './bracket/BracketView';
 import { Lottery } from './lottery/Lottery';
 import { RankView } from './rank/RankView';
 import { ScoreView } from './score/ScoreView';
+import { GroupSp } from './groupSp/GroupSp';
 
 declare let $
 declare let io
@@ -20,6 +21,7 @@ let rankView: RankView
 let bracketView: BracketView
 let scoreView: ScoreView
 let lottery: Lottery
+let groupSp: GroupSp
 let canvasStage
 imgLoader
 class StageOnlineView extends VueBase {
@@ -102,11 +104,13 @@ class StageOnlineView extends VueBase {
             this.showScore()
         }
         else if (panel == "cj") {
-
             // this.showScore()
             let id = this.$route.query['id']
             let k = this.$route.query['k']
             this.showLottery(k, id)
+        }
+        else if (panel == "group") {
+            this.showGroup()
         }
         else {
             this.showRank()
@@ -140,7 +144,12 @@ class StageOnlineView extends VueBase {
             lottery = new Lottery(canvasStage, k, id)
         }
     }
+    groupSp: any
+    showGroup() {
+        if (!groupSp)
+            groupSp = new GroupSp(canvasStage,this.gameId)
 
+    }
     showRank() {
         if (!rankView) {
             rankView = new RankView(this, canvasStage)

@@ -358,6 +358,9 @@ export class ScoreM3 {
         else if (matchType == 1) {
             this.gameIdx.text = '车轮战' + paddy(gameIdx, 2) + '场'
         }
+        else if (matchType == 4) {
+            this.gameIdx.text = '小组赛' + paddy(gameIdx, 2) + '场'
+        }
         else if (matchType == 3) {
             this.gameIdx.text = '决赛'
         }
