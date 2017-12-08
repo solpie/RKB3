@@ -9178,6 +9178,7 @@
 	                    avatar: pd.avatar,
 	                    win: pd.stats.match_win,
 	                    lose: pd.stats.match_lose,
+	                    state: Number(pd.status),
 	                    rank: pd.powerRank,
 	                    score: pd.stats.net_score
 	                };
@@ -9185,7 +9186,8 @@
 	            }
 	            console.log(orderArr);
 	            orderArr = orderArr.sort(thenBy_1.firstBy(function (v1, v2) { return v2.win - v1.win; })
-	                .thenBy(function (v1, v2) { return v2.score - v1.score; }));
+	                .thenBy(function (v1, v2) { return v2.score - v1.score; })
+	                .thenBy(function (v1, v2) { return v1.state - v2.state; }));
 	            var loadAvt = function (url) {
 	                ImgLoader_1.imgLoader.loadTex(url, function (tex) {
 	                    var avt = _this.avt;

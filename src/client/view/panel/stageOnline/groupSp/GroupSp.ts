@@ -144,7 +144,7 @@ class G1 extends PIXI.Container {
             r.x = 50
             r.setData({
                 isBig: i == 0,
-                rank:  i, name: "", win: 0, lose: 0, score: 0
+                rank: i, name: "", win: 0, lose: 0, score: 0
             })
             this.addChild(r)
             this.playerRowArr.push(r)
@@ -166,6 +166,7 @@ class G1 extends PIXI.Container {
                     avatar: pd.avatar,
                     win: pd.stats.match_win,
                     lose: pd.stats.match_lose,
+                    state: Number(pd.status),// 1:晋级 2:淘汰 3:弃权
                     rank: pd.powerRank,
                     score: pd.stats.net_score
                 }
@@ -173,7 +174,9 @@ class G1 extends PIXI.Container {
             }
             console.log(orderArr)
             orderArr = orderArr.sort(firstBy(function (v1, v2) { return v2.win - v1.win; })
-                .thenBy(function (v1, v2) { return v2.score - v1.score; }))
+                .thenBy(function (v1, v2) { return v2.score - v1.score; })
+                .thenBy(function (v1, v2) { return v1.state - v2.state; })
+            )
 
             let loadAvt = (url) => {
                 imgLoader.loadTex(url, tex => {
