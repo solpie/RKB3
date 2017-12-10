@@ -367,14 +367,15 @@ export class ScoreM3 {
         this.gameIdx.x = 962 - this.gameIdx.width * .5
     }
     _showWinScore() {
-        this.winScoreText.visible = true
-        this.timer.visible = false
-        blink2({
-            target: this.winScoreText, time: 100, loop: 20, callback: () => {
-                this.winScoreText.visible = false
-                this.timer.visible = true
-            }
-        })
+        // this.winScoreText.visible = true
+        // this.timer.visible = false
+        // blink2({
+        //     target: this.winScoreText, time: 100, loop: 20, callback: () => {
+        //         this.winScoreText.visible = false
+        //         this.timer.visible = true
+        //     }
+        // })
+        
         // TweenEx.delayedCall(3000, () => {
         //     this.winScoreText.visible = false
         //     this.timer.visible = true

@@ -8574,7 +8574,6 @@
 	var TextTimer_1 = __webpack_require__(52);
 	var const_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(17);
-	var Fx_1 = __webpack_require__(56);
 	var FoulTextM2_1 = __webpack_require__(99);
 	var skin = {
 	    light: {
@@ -8839,15 +8838,6 @@
 	        this.gameIdx.x = 962 - this.gameIdx.width * .5;
 	    };
 	    ScoreM3.prototype._showWinScore = function () {
-	        var _this = this;
-	        this.winScoreText.visible = true;
-	        this.timer.visible = false;
-	        Fx_1.blink2({
-	            target: this.winScoreText, time: 100, loop: 20, callback: function () {
-	                _this.winScoreText.visible = false;
-	                _this.timer.visible = true;
-	            }
-	        });
 	    };
 	    ScoreM3.prototype.setLeftScore = function (v) {
 	        this.leftScoreText.text = v + '';
