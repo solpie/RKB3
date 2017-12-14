@@ -1457,14 +1457,18 @@
 	    mousedown: 'mousedown',
 	    click: 'click',
 	};
-	exports.newModal = function (alpha, width, height) {
+	exports.newModal = function (alpha, width, height, color) {
 	    if (alpha === void 0) { alpha = 0.8; }
 	    if (!width)
 	        width = const_1.ViewConst.STAGE_WIDTH;
 	    if (!height)
 	        height = const_1.ViewConst.STAGE_HEIGHT;
 	    var m = new PIXI.Graphics();
-	    m.drawRect(0, 0, width, height)
+	    var c = 0x000000;
+	    if (color)
+	        c = color;
+	    m.beginFill(c)
+	        .drawRect(0, 0, width, height)
 	        .alpha = alpha;
 	    return m;
 	};
@@ -4368,7 +4372,7 @@
 	var Lottery_1 = __webpack_require__(77);
 	var RankView_1 = __webpack_require__(80);
 	var ScoreView_1 = __webpack_require__(82);
-	var GroupSp_1 = __webpack_require__(112);
+	var GroupSp2_1 = __webpack_require__(114);
 	var rankView;
 	var bracketView;
 	var scoreView;
@@ -4627,7 +4631,7 @@
 	    };
 	    StageOnlineView.prototype.showGroup = function () {
 	        if (!groupSp)
-	            groupSp = new GroupSp_1.GroupSp(canvasStage, this.gameId);
+	            groupSp = new GroupSp2_1.GroupSp2(canvasStage, this.gameId);
 	    };
 	    StageOnlineView.prototype.showRank = function () {
 	        if (!rankView) {
@@ -9028,225 +9032,7 @@
 /* 109 */,
 /* 110 */,
 /* 111 */,
-/* 112 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var timers_1 = __webpack_require__(69);
-	var PixiEx_1 = __webpack_require__(46);
-	var const_1 = __webpack_require__(43);
-	var HupuAPI_1 = __webpack_require__(22);
-	var thenBy_1 = __webpack_require__(113);
-	var ImgLoader_1 = __webpack_require__(68);
-	var Row1 = (function (_super) {
-	    __extends(Row1, _super);
-	    function Row1() {
-	        _super.call(this);
-	        var rs = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '25px', fill: "#8696b7",
-	        };
-	        this.rankText = new PIXI.Text('', rs);
-	        this.rankText.style.fill = '#ccc';
-	        this.rankText.x = 0;
-	        this.rankText.y = 0;
-	        this.addChild(this.rankText);
-	        this.nameText = new PIXI.Text('', rs);
-	        this.nameText.x = 120;
-	        this.nameText.y = this.rankText.y;
-	        this.addChild(this.nameText);
-	        this.winText = new PIXI.Text('', rs);
-	        this.winText.x = 160;
-	        this.winText.y = this.rankText.y;
-	        this.addChild(this.winText);
-	        this.loseText = new PIXI.Text('', rs);
-	        this.loseText.x = 160;
-	        this.loseText.y = this.rankText.y;
-	        this.addChild(this.loseText);
-	        this.scoreText = new PIXI.Text('', rs);
-	        this.scoreText.x = 160;
-	        this.scoreText.y = this.rankText.y;
-	        this.addChild(this.scoreText);
-	    }
-	    Row1.prototype._setSize = function (s) {
-	        this.rankText.style.fontSize = s + 'px';
-	        this.nameText.style.fontSize = s + 'px';
-	        this.winText.style.fontSize = s + 'px';
-	        this.loseText.style.fontSize = s + 'px';
-	        this.scoreText.style.fontSize = s + 'px';
-	    };
-	    Row1.prototype.setData = function (data) {
-	        if (data.isBig) {
-	            this.rankText.text = data.rank + '';
-	            this.rankText.x = 40 - this.rankText.width;
-	            this.nameText.text = data.name;
-	            this.nameText.x = 95 - (this.nameText.width * .5);
-	            this.winText.text = data.win + '';
-	            this.winText.x = 183 - (this.winText.width * .5);
-	            this.loseText.text = data.lose + '';
-	            this.loseText.x = 222 - (this.loseText.width * .5);
-	            this.scoreText.text = data.score + '';
-	            this.scoreText.x = 278 - (this.scoreText.width * .5);
-	            this._setSize(30);
-	        }
-	        else {
-	            this._setSize(25);
-	            this.rankText.text = data.rank + '';
-	            this.rankText.x = 40 - this.rankText.width;
-	            this.nameText.text = data.name;
-	            this.nameText.x = 105 - (this.nameText.width * .5);
-	            this.winText.text = data.win + '';
-	            this.winText.x = 183 - (this.winText.width * .5);
-	            this.loseText.text = data.lose + '';
-	            this.loseText.x = 222 - (this.loseText.width * .5);
-	            this.scoreText.text = data.score + '';
-	            this.scoreText.x = 278 - (this.scoreText.width * .5);
-	        }
-	    };
-	    return Row1;
-	}(PIXI.Container));
-	var G1 = (function (_super) {
-	    __extends(G1, _super);
-	    function G1() {
-	        _super.call(this);
-	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/group/groupBg.png' });
-	        this.addChild(bg);
-	        this.avt = new PIXI.Sprite();
-	        bg.addChild(this.avt);
-	        this.avt.x = 10;
-	        this.avt.y = 10;
-	        var avtMask = new PIXI.Graphics();
-	        avtMask.beginFill(0xffff00).drawRect(0, 0, 70 / 0.8, 70 / 0.8);
-	        avtMask.x = 20;
-	        avtMask.y = 22;
-	        bg.addChild(avtMask);
-	        this.avt.mask = avtMask;
-	        var fg = PixiEx_1.newBitmap({ url: '/img/panel/group/groupFg.png' });
-	        this.addChild(fg);
-	        bg.scale.x = bg.scale.y =
-	            fg.scale.x = fg.scale.y =
-	                0.8;
-	        var rs = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '28px', fill: "#BABABA",
-	        };
-	        this.groupText = new PIXI.Text('GROUP A', rs);
-	        this.groupText.x = 140;
-	        this.groupText.y = 14;
-	        this.addChild(this.groupText);
-	        this.playerRowArr = [];
-	        for (var i = 0; i < 3; i++) {
-	            var r = new Row1();
-	            r.y = 90 + i * 50;
-	            r.x = 50;
-	            r.setData({
-	                isBig: i == 0,
-	                rank: i, name: "", win: 0, lose: 0, score: 0
-	            });
-	            this.addChild(r);
-	            this.playerRowArr.push(r);
-	        }
-	        this.playerRowArr[1].y += 7;
-	        this.playerRowArr[2].y += 4;
-	    }
-	    G1.prototype.setData = function (data) {
-	        var _this = this;
-	        this.groupText.text = 'GROUP ' + data.group;
-	        if (data.playerArr) {
-	            var playerArr = data.playerArr;
-	            var orderArr = [];
-	            for (var _i = 0, playerArr_1 = playerArr; _i < playerArr_1.length; _i++) {
-	                var p = playerArr_1[_i];
-	                var pd = p.player;
-	                var pData = {
-	                    name: pd.name,
-	                    avatar: pd.avatar,
-	                    win: pd.stats.match_win,
-	                    lose: pd.stats.match_lose,
-	                    state: Number(pd.status),
-	                    rank: pd.powerRank,
-	                    score: pd.stats.net_score
-	                };
-	                orderArr.push(pData);
-	            }
-	            console.log(orderArr);
-	            orderArr = orderArr.sort(thenBy_1.firstBy(function (v1, v2) { return v2.win - v1.win; })
-	                .thenBy(function (v1, v2) { return v2.score - v1.score; })
-	                .thenBy(function (v1, v2) { return v1.state - v2.state; }));
-	            var loadAvt = function (url) {
-	                ImgLoader_1.imgLoader.loadTex(url, function (tex) {
-	                    var avt = _this.avt;
-	                    avt.texture = tex;
-	                    var s = (70 / 0.8) / tex.width;
-	                    avt.x = avt.mask.x;
-	                    avt.y = avt.mask.y;
-	                    avt.scale.x = avt.scale.y = s;
-	                });
-	            };
-	            for (var i = 0; i < this.playerRowArr.length; i++) {
-	                var pra = this.playerRowArr[i];
-	                orderArr[i].isBig = (i == 0);
-	                if (orderArr[i].isBig) {
-	                    loadAvt(orderArr[i].avatar);
-	                }
-	                pra.setData(orderArr[i]);
-	            }
-	        }
-	    };
-	    return G1;
-	}(PIXI.Container));
-	var GroupSp = (function (_super) {
-	    __extends(GroupSp, _super);
-	    function GroupSp(parent, gameId) {
-	        var _this = this;
-	        _super.call(this);
-	        this.groupArr = [];
-	        this.gameId = gameId;
-	        parent.addChild(this);
-	        this.addChild(PixiEx_1.newModal(0.8));
-	        var gArr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-	        for (var i = 0; i < 8; i++) {
-	            var g1 = new G1();
-	            if (i < 4) {
-	                g1.x = 50 + i * 480;
-	                g1.y = 100;
-	            }
-	            else {
-	                g1.x = 50 + (i - 4) * 480;
-	                g1.y = 500;
-	            }
-	            g1.setData({ group: gArr[i] });
-	            this.groupArr.push(g1);
-	            this.addChild(g1);
-	        }
-	        console.log('show GroupSp');
-	        this.updateData();
-	        timers_1.setInterval(function (_) {
-	            _this.updateData();
-	        }, 3000);
-	    }
-	    GroupSp.prototype.updateData = function () {
-	        var _this = this;
-	        var gameId;
-	        HupuAPI_1.getGroupData(this.gameId, function (res) {
-	            for (var groupName in res.data) {
-	                var idx = groupName.charCodeAt(0) - 65;
-	                var g1 = _this.groupArr[idx];
-	                g1.setData({ group: groupName, playerArr: res.data[groupName] });
-	            }
-	        });
-	    };
-	    return GroupSp;
-	}(PIXI.Container));
-	exports.GroupSp = GroupSp;
-
-
-/***/ },
+/* 112 */,
 /* 113 */
 /***/ function(module, exports) {
 
@@ -9281,6 +9067,271 @@
 	    }
 	    return tb;
 	})();
+
+
+/***/ },
+/* 114 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var PixiEx_1 = __webpack_require__(46);
+	var const_1 = __webpack_require__(43);
+	var HupuAPI_1 = __webpack_require__(22);
+	var thenBy_1 = __webpack_require__(113);
+	var ImgLoader_1 = __webpack_require__(68);
+	var Row1 = (function (_super) {
+	    __extends(Row1, _super);
+	    function Row1() {
+	        _super.call(this);
+	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/group/groupBg2item.png' }));
+	        this.avt = new PIXI.Sprite();
+	        this.avt.x = 610;
+	        this.avt.y = 325;
+	        this.addChild(this.avt);
+	        var rs = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '60px', fill: "#f2f2f2",
+	        };
+	        var l = new PIXI.Text('', rs);
+	        l.x = 783;
+	        l.y = 340;
+	        this.playerName = l;
+	        this.addChild(l);
+	        l = new PIXI.Text('', rs);
+	        l.x = 1145;
+	        l.y = this.playerName.y;
+	        this.winLose = l;
+	        this.addChild(l);
+	        l = new PIXI.Text('', rs);
+	        l.x = 1145;
+	        l.y = this.playerName.y;
+	        this.score = l;
+	        this.addChild(l);
+	    }
+	    Row1.prototype.setData = function (data) {
+	        var _this = this;
+	        this.playerName.text = data.name;
+	        this.winLose.text = data.win + '/' + data.lose;
+	        this.winLose.x = 1195 - this.winLose.width * .5;
+	        this.score.text = data.score + '';
+	        this.score.x = 1410 - this.score.width * .5;
+	        ImgLoader_1.imgLoader.loadTex(data.avatar, function (tex) {
+	            var avt = _this.avt;
+	            avt.texture = tex;
+	            var s = (70 / 0.8) / tex.width;
+	            avt.scale.x = avt.scale.y = s;
+	        });
+	    };
+	    return Row1;
+	}(PIXI.Container));
+	exports.Row1 = Row1;
+	function rgbToHex(r, g, b) {
+	    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+	}
+	var Tab1 = (function (_super) {
+	    __extends(Tab1, _super);
+	    function Tab1() {
+	        _super.call(this);
+	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/group/groupBg2tab.png' });
+	        bg.x = -12;
+	        bg.y = -13;
+	        this.addChild(bg);
+	        var rs = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '28px', fill: "#cdd3d6",
+	        };
+	        this.label = new PIXI.Text('', rs);
+	        this.label.x = 23;
+	        this.label.y = 9;
+	        this.addChild(this.label);
+	    }
+	    Tab1.prototype.setIdx = function (idx) {
+	        this.idx = idx;
+	        var c0 = [0xf0, 0xfa, 0xff];
+	        var c1 = [0xcb, 0xd1, 0xd4];
+	        var colorR = c0[0] - Math.floor((c0[0] - c1[0]) * idx / 8);
+	        var colorG = c0[1] - Math.floor((c0[1] - c1[1]) * idx / 8);
+	        var colorB = c0[2] - Math.floor((c0[2] - c1[2]) * idx / 8);
+	        this.label.style.fill = rgbToHex(colorR, colorG, colorB);
+	        console.log('r', colorG, 'g', colorG, 'b', colorB, this.label.style.fill);
+	    };
+	    Tab1.prototype.setText = function (t) {
+	        this.label.text = t;
+	    };
+	    return Tab1;
+	}(PIXI.Container));
+	exports.Tab1 = Tab1;
+	var gArr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+	var GroupSp2 = (function (_super) {
+	    __extends(GroupSp2, _super);
+	    function GroupSp2(parent, gameId) {
+	        var _this = this;
+	        _super.call(this);
+	        this.groupArr = [];
+	        this.rowArr = [];
+	        this.tabArr = [];
+	        this.updateTime = 3000;
+	        this.updateCount = 3000;
+	        this.gameId = gameId;
+	        parent.addChild(this);
+	        this.addChild(PixiEx_1.newModal(0.7, null, null, 0x232b3b));
+	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/group/groupBg2.png' }));
+	        var rs = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '40px', fill: "#e2e2e2",
+	        };
+	        var l = new PIXI.Text('小组赛第一轮', rs);
+	        l.x = 365;
+	        l.y = 210;
+	        this.groupTitle = l;
+	        this.addChild(l);
+	        for (var i = 0; i < 3; i++) {
+	            var r = new Row1();
+	            r.y = 150 * i;
+	            this.addChild(r);
+	            this.rowArr.push(r);
+	        }
+	        for (var i = 0; i < 8; i++) {
+	            var t = new Tab1();
+	            t.setText('GROUP  ' + gArr[i]);
+	            t.setIdx(i);
+	            t.x = 350;
+	            t.y = 290 + 60 * i;
+	            this.addChild(t);
+	            this.groupArr.push(t);
+	        }
+	        this.tabFocus = PixiEx_1.newBitmap({ url: '/img/panel/group/groupBg2tabFocus.png' });
+	        this.tabFocus.x = -12;
+	        this.tabFocus.y = -13;
+	        this.addChild(this.tabFocus);
+	        this.dataArr = [];
+	        this.updateData();
+	        setInterval(function (_) {
+	            _this.updateCount -= 1000;
+	            if (_this.updateCount < 0) {
+	                _this.updateCount = _this.updateTime;
+	                _this.updateData();
+	            }
+	        }, 1000);
+	        this.initMouse();
+	    }
+	    GroupSp2.prototype.initMouse = function () {
+	        var _this = this;
+	        window.onmouseup = function (e) {
+	            var mx = e.clientX;
+	            var my = e.clientY;
+	            for (var _i = 0, _a = _this.groupArr; _i < _a.length; _i++) {
+	                var g = _a[_i];
+	                var t = g;
+	                if (mx > t.x && mx < t.x + t.width && my > t.y && my < t.y + t.height) {
+	                    console.log('click', t.label.text, t.idx);
+	                    _this.updateCount = _this.updateTime;
+	                    _this.showGroup(t.idx);
+	                }
+	            }
+	        };
+	    };
+	    GroupSp2.prototype.showGroup = function (idx) {
+	        var groupTab = this.groupArr[idx];
+	        this.tabFocus.x = groupTab.x - 12;
+	        this.tabFocus.y = groupTab.y - 13;
+	        var data = this.dataArr[idx];
+	        var round = 0;
+	        if (data.playerArr) {
+	            var playerArr = data.playerArr;
+	            var orderArr = [];
+	            for (var _i = 0, playerArr_1 = playerArr; _i < playerArr_1.length; _i++) {
+	                var p = playerArr_1[_i];
+	                var pd = p.player;
+	                var pData = {
+	                    name: pd.name,
+	                    avatar: pd.avatar,
+	                    win: pd.stats.match_win,
+	                    lose: pd.stats.match_lose,
+	                    state: Number(pd.status),
+	                    rank: pd.powerRank,
+	                    score: pd.stats.net_score
+	                };
+	                round += pData.win;
+	                orderArr.push(pData);
+	            }
+	            console.log(orderArr);
+	            orderArr = orderArr.sort(thenBy_1.firstBy(function (v1, v2) { return v2.win - v1.win; })
+	                .thenBy(function (v1, v2) { return v2.score - v1.score; })
+	                .thenBy(function (v1, v2) { return v1.state - v2.state; }));
+	            for (var i = 0; i < this.rowArr.length; i++) {
+	                var row = this.rowArr[i];
+	                row.setData(orderArr[i]);
+	            }
+	            return round;
+	        }
+	    };
+	    GroupSp2.prototype.setRoundIdx = function (round, idx) {
+	        var groupName = gArr[idx];
+	        this.groupTitle.text = '小组赛第' + round + '轮 ' + groupName + '组';
+	    };
+	    GroupSp2.prototype.calcRound = function (data) {
+	        var round = 0;
+	        if (data.playerArr) {
+	            var playerArr = data.playerArr;
+	            for (var _i = 0, playerArr_2 = playerArr; _i < playerArr_2.length; _i++) {
+	                var p = playerArr_2[_i];
+	                var pd = p.player;
+	                if (pd.stats) {
+	                    var pData = {
+	                        win: pd.stats.match_win,
+	                        score: pd.stats.net_score
+	                    };
+	                    round += pData.win;
+	                }
+	            }
+	        }
+	        return round;
+	    };
+	    GroupSp2.prototype.updateData = function () {
+	        var _this = this;
+	        var gameId;
+	        var curRound = 0;
+	        var curGroupIdx = 0;
+	        var groupGameCountMap = {};
+	        HupuAPI_1.getGroupData(this.gameId, function (res) {
+	            console.log(res.data);
+	            for (var groupName in res.data) {
+	                var idx = groupName.charCodeAt(0) - 65;
+	                _this.dataArr.push({ group: groupName, playerArr: res.data[groupName] });
+	                var winCount = _this.calcRound({ playerArr: res.data[groupName] });
+	                groupGameCountMap[groupName] = winCount;
+	            }
+	            curRound = Math.min(groupGameCountMap['H'] + 1, 3);
+	            var curGroupCount = groupGameCountMap['A'];
+	            if (curGroupCount == 0) {
+	                curGroupIdx = 0;
+	            }
+	            else {
+	                for (var i = 1; i < gArr.length; i++) {
+	                    var gn = gArr[i];
+	                    if (gn != 'A') {
+	                        var round = groupGameCountMap[gn];
+	                        if (groupGameCountMap[gn] < curGroupCount) {
+	                            curGroupIdx = i;
+	                            break;
+	                        }
+	                    }
+	                }
+	            }
+	            console.log('group game map', groupGameCountMap, 'round', curRound, 'group', curGroupIdx);
+	            _this.showGroup(curGroupIdx);
+	            _this.setRoundIdx(curRound, curGroupIdx);
+	        });
+	    };
+	    return GroupSp2;
+	}(PIXI.Container));
+	exports.GroupSp2 = GroupSp2;
 
 
 /***/ }

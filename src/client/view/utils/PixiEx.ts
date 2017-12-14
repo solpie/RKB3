@@ -222,13 +222,17 @@ export let PIXI_MOUSE_EVENT = {
     click: 'click',
 }
 
-export const newModal = (alpha = 0.8, width?, height?) => {
+export const newModal = (alpha = 0.8, width?, height?, color?) => {
     if (!width)
         width = ViewConst.STAGE_WIDTH
     if (!height)
         height = ViewConst.STAGE_HEIGHT
     let m = new PIXI.Graphics()
-    m.drawRect(0, 0, width, height)
+    let c = 0x000000
+    if (color)
+        c = color
+    m.beginFill(c)
+        .drawRect(0, 0, width, height)
         .alpha = alpha
     return m
 }

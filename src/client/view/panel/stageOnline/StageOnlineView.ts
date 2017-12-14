@@ -14,6 +14,7 @@ import { Lottery } from './lottery/Lottery';
 import { RankView } from './rank/RankView';
 import { ScoreView } from './score/ScoreView';
 import { GroupSp } from './groupSp/GroupSp';
+import { GroupSp2 } from './groupSp/GroupSp2';
 
 declare let $
 declare let io
@@ -147,7 +148,7 @@ class StageOnlineView extends VueBase {
     groupSp: any
     showGroup() {
         if (!groupSp)
-            groupSp = new GroupSp(canvasStage,this.gameId)
+            groupSp = new GroupSp2(canvasStage,this.gameId)
 
     }
     showRank() {
