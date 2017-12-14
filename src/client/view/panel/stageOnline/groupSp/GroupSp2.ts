@@ -182,17 +182,22 @@ export class GroupSp2 extends PIXI.Container {
             let orderArr = []
             for (let p of playerArr) {
                 let pd = p.player
-                let pData = {
-                    name: pd.name,
-                    avatar: pd.avatar,
-                    win: pd.stats.match_win,
-                    lose: pd.stats.match_lose,
-                    state: Number(pd.status),// 1:晋级 2:淘汰 3:弃权
-                    rank: pd.powerRank,
-                    score: pd.stats.net_score
+                if (pd.stats) {
+                    let pData = {
+                        name: pd.name,
+                        avatar: pd.avatar,
+                        win: pd.stats.match_win,
+                        lose: pd.stats.match_lose,
+                        state: Number(pd.status),// 1:晋级 2:淘汰 3:弃权
+                        rank: pd.powerRank,
+                        score: pd.stats.net_score
+                    }
+                    round += pData.win
+                    orderArr.push(pData)
                 }
-                round += pData.win
-                orderArr.push(pData)
+                else {
+                    console.log('error',pd);
+                }
             }
             console.log(orderArr)
             orderArr = orderArr.sort(firstBy(function (v1, v2) { return v2.win - v1.win; })
@@ -218,11 +223,7 @@ export class GroupSp2 extends PIXI.Container {
             for (let p of playerArr) {
                 let pd = p.player
                 if (pd.stats) {
-                    let pData = {
-                        win: pd.stats.match_win,
-                        score: pd.stats.net_score
-                    }
-                    round += pData.win
+                    round += pd.stats.match_win
                 }
             }
         }
@@ -234,7 +235,7 @@ export class GroupSp2 extends PIXI.Container {
         let curRound = 0;
         let curGroupIdx = 0
         let groupGameCountMap = {}
-
+        this.dataArr = []
         getGroupData(this.gameId, res => {
             console.log(res.data)
             for (let groupName in res.data) {
@@ -262,8 +263,8 @@ export class GroupSp2 extends PIXI.Container {
                 }
             }
 
-            // console.log('data arr', this.dataArr);
-            console.log('group game map', groupGameCountMap, 'round', curRound, 'group', curGroupIdx);
+            console.log('data arr', this.dataArr);
+            // console.log('group game map', groupGameCountMap, 'round', curRound, 'group', curGroupIdx);
             this.showGroup(curGroupIdx)
             this.setRoundIdx(curRound, curGroupIdx)
         })

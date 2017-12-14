@@ -9248,17 +9248,22 @@
 	            for (var _i = 0, playerArr_1 = playerArr; _i < playerArr_1.length; _i++) {
 	                var p = playerArr_1[_i];
 	                var pd = p.player;
-	                var pData = {
-	                    name: pd.name,
-	                    avatar: pd.avatar,
-	                    win: pd.stats.match_win,
-	                    lose: pd.stats.match_lose,
-	                    state: Number(pd.status),
-	                    rank: pd.powerRank,
-	                    score: pd.stats.net_score
-	                };
-	                round += pData.win;
-	                orderArr.push(pData);
+	                if (pd.stats) {
+	                    var pData = {
+	                        name: pd.name,
+	                        avatar: pd.avatar,
+	                        win: pd.stats.match_win,
+	                        lose: pd.stats.match_lose,
+	                        state: Number(pd.status),
+	                        rank: pd.powerRank,
+	                        score: pd.stats.net_score
+	                    };
+	                    round += pData.win;
+	                    orderArr.push(pData);
+	                }
+	                else {
+	                    console.log('error', pd);
+	                }
 	            }
 	            console.log(orderArr);
 	            orderArr = orderArr.sort(thenBy_1.firstBy(function (v1, v2) { return v2.win - v1.win; })
@@ -9283,11 +9288,7 @@
 	                var p = playerArr_2[_i];
 	                var pd = p.player;
 	                if (pd.stats) {
-	                    var pData = {
-	                        win: pd.stats.match_win,
-	                        score: pd.stats.net_score
-	                    };
-	                    round += pData.win;
+	                    round += pd.stats.match_win;
 	                }
 	            }
 	        }
@@ -9299,6 +9300,7 @@
 	        var curRound = 0;
 	        var curGroupIdx = 0;
 	        var groupGameCountMap = {};
+	        this.dataArr = [];
 	        HupuAPI_1.getGroupData(this.gameId, function (res) {
 	            console.log(res.data);
 	            for (var groupName in res.data) {
@@ -9324,7 +9326,7 @@
 	                    }
 	                }
 	            }
-	            console.log('group game map', groupGameCountMap, 'round', curRound, 'group', curGroupIdx);
+	            console.log('data arr', _this.dataArr);
 	            _this.showGroup(curGroupIdx);
 	            _this.setRoundIdx(curRound, curGroupIdx);
 	        });
