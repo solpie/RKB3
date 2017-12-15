@@ -9170,13 +9170,10 @@
 	var GroupSp2 = (function (_super) {
 	    __extends(GroupSp2, _super);
 	    function GroupSp2(parent, gameId) {
-	        var _this = this;
 	        _super.call(this);
 	        this.groupArr = [];
 	        this.rowArr = [];
 	        this.tabArr = [];
-	        this.updateTime = 3000;
-	        this.updateCount = 3000;
 	        this.gameId = gameId;
 	        parent.addChild(this);
 	        this.addChild(PixiEx_1.newModal(0.7, null, null, 0x232b3b));
@@ -9209,17 +9206,29 @@
 	        this.tabFocus.x = -12;
 	        this.tabFocus.y = -13;
 	        this.addChild(this.tabFocus);
-	        this.dataArr = [];
 	        this.updateData();
-	        setInterval(function (_) {
-	            _this.updateCount -= 1000;
-	            if (_this.updateCount < 0) {
-	                _this.updateCount = _this.updateTime;
-	                _this.updateData();
-	            }
-	        }, 1000);
 	        this.initMouse();
+	        this.initWS();
 	    }
+	    GroupSp2.prototype.initWS = function () {
+	        var _this = this;
+	        HupuAPI_1.getHupuWS(function (hupuWsUrl) {
+	            var remoteIO = io.connect(hupuWsUrl);
+	            remoteIO.on('connect', function () {
+	                console.log('hupuAuto socket connected', hupuWsUrl, _this.gameId);
+	                remoteIO.emit('passerbyking', {
+	                    game_id: _this.gameId,
+	                    page: 'score'
+	                });
+	            });
+	            remoteIO.on('wall', function (data) {
+	                var event = data.et;
+	                if (event == 'commitGame') {
+	                    _this.updateData();
+	                }
+	            });
+	        });
+	    };
 	    GroupSp2.prototype.initMouse = function () {
 	        var _this = this;
 	        window.onmouseup = function (e) {
@@ -9230,7 +9239,6 @@
 	                var t = g;
 	                if (mx > t.x && mx < t.x + t.width && my > t.y && my < t.y + t.height) {
 	                    console.log('click', t.label.text, t.idx);
-	                    _this.updateCount = _this.updateTime;
 	                    _this.showGroup(t.idx);
 	                }
 	            }

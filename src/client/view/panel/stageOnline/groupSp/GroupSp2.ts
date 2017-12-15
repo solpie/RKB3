@@ -1,8 +1,9 @@
 import { newModal, newBitmap } from "../../../utils/PixiEx";
 import { FontName } from "../../../const";
-import { getGroupData } from "../../../utils/HupuAPI";
+import { getGroupData, getHupuWS } from "../../../utils/HupuAPI";
 import { firstBy } from "../../../utils/thenBy";
 import { imgLoader } from "../../../utils/ImgLoader";
+declare let io;
 export class Row1 extends PIXI.Container {
     playerName: PIXI.Text
     winLose: PIXI.Text
@@ -103,8 +104,8 @@ export class GroupSp2 extends PIXI.Container {
     groupTitle: PIXI.Text
 
     tabFocus: PIXI.Sprite
-    updateTime = 3000
-    updateCount = 3000
+    // updateTime = 3000
+    // updateCount = 3000
     constructor(parent, gameId) {
         super()
         this.gameId = gameId
@@ -145,17 +146,41 @@ export class GroupSp2 extends PIXI.Container {
         this.tabFocus.y = -13
         this.addChild(this.tabFocus)
 
-        this.dataArr = []
         this.updateData()
-        setInterval(_ => {
-            this.updateCount -= 1000
-            if (this.updateCount < 0) {
-                this.updateCount = this.updateTime
-                this.updateData()
-            }
-        }, 1000)
+        // setInterval(_ => {
+        //     this.updateCount -= 1000
+        //     if (this.updateCount < 0) {
+        //         this.updateCount = this.updateTime
+        //         this.updateData()
+        //     }
+        // }, 1000)
         this.initMouse()
+        this.initWS()
     }
+
+    initWS() {
+        getHupuWS((hupuWsUrl) => {
+            let remoteIO = io.connect(hupuWsUrl);
+
+            remoteIO.on('connect', () => {
+                console.log('hupuAuto socket connected', hupuWsUrl, this.gameId);
+                remoteIO.emit('passerbyking', {
+                    game_id: this.gameId,
+                    page: 'score'
+                })
+            });
+
+
+            remoteIO.on('wall', (data: any) => {
+                let event = data.et;
+                if (event == 'commitGame') {
+                    this.updateData()
+                }
+            })
+
+        })
+    }
+
     initMouse() {
         window.onmouseup = (e) => {
             let mx = e.clientX
@@ -164,11 +189,10 @@ export class GroupSp2 extends PIXI.Container {
                 let t = g
                 if (mx > t.x && mx < t.x + t.width && my > t.y && my < t.y + t.height) {
                     console.log('click', t.label.text, t.idx);
-                    this.updateCount = this.updateTime
+                    // this.updateCount = this.updateTime
                     this.showGroup(t.idx)
                 }
             }
-
         }
     }
     showGroup(idx) {
@@ -196,7 +220,7 @@ export class GroupSp2 extends PIXI.Container {
                     orderArr.push(pData)
                 }
                 else {
-                    console.log('error',pd);
+                    console.log('error', pd);
                 }
             }
             console.log(orderArr)
