@@ -6675,12 +6675,12 @@
 	                eventMap['startGame'] = function () {
 	                    console.log('startGame', data);
 	                    logEvent('startGame', data);
-	                    _this.scorePanel.set35ScoreLight(data.winScore);
-	                    _this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
-	                    setPlayer(data.player.left, data.player.right);
 	                    _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
 	                    _this.scorePanel.resetScore();
 	                    _this.scorePanel.resetTimer();
+	                    _this.scorePanel.set35ScoreLight(data.winScore);
+	                    _this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
+	                    setPlayer(data.player.left, data.player.right);
 	                };
 	                eventMap['commitGame'] = function () {
 	                    console.log('commitGame', data);
@@ -6690,8 +6690,6 @@
 	                        _this.eventPanel.showVictory(player);
 	                    else
 	                        _this.eventPanel.showWin(player);
-	                    _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
-	                    _this.scorePanel.resetScore();
 	                };
 	                if (eventMap[event]) {
 	                    isRunning = true;

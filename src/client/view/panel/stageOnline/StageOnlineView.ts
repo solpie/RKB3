@@ -149,7 +149,6 @@ class StageOnlineView extends VueBase {
     showGroup() {
         if (!groupSp)
             groupSp = new GroupSp2(canvasStage,this.gameId)
-
     }
     showRank() {
         if (!rankView) {

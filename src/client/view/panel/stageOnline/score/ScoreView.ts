@@ -338,13 +338,15 @@ export class ScoreView extends BasePanelView {
                 eventMap['startGame'] = () => {
                     console.log('startGame', data);
                     logEvent('startGame', data)
+                    this.scorePanel.toggleTimer(TimerState.PAUSE);
+                    this.scorePanel.resetScore();
+                    this.scorePanel.resetTimer();
+
                     this.scorePanel.set35ScoreLight(data.winScore);
                     this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
                     setPlayer(data.player.left, data.player.right);
                     // window.location.reload();
-                    this.scorePanel.toggleTimer(TimerState.PAUSE);
-                    this.scorePanel.resetScore();
-                    this.scorePanel.resetTimer();
+                
                 };
 
                 eventMap['commitGame'] = () => {
@@ -355,8 +357,8 @@ export class ScoreView extends BasePanelView {
                         this.eventPanel.showVictory(player)
                     else
                         this.eventPanel.showWin(player)
-                    this.scorePanel.toggleTimer(TimerState.PAUSE);
-                    this.scorePanel.resetScore();
+                    // this.scorePanel.toggleTimer(TimerState.PAUSE);
+                    // this.scorePanel.resetScore();
                 };
                 if (eventMap[event]) {
                     isRunning = true
