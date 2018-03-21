@@ -5,7 +5,7 @@ import { Event2017 } from './Event2017';
 import { PlayerInfo } from '../../../../model/PlayerInfo';
 import { getScorePanelUrl } from '../../../admin/home/home';
 import { CommandId } from '../../../Command';
-import { PanelId, TimerState } from '../../../const';
+import { PanelId, TimerState, FontName } from '../../../const';
 import { getHupuWS } from '../../../utils/HupuAPI';
 import { TweenEx } from '../../../utils/TweenEx';
 import { BasePanelView } from '../../BasePanelView';
@@ -14,6 +14,7 @@ import { Score2017 } from './Score2017';
 import { ScoreM3 } from './ScoreM2';
 import { ScorePanel2 } from './ScorePanel2';
 // import { initIO } from '../../../../router/PanelRouter';
+import { Score2018 } from './Score2018';
 declare let io;
 declare let $;
 function logEvent(...a) {
@@ -22,7 +23,7 @@ function logEvent(...a) {
     console.info(t, a)
 }
 export class ScoreView extends BasePanelView {
-    scorePanel: any
+    scorePanel: Score2018
     eventPanel: Event2017
     rankingData: RankingData
 
@@ -44,11 +45,19 @@ export class ScoreView extends BasePanelView {
         this.isTest = $route.query.test == "1"
         let isManmual = $route.query.m == '1'
         let m2 = $route.query.m2 == '1'
+        // let s4 = $route.query.s4 == '1'
         this.isM2 = m2
-        if (m2)
-            this.scorePanel = new ScoreM3(stage, darkTheme)
-        else
-            this.scorePanel = new Score2017(stage, darkTheme)
+        if (m2) {
+            // this.scorePanel = new ScoreM3(stage, darkTheme)
+        }
+        else {
+            //preload font
+            let f1 = this.preLoadFont(FontName.DigiLED)
+            stage.addChild(f1)
+            this.scorePanel = new Score2018(stage)
+        }
+
+        // this.scorePanel = new Score2017(stage, darkTheme)
         this.eventPanel = new Event2017(stage, darkTheme)
 
         console.log('new ScoreView')
@@ -82,7 +91,14 @@ export class ScoreView extends BasePanelView {
         this.initDelay()
         this.initLocal()
     }
-    initManmual() {
+
+    preLoadFont(fontName) {
+        let t = new PIXI.Text('', {
+            fontFamily: fontName,
+        })
+        t.text = '0'
+        t.alpha = 0
+        return t
     }
     initDelay() {
         console.log('initDelay')
@@ -216,30 +232,16 @@ export class ScoreView extends BasePanelView {
 
                 // powerRankType  1.大魔王，2.精英，3.实力选手，4.路人，5.新秀，6.冲榜
 
-                leftRankingData = getRankData(leftPlayer)
-                rightRankingData = getRankData(rightPlayer)
+                // leftRankingData = getRankData(leftPlayer)
+                // rightRankingData = getRankData(rightPlayer)
                 // if (this.rankingData) {
                 // leftRankingData = this.rankingData.getPlayerData(leftPlayer.player_id)
                 //     rightRankingData = this.rankingData.getPlayerData(rightPlayer.player_id)
                 // }
                 console.log('rankingData', leftRankingData, rightRankingData);
                 // player level 0 其他 1 至少一个胜场  2 大师赛 3冠军
-                this.scorePanel.setLeftPlayerInfo(
-                    leftPlayer.name,
-                    leftPlayer.avatar,
-                    leftPlayer.weight,
-                    leftPlayer.height,
-                    leftPlayer.nickname,
-                    leftPlayer.level,
-                    leftRankingData)
-                this.scorePanel.setRightPlayerInfo(
-                    rightPlayer.name,
-                    rightPlayer.avatar,
-                    rightPlayer.weight,
-                    rightPlayer.height,
-                    rightPlayer.nickname,
-                    rightPlayer.level,
-                    rightRankingData)
+                this.scorePanel.setLeftPlayerInfo(leftPlayer)
+                this.scorePanel.setRightPlayerInfo(rightPlayer)
             };
 
             remoteIO.on('error', (e) => {
@@ -346,17 +348,17 @@ export class ScoreView extends BasePanelView {
                     this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
                     setPlayer(data.player.left, data.player.right);
                     // window.location.reload();
-                
+
                 };
 
                 eventMap['commitGame'] = () => {
                     console.log('commitGame', data)
                     logEvent('commitGame', data)
                     let player = data.player
-                    if (this.isM2)
-                        this.eventPanel.showVictory(player)
-                    else
-                        this.eventPanel.showWin(player)
+                    // if (this.isM2)
+                    this.eventPanel.showVictory(player)
+                    // else
+                    //     this.eventPanel.showWin(player)
                     // this.scorePanel.toggleTimer(TimerState.PAUSE);
                     // this.scorePanel.resetScore();
                 };

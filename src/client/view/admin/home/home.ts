@@ -10,8 +10,8 @@ export function getScorePanelUrl(gameId, isDark, isOb = true) {
     if (isOb)
         op = 'ob'
     if (isDark)
-        return `/panel/#/ol/${op}/${gameId}?panel=score&m2=1&theme=dark`
-    return `/panel/#/ol/${op}/${gameId}?panel=score&m2=1`
+        return `/panel/#/ol/${op}/${gameId}?panel=score&s4=1&theme=dark`
+    return `/panel/#/ol/${op}/${gameId}?panel=score&s4=1`
 }
 class HomeView extends VueBase {
     template = require('./home.html');
@@ -62,7 +62,7 @@ class HomeView extends VueBase {
     updateLinks(gameId) {
         this.links = [
             // { title: "比分面板（蓝色）", url: getScorePanelUrl(gameId, true) },
-            { title: "比分面板（M2）", url: getScorePanelUrl(gameId, false) },
+            { title: "比分面板（S4）", url: getScorePanelUrl(gameId, false) },
             { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
             { title: "八强面板", url: `/panel/#/ol/ob/${gameId}?panel=bracket` },
             { title: "小组面板", url: `/panel/#/ol/ob/${gameId}?panel=group` },

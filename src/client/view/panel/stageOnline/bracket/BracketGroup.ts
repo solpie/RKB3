@@ -33,21 +33,22 @@ export function fitWidth(label: PIXI.Text, width, size) {
         fitWidth(label, width, size - 1)
     }
 }
+const l1 = 290
 export let groupPosMap = {
-    "1": _mkGroup({ x: 320, y: 91, hints: ['1号种子 ', "8号种子 "] }),
-    "2": _mkGroup({ x: 320, y: 95 + 137, hints: ['4号种子 ', "5号种子 "] }),
-    "3": _mkGroup({ x: 320, y: 95 + 145 * 2 + 18, hints: ['2号种子 ', "7号种子 "] }),
-    "4": _mkGroup({ x: 320, y: 95 + 145 * 3 + 14, hints: ['3号种子 ', "6号种子 "] }),
-    "5": _mkGroup({ x: 320, y: 806, hints: ['第1场败者 ', "第2场败者 "] }),
-    "6": _mkGroup({ x: 320, y: 805 + 142, hints: ['第3场败者 ', "第4场败者 "] }),
+    "1": _mkGroup({ x:  l1, y: 91, hints: ['1号种子 ', "8号种子 "] }),
+    "2": _mkGroup({ x:  l1, y: 95 + 137, hints: ['4号种子 ', "5号种子 "] }),
+    "3": _mkGroup({ x:  l1, y: 95 + 145 * 2 + 18, hints: ['2号种子 ', "7号种子 "] }),
+    "4": _mkGroup({ x:  l1, y: 95 + 145 * 3 + 14, hints: ['3号种子 ', "6号种子 "] }),
+    "5": _mkGroup({ x:  l1, y: 756, hints: ['第1场败者 ', "第2场败者 "] }),
+    "6": _mkGroup({ x:  l1, y: 755 + 142, hints: ['第3场败者 ', "第4场败者 "] }),
     "7": _mkGroup({ x: 671, y: 162 }),
     "8": _mkGroup({ x: 671, y: 476 }),
-    "9": _mkGroup({ x: 664, y: 893, hints: ['第7场败者 ', ""] }),
-    "10": _mkGroup({ x: 664, y: 751, hints: ['第8场败者 ', ""] }),
+    "9": _mkGroup({ x: 671, y: 843, hints: ['第7场败者 ', ""] }),
+    "10": _mkGroup({ x: 671, y: 701, hints: ['第8场败者 ', ""] }),
     "11": _mkGroup({ x: 1067, y: 319 }),
-    "12": _mkGroup({ x: 1020, y: 825 }),
-    "13": _mkGroup({ x: 1366, y: 770, hints: ['第11场败者 ', ""] }),
-    "14": _mkGroup({ x: 1463, y: 396, hints: ['', "第13场胜者 "] }),
+    "12": _mkGroup({ x: 1067, y: 760 }),
+    "13": _mkGroup({ x: 1368, y: 720, hints: ['第11场败者 ', ""] }),
+    "14": _mkGroup({ x: 1463, y: 319, hints: ['', "第13场胜者 "] }),
 };
 // export let __groupPosMap = {
 //     "1": _mkGroup({ x: 255, y: 95, hints: ['1号种子 ', "8号种子 "] }),

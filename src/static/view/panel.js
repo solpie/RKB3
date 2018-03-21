@@ -161,8 +161,8 @@
 	    if (isOb)
 	        op = 'ob';
 	    if (isDark)
-	        return "/panel/#/ol/" + op + "/" + gameId + "?panel=score&m2=1&theme=dark";
-	    return "/panel/#/ol/" + op + "/" + gameId + "?panel=score&m2=1";
+	        return "/panel/#/ol/" + op + "/" + gameId + "?panel=score&s4=1&theme=dark";
+	    return "/panel/#/ol/" + op + "/" + gameId + "?panel=score&s4=1";
 	}
 	exports.getScorePanelUrl = getScorePanelUrl;
 	var HomeView = (function (_super) {
@@ -232,7 +232,7 @@
 	    };
 	    HomeView.prototype.updateLinks = function (gameId) {
 	        this.links = [
-	            { title: "比分面板（M2）", url: getScorePanelUrl(gameId, false) },
+	            { title: "比分面板（S4）", url: getScorePanelUrl(gameId, false) },
 	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
 	            { title: "小组面板", url: "/panel/#/ol/ob/" + gameId + "?panel=group" },
@@ -1117,7 +1117,9 @@
 	    playerPanel: 'player'
 	};
 	exports.FontName = {
-	    MicrosoftYahei: "Microsoft Yahei"
+	    MicrosoftYahei: "Microsoft Yahei",
+	    Impact: "impact",
+	    DigiLED: "digital"
 	};
 	exports.ServerConst = {
 	    SEND_ASYNC: true,
@@ -1457,6 +1459,10 @@
 	    mousedown: 'mousedown',
 	    click: 'click',
 	};
+	function setScale(obj, s) {
+	    obj.scale.x = obj.scale.y = s;
+	}
+	exports.setScale = setScale;
 	exports.newModal = function (alpha, width, height, color) {
 	    if (alpha === void 0) { alpha = 0.8; }
 	    if (!width)
@@ -4369,10 +4375,10 @@
 	var WebJsFunc_1 = __webpack_require__(23);
 	var BasePanelView_1 = __webpack_require__(44);
 	var BracketView_1 = __webpack_require__(71);
-	var Lottery_1 = __webpack_require__(77);
-	var RankView_1 = __webpack_require__(80);
-	var ScoreView_1 = __webpack_require__(82);
-	var GroupSp2_1 = __webpack_require__(114);
+	var Lottery_1 = __webpack_require__(78);
+	var RankView_1 = __webpack_require__(81);
+	var ScoreView_1 = __webpack_require__(83);
+	var GroupSp2_1 = __webpack_require__(97);
 	var rankView;
 	var bracketView;
 	var scoreView;
@@ -4384,7 +4390,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(100);
+	        this.template = __webpack_require__(99);
 	        this.actTab = VueBase_1.VueBase.PROP;
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
@@ -5199,43 +5205,24 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var WebDBCmd_1 = __webpack_require__(72);
-	var PreRound_1 = __webpack_require__(73);
-	var Bracket2017_1 = __webpack_require__(76);
 	var Command_1 = __webpack_require__(61);
 	var HupuAPI_1 = __webpack_require__(22);
 	var BasePanelView_1 = __webpack_require__(44);
 	var const_1 = __webpack_require__(43);
 	var BracketGroup_1 = __webpack_require__(75);
+	var Bracket2018_1 = __webpack_require__(76);
 	var BracketView = (function (_super) {
 	    __extends(BracketView, _super);
 	    function BracketView(stage, gameId, $route) {
-	        var _this = this;
 	        _super.call(this, const_1.PanelId.onlinePanel);
 	        this.name = const_1.PanelId.bracketPanel;
 	        console.log("new bracket", $route.query);
 	        var isManmaul = $route.query.m == '1';
-	        this.bracket = new Bracket2017_1.Bracket2017(stage);
+	        this.bracket = new Bracket2018_1.Bracket2018(stage);
 	        if (isManmaul)
 	            this.initManmaul();
 	        else {
 	            this.bracket.visible = false;
-	            this.preRound = new PreRound_1.PreRound(stage);
-	            window.onkeyup = function (e) {
-	                console.log(e);
-	                if (e.key == 'ArrowLeft') {
-	                    _this.preRound.showRight(false);
-	                }
-	                else if (e.key == 'ArrowRight') {
-	                    _this.preRound.showRight(true);
-	                }
-	                else if (e.key == 'Tab') {
-	                    _this.bracket.visible = !_this.bracket.visible;
-	                    _this.preRound.visible = !_this.preRound.visible;
-	                }
-	                else if (e.key == 'ArrowUp') {
-	                    _this.preRound.toggleTheme();
-	                }
-	            };
 	            this.getPreRoundInfo(gameId);
 	            this.initAuto(Number(gameId));
 	        }
@@ -5243,7 +5230,6 @@
 	        this.initBg();
 	    }
 	    BracketView.prototype.initManmaul = function () {
-	        var _this = this;
 	        var srvIO = io.connect('/webDB')
 	            .on('connect', function () {
 	            console.log('connect manmaul!');
@@ -5259,24 +5245,10 @@
 	        })
 	            .on("" + WebDBCmd_1.WebDBCmd.sc_bracketInit, function (data) {
 	            delete data['_'];
-	            _this.onBracketData({ data: data });
 	        });
 	    };
 	    BracketView.prototype.getPreRoundInfo = function (gameId) {
-	        var _this = this;
-	        HupuAPI_1.getPreRoundPlayer(gameId, function (res) {
-	            console.log('getPreRoundInfo', res);
-	            var playerArr = res.data;
-	            if (playerArr.length > 8) {
-	                _this.preRound.setPlayerArr(playerArr);
-	                _this.bracket.visible = false;
-	                _this.preRound.visible = true;
-	            }
-	            else {
-	                _this.bracket.visible = true;
-	                _this.preRound.visible = false;
-	            }
-	        });
+	        this.bracket.visible = true;
 	    };
 	    BracketView.prototype.initBg = function () {
 	    };
@@ -5298,20 +5270,13 @@
 	        console.log('connected local /rkb');
 	    };
 	    BracketView.prototype.initLocal = function () {
-	        var _this = this;
 	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
 	        localWs.on('connect', function (msg) {
 	            console.log('connect', window.location.host);
 	        })
 	            .on("" + Command_1.CommandId.sc_setPreRoundPosition, function (data) {
-	            _this.bracket.visible = false;
-	            _this.preRound.visible = true;
-	            _this.preRound.showRight(data.isRight);
 	        })
 	            .on("" + Command_1.CommandId.sc_togglePreRoundTheme, function (data) {
-	            _this.bracket.visible = false;
-	            _this.preRound.visible = true;
-	            _this.preRound.setTheme(data.isDark);
 	        });
 	    };
 	    BracketView.prototype.initAuto = function (gameId) {
@@ -5335,7 +5300,7 @@
 	            eventMap['top8Match'] = function (data) {
 	                console.log('top8Match', data);
 	                data.data = data.list;
-	                _this.onBracketData(data);
+	                _this.bracket.onBracketData(data);
 	            };
 	            eventMap['startGame'] = function (data) {
 	                console.log('startGame', data);
@@ -5453,211 +5418,7 @@
 
 
 /***/ },
-/* 73 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var Com2017_1 = __webpack_require__(74);
-	var JsFunc_1 = __webpack_require__(17);
-	var BracketGroup_1 = __webpack_require__(75);
-	var const_1 = __webpack_require__(43);
-	var PixiEx_1 = __webpack_require__(46);
-	var skinConf = {
-	    'dark': {
-	        bg: '/img/panel/bracket/preRoundBgBlue.png',
-	        ftBg: '/img/panel/bracket/preRoundFtBlue.png',
-	        playerBg: '/img/panel/bracket/preRoundPlayerBlue.png'
-	    },
-	    'light': {
-	        bg: '/img/panel/bracket/preRoundBg.png',
-	        ftBg: '/img/panel/bracket/preRoundFt.png',
-	        playerBg: '/img/panel/bracket/preRoundPlayer.png'
-	    }
-	};
-	var skin;
-	var PlayerCtn = (function (_super) {
-	    __extends(PlayerCtn, _super);
-	    function PlayerCtn() {
-	        _super.call(this);
-	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/bracket/preRoundPlayer.png' });
-	        this.bg = bg;
-	        this.addChild(bg);
-	        this.avt = new PIXI.Sprite();
-	        this.avt.x = 1;
-	        this.avt.y = 1;
-	        this.addChild(this.avt);
-	        this.ft = new PIXI.Sprite();
-	        this.ft.x = 60;
-	        this.ft.y = -6;
-	        this.playerName = new PIXI.Text('');
-	        this.playerName.x = 60;
-	        var s = this.playerName.style;
-	        s.fontFamily = const_1.FontName.MicrosoftYahei;
-	        s.fontSize = '30px';
-	        s.fill = 0xffffff;
-	        this.addChild(this.playerName);
-	    }
-	    PlayerCtn.prototype.setAvatar = function (name, avtUrl, ftId) {
-	        var _this = this;
-	        PixiEx_1.loadRes(avtUrl, function (img) {
-	            _this.avt.texture = PixiEx_1.imgToTex(img);
-	            _this.avt.width = _this.avt.height = 52;
-	        }, true);
-	        JsFunc_1.loadImg(Com2017_1.getFtLineUrl(ftId), function (img) {
-	            _this.ft.texture = PixiEx_1.imgToTex(img);
-	        });
-	        this.playerName.text = name;
-	        BracketGroup_1.fitWidth(this.playerName, 220, 30);
-	        this.playerName.y = 30 - this.playerName.height * .5;
-	    };
-	    PlayerCtn.prototype.setDark = function (isDark) {
-	        isDark ? this.bg.texture.baseTexture.updateSourceImage(skinConf['dark'].playerBg)
-	            : this.bg.texture.baseTexture.updateSourceImage(skinConf['light'].playerBg);
-	    };
-	    return PlayerCtn;
-	}(PIXI.Container));
-	var FtCtn = (function (_super) {
-	    __extends(FtCtn, _super);
-	    function FtCtn(ftId) {
-	        _super.call(this);
-	        this.ftId = ftId + '';
-	        var ftLogo = PixiEx_1.newBitmap({ url: Com2017_1.getFtLogoUrl2(ftId) });
-	        ftLogo.x = 1;
-	        ftLogo.y = 1;
-	        ftLogo.width = ftLogo.height = 45;
-	        this.addChild(ftLogo);
-	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/bracket/preRoundFt.png' });
-	        this.bg = bg;
-	        this.addChild(bg);
-	        this.leftText = new PIXI.Text();
-	        this.leftText.x = 30;
-	        this.leftText.y = 32;
-	        var s = this.leftText.style;
-	        s.fill = '#2cfff8';
-	        s.fontFamily = const_1.FontName.MicrosoftYahei;
-	        s.fontSize = '18px';
-	        s.fontWeight = 'bold';
-	        this.addChild(this.leftText);
-	    }
-	    FtCtn.prototype.setNum = function (num) {
-	        if (!num)
-	            num = 0;
-	        if (num < 1) {
-	            this.alpha = .3;
-	        }
-	        this.leftText.text = num + '';
-	    };
-	    FtCtn.prototype.setDark = function (isDark) {
-	        isDark ? this.bg.texture.baseTexture.updateSourceImage(skinConf['dark'].ftBg)
-	            : this.bg.texture.baseTexture.updateSourceImage(skinConf['light'].ftBg);
-	    };
-	    return FtCtn;
-	}(PIXI.Container));
-	var PreRound = (function (_super) {
-	    __extends(PreRound, _super);
-	    function PreRound(stage, isDark) {
-	        if (isDark === void 0) { isDark = false; }
-	        _super.call(this);
-	        this.ftMap = {};
-	        this.imgTex = {};
-	        this.isDark = false;
-	        stage.addChild(this);
-	        this.x = const_1.ViewConst.STAGE_WIDTH - 500;
-	        this.y = 220;
-	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/bracket/preRoundBg.png' });
-	        this.bg = bg;
-	        this.addChild(bg);
-	        this.playerArr = [];
-	        for (var i = 0; i < 6; i++) {
-	            var p = new PlayerCtn();
-	            p.y = 74 * i + 160;
-	            p.x = 175;
-	            this.addChild(p);
-	            this.playerArr.push(p);
-	        }
-	        this.ftArr = [];
-	        for (var i = 0; i < 8; i++) {
-	            var f = new FtCtn(i + 1);
-	            this.ftMap[f.ftId] = f;
-	            f.x = 51 + i * 50;
-	            f.y = 20;
-	            this.ftArr.push(f);
-	        }
-	        this.playerLeftText = new PIXI.Text();
-	        this.playerLeftText.y = 100;
-	        var s = this.playerLeftText.style;
-	        s.fontFamily = const_1.FontName.MicrosoftYahei;
-	        s.fontSize = '40px';
-	        s.fontWeight = 'bold';
-	        s.fill = '#2cfff8';
-	        this.addChild(this.playerLeftText);
-	    }
-	    PreRound.prototype.setPlayerArr = function (playerDataArr) {
-	        var sum = {};
-	        for (var i = 0; i < playerDataArr.length; i++) {
-	            var pf = playerDataArr[i];
-	            if (!sum[pf.groupId])
-	                sum[pf.groupId] = 0;
-	            sum[pf.groupId]++;
-	        }
-	        for (var ftId in this.ftMap) {
-	            this.ftMap[ftId].setNum(sum[ftId]);
-	        }
-	        console.log(sum);
-	        for (var i = 2; i < 8; i++) {
-	            var p = playerDataArr[i];
-	            this.playerArr[i - 2].setAvatar(p.name, p.avatar, p.groupId);
-	        }
-	        this.playerLeftText.text = playerDataArr.length + '';
-	        this.playerLeftText.x = 90 - this.playerLeftText.width * .5;
-	    };
-	    PreRound.prototype.showRight = function (isRight) {
-	        if (isRight) {
-	            this.x = const_1.ViewConst.STAGE_WIDTH - 500;
-	        }
-	        else {
-	            this.x = -20;
-	        }
-	    };
-	    PreRound.prototype.setDark = function (isDark) {
-	        isDark ? this.bg.texture.baseTexture.updateSourceImage(skinConf['dark'].bg)
-	            : this.bg.texture.baseTexture.updateSourceImage(skinConf['light'].bg);
-	    };
-	    PreRound.prototype.toggleTheme = function () {
-	        this.isDark = !this.isDark;
-	        this.setDark(this.isDark);
-	        for (var _i = 0, _a = this.playerArr; _i < _a.length; _i++) {
-	            var p = _a[_i];
-	            p.setDark(this.isDark);
-	        }
-	        for (var _b = 0, _c = this.ftArr; _b < _c.length; _b++) {
-	            var f = _c[_b];
-	            f.setDark(this.isDark);
-	        }
-	    };
-	    PreRound.prototype.setTheme = function (isDark) {
-	        this.isDark = isDark;
-	        this.setDark(this.isDark);
-	        for (var _i = 0, _a = this.playerArr; _i < _a.length; _i++) {
-	            var p = _a[_i];
-	            p.setDark(this.isDark);
-	        }
-	        for (var _b = 0, _c = this.ftArr; _b < _c.length; _b++) {
-	            var f = _c[_b];
-	            f.setDark(this.isDark);
-	        }
-	    };
-	    return PreRound;
-	}(PIXI.Container));
-	exports.PreRound = PreRound;
-
-
-/***/ },
+/* 73 */,
 /* 74 */
 /***/ function(module, exports) {
 
@@ -5736,21 +5497,22 @@
 	    }
 	}
 	exports.fitWidth = fitWidth;
+	var l1 = 290;
 	exports.groupPosMap = {
-	    "1": _mkGroup({ x: 320, y: 91, hints: ['1号种子 ', "8号种子 "] }),
-	    "2": _mkGroup({ x: 320, y: 95 + 137, hints: ['4号种子 ', "5号种子 "] }),
-	    "3": _mkGroup({ x: 320, y: 95 + 145 * 2 + 18, hints: ['2号种子 ', "7号种子 "] }),
-	    "4": _mkGroup({ x: 320, y: 95 + 145 * 3 + 14, hints: ['3号种子 ', "6号种子 "] }),
-	    "5": _mkGroup({ x: 320, y: 806, hints: ['第1场败者 ', "第2场败者 "] }),
-	    "6": _mkGroup({ x: 320, y: 805 + 142, hints: ['第3场败者 ', "第4场败者 "] }),
+	    "1": _mkGroup({ x: l1, y: 91, hints: ['1号种子 ', "8号种子 "] }),
+	    "2": _mkGroup({ x: l1, y: 95 + 137, hints: ['4号种子 ', "5号种子 "] }),
+	    "3": _mkGroup({ x: l1, y: 95 + 145 * 2 + 18, hints: ['2号种子 ', "7号种子 "] }),
+	    "4": _mkGroup({ x: l1, y: 95 + 145 * 3 + 14, hints: ['3号种子 ', "6号种子 "] }),
+	    "5": _mkGroup({ x: l1, y: 756, hints: ['第1场败者 ', "第2场败者 "] }),
+	    "6": _mkGroup({ x: l1, y: 755 + 142, hints: ['第3场败者 ', "第4场败者 "] }),
 	    "7": _mkGroup({ x: 671, y: 162 }),
 	    "8": _mkGroup({ x: 671, y: 476 }),
-	    "9": _mkGroup({ x: 664, y: 893, hints: ['第7场败者 ', ""] }),
-	    "10": _mkGroup({ x: 664, y: 751, hints: ['第8场败者 ', ""] }),
+	    "9": _mkGroup({ x: 671, y: 843, hints: ['第7场败者 ', ""] }),
+	    "10": _mkGroup({ x: 671, y: 701, hints: ['第8场败者 ', ""] }),
 	    "11": _mkGroup({ x: 1067, y: 319 }),
-	    "12": _mkGroup({ x: 1020, y: 825 }),
-	    "13": _mkGroup({ x: 1366, y: 770, hints: ['第11场败者 ', ""] }),
-	    "14": _mkGroup({ x: 1463, y: 396, hints: ['', "第13场胜者 "] }),
+	    "12": _mkGroup({ x: 1067, y: 760 }),
+	    "13": _mkGroup({ x: 1368, y: 720, hints: ['第11场败者 ', ""] }),
+	    "14": _mkGroup({ x: 1463, y: 319, hints: ['', "第13场胜者 "] }),
 	};
 	var BracketGroup = (function () {
 	    function BracketGroup(idx) {
@@ -5787,9 +5549,10 @@
 	var Fx_1 = __webpack_require__(56);
 	var const_1 = __webpack_require__(43);
 	var PixiEx_1 = __webpack_require__(46);
-	var Bracket2017 = (function (_super) {
-	    __extends(Bracket2017, _super);
-	    function Bracket2017(parent) {
+	var BracketGroup2018_1 = __webpack_require__(77);
+	var Bracket2018 = (function (_super) {
+	    __extends(Bracket2018, _super);
+	    function Bracket2018(parent) {
 	        var _this = this;
 	        _super.call(this);
 	        parent.addChild(this);
@@ -5801,72 +5564,80 @@
 	        });
 	        bg.alpha = 0.8;
 	        this.addChild(bg);
+	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/bracket/s4/route.png' }));
 	        var hintCtn = new PIXI.Container();
 	        this.addChild(hintCtn);
-	        var frame = PixiEx_1.newBitmap({
-	            url: '/img/panel/bracket/bg1.png'
-	        });
-	        this.addChild(frame);
-	        this.comingTitle = PixiEx_1.newBitmap({ url: '/img/panel/bracket/coming.png' });
-	        this.comingTitle.visible = false;
-	        this.addChild(this.comingTitle);
-	        for (var idx in BracketGroup_1.groupPosMap) {
-	            var ctn = new PIXI.Container();
-	            this.addChild(ctn);
-	            var g = BracketGroup_1.groupPosMap[idx];
-	            console.log(g);
-	            ctn.x = g.x;
-	            ctn.y = g.y;
-	            var h1 = new PIXI.Sprite();
-	            h1.x = g.x + 170;
-	            h1.y = g.y + 50;
-	            h1.scale.y = -1;
-	            hintCtn.addChild(h1);
-	            g.hint1 = h1;
-	            var h2 = new PIXI.Sprite();
-	            h2.x = h1.x;
-	            h2.y = g.y + 49;
-	            hintCtn.addChild(h2);
-	            g.hint2 = h2;
-	            ctn.addChild(g.scores[0]);
-	            ctn.addChild(g.scores[1]);
-	            ctn.addChild(g.labels[0]);
-	            ctn.addChild(g.labels[1]);
-	        }
-	        JsFunc_1.loadImgArr(['/img/panel/bracket/hint1.png', '/img/panel/bracket/hint2.png'], function (img) {
-	            var tex = PixiEx_1.imgToTex(img[0]);
-	            _this.hint1Tex = tex;
-	            _this.hint2Tex = PixiEx_1.imgToTex(img[1]);
-	            console.log('load tex', hintCtn.children);
-	            for (var _i = 0, _a = hintCtn.children; _i < _a.length; _i++) {
-	                var c = _a[_i];
-	                c.texture = tex;
+	        this.groupSpMap = [];
+	        JsFunc_1.loadImg('/img/panel/bracket/s4/group.png', function (img) {
+	            for (var i = 0; i < 14; i++) {
+	                var gsp = new BracketGroup2018_1.BracketGroup2018(PixiEx_1.imgToTex(img));
+	                var gameIdx = i + 1;
+	                _this.groupSpMap[gameIdx] = gsp;
+	                var g = BracketGroup_1.groupPosMap[i + 1];
+	                console.log(g);
+	                gsp.x = g.x;
+	                gsp.y = g.y;
+	                _this.addChild(gsp);
 	            }
 	        });
+	        this.comingTitle = PixiEx_1.newBitmap({ url: '/img/panel/bracket/s4/focus.png' });
+	        this.comingTitle.visible = false;
+	        this.addChild(this.comingTitle);
 	    }
-	    Bracket2017.prototype.setWinHint = function (sp, isFlip) {
+	    Bracket2018.prototype.setWinHint = function (sp, isFlip) {
 	        if (isFlip === void 0) { isFlip = false; }
 	        sp.texture = this.hint2Tex;
 	    };
-	    Bracket2017.prototype.hideComing = function () {
+	    Bracket2018.prototype.hideComing = function () {
 	        this.comingTitle.visible = false;
 	    };
-	    Bracket2017.prototype.showComingIdx = function (idx) {
+	    Bracket2018.prototype.showComingIdx = function (idx) {
 	        var _this = this;
 	        var g = BracketGroup_1.groupPosMap[idx];
 	        this.comingTitle.visible = false;
 	        TweenEx_1.TweenEx.delayedCall(610, function () {
 	            if (g) {
 	                _this.comingTitle.visible = true;
-	                _this.comingTitle.x = g.x - 38;
-	                _this.comingTitle.y = g.y - 43;
+	                _this.comingTitle.x = g.x;
+	                _this.comingTitle.y = g.y;
 	                Fx_1.blink2({ target: _this.comingTitle, time: 600 });
 	            }
 	        });
 	    };
-	    return Bracket2017;
+	    Bracket2018.prototype.onBracketData = function (res) {
+	        var closeGame = {};
+	        console.log('onBracketData', res.data);
+	        for (var gameIdx in res.data) {
+	            var dataObj = res.data[gameIdx];
+	            var gsp = this.groupSpMap[gameIdx];
+	            gsp.setGameIdx(gameIdx);
+	            if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
+	                closeGame[gameIdx] = true;
+	            }
+	            var group2 = BracketGroup_1.groupPosMap[gameIdx];
+	            var hints = group2.hints;
+	            if (dataObj.left.name)
+	                gsp.setLeftName(dataObj.left.name);
+	            else
+	                gsp.setLeftName(hints ? hints[0] : '', true);
+	            if (dataObj.right.name)
+	                gsp.setRightName(dataObj.right.name);
+	            else
+	                gsp.setRightName(hints ? hints[1] : '', true);
+	        }
+	        var comingIdx = 1;
+	        for (var i = 0; i < 14; i++) {
+	            var isClose = closeGame[14 - i];
+	            if (isClose) {
+	                comingIdx = 14 - i + 1;
+	                break;
+	            }
+	        }
+	        this.showComingIdx(comingIdx);
+	    };
+	    return Bracket2018;
 	}(PIXI.Container));
-	exports.Bracket2017 = Bracket2017;
+	exports.Bracket2018 = Bracket2018;
 
 
 /***/ },
@@ -5879,13 +5650,86 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var const_1 = __webpack_require__(43);
+	var PixiEx_1 = __webpack_require__(46);
+	var BracketGroup2018 = (function (_super) {
+	    __extends(BracketGroup2018, _super);
+	    function BracketGroup2018(bgTex) {
+	        _super.call(this);
+	        var bg = new PIXI.Sprite();
+	        bg.texture = bgTex;
+	        this.addChild(bg);
+	        PixiEx_1.setScale(bg, 1);
+	        var ns = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '30px', fill: "#fff",
+	            fontWeight: 'bold'
+	        };
+	        var lName = new PIXI.Text('', ns);
+	        this.lName = lName;
+	        this.lName.y = 5;
+	        lName.x = 6;
+	        this.addChild(lName);
+	        var rName = new PIXI.Text('', ns);
+	        this.rName = rName;
+	        rName.y = 80;
+	        this.rName.x = this.lName.x;
+	        this.addChild(rName);
+	        var gs = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '28px', fill: "#333",
+	            fontWeight: 'bold'
+	        };
+	        var gameIdx = new PIXI.Text('', gs);
+	        this.addChild(gameIdx);
+	        gameIdx.x = -15;
+	        gameIdx.y = 49;
+	        this.gameIdx = gameIdx;
+	    }
+	    BracketGroup2018.prototype.setLeftName = function (str, isHint) {
+	        if (isHint === void 0) { isHint = false; }
+	        this.lName.text = str.toUpperCase();
+	        this.lName.x = 111 - 0.5 * this.lName.width;
+	        if (isHint)
+	            this.lName.alpha = 0.3;
+	        else
+	            this.lName.alpha = 1;
+	    };
+	    BracketGroup2018.prototype.setRightName = function (str, isHint) {
+	        if (isHint === void 0) { isHint = false; }
+	        this.rName.text = str.toUpperCase();
+	        this.rName.x = 111 - 0.5 * this.rName.width;
+	        if (isHint)
+	            this.rName.alpha = 0.3;
+	        else
+	            this.rName.alpha = 1;
+	    };
+	    BracketGroup2018.prototype.setGameIdx = function (gameIdx) {
+	        this.gameIdx.text = gameIdx + '.';
+	        this.gameIdx.x = -3 - this.gameIdx.width;
+	    };
+	    return BracketGroup2018;
+	}(PIXI.Container));
+	exports.BracketGroup2018 = BracketGroup2018;
+
+
+/***/ },
+/* 78 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
 	var JsFunc_1 = __webpack_require__(17);
 	var WebJsFunc_1 = __webpack_require__(23);
-	var RollFx_1 = __webpack_require__(78);
+	var RollFx_1 = __webpack_require__(79);
 	var BracketGroup_1 = __webpack_require__(75);
 	var const_1 = __webpack_require__(43);
 	var PixiEx_1 = __webpack_require__(46);
-	var RandomFx_1 = __webpack_require__(79);
+	var RandomFx_1 = __webpack_require__(80);
 	var Lottery = (function (_super) {
 	    __extends(Lottery, _super);
 	    function Lottery(parent, k, id) {
@@ -6075,7 +5919,7 @@
 
 
 /***/ },
-/* 78 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6118,7 +5962,7 @@
 
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6184,7 +6028,7 @@
 
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6196,7 +6040,7 @@
 	var PlayerInfo_1 = __webpack_require__(29);
 	var BasePanelView_1 = __webpack_require__(44);
 	var const_1 = __webpack_require__(43);
-	var FTInfo_1 = __webpack_require__(81);
+	var FTInfo_1 = __webpack_require__(82);
 	var PixiEx_1 = __webpack_require__(46);
 	var JsFunc_1 = __webpack_require__(17);
 	var RankView = (function (_super) {
@@ -6400,7 +6244,7 @@
 
 
 /***/ },
-/* 81 */
+/* 82 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -6429,7 +6273,7 @@
 
 
 /***/ },
-/* 82 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6438,15 +6282,14 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Event2017_1 = __webpack_require__(83);
+	var Event2017_1 = __webpack_require__(84);
 	var home_1 = __webpack_require__(16);
 	var Command_1 = __webpack_require__(61);
 	var const_1 = __webpack_require__(43);
 	var HupuAPI_1 = __webpack_require__(22);
 	var TweenEx_1 = __webpack_require__(50);
 	var BasePanelView_1 = __webpack_require__(44);
-	var Score2017_1 = __webpack_require__(95);
-	var ScoreM2_1 = __webpack_require__(98);
+	var Score2018_1 = __webpack_require__(96);
 	function logEvent() {
 	    var a = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
@@ -6471,10 +6314,13 @@
 	        var isManmual = $route.query.m == '1';
 	        var m2 = $route.query.m2 == '1';
 	        this.isM2 = m2;
-	        if (m2)
-	            this.scorePanel = new ScoreM2_1.ScoreM3(stage, darkTheme);
-	        else
-	            this.scorePanel = new Score2017_1.Score2017(stage, darkTheme);
+	        if (m2) {
+	        }
+	        else {
+	            var f1 = this.preLoadFont(const_1.FontName.DigiLED);
+	            stage.addChild(f1);
+	            this.scorePanel = new Score2018_1.Score2018(stage);
+	        }
 	        this.eventPanel = new Event2017_1.Event2017(stage, darkTheme);
 	        console.log('new ScoreView');
 	        if (this.isTest) {
@@ -6483,7 +6329,13 @@
 	        this.initDelay();
 	        this.initLocal();
 	    }
-	    ScoreView.prototype.initManmual = function () {
+	    ScoreView.prototype.preLoadFont = function (fontName) {
+	        var t = new PIXI.Text('', {
+	            fontFamily: fontName,
+	        });
+	        t.text = '0';
+	        t.alpha = 0;
+	        return t;
 	    };
 	    ScoreView.prototype.initDelay = function () {
 	        var _this = this;
@@ -6602,11 +6454,9 @@
 	                console.log(leftPlayer);
 	                var leftRankingData;
 	                var rightRankingData;
-	                leftRankingData = getRankData(leftPlayer);
-	                rightRankingData = getRankData(rightPlayer);
 	                console.log('rankingData', leftRankingData, rightRankingData);
-	                _this.scorePanel.setLeftPlayerInfo(leftPlayer.name, leftPlayer.avatar, leftPlayer.weight, leftPlayer.height, leftPlayer.nickname, leftPlayer.level, leftRankingData);
-	                _this.scorePanel.setRightPlayerInfo(rightPlayer.name, rightPlayer.avatar, rightPlayer.weight, rightPlayer.height, rightPlayer.nickname, rightPlayer.level, rightRankingData);
+	                _this.scorePanel.setLeftPlayerInfo(leftPlayer);
+	                _this.scorePanel.setRightPlayerInfo(rightPlayer);
 	            };
 	            remoteIO.on('error', function (e) {
 	                console.log('connect_error', e);
@@ -6686,10 +6536,7 @@
 	                    console.log('commitGame', data);
 	                    logEvent('commitGame', data);
 	                    var player = data.player;
-	                    if (_this.isM2)
-	                        _this.eventPanel.showVictory(player);
-	                    else
-	                        _this.eventPanel.showWin(player);
+	                    _this.eventPanel.showVictory(player);
 	                };
 	                if (eventMap[event]) {
 	                    isRunning = true;
@@ -6748,7 +6595,7 @@
 
 
 /***/ },
-/* 83 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6762,15 +6609,15 @@
 	var PixiEx_1 = __webpack_require__(46);
 	var TweenEx_1 = __webpack_require__(50);
 	var BracketGroup_1 = __webpack_require__(75);
-	var Champion_1 = __webpack_require__(84);
+	var Champion_1 = __webpack_require__(85);
 	var Com2017_1 = __webpack_require__(74);
-	var Group_1 = __webpack_require__(85);
-	var LogoFx_1 = __webpack_require__(86);
-	var NoticeSprite_1 = __webpack_require__(87);
-	var Ranking_1 = __webpack_require__(89);
-	var ScoreFx_1 = __webpack_require__(91);
-	var TopInfo_1 = __webpack_require__(92);
-	var VictoryM2_1 = __webpack_require__(93);
+	var Group_1 = __webpack_require__(86);
+	var LogoFx_1 = __webpack_require__(87);
+	var NoticeSprite_1 = __webpack_require__(88);
+	var Ranking_1 = __webpack_require__(90);
+	var ScoreFx_1 = __webpack_require__(92);
+	var TopInfo_1 = __webpack_require__(93);
+	var VictoryM2_1 = __webpack_require__(94);
 	var Event2017 = (function (_super) {
 	    __extends(Event2017, _super);
 	    function Event2017(stage, isDark) {
@@ -7008,7 +6855,7 @@
 
 
 /***/ },
-/* 84 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7082,7 +6929,7 @@
 
 
 /***/ },
-/* 85 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7175,7 +7022,7 @@
 
 
 /***/ },
-/* 86 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7215,7 +7062,7 @@
 
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7227,7 +7074,7 @@
 	var PixiEx_1 = __webpack_require__(46);
 	var const_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(17);
-	var ScaleSprite_1 = __webpack_require__(88);
+	var ScaleSprite_1 = __webpack_require__(89);
 	var NoticeSprite = (function (_super) {
 	    __extends(NoticeSprite, _super);
 	    function NoticeSprite() {
@@ -7338,7 +7185,7 @@
 
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -7420,7 +7267,7 @@
 
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7432,7 +7279,7 @@
 	var const_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(17);
 	var PixiEx_1 = __webpack_require__(46);
-	var RankingItem_1 = __webpack_require__(90);
+	var RankingItem_1 = __webpack_require__(91);
 	var Ranking = (function (_super) {
 	    __extends(Ranking, _super);
 	    function Ranking(parent, rankingData) {
@@ -7568,7 +7415,7 @@
 
 
 /***/ },
-/* 90 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7750,7 +7597,7 @@
 
 
 /***/ },
-/* 91 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7794,7 +7641,7 @@
 
 
 /***/ },
-/* 92 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7843,7 +7690,7 @@
 
 
 /***/ },
-/* 93 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7854,7 +7701,7 @@
 	};
 	var ImgLoader_1 = __webpack_require__(68);
 	var PixiEx_1 = __webpack_require__(46);
-	var TextMaker_1 = __webpack_require__(94);
+	var TextMaker_1 = __webpack_require__(95);
 	var const_1 = __webpack_require__(43);
 	var TweenEx_1 = __webpack_require__(50);
 	var VictoryM2 = (function (_super) {
@@ -7929,7 +7776,7 @@
 
 
 /***/ },
-/* 94 */
+/* 95 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -8025,609 +7872,48 @@
 
 
 /***/ },
-/* 95 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var Com2017_1 = __webpack_require__(74);
-	var FoulText_1 = __webpack_require__(96);
-	var Fx_1 = __webpack_require__(56);
-	var FoulGroup_1 = __webpack_require__(97);
-	var TextTimer_1 = __webpack_require__(52);
-	var SpriteGroup_1 = __webpack_require__(55);
-	var const_1 = __webpack_require__(43);
-	var JsFunc_1 = __webpack_require__(17);
-	var PixiEx_1 = __webpack_require__(46);
-	var skin = {
-	    light: {
-	        bg: '/img/panel/score2017/bgLight.png',
-	        fontColor: '#fff',
-	        score: '/img/panel/score2017/scoreLight.png',
-	        foul: '/img/panel/score2017/foul.png',
-	        foulHint: '/img/panel/score2017/foulHintLight.png',
-	        section1: '/img/panel/score2017/section1Light.png',
-	        section2: '/img/panel/score2017/section2Light.png',
-	        section3: '/img/panel/score2017/section3Light.png'
-	    },
-	    dark: {
-	        bg: '/img/panel/score2017/bgDark.png',
-	        fontColor: '#1b5e80',
-	        score: '/img/panel/score2017/scoreDark.png',
-	        foul: '/img/panel/score2017/foul.png',
-	        foulHint: '/img/panel/score2017/foulHintDark.png',
-	        section1: '/img/panel/score2017/section1Dark.png',
-	        section2: '/img/panel/score2017/section2Dark.png',
-	        section3: '/img/panel/score2017/section3Dark.png'
-	    }
-	};
-	function polygon(g, radius, sides) {
-	    if (sides < 3)
-	        return;
-	    var a = (Math.PI * 2) / sides;
-	    g.moveTo(radius, 0);
-	    for (var i = 1; i < sides; i++) {
-	        g.lineTo(radius * Math.cos(a * i), radius * Math.sin(a * i));
-	    }
-	}
-	var Score2017 = (function () {
-	    function Score2017(stage, isDark) {
-	        var _this = this;
-	        if (isDark === void 0) { isDark = false; }
-	        this._tex = {};
-	        this.stage = stage;
-	        if (isDark)
-	            this.skin = skin.dark;
-	        else
-	            this.skin = skin.light;
-	        var bg = PixiEx_1.newBitmap({ url: this.skin.bg });
-	        stage.addChild(bg);
-	        this.ctn = bg;
-	        var ctn = new PIXI.Container;
-	        bg.addChild(ctn);
-	        ctn.y = const_1.ViewConst.STAGE_HEIGHT - 300;
-	        this.gameSection = new PIXI.Sprite;
-	        this.gameSection.x = 926;
-	        this.gameSection.y = 174;
-	        ctn.addChild(this.gameSection);
-	        PixiEx_1.loadRes(this.skin.score, function (img) {
-	            var tex = PixiEx_1.imgToTex(img);
-	            var sheet = {
-	                text: '0',
-	                animations: {
-	                    "0": 0, "1": 1, "2": 2, "3": 3, "4": 4,
-	                    "5": 5, "6": 6, "7": 7, "8": 9, "9": 8
-	                },
-	                texture: tex,
-	                frames: [[0, 0, 110, 128],
-	                    [111, 0, 110, 128],
-	                    [0, 129, 110, 128],
-	                    [111, 129, 110, 128],
-	                    [222, 0, 110, 128],
-	                    [222, 129, 110, 128],
-	                    [0, 258, 110, 128],
-	                    [111, 258, 110, 128],
-	                    [222, 258, 110, 128],
-	                    [333, 0, 110, 128]]
-	            };
-	            var leftScoreNum = new PixiEx_1.BitmapText(sheet);
-	            _this.leftScoreText = leftScoreNum;
-	            leftScoreNum.x = 765;
-	            leftScoreNum.y = 130;
-	            leftScoreNum.align = 'center';
-	            ctn.addChild(leftScoreNum);
-	            var rightScoreNum = new PixiEx_1.BitmapText(sheet);
-	            _this.rightScoreText = rightScoreNum;
-	            rightScoreNum.x = leftScoreNum.x + 275;
-	            rightScoreNum.y = leftScoreNum.y;
-	            rightScoreNum.align = 'center';
-	            ctn.addChild(rightScoreNum);
-	        });
-	        var lf = new FoulGroup_1.FoulGroup({ dir: SpriteGroup_1.Direction.e, invert: 29, img: this.skin.foul, count: 4 });
-	        lf.x = 771;
-	        lf.y = 262;
-	        this.leftFoul = lf;
-	        var rf = new FoulGroup_1.FoulGroup({ dir: SpriteGroup_1.Direction.w, invert: 29, img: this.skin.foul, count: 4 });
-	        rf.x = 1037;
-	        rf.y = lf.y;
-	        this.rightFoul = rf;
-	        var fts = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '30px', fill: "#fff",
-	            fontWeight: 'bold'
-	        };
-	        var lft = new FoulText_1.FoulText(this.skin.foulHint);
-	        lft.x = 774;
-	        lft.y = 255;
-	        ctn.addChild(lft);
-	        this.lFoulText = lft;
-	        var rft = new FoulText_1.FoulText(this.skin.foulHint);
-	        rft.x = 1036;
-	        rft.y = lft.y;
-	        ctn.addChild(rft);
-	        this.rFoulText = rft;
-	        var tts = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '30px', fill: "#fff",
-	            fontWeight: 'bold'
-	        };
-	        var t = new TextTimer_1.TextTimer('', tts);
-	        ctn.addChild(t);
-	        t.x = 917;
-	        t.y = 90;
-	        t.setTimeBySec(0);
-	        this.timer = t;
-	        var winScoreText = new PIXI.Text("", tts);
-	        winScoreText.x = t.x;
-	        winScoreText.y = t.y;
-	        winScoreText.visible = false;
-	        ctn.addChild(winScoreText);
-	        this.winScoreText = winScoreText;
-	        var gis = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '26px', fill: "#fff",
-	            fontWeight: 'bold'
-	        };
-	        var gi = new PIXI.Text("第00场", gis);
-	        this.gameIdx = gi;
-	        gi.x = 917;
-	        gi.y = 258;
-	        ctn.addChild(gi);
-	        var pns = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '31px', fill: this.skin.fontColor,
-	            stroke: '#000',
-	            strokeThickness: 2,
-	            fontWeight: 'bold',
-	        };
-	        var pis = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '22px', fill: this.skin.fontColor,
-	            stroke: '#000',
-	            strokeThickness: 2,
-	            fontWeight: 'bold'
-	        };
-	        var lpn = new PIXI.Text("", pns);
-	        lpn.y = 155;
-	        this.lPlayerName = lpn;
-	        ctn.addChild(lpn);
-	        var lpi = new PIXI.Text("", pis);
-	        lpi.y = 200;
-	        this.lPlayerInfo = lpi;
-	        ctn.addChild(lpi);
-	        var rpn = new PIXI.Text("", pns);
-	        rpn.y = lpn.y;
-	        rpn.x = 1420;
-	        this.rPlayerName = rpn;
-	        ctn.addChild(rpn);
-	        var rpi = new PIXI.Text("", pis);
-	        rpi.x = rpn.x;
-	        rpi.y = lpi.y;
-	        this.rPlayerInfo = rpi;
-	        ctn.addChild(rpi);
-	        var lpr = new PIXI.Text("", pis);
-	        lpr.y = 258;
-	        this.lPlayerRanking = lpr;
-	        ctn.addChild(lpr);
-	        var rpr = new PIXI.Text("", pis);
-	        rpr.y = lpr.y;
-	        this.rPlayerRanking = rpr;
-	        ctn.addChild(rpr);
-	        var lm = new PIXI.Graphics()
-	            .beginFill(0xff0000);
-	        polygon(lm, 58, 6);
-	        lm.x = 628;
-	        lm.y = 193;
-	        var rm = new PIXI.Graphics()
-	            .beginFill(0xff0000);
-	        polygon(rm, 58, 6);
-	        rm.x = 1294;
-	        rm.y = lm.y;
-	        var lRankingFrame = new PIXI.Graphics()
-	            .beginFill(0xff0000);
-	        polygon(lRankingFrame, 63, 6);
-	        lRankingFrame.x = 628;
-	        lRankingFrame.y = 193;
-	        ctn.addChild(lRankingFrame);
-	        var rRankingFrame = new PIXI.Graphics()
-	            .beginFill(0xff0000);
-	        polygon(rRankingFrame, 63, 6);
-	        rRankingFrame.x = 1294;
-	        rRankingFrame.y = lRankingFrame.y;
-	        ctn.addChild(rRankingFrame);
-	        lRankingFrame.alpha = rRankingFrame.alpha = 0;
-	        this.lRankingFrame = lRankingFrame;
-	        this.rRankingFrame = rRankingFrame;
-	        ctn.addChild(rm);
-	        ctn.addChild(lm);
-	        var la = new PIXI.Sprite();
-	        la.x = lm.x;
-	        la.y = lm.y;
-	        la.mask = lm;
-	        this.lAvatar = la;
-	        ctn.addChild(this.lAvatar);
-	        var ra = new PIXI.Sprite();
-	        ra.x = rm.x;
-	        ra.y = rm.y;
-	        ra.mask = rm;
-	        this.rAvatar = ra;
-	        ctn.addChild(this.rAvatar);
-	        var ftns = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '22px', fill: '#fff',
-	            fontWeight: 'bold'
-	        };
-	        var lftn = new PIXI.Text('', ftns);
-	        this.lFtName = lftn;
-	        lftn.y = 267;
-	        ctn.addChild(lftn);
-	        var rftn = new PIXI.Text('', ftns);
-	        ctn.addChild(rftn);
-	        this.rFtName = rftn;
-	        rftn.y = lftn.y;
-	        ctn.addChild(rftn);
-	        var lFrame = new PIXI.Sprite();
-	        lFrame.scale.x = lFrame.scale.y = 0.97;
-	        this.lFrame = lFrame;
-	        lFrame.x = 562;
-	        lFrame.y = 134;
-	        ctn.addChild(lFrame);
-	        var rFrame = new PIXI.Sprite();
-	        rFrame.scale.x = rFrame.scale.y = 0.97;
-	        this.rFrame = rFrame;
-	        rFrame.x = 1228;
-	        rFrame.y = lFrame.y;
-	        ctn.addChild(rFrame);
-	    }
-	    Score2017.prototype.set35ScoreLight = function (winScore) {
-	        this.winScoreText.text = winScore + '球胜';
-	    };
-	    Score2017.prototype.setGameIdx = function (gameIdx, matchType) {
-	        var _this = this;
-	        console.log('isMaster', matchType);
-	        if (matchType == 2) {
-	            if (!this.gameSection2)
-	                JsFunc_1.loadImg(this.skin.section2, function (img) {
-	                    _this.gameSection2 = PixiEx_1.imgToTex(img);
-	                    _this.gameSection.texture = _this.gameSection2;
-	                });
-	            else
-	                this.gameSection.texture = this.gameSection2;
-	        }
-	        else if (matchType == 1) {
-	            if (!this.gameSection1)
-	                JsFunc_1.loadImg(this.skin.section1, function (img) {
-	                    _this.gameSection1 = PixiEx_1.imgToTex(img);
-	                    _this.gameSection.texture = _this.gameSection1;
-	                });
-	            else
-	                this.gameSection.texture = this.gameSection1;
-	        }
-	        else if (matchType == 3) {
-	            if (!this.gameSection3)
-	                JsFunc_1.loadImg(this.skin.section3, function (img) {
-	                    _this.gameSection3 = PixiEx_1.imgToTex(img);
-	                    _this.gameSection.texture = _this.gameSection3;
-	                });
-	            else
-	                this.gameSection.texture = this.gameSection3;
-	        }
-	        this.gameIdx.text = '第' + JsFunc_1.paddy(gameIdx, 2) + '场';
-	    };
-	    Score2017.prototype._showWinScore = function () {
-	        var _this = this;
-	        this.winScoreText.visible = true;
-	        this.timer.visible = false;
-	        Fx_1.blink2({
-	            target: this.winScoreText, time: 100, loop: 20, callback: function () {
-	                _this.winScoreText.visible = false;
-	                _this.timer.visible = true;
-	            }
-	        });
-	    };
-	    Score2017.prototype.setLeftScore = function (v) {
-	        this.leftScoreText.text = v + '';
-	        this._showWinScore();
-	    };
-	    Score2017.prototype.setRightScore = function (v) {
-	        this.rightScoreText.text = v + '';
-	        this._showWinScore();
-	    };
-	    Score2017.prototype._setFoulText = function (label, v) {
-	        var s = v + ' Foul';
-	        if (Number(v) > 3) {
-	            s = '  犯满';
-	        }
-	        label.text = s;
-	    };
-	    Score2017.prototype.setLeftFoul = function (v) {
-	        this.lFoulText.setFoul(v);
-	    };
-	    Score2017.prototype.setRightFoul = function (v) {
-	        this.rFoulText.setFoul(v);
-	    };
-	    Score2017.prototype.resetTimer = function () {
-	        this.timer.resetTimer();
-	    };
-	    Score2017.prototype.setTimer = function (v) {
-	        this.timer.setTimeBySec(v);
-	    };
-	    Score2017.prototype.toggleTimer = function (v) {
-	        this.timer.toggleTimer(v);
-	    };
-	    Score2017.prototype.resetScore = function () {
-	        this.setLeftScore(0);
-	        this.setRightScore(0);
-	        this.setLeftFoul(0);
-	        this.setRightFoul(0);
-	    };
-	    Score2017.prototype._fixFtName = function (label, name) {
-	        if (name.toUpperCase() == "GREENLIGHT") {
-	            name = "GREENLIGHT";
-	            label.style.fontSize = '13px';
-	        }
-	        else {
-	            label.style.fontSize = '22px';
-	        }
-	        label.text = name;
-	        label.y = 280 - label.height * .5;
-	    };
-	    Score2017.prototype.setLeftPlayerInfo = function (name, avatar, weight, height, ftId, level, rankingData) {
-	        var _this = this;
-	        this._lFtId = ftId;
-	        this._loadFrame(level, this.lFrame);
-	        this.lPlayerName.text = name;
-	        this.lPlayerName.x = 500 - this.lPlayerName.width;
-	        PixiEx_1.loadRes(avatar, function (img) {
-	            var avt = _this.lAvatar;
-	            avt.texture = PixiEx_1.imgToTex(img);
-	            var s = avt.mask.width / img.width;
-	            avt.x = avt.mask.x - avt.texture.width * .5 * s;
-	            avt.y = avt.mask.y - avt.texture.height * .5 * s;
-	            avt.scale.x = avt.scale.y = s;
-	        }, true);
-	        if (!height)
-	            height = 0;
-	        if (!weight)
-	            weight = 0;
-	        this.lPlayerInfo.text = height + 'CM ' + weight + "KG ";
-	        this.lPlayerInfo.x = 500 - this.lPlayerInfo.width;
-	        if (rankingData) {
-	            this.lPlayerRanking.text = rankingData.text;
-	            if (rankingData.color) {
-	                this.lRankingFrame.beginFill(rankingData.color);
-	                polygon(this.lRankingFrame, 63, 6);
-	                this.lRankingFrame.alpha = 1;
-	            }
-	            else
-	                this.lRankingFrame.alpha = 0;
-	        }
-	        this._fixFtName(this.lFtName, Com2017_1.getFtName(ftId));
-	        this.lFtName.x = 630 - this.lFtName.width * .5;
-	        this.lPlayerRanking.x = 510 - this.lPlayerRanking.width;
-	    };
-	    Score2017.prototype._loadFrame = function (level, frame) {
-	        var _this = this;
-	        level = Number(level);
-	        if (level > 0) {
-	            var frameUrl_1 = '/img/panel/score2017/frame' + level + '.png';
-	            frame.visible = true;
-	            if (!this._tex[frameUrl_1]) {
-	                JsFunc_1.loadImg(frameUrl_1, function (img) {
-	                    _this._tex[frameUrl_1] = frame.texture = PixiEx_1.imgToTex(img);
-	                });
-	            }
-	            else
-	                frame.texture = this._tex[frameUrl_1];
-	        }
-	        else
-	            frame.visible = false;
-	    };
-	    Score2017.prototype.setRightPlayerInfo = function (name, avatar, weight, height, ftId, level, rankingData) {
-	        var _this = this;
-	        this._rFtId = ftId;
-	        this._loadFrame(level, this.rFrame);
-	        this.rPlayerName.text = name;
-	        PixiEx_1.loadRes(avatar, function (img) {
-	            var avt = _this.rAvatar;
-	            avt.texture = PixiEx_1.imgToTex(img);
-	            var s = avt.mask.width / img.width;
-	            avt.x = avt.mask.x - avt.texture.width * .5 * s;
-	            avt.y = avt.mask.y - avt.texture.height * .5 * s;
-	            avt.scale.x = avt.scale.y = s;
-	        }, true);
-	        if (!height)
-	            height = 0;
-	        if (!weight)
-	            weight = 0;
-	        this.rPlayerInfo.text = height + 'CM ' + weight + "KG ";
-	        this._fixFtName(this.rFtName, Com2017_1.getFtName(ftId));
-	        this.rFtName.x = 1293 - this.rFtName.width * .5;
-	        this.rPlayerRanking.x = 1410;
-	        if (rankingData) {
-	            this.rPlayerRanking.text = rankingData.text;
-	            if (rankingData.color) {
-	                this.rRankingFrame.beginFill(rankingData.color);
-	                polygon(this.rRankingFrame, 63, 6);
-	                this.rRankingFrame.alpha = 1;
-	            }
-	            else
-	                this.rRankingFrame.alpha = 0;
-	        }
-	    };
-	    Score2017.prototype.getPlayerInfo = function (isLeft) {
-	        var player = {};
-	        if (isLeft) {
-	            player.name = this.lPlayerName.text;
-	            player.info = this.lPlayerInfo.text;
-	            player.ftId = this._lFtId;
-	        }
-	        else {
-	            player.name = this.rPlayerName.text;
-	            player.info = this.rPlayerInfo.text;
-	            player.ftId = this._rFtId;
-	        }
-	        return player;
-	    };
-	    Score2017.prototype.show = function () {
-	        this.ctn.visible = true;
-	    };
-	    Score2017.prototype.hide = function () {
-	        this.ctn.visible = false;
-	    };
-	    return Score2017;
-	}());
-	exports.Score2017 = Score2017;
-
-
-/***/ },
 /* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var Fx_1 = __webpack_require__(56);
 	var PixiEx_1 = __webpack_require__(46);
-	var const_1 = __webpack_require__(43);
-	var FoulText = (function (_super) {
-	    __extends(FoulText, _super);
-	    function FoulText(hintUrl) {
-	        _super.call(this);
-	        var h = PixiEx_1.newBitmap({ url: hintUrl });
-	        this.hint = h;
-	        this.addChild(h);
-	        var fts = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '30px', fill: "#fff",
-	            fontWeight: 'bold'
-	        };
-	        var l = new PIXI.Text('', fts);
-	        this.addChild(l);
-	        this.label = l;
-	    }
-	    FoulText.prototype.setFoul = function (v) {
-	        var s = v + ' Foul';
-	        this.hint.visible = false;
-	        if (Number(v) > 3) {
-	            s = '犯 满';
-	            this.hint.visible = true;
-	            Fx_1.blink2({
-	                target: this.hint, time: 130, loop: 31
-	            });
-	        }
-	        this.label.text = s;
-	        this.label.x = (109 - this.label.width) * .5;
-	    };
-	    return FoulText;
-	}(PIXI.Container));
-	exports.FoulText = FoulText;
-
-
-/***/ },
-/* 97 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var Fx_1 = __webpack_require__(56);
-	var PixiEx_1 = __webpack_require__(46);
-	var SpriteGroup_1 = __webpack_require__(55);
-	var FoulGroup = (function (_super) {
-	    __extends(FoulGroup, _super);
-	    function FoulGroup() {
-	        _super.apply(this, arguments);
-	    }
-	    FoulGroup.prototype.setNum = function (v) {
-	        _super.prototype.setNum.call(this, v);
-	        if (v >= 4) {
-	            if (!this._hint) {
-	                this._hint = PixiEx_1.newBitmap({
-	                    url: '/img/panel/score2017/foulHint.png',
-	                    x: -20,
-	                    y: -22
-	                });
-	                this.addChild(this._hint);
-	            }
-	            this._hint.visible = true;
-	            Fx_1.blink2({ target: this._hint, time: 100, loop: 100 });
-	        }
-	        else if (this._hint)
-	            this._hint.visible = false;
-	    };
-	    return FoulGroup;
-	}(SpriteGroup_1.SpriteGroup));
-	exports.FoulGroup = FoulGroup;
-
-
-/***/ },
-/* 98 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var ImgLoader_1 = __webpack_require__(68);
-	var PixiEx_1 = __webpack_require__(46);
-	var TextTimer_1 = __webpack_require__(52);
-	var const_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(17);
-	var FoulTextM2_1 = __webpack_require__(99);
+	var ImgLoader_1 = __webpack_require__(68);
+	var const_1 = __webpack_require__(43);
+	var TextTimer_1 = __webpack_require__(52);
+	var BracketGroup_1 = __webpack_require__(75);
 	var skin = {
-	    light: {
-	        bg: '/img/panel/score/m2/bg2.png',
-	        fontColor: '#fff',
-	        score: '/img/panel/score/m2/score.png',
-	        foul: '/img/panel/score2017/foul.png',
-	        foulHint: '/img/panel/score2017/foulHintLight.png',
-	        section1: '/img/panel/score2017/section1Light.png',
-	        section2: '/img/panel/score2017/section2Light.png',
-	        section3: '/img/panel/score2017/section3Light.png'
-	    },
-	    dark: {
-	        bg: '/img/panel/score/m2/bg2.png',
-	        fontColor: '#1b5e80',
-	        score: '/img/panel/score/m2/score.png',
-	        foul: '/img/panel/score2017/foul.png',
-	        foulHint: '/img/panel/score2017/foulHintDark.png',
-	        section1: '/img/panel/score2017/section1Dark.png',
-	        section2: '/img/panel/score2017/section2Dark.png',
-	        section3: '/img/panel/score2017/section3Dark.png'
-	    }
+	    bg: '/img/panel/score2018/bg.png',
+	    score: '/img/panel/score2018/score.png',
+	    scoreTex: '/img/panel/score2018/scoreTex.png',
+	    maskL: '/img/panel/score2018/avtMaskL.png',
+	    maskR: '/img/panel/score2018/avtMaskR.png',
 	};
-	var ScoreM3 = (function () {
-	    function ScoreM3(stage, isDark) {
+	var loadAvt = function (avtSp, url) {
+	    ImgLoader_1.imgLoader.loadTex(url, function (tex) {
+	        var s = 112 / tex.width;
+	        avtSp.texture = tex;
+	        avtSp.x = avtSp.mask.x;
+	        PixiEx_1.setScale(avtSp, s);
+	        avtSp.y = avtSp.mask.y - (avtSp.height - avtSp.mask.height) * .5;
+	    });
+	};
+	var Score2018 = (function () {
+	    function Score2018(stage) {
 	        var _this = this;
-	        if (isDark === void 0) { isDark = false; }
-	        this._tex = {};
-	        this._texFt = {};
-	        this.winSectionArr = [7, 8];
-	        this.loseSectionArr = [5, 6, 9, 10, 12];
-	        this._NAME_WIDTH = 250;
-	        this.stage = stage;
-	        if (isDark)
-	            this.skin = skin.dark;
-	        else
-	            this.skin = skin.light;
-	        var bg = PixiEx_1.newBitmap({ url: this.skin.bg });
-	        stage.addChild(bg);
-	        this.ctn = bg;
-	        var ctn = new PIXI.Container;
-	        bg.addChild(ctn);
-	        ctn.y = const_1.ViewConst.STAGE_HEIGHT - 300;
-	        bg.scale.x = bg.scale.y = .87;
-	        bg.x = 122;
-	        bg.y = 146;
-	        this.gameSection = new PIXI.Sprite;
-	        this.gameSection.x = 926;
-	        this.gameSection.y = 174;
-	        ctn.addChild(this.gameSection);
-	        PixiEx_1.loadRes(this.skin.score, function (img) {
-	            var tex = PixiEx_1.imgToTex(img);
+	        this.p = stage;
+	        var baseCtn = new PIXI.Container();
+	        this.baseCtn = baseCtn;
+	        var ctn = new PIXI.Container();
+	        ctn.y = 890;
+	        this.p.addChild(baseCtn);
+	        var bg = PixiEx_1.newBitmap({ url: skin.bg });
+	        baseCtn.addChild(bg);
+	        baseCtn.addChild(ctn);
+	        var imgArr = [];
+	        imgArr.push({ name: 'score', url: skin.score });
+	        JsFunc_1.loadImgArr(imgArr, function (imgCol) {
+	            var tex = PixiEx_1.imgToTex(imgCol['score']);
 	            var sheet = {
 	                text: '0',
 	                animations: {
@@ -8648,427 +7934,228 @@
 	                    [55, 162, 54, 80]]
 	            };
 	            var lScoreNum = new PixiEx_1.BitmapText(sheet);
-	            _this.leftScoreText = lScoreNum;
-	            lScoreNum.x = 808;
-	            lScoreNum.y = 90;
+	            _this.lScoreText = lScoreNum;
+	            lScoreNum.x = 840;
+	            lScoreNum.y = 27;
 	            lScoreNum.align = 'center';
 	            ctn.addChild(lScoreNum);
 	            var rScoreNum = new PixiEx_1.BitmapText(sheet);
-	            _this.rightScoreText = rScoreNum;
-	            rScoreNum.x = lScoreNum.x + 232;
+	            _this.rScoreText = rScoreNum;
+	            rScoreNum.x = lScoreNum.x + 187;
 	            rScoreNum.y = lScoreNum.y;
 	            rScoreNum.align = 'center';
-	            lScoreNum.scale.x = lScoreNum.scale.y = 1.3;
-	            rScoreNum.scale.x = rScoreNum.scale.y = 1.3;
+	            PixiEx_1.setScale(lScoreNum, 0.95);
+	            PixiEx_1.setScale(rScoreNum, 0.95);
 	            ctn.addChild(rScoreNum);
 	        });
-	        var lft = new FoulTextM2_1.FoulTextM2(this.skin.foulHint);
-	        lft.x = 780;
-	        lft.y = 200;
-	        lft.setFoul(0);
-	        ctn.addChild(lft);
-	        this.lFoulText = lft;
-	        var rft = new FoulTextM2_1.FoulTextM2(this.skin.foulHint);
-	        rft.x = 1045;
-	        rft.y = lft.y;
-	        rft.setFoul(0);
-	        ctn.addChild(rft);
-	        this.rFoulText = rft;
+	        var avtMaskL = PixiEx_1.newBitmap({ url: skin.maskL });
+	        ctn.addChild(avtMaskL);
+	        avtMaskL.x = 710;
+	        avtMaskL.y = 26;
+	        var avtMaskR = PixiEx_1.newBitmap({ url: skin.maskR });
+	        ctn.addChild(avtMaskR);
+	        avtMaskR.x = 1099;
+	        avtMaskR.y = avtMaskL.y;
+	        var avtL = new PIXI.Sprite();
+	        this.lAvt = avtL;
+	        avtL.mask = avtMaskL;
+	        ctn.addChild(avtL);
+	        var avtR = new PIXI.Sprite();
+	        this.rAvt = avtR;
+	        avtR.mask = avtMaskR;
+	        ctn.addChild(avtR);
+	        var lIcon = new PIXI.Sprite();
+	        lIcon.x = 517;
+	        lIcon.y = 25;
+	        this.lIcon = lIcon;
+	        ctn.addChild(lIcon);
+	        var rIcon = new PIXI.Sprite();
+	        rIcon.x = 1365;
+	        rIcon.y = lIcon.y;
+	        this.rIcon = rIcon;
+	        ctn.addChild(rIcon);
+	        PixiEx_1.setScale(lIcon, 0.40);
+	        PixiEx_1.setScale(rIcon, 0.40);
+	        var fts = {
+	            fontFamily: const_1.FontName.Impact,
+	            fontSize: '30px', fill: "#c2c1d4",
+	            fontWeight: 'bold'
+	        };
+	        var foulL = new PIXI.Text("8", fts);
+	        foulL.x = 719;
+	        foulL.y = 115;
+	        ctn.addChild(foulL);
+	        this.lFoul = foulL;
+	        var foulR = new PIXI.Text("5", fts);
+	        foulR.x = 1190;
+	        foulR.y = foulL.y;
+	        ctn.addChild(foulR);
+	        this.rFoul = foulR;
 	        var tts = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '30px', fill: "#fff",
+	            fontFamily: const_1.FontName.Impact,
+	            fontSize: '37px', fill: "#ff7e00",
 	            fontWeight: 'bold'
 	        };
 	        var t = new TextTimer_1.TextTimer('', tts);
 	        ctn.addChild(t);
-	        t.x = 919;
-	        t.y = 210;
+	        t.x = 915;
+	        t.y = 103;
 	        t.textInSec = 0;
 	        this.timer = t;
-	        var winScoreText = new PIXI.Text("", tts);
-	        winScoreText.x = t.x;
-	        winScoreText.y = t.y;
-	        winScoreText.visible = false;
-	        ctn.addChild(winScoreText);
-	        this.winScoreText = winScoreText;
-	        var gis = {
+	        var ns = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '24px', fill: "#fff",
+	            fontSize: '35px', fill: "#000520",
 	            fontWeight: 'bold'
 	        };
-	        var gi = new PIXI.Text("", gis);
-	        this.gameIdx = gi;
-	        gi.x = 908;
-	        gi.y = 68;
-	        ctn.addChild(gi);
-	        var pns = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '30px', fill: this.skin.fontColor,
-	            fontWeight: 'bold',
+	        var lName = new PIXI.Text('', ns);
+	        this.lName = lName;
+	        this.lName.y = 28;
+	        lName.x = 600 + 113 - lName.width;
+	        ctn.addChild(lName);
+	        var rName = new PIXI.Text('', ns);
+	        this.rName = rName;
+	        rName.x = 1200;
+	        this.rName.y = this.lName.y;
+	        ctn.addChild(rName);
+	        var is = {
+	            fontFamily: const_1.FontName.Impact,
+	            fontSize: '25px', fill: "#000520"
 	        };
-	        var lpn = new PIXI.Text("", pns);
-	        lpn.y = 82;
-	        this.lPlayerName = lpn;
-	        ctn.addChild(lpn);
-	        var pis = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '28px', fill: this.skin.fontColor,
-	            stroke: '#000',
-	            strokeThickness: 2,
-	            fontWeight: 'bold'
-	        };
-	        var lHeight = new PIXI.Text("", pis);
-	        lHeight.y = 142;
-	        this.lPlayerHeight = lHeight;
-	        ctn.addChild(lHeight);
-	        var lWeight = new PIXI.Text("", pis);
-	        lWeight.y = lHeight.y;
-	        this.lPlayerWeight = lWeight;
-	        ctn.addChild(lWeight);
-	        var rpn = new PIXI.Text("", pns);
-	        rpn.y = lpn.y;
-	        rpn.x = 1318;
-	        this.rPlayerName = rpn;
-	        ctn.addChild(rpn);
-	        var rHeight = new PIXI.Text("", pis);
-	        rHeight.x = rpn.x - 10;
-	        rHeight.y = lHeight.y;
-	        this.rPlayerHeight = rHeight;
-	        ctn.addChild(rHeight);
-	        var rWeight = new PIXI.Text("", pis);
-	        rWeight.x = rpn.x - 10;
-	        rWeight.y = lHeight.y;
-	        this.rPlayerWeight = rWeight;
-	        ctn.addChild(rWeight);
-	        var hupuIDstyle = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '25px', fill: "#ddd",
-	            fontWeight: 'bold',
-	        };
-	        var lHupuID = new PIXI.Text("", hupuIDstyle);
-	        lHupuID.y = 200;
-	        lHupuID.text = '';
-	        lHupuID.x = 595 - lHupuID.width;
-	        this.lPlayerHupuID = lHupuID;
-	        ctn.addChild(lHupuID);
-	        var rHupuID = new PIXI.Text("", hupuIDstyle);
-	        rHupuID.y = lHupuID.y;
-	        rHupuID.x = 1320;
-	        this.rPlayerHupuID = rHupuID;
-	        ctn.addChild(rHupuID);
-	        var lAvatar = new PIXI.Sprite();
-	        lAvatar.x = 595;
-	        lAvatar.y = 76;
-	        this.lAvatar = lAvatar;
-	        ctn.addChild(this.lAvatar);
-	        var lm = PixiEx_1.newBitmap({ url: '/img/panel/score/m2/avtMask.png' });
-	        lm.x = lAvatar.x + 2;
-	        lm.y = 76;
-	        lAvatar.mask = lm;
-	        ctn.addChild(lm);
-	        var rAvatar = new PIXI.Sprite();
-	        rAvatar.x = 1138;
-	        rAvatar.y = lm.y;
-	        this.rAvatar = rAvatar;
-	        ctn.addChild(this.rAvatar);
-	        var rm = PixiEx_1.newBitmap({ url: '/img/panel/score/m2/avtMask.png' });
-	        rm.x = 1138;
-	        rm.y = rAvatar.y;
-	        rAvatar.mask = rm;
-	        ctn.addChild(rm);
-	        var rRankingColor = new PIXI.Graphics();
-	        this._drawRankingColor(rRankingColor, 0xdddddd);
-	        rRankingColor.x = rm.x + 45;
-	        rRankingColor.y = lm.y + 120;
-	        ctn.addChild(rRankingColor);
-	        var lRankingColor = new PIXI.Graphics();
-	        this._drawRankingColor(lRankingColor, 0xdddddd);
-	        lRankingColor.x = lm.x + 45;
-	        lRankingColor.y = lm.y + 120;
-	        this.lRankingColor = lRankingColor;
-	        this.rRankingColor = rRankingColor;
-	        ctn.addChild(lRankingColor);
+	        var lHeightWeight = new PIXI.Text('', is);
+	        this.lHeightWeight = lHeightWeight;
+	        ctn.addChild(lHeightWeight);
+	        lHeightWeight.x = 713 - lHeightWeight.width;
+	        lHeightWeight.y = 78;
+	        var rHeightWeight = new PIXI.Text('', is);
+	        this.rHeightWeight = rHeightWeight;
+	        ctn.addChild(rHeightWeight);
+	        rHeightWeight.x = 1200;
+	        rHeightWeight.y = lHeightWeight.y;
 	        var rs = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '35px', fill: "#fff",
+	            fontFamily: const_1.FontName.Impact,
+	            fontSize: '30px', fill: "#000520"
 	        };
-	        var lRankingText = new PIXI.Text("", rs);
-	        lRankingText.y = lRankingColor.y + 5;
-	        ctn.addChild(lRankingText);
-	        this.lRankingText = lRankingText;
-	        var rRankingText = new PIXI.Text("", rs);
-	        rRankingText.y = lRankingText.y;
-	        ctn.addChild(rRankingText);
-	        this.rRankingText = rRankingText;
+	        var lRank = new PIXI.Text('', rs);
+	        this.lRank = lRank;
+	        ctn.addChild(lRank);
+	        lRank.y = 32;
+	        var rRank = new PIXI.Text('', rs);
+	        this.rRank = rRank;
+	        ctn.addChild(rRank);
+	        rRank.x = 1410;
+	        rRank.y = lRank.y;
+	        var gs = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '20px', fill: "#c2c1d4",
+	            fontWeight: 'bold'
+	        };
+	        var gameTitle = new PIXI.Text('', gs);
+	        this.gameTitle = gameTitle;
+	        ctn.addChild(gameTitle);
+	        gameTitle.y = 12;
+	        gs.fontSize = '30px';
+	        gs.fontFamily = const_1.FontName.Impact;
+	        var gameIdxTxt = new PIXI.Text('', gs);
+	        this.gameIdxTxt = gameIdxTxt;
+	        ctn.addChild(gameIdxTxt);
+	        gameIdxTxt.y = 35;
 	    }
-	    ScoreM3.prototype._drawRankingColor = function (g, col) {
-	        g.beginFill(col)
-	            .moveTo(25, 0)
-	            .lineTo(75, 0)
-	            .lineTo(100, 50)
-	            .lineTo(0, 50);
+	    Score2018.prototype.set35ScoreLight = function (data) {
 	    };
-	    ScoreM3.prototype.set35ScoreLight = function (winScore) {
-	        this.winScoreText.text = winScore + '球胜';
-	    };
-	    ScoreM3.prototype.setGameIdx = function (gameIdx, matchType) {
-	        gameIdx = Number(gameIdx);
-	        console.log('isMaster', matchType, gameIdx);
-	        if (matchType == 2) {
-	            if (this.winSectionArr.indexOf(gameIdx) > -1)
-	                this.gameIdx.text = '胜者组' + JsFunc_1.paddy(gameIdx, 2) + '场';
-	            else if (this.loseSectionArr.indexOf(gameIdx) > -1)
-	                this.gameIdx.text = '败者组' + JsFunc_1.paddy(gameIdx, 2) + '场';
-	            else if (gameIdx == 11)
-	                this.gameIdx.text = '胜者组决赛';
-	            else if (gameIdx == 13)
-	                this.gameIdx.text = '败者组决赛';
-	            else if (gameIdx == 14)
-	                this.gameIdx.text = '决赛';
-	            else
-	                this.gameIdx.text = '大师赛' + JsFunc_1.paddy(gameIdx, 2) + '场';
+	    Score2018.prototype.setGameIdx = function (gameIdx, type) {
+	        if (type == 2) {
+	            this.gameTitle.text = '大师赛';
 	        }
-	        else if (matchType == 1) {
-	            this.gameIdx.text = '车轮战' + JsFunc_1.paddy(gameIdx, 2) + '场';
+	        else if (type == 1) {
+	            this.gameTitle.text = '小组赛';
 	        }
-	        else if (matchType == 4) {
-	            this.gameIdx.text = '小组赛' + JsFunc_1.paddy(gameIdx, 2) + '场';
+	        else if (type == 3) {
+	            this.gameTitle.text = '决赛';
 	        }
-	        else if (matchType == 3) {
-	            this.gameIdx.text = '决赛';
-	        }
-	        this.gameIdx.x = 962 - this.gameIdx.width * .5;
+	        this.gameIdxTxt.text = '' + JsFunc_1.paddy(gameIdx, 2);
+	        this.gameIdxTxt.x = 960 - 0.5 * this.gameIdxTxt.width;
+	        this.gameTitle.x = 960 - 0.5 * this.gameTitle.width;
 	    };
-	    ScoreM3.prototype._showWinScore = function () {
-	    };
-	    ScoreM3.prototype.setLeftScore = function (v) {
-	        this.leftScoreText.text = v + '';
-	        this._showWinScore();
-	    };
-	    ScoreM3.prototype.setScoreFoul = function (data) {
-	        if ('leftScore' in data)
-	            this.setLeftScore(data.leftScore);
-	        if ('rightScore' in data)
-	            this.setRightScore(data.rightScore);
-	        if ('leftFoul' in data)
-	            this.setLeftFoul(data.leftFoul);
-	        if ('rightFoul' in data)
-	            this.setRightFoul(data.rightFoul);
-	    };
-	    ScoreM3.prototype.setRightScore = function (v) {
-	        this.rightScoreText.text = v + '';
-	        this._showWinScore();
-	    };
-	    ScoreM3.prototype._setFoulText = function (label, v) {
-	        var s = v + '';
-	        label.text = s;
-	    };
-	    ScoreM3.prototype.setLeftFoul = function (v) {
-	        this.lFoulText.setFoul(v);
-	    };
-	    ScoreM3.prototype.setRightFoul = function (v) {
-	        this.rFoulText.setFoul(v);
-	    };
-	    ScoreM3.prototype.resetTimer = function () {
-	        this.timer.resetTimer();
-	    };
-	    ScoreM3.prototype.setTimer = function (v) {
-	        this.timer.setTimeBySec(v);
-	    };
-	    ScoreM3.prototype.toggleTimer = function (v) {
-	        this.timer.toggleTimer(v);
-	    };
-	    ScoreM3.prototype.resetScore = function () {
-	        this.setLeftScore(0);
-	        this.setRightScore(0);
+	    Score2018.prototype.resetScore = function () {
 	        this.setLeftFoul(0);
 	        this.setRightFoul(0);
+	        this.setLeftScore(0);
+	        this.setRightScore(0);
 	    };
-	    ScoreM3.prototype._fixFtName = function (label, name) {
-	        if (name.toUpperCase() == "GREENLIGHT") {
-	            name = "GREENLIGHT";
-	            label.style.fontSize = '13px';
-	        }
-	        else {
-	            label.style.fontSize = '22px';
-	        }
-	        label.text = name;
-	        label.y = 280 - label.height * .5;
+	    Score2018.prototype.setLeftScore = function (data) {
+	        this.lScoreText.text = data + '';
 	    };
-	    ScoreM3.prototype.cutName = function (n, width) {
-	        if (n.width > width) {
-	            n.text = n.text.substr(0, n.text.length - 1);
-	            this.cutName(n, width);
-	        }
+	    Score2018.prototype.setRightScore = function (data) {
+	        this.rScoreText.text = data + '';
 	    };
-	    ScoreM3.prototype.setLeftPlayerInfo = function (name, avatar, weight, height, nickName, level, rankingData) {
+	    Score2018.prototype.setLeftFoul = function (data) {
+	        this.lFoul.text = data;
+	    };
+	    Score2018.prototype.setRightFoul = function (data) {
+	        this.rFoul.text = data;
+	    };
+	    Score2018.prototype.setLeftPlayerInfo = function (lPlayer) {
 	        var _this = this;
-	        this.lPlayerHupuID.text = nickName;
-	        this.lPlayerHupuID.x = 595 - this.lPlayerHupuID.width;
-	        this.cutName(this.lPlayerHupuID, this._NAME_WIDTH);
-	        this._loadFrame(level, this.lFrame);
-	        this.lPlayerName.text = name;
-	        this.cutName(this.lPlayerName, this._NAME_WIDTH);
-	        this.lPlayerName.x = 604 - this.lPlayerName.width;
-	        ImgLoader_1.imgLoader.loadTex(avatar, function (tex) {
-	            var avt = _this.lAvatar;
-	            avt.texture = tex;
-	            var s = 190 / tex.width;
-	            avt.x = avt.mask.x;
-	            avt.y = avt.mask.y;
-	            avt.scale.x = avt.scale.y = s;
-	        });
-	        this.lPlayerHeight.text = height;
-	        this.lPlayerWeight.text = weight;
-	        this.lPlayerHeight.x = 390 - this.lPlayerHeight.width;
-	        this.lPlayerWeight.x = 535 - this.lPlayerWeight.width;
-	        console.log('lPlayer ranking data', rankingData);
-	        this._drawRankingColor(this.lRankingColor, rankingData.color);
-	        this.lRankingText.text = rankingData.text;
-	        this.lRankingText.x = 693 - this.lRankingText.width * .5;
+	        var lIconUrl = '/img/icon/rankIcon_b' + lPlayer.powerRankType + '.png';
+	        PixiEx_1.loadRes(lIconUrl, function (tex) {
+	            _this.lIcon.texture = PixiEx_1.imgToTex(tex);
+	        }, false);
+	        this.lName.text = lPlayer.name;
+	        BracketGroup_1.fitWidth(this.lName, 258, 35);
+	        this.lName.x = 718 - this.lName.width;
+	        loadAvt(this.lAvt, lPlayer.avatar);
+	        this.lName.text = lPlayer.name;
+	        this.lHeightWeight.text = lPlayer.height + 'cm | ' + lPlayer.weight + 'kg';
+	        this.lHeightWeight.x = 713 - this.lHeightWeight.width;
+	        this.lRank.text = lPlayer.powerRank;
+	        this.lRank.x = 510 - this.lRank.width;
 	    };
-	    ScoreM3.prototype._loadFrame = function (level, frame) {
-	    };
-	    ScoreM3.prototype.setRightPlayerInfo = function (name, avatar, weight, height, nickName, level, rankingData) {
+	    Score2018.prototype.setRightPlayerInfo = function (rPlayer) {
 	        var _this = this;
-	        this.rPlayerHupuID.text = nickName;
-	        this.cutName(this.rPlayerHupuID, this._NAME_WIDTH);
-	        this._loadFrame(level, this.rFrame);
-	        this.rPlayerName.text = name;
-	        this.cutName(this.rPlayerName, this._NAME_WIDTH);
-	        ImgLoader_1.imgLoader.loadTex(avatar, function (tex) {
-	            var avt = _this.rAvatar;
-	            avt.texture = tex;
-	            var s = 190 / tex.width;
-	            avt.x = avt.mask.x;
-	            avt.y = avt.mask.y;
-	            avt.scale.x = avt.scale.y = s;
-	        });
-	        this.rPlayerHeight.text = height;
-	        this.rPlayerWeight.text = weight;
-	        this.rPlayerHeight.x = 1420 - this.rPlayerHeight.width;
-	        this.rPlayerWeight.x = 1558 - this.rPlayerWeight.width;
-	        this._drawRankingColor(this.rRankingColor, rankingData.color);
-	        this.rRankingText.text = rankingData.text;
-	        this.rRankingText.x = 1235 - this.rRankingText.width * .5;
+	        var rIconUrl = '/img/icon/rankIcon_b' + rPlayer.powerRankType + '.png';
+	        PixiEx_1.loadRes(rIconUrl, function (tex) {
+	            _this.rIcon.texture = PixiEx_1.imgToTex(tex);
+	        }, false);
+	        this.rName.text = rPlayer.name;
+	        BracketGroup_1.fitWidth(this.rName, 258, 35);
+	        loadAvt(this.rAvt, rPlayer.avatar);
+	        this.rHeightWeight.text = rPlayer.height + 'cm | ' + rPlayer.weight + 'kg';
+	        this.rRank.text = rPlayer.powerRank;
 	    };
-	    ScoreM3.prototype.getPlayerInfo = function (isLeft) {
+	    Score2018.prototype.resetTimer = function () {
+	        this.timer.resetTimer();
+	    };
+	    Score2018.prototype.setTimer = function (v) {
+	        this.timer.setTimeBySec(v);
+	    };
+	    Score2018.prototype.toggleTimer = function (v) {
+	        this.timer.toggleTimer(v);
+	    };
+	    Score2018.prototype.hide = function () {
+	        this.baseCtn.visible = false;
+	    };
+	    Score2018.prototype.show = function () {
+	        this.baseCtn.visible = true;
+	    };
+	    Score2018.prototype.getPlayerInfo = function (isLeft) {
 	        var player = {};
 	        if (isLeft) {
-	            player.name = this.lPlayerName.text;
-	            player.info = this.lPlayerHeight.text + ' CM ' + this.lPlayerWeight.text + ' KG';
-	            player.ftId = this._lFtId;
+	            player.name = this.lName.text;
+	            player.info = this.lHeightWeight.text;
 	        }
 	        else {
-	            player.name = this.rPlayerName.text;
-	            player.info = this.rPlayerHeight.text + ' CM ' + this.rPlayerWeight.text + ' KG';
-	            player.ftId = this._rFtId;
+	            player.name = this.rName.text;
+	            player.info = this.rName.text;
 	        }
 	        return player;
 	    };
-	    ScoreM3.prototype.show = function () {
-	        this.ctn.visible = true;
-	    };
-	    ScoreM3.prototype.hide = function () {
-	        this.ctn.visible = false;
-	    };
-	    return ScoreM3;
+	    return Score2018;
 	}());
-	exports.ScoreM3 = ScoreM3;
+	exports.Score2018 = Score2018;
 
 
 /***/ },
-/* 99 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var const_1 = __webpack_require__(43);
-	var FoulTextM2 = (function (_super) {
-	    __extends(FoulTextM2, _super);
-	    function FoulTextM2(hintUrl) {
-	        _super.call(this);
-	        this.hasHint = true;
-	        var fts = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '40px', fill: "#ddd",
-	            fontWeight: 'bold'
-	        };
-	        var l = new PIXI.Text('', fts);
-	        this.addChild(l);
-	        this.label = l;
-	    }
-	    FoulTextM2.prototype.setFoul = function (v) {
-	        var s = v + ' ';
-	        this.label.text = s;
-	        this.label.x = (109 - this.label.width) * .5;
-	    };
-	    return FoulTextM2;
-	}(PIXI.Container));
-	exports.FoulTextM2 = FoulTextM2;
-
-
-/***/ },
-/* 100 */
-/***/ function(module, exports) {
-
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">实力榜:</label><br>\r\n            <input class=\"input\" type=\"text\" style=\"width: 110px;\" v-model=\"inputDate\">\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,1)\">显示总榜1</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,2)\">显示总榜2</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,3)\">显示总榜3</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,4)\">显示总榜4</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,5)\">显示总榜5</button>\r\n            <button class=\"button\" @click=\"onShowRanking(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onShowDateRanking(inputDate)\">查询日期</button>\r\n            <button class=\"button\" @click=\"onShowPlayerRanking(inputDate)\">查询Player</button>\r\n            <button class=\"button\" @click=\"onRemoveRanking(inputDate)\">删除日期</button>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
-
-/***/ },
-/* 101 */,
-/* 102 */,
-/* 103 */,
-/* 104 */,
-/* 105 */,
-/* 106 */,
-/* 107 */,
-/* 108 */,
-/* 109 */,
-/* 110 */,
-/* 111 */,
-/* 112 */,
-/* 113 */
-/***/ function(module, exports) {
-
-	"use strict";
-	exports.firstBy = (function () {
-	    function identity(v) { return v; }
-	    function ignoreCase(v) { return typeof (v) === "string" ? v.toLowerCase() : v; }
-	    function makeCompareFunction(f, opt) {
-	        opt = typeof (opt) === "number" ? { direction: opt } : opt || {};
-	        if (typeof (f) != "function") {
-	            var prop = f;
-	            f = function (v1) { return !!v1[prop] ? v1[prop] : ""; };
-	        }
-	        if (f.length === 1) {
-	            var uf = f;
-	            var preprocess = opt.ignoreCase ? ignoreCase : identity;
-	            f = function (v1, v2) { return preprocess(uf(v1)) < preprocess(uf(v2)) ? -1 : preprocess(uf(v1)) > preprocess(uf(v2)) ? 1 : 0; };
-	        }
-	        if (opt.direction === -1)
-	            return function (v1, v2) { return -f(v1, v2); };
-	        return f;
-	    }
-	    function tb(func, opt) {
-	        var x = typeof (this) == "function" ? this : false;
-	        var y = makeCompareFunction(func, opt);
-	        var f = x ? function (a, b) {
-	            return x(a, b) || y(a, b);
-	        }
-	            : y;
-	        f.thenBy = tb;
-	        return f;
-	    }
-	    return tb;
-	})();
-
-
-/***/ },
-/* 114 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9080,7 +8167,7 @@
 	var PixiEx_1 = __webpack_require__(46);
 	var const_1 = __webpack_require__(43);
 	var HupuAPI_1 = __webpack_require__(22);
-	var thenBy_1 = __webpack_require__(113);
+	var thenBy_1 = __webpack_require__(98);
 	var ImgLoader_1 = __webpack_require__(68);
 	var Row1 = (function (_super) {
 	    __extends(Row1, _super);
@@ -9341,6 +8428,49 @@
 	}(PIXI.Container));
 	exports.GroupSp2 = GroupSp2;
 
+
+/***/ },
+/* 98 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.firstBy = (function () {
+	    function identity(v) { return v; }
+	    function ignoreCase(v) { return typeof (v) === "string" ? v.toLowerCase() : v; }
+	    function makeCompareFunction(f, opt) {
+	        opt = typeof (opt) === "number" ? { direction: opt } : opt || {};
+	        if (typeof (f) != "function") {
+	            var prop = f;
+	            f = function (v1) { return !!v1[prop] ? v1[prop] : ""; };
+	        }
+	        if (f.length === 1) {
+	            var uf = f;
+	            var preprocess = opt.ignoreCase ? ignoreCase : identity;
+	            f = function (v1, v2) { return preprocess(uf(v1)) < preprocess(uf(v2)) ? -1 : preprocess(uf(v1)) > preprocess(uf(v2)) ? 1 : 0; };
+	        }
+	        if (opt.direction === -1)
+	            return function (v1, v2) { return -f(v1, v2); };
+	        return f;
+	    }
+	    function tb(func, opt) {
+	        var x = typeof (this) == "function" ? this : false;
+	        var y = makeCompareFunction(func, opt);
+	        var f = x ? function (a, b) {
+	            return x(a, b) || y(a, b);
+	        }
+	            : y;
+	        f.thenBy = tb;
+	        return f;
+	    }
+	    return tb;
+	})();
+
+
+/***/ },
+/* 99 */
+/***/ function(module, exports) {
+
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <!-- <label class=\"label\">实力榜:</label><br>\r\n            <input class=\"input\" type=\"text\" style=\"width: 110px;\" v-model=\"inputDate\">\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,1)\">显示总榜1</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,4)\">显示总榜4</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,5)\">显示总榜5</button>\r\n            <button class=\"button\" @click=\"onShowRanking(false)\">隐藏</button> -->\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <!--<button class=\"button\" @click=\"onClkRegularPlayer\">剩余球员</button>-->\r\n            <label class=\"label\">   车轮战面板设置：</label> <br>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(true)\">蓝色</button>\r\n            <button class=\"button\" @click=\"onTogglePreRoundTheme(false)\">绿色</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(false)\">显示在左边</button>\r\n            <button class=\"button\" @click=\"onSetPreRoundPosition(true)\">显示在右边</button>\r\n            <label class=\"label\">   面板颜色：</label> <br>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(false)\">切换绿色面板</button>\r\n            <button class=\"button\" @click=\"onClkToggleTheme(true)\">切换蓝色面板</button>\r\n            <label class=\"label\">   媒体支持面板：</label> <br>\r\n            <button class=\"button\" @click=\"onSetBDVisible(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onSetBDVisible(false)\">隐藏</button>\r\n            <!--公告-->\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ }
 /******/ ]);

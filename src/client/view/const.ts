@@ -12,7 +12,9 @@ export const PanelId = {
     playerPanel: 'player'
 };
 export const FontName = {
-    MicrosoftYahei: "Microsoft Yahei"
+    MicrosoftYahei: "Microsoft Yahei",
+    Impact: "impact",
+    DigiLED: "digital"
 };
 export const ServerConst = {
     SEND_ASYNC: true,

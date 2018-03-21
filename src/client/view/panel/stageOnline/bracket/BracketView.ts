@@ -10,42 +10,43 @@ import { fitWidth, groupPosMap, PlayerSvg } from './BracketGroup';
 import { newBitmap } from "../../../utils/PixiEx";
 import { drawLine1, drawLine2, drawLine4 } from "./GroupLine";
 import { blink2 } from "../../../utils/Fx";
+import { Bracket2018 } from './Bracket2018';
 // import Container = createjs.Container;
 // import Bitmap = createjs.Bitmap;
 declare let $;
 declare let io;
 export class BracketView extends BasePanelView {
-    bracket: Bracket2017
-    preRound: PreRound
+    bracket: Bracket2018
+    // preRound: PreRound
     constructor(stage, gameId, $route) {
         super(PanelId.onlinePanel);
         this.name = PanelId.bracketPanel;
         console.log("new bracket", $route.query);
         let isManmaul = $route.query.m == '1'
 
-        this.bracket = new Bracket2017(stage)
+        this.bracket = new Bracket2018(stage)
 
         if (isManmaul)
             this.initManmaul()
         else {
             this.bracket.visible = false
-            this.preRound = new PreRound(stage)
-            window.onkeyup = (e) => {
-                console.log(e)
-                if (e.key == 'ArrowLeft') {
-                    this.preRound.showRight(false)
-                }
-                else if (e.key == 'ArrowRight') {
-                    this.preRound.showRight(true)
-                }
-                else if (e.key == 'Tab') {
-                    this.bracket.visible = !this.bracket.visible
-                    this.preRound.visible = !this.preRound.visible
-                }
-                else if (e.key == 'ArrowUp') {
-                    this.preRound.toggleTheme()
-                }
-            }
+            // this.preRound = new PreRound(stage)
+            // window.onkeyup = (e) => {
+            //     console.log(e)
+            //     if (e.key == 'ArrowLeft') {
+            //         this.preRound.showRight(false)
+            //     }
+            //     else if (e.key == 'ArrowRight') {
+            //         this.preRound.showRight(true)
+            //     }
+            //     else if (e.key == 'Tab') {
+            //         // this.bracket.visible = !this.bracket.visible
+            //         // this.preRound.visible = !this.preRound.visible
+            //     }
+            //     else if (e.key == 'ArrowUp') {
+            //         this.preRound.toggleTheme()
+            //     }
+            // }
             this.getPreRoundInfo(gameId)
             this.initAuto(Number(gameId));
         }
@@ -69,24 +70,24 @@ export class BracketView extends BasePanelView {
             })
             .on(`${WebDBCmd.sc_bracketInit}`, (data) => {
                 delete data['_']
-                this.onBracketData({data:data});
+                // this.onBracketData({ data: data });
             })
     }
 
     getPreRoundInfo(gameId) {
-        getPreRoundPlayer(gameId, (res) => {
-            console.log('getPreRoundInfo', res)
-            let playerArr = res.data
-            if (playerArr.length > 8) {
-                this.preRound.setPlayerArr(playerArr)
-                this.bracket.visible = false
-                this.preRound.visible = true
-            }
-            else {
-                this.bracket.visible = true
-                this.preRound.visible = false
-            }
-        })
+        // getPreRoundPlayer(gameId, (res) => {
+        //     console.log('getPreRoundInfo', res)
+        //     let playerArr = res.data
+        //     if (playerArr.length > 8) {
+        //         this.preRound.setPlayerArr(playerArr)
+        // this.bracket.visible = false
+        // this.preRound.visible = true
+        //     }
+        //     else {
+        this.bracket.visible = true
+        // this.preRound.visible = false
+        //     }
+        // })
     }
 
     initBg() {
@@ -124,14 +125,14 @@ export class BracketView extends BasePanelView {
             console.log('connect', window.location.host)
         })
             .on(`${CommandId.sc_setPreRoundPosition}`, (data) => {
-                this.bracket.visible = false
-                this.preRound.visible = true
-                this.preRound.showRight(data.isRight)
+                // this.bracket.visible = false
+                // this.preRound.visible = true
+                // this.preRound.showRight(data.isRight)
             })
             .on(`${CommandId.sc_togglePreRoundTheme}`, (data) => {
-                this.bracket.visible = false
-                this.preRound.visible = true
-                this.preRound.setTheme(data.isDark)
+                // this.bracket.visible = false
+                // this.preRound.visible = true
+                // this.preRound.setTheme(data.isDark)
             })
     }
 
@@ -154,20 +155,20 @@ export class BracketView extends BasePanelView {
             let eventMap = {};
             eventMap['top8Match'] = (data) => {
                 console.log('top8Match', data);
-                // this.bracket.visible = true
-                // this.preRound.visible = false
                 data.data = data.list;
-                this.onBracketData(data);
+                this.bracket.onBracketData(data)
             };
             eventMap['startGame'] = (data) => {
                 console.log('startGame', data);
                 this.getPreRoundInfo(gameId)
                 // this.bracket.hideComing()
             };
+
             eventMap['init'] = (data) => {
                 console.log('init', data);
                 // this.bracket.hideComing()
             };
+
             eventMap['commitGame'] = (data) => {
                 console.log('commitGame', data);
                 this.getPreRoundInfo(gameId)

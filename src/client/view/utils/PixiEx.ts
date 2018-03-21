@@ -221,6 +221,9 @@ export let PIXI_MOUSE_EVENT = {
     mousedown: 'mousedown',
     click: 'click',
 }
+export function setScale(obj, s) {
+    obj.scale.x = obj.scale.y = s
+}
 
 export const newModal = (alpha = 0.8, width?, height?, color?) => {
     if (!width)
