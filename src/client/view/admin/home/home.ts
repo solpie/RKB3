@@ -44,7 +44,7 @@ class HomeView extends VueBase {
             for (var i = 0; i < gameDataArr.length; i++) {
                 // var gameData = gameDataArr[i];
                 var gameData = gameDataArr[gameDataArr.length - 1 - i];
-                if (Number(gameData.id) > 490) {
+                if (Number(gameData.id) > 573) {
                     gameData.text = "[" + gameData.id + "]:" + gameData.title;
                     gameData.value = gameData.id;
                     this.gameDataArr.push(gameData);
