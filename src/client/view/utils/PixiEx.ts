@@ -1,4 +1,4 @@
-import { loadImg } from "./JsFunc";
+import { loadImg, paddy } from "./JsFunc";
 import { proxy } from "./WebJsFunc";
 import { ViewConst } from "../const";
 export function imgToTex(img): PIXI.Texture {

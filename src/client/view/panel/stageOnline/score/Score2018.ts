@@ -4,6 +4,7 @@ import { imgLoader } from '../../../utils/ImgLoader';
 import { FontName } from '../../../const';
 import { TextTimer } from '../../../utils/TextTimer';
 import { fitWidth } from '../bracket/BracketGroup';
+import { TweenEx } from '../../../utils/TweenEx';
 const skin = {
     bg: '/img/panel/score2018/bg.png',
     score: '/img/panel/score2018/score.png',
@@ -169,7 +170,9 @@ export class Score2018 {
         ctn.addChild(t)
         t.x = 915
         t.y = 103
-        t.textInSec = 0
+        TweenEx.delayedCall(1500, _ => {
+            t.textInSec = 0
+        })
         this.timer = t
 
         let ns = {
@@ -233,12 +236,13 @@ export class Score2018 {
         this.gameTitle = gameTitle
         ctn.addChild(gameTitle)
         gameTitle.y = 12
-
+        
         gs.fontSize = '30px'
         gs.fontFamily = FontName.Impact
         let gameIdxTxt = new PIXI.Text('', gs)
         this.gameIdxTxt = gameIdxTxt
         ctn.addChild(gameIdxTxt)
+        gameIdxTxt.style.fontWeight = 'normal'
         gameIdxTxt.y = 35
 
         // this.test()
@@ -248,10 +252,24 @@ export class Score2018 {
     set35ScoreLight(data) {
 
     }
+    winSectionArr = [7, 8]
+    loseSectionArr = [5, 6, 9, 10, 12]
     //1 车轮 2 大师 3 决赛    
     setGameIdx(gameIdx, type) {
         if (type == 2) {
-            this.gameTitle.text = '大师赛'
+
+            if (this.winSectionArr.indexOf(gameIdx) > -1)
+                this.gameTitle.text = '胜者组'
+            else if (this.loseSectionArr.indexOf(gameIdx) > -1)
+                this.gameTitle.text = '败者组'
+            else if (gameIdx == 11)
+                this.gameTitle.text = '胜者组'
+            else if (gameIdx == 13)
+                this.gameTitle.text = '败者组'
+            else if (gameIdx == 14)
+                this.gameTitle.text = '决赛'
+            else
+                this.gameTitle.text = '大师赛'
         }
         else if (type == 1) {
             this.gameTitle.text = '小组赛'
@@ -342,10 +360,12 @@ export class Score2018 {
         if (isLeft) {
             player.name = this.lName.text
             player.info = this.lHeightWeight.text
+            player.rank = this.lRank.text
         }
         else {
             player.name = this.rName.text
-            player.info = this.rName.text
+            player.info = this.rHeightWeight.text
+            player.rank = this.rRank.text
         }
         return player
     }

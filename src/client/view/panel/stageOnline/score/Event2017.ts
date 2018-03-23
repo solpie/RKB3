@@ -13,6 +13,7 @@ import { ScoreFx } from './ScoreFx';
 import { TopInfo } from './TopInfo';
 import { VictoryM2 } from './VictoryM2';
 import { Victory2 } from "./Victory2";
+import { Winner } from './Winner';
 
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
@@ -213,8 +214,8 @@ export class Event2017 extends PIXI.Container {
             this.champion = new Champion()
             this.addChild(this.champion)
         }
-        
-        console.log('champion',player);
+
+        console.log('champion', player);
         this.champion.setChampion(title, player.name, player.info, player.ftId)
     }
 
@@ -311,19 +312,34 @@ export class Event2017 extends PIXI.Container {
             : this.ranking.hide()
     }
 
-    victoryM2: VictoryM2
+    winner: Winner
     showVictory(data) {
-        if (!this.victoryM2) {
-            this.victoryM2 = new VictoryM2()
-            this.victoryM2.create(this)
+        if (!this.winner) {
+            this.winner = new Winner()
+            this.winner.create(this)
         }
         let d: any = {}
         for (let k in data) {
             d['k'] = data['k']
         }
-        console.log(data)
         d.rec = { win: data.winAmount, lose: data.loseAmount }
         d.winner = data
-        this.victoryM2.show(d)
+        this.winner.show(d)
     }
+    // victoryM2: VictoryM2
+    // showVictory(data) {
+    //     if (!this.victoryM2) {
+    //         this.victoryM2 = new VictoryM2()
+    //         this.victoryM2.create(this)
+    //     }
+    //     let d: any = {}
+    //     for (let k in data) {
+    //         d['k'] = data['k']
+    //     }
+    //     console.log(data)
+    //     d.rec = { win: data.winAmount, lose: data.loseAmount }
+    //     d.winner = data
+    //     this.victoryM2.show(d)
+    // }
+
 }
