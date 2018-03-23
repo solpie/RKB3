@@ -254,10 +254,10 @@ export class Score2018 {
     }
     winSectionArr = [7, 8]
     loseSectionArr = [5, 6, 9, 10, 12]
-    //1 车轮 2 大师 3 决赛    
+    //1 车轮 2 大师 3 决赛    4 小组赛
     setGameIdx(gameIdx, type) {
+        console.log('gameIdx',gameIdx,'type',type)
         if (type == 2) {
-
             if (this.winSectionArr.indexOf(gameIdx) > -1)
                 this.gameTitle.text = '胜者组'
             else if (this.loseSectionArr.indexOf(gameIdx) > -1)
@@ -271,8 +271,11 @@ export class Score2018 {
             else
                 this.gameTitle.text = '大师赛'
         }
-        else if (type == 1) {
+        else if (type == 4) {
             this.gameTitle.text = '小组赛'
+        }
+        else if (type == 1) {
+            this.gameTitle.text = '车轮赛'
         }
         else if (type == 3) {
             this.gameTitle.text = '决赛'
