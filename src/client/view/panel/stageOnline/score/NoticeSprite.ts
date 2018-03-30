@@ -1,63 +1,46 @@
-import { newBitmap } from '../../../utils/PixiEx';
+import { newBitmap, gradientG } from '../../../utils/PixiEx';
 import { FontName, ViewConst } from '../../../const';
 import { loadImg } from '../../../utils/JsFunc';
 import { ScaleSprite } from '../../../utils/ScaleSprite';
 export class NoticeSprite extends PIXI.Container {
-    frame: ScaleSprite
-    line: PIXI.Sprite
     content: PIXI.Text
     title: PIXI.Text
     imgWidth: number
     imgHeight: number
     bg: PIXI.Graphics
-    lLight: PIXI.Sprite
-    rLight: PIXI.Sprite
+    titleBg: PIXI.Graphics
     _content: string
     _title: string
     _isLeft: boolean
     _isBold: String
     constructor() {
         super()
+
         this.bg = new PIXI.Graphics()
-        this.bg.alpha = .8
         this.addChild(this.bg)
 
-        loadImg('/img/panel/score2017/noticeBg.png', (img) => {
-            this.imgWidth = 250
-            this.imgHeight = 130
 
-            this.frame = new ScaleSprite(img, { x: 27, y: 29, width: 31, height: 27 })
-            // this.frame.resize(1000, 800)
-            this.addChildAt(this.frame, 1)
-            this.setText(this._content, this._title, this._isLeft, this._isBold)
-        })        // super()
-        this.lLight = newBitmap({ url: '/img/panel/score2017/noticeLight.png' })
-        this.lLight.y = 34
-        this.addChild(this.lLight)
-        this.rLight = newBitmap({ url: '/img/panel/score2017/noticeLight.png' })
-        this.rLight.y = this.lLight.y
-        this.addChild(this.rLight)
         let ts = {
             fontFamily: FontName.MicrosoftYahei,
-            fontSize: '35px', fill: "#fff",
+            fontSize: '35px', fill: "#3d4470",
             fontWeight: 'bold'
         }
-        this.line = newBitmap({
-            url: '/img/panel/score2017/noticeLine.png'
-        })
-        this.line.y = 48
-        this.line.x = 9
-        this.addChild(this.line)
 
-        this.content = new PIXI.Text('', ts)
-        this.content.y = 60
-        this.addChild(this.content)
 
         this.title = new PIXI.Text('', ts)
         this.title.style.fontSize = '25px'
         this.title.y = 12
         this.addChild(this.title)
         this.y = 85
+
+        ts.fill = '#e1dfed'
+
+        this.content = new PIXI.Text('', ts)
+        this.content.y = 60
+        this.addChild(this.content)
+
+        this.setText(this._content, this._title, this._isLeft, this._isBold)
+
     }
     show() {
         this.visible = true
@@ -75,8 +58,7 @@ export class NoticeSprite extends PIXI.Container {
 
         this.content.style.fontWeight = isBold
         let lineGap = 15
-        if(isBold=='bold')
-        {
+        if (isBold == 'bold') {
             lineGap = 18
         }
         this.content.style.lineHeight = Number(this.content.style.fontSize.replace('px', '')) + lineGap
@@ -88,49 +70,37 @@ export class NoticeSprite extends PIXI.Container {
         let h = this.content.height
         if (h < this.imgHeight)
             h = this.imgHeight
+        let fw = textWidth + 40
+        let fh = this.content.height + 15 + this.content.y
 
-        this.frame.resize(textWidth + 40, this.content.height + 15 + this.content.y)
-        this.line.width = textWidth + 40 - 18
-        this.content.x = 0.5 * (this.frame.width - this.content.width)
-
-        this.title.x = 0.5 * (this.frame.width - this.title.width)
-
+        this.content.x = 0.5 * (fw - this.content.width)
+        this.title.x = 0.5 * (fw - this.title.width)
 
         this.bg.clear()
-        let fw = this.frame.width
-        let fh = this.frame.height
-        this.bg.beginFill(0x000000)
-            .moveTo(25, 6)
-            .lineTo(fw - 8, 6)
-            .lineTo(fw - 8, fh - 28)
-            .lineTo(fw - 25, fh - 6)
-            // .lineTo(fw - 12, fh - 28)
-            // .lineTo(fw - 25, fh - 6)
-            // .lineTo(fw - 12, fh - 6)
-            // .lineTo(fw - 12, 26)
-            .lineTo(6, fh - 6)
-            .lineTo(6, 25)
-        // .lineTo(25, 6)
-        if (fw < 260) {
-            this.lLight.visible = false
-            this.rLight.visible = false
-        }
-        else {
-            this.lLight.visible = true
-            this.rLight.visible = true
-            this.lLight.x = this.title.x - 75 - 8
-            this.rLight.x = this.title.x + this.title.width + 8
-            if (this.rLight.x + this.rLight.width - this.lLight.x > fw - 25) {
-                this.lLight.visible = false
-                this.rLight.visible = false
-            }
-        }
+        let t = this.title
 
+        this.bg.beginFill(0xffffff, 0.38)
+            .drawRect(0, 0, fw, fh)
+            .endFill()
+
+            .beginFill(0x000000, 1)
+            .drawRect(5, 5, fw - 10, fh - 10)
+            .endFill()
+           // let c1 = [0xf0, 0xfa, 0xff]
+    // let c2 = [0xcb, 0xd1, 0xd4]
+        gradientG(this.bg, 5, 5, fw - 10, fh - 10,
+            0x414665, 0x1a203e)
+        this.bg.beginFill(0xffffff, 1)
+            .moveTo(t.x - 15, t.y + t.height * .5)
+            .lineTo(t.x - 5, t.y + t.height + 5)
+            .lineTo(t.x + t.width + 5, t.y + t.height + 5)
+            .lineTo(t.x + t.width + 15, t.y + t.height * .5)
+            .drawRect(5, 5, fw - 10, 24)
         if (isLeft) {
-            this.x = 5
+            this.x = 15
         }
         else {
-            this.x = ViewConst.STAGE_WIDTH - fw - 5
+            this.x = ViewConst.STAGE_WIDTH - fw - 15
         }
         this.y = (1 - .618) * (ViewConst.STAGE_HEIGHT - fh)
     }

@@ -299,10 +299,10 @@ export class Score2018 {
         this.rScoreText.text = data + ''
     }
     setLeftFoul(data) {
-        this.lFoul.text = data
+        this.lFoul.text = data+''
     }
     setRightFoul(data) {
-        this.rFoul.text = data
+        this.rFoul.text = data+''
     }
     setLeftPlayerInfo(lPlayer) {
         let lIconUrl = '/img/icon/rankIcon_b' + lPlayer.powerRankType + '.png'
@@ -333,11 +333,7 @@ export class Score2018 {
         fitWidth(this.rName, 258, 35)
         loadAvt(this.rAvt, rPlayer.avatar)
         this.rHeightWeight.text = rPlayer.height + 'cm | ' + rPlayer.weight + 'kg'
-        // + " |rank:"
-        // + rPlayer.powerRank
-        // + rPlayer.powerRank
-        // + rPlayer.powerRank
-        // + rPlayer.powerRank
+      
         this.rRank.text = rPlayer.powerRank
     }
 

@@ -1488,6 +1488,20 @@
 	    }
 	}
 	exports.polygon = polygon;
+	function gradientG(g, x, y, w, h, col1, col2) {
+	    var c1 = [col1 >> 16, (col1 & 0x00ff00) >> 8, col1 & 0x0000ff];
+	    var c2 = [col2 >> 16, (col2 & 0x00ff00) >> 8, col2 & 0x0000ff];
+	    var colorR, colorG, colorB;
+	    for (var i = 0; i < h; i++) {
+	        colorR = c1[0] - Math.floor((c1[0] - c2[0]) * i / h);
+	        colorG = c1[1] - Math.floor((c1[1] - c2[1]) * i / h);
+	        colorB = c1[2] - Math.floor((c1[2] - c2[2]) * i / h);
+	        g.beginFill((colorR << 16) + (colorG << 8) + colorB);
+	        g.drawRect(x, y + i, w, 1);
+	    }
+	    g.endFill();
+	}
+	exports.gradientG = gradientG;
 
 
 /***/ },
@@ -7108,48 +7122,27 @@
 	};
 	var PixiEx_1 = __webpack_require__(46);
 	var const_1 = __webpack_require__(43);
-	var JsFunc_1 = __webpack_require__(17);
-	var ScaleSprite_1 = __webpack_require__(89);
 	var NoticeSprite = (function (_super) {
 	    __extends(NoticeSprite, _super);
 	    function NoticeSprite() {
-	        var _this = this;
 	        _super.call(this);
 	        this.bg = new PIXI.Graphics();
-	        this.bg.alpha = .8;
 	        this.addChild(this.bg);
-	        JsFunc_1.loadImg('/img/panel/score2017/noticeBg.png', function (img) {
-	            _this.imgWidth = 250;
-	            _this.imgHeight = 130;
-	            _this.frame = new ScaleSprite_1.ScaleSprite(img, { x: 27, y: 29, width: 31, height: 27 });
-	            _this.addChildAt(_this.frame, 1);
-	            _this.setText(_this._content, _this._title, _this._isLeft, _this._isBold);
-	        });
-	        this.lLight = PixiEx_1.newBitmap({ url: '/img/panel/score2017/noticeLight.png' });
-	        this.lLight.y = 34;
-	        this.addChild(this.lLight);
-	        this.rLight = PixiEx_1.newBitmap({ url: '/img/panel/score2017/noticeLight.png' });
-	        this.rLight.y = this.lLight.y;
-	        this.addChild(this.rLight);
 	        var ts = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '35px', fill: "#fff",
+	            fontSize: '35px', fill: "#3d4470",
 	            fontWeight: 'bold'
 	        };
-	        this.line = PixiEx_1.newBitmap({
-	            url: '/img/panel/score2017/noticeLine.png'
-	        });
-	        this.line.y = 48;
-	        this.line.x = 9;
-	        this.addChild(this.line);
-	        this.content = new PIXI.Text('', ts);
-	        this.content.y = 60;
-	        this.addChild(this.content);
 	        this.title = new PIXI.Text('', ts);
 	        this.title.style.fontSize = '25px';
 	        this.title.y = 12;
 	        this.addChild(this.title);
 	        this.y = 85;
+	        ts.fill = '#e1dfed';
+	        this.content = new PIXI.Text('', ts);
+	        this.content.y = 60;
+	        this.addChild(this.content);
+	        this.setText(this._content, this._title, this._isLeft, this._isBold);
 	    }
 	    NoticeSprite.prototype.show = function () {
 	        this.visible = true;
@@ -7178,39 +7171,30 @@
 	        var h = this.content.height;
 	        if (h < this.imgHeight)
 	            h = this.imgHeight;
-	        this.frame.resize(textWidth + 40, this.content.height + 15 + this.content.y);
-	        this.line.width = textWidth + 40 - 18;
-	        this.content.x = 0.5 * (this.frame.width - this.content.width);
-	        this.title.x = 0.5 * (this.frame.width - this.title.width);
+	        var fw = textWidth + 40;
+	        var fh = this.content.height + 15 + this.content.y;
+	        this.content.x = 0.5 * (fw - this.content.width);
+	        this.title.x = 0.5 * (fw - this.title.width);
 	        this.bg.clear();
-	        var fw = this.frame.width;
-	        var fh = this.frame.height;
-	        this.bg.beginFill(0x000000)
-	            .moveTo(25, 6)
-	            .lineTo(fw - 8, 6)
-	            .lineTo(fw - 8, fh - 28)
-	            .lineTo(fw - 25, fh - 6)
-	            .lineTo(6, fh - 6)
-	            .lineTo(6, 25);
-	        if (fw < 260) {
-	            this.lLight.visible = false;
-	            this.rLight.visible = false;
-	        }
-	        else {
-	            this.lLight.visible = true;
-	            this.rLight.visible = true;
-	            this.lLight.x = this.title.x - 75 - 8;
-	            this.rLight.x = this.title.x + this.title.width + 8;
-	            if (this.rLight.x + this.rLight.width - this.lLight.x > fw - 25) {
-	                this.lLight.visible = false;
-	                this.rLight.visible = false;
-	            }
-	        }
+	        var t = this.title;
+	        this.bg.beginFill(0xffffff, 0.38)
+	            .drawRect(0, 0, fw, fh)
+	            .endFill()
+	            .beginFill(0x000000, 1)
+	            .drawRect(5, 5, fw - 10, fh - 10)
+	            .endFill();
+	        PixiEx_1.gradientG(this.bg, 5, 5, fw - 10, fh - 10, 0x414665, 0x1a203e);
+	        this.bg.beginFill(0xffffff, 1)
+	            .moveTo(t.x - 15, t.y + t.height * .5)
+	            .lineTo(t.x - 5, t.y + t.height + 5)
+	            .lineTo(t.x + t.width + 5, t.y + t.height + 5)
+	            .lineTo(t.x + t.width + 15, t.y + t.height * .5)
+	            .drawRect(5, 5, fw - 10, 24);
 	        if (isLeft) {
-	            this.x = 5;
+	            this.x = 15;
 	        }
 	        else {
-	            this.x = const_1.ViewConst.STAGE_WIDTH - fw - 5;
+	            this.x = const_1.ViewConst.STAGE_WIDTH - fw - 15;
 	        }
 	        this.y = (1 - .618) * (const_1.ViewConst.STAGE_HEIGHT - fh);
 	    };
@@ -7220,88 +7204,7 @@
 
 
 /***/ },
-/* 89 */
-/***/ function(module, exports) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var ScaleSprite = (function (_super) {
-	    __extends(ScaleSprite, _super);
-	    function ScaleSprite(img, scaleRect) {
-	        _super.call(this);
-	        var bt = new PIXI.BaseTexture(img);
-	        var _sp = function (x, y, w, h) {
-	            return new PIXI.Sprite(new PIXI.Texture(bt, new PIXI.Rectangle(x, y, w, h)));
-	        };
-	        var lt = _sp(0, 0, scaleRect.x, scaleRect.y);
-	        this.addChild(lt);
-	        this.lt = lt;
-	        this.t = _sp(scaleRect.x, 0, scaleRect.width, scaleRect.y);
-	        this.t.x = scaleRect.x;
-	        this.addChild(this.t);
-	        var rt = _sp(scaleRect.x + scaleRect.width, 0, bt.width - scaleRect.x - scaleRect.width, scaleRect.y);
-	        rt.x = scaleRect.x + scaleRect.width;
-	        this.addChild(rt);
-	        this.rt = rt;
-	        this.r = _sp(scaleRect.x + scaleRect.width, scaleRect.y, bt.width - scaleRect.x - scaleRect.width, scaleRect.height);
-	        this.r.x = scaleRect.x + scaleRect.width;
-	        this.r.y = scaleRect.y;
-	        this.addChild(this.r);
-	        this.rb = _sp(scaleRect.x + scaleRect.width, scaleRect.y + scaleRect.height, bt.width - scaleRect.x - scaleRect.width, bt.height - scaleRect.y - scaleRect.height);
-	        this.rb.x = scaleRect.x + scaleRect.width;
-	        this.rb.y = scaleRect.y + scaleRect.height;
-	        this.addChild(this.rb);
-	        this.b = _sp(scaleRect.x, scaleRect.y + scaleRect.height, scaleRect.width, bt.height - scaleRect.y - scaleRect.height);
-	        this.b.x = scaleRect.x;
-	        this.b.y = scaleRect.y + scaleRect.height;
-	        this.addChild(this.b);
-	        this.lb = _sp(0, scaleRect.y + scaleRect.height, scaleRect.x, bt.height - scaleRect.y - scaleRect.height);
-	        this.lb.y = scaleRect.y + scaleRect.height;
-	        this.addChild(this.lb);
-	        this.l = _sp(0, scaleRect.y, scaleRect.x, scaleRect.height);
-	        this.l.y = scaleRect.y;
-	        this.addChild(this.l);
-	    }
-	    Object.defineProperty(ScaleSprite.prototype, "width", {
-	        get: function () {
-	            return this._w;
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    Object.defineProperty(ScaleSprite.prototype, "height", {
-	        get: function () {
-	            return this._h;
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    ScaleSprite.prototype.resize = function (width, height) {
-	        this._w = width;
-	        this._h = height;
-	        var sw = width - this.lt.width - this.rt.width;
-	        this.t.width = sw;
-	        this.b.width = sw;
-	        this.rt.x = this.lt.width + sw;
-	        this.r.x = this.lt.width + sw;
-	        this.rb.x = this.lt.width + sw;
-	        var sh = height - this.lt.height - this.lb.height;
-	        this.l.height = sh;
-	        this.r.height = sh;
-	        this.lb.y = this.lt.height + sh;
-	        this.b.y = this.lt.height + sh;
-	        this.rb.y = this.lt.height + sh;
-	    };
-	    return ScaleSprite;
-	}(PIXI.Container));
-	exports.ScaleSprite = ScaleSprite;
-
-
-/***/ },
+/* 89 */,
 /* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -7965,10 +7868,10 @@
 	        this.rScoreText.text = data + '';
 	    };
 	    Score2018.prototype.setLeftFoul = function (data) {
-	        this.lFoul.text = data;
+	        this.lFoul.text = data + '';
 	    };
 	    Score2018.prototype.setRightFoul = function (data) {
-	        this.rFoul.text = data;
+	        this.rFoul.text = data + '';
 	    };
 	    Score2018.prototype.setLeftPlayerInfo = function (lPlayer) {
 	        var _this = this;
@@ -8051,18 +7954,24 @@
 	    __extends(Row1, _super);
 	    function Row1() {
 	        _super.call(this);
-	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/group/groupBg2item.png' }));
 	        this.avt = new PIXI.Sprite();
-	        this.avt.x = 610;
-	        this.avt.y = 325;
+	        this.avt.x = 546;
+	        this.avt.y = 314;
 	        this.addChild(this.avt);
+	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/group/groupBg2item.png' }));
+	        var avtMask = new PIXI.Graphics;
+	        avtMask.beginFill(0xff0000)
+	            .drawCircle(0, 0, 53);
+	        avtMask.x = 603;
+	        avtMask.y = 372;
 	        var rs = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '60px', fill: "#f2f2f2",
+	            fontSize: '50px', fill: "#000520",
+	            fontWeight: 'bold'
 	        };
 	        var l = new PIXI.Text('', rs);
-	        l.x = 783;
-	        l.y = 340;
+	        l.x = 740;
+	        l.y = 320;
 	        this.playerName = l;
 	        this.addChild(l);
 	        l = new PIXI.Text('', rs);
@@ -8080,13 +7989,13 @@
 	        var _this = this;
 	        this.playerName.text = data.name;
 	        this.winLose.text = data.win + '/' + data.lose;
-	        this.winLose.x = 1195 - this.winLose.width * .5;
+	        this.winLose.x = 1100 - this.winLose.width * .5;
 	        this.score.text = data.score + '';
-	        this.score.x = 1410 - this.score.width * .5;
+	        this.score.x = 1320 - this.score.width * .5;
 	        ImgLoader_1.imgLoader.loadTex(data.avatar, function (tex) {
 	            var avt = _this.avt;
 	            avt.texture = tex;
-	            var s = (70 / 0.8) / tex.width;
+	            var s = 110 / tex.height;
 	            avt.scale.x = avt.scale.y = s;
 	        });
 	    };
@@ -8139,15 +8048,15 @@
 	        this.tabArr = [];
 	        this.gameId = gameId;
 	        parent.addChild(this);
-	        this.addChild(PixiEx_1.newModal(0.7, null, null, 0x232b3b));
-	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/group/groupBg2.png' }));
+	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/group/groupBg.png' }));
 	        var rs = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '40px', fill: "#e2e2e2",
+	            fontSize: '40px', fill: "#4d5167",
+	            fontWeight: 'bold'
 	        };
 	        var l = new PIXI.Text('小组赛第一轮', rs);
-	        l.x = 365;
-	        l.y = 210;
+	        l.x = 365 + 466;
+	        l.y = 130;
 	        this.groupTitle = l;
 	        this.addChild(l);
 	        for (var i = 0; i < 3; i++) {
@@ -8158,10 +8067,10 @@
 	        }
 	        for (var i = 0; i < 8; i++) {
 	            var t = new Tab1();
-	            t.setText('GROUP  ' + gArr[i]);
+	            t.setText(gArr[i] + " 组");
 	            t.setIdx(i);
-	            t.x = 350;
-	            t.y = 290 + 60 * i;
+	            t.x = 360;
+	            t.y = 280 + 57 * i;
 	            this.addChild(t);
 	            this.groupArr.push(t);
 	        }
@@ -8250,6 +8159,7 @@
 	    GroupSp2.prototype.setRoundIdx = function (round, idx) {
 	        var groupName = gArr[idx];
 	        this.groupTitle.text = '小组赛第' + round + '轮 ' + groupName + '组';
+	        this.groupTitle.x = 960 - this.groupTitle.width * .5;
 	    };
 	    GroupSp2.prototype.calcRound = function (data) {
 	        var round = 0;

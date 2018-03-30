@@ -13,7 +13,6 @@ import { BracketView } from './bracket/BracketView';
 import { Lottery } from './lottery/Lottery';
 import { RankView } from './rank/RankView';
 import { ScoreView } from './score/ScoreView';
-import { GroupSp } from './groupSp/GroupSp';
 import { GroupSp2 } from './groupSp/GroupSp2';
 
 declare let $
@@ -22,7 +21,7 @@ let rankView: RankView
 let bracketView: BracketView
 let scoreView: ScoreView
 let lottery: Lottery
-let groupSp: GroupSp
+let groupSp: GroupSp2
 let canvasStage
 imgLoader
 class StageOnlineView extends VueBase {
