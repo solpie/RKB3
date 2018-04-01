@@ -13,7 +13,6 @@ import { RankingData } from './RankingData';
 import { Score2017 } from './Score2017';
 import { ScoreM3 } from './ScoreM2';
 import { ScorePanel2 } from './ScorePanel2';
-// import { initIO } from '../../../../router/PanelRouter';
 import { Score2018 } from './Score2018';
 declare let io;
 declare let $;
@@ -26,6 +25,7 @@ export class ScoreView extends BasePanelView {
     scorePanel: Score2018
     eventPanel: Event2017
     rankingData: RankingData
+    stage: any
 
     delayTimeMS = 0
     delayTd = 0
@@ -36,6 +36,8 @@ export class ScoreView extends BasePanelView {
 
     constructor(stage: PIXI.Container, $route) {
         super(PanelId.onlinePanel)
+        this.stage = stage
+
         this.$route = $route
         this.name = PanelId.scorePanel
         // this.isOp = this.$route.params.op == "op"
@@ -202,42 +204,40 @@ export class ScoreView extends BasePanelView {
                 data.v ? this.scorePanel.hide()
                     : this.scorePanel.show()
             })
+            .on(`${CommandId.sc_showTop5}`, (data) => {
+                this.eventPanel.showTop5(data)
+            })
     }
+
+
 
     initRemote() {
         // getHupuWs()
         let isRunning = false
         getHupuWS((hupuWsUrl) => {
             let remoteIO = io.connect(hupuWsUrl);
-            let getRankData = (p) => {
-                let colorSeg = [0xe96b1f,
-                    0x6736f8,
-                    0x4860f6,
-                    0x599b1e,
-                    0xa3a8b5,
-                    0xa3a8b5,
-                ]
-                if (p.powerRankType == 0 || p.powerRank == 0)
-                    return { ranking: p.powerRank, text: '冲榜', color: colorSeg[5] }
-                else if (p.powerRankType > 4) {
-                    return { ranking: p.powerRank, text: '冲榜', color: colorSeg[5] }
-                }
-                else
-                    return { ranking: p.powerRank, text: '' + p.powerRank, color: colorSeg[p.powerRankType - 1] }
-            }
+            // let getRankData = (p) => {
+            //     let colorSeg = [0xe96b1f,
+            //         0x6736f8,
+            //         0x4860f6,
+            //         0x599b1e,
+            //         0xa3a8b5,
+            //         0xa3a8b5,
+            //     ]
+            //     if (p.powerRankType == 0 || p.powerRank == 0)
+            //         return { ranking: p.powerRank, text: '冲榜', color: colorSeg[5] }
+            //     else if (p.powerRankType > 4) {
+            //         return { ranking: p.powerRank, text: '冲榜', color: colorSeg[5] }
+            //     }
+            //     else
+            //         return { ranking: p.powerRank, text: '' + p.powerRank, color: colorSeg[p.powerRankType - 1] }
+            // }
             let setPlayer = (leftPlayer, rightPlayer) => {
                 console.log(leftPlayer)
                 let leftRankingData;
                 let rightRankingData;
 
                 // powerRankType  1.大魔王，2.精英，3.实力选手，4.路人，5.新秀，6.冲榜
-
-                // leftRankingData = getRankData(leftPlayer)
-                // rightRankingData = getRankData(rightPlayer)
-                // if (this.rankingData) {
-                // leftRankingData = this.rankingData.getPlayerData(leftPlayer.player_id)
-                //     rightRankingData = this.rankingData.getPlayerData(rightPlayer.player_id)
-                // }
                 console.log('rankingData', leftRankingData, rightRankingData);
                 // player level 0 其他 1 至少一个胜场  2 大师赛 3冠军
                 this.scorePanel.setLeftPlayerInfo(leftPlayer)
@@ -288,14 +288,6 @@ export class ScoreView extends BasePanelView {
                         this.scorePanel.toggleTimer(TimerState.PAUSE);
                         this.scorePanel.resetTimer();
                     }
-                    // if (gameTime > 0)
-                    //     this.scorePanel.toggleTimer(TimerState.RUNNING)
-                    // this.emit('init', data)
-                    //setup timer
-                    // console.log('$opView', this.$opView);
-                    // this.$opView.setSrvTime(data.t);
-
-                    // this.$opView.liveTime = DateFormat(new Date(this.srvTime), "hh:mm:ss");
 
 
                     //test

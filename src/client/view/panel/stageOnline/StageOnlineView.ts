@@ -58,6 +58,8 @@ class StageOnlineView extends VueBase {
     inputDate = VueBase.PROP
     //冠军 面板
     championTitle = VueBase.PROP
+    //
+    gameIdxArr = VueBase.PROP
     //公告
     noticeTitle = VueBase.PROP
     noticeContent = VueBase.PROP
@@ -147,7 +149,7 @@ class StageOnlineView extends VueBase {
     groupSp: any
     showGroup() {
         if (!groupSp)
-            groupSp = new GroupSp2(canvasStage,this.gameId)
+            groupSp = new GroupSp2(canvasStage, this.gameId)
     }
     showRank() {
         if (!rankView) {
@@ -427,10 +429,10 @@ class StageOnlineView extends VueBase {
                 }
             })
         },
-        onRemoveRanking(date) {
-            removeRanking(date)
+        onClkTop5(v, idx,g) {
+            
+            this.opReq(`${CommandId.cs_showTop5}`, { _: null, visible: v, idx: idx ,gameIdxArr:g})
         },
-        //manmual score
         onAddScore(isLeft, dtScore) {
 
         }

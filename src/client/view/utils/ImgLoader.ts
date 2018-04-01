@@ -12,5 +12,34 @@ class ImgLoader {
         else
             callback(this._texMap[url])
     }
+
+
+    _loadTex2(url, callback, isCrossOrigin = true) {
+        if (url.charAt(0) == '/')
+            isCrossOrigin = false
+        if (!this._texMap[url]) {
+            loadRes(url, (img) => {
+                this._texMap[url] = img
+                callback(this._texMap[url])
+            }, isCrossOrigin);
+        }
+        else
+            callback(this._texMap[url])
+    }
+
+    loadTexArr(urlArr, callback, isCrossOrigin = false) {
+        let recur = () => {
+            if (urlArr.length)
+                this._loadTex2(urlArr.pop(), _ => {
+                    recur()
+                }, isCrossOrigin)
+            else
+                callback()
+        }
+        recur()
+    }
+    getTex(url) {
+        return imgToTex(this._texMap[url])
+    }
 }
 export const imgLoader = window['imgLoader'] = new ImgLoader()

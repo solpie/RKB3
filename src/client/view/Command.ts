@@ -146,6 +146,9 @@ export const CommandId = {
     cs_toggleChampionPanel: '',
     sc_toggleChampionPanel: '',
     initPanel: '',
+    //top 5
+    cs_showTop5: '',
+    sc_showTop5: '',
     ///screen
     cs_inScreenScore: '',
     inScreenScore: '',

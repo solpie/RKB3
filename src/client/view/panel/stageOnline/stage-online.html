@@ -54,6 +54,16 @@
                    return c >= 48 && c <= 57 ||c==46' placeholder="" style="width: 50px;" v-model="panelTime2Set">
                 <button class="button" @click="onClkSetPanelTime(panelTime2Set)">确定</button>
             </p>
+
+            <label class="label">  夺冠热门:</label><br>
+            <input class="input" type="text" placeholder="1 3 4 6 10空格隔开比赛出场场次" style="width: 250px;" v-model="gameIdxArr">
+            <button class="button" @click="onClkTop5(true,1,gameIdxArr)">p1</button>
+            <button class="button" @click="onClkTop5(true,2,gameIdxArr)">p2</button>
+            <button class="button" @click="onClkTop5(true,3,gameIdxArr)">p3</button>
+            <button class="button" @click="onClkTop5(true,4,gameIdxArr)">p4</button>
+            <button class="button" @click="onClkTop5(true,5,gameIdxArr)">p5</button>
+            <button class="button" @click="onClkTop5(false,1)">隐藏</button>
+            <br>
             <label class="label">  冠军面板:</label><br>
             <input class="input" type="text" placeholder="2017上海站第二轮冠军" style="width: 250px;" v-model="championTitle">
             <button class="button" @click="onClkLeftChampion">{{lLiveName}} 冠军</button>
@@ -61,19 +71,7 @@
             <button class="button" @click="onClkToggleChampionPanel(true)">显示</button>
             <button class="button" @click="onClkToggleChampionPanel(false)">隐藏</button>
             <br>
-            <!--<button class="button" @click="onClkRegularPlayer">剩余球员</button>-->
-            <!-- <label class="label">   车轮战面板设置：</label> <br>
-            <button class="button" @click="onTogglePreRoundTheme(true)">蓝色</button>
-            <button class="button" @click="onTogglePreRoundTheme(false)">绿色</button>
-            <button class="button" @click="onSetPreRoundPosition(false)">显示在左边</button>
-            <button class="button" @click="onSetPreRoundPosition(true)">显示在右边</button> -->
-            <!-- <label class="label">   面板颜色：</label> <br>
-            <button class="button" @click="onClkToggleTheme(false)">切换绿色面板</button>
-            <button class="button" @click="onClkToggleTheme(true)">切换蓝色面板</button> -->
-            <!-- <label class="label">   媒体支持面板：</label> <br>
-            <button class="button" @click="onSetBDVisible(true)">显示</button>
-            <button class="button" @click="onSetBDVisible(false)">隐藏</button> -->
-            <!--公告-->
+
             <div style="left: 600px;top:0px;position: absolute;">
                 <label class="radio">
                 <input type="radio" name="bold" value='normal' v-model='isBold' checked >

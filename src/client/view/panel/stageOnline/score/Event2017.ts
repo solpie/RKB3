@@ -14,6 +14,7 @@ import { TopInfo } from './TopInfo';
 import { VictoryM2 } from './VictoryM2';
 import { Victory2 } from "./Victory2";
 import { Winner } from './Winner';
+import { Top5 } from '../top5/Top5';
 
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
@@ -326,20 +327,19 @@ export class Event2017 extends PIXI.Container {
         d.winner = data
         this.winner.show(d)
     }
-    // victoryM2: VictoryM2
-    // showVictory(data) {
-    //     if (!this.victoryM2) {
-    //         this.victoryM2 = new VictoryM2()
-    //         this.victoryM2.create(this)
-    //     }
-    //     let d: any = {}
-    //     for (let k in data) {
-    //         d['k'] = data['k']
-    //     }
-    //     console.log(data)
-    //     d.rec = { win: data.winAmount, lose: data.loseAmount }
-    //     d.winner = data
-    //     this.victoryM2.show(d)
-    // }
-
+    top5: Top5
+    showTop5(data) {
+        if (!this.top5) {
+            this.top5 = new Top5()
+            this.top5.create(this,data)
+            data.visible ?
+                this.top5.show(data)
+                : this.top5.hide()
+        }
+        else {
+            data.visible ?
+                this.top5.show(data)
+                : this.top5.hide()
+        }
+    }
 }
