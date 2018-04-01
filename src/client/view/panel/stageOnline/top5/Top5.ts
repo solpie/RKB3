@@ -128,7 +128,7 @@ export class Top5 extends PIXI.Container {
         let imgArr = []
         this.curPlayer = new PIXI.Sprite()
         this.addChild(this.curPlayer)
-     
+
 
         let tabArr = []
         for (let i = 0; i < 5; i++) {
@@ -156,14 +156,16 @@ export class Top5 extends PIXI.Container {
     show(data) {
         console.log('show player ', data);
         this.setTab(data.idx)
-        let a = data.gameIdxArr.split(' ')
-        if (a.length > 1) {
-            for (let i = 0; i < this.tabArr.length; i++) {
-                let t: Tab2 = this.tabArr[i];
-                if (a[i])
-                    t.setGameIdx(a[i])
-                else
-                    t.setGameIdx(0)
+        if (data.gameIdxArr) {
+            let a = data.gameIdxArr.split(' ')
+            if (a.length > 1) {
+                for (let i = 0; i < this.tabArr.length; i++) {
+                    let t: Tab2 = this.tabArr[i];
+                    if (a[i])
+                        t.setGameIdx(a[i])
+                    else
+                        t.setGameIdx(0)
+                }
             }
         }
         this.p.addChild(this)
@@ -228,7 +230,7 @@ export class Top5 extends PIXI.Container {
         info.y = 550
 
         rs.fontSize = '48px'
-        let title = new PIXI.Text('夺冠热门球员',rs)
+        let title = new PIXI.Text('夺冠热门球员', rs)
         this.addChild(title)
         title.x = 960 - title.width * .5
         title.y = 120

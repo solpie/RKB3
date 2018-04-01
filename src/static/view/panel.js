@@ -8002,14 +8002,16 @@
 	    Top5.prototype.show = function (data) {
 	        console.log('show player ', data);
 	        this.setTab(data.idx);
-	        var a = data.gameIdxArr.split(' ');
-	        if (a.length > 1) {
-	            for (var i = 0; i < this.tabArr.length; i++) {
-	                var t = this.tabArr[i];
-	                if (a[i])
-	                    t.setGameIdx(a[i]);
-	                else
-	                    t.setGameIdx(0);
+	        if (data.gameIdxArr) {
+	            var a = data.gameIdxArr.split(' ');
+	            if (a.length > 1) {
+	                for (var i = 0; i < this.tabArr.length; i++) {
+	                    var t = this.tabArr[i];
+	                    if (a[i])
+	                        t.setGameIdx(a[i]);
+	                    else
+	                        t.setGameIdx(0);
+	                }
 	            }
 	        }
 	        this.p.addChild(this);
