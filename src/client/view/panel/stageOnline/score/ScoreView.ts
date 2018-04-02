@@ -33,6 +33,7 @@ export class ScoreView extends BasePanelView {
     isTest = false
     $route: any
     isM2: Boolean
+    isOP: Boolean
 
     constructor(stage: PIXI.Container, $route) {
         super(PanelId.onlinePanel)
@@ -40,7 +41,8 @@ export class ScoreView extends BasePanelView {
 
         this.$route = $route
         this.name = PanelId.scorePanel
-        // this.isOp = this.$route.params.op == "op"
+        this.isOP = this.$route.params.op == "op"
+        console.log('$route', this.$route);
         let darkTheme = $route.query.theme == "dark"
         this.gameId = $route.params.game_id
 
@@ -188,10 +190,21 @@ export class ScoreView extends BasePanelView {
                     : this.eventPanel.champion.hide()
             })
             .on(`${CommandId.sc_showNotice}`, (data) => {
-                this.eventPanel.showNotice(data.title, data.content, data.isLeft, data.isBold)
-                data.visible ?
-                    this.eventPanel.noticeSprite.show()
-                    : this.eventPanel.noticeSprite.hide()
+                if (data.isPreview) {
+                    if (this.isOP) {
+                        this.eventPanel.showNotice(data.title, data.content, data.isLeft, data.isBold)
+                        data.visible ?
+                            this.eventPanel.noticeSprite.show()
+                            : this.eventPanel.noticeSprite.hide()
+                    }
+                }
+                else {
+                    this.eventPanel.showNotice(data.title, data.content, data.isLeft, data.isBold)
+                    data.visible ?
+                        this.eventPanel.noticeSprite.show()
+                        : this.eventPanel.noticeSprite.hide()
+                }
+
             })
             .on(`${CommandId.sc_showRanking}`, (data) => {
                 // this.eventPanel.showRanking(data, this.rankingData)
@@ -209,6 +222,7 @@ export class ScoreView extends BasePanelView {
                     : this.scorePanel.show()
             })
             .on(`${CommandId.sc_showTop5}`, (data) => {
+                console.log('sc_showTop5');
                 this.eventPanel.showTop5(data)
             })
     }

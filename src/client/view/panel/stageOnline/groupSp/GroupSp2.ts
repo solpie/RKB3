@@ -168,7 +168,7 @@ export class GroupSp2 extends PIXI.Container {
         //         this.updateData()
         //     }
         // }, 1000)
-        this.initMouse()
+        // this.initMouse()
         this.initWS()
     }
 

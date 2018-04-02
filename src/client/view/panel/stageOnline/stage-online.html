@@ -96,6 +96,9 @@
                 <br>
                 <input class="input" type="text" placeholder="公告" style="width: 280px;" v-model="noticeTitle">
                 <textarea style="width:580px;height:250px" v-model="noticeContent"></textarea>
+                <button class="button" @click="onClkNotice(true,true,true)">左边预览</button>
+                <button class="button" @click="onClkNotice(true,false,true)">右边预览</button>
+                <br>
                 <button class="button" @click="onClkNotice(true,true)">左边显示</button>
                 <button class="button" @click="onClkNotice(true,false)">右边显示</button>
                 <button class="button" @click="onClkNotice(false,false)">隐藏</button>

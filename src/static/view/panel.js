@@ -4515,12 +4515,17 @@
 	                }
 	                this.noticeHistory = a;
 	            },
-	            onClkNotice: function (visible, isLeft) {
+	            onClkNotice: function (visible, isLeft, isPreview) {
 	                if (this.noticeContent) {
 	                    if (!this.noticeHistory)
 	                        this.noticeHistory = [];
 	                    this.noticeHistory.push({ content: this.noticeContent, title: this.noticeTitle });
-	                    this.opReq("" + Command_1.CommandId.cs_showNotice, { _: null, title: this.noticeTitle, content: this.noticeContent, isLeft: isLeft, visible: visible, isBold: this.isBold });
+	                    this.opReq("" + Command_1.CommandId.cs_showNotice, {
+	                        _: null,
+	                        isPreview: isPreview,
+	                        title: this.noticeTitle,
+	                        content: this.noticeContent, isLeft: isLeft, visible: visible, isBold: this.isBold
+	                    });
 	                }
 	            },
 	            onClkToggleTheme: function (isDark) {
@@ -4595,9 +4600,11 @@
 	                });
 	            },
 	            onClkTop5: function (v, idx, g) {
+	                console.log('click top5');
 	                this.opReq("" + Command_1.CommandId.cs_showTop5, { _: null, visible: v, idx: idx, gameIdxArr: g });
 	            },
 	            onClkGroup: function (v, idx) {
+	                console.log('click group');
 	                this.opReq("" + Command_1.CommandId.cs_showGroup, { _: null, visible: v, idx: idx });
 	            },
 	            onAddScore: function (isLeft, dtScore) {
@@ -4645,6 +4652,7 @@
 	            console.log('connect', window.location.host);
 	        })
 	            .on("" + Command_1.CommandId.sc_showGroup, function (data) {
+	            console.log('sc_showGroup');
 	            _this.showGroup(data);
 	        });
 	    };
@@ -6192,6 +6200,8 @@
 	        this.stage = stage;
 	        this.$route = $route;
 	        this.name = const_1.PanelId.scorePanel;
+	        this.isOP = this.$route.params.op == "op";
+	        console.log('$route', this.$route);
 	        var darkTheme = $route.query.theme == "dark";
 	        this.gameId = $route.params.game_id;
 	        this.isTest = $route.query.test == "1";
@@ -6298,10 +6308,20 @@
 	                : _this.eventPanel.champion.hide();
 	        })
 	            .on("" + Command_1.CommandId.sc_showNotice, function (data) {
-	            _this.eventPanel.showNotice(data.title, data.content, data.isLeft, data.isBold);
-	            data.visible ?
-	                _this.eventPanel.noticeSprite.show()
-	                : _this.eventPanel.noticeSprite.hide();
+	            if (data.isPreview) {
+	                if (_this.isOP) {
+	                    _this.eventPanel.showNotice(data.title, data.content, data.isLeft, data.isBold);
+	                    data.visible ?
+	                        _this.eventPanel.noticeSprite.show()
+	                        : _this.eventPanel.noticeSprite.hide();
+	                }
+	            }
+	            else {
+	                _this.eventPanel.showNotice(data.title, data.content, data.isLeft, data.isBold);
+	                data.visible ?
+	                    _this.eventPanel.noticeSprite.show()
+	                    : _this.eventPanel.noticeSprite.hide();
+	            }
 	        })
 	            .on("" + Command_1.CommandId.sc_showRanking, function (data) {
 	        })
@@ -6317,6 +6337,7 @@
 	                : _this.scorePanel.show();
 	        })
 	            .on("" + Command_1.CommandId.sc_showTop5, function (data) {
+	            console.log('sc_showTop5');
 	            _this.eventPanel.showTop5(data);
 	        });
 	    };
@@ -7937,39 +7958,39 @@
 	}(PIXI.Container));
 	var infoArr = [
 	    {
-	        name: '张智扬',
-	        hwa: [188, 80, 23],
-	        info: "\u524Dcuba\u5C71\u897F\u5927\u5B66\u9996\u53D1\u7403\u5458\n\u5FAE\u535A\uFF1A@\u5F20\u667A\u626C\u5E06\u8D77\u822A\n\u8DEF\u4EBA\u738B\u5B9E\u529B\u699C\u7B2C\u4E00\u540D\n5\u6B21\u53C2\u52A0\u57CE\u5E02\u8D5B\u5168\u90E8\u593A\u51A0\n11\u6708&12\u6708\u51A0\u519B\u8D5B\u51A0\u519B\n        ",
-	        tag1: '实力榜第一人',
-	        hupuID: '@张韦韦韦韦韦'
+	        name: '徐长龙',
+	        hwa: [195, 95, 29],
+	        info: "\u524Dcubs\u5C71\u4E1C\u5927\u5B66\u961F\u957F\n\u5B9E\u529B\u699C\u7B2C5\u540D \n\u5C71\u4E1C\u8D5B\u533A7\u51A0\u738B \n9\u6708&12\u6708\u51A0\u519B\u8D5B\u5B63\u519B\n        ",
+	        tag1: '沉着冷静',
+	        hupuID: '@浩扬篮球阿清'
 	    },
 	    {
-	        name: '陈鼎',
-	        hwa: [188, 95, 28],
-	        info: "\u5FAE\u535A\uFF1A@\u5C11\u5E74\u4F60\u88AB\u5305\u56F4\u4E86 \n\u5B9E\u529B\u699C\u6392\u540D\u7B2C18\u540D \n\u8DEF\u4EBA\u738B\u4E0A\u6D77\u7AD9\u51A0\u519B\n10\u6708\u51A0\u519B\u8D5B\u5B63\u519B\n        ",
-	        tag1: '路人王邓肯',
-	        hupuID: '@CD狠低调'
+	        name: '于潇',
+	        hwa: [203, 95, 28],
+	        info: "\u5B9E\u529B\u699C\u6392\u540D\u7B2C48\u540D \n\u8DEF\u4EBA\u738B\u70DF\u53F0\u7AD9\u51A0\u519B \n\u4E24\u6B21\u53C2\u4E0E\u51A0\u519B\u8D5B\n        ",
+	        tag1: '高瘦远投王',
+	        hupuID: '@把球给我六六'
 	    },
 	    {
-	        name: '柳杨杰',
-	        hwa: [180, 75, 22],
-	        info: "\u5FAE\u535A\uFF1A@\u4F20\u7403\u5976 \n\u5B9E\u529B\u699C\u7B2C29\u540D \n\u8DEF\u4EBA\u738B\u4E0A\u6D77\u7AD9\u516D\u51A0\u738B\n\u51A0\u519B\u8D5B\u53CA\u603B\u51B3\u8D5B\u9009\u624B\n        ",
-	        tag1: '中投小王子',
-	        hupuID: '@打铁不算多'
+	        name: '矫凯文',
+	        hwa: [188, 90, 25],
+	        info: "\u524DNBL\u5E7F\u897F\u5A01\u58EE\u7403\u5458 \nNBL\u5168\u660E\u661F \n2014\u5E74\u968F\u961F\u62FF\u4E0BNBL\u51A0\u519B \n\u66FE\u5355\u573A\u780D\u4E0B\u4E09\u53CC\n        ",
+	        tag1: '球队大脑',
+	        hupuID: '矫凯文'
 	    },
 	    {
-	        name: '方良超',
-	        hwa: [174, 73, 27],
-	        info: "\u5FAE\u535A\uFF1A@\u65B9\u826F\u8D85 \n\u5B9E\u529B\u699C\u7B2C48\u540D \nX-Battle\u660E\u661F\u7403\u5458\n\u8DEF\u4EBA\u738B\u4E0A\u6D77\u7AD9\u51A0\u519B\n9\u6708\u51A0\u519B\u8D5B\u4E9A\u519B\n        ",
-	        tag1: '无畏大师',
-	        hupuID: '@方良超'
+	        name: '蓝震海',
+	        hwa: [186, 80, 28],
+	        info: "\u524DNBL\u9999\u6E2F\u65B0\u4E3D\u5B9D\u7403\u5458\n        ",
+	        tag1: '实力干将',
+	        hupuID: '@蓝震海'
 	    },
 	    {
-	        name: '任泽南',
-	        hwa: [185, 80, 22],
-	        info: "\u5FAE\u535A\uFF1A@RZNNNNNNN \n\u8DEF\u4EBA\u738B\u77E5\u540D\u4E3B\u64AD \n\u5317\u4EAC\u7AD9\u56DB\u5F3A\u9009\u624B\n        ",
-	        tag1: '好身体',
-	        hupuID: '@RZNNNNNNN'
+	        name: '刘晨',
+	        hwa: [190, 100, 28],
+	        info: "2017\u5168\u56FD\u4E09\u5BF9\u4E09\u8054\u8D5B\u51A0\u519B\n        ",
+	        tag1: '三对三大师',
+	        hupuID: '@刘晨'
 	    },
 	];
 	var Top5 = (function (_super) {
@@ -8540,7 +8561,6 @@
 	        this.tabFocus.y = -13;
 	        this.addChild(this.tabFocus);
 	        this.updateData();
-	        this.initMouse();
 	        this.initWS();
 	    }
 	    GroupSp2.prototype.initWS = function () {
@@ -8726,7 +8746,7 @@
 /* 98 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <!-- <label class=\"label\">实力榜:</label><br>\r\n            <input class=\"input\" type=\"text\" style=\"width: 110px;\" v-model=\"inputDate\">\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,1)\">显示总榜1</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,4)\">显示总榜4</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,5)\">显示总榜5</button>\r\n            <button class=\"button\" @click=\"onShowRanking(false)\">隐藏</button> -->\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>特效</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <!-- <label class=\"label\">实力榜:</label><br>\r\n            <input class=\"input\" type=\"text\" style=\"width: 110px;\" v-model=\"inputDate\">\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,1)\">显示总榜1</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,4)\">显示总榜4</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,5)\">显示总榜5</button>\r\n            <button class=\"button\" @click=\"onShowRanking(false)\">隐藏</button> -->\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n\r\n            <div style=\"left: 600px;top:0px;position: absolute;\">\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                正常\r\n            </label>\r\n                <label class=\"radio\">\r\n                <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                加粗\r\n            </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n                <br>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <label class=\"label\">   fx test：</label> <br>\r\n            <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ }
 /******/ ]);

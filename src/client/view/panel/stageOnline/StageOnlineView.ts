@@ -140,6 +140,7 @@ class StageOnlineView extends VueBase {
             //     this.showOnly("")
             // })
             .on(`${CommandId.sc_showGroup}`, (data) => {
+                console.log('sc_showGroup');
                 this.showGroup(data)
             })
 
@@ -361,14 +362,19 @@ class StageOnlineView extends VueBase {
             this.noticeHistory = a
         },
 
-        onClkNotice(visible, isLeft) {
+        onClkNotice(visible, isLeft, isPreview?) {
             if (this.noticeContent) {
                 // noticeHistory
                 if (!this.noticeHistory)
                     this.noticeHistory = []
                 this.noticeHistory.push({ content: this.noticeContent, title: this.noticeTitle })
                 this.opReq(`${CommandId.cs_showNotice}`,
-                    { _: null, title: this.noticeTitle, content: this.noticeContent, isLeft: isLeft, visible: visible, isBold: this.isBold })
+                    {
+                        _: null,
+                        isPreview: isPreview,
+                        title: this.noticeTitle,
+                        content: this.noticeContent, isLeft: isLeft, visible: visible, isBold: this.isBold
+                    })
             }
 
         },
@@ -439,9 +445,11 @@ class StageOnlineView extends VueBase {
             })
         },
         onClkTop5(v, idx, g) {
+            console.log('click top5');
             this.opReq(`${CommandId.cs_showTop5}`, { _: null, visible: v, idx: idx, gameIdxArr: g })
         },
         onClkGroup(v, idx) {
+            console.log('click group');
             this.opReq(`${CommandId.cs_showGroup}`, { _: null, visible: v, idx: idx })
         },
         onAddScore(isLeft, dtScore) {
