@@ -314,7 +314,7 @@ export class GroupSp2 extends PIXI.Container {
 
             console.log('data arr', this.dataArr);
             // console.log('group game map', groupGameCountMap, 'round', curRound, 'group', curGroupIdx);
-            this.showGroup(curGroupIdx)
+            // this.showGroup(curGroupIdx)
             this.setRoundIdx(curRound, curGroupIdx)
         })
     }

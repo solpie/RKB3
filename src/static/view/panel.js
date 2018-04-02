@@ -8714,7 +8714,6 @@
 	                }
 	            }
 	            console.log('data arr', _this.dataArr);
-	            _this.showGroup(curGroupIdx);
 	            _this.setRoundIdx(curRound, curGroupIdx);
 	        });
 	    };
