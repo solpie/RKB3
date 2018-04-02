@@ -117,10 +117,12 @@ export class GroupSp2 extends PIXI.Container {
     tabFocus: PIXI.Sprite
     // updateTime = 3000
     // updateCount = 3000
+    p: any
     constructor(parent, gameId) {
         super()
         this.gameId = gameId
         parent.addChild(this)
+        this.p = parent
         // this.addChild(newModal(0.7, null, null, 0x232b3b))
         this.addChild(newBitmap({ url: '/img/panel/group/groupBg.png' }))
 
@@ -207,8 +209,18 @@ export class GroupSp2 extends PIXI.Container {
             }
         }
     }
+    hide() {
+        if (this.parent)
+            this.parent.removeChild(this)
+    }
     showGroup(idx) {
+        this.p.addChild(this)
+        if (idx < 0)
+            return -1
         let groupTab = this.groupArr[idx]
+        // if (!groupTab) {
+        //     return
+        // }
         this.tabFocus.x = groupTab.x - 12
         this.tabFocus.y = groupTab.y - 13
         let data = this.dataArr[idx]

@@ -117,8 +117,8 @@ class StageOnlineView extends VueBase {
         else {
             this.showRank()
         }
+        this.initIO()
         console.log('StageOnlineView mounted!')
-        // this.initIO()
     }
 
     initIO() {
@@ -132,12 +132,15 @@ class StageOnlineView extends VueBase {
             //     console.log("CommandId.sc_showRank", data)
             //     this.showRank()
             // })
-            .on(`${CommandId.sc_showBracket}`, (data) => {
-                console.log("CommandId.sc_showBracket", data)
-                this.showBracket()
-            })
-            .on(`${CommandId.sc_hideOnlinePanel}`, (data) => {
-                this.showOnly("")
+            // .on(`${CommandId.sc_showBracket}`, (data) => {
+            //     console.log("CommandId.sc_showBracket", data)
+            //     this.showBracket()
+            // })
+            // .on(`${CommandId.sc_hideOnlinePanel}`, (data) => {
+            //     this.showOnly("")
+            // })
+            .on(`${CommandId.sc_showGroup}`, (data) => {
+                this.showGroup(data)
             })
 
     }
@@ -147,9 +150,15 @@ class StageOnlineView extends VueBase {
         }
     }
     groupSp: any
-    showGroup() {
+    showGroup(data?) {
         if (!groupSp)
             groupSp = new GroupSp2(canvasStage, this.gameId)
+        else {
+            if (data.visible)
+                groupSp.showGroup(data.idx - 1)
+            else
+                groupSp.hide()
+        }
     }
     showRank() {
         if (!rankView) {
@@ -429,9 +438,11 @@ class StageOnlineView extends VueBase {
                 }
             })
         },
-        onClkTop5(v, idx,g) {
-            
-            this.opReq(`${CommandId.cs_showTop5}`, { _: null, visible: v, idx: idx ,gameIdxArr:g})
+        onClkTop5(v, idx, g) {
+            this.opReq(`${CommandId.cs_showTop5}`, { _: null, visible: v, idx: idx, gameIdxArr: g })
+        },
+        onClkGroup(v, idx) {
+            this.opReq(`${CommandId.cs_showGroup}`, { _: null, visible: v, idx: idx })
         },
         onAddScore(isLeft, dtScore) {
 

@@ -65,6 +65,8 @@ export const CommandId = {
     sc_showRank: '',//
     cs_showBracket: '',//
     sc_showBracket: '',//
+    cs_showGroup: '',//
+    sc_showGroup: '',//
     cs_hideOnlinePanel: '',//
     sc_hideOnlinePanel: '',//
     //preround

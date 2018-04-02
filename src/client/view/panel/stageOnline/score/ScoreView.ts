@@ -54,11 +54,16 @@ export class ScoreView extends BasePanelView {
         }
         else {
             //preload font
-            let f1 = this.preLoadFont(FontName.DigiLED)
+            // let f1 = this.preLoadFont(FontName.DigiLED)
+            let f1 = this.preLoadFont(FontName.MicrosoftYahei)
             stage.addChild(f1)
-            this.scorePanel = new Score2018(stage)
+            let f2 = this.preLoadFont(FontName.Impact)
+            stage.addChild(f2)
+            TweenEx.delayedCall(1000, _ => {
+                this.scorePanel = new Score2018(stage)
+                this.initDelay()
+            })
         }
-
         // this.scorePanel = new Score2017(stage, darkTheme)
         this.eventPanel = new Event2017(stage, darkTheme)
 
@@ -90,7 +95,6 @@ export class ScoreView extends BasePanelView {
         //     this.initManmual()
         // }
         // else
-        this.initDelay()
         this.initLocal()
     }
 
@@ -216,22 +220,6 @@ export class ScoreView extends BasePanelView {
         let isRunning = false
         getHupuWS((hupuWsUrl) => {
             let remoteIO = io.connect(hupuWsUrl);
-            // let getRankData = (p) => {
-            //     let colorSeg = [0xe96b1f,
-            //         0x6736f8,
-            //         0x4860f6,
-            //         0x599b1e,
-            //         0xa3a8b5,
-            //         0xa3a8b5,
-            //     ]
-            //     if (p.powerRankType == 0 || p.powerRank == 0)
-            //         return { ranking: p.powerRank, text: '冲榜', color: colorSeg[5] }
-            //     else if (p.powerRankType > 4) {
-            //         return { ranking: p.powerRank, text: '冲榜', color: colorSeg[5] }
-            //     }
-            //     else
-            //         return { ranking: p.powerRank, text: '' + p.powerRank, color: colorSeg[p.powerRankType - 1] }
-            // }
             let setPlayer = (leftPlayer, rightPlayer) => {
                 console.log(leftPlayer)
                 let leftRankingData;
@@ -255,10 +243,10 @@ export class ScoreView extends BasePanelView {
                     page: 'score'
                 })
 
-                TweenEx.delayedCall(3000, () => {
-                    if (!isRunning)
-                        this.initDefaultPlayer()
-                });
+                // TweenEx.delayedCall(3000, () => {
+                //     if (!isRunning)
+                //         this.initDefaultPlayer()
+                // });
             });
 
             remoteIO.on('wall', (data: any) => {
@@ -288,19 +276,6 @@ export class ScoreView extends BasePanelView {
                         this.scorePanel.toggleTimer(TimerState.PAUSE);
                         this.scorePanel.resetTimer();
                     }
-
-
-                    //test
-                    // this.eventPanel.playerInfoCard.fadeInWinPlayer(true, data.player.left);
-                    // this.eventPanel.playerInfoCard.fadeInWinPlayer(false, data.player.right);
-                    // this.scorePanel.resetTimer();
-                    // this.scorePanel.toggleTimer1(TimerState.RUNNING);
-                    // Tween.get(this).wait(3000).call(()=> {
-                    //     this.scorePanel.toggleTimer1(TimerState.PAUSE);
-                    // });
-                    // this.scorePanel.setRightFoul(3)
-                    // this.scorePanel.setLeftFoul(4)
-
                 };
 
                 eventMap['updateScore'] = () => {
