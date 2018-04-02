@@ -213,14 +213,8 @@ export class GroupSp2 extends PIXI.Container {
         if (this.parent)
             this.parent.removeChild(this)
     }
-    showGroup(idx) {
-        this.p.addChild(this)
-        if (idx < 0)
-            return -1
+    _fillData(idx) {
         let groupTab = this.groupArr[idx]
-        // if (!groupTab) {
-        //     return
-        // }
         this.tabFocus.x = groupTab.x - 12
         this.tabFocus.y = groupTab.y - 13
         let data = this.dataArr[idx]
@@ -259,6 +253,12 @@ export class GroupSp2 extends PIXI.Container {
             }
             return round
         }
+    }
+    showGroup(idx) {
+        this.p.addChild(this)
+        if (idx < 0)
+            return -1
+        this._fillData(idx)
     }
     setRoundIdx(round, idx) {
         let groupName = gArr[idx]
@@ -315,6 +315,7 @@ export class GroupSp2 extends PIXI.Container {
             console.log('data arr', this.dataArr);
             // console.log('group game map', groupGameCountMap, 'round', curRound, 'group', curGroupIdx);
             // this.showGroup(curGroupIdx)
+            this._fillData(curGroupIdx)
             this.setRoundIdx(curRound, curGroupIdx)
         })
     }

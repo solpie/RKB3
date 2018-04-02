@@ -8619,10 +8619,7 @@
 	        if (this.parent)
 	            this.parent.removeChild(this);
 	    };
-	    GroupSp2.prototype.showGroup = function (idx) {
-	        this.p.addChild(this);
-	        if (idx < 0)
-	            return -1;
+	    GroupSp2.prototype._fillData = function (idx) {
 	        var groupTab = this.groupArr[idx];
 	        this.tabFocus.x = groupTab.x - 12;
 	        this.tabFocus.y = groupTab.y - 13;
@@ -8661,6 +8658,12 @@
 	            }
 	            return round;
 	        }
+	    };
+	    GroupSp2.prototype.showGroup = function (idx) {
+	        this.p.addChild(this);
+	        if (idx < 0)
+	            return -1;
+	        this._fillData(idx);
 	    };
 	    GroupSp2.prototype.setRoundIdx = function (round, idx) {
 	        var groupName = gArr[idx];
@@ -8714,6 +8717,7 @@
 	                }
 	            }
 	            console.log('data arr', _this.dataArr);
+	            _this._fillData(curGroupIdx);
 	            _this.setRoundIdx(curRound, curGroupIdx);
 	        });
 	    };
