@@ -60,6 +60,7 @@ class StageOnlineView extends VueBase {
     championTitle = VueBase.PROP
     //
     gameIdxArr = VueBase.PROP
+    vsTitle = VueBase.PROP
     //公告
     noticeTitle = VueBase.PROP
     noticeContent = VueBase.PROP
@@ -445,12 +446,13 @@ class StageOnlineView extends VueBase {
             })
         },
         onClkTop5(v, idx, g) {
-            console.log('click top5');
             this.opReq(`${CommandId.cs_showTop5}`, { _: null, visible: v, idx: idx, gameIdxArr: g })
         },
         onClkGroup(v, idx) {
-            console.log('click group');
             this.opReq(`${CommandId.cs_showGroup}`, { _: null, visible: v, idx: idx })
+        },
+        onClkVsTitle(v, vs) {
+            this.opReq(`${CommandId.cs_showVsTitle}`, { _: null, visible: v, vs: vs })
         },
         onAddScore(isLeft, dtScore) {
 

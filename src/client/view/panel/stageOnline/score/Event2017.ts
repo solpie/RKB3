@@ -15,6 +15,7 @@ import { VictoryM2 } from './VictoryM2';
 import { Victory2 } from "./Victory2";
 import { Winner } from './Winner';
 import { Top5 } from '../top5/Top5';
+import { VsTitle } from './VsTitle';
 
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
@@ -331,7 +332,7 @@ export class Event2017 extends PIXI.Container {
     showTop5(data) {
         if (!this.top5) {
             this.top5 = new Top5()
-            this.top5.create(this,data)
+            this.top5.create(this, data)
             data.visible ?
                 this.top5.show(data)
                 : this.top5.hide()
@@ -341,5 +342,15 @@ export class Event2017 extends PIXI.Container {
                 this.top5.show(data)
                 : this.top5.hide()
         }
+    }
+    vsTitle: VsTitle
+    showVsTitle(data) {
+        if (!this.vsTitle) {
+            this.vsTitle = new VsTitle()
+            this.vsTitle.create(this)
+        }
+        data.visible ?
+            this.vsTitle.show(data)
+            : this.vsTitle.hide()
     }
 }

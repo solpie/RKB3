@@ -225,6 +225,10 @@ export class ScoreView extends BasePanelView {
                 console.log('sc_showTop5');
                 this.eventPanel.showTop5(data)
             })
+            .on(`${CommandId.sc_showVsTitle}`, (data) => {
+                console.log('sc_showVsTitle',data);
+                this.eventPanel.showVsTitle(data)
+            })
     }
 
 
