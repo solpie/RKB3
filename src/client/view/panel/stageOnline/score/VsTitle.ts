@@ -31,10 +31,10 @@ export class VsTitle extends PIXI.Container {
         content.y = 825
 
         let vs = new PIXI.Text('vs', ts)
-        this.addChild(vs)
+        // this.addChild(vs)
         this.lText = vs
         vs = new PIXI.Text('vs', ts)
-        this.addChild(vs)
+        // this.addChild(vs)
         this.rText = vs
         // vs.y = content.y
     }

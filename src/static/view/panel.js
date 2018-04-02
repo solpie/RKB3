@@ -8809,10 +8809,8 @@
 	        this.addChild(content);
 	        content.y = 825;
 	        var vs = new PIXI.Text('vs', ts);
-	        this.addChild(vs);
 	        this.lText = vs;
 	        vs = new PIXI.Text('vs', ts);
-	        this.addChild(vs);
 	        this.rText = vs;
 	    };
 	    VsTitle.prototype.show = function (data) {
