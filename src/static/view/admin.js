@@ -1069,6 +1069,9 @@
 	exports._avatar = function (filename) {
 	    return '/img/player/avatar/' + filename;
 	};
+	exports.getTop5Data = function (callback) {
+	    _get('/db/top5.json?t=' + new Date(), callback);
+	};
 
 
 /***/ },

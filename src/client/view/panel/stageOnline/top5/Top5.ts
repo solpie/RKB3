@@ -2,6 +2,8 @@ import { newBitmap, loadRes } from '../../../utils/PixiEx';
 import { imgLoader } from '../../../utils/ImgLoader';
 import { FontName } from '../../../const';
 import { paddy } from '../../../utils/JsFunc';
+import { $post } from '../../../utils/WebJsFunc';
+import { getTop5Data } from '../../../utils/HupuAPI';
 class Tab2 extends PIXI.Container {
     playerName: PIXI.Text
     playerName2: PIXI.Text
@@ -52,56 +54,56 @@ class Tab2 extends PIXI.Container {
         this.gameIdx.x = 60 - this.gameIdx.width * .5
     }
 }
-let infoArr = [
-    {
-        name: '徐长龙',
-        hwa: [195, 95, 29],
-        info: `前cubs山东大学队长
-实力榜第5名 
-山东赛区7冠王 
-9月&12月冠军赛季军
-        `,
-        tag1: '沉着冷静',
-        hupuID: '@浩扬篮球阿清'
-    },
-    {
-        name: '于潇',
-        hwa: [203, 95, 28],
-        info: `实力榜排名第48名 
-路人王烟台站冠军 
-两次参与冠军赛
-        `,
-        tag1: '高瘦远投王',
-        hupuID: '@把球给我六六'
-    },
-    {
-        name: '矫凯文',
-        hwa: [188, 90, 25],
-        info: `前NBL广西威壮球员 
-NBL全明星 
-2014年随队拿下NBL冠军 
-曾单场砍下三双
-        `,
-        tag1: '球队大脑',
-        hupuID: '矫凯文'
-    },
-    {
-        name: '蓝震海',
-        hwa: [186, 80, 28],
-        info: `前NBL香港新丽宝球员
-        `,
-        tag1: '实力干将',
-        hupuID: '@蓝震海'
-    },
-    {
-        name: '刘晨',
-        hwa: [190, 100, 28],
-        info: `2017全国三对三联赛冠军
-        `,
-        tag1: '三对三大师',
-        hupuID: '@刘晨'
-    },
-]
+// let infoArr = [
+//     {
+//         name: '徐长龙',
+//         hwa: [195, 95, 29],
+//         info: `前cubs山东大学队长
+// 实力榜第5名 
+// 山东赛区7冠王 
+// 9月&12月冠军赛季军
+//         `,
+//         tag1: '沉着冷静',
+//         hupuID: '@浩扬篮球阿清'
+//     },
+//     {
+//         name: '于潇',
+//         hwa: [203, 95, 28],
+//         info: `实力榜排名第48名 
+// 路人王烟台站冠军 
+// 两次参与冠军赛
+//         `,
+//         tag1: '高瘦远投王',
+//         hupuID: '@把球给我六六'
+//     },
+//     {
+//         name: '矫凯文',
+//         hwa: [188, 90, 25],
+//         info: `前NBL广西威壮球员 
+// NBL全明星 
+// 2014年随队拿下NBL冠军 
+// 曾单场砍下三双
+//         `,
+//         tag1: '球队大脑',
+//         hupuID: '矫凯文'
+//     },
+//     {
+//         name: '蓝震海',
+//         hwa: [186, 80, 28],
+//         info: `前NBL香港新丽宝球员
+//         `,
+//         tag1: '实力干将',
+//         hupuID: '@蓝震海'
+//     },
+//     {
+//         name: '刘晨',
+//         hwa: [190, 100, 28],
+//         info: `2017全国三对三联赛冠军
+//         `,
+//         tag1: '三对三大师',
+//         hupuID: '@刘晨'
+//     },
+// ]
 export class Top5 extends PIXI.Container {
     static class = 'Top5'
     p: any
@@ -115,34 +117,37 @@ export class Top5 extends PIXI.Container {
     info: PIXI.Text
     title: PIXI.Text
     create(parent: any, data) {
-        parent.addChild(this)
         this.p = parent
         let imgArr = []
         this.curPlayer = new PIXI.Sprite()
         this.addChild(this.curPlayer)
-
-
-        let tabArr = []
-        for (let i = 0; i < 5; i++) {
-            let t = new Tab2()
-            this.addChild(t)
-            this.tabArr.push(t)
-            t.x = 203
-            t.y = 204 + i * 134
-            imgArr.push(`/img/panel/top5/p${i + 1}.png`)
-            t.visible = false
-            t.setInfo(infoArr[i])
-            tabArr.push(t)
-        }
-        imgArr.push('/img/panel/top5/bg.png')
-        imgLoader.loadTexArr(imgArr, _ => {
-            tabArr.forEach(t => {
-                t.visible = true
-            });
-            let bg = newBitmap({ url: '/img/panel/top5/bg.png' })
-            this.addChildAt(bg, 0)
-            this.initDetail()
-            this.show(data)
+        getTop5Data(res => {
+            let d = JSON.parse(res)
+            console.log('top5 data', res, d);
+            this.infoArr = d// JSON.parse(res)
+            let tabArr = []
+            for (let i = 0; i < 5; i++) {
+                let t = new Tab2()
+                this.addChild(t)
+                this.tabArr.push(t)
+                t.x = 203
+                t.y = 204 + i * 134
+                imgArr.push(`/img/player/top5/${this.infoArr[i].img}.png`)
+                t.visible = false
+                t.setInfo(this.infoArr[i])
+                tabArr.push(t)
+            }
+            imgArr.push('/img/panel/top5/bg.png')
+     
+            imgLoader.loadTexArr(imgArr, _ => {
+                tabArr.forEach(t => {
+                    t.visible = true
+                });
+                let bg = newBitmap({ url: '/img/panel/top5/bg.png' })
+                this.addChildAt(bg, 0)
+                this.initDetail()
+                this.show(data)
+            })
         })
     }
     show(data) {
@@ -162,11 +167,11 @@ export class Top5 extends PIXI.Container {
         }
         this.p.addChild(this)
     }
-
+    infoArr:any
     setTab(idx) {
         idx = Number(idx)
-        let data = infoArr[idx - 1]
-        this.curPlayer.texture = imgLoader.getTex(`/img/panel/top5/p${idx}.png`)
+        let data = this.infoArr[idx - 1]
+        this.curPlayer.texture = imgLoader.getTex(`/img/player/top5/${data.img}.png`)
         this.setDetail(data)
     }
 

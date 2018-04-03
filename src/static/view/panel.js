@@ -594,6 +594,9 @@
 	exports._avatar = function (filename) {
 	    return '/img/player/avatar/' + filename;
 	};
+	exports.getTop5Data = function (callback) {
+	    _get('/db/top5.json?t=' + new Date(), callback);
+	};
 
 
 /***/ },
@@ -6754,9 +6757,6 @@
 	        if (!this.top5) {
 	            this.top5 = new Top5_1.Top5();
 	            this.top5.create(this, data);
-	            data.visible ?
-	                this.top5.show(data)
-	                : this.top5.hide();
 	        }
 	        else {
 	            data.visible ?
@@ -7931,6 +7931,7 @@
 	var ImgLoader_1 = __webpack_require__(67);
 	var const_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(17);
+	var HupuAPI_1 = __webpack_require__(22);
 	var Tab2 = (function (_super) {
 	    __extends(Tab2, _super);
 	    function Tab2() {
@@ -7974,43 +7975,6 @@
 	    };
 	    return Tab2;
 	}(PIXI.Container));
-	var infoArr = [
-	    {
-	        name: '徐长龙',
-	        hwa: [195, 95, 29],
-	        info: "\u524Dcubs\u5C71\u4E1C\u5927\u5B66\u961F\u957F\n\u5B9E\u529B\u699C\u7B2C5\u540D \n\u5C71\u4E1C\u8D5B\u533A7\u51A0\u738B \n9\u6708&12\u6708\u51A0\u519B\u8D5B\u5B63\u519B\n        ",
-	        tag1: '沉着冷静',
-	        hupuID: '@浩扬篮球阿清'
-	    },
-	    {
-	        name: '于潇',
-	        hwa: [203, 95, 28],
-	        info: "\u5B9E\u529B\u699C\u6392\u540D\u7B2C48\u540D \n\u8DEF\u4EBA\u738B\u70DF\u53F0\u7AD9\u51A0\u519B \n\u4E24\u6B21\u53C2\u4E0E\u51A0\u519B\u8D5B\n        ",
-	        tag1: '高瘦远投王',
-	        hupuID: '@把球给我六六'
-	    },
-	    {
-	        name: '矫凯文',
-	        hwa: [188, 90, 25],
-	        info: "\u524DNBL\u5E7F\u897F\u5A01\u58EE\u7403\u5458 \nNBL\u5168\u660E\u661F \n2014\u5E74\u968F\u961F\u62FF\u4E0BNBL\u51A0\u519B \n\u66FE\u5355\u573A\u780D\u4E0B\u4E09\u53CC\n        ",
-	        tag1: '球队大脑',
-	        hupuID: '矫凯文'
-	    },
-	    {
-	        name: '蓝震海',
-	        hwa: [186, 80, 28],
-	        info: "\u524DNBL\u9999\u6E2F\u65B0\u4E3D\u5B9D\u7403\u5458\n        ",
-	        tag1: '实力干将',
-	        hupuID: '@蓝震海'
-	    },
-	    {
-	        name: '刘晨',
-	        hwa: [190, 100, 28],
-	        info: "2017\u5168\u56FD\u4E09\u5BF9\u4E09\u8054\u8D5B\u51A0\u519B\n        ",
-	        tag1: '三对三大师',
-	        hupuID: '@刘晨'
-	    },
-	];
 	var Top5 = (function (_super) {
 	    __extends(Top5, _super);
 	    function Top5() {
@@ -8019,32 +7983,36 @@
 	    }
 	    Top5.prototype.create = function (parent, data) {
 	        var _this = this;
-	        parent.addChild(this);
 	        this.p = parent;
 	        var imgArr = [];
 	        this.curPlayer = new PIXI.Sprite();
 	        this.addChild(this.curPlayer);
-	        var tabArr = [];
-	        for (var i = 0; i < 5; i++) {
-	            var t = new Tab2();
-	            this.addChild(t);
-	            this.tabArr.push(t);
-	            t.x = 203;
-	            t.y = 204 + i * 134;
-	            imgArr.push("/img/panel/top5/p" + (i + 1) + ".png");
-	            t.visible = false;
-	            t.setInfo(infoArr[i]);
-	            tabArr.push(t);
-	        }
-	        imgArr.push('/img/panel/top5/bg.png');
-	        ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
-	            tabArr.forEach(function (t) {
-	                t.visible = true;
+	        HupuAPI_1.getTop5Data(function (res) {
+	            var d = JSON.parse(res);
+	            console.log('top5 data', res, d);
+	            _this.infoArr = d;
+	            var tabArr = [];
+	            for (var i = 0; i < 5; i++) {
+	                var t = new Tab2();
+	                _this.addChild(t);
+	                _this.tabArr.push(t);
+	                t.x = 203;
+	                t.y = 204 + i * 134;
+	                imgArr.push("/img/player/top5/" + _this.infoArr[i].img + ".png");
+	                t.visible = false;
+	                t.setInfo(_this.infoArr[i]);
+	                tabArr.push(t);
+	            }
+	            imgArr.push('/img/panel/top5/bg.png');
+	            ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
+	                tabArr.forEach(function (t) {
+	                    t.visible = true;
+	                });
+	                var bg = PixiEx_1.newBitmap({ url: '/img/panel/top5/bg.png' });
+	                _this.addChildAt(bg, 0);
+	                _this.initDetail();
+	                _this.show(data);
 	            });
-	            var bg = PixiEx_1.newBitmap({ url: '/img/panel/top5/bg.png' });
-	            _this.addChildAt(bg, 0);
-	            _this.initDetail();
-	            _this.show(data);
 	        });
 	    };
 	    Top5.prototype.show = function (data) {
@@ -8066,8 +8034,8 @@
 	    };
 	    Top5.prototype.setTab = function (idx) {
 	        idx = Number(idx);
-	        var data = infoArr[idx - 1];
-	        this.curPlayer.texture = ImgLoader_1.imgLoader.getTex("/img/panel/top5/p" + idx + ".png");
+	        var data = this.infoArr[idx - 1];
+	        this.curPlayer.texture = ImgLoader_1.imgLoader.getTex("/img/player/top5/" + data.img + ".png");
 	        this.setDetail(data);
 	    };
 	    Top5.prototype.setDetail = function (data) {

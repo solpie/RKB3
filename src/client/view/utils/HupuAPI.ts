@@ -84,3 +84,8 @@ export let getGameInfo = (callback) => {
 export let _avatar = (filename) => {
     return '/img/player/avatar/' + filename
 }
+
+export let getTop5Data = (callback) => {
+    
+    _get('/db/top5.json?t='+new Date(), callback)
+}

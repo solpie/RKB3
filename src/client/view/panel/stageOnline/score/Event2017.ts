@@ -333,9 +333,9 @@ export class Event2017 extends PIXI.Container {
         if (!this.top5) {
             this.top5 = new Top5()
             this.top5.create(this, data)
-            data.visible ?
-                this.top5.show(data)
-                : this.top5.hide()
+            // data.visible ?
+            //     this.top5.show(data)
+            //     : this.top5.hide()
         }
         else {
             data.visible ?
