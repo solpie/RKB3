@@ -3,6 +3,7 @@ import { FontName } from "../../../const";
 import { getGroupData, getHupuWS } from "../../../utils/HupuAPI";
 import { firstBy } from "../../../utils/thenBy";
 import { imgLoader } from "../../../utils/ImgLoader";
+import { fitWidth } from '../bracket/BracketGroup';
 declare let io;
 export class Row1 extends PIXI.Container {
     playerName: PIXI.Text
@@ -52,6 +53,8 @@ export class Row1 extends PIXI.Container {
     }
     setData(data) {
         this.playerName.text = data.name
+        // this.playerName.text = '依力扎提·热合木'
+        fitWidth(this.playerName,300,50)
 
         this.winLose.text = data.win + '/' + data.lose
         this.winLose.x = 1100 - this.winLose.width * .5

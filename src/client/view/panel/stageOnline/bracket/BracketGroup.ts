@@ -29,7 +29,7 @@ export function fitWidth(label: PIXI.Text, width, size) {
         // label.style = { font: size + 'px' }
         // label.text = label.text
         label.style.font = size + 'px'
-        label.style['fontFamily'] = FontName.MicrosoftYahei
+        // label.style['fontFamily'] = FontName.MicrosoftYahei
         fitWidth(label, width, size - 1)
     }
 }

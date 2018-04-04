@@ -5389,7 +5389,6 @@
 	    console.log(label.width, width);
 	    if (label.width > width) {
 	        label.style.font = size + 'px';
-	        label.style['fontFamily'] = const_1.FontName.MicrosoftYahei;
 	        fitWidth(label, width, size - 1);
 	    }
 	}
@@ -8417,6 +8416,7 @@
 	var HupuAPI_1 = __webpack_require__(22);
 	var thenBy_1 = __webpack_require__(97);
 	var ImgLoader_1 = __webpack_require__(67);
+	var BracketGroup_1 = __webpack_require__(72);
 	var Row1 = (function (_super) {
 	    __extends(Row1, _super);
 	    function Row1() {
@@ -8455,6 +8455,7 @@
 	    Row1.prototype.setData = function (data) {
 	        var _this = this;
 	        this.playerName.text = data.name;
+	        BracketGroup_1.fitWidth(this.playerName, 300, 50);
 	        this.winLose.text = data.win + '/' + data.lose;
 	        this.winLose.x = 1100 - this.winLose.width * .5;
 	        this.score.text = data.score + '';
@@ -8795,12 +8796,12 @@
 	            this.rText.text = rn;
 	            if (this.lText.width > this.rText.width) {
 	                while (this.lText.width > this.rText.width) {
-	                    this.rText.text += ' ';
+	                    this.rText.text = ' ' + this.rText.text + " ";
 	                }
 	            }
 	            if (this.lText.width < this.rText.width) {
 	                while (this.lText.width < this.rText.width) {
-	                    this.lText.text = ' ' + this.lText.text;
+	                    this.lText.text = ' ' + this.lText.text + " ";
 	                }
 	            }
 	            this.content.text = this.lText.text + ' vs ' + this.rText.text;
@@ -8821,11 +8822,7 @@
 	                .endFill();
 	            PixiEx_1.gradientG(g, cx - 10, cy - 10, cw + 20, ch + 20, 0x414665, 0x1a203e);
 	            g.beginFill(0xffffff, 1)
-	                .drawRect(cx - 10, cy - 10, cw + 20, barH)
-	                .moveTo(960 - 15, cy - 10 + barH)
-	                .lineTo(960 + 15, cy - 10 + barH)
-	                .lineTo(960 + 10, cy - 5 + barH)
-	                .lineTo(960 - 10, cy - 5 + barH);
+	                .drawRect(cx - 10, cy - 10, cw + 20, barH);
 	            this.alpha = 0;
 	            this.p.addChild(this);
 	            TweenEx_1.TweenEx.to(this, 300, { alpha: 1 });
