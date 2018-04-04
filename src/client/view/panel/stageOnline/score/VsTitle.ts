@@ -57,7 +57,7 @@ export class VsTitle extends PIXI.Container {
                     this.lText.text = ' '+ this.lText.text+" "
                 }
             }
-            
+
             this.content.text = this.lText.text + ' vs ' + this.rText.text
             this.content.x = 960 - this.content.width * .5
             let cx = this.content.x
@@ -78,10 +78,10 @@ export class VsTitle extends PIXI.Container {
             gradientG(g, cx - 10, cy - 10, cw + 20, ch + 20, 0x414665, 0x1a203e)
             g.beginFill(0xffffff, 1)
                 .drawRect(cx - 10, cy - 10, cw + 20, barH)
-                // .moveTo(960 - 15, cy - 10 + barH)
-                // .lineTo(960 + 15, cy - 10 + barH)
-                // .lineTo(960 + 10, cy - 5 + barH)
-                // .lineTo(960 - 10, cy - 5 + barH)
+                .moveTo(960 - 15, cy - 10 + barH)
+                .lineTo(960 + 15, cy - 10 + barH)
+                .lineTo(960 + 10, cy - 5 + barH)
+                .lineTo(960 - 10, cy - 5 + barH)
             this.alpha = 0
             this.p.addChild(this)
             TweenEx.to(this, 300, { alpha: 1 })

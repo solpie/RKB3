@@ -8822,7 +8822,11 @@
 	                .endFill();
 	            PixiEx_1.gradientG(g, cx - 10, cy - 10, cw + 20, ch + 20, 0x414665, 0x1a203e);
 	            g.beginFill(0xffffff, 1)
-	                .drawRect(cx - 10, cy - 10, cw + 20, barH);
+	                .drawRect(cx - 10, cy - 10, cw + 20, barH)
+	                .moveTo(960 - 15, cy - 10 + barH)
+	                .lineTo(960 + 15, cy - 10 + barH)
+	                .lineTo(960 + 10, cy - 5 + barH)
+	                .lineTo(960 - 10, cy - 5 + barH);
 	            this.alpha = 0;
 	            this.p.addChild(this);
 	            TweenEx_1.TweenEx.to(this, 300, { alpha: 1 });
