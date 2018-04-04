@@ -138,7 +138,7 @@ export class Top5 extends PIXI.Container {
                 tabArr.push(t)
             }
             imgArr.push('/img/panel/top5/bg.png')
-     
+
             imgLoader.loadTexArr(imgArr, _ => {
                 tabArr.forEach(t => {
                     t.visible = true
@@ -167,7 +167,8 @@ export class Top5 extends PIXI.Container {
         }
         this.p.addChild(this)
     }
-    infoArr:any
+
+    infoArr: any
     setTab(idx) {
         idx = Number(idx)
         let data = this.infoArr[idx - 1]
@@ -177,15 +178,17 @@ export class Top5 extends PIXI.Container {
 
 
     setDetail(data) {
-        console.log('show detail', data);
-        this.playerName.text = data.name
-        this.hupuID.text = data.hupuID
-        this.hwa.text =
-            data.hwa[0] + ' cm/ '
-            + data.hwa[1] + ' kg/ '
-            + data.hwa[2] + ' 岁';
-        this.info.text = data.info
-        this.tag1.text = data.tag1
+        if (this.playerName) {
+            console.log('show detail', data);
+            this.playerName.text = data.name
+            this.hupuID.text = data.hupuID
+            this.hwa.text =
+                data.hwa[0] + ' cm/ '
+                + data.hwa[1] + ' kg/ '
+                + data.hwa[2] + ' 岁';
+            this.info.text = data.info
+            this.tag1.text = data.tag1
+        }
     }
 
     initDetail() {

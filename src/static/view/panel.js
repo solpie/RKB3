@@ -8038,15 +8038,17 @@
 	        this.setDetail(data);
 	    };
 	    Top5.prototype.setDetail = function (data) {
-	        console.log('show detail', data);
-	        this.playerName.text = data.name;
-	        this.hupuID.text = data.hupuID;
-	        this.hwa.text =
-	            data.hwa[0] + ' cm/ '
-	                + data.hwa[1] + ' kg/ '
-	                + data.hwa[2] + ' 岁';
-	        this.info.text = data.info;
-	        this.tag1.text = data.tag1;
+	        if (this.playerName) {
+	            console.log('show detail', data);
+	            this.playerName.text = data.name;
+	            this.hupuID.text = data.hupuID;
+	            this.hwa.text =
+	                data.hwa[0] + ' cm/ '
+	                    + data.hwa[1] + ' kg/ '
+	                    + data.hwa[2] + ' 岁';
+	            this.info.text = data.info;
+	            this.tag1.text = data.tag1;
+	        }
 	    };
 	    Top5.prototype.initDetail = function () {
 	        var rs = {
