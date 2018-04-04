@@ -4,7 +4,7 @@ import { setInterval } from 'timers';
 import { type } from 'os';
 import { CommandId } from '../../Command';
 import { PanelId } from '../../const';
-import { getClientDelay, setClientDelay } from '../../utils/HupuAPI';
+import { getClientDelay, setClientDelay, getVsTitleData } from '../../utils/HupuAPI';
 import { DateFormat } from '../../utils/JsFunc';
 import { VueBase } from '../../utils/VueBase';
 import { dynamicLoading, $post } from '../../utils/WebJsFunc';
@@ -14,6 +14,7 @@ import { Lottery } from './lottery/Lottery';
 import { RankView } from './rank/RankView';
 import { ScoreView } from './score/ScoreView';
 import { GroupSp2 } from './groupSp/GroupSp2';
+import { VsTitle } from './score/VsTitle';
 
 declare let $
 declare let io
@@ -62,6 +63,7 @@ class StageOnlineView extends VueBase {
     //
     gameIdxArr = VueBase.PROP
     vsTitle = VueBase.PROP
+    vsTitleMap: any
     //公告
     noticeTitle = VueBase.PROP
     noticeContent = VueBase.PROP
@@ -441,15 +443,15 @@ class StageOnlineView extends VueBase {
             })
         },
         onShowDateRanking(date) {
-            $.get('/online/ranking/top10/' + date, res => {
-                console.log('Top10player', date);
-                let playerArr: Array<any> = res.top10
-                let idx = 1
-                for (let p of playerArr) {
-                    console.log("#" + idx, "*", p.dtRanking, p.playerName);
-                    idx++
-                }
-            })
+            // $.get('/online/ranking/top10/' + date, res => {
+            //     console.log('Top10player', date);
+            //     let playerArr: Array<any> = res.top10
+            //     let idx = 1
+            //     for (let p of playerArr) {
+            //         console.log("#" + idx, "*", p.dtRanking, p.playerName);
+            //         idx++
+            //     }
+            // })
         },
         onClkTop5(v, idx, g) {
             this.opReq(`${CommandId.cs_showTop5}`, { _: null, visible: v, idx: idx, gameIdxArr: g })
@@ -459,6 +461,26 @@ class StageOnlineView extends VueBase {
         },
         onClkVsTitle(v, vs) {
             this.opReq(`${CommandId.cs_showVsTitle}`, { _: null, visible: v, vs: vs })
+        },
+        onClkLoadVsTitle() {
+            if (this.vsTitleMap) {
+                // this.lLiveName = '丁绍祺'
+                // this.rLiveName = '万昌东'
+                console.log('map ', this.lLiveName,this.rLiveName)
+                let ln = this.vsTitleMap[this.lLiveName]
+                let rn = this.vsTitleMap[this.rLiveName]
+                if (ln && rn) {
+                    this.vsTitle = ln + ' ' + rn
+                }
+            }
+            else {
+                getVsTitleData(res => {
+                    let map = JSON.parse(res)
+                    this.vsTitleMap = map
+                    console.log('vs title', map);
+                    this.onClkLoadVsTitle()
+                })
+            }
         },
         onAddScore(isLeft, dtScore) {
 

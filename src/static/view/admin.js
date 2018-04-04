@@ -1072,6 +1072,9 @@
 	exports.getTop5Data = function (callback) {
 	    _get('/db/top5.json?t=' + new Date(), callback);
 	};
+	exports.getVsTitleData = function (callback) {
+	    _get('/db/vs.json?t=' + new Date(), callback);
+	};
 
 
 /***/ },

@@ -86,6 +86,8 @@ export let _avatar = (filename) => {
 }
 
 export let getTop5Data = (callback) => {
-    
     _get('/db/top5.json?t='+new Date(), callback)
+}
+export let getVsTitleData = (callback) => {
+    _get('/db/vs.json?t='+new Date(), callback)
 }
