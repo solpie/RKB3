@@ -2,14 +2,14 @@
     <div v-if="isOp" id="opPanel" style="position: absolute;left: 100px;top:60px;width: 1000px">
         <div class="tabs  is-boxed">
             <ul>
-                <li v-bind:class="{ 'is-active': actTab== 'tab1'}" @click='tab("tab1")'>
+                <li v-if='!isRmOp' v-bind:class="{ 'is-active': actTab== 'tab1'}" @click='tab("tab1")'>
                     <a>
                         <span>Main</span>
                     </a>
                 </li>
                 <li v-bind:class="{ 'is-active': actTab== 'tab2'}" @click='tab("tab2")'>
                     <a>
-                        <span>特效</span>
+                        <span>公告</span>
                     </a>
                 </li>
             </ul>
@@ -88,35 +88,36 @@
             <button class="button" @click="onClkToggleChampionPanel(true)">显示</button>
             <button class="button" @click="onClkToggleChampionPanel(false)">隐藏</button>
             <br>
+        </div>
+    </div>
 
-            <div style="left: 600px;top:0px;position: absolute;">
-                <label class="radio">
-                <input type="radio" name="bold" value='normal' v-model='isBold' checked >
-                正常
-            </label>
-                <label class="radio">
-                <input type="radio" name="bold" value='bold' v-model='isBold'>
-                加粗
-            </label>
-                <br>
-                <input class="input" type="text" placeholder="公告" style="width: 280px;" v-model="noticeTitle">
-                <textarea style="width:580px;height:250px" v-model="noticeContent"></textarea>
-                <button class="button" @click="onClkNotice(true,true,true)">左边预览</button>
-                <button class="button" @click="onClkNotice(true,false,true)">右边预览</button>
-                <br>
-                <button class="button" @click="onClkNotice(true,true)">左边显示</button>
-                <button class="button" @click="onClkNotice(true,false)">右边显示</button>
-                <button class="button" @click="onClkNotice(false,false)">隐藏</button>
-                <br>
-                <div v-for="(n,idx) in noticeHistory">
-                    <a @click="onClkNoticePresets(n.title,n.content)" style="font-size:35px;">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>
-                    <a @click="onDelNoticePresets(n.content)">del</a>
-                </div>
+    <div v-if='actTab=="tab2"'>
+        <div v-if='isRmOp||isOp' style="position: absolute;left: 100px;top:260px;width: 800px">
+            <label class="radio">
+                        <input type="radio" name="bold" value='normal' v-model='isBold' checked >
+                        正常
+                    </label>
+            <label class="radio">
+                        <input type="radio" name="bold" value='bold' v-model='isBold'>
+                        加粗
+                    </label>
+            <br>
+            <input class="input" type="text" placeholder="公告" style="width: 280px;" v-model="noticeTitle">
+            <textarea style="width:580px;height:250px" v-model="noticeContent"></textarea>
+            <br>
+            <button class="button" @click="onClkNotice(true,true,true)">左边预览</button>
+            <button class="button" @click="onClkNotice(true,false,true)">右边预览</button>
+            <br>
+            <button class="button" @click="onClkNotice(true,true)">左边显示</button>
+            <button class="button" @click="onClkNotice(true,false)">右边显示</button>
+            <button class="button" @click="onClkNotice(false,false)">隐藏</button>
+            <br>
+            <div v-for="(n,idx) in noticeHistory">
+                <a @click="onClkNoticePresets(n.title,n.content)" style="font-size:35px;">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>
+                <a @click="onDelNoticePresets(n.content)">del</a>
             </div>
         </div>
-        <div v-if='actTab=="tab2"'>
-            <label class="label">   fx test：</label> <br>
-            <button class="button" @click="onPlayScoreFx()">score fx</button>
-        </div>
+        <!-- <label class="label">   fx test：</label> <br>
+        <button class="button" @click="onPlayScoreFx()">score fx</button> -->
     </div>
 </div>

@@ -178,7 +178,7 @@ export class Top5 extends PIXI.Container {
 
 
     setDetail(data) {
-        if (this.playerName) {
+        // if (this.playerName) {
             console.log('show detail', data);
             this.playerName.text = data.name
             this.hupuID.text = data.hupuID
@@ -188,7 +188,7 @@ export class Top5 extends PIXI.Container {
                 + data.hwa[2] + ' 岁';
             this.info.text = data.info
             this.tag1.text = data.tag1
-        }
+        // }
     }
 
     initDetail() {

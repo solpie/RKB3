@@ -30,6 +30,7 @@ class StageOnlineView extends VueBase {
     actTab = VueBase.PROP
     gameId = VueBase.String
     isOp = VueBase.PROP
+    isRmOp = VueBase.PROP
     delayTime = VueBase.PROP
     //开题延时输入
     clientDelayTime = VueBase.PROP
@@ -85,9 +86,14 @@ class StageOnlineView extends VueBase {
 
     protected created() {
         this.basePanelArr = []
-        this.isOp = this.$route.params.op == "op"
+        this.isRmOp = this.$route.params.op == "rmop"
+        this.isOp = this.$route.params.op == "op" || (this.isRmOp)
         this.gameId = this.$route.params.game_id
-        if (this.isOp) {
+        if (this.isRmOp) {
+            this.actTab = 'tab2'
+            dynamicLoading.css('/css/bulma.min.css')
+        }
+        else if (this.isOp) {
             this.actTab = 'tab1'
             dynamicLoading.css('/css/bulma.min.css')
         }
