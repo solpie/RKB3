@@ -6213,6 +6213,7 @@
 	        this.$route = $route;
 	        this.name = const_1.PanelId.scorePanel;
 	        this.isOP = this.$route.params.op == "op";
+	        this.isRmOP = this.$route.params.op == "rmop";
 	        console.log('$route', this.$route);
 	        var darkTheme = $route.query.theme == "dark";
 	        this.gameId = $route.params.game_id;
@@ -6321,7 +6322,7 @@
 	        })
 	            .on("" + Command_1.CommandId.sc_showNotice, function (data) {
 	            if (data.isPreview) {
-	                if (_this.isOP) {
+	                if (_this.isOP || _this.isRmOP) {
 	                    _this.eventPanel.showNotice(data.title, data.content, data.isLeft, data.isBold);
 	                    data.visible ?
 	                        _this.eventPanel.noticeSprite.show()

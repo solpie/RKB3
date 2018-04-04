@@ -34,6 +34,7 @@ export class ScoreView extends BasePanelView {
     $route: any
     isM2: Boolean
     isOP: Boolean
+    isRmOP: Boolean
 
     constructor(stage: PIXI.Container, $route) {
         super(PanelId.onlinePanel)
@@ -42,6 +43,7 @@ export class ScoreView extends BasePanelView {
         this.$route = $route
         this.name = PanelId.scorePanel
         this.isOP = this.$route.params.op == "op"
+        this.isRmOP = this.$route.params.op == "rmop"
         console.log('$route', this.$route);
         let darkTheme = $route.query.theme == "dark"
         this.gameId = $route.params.game_id
@@ -191,7 +193,7 @@ export class ScoreView extends BasePanelView {
             })
             .on(`${CommandId.sc_showNotice}`, (data) => {
                 if (data.isPreview) {
-                    if (this.isOP) {
+                    if (this.isOP||this.isRmOP) {
                         this.eventPanel.showNotice(data.title, data.content, data.isLeft, data.isBold)
                         data.visible ?
                             this.eventPanel.noticeSprite.show()
