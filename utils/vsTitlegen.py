@@ -31,10 +31,10 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
     ncols = table.ncols  # 列数
     colnames = table.row_values(colnameindex)  # 某一行数据
     plist = {}
-    v = table.cell(2, 2)
+    # v = table.cell(2, 2)
     for i in range(0, 24):
-        n = table.cell(1 + i, 0).value
-        title = table.cell(1 + i, 1).value
+        n = table.cell(0 + i, 0).value
+        title = table.cell(0 + i, 1).value
         plist[n] = title
     print(json.dumps(plist, ensure_ascii=False))
     return plist
