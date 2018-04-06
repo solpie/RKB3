@@ -31,15 +31,17 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
     ncols = table.ncols  # 列数
     colnames = table.row_values(colnameindex)  # 某一行数据
     plist = []
-    v = table.cell(2, 2)
+    v = table.cell(2, 0)
+    print(v)
     for i in range(0, 5):
-        n = table.cell(2 + i, 0).value
-        hupuID = table.cell(2 + i, 1).value
-        h = int(table.cell(2 + i, 2).value)
-        w = int(table.cell(2 + i, 3).value)
-        a = int(table.cell(2 + i, 4).value)
-        t = table.cell(2 + i, 5).value
-        info = table.cell(2 + i, 6).value.replace(',', '\n').replace(' ', '\n').replace('，','\n')
+        n = table.cell(1 + i, 0).value
+        hupuID = table.cell(1 + i, 1).value
+        h = int(table.cell(1 + i, 3).value)
+        w = int(table.cell(1 + i, 4).value)
+        a = int(table.cell(1 + i, 2).value)
+        # t = table.cell(1 + i, 5).value
+        t = ''
+        info = table.cell(1 + i, 5).value.replace(',', '\n').replace(' ', '\n').replace('，','\n')
         plist.append({'name': n, 'hupuID': hupuID,
                       'hwa': [h, w, a], 'tag1': t,'info':info,'img':'p'+str(i+1)})
 

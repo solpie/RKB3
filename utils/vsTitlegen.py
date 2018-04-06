@@ -33,15 +33,15 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
     plist = {}
     # v = table.cell(2, 2)
     for i in range(0, 24):
-        n = table.cell(0 + i, 0).value
-        title = table.cell(0 + i, 1).value
+        n = table.cell(1 + i, 0).value
+        title = table.cell(1 + i, 1).value
         plist[n] = title
     print(json.dumps(plist, ensure_ascii=False))
     return plist
 
 
 def main():
-    tables = excel_table_byindex('vs.xlsx')
+    tables = excel_table_byindex('vs.xlsx',0,1)
     # for row in tables:
     #     print(row)
 
