@@ -5406,7 +5406,7 @@
 	function fitWidth(label, width, size) {
 	    console.log(label.width, width);
 	    if (label.width > width) {
-	        label.style.font = size + 'px';
+	        label.style.fontSize = size + 'px';
 	        fitWidth(label, width, size - 1);
 	    }
 	}
@@ -8368,7 +8368,6 @@
 	        BracketGroup_1.fitWidth(this.lName, 258, 35);
 	        this.lName.x = 718 - this.lName.width;
 	        loadAvt(this.lAvt, lPlayer.avatar);
-	        this.lName.text = lPlayer.name;
 	        this.lHeightWeight.text = lPlayer.height + 'cm | ' + lPlayer.weight + 'kg';
 	        this.lHeightWeight.x = 713 - this.lHeightWeight.width;
 	        this.lRank.text = lPlayer.powerRank;

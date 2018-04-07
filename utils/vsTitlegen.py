@@ -41,7 +41,8 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
 
 
 def main():
-    tables = excel_table_byindex('vs.xlsx',0,1)
+    tables = excel_table_byindex('vs.xlsx')
+    # tables = excel_table_byindex('vs.xlsx',0,1)
     # for row in tables:
     #     print(row)
 

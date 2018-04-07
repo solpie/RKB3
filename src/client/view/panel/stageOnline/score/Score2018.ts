@@ -315,7 +315,6 @@ export class Score2018 {
         this.lName.x = 718 - this.lName.width
 
         loadAvt(this.lAvt, lPlayer.avatar)
-        this.lName.text = lPlayer.name
 
 
         this.lHeightWeight.text = lPlayer.height + 'cm | ' + lPlayer.weight + 'kg'
