@@ -116,6 +116,7 @@ export class Top5 extends PIXI.Container {
     tag1: PIXI.Text
     info: PIXI.Text
     title: PIXI.Text
+    cacheTime: Number
     create(parent: any, data) {
         this.p = parent
         let imgArr = []
@@ -126,13 +127,14 @@ export class Top5 extends PIXI.Container {
             console.log('top5 data', res, d);
             this.infoArr = d// JSON.parse(res)
             let tabArr = []
+            this.cacheTime = new Date().getTime()
             for (let i = 0; i < 5; i++) {
                 let t = new Tab2()
                 this.addChild(t)
                 this.tabArr.push(t)
                 t.x = 203
                 t.y = 204 + i * 134
-                imgArr.push(`/img/player/top5/${this.infoArr[i].img}.png`)
+                imgArr.push(`/img/player/top5/${this.infoArr[i].img}.png?t=` + this.cacheTime)
                 t.visible = false
                 t.setInfo(this.infoArr[i])
                 tabArr.push(t)
@@ -169,25 +171,26 @@ export class Top5 extends PIXI.Container {
     }
 
     infoArr: any
+
     setTab(idx) {
         idx = Number(idx)
         let data = this.infoArr[idx - 1]
-        this.curPlayer.texture = imgLoader.getTex(`/img/player/top5/${data.img}.png`)
+        this.curPlayer.texture = imgLoader.getTex(`/img/player/top5/${data.img}.png?t=`+this.cacheTime)
         this.setDetail(data)
     }
 
 
     setDetail(data) {
         // if (this.playerName) {
-            console.log('show detail', data);
-            this.playerName.text = data.name
-            this.hupuID.text = data.hupuID
-            this.hwa.text =
-                data.hwa[0] + ' cm/ '
-                + data.hwa[1] + ' kg/ '
-                + data.hwa[2] + ' 岁';
-            this.info.text = data.info
-            this.tag1.text = data.tag1
+        console.log('show detail', data);
+        this.playerName.text = data.name
+        this.hupuID.text = data.hupuID
+        this.hwa.text =
+            data.hwa[0] + ' cm/ '
+            + data.hwa[1] + ' kg/ '
+            + data.hwa[2] + ' 岁';
+        this.info.text = data.info
+        this.tag1.text = data.tag1
         // }
     }
 

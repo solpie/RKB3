@@ -49,12 +49,12 @@ export class VsTitle extends PIXI.Container {
             this.rText.text = rn
             if (this.lText.width > this.rText.width) {
                 while (this.lText.width > this.rText.width) {
-                    this.rText.text = ' '+  this.rText.text+" "
+                    this.rText.text = ' ' + this.rText.text + " "
                 }
             }
             if (this.lText.width < this.rText.width) {
                 while (this.lText.width < this.rText.width) {
-                    this.lText.text = ' '+ this.lText.text+" "
+                    this.lText.text = ' ' + this.lText.text + " "
                 }
             }
 
@@ -141,7 +141,11 @@ export class VsTitle extends PIXI.Container {
     // }
 
     hide() {
-        if (this.parent)
-            this.parent.removeChild(this)
+        if (this.parent) {
+            TweenEx.to(this, 300, { alpha: 0 })
+                .call(_ => {
+                    this.parent.removeChild(this)
+                })
+        }
     }
 }

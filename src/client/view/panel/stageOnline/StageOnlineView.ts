@@ -466,12 +466,17 @@ class StageOnlineView extends VueBase {
             if (this.vsTitleMap) {
                 // this.lLiveName = '丁绍祺'
                 // this.rLiveName = '万昌东'
-                console.log('map ', this.lLiveName,this.rLiveName)
+                console.log('map ', this.lLiveName, this.rLiveName)
                 let ln = this.vsTitleMap[this.lLiveName]
                 let rn = this.vsTitleMap[this.rLiveName]
                 if (ln && rn) {
                     this.vsTitle = ln + ' ' + rn
                 }
+                else if (ln) {
+                    this.VsTitle = ln
+                }
+                else if (rn)
+                    this.VsTitle = rn
             }
             else {
                 getVsTitleData(res => {

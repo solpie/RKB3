@@ -4617,6 +4617,11 @@
 	                    if (ln && rn) {
 	                        this.vsTitle = ln + ' ' + rn;
 	                    }
+	                    else if (ln) {
+	                        this.VsTitle = ln;
+	                    }
+	                    else if (rn)
+	                        this.VsTitle = rn;
 	                }
 	                else {
 	                    HupuAPI_1.getVsTitleData(function (res) {
@@ -8010,13 +8015,14 @@
 	            console.log('top5 data', res, d);
 	            _this.infoArr = d;
 	            var tabArr = [];
+	            _this.cacheTime = new Date().getTime();
 	            for (var i = 0; i < 5; i++) {
 	                var t = new Tab2();
 	                _this.addChild(t);
 	                _this.tabArr.push(t);
 	                t.x = 203;
 	                t.y = 204 + i * 134;
-	                imgArr.push("/img/player/top5/" + _this.infoArr[i].img + ".png");
+	                imgArr.push(("/img/player/top5/" + _this.infoArr[i].img + ".png?t=") + _this.cacheTime);
 	                t.visible = false;
 	                t.setInfo(_this.infoArr[i]);
 	                tabArr.push(t);
@@ -8053,7 +8059,7 @@
 	    Top5.prototype.setTab = function (idx) {
 	        idx = Number(idx);
 	        var data = this.infoArr[idx - 1];
-	        this.curPlayer.texture = ImgLoader_1.imgLoader.getTex("/img/player/top5/" + data.img + ".png");
+	        this.curPlayer.texture = ImgLoader_1.imgLoader.getTex(("/img/player/top5/" + data.img + ".png?t=") + this.cacheTime);
 	        this.setDetail(data);
 	    };
 	    Top5.prototype.setDetail = function (data) {
@@ -8851,8 +8857,13 @@
 	        }
 	    };
 	    VsTitle.prototype.hide = function () {
-	        if (this.parent)
-	            this.parent.removeChild(this);
+	        var _this = this;
+	        if (this.parent) {
+	            TweenEx_1.TweenEx.to(this, 300, { alpha: 0 })
+	                .call(function (_) {
+	                _this.parent.removeChild(_this);
+	            });
+	        }
 	    };
 	    VsTitle.class = 'VsTitle';
 	    return VsTitle;
