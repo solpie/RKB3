@@ -603,7 +603,6 @@
 	            { title: "比分面板（S4）", url: getScorePanelUrl(gameId, false) },
 	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
-	            { title: "小组面板", url: "/panel/#/ol/ob/" + gameId + "?panel=group" },
 	        ];
 	    };
 	    HomeView.prototype.genQRCode = function () {

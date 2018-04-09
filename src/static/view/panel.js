@@ -235,7 +235,6 @@
 	            { title: "比分面板（S4）", url: getScorePanelUrl(gameId, false) },
 	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
-	            { title: "小组面板", url: "/panel/#/ol/ob/" + gameId + "?panel=group" },
 	        ];
 	    };
 	    HomeView.prototype.genQRCode = function () {
@@ -7969,7 +7968,7 @@
 	        var pn = new PIXI.Text('', rs);
 	        this.playerName = pn;
 	        this.addChild(pn);
-	        pn.x = 198;
+	        pn.x = 168;
 	        pn.y = 20;
 	        var gameTitle = new PIXI.Text('小组赛', {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
@@ -8250,6 +8249,10 @@
 	        var _this = this;
 	        this.winSectionArr = [7, 8];
 	        this.loseSectionArr = [5, 6, 9, 10, 12];
+	        this.to8 = [1, 2, 3, 4];
+	        this.to6 = [5, 6];
+	        this.to4 = [7, 8, 9, 10];
+	        this.to2 = [11, 12];
 	        this.p = stage;
 	        var baseCtn = new PIXI.Container();
 	        this.baseCtn = baseCtn;
@@ -8416,22 +8419,25 @@
 	    };
 	    Score2018.prototype.setGameIdx = function (gameIdx, type) {
 	        console.log('gameIdx', gameIdx, 'type', type);
+	        this.gameIdxTxt.text = '' + JsFunc_1.paddy(gameIdx, 2);
 	        if (type == 2) {
-	            if (this.winSectionArr.indexOf(gameIdx) > -1)
-	                this.gameTitle.text = '胜者组';
-	            else if (this.loseSectionArr.indexOf(gameIdx) > -1)
-	                this.gameTitle.text = '败者组';
-	            else if (gameIdx == 11)
-	                this.gameTitle.text = '胜者组';
+	            if (this.to8.indexOf(gameIdx) > -1)
+	                this.gameTitle.text = '八强分组赛';
+	            else if (this.to6.indexOf(gameIdx) > -1)
+	                this.gameTitle.text = '六强争夺赛';
+	            else if (this.to4.indexOf(gameIdx) > -1)
+	                this.gameTitle.text = '四强争夺赛';
+	            else if (this.to2.indexOf(gameIdx) > -1)
+	                this.gameTitle.text = '四强赛';
 	            else if (gameIdx == 13)
-	                this.gameTitle.text = '败者组';
+	                this.gameTitle.text = '半决赛';
 	            else if (gameIdx == 14)
 	                this.gameTitle.text = '决赛';
 	            else
 	                this.gameTitle.text = '大师赛';
 	        }
 	        else if (type == 4) {
-	            this.gameTitle.text = '小组赛';
+	            this.gameTitle.text = '席位战';
 	        }
 	        else if (type == 1) {
 	            this.gameTitle.text = '车轮赛';
@@ -8439,7 +8445,6 @@
 	        else if (type == 3) {
 	            this.gameTitle.text = '决赛';
 	        }
-	        this.gameIdxTxt.text = '' + JsFunc_1.paddy(gameIdx, 2);
 	        this.gameIdxTxt.x = 960 - 0.5 * this.gameIdxTxt.width;
 	        this.gameTitle.x = 960 - 0.5 * this.gameTitle.width;
 	    };

@@ -22,7 +22,7 @@ class Tab2 extends PIXI.Container {
         let pn = new PIXI.Text('', rs)
         this.playerName = pn
         this.addChild(pn)
-        pn.x = 198
+        pn.x = 168
         pn.y = 20
 
         let gameTitle = new PIXI.Text('小组赛',

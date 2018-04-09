@@ -236,7 +236,7 @@ export class Score2018 {
         this.gameTitle = gameTitle
         ctn.addChild(gameTitle)
         gameTitle.y = 12
-        
+
         gs.fontSize = '30px'
         gs.fontFamily = FontName.Impact
         let gameIdxTxt = new PIXI.Text('', gs)
@@ -254,25 +254,40 @@ export class Score2018 {
     }
     winSectionArr = [7, 8]
     loseSectionArr = [5, 6, 9, 10, 12]
+    // last8 = [1,2,3,4]
+    to8 = [1, 2, 3, 4]
+    to6 = [5, 6]
+    to4 = [7, 8, 9, 10]
+    to2 = [11, 12]
     //1 车轮 2 大师 3 决赛    4 小组赛
     setGameIdx(gameIdx, type) {
-        console.log('gameIdx',gameIdx,'type',type)
+        console.log('gameIdx', gameIdx, 'type', type)
+        this.gameIdxTxt.text = '' + paddy(gameIdx, 2)
+        // this.gameIdxTxt.text = '四强'
         if (type == 2) {
-            if (this.winSectionArr.indexOf(gameIdx) > -1)
-                this.gameTitle.text = '胜者组'
-            else if (this.loseSectionArr.indexOf(gameIdx) > -1)
-                this.gameTitle.text = '败者组'
-            else if (gameIdx == 11)
-                this.gameTitle.text = '胜者组'
+            // if (this.winSectionArr.indexOf(gameIdx) > -1)
+            //     this.gameTitle.text = '胜者组'
+            // else if (this.loseSectionArr.indexOf(gameIdx) > -1)
+            //     this.gameTitle.text = '败者组'
+            if (this.to8.indexOf(gameIdx) > -1)
+                this.gameTitle.text = '八强分组赛'
+            else if (this.to6.indexOf(gameIdx) > -1)
+                this.gameTitle.text = '六强争夺赛'
+            else if (this.to4.indexOf(gameIdx) > -1)
+                this.gameTitle.text = '四强争夺赛'
+            else if (this.to2.indexOf(gameIdx) > -1)
+                this.gameTitle.text = '四强赛'
+            // else if (gameIdx == 11)
+            //     this.gameTitle.text = '半决赛'
             else if (gameIdx == 13)
-                this.gameTitle.text = '败者组'
+                this.gameTitle.text = '半决赛'
             else if (gameIdx == 14)
                 this.gameTitle.text = '决赛'
             else
                 this.gameTitle.text = '大师赛'
         }
         else if (type == 4) {
-            this.gameTitle.text = '小组赛'
+            this.gameTitle.text = '席位战'
         }
         else if (type == 1) {
             this.gameTitle.text = '车轮赛'
@@ -281,7 +296,6 @@ export class Score2018 {
             this.gameTitle.text = '决赛'
         }
 
-        this.gameIdxTxt.text = '' + paddy(gameIdx, 2)
         this.gameIdxTxt.x = 960 - 0.5 * this.gameIdxTxt.width
         this.gameTitle.x = 960 - 0.5 * this.gameTitle.width
     }
@@ -299,10 +313,10 @@ export class Score2018 {
         this.rScoreText.text = data + ''
     }
     setLeftFoul(data) {
-        this.lFoul.text = data+''
+        this.lFoul.text = data + ''
     }
     setRightFoul(data) {
-        this.rFoul.text = data+''
+        this.rFoul.text = data + ''
     }
     setLeftPlayerInfo(lPlayer) {
         let lIconUrl = '/img/icon/rankIcon_b' + lPlayer.powerRankType + '.png'
@@ -332,7 +346,7 @@ export class Score2018 {
         fitWidth(this.rName, 258, 35)
         loadAvt(this.rAvt, rPlayer.avatar)
         this.rHeightWeight.text = rPlayer.height + 'cm | ' + rPlayer.weight + 'kg'
-      
+
         this.rRank.text = rPlayer.powerRank
     }
 
