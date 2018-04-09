@@ -1,4 +1,4 @@
-import { newBitmap, loadRes } from '../../../utils/PixiEx';
+import { newBitmap, loadRes, setScale } from '../../../utils/PixiEx';
 import { imgLoader } from '../../../utils/ImgLoader';
 import { FontName } from '../../../const';
 import { paddy } from '../../../utils/JsFunc';
@@ -43,6 +43,8 @@ class Tab2 extends PIXI.Container {
         gameIdx.y = 50
         this.gameIdx = gameIdx
         this.addChild(gameIdx)
+
+        setScale(this,0.9)
     }
 
     setInfo(data) {
@@ -54,56 +56,6 @@ class Tab2 extends PIXI.Container {
         this.gameIdx.x = 60 - this.gameIdx.width * .5
     }
 }
-// let infoArr = [
-//     {
-//         name: '徐长龙',
-//         hwa: [195, 95, 29],
-//         info: `前cubs山东大学队长
-// 实力榜第5名 
-// 山东赛区7冠王 
-// 9月&12月冠军赛季军
-//         `,
-//         tag1: '沉着冷静',
-//         hupuID: '@浩扬篮球阿清'
-//     },
-//     {
-//         name: '于潇',
-//         hwa: [203, 95, 28],
-//         info: `实力榜排名第48名 
-// 路人王烟台站冠军 
-// 两次参与冠军赛
-//         `,
-//         tag1: '高瘦远投王',
-//         hupuID: '@把球给我六六'
-//     },
-//     {
-//         name: '矫凯文',
-//         hwa: [188, 90, 25],
-//         info: `前NBL广西威壮球员 
-// NBL全明星 
-// 2014年随队拿下NBL冠军 
-// 曾单场砍下三双
-//         `,
-//         tag1: '球队大脑',
-//         hupuID: '矫凯文'
-//     },
-//     {
-//         name: '蓝震海',
-//         hwa: [186, 80, 28],
-//         info: `前NBL香港新丽宝球员
-//         `,
-//         tag1: '实力干将',
-//         hupuID: '@蓝震海'
-//     },
-//     {
-//         name: '刘晨',
-//         hwa: [190, 100, 28],
-//         info: `2017全国三对三联赛冠军
-//         `,
-//         tag1: '三对三大师',
-//         hupuID: '@刘晨'
-//     },
-// ]
 export class Top5 extends PIXI.Container {
     static class = 'Top5'
     p: any
@@ -132,8 +84,8 @@ export class Top5 extends PIXI.Container {
                 let t = new Tab2()
                 this.addChild(t)
                 this.tabArr.push(t)
-                t.x = 203
-                t.y = 204 + i * 134
+                t.x = 253
+                t.y = 204 + i * 125
                 imgArr.push(`/img/player/top5/${this.infoArr[i].img}.png?t=` + this.cacheTime)
                 t.visible = false
                 t.setInfo(this.infoArr[i])
@@ -175,7 +127,7 @@ export class Top5 extends PIXI.Container {
     setTab(idx) {
         idx = Number(idx)
         let data = this.infoArr[idx - 1]
-        this.curPlayer.texture = imgLoader.getTex(`/img/player/top5/${data.img}.png?t=`+this.cacheTime)
+        this.curPlayer.texture = imgLoader.getTex(`/img/player/top5/${data.img}.png?t=` + this.cacheTime)
         this.setDetail(data)
     }
 
@@ -184,7 +136,7 @@ export class Top5 extends PIXI.Container {
         // if (this.playerName) {
         console.log('show detail', data);
         this.playerName.text = data.name
-        this.hupuID.text = data.hupuID
+        // this.hupuID.text = data.hupuID
         this.hwa.text =
             data.hwa[0] + ' cm/ '
             + data.hwa[1] + ' kg/ '
@@ -205,12 +157,12 @@ export class Top5 extends PIXI.Container {
         let pn = new PIXI.Text('', rs)
         this.playerName = pn
         this.addChild(pn)
-        pn.x = 1150
-        pn.y = 232
+        pn.x = 1146
+        pn.y = 228
 
         let hupuID = new PIXI.Text('', rs)
         this.hupuID = hupuID
-        this.addChild(hupuID)
+        // this.addChild(hupuID)
         hupuID.x = pn.x
         hupuID.y = 232 + 76
 
@@ -218,19 +170,19 @@ export class Top5 extends PIXI.Container {
         this.hwa = hwa
         this.addChild(hwa)
         hwa.x = pn.x
-        hwa.y = 232 + 76 + 76
+        hwa.y = 304
 
         let tag1 = new PIXI.Text('', rs)
         this.tag1 = tag1
         this.addChild(tag1)
         tag1.x = pn.x
-        tag1.y = 232 + 76 + 76 + 76
+        tag1.y = 380
 
         let info = new PIXI.Text('', rs)
         this.info = info
         this.addChild(info)
         info.x = pn.x
-        info.y = 550
+        info.y = 470
 
         rs.fontSize = '48px'
         let title = new PIXI.Text('夺冠热门球员', rs)
