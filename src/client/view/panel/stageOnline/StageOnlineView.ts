@@ -473,10 +473,10 @@ class StageOnlineView extends VueBase {
                     this.vsTitle = ln + ' ' + rn
                 }
                 else if (ln) {
-                    this.VsTitle = ln
+                    this.VsTitle = ln + ' ' + '神秘补位球员'
                 }
                 else if (rn)
-                    this.VsTitle = rn
+                    this.VsTitle = rn + ' ' + '神秘补位球员'
             }
             else {
                 getVsTitleData(res => {
