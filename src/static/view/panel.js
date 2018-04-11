@@ -8034,6 +8034,10 @@
 	                });
 	                var bg = PixiEx_1.newBitmap({ url: '/img/panel/top5/bg.png' });
 	                _this.addChildAt(bg, 0);
+	                var tagBg = PixiEx_1.newBitmap({ url: '/img/panel/top5/tag.png' });
+	                _this.addChild(tagBg);
+	                _this.tag2Bg = tagBg;
+	                _this.tag2Bg.visible = false;
 	                _this.initDetail();
 	                _this.show(data);
 	            });
@@ -8070,7 +8074,18 @@
 	                + data.hwa[1] + ' kg/ '
 	                + data.hwa[2] + ' 岁';
 	        this.info.text = data.info;
-	        this.tag1.text = data.tag1;
+	        this.tag2.text = '';
+	        this.tag2Bg.visible = false;
+	        var a = data.tag1.split(' ');
+	        if (a.length == 2) {
+	            this.tag2Bg.x = this.tag2.x - 28;
+	            this.tag2Bg.y = this.tag2.y - 14;
+	            this.tag2Bg.visible = true;
+	            this.tag1.text = a[0];
+	            this.tag2.text = a[1];
+	        }
+	        else
+	            this.tag1.text = data.tag1;
 	    };
 	    Top5.prototype.initDetail = function () {
 	        var rs = {
@@ -8097,6 +8112,11 @@
 	        this.addChild(tag1);
 	        tag1.x = pn.x;
 	        tag1.y = 380;
+	        var tag2 = new PIXI.Text('', rs);
+	        this.tag2 = tag2;
+	        this.addChild(tag2);
+	        tag2.x = tag1.x + 280;
+	        tag2.y = tag1.y;
 	        var info = new PIXI.Text('', rs);
 	        this.info = info;
 	        this.addChild(info);
