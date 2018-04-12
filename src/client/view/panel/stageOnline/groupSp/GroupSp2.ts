@@ -53,7 +53,6 @@ export class Row1 extends PIXI.Container {
     }
     setData(data) {
         this.playerName.text = data.name
-        // this.playerName.text = '依力扎提·热合木'
         fitWidth(this.playerName,300,50)
 
         this.winLose.text = data.win + '/' + data.lose
