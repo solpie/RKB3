@@ -84,15 +84,17 @@ export class Top5 extends PIXI.Container {
             let tabArr = []
             this.cacheTime = new Date().getTime()
             for (let i = 0; i < 5; i++) {
-                let t = new Tab2()
-                this.addChild(t)
-                this.tabArr.push(t)
-                t.x = 253
-                t.y = 204 + i * 125
-                imgArr.push(`/img/player/top5/${this.infoArr[i].img}.png?t=` + this.cacheTime)
-                t.visible = false
-                t.setInfo(this.infoArr[i])
-                tabArr.push(t)
+                if (this.infoArr[i]) {
+                    let t = new Tab2()
+                    this.addChild(t)
+                    this.tabArr.push(t)
+                    t.x = 253
+                    t.y = 204 + i * 125
+                    imgArr.push(`/img/player/top5/${this.infoArr[i].img}.png?t=` + this.cacheTime)
+                    t.visible = false
+                    t.setInfo(this.infoArr[i])
+                    tabArr.push(t)
+                }
             }
             imgArr.push('/img/panel/top5/bg.png')
 

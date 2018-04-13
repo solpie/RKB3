@@ -14,6 +14,7 @@ import { Score2017 } from './Score2017';
 import { ScoreM3 } from './ScoreM2';
 import { ScorePanel2 } from './ScorePanel2';
 import { Score2018 } from './Score2018';
+import { PlayerNow } from '../playerNow/PlayerNow';
 declare let io;
 declare let $;
 function logEvent(...a) {
@@ -91,8 +92,23 @@ export class ScoreView extends BasePanelView {
             //     this.eventPanel.showWin(player)
             // })
             // this.eventPanel.showWin2(player)
-            this.eventPanel.showTopInfo()
+            // this.eventPanel.showTopInfo()
             // this.eventPanel.showLogoFx()
+            let p = new PlayerNow()
+            p.show({
+                avatar: '/img/player/now/p1.png',
+                title: '蓝方球员',
+                y: 285, x: 20
+            })
+            this.stage.addChild(p)
+
+            let p2 = new PlayerNow()
+            p2.show({
+                avatar: '/img/player/now/p1.png',
+                title: '红方球员',
+                x: 1920 - 270, y: 285
+            })
+            this.stage.addChild(p2)
 
         }
         // if (isManmual) {
@@ -182,9 +198,13 @@ export class ScoreView extends BasePanelView {
                 this.scorePanel.hide()
             })
             .on(`${CommandId.sc_toggleScorePanel}`, (data) => {
-                data.visible ?
+                if (data.visible) {
                     this.scorePanel.show()
-                    : this.scorePanel.hide()
+                }
+                else {
+                    this.scorePanel.hide()
+                    this.eventPanel.hideVictory()
+                }
             })
             .on(`${CommandId.sc_toggleChampionPanel}`, (data) => {
                 data.visible ?
@@ -193,7 +213,7 @@ export class ScoreView extends BasePanelView {
             })
             .on(`${CommandId.sc_showNotice}`, (data) => {
                 if (data.isPreview) {
-                    if (this.isOP||this.isRmOP) {
+                    if (this.isOP || this.isRmOP) {
                         this.eventPanel.showNotice(data.title, data.content, data.isLeft, data.isBold)
                         data.visible ?
                             this.eventPanel.noticeSprite.show()
@@ -228,7 +248,7 @@ export class ScoreView extends BasePanelView {
                 this.eventPanel.showTop5(data)
             })
             .on(`${CommandId.sc_showVsTitle}`, (data) => {
-                console.log('sc_showVsTitle',data);
+                console.log('sc_showVsTitle', data);
                 this.eventPanel.showVsTitle(data)
             })
     }

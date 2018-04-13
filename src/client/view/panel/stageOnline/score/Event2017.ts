@@ -328,6 +328,11 @@ export class Event2017 extends PIXI.Container {
         d.winner = data
         this.winner.show(d)
     }
+    hideVictory() {
+        if (this.winner) {
+            this.winner.hide()
+        }
+    }
     top5: Top5
     showTop5(data) {
         if (!this.top5) {
