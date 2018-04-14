@@ -327,6 +327,7 @@ export class Event2017 extends PIXI.Container {
         d.rec = { win: data.winAmount, lose: data.loseAmount }
         d.winner = data
         this.winner.show(d)
+        
     }
     hideVictory() {
         if (this.winner) {

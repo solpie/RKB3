@@ -363,7 +363,9 @@ export class ScoreView extends BasePanelView {
                     logEvent('commitGame', data)
                     let player = data.player
                     // if (this.isM2)
-                    this.eventPanel.showVictory(player)
+                    if (this.scorePanel.baseCtn.visible)
+                        this.eventPanel.showVictory(player)
+                        
                     // else
                     //     this.eventPanel.showWin(player)
                     // this.scorePanel.toggleTimer(TimerState.PAUSE);

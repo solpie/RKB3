@@ -6479,7 +6479,8 @@
 	                    console.log('commitGame', data);
 	                    logEvent('commitGame', data);
 	                    var player = data.player;
-	                    _this.eventPanel.showVictory(player);
+	                    if (_this.scorePanel.baseCtn.visible)
+	                        _this.eventPanel.showVictory(player);
 	                };
 	                if (eventMap[event]) {
 	                    isRunning = true;
