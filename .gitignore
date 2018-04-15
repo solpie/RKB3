@@ -36,5 +36,5 @@ jspm_packages
 .node_repl_history
 *flags/
 p*.png
-**xlsx
+**xlsx**
 utils/top5.xlsx
