@@ -61,8 +61,8 @@
 	        components: { default: KOA_1.koa }
 	    },
 	    {
-	        path: '/5v5/:op',
-	        components: { default: Stage5v5_1.stage5v5 }
+	        path: '/studio/:op',
+	        components: { default: Stage5v5_1.studio }
 	    },
 	    {
 	        path: '/3/:op',
@@ -3946,13 +3946,11 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var HupuAPI_1 = __webpack_require__(22);
-	var WebJsFunc_1 = __webpack_require__(23);
 	var Command_1 = __webpack_require__(61);
-	var Score5v5_1 = __webpack_require__(64);
 	var BasePanelView_1 = __webpack_require__(44);
 	var const_1 = __webpack_require__(43);
 	var VueBase_1 = __webpack_require__(18);
+	var StudioPanel_1 = __webpack_require__(112);
 	var Stage5v5 = (function (_super) {
 	    __extends(Stage5v5, _super);
 	    function Stage5v5() {
@@ -4059,325 +4057,30 @@
 	        VueBase_1.VueBase.initProps(this);
 	    }
 	    Stage5v5.prototype.initCanvas = function () {
-	        this.panel = new Score5v5_1.Score5v5(BasePanelView_1.BasePanelView.initPixi());
+	        this.stuioPanel = new StudioPanel_1.StudioPanel(BasePanelView_1.BasePanelView.initPixi());
 	    };
 	    Stage5v5.prototype.created = function () {
-	        var _this = this;
 	        this.leftScore = this.rightScore = 0;
 	        this.leftPlayerArr = [0, 0, 0, 0, 0];
 	        this.rightPlayerArr = [0, 0, 0, 0, 0];
 	        this.initCanvas();
-	        this.isOp = this.$route.params['op'] == 'op';
-	        if (this.isOp) {
-	            WebJsFunc_1.dynamicLoading.css('/css/bulma.min.css');
-	        }
-	        this.isMobile = this.$route.query['m'] == '1';
-	        if (this.isMobile) {
-	            this.panel.x = -600;
-	        }
-	        this.initIO();
-	        var m = function (reqCmd, data) {
-	            var on = function (resCmd, callback) {
-	            };
-	            return {
-	                on: function (resCmd, callback) {
-	                    return on;
-	                }
-	            };
-	        };
-	        HupuAPI_1.getPlayerDoc(function (playerDocArr) {
-	            var pm = {};
-	            for (var _i = 0, playerDocArr_1 = playerDocArr; _i < playerDocArr_1.length; _i++) {
-	                var player = playerDocArr_1[_i];
-	                pm[player.id] = player;
-	            }
-	            _this.playerMap = pm;
-	        });
 	    };
 	    Stage5v5.prototype.initIO = function () {
-	        var _this = this;
 	        io.connect("/" + const_1.PanelId.rkbPanel)
 	            .on("" + Command_1.CommandId.sc_showHeaderText, function (data) {
-	            console.log("CommandId.sc_showHeaderText", data);
-	            _this.panel.showText(data.text, data.sec);
-	        })
-	            .on("" + Command_1.CommandId.sc_5v5score, function (data) {
-	            console.log("CommandId.sc_5v5score", data);
-	            var isLeft = data.isLeft;
-	            isLeft ? _this.panel.setLeftScore(data.score)
-	                : _this.panel.setRightScore(data.score);
-	        })
-	            .on("" + Command_1.CommandId.sc_5v5timeup, function (data) {
-	            console.log("CommandId.sc_5v5timeup", data);
-	            var isLeft = data.isLeft;
-	            var timeup = Number(data.timeup);
-	            isLeft ? _this.panel.setLeftTimeup(timeup)
-	                : _this.panel.setRightTimeup(timeup);
-	        })
-	            .on("" + Command_1.CommandId.sc_5v5queter, function (data) {
-	            console.log("CommandId.sc_5v5queter", data);
-	            _this.panel.setQueter(data.queter);
-	        })
-	            .on("" + Command_1.CommandId.sc_5v5toggleTimer, function (data) {
-	            if (data.isPause == undefined)
-	                _this.panel.timeText.toggleTimer();
-	            else if (data.isPause)
-	                _this.panel.timeText.toggleTimer(const_1.TimerState.PAUSE);
-	            else
-	                _this.panel.timeText.toggleTimer(const_1.TimerState.RUNNING);
-	        })
-	            .on("" + Command_1.CommandId.sc_5v5resetTimer, function (data) {
-	            _this.panel.timeText.resetTimer();
-	            _this.panel.timeText.setTimeBySec(12 * 60);
-	        })
-	            .on("" + Command_1.CommandId.sc_5v5setPlayer, function (data) {
-	            console.log("CommandId.sc_5v5setPlayer", data);
-	            _this.panel.setPlayer(data.isLeft, data.idx, data.playerDoc, data.isFx);
-	        })
-	            .on("" + Command_1.CommandId.sc_5v5hidePlayer, function (data) {
-	            _this.panel.hidePlayer(data.isLeft);
-	        })
-	            .on("" + Command_1.CommandId.sc_5v5setTimeString, function (data) {
-	            _this.panel.timeText.setTimeBySec(data.timeInSec);
 	        });
 	    };
 	    return Stage5v5;
 	}(VueBase_1.VueBase));
-	exports.stage5v5 = new Stage5v5();
+	exports.studio = new Stage5v5();
 
 
 /***/ },
-/* 64 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var HupuAPI_1 = __webpack_require__(22);
-	var JsFunc_1 = __webpack_require__(17);
-	var TextTimer_1 = __webpack_require__(52);
-	var SpriteGroup_1 = __webpack_require__(55);
-	var const_1 = __webpack_require__(43);
-	var TweenEx_1 = __webpack_require__(50);
-	var PixiEx_1 = __webpack_require__(46);
-	var Score5v5 = (function (_super) {
-	    __extends(Score5v5, _super);
-	    function Score5v5(parent) {
-	        _super.call(this);
-	        parent.addChild(this);
-	        console.log('Score5v5');
-	        var bx = 330, by = 900;
-	        var scorePanel = new PIXI.Container();
-	        scorePanel.x = bx;
-	        scorePanel.y = by;
-	        this.addChild(scorePanel);
-	        this.header = PixiEx_1.newBitmap({ url: '/img/panel/5v5/bgHeader.png' });
-	        this.header['y0'] = 0;
-	        this.header['y1'] = -40;
-	        scorePanel.addChild(this.header);
-	        var msk = new PIXI.Graphics()
-	            .beginFill(0xff0000)
-	            .drawRect(0, 0, 1260, 45);
-	        scorePanel.addChild(msk);
-	        this.header.mask = msk;
-	        var htStyle = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '25px', fill: '#fff'
-	        };
-	        var ht = new PIXI.Text('', htStyle);
-	        ht.x = 10;
-	        ht.y = 48;
-	        this.header.addChild(ht);
-	        this.headerText = ht;
-	        scorePanel.addChild(PixiEx_1.newBitmap({ url: '/img/panel/5v5/scoreBg.png' }));
-	        var lt = new SpriteGroup_1.SpriteGroup({ invert: 77, count: 5, img: '/img/panel/5v5/foul.jpg' });
-	        lt.x = 5;
-	        lt.y = 103;
-	        scorePanel.addChild(lt);
-	        this.leftTimeup = lt;
-	        var rt = new SpriteGroup_1.SpriteGroup({ invert: 77, count: 5, img: '/img/panel/5v5/foul.jpg' });
-	        rt.x = 481;
-	        rt.y = lt.y;
-	        scorePanel.addChild(rt);
-	        this.rightTimeup = rt;
-	        var lp = new SpriteGroup_1.SpriteGroup({ dir: SpriteGroup_1.Direction.s, invert: 63, img: '/img/panel/5v5/playerBg.png', count: 5 });
-	        lp.y = 320;
-	        this.addChild(lp);
-	        this.leftPlayer = lp;
-	        var rp = new SpriteGroup_1.SpriteGroup({ dir: SpriteGroup_1.Direction.s, invert: 63, img: '/img/panel/5v5/playerBg.png', count: 5, flip: -1 });
-	        rp.x = const_1.ViewConst.STAGE_WIDTH;
-	        rp.y = lp.y;
-	        this.rightPlayer = rp;
-	        this.addChild(rp);
-	        var whiteLogo = PixiEx_1.newBitmap({ url: '/img/ft/white.jpg' });
-	        whiteLogo.y = 45;
-	        whiteLogo.x = 5;
-	        scorePanel.addChild(whiteLogo);
-	        var blackLogo = PixiEx_1.newBitmap({ url: '/img/ft/black.jpg' });
-	        blackLogo.y = whiteLogo.y;
-	        blackLogo.x = 481;
-	        scorePanel.addChild(blackLogo);
-	        var ts = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '35px', fill: '#fff'
-	        };
-	        var whiteText = new PIXI.Text('路人王全明星白', ts);
-	        whiteText.x = 105;
-	        whiteText.y = 49;
-	        scorePanel.addChild(whiteText);
-	        var blackText = new PIXI.Text('路人王全明星黑', ts);
-	        blackText.x = 585;
-	        blackText.y = whiteText.y;
-	        scorePanel.addChild(blackText);
-	        var ss = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '43px', fill: '#fff',
-	            fontWeight: 'bold'
-	        };
-	        var ls = new PIXI.Text('', ss);
-	        ls.y = 46;
-	        scorePanel.addChild(ls);
-	        this.leftScore = ls;
-	        this.setLeftScore(0);
-	        var rs = new PIXI.Text('', ss);
-	        rs.y = ls.y;
-	        this.rightScore = rs;
-	        scorePanel.addChild(rs);
-	        this.setRightScore(0);
-	        var qs = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '25px', fill: '#bcbcbc'
-	        };
-	        var qt = new PIXI.Text('', qs);
-	        qt.x = 985;
-	        qt.y = 56;
-	        this.queterText = qt;
-	        scorePanel.addChild(qt);
-	        this.setQueter(1);
-	        var tts = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '25px', fill: '#fff'
-	        };
-	        var tt = new TextTimer_1.TextTimer('', tts);
-	        tt.isMin = true;
-	        tt.y = 56;
-	        tt.x = 1150;
-	        tt.setTimeBySec(12 * 60);
-	        this.timeText = tt;
-	        scorePanel.addChild(tt);
-	        this.hidePlayer(true);
-	        this.hidePlayer(false);
-	    }
-	    Score5v5.prototype.setLeftScore = function (score) {
-	        this.leftScore.text = String(score);
-	        this.leftScore.x = 435 - this.leftScore.width * .5;
-	    };
-	    Score5v5.prototype.setRightScore = function (score) {
-	        this.rightScore.text = String(score);
-	        this.rightScore.x = 910 - this.rightScore.width * .5;
-	    };
-	    Score5v5.prototype.setLeftTimeup = function (score) {
-	        this.leftTimeup.setNum(score);
-	    };
-	    Score5v5.prototype.setRightTimeup = function (score) {
-	        this.rightTimeup.setNum(score);
-	    };
-	    Score5v5.prototype.test = function () {
-	        var _this = this;
-	        TweenEx_1.TweenEx.delayedCall(500, function () {
-	            _this.showText('fsfsasasfasdadf', 5);
-	        });
-	    };
-	    Score5v5.prototype.setQueter = function (queter) {
-	        var qmap = { '1': '1ST', '2': '2ND', '3': '3RD', '4': '4TH' };
-	        this.queterText.text = qmap[queter] + ' QTR';
-	    };
-	    Score5v5.prototype.showText = function (text, sec, isRoll) {
-	        var _this = this;
-	        this.headerText.text = text;
-	        this.showHeader();
-	        TweenEx_1.TweenEx.delayedCall(sec * 1000, function () {
-	            _this.hideHeader();
-	        });
-	    };
-	    Score5v5.prototype.showHeader = function (callback) {
-	        TweenEx_1.TweenEx.to(this.header, 80, { y: this.header['y1'] }, callback);
-	    };
-	    Score5v5.prototype.hideHeader = function () {
-	        TweenEx_1.TweenEx.to(this.header, 80, { y: this.header['y0'] });
-	    };
-	    Score5v5.prototype.setPlayer = function (isLeft, idx, playerDoc, isFx) {
-	        var spArr;
-	        var sp;
-	        var flip = 1;
-	        isLeft ? spArr = this.leftPlayer.spArr
-	            : spArr = this.rightPlayer.spArr;
-	        sp = spArr[idx];
-	        var from;
-	        var to;
-	        if (isLeft) {
-	            from = -301;
-	        }
-	        else {
-	            from = 301;
-	            flip = -1;
-	        }
-	        sp.removeChildren();
-	        var avt = PixiEx_1.newBitmap({ url: HupuAPI_1._avatar(playerDoc.avatar) });
-	        avt.x = 58;
-	        avt.y = 2;
-	        avt.scale.x = avt.scale.y = 56 / 120;
-	        sp.addChild(avt);
-	        var nt = new PIXI.Text(JsFunc_1.cnWrap(playerDoc.name, 30, 12));
-	        nt.style.fill = '#fff';
-	        nt.x = 205 - nt.width * .5 * flip;
-	        nt.y = 12;
-	        nt.scale.x = flip;
-	        sp.addChild(nt);
-	        var nbt = new PIXI.Text(playerDoc.number);
-	        nbt.style.fill = '#fff';
-	        nbt.style['fontSize'] = '36px';
-	        nbt.style['fontWeight'] = 'bold';
-	        nbt.x = 30 - nbt.width * .5 * flip;
-	        nbt.y = 10;
-	        nbt.scale.x = flip;
-	        sp.addChild(nbt);
-	        if (isFx)
-	            for (var i = 0; i < spArr.length; i++) {
-	                spArr[i].x = from;
-	                new TweenEx_1.TweenEx(spArr[i])
-	                    .delay(i * 30)
-	                    .to({ x: 0 }, 100)
-	                    .start();
-	            }
-	    };
-	    Score5v5.prototype.hidePlayer = function (isLeft) {
-	        var spArr;
-	        var to;
-	        isLeft ? spArr = this.leftPlayer.spArr
-	            : spArr = this.rightPlayer.spArr;
-	        isLeft ? to = -301
-	            : to = 301;
-	        for (var i = 0; i < spArr.length; i++) {
-	            new TweenEx_1.TweenEx(spArr[i])
-	                .delay(i * 30)
-	                .to({ x: to }, 100)
-	                .start();
-	        }
-	    };
-	    return Score5v5;
-	}(PIXI.Container));
-	exports.Score5v5 = Score5v5;
-
-
-/***/ },
+/* 64 */,
 /* 65 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <div v-if='isMobile'>\r\n        <input class=\"input\" type=\"text\" v-model='timeString' @keyup.enter='onTimeString(timeString)' style=\"width: 450px;height:220px;\" />\r\n        <button class=\"button is-large\" @click=\"onTimeString(timeString)\" style=\"width: 450px;height:220px;font-size: 160px\">设置（秒）</button>\r\n        <br>\r\n        <button class=\"button is-large\" @click=\"onToggleTimer(1)\" style=\"width: 450px;height:220px;font-size: 160px\">暂停</button>\r\n        <button class=\"button is-large\" @click=\"onToggleTimer(0)\" style=\"width: 450px;height:220px;font-size: 160px\">开始</button>\r\n        <br>\r\n        <button class=\"button is-large\" @click=\"onResetTimer()\" style=\"width: 450px;height:220px;font-size: 160px\">Reset</button>\r\n    </div>\r\n    <div v-if='!isMobile'>\r\n        <label class=\"label\"> 滚动字幕： 秒      内容</label>\r\n        <label class=\"checkbox\">\r\n        <input type=\"checkbox\">\r\n        滚动\r\n     </label>\r\n        <input class=\"input\" type=\"text\" v-model='headerTextSec' style=\"width:50px\" />\r\n        <input class=\"input\" type=\"text\" v-model='headerText' @keyup.enter='onShowHeaderText(headerText,headerTextSec)' style=\"width:650px\" />\r\n        <label class=\"label\"> 小节：</label>\r\n        <input class=\"input\" type=\"text\" v-model='queter' @keyup.enter='onQueter(queter)' style=\"width:50px\" />\r\n        <label class=\"label\"> 比分：</label>\r\n        <div class=\"columns\">\r\n            <div class=\"column\">\r\n                <button class=\"button\" @click=\"onScore(true,leftScore-1)\"> -1</button>\r\n                <button class=\"button\" @click=\"onScore(true,leftScore-2)\"> -2</button>\r\n                <button class=\"button\" @click=\"onScore(true,leftScore-3)\"> -3</button>\r\n                <input class=\"input\" type=\"text\" v-model='leftScore' @keyup.enter='onScore(true,leftScore)' style=\"width:50px\" />\r\n                <button class=\"button\" @click=\"onScore(true,leftScore+1)\"> +1</button>\r\n                <button class=\"button\" @click=\"onScore(true,leftScore+2)\"> +2</button>\r\n                <button class=\"button\" @click=\"onScore(true,leftScore+3)\"> +3</button>\r\n            </div>\r\n            <div class=\"column\">\r\n                <button class=\"button\" @click=\"onScore(false,rightScore-1)\"> -1</button>\r\n                <button class=\"button\" @click=\"onScore(false,rightScore-2)\"> -2</button>\r\n                <button class=\"button\" @click=\"onScore(false,rightScore-3)\"> -3</button>\r\n                <input class=\"input\" type=\"text\" v-model='rightScore' @keyup.enter='onScore(false,rightScore)' style=\"width:50px\" />\r\n                <button class=\"button\" @click=\"onScore(false,rightScore+1)\"> +1</button>\r\n                <button class=\"button\" @click=\"onScore(false,rightScore+2)\"> +2</button>\r\n                <button class=\"button\" @click=\"onScore(false,rightScore+3)\"> +3</button>\r\n            </div>\r\n        </div>\r\n        <label class=\"label\">暂停：</label>\r\n        <div class=\"columns\">\r\n            <div class=\"column\">\r\n                <input class=\"input\" type=\"text\" v-model='leftTimeup' @keyup.enter='onTimeup(true,leftTimeup)' style=\"width:50px\" />\r\n            </div>\r\n            <div class=\"column\">\r\n                <input class=\"input\" type=\"text\" v-model='rightTimeup' @keyup.enter='onTimeup(false,rightTimeup)' style=\"width:50px\" />\r\n            </div>\r\n        </div>\r\n        <label class=\"label\">球员</label>\r\n        <div class=\"columns\">\r\n            <div class=\"column\">\r\n                <input v-for=\"_,index in leftPlayerArr\" class=\"input\" type=\"text\" v-model='leftPlayerArr[index]' @keyup.enter='onPlayer(true,leftPlayerArr[index],index)' style=\"width:40px\" />\r\n                <button class=\"button\" @click=\"onPlayer(true,leftPlayerArr,-1)\">set</button>\r\n                <button class=\"button\" @click=\"onHidePlayer(true)\">hide</button>\r\n            </div>\r\n            <div class=\"column\">\r\n                <input v-for=\"_,index in rightPlayerArr\" class=\"input\" type=\"text\" v-model='rightPlayerArr[index]' @keyup.enter='onPlayer(false,rightPlayerArr[index],index)' style=\"width:40px\" />\r\n                <button class=\"button\" @click=\"onPlayer(false,rightPlayerArr,-1)\">set</button>\r\n                <button class=\"button\" @click=\"onHidePlayer(false)\">hide</button>\r\n            </div>\r\n        </div>\r\n        <input class=\"input\" type=\"text\" v-model='timeString' @keyup.enter='onTimeString(timeString)' style=\"width:80px\" />\r\n        <button class=\"button is-large\" @click=\"onToggleTimer()\">Toggle</button>\r\n        <button class=\"button is-large\" @click=\"onResetTimer()\">Reset</button>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <!-- <div v-if='isMobile'>\r\n        <input class=\"input\" type=\"text\" v-model='timeString' @keyup.enter='onTimeString(timeString)' style=\"width: 450px;height:220px;\" />\r\n        <button class=\"button is-large\" @click=\"onTimeString(timeString)\" style=\"width: 450px;height:220px;font-size: 160px\">设置（秒）</button>\r\n        <br>\r\n        <button class=\"button is-large\" @click=\"onToggleTimer(1)\" style=\"width: 450px;height:220px;font-size: 160px\">暂停</button>\r\n        <button class=\"button is-large\" @click=\"onToggleTimer(0)\" style=\"width: 450px;height:220px;font-size: 160px\">开始</button>\r\n        <br>\r\n        <button class=\"button is-large\" @click=\"onResetTimer()\" style=\"width: 450px;height:220px;font-size: 160px\">Reset</button>\r\n    </div>\r\n    <div v-if='!isMobile'>\r\n        <label class=\"label\"> 滚动字幕： 秒      内容</label>\r\n        <label class=\"checkbox\">\r\n        <input type=\"checkbox\">\r\n        滚动\r\n     </label>\r\n        <input class=\"input\" type=\"text\" v-model='headerTextSec' style=\"width:50px\" />\r\n        <input class=\"input\" type=\"text\" v-model='headerText' @keyup.enter='onShowHeaderText(headerText,headerTextSec)' style=\"width:650px\" />\r\n        <label class=\"label\"> 小节：</label>\r\n        <input class=\"input\" type=\"text\" v-model='queter' @keyup.enter='onQueter(queter)' style=\"width:50px\" />\r\n        <label class=\"label\"> 比分：</label>\r\n        <div class=\"columns\">\r\n            <div class=\"column\">\r\n                <button class=\"button\" @click=\"onScore(true,leftScore-1)\"> -1</button>\r\n                <button class=\"button\" @click=\"onScore(true,leftScore-2)\"> -2</button>\r\n                <button class=\"button\" @click=\"onScore(true,leftScore-3)\"> -3</button>\r\n                <input class=\"input\" type=\"text\" v-model='leftScore' @keyup.enter='onScore(true,leftScore)' style=\"width:50px\" />\r\n                <button class=\"button\" @click=\"onScore(true,leftScore+1)\"> +1</button>\r\n                <button class=\"button\" @click=\"onScore(true,leftScore+2)\"> +2</button>\r\n                <button class=\"button\" @click=\"onScore(true,leftScore+3)\"> +3</button>\r\n            </div>\r\n            <div class=\"column\">\r\n                <button class=\"button\" @click=\"onScore(false,rightScore-1)\"> -1</button>\r\n                <button class=\"button\" @click=\"onScore(false,rightScore-2)\"> -2</button>\r\n                <button class=\"button\" @click=\"onScore(false,rightScore-3)\"> -3</button>\r\n                <input class=\"input\" type=\"text\" v-model='rightScore' @keyup.enter='onScore(false,rightScore)' style=\"width:50px\" />\r\n                <button class=\"button\" @click=\"onScore(false,rightScore+1)\"> +1</button>\r\n                <button class=\"button\" @click=\"onScore(false,rightScore+2)\"> +2</button>\r\n                <button class=\"button\" @click=\"onScore(false,rightScore+3)\"> +3</button>\r\n            </div>\r\n        </div>\r\n        <label class=\"label\">暂停：</label>\r\n        <div class=\"columns\">\r\n            <div class=\"column\">\r\n                <input class=\"input\" type=\"text\" v-model='leftTimeup' @keyup.enter='onTimeup(true,leftTimeup)' style=\"width:50px\" />\r\n            </div>\r\n            <div class=\"column\">\r\n                <input class=\"input\" type=\"text\" v-model='rightTimeup' @keyup.enter='onTimeup(false,rightTimeup)' style=\"width:50px\" />\r\n            </div>\r\n        </div>\r\n        <label class=\"label\">球员</label>\r\n        <div class=\"columns\">\r\n            <div class=\"column\">\r\n                <input v-for=\"_,index in leftPlayerArr\" class=\"input\" type=\"text\" v-model='leftPlayerArr[index]' @keyup.enter='onPlayer(true,leftPlayerArr[index],index)' style=\"width:40px\" />\r\n                <button class=\"button\" @click=\"onPlayer(true,leftPlayerArr,-1)\">set</button>\r\n                <button class=\"button\" @click=\"onHidePlayer(true)\">hide</button>\r\n            </div>\r\n            <div class=\"column\">\r\n                <input v-for=\"_,index in rightPlayerArr\" class=\"input\" type=\"text\" v-model='rightPlayerArr[index]' @keyup.enter='onPlayer(false,rightPlayerArr[index],index)' style=\"width:40px\" />\r\n                <button class=\"button\" @click=\"onPlayer(false,rightPlayerArr,-1)\">set</button>\r\n                <button class=\"button\" @click=\"onHidePlayer(false)\">hide</button>\r\n            </div>\r\n        </div>\r\n        <input class=\"input\" type=\"text\" v-model='timeString' @keyup.enter='onTimeString(timeString)' style=\"width:80px\" />\r\n        <button class=\"button is-large\" @click=\"onToggleTimer()\">Toggle</button>\r\n        <button class=\"button is-large\" @click=\"onResetTimer()\">Reset</button>\r\n    </div> -->\r\n</div>";
 
 /***/ },
 /* 66 */
@@ -6422,6 +6125,8 @@
 	                eventMap['init'] = function () {
 	                    console.log('init', data);
 	                    logEvent('init', data);
+	                    var lPlayer = data.player.left;
+	                    var rPlayer = data.player.right;
 	                    _this.scorePanel.set35ScoreLight(data.winScore);
 	                    _this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
 	                    setPlayer(data.player.left, data.player.right);
@@ -6440,6 +6145,7 @@
 	                        _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
 	                        _this.scorePanel.resetTimer();
 	                    }
+	                    _this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title });
 	                };
 	                eventMap['updateScore'] = function () {
 	                    console.log('updateScore', data);
@@ -6471,9 +6177,12 @@
 	                    _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
 	                    _this.scorePanel.resetScore();
 	                    _this.scorePanel.resetTimer();
+	                    var lPlayer = data.player.left;
+	                    var rPlayer = data.player.right;
 	                    _this.scorePanel.set35ScoreLight(data.winScore);
 	                    _this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
 	                    setPlayer(data.player.left, data.player.right);
+	                    _this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title });
 	                };
 	                eventMap['commitGame'] = function () {
 	                    console.log('commitGame', data);
@@ -8987,6 +8696,27 @@
 	    return PlayerNow;
 	}(PIXI.Container));
 	exports.PlayerNow = PlayerNow;
+
+
+/***/ },
+/* 112 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var StudioPanel = (function (_super) {
+	    __extends(StudioPanel, _super);
+	    function StudioPanel(parent) {
+	        _super.call(this);
+	        this.p = parent;
+	    }
+	    return StudioPanel;
+	}(PIXI.Container));
+	exports.StudioPanel = StudioPanel;
 
 
 /***/ }

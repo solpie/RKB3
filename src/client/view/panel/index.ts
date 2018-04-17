@@ -9,7 +9,7 @@ require(`script!./../../libs/vue/vue-router.min.js`);
 
 import { stage3point } from './3point/stage3point';
 import { koa } from './koa/KOA';
-import { stage5v5 } from './stage5v5/Stage5v5';
+import { studio } from './stage5v5/Stage5v5';
 import { stageOnlineView } from './stageOnline/StageOnlineView';
 //////////////
 
@@ -27,8 +27,8 @@ let routes = [
         components: { default: koa }
     },
     {
-        path: '/5v5/:op',
-        components: { default: stage5v5 }
+        path: '/studio/:op',
+        components: { default: studio }
     },
     {
         path: '/3/:op',

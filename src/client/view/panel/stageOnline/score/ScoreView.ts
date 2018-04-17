@@ -297,6 +297,8 @@ export class ScoreView extends BasePanelView {
                 eventMap['init'] = () => {
                     console.log('init', data);
                     logEvent('init', data);
+                    let lPlayer = data.player.left
+                    let rPlayer = data.player.right
                     this.scorePanel.set35ScoreLight(data.winScore);
                     this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
                     setPlayer(data.player.left, data.player.right);
@@ -316,6 +318,9 @@ export class ScoreView extends BasePanelView {
                         this.scorePanel.toggleTimer(TimerState.PAUSE);
                         this.scorePanel.resetTimer();
                     }
+
+                    //vs title
+                    this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title })
                 };
 
                 eventMap['updateScore'] = () => {
@@ -350,11 +355,14 @@ export class ScoreView extends BasePanelView {
                     this.scorePanel.toggleTimer(TimerState.PAUSE);
                     this.scorePanel.resetScore();
                     this.scorePanel.resetTimer();
-
+                    
+                    let lPlayer = data.player.left
+                    let rPlayer = data.player.right
                     this.scorePanel.set35ScoreLight(data.winScore);
                     this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
                     setPlayer(data.player.left, data.player.right);
                     // window.location.reload();
+                    this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title })
 
                 };
 
@@ -365,7 +373,7 @@ export class ScoreView extends BasePanelView {
                     // if (this.isM2)
                     if (this.scorePanel.baseCtn.visible)
                         this.eventPanel.showVictory(player)
-                        
+
                     // else
                     //     this.eventPanel.showWin(player)
                     // this.scorePanel.toggleTimer(TimerState.PAUSE);

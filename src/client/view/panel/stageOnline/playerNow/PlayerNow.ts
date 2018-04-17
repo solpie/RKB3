@@ -14,8 +14,6 @@ export class PlayerNow extends PIXI.Container {
 
 
 
-
-
         this.avtSP = new PIXI.Sprite()
         this.addChild(this.avtSP)
         this.avtSP.x = 25
