@@ -487,8 +487,8 @@ class StageOnlineView extends VueBase {
                 })
             }
         },
-        onAddScore(isLeft, dtScore) {
-
+        onClkShowStage(v) {
+            this.opReq(`${CommandId.cs_showStage}`, { _: null, visible: v})
         }
     }
 }

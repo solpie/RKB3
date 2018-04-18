@@ -68,6 +68,8 @@ export const CommandId = {
     cs_showGroup: '',//
     sc_showGroup: '',//
     //vs title
+    cs_showStage: '',//
+    sc_showStage: '',//
     cs_showVsTitle: '',//
     sc_showVsTitle: '',//
     cs_hideOnlinePanel: '',//

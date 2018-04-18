@@ -251,8 +251,22 @@ export class ScoreView extends BasePanelView {
                 console.log('sc_showVsTitle', data);
                 this.eventPanel.showVsTitle(data)
             })
+            .on(`${CommandId.sc_showStage}`, (data) => {
+                console.log('sc_showStage', data);
+                this.showStage(data.visible)
+            })
     }
-
+    showStage(v) {
+        this.stage.visible = v
+        // if (v) {
+        //     this.scorePanel.show()
+        //     this.eventPanel.visible = true
+        // }
+        // else {
+        //     this.scorePanel.hide()
+        //     this.eventPanel.visible = false
+        // }
+    }
 
 
     initRemote() {
@@ -320,7 +334,8 @@ export class ScoreView extends BasePanelView {
                     }
 
                     //vs title
-                    this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title })
+                    if (lPlayer.title && rPlayer.title)
+                        this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title })
                 };
 
                 eventMap['updateScore'] = () => {
@@ -355,14 +370,15 @@ export class ScoreView extends BasePanelView {
                     this.scorePanel.toggleTimer(TimerState.PAUSE);
                     this.scorePanel.resetScore();
                     this.scorePanel.resetTimer();
-                    
+
                     let lPlayer = data.player.left
                     let rPlayer = data.player.right
                     this.scorePanel.set35ScoreLight(data.winScore);
                     this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
                     setPlayer(data.player.left, data.player.right);
                     // window.location.reload();
-                    this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title })
+                    if (lPlayer.title && rPlayer.title)
+                        this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title })
 
                 };
 

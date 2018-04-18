@@ -3840,6 +3840,8 @@
 	    sc_showBracket: '',
 	    cs_showGroup: '',
 	    sc_showGroup: '',
+	    cs_showStage: '',
+	    sc_showStage: '',
 	    cs_showVsTitle: '',
 	    sc_showVsTitle: '',
 	    cs_hideOnlinePanel: '',
@@ -3950,7 +3952,7 @@
 	var BasePanelView_1 = __webpack_require__(44);
 	var const_1 = __webpack_require__(43);
 	var VueBase_1 = __webpack_require__(18);
-	var StudioPanel_1 = __webpack_require__(112);
+	var StudioPanel_1 = __webpack_require__(64);
 	var Stage5v5 = (function (_super) {
 	    __extends(Stage5v5, _super);
 	    function Stage5v5() {
@@ -4076,7 +4078,27 @@
 
 
 /***/ },
-/* 64 */,
+/* 64 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var StudioPanel = (function (_super) {
+	    __extends(StudioPanel, _super);
+	    function StudioPanel(parent) {
+	        _super.call(this);
+	        this.p = parent;
+	    }
+	    return StudioPanel;
+	}(PIXI.Container));
+	exports.StudioPanel = StudioPanel;
+
+
+/***/ },
 /* 65 */
 /***/ function(module, exports) {
 
@@ -4105,7 +4127,7 @@
 	var Lottery_1 = __webpack_require__(75);
 	var RankView_1 = __webpack_require__(78);
 	var ScoreView_1 = __webpack_require__(80);
-	var GroupSp2_1 = __webpack_require__(97);
+	var GroupSp2_1 = __webpack_require__(98);
 	var rankView;
 	var bracketView;
 	var scoreView;
@@ -4117,7 +4139,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(99);
+	        this.template = __webpack_require__(100);
 	        this.actTab = VueBase_1.VueBase.PROP;
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
@@ -4334,7 +4356,8 @@
 	                    });
 	                }
 	            },
-	            onAddScore: function (isLeft, dtScore) {
+	            onClkShowStage: function (v) {
+	                this.opReq("" + Command_1.CommandId.cs_showStage, { _: null, visible: v });
 	            }
 	        };
 	        VueBase_1.VueBase.initProps(this);
@@ -5911,7 +5934,7 @@
 	var TweenEx_1 = __webpack_require__(50);
 	var BasePanelView_1 = __webpack_require__(44);
 	var Score2018_1 = __webpack_require__(96);
-	var PlayerNow_1 = __webpack_require__(111);
+	var PlayerNow_1 = __webpack_require__(97);
 	function logEvent() {
 	    var a = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
@@ -6093,7 +6116,14 @@
 	            .on("" + Command_1.CommandId.sc_showVsTitle, function (data) {
 	            console.log('sc_showVsTitle', data);
 	            _this.eventPanel.showVsTitle(data);
+	        })
+	            .on("" + Command_1.CommandId.sc_showStage, function (data) {
+	            console.log('sc_showStage', data);
+	            _this.showStage(data.visible);
 	        });
+	    };
+	    ScoreView.prototype.showStage = function (v) {
+	        this.stage.visible = v;
 	    };
 	    ScoreView.prototype.initRemote = function () {
 	        var _this = this;
@@ -6145,7 +6175,8 @@
 	                        _this.scorePanel.toggleTimer(const_1.TimerState.PAUSE);
 	                        _this.scorePanel.resetTimer();
 	                    }
-	                    _this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title });
+	                    if (lPlayer.title && rPlayer.title)
+	                        _this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title });
 	                };
 	                eventMap['updateScore'] = function () {
 	                    console.log('updateScore', data);
@@ -6182,7 +6213,8 @@
 	                    _this.scorePanel.set35ScoreLight(data.winScore);
 	                    _this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
 	                    setPlayer(data.player.left, data.player.right);
-	                    _this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title });
+	                    if (lPlayer.title && rPlayer.title)
+	                        _this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title });
 	                };
 	                eventMap['commitGame'] = function () {
 	                    console.log('commitGame', data);
@@ -7911,50 +7943,54 @@
 	        this.rText = vs;
 	    };
 	    VsTitle.prototype.show = function (data) {
-	        var a = data.vs.split(' ');
-	        console.log('show', data, a);
-	        if (a.length == 2) {
-	            var ln = a[0];
-	            var rn = a[1];
-	            this.lText.text = ln;
-	            this.rText.text = rn;
-	            if (this.lText.width > this.rText.width) {
-	                while (this.lText.width > this.rText.width) {
-	                    this.rText.text = ' ' + this.rText.text + " ";
+	        if (data.vs) {
+	            var a = data.vs.split(' ');
+	            console.log('show', data, a);
+	            if (a.length == 2) {
+	                var ln = a[0];
+	                var rn = a[1];
+	                this.lText.text = ln;
+	                this.rText.text = rn;
+	                if (this.lText.width > this.rText.width) {
+	                    while (this.lText.width > this.rText.width) {
+	                        this.rText.text = ' ' + this.rText.text + " ";
+	                    }
 	                }
-	            }
-	            if (this.lText.width < this.rText.width) {
-	                while (this.lText.width < this.rText.width) {
-	                    this.lText.text = ' ' + this.lText.text + " ";
+	                if (this.lText.width < this.rText.width) {
+	                    while (this.lText.width < this.rText.width) {
+	                        this.lText.text = ' ' + this.lText.text + " ";
+	                    }
 	                }
+	                this.content.text = this.lText.text + ' vs ' + this.rText.text;
+	                this.content.x = 960 - this.content.width * .5;
+	                var cx = this.content.x;
+	                var cy = this.content.y;
+	                var cw = this.content.width;
+	                var ch = this.content.height;
+	                var g = this.bg;
+	                var t = this.content;
+	                var barH = 5;
+	                g.clear();
+	                g.beginFill(0xffffff, 0.38)
+	                    .drawRect(cx - 15, cy - 15, cw + 30, ch + 30)
+	                    .endFill()
+	                    .beginFill(0x000000, 1)
+	                    .drawRect(cx - 10, cy - 10, cw + 20, ch + 20)
+	                    .endFill();
+	                PixiEx_1.gradientG(g, cx - 10, cy - 10, cw + 20, ch + 20, 0x414665, 0x1a203e);
+	                g.beginFill(0xffffff, 1)
+	                    .drawRect(cx - 10, cy - 10, cw + 20, barH)
+	                    .moveTo(960 - 15, cy - 10 + barH)
+	                    .lineTo(960 + 15, cy - 10 + barH)
+	                    .lineTo(960 + 10, cy - 5 + barH)
+	                    .lineTo(960 - 10, cy - 5 + barH);
 	            }
-	            this.content.text = this.lText.text + ' vs ' + this.rText.text;
-	            this.content.x = 960 - this.content.width * .5;
-	            var cx = this.content.x;
-	            var cy = this.content.y;
-	            var cw = this.content.width;
-	            var ch = this.content.height;
-	            var g = this.bg;
-	            var t = this.content;
-	            var barH = 5;
-	            g.clear();
-	            g.beginFill(0xffffff, 0.38)
-	                .drawRect(cx - 15, cy - 15, cw + 30, ch + 30)
-	                .endFill()
-	                .beginFill(0x000000, 1)
-	                .drawRect(cx - 10, cy - 10, cw + 20, ch + 20)
-	                .endFill();
-	            PixiEx_1.gradientG(g, cx - 10, cy - 10, cw + 20, ch + 20, 0x414665, 0x1a203e);
-	            g.beginFill(0xffffff, 1)
-	                .drawRect(cx - 10, cy - 10, cw + 20, barH)
-	                .moveTo(960 - 15, cy - 10 + barH)
-	                .lineTo(960 + 15, cy - 10 + barH)
-	                .lineTo(960 + 10, cy - 5 + barH)
-	                .lineTo(960 - 10, cy - 5 + barH);
-	            this.alpha = 0;
-	            this.p.addChild(this);
-	            TweenEx_1.TweenEx.to(this, 300, { alpha: 1 });
 	        }
+	        else {
+	        }
+	        this.alpha = 0;
+	        this.p.addChild(this);
+	        TweenEx_1.TweenEx.to(this, 300, { alpha: 1 });
 	    };
 	    VsTitle.prototype.hide = function () {
 	        var _this = this;
@@ -8294,8 +8330,76 @@
 	};
 	var PixiEx_1 = __webpack_require__(46);
 	var const_1 = __webpack_require__(43);
+	var ImgLoader_1 = __webpack_require__(67);
+	var PlayerNow = (function (_super) {
+	    __extends(PlayerNow, _super);
+	    function PlayerNow() {
+	        _super.call(this);
+	        this.bg = new PIXI.Graphics();
+	        this.addChild(this.bg);
+	        this.avtSP = new PIXI.Sprite();
+	        this.addChild(this.avtSP);
+	        this.avtSP.x = 25;
+	        this.avtSP.y = 25;
+	        this.titleBg = new PIXI.Graphics();
+	        this.addChild(this.titleBg);
+	        var ts = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '35px', fill: "#3d4470",
+	            fontWeight: 'bold'
+	        };
+	        this.title = new PIXI.Text('蓝方球员', ts);
+	        this.title.style.fontSize = '25px';
+	        this.title.y = 12;
+	        this.title.x = 125 - this.title.width * .5;
+	        this.addChild(this.title);
+	    }
+	    PlayerNow.prototype.show = function (data) {
+	        var _this = this;
+	        ImgLoader_1.imgLoader.loadTex2(data.avatar, function (_) {
+	            _this.y = data.y;
+	            _this.x = data.x;
+	            _this.title.text = data.title;
+	            _this.bg.clear();
+	            var t = _this.title;
+	            var fw = 250, fh = 400;
+	            _this.bg.beginFill(0xffffff, 0.38)
+	                .drawRect(0, 0, fw, fh)
+	                .endFill()
+	                .beginFill(0x000000, 1)
+	                .drawRect(5, 5, fw - 10, fh - 10)
+	                .endFill();
+	            PixiEx_1.gradientG(_this.bg, 5, 5, fw - 10, fh - 10, 0x414665, 0x1a203e);
+	            _this.titleBg.beginFill(0xffffff, 1)
+	                .moveTo(t.x - 15, t.y + t.height * .5)
+	                .lineTo(t.x - 5, t.y + t.height + 5)
+	                .lineTo(t.x + t.width + 5, t.y + t.height + 5)
+	                .lineTo(t.x + t.width + 15, t.y + t.height * .5)
+	                .drawRect(5, 5, fw - 10, 24);
+	            var tex = ImgLoader_1.imgLoader.getTex(data.avatar);
+	            _this.avtSP.texture = tex;
+	            PixiEx_1.setScale(_this.avtSP, 200 / tex.width);
+	        });
+	    };
+	    return PlayerNow;
+	}(PIXI.Container));
+	exports.PlayerNow = PlayerNow;
+
+
+/***/ },
+/* 98 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var PixiEx_1 = __webpack_require__(46);
+	var const_1 = __webpack_require__(43);
 	var HupuAPI_1 = __webpack_require__(22);
-	var thenBy_1 = __webpack_require__(98);
+	var thenBy_1 = __webpack_require__(99);
 	var ImgLoader_1 = __webpack_require__(67);
 	var BracketGroup_1 = __webpack_require__(72);
 	var Row1 = (function (_super) {
@@ -8577,7 +8681,7 @@
 
 
 /***/ },
-/* 98 */
+/* 99 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -8614,110 +8718,10 @@
 
 
 /***/ },
-/* 99 */
+/* 100 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <!-- <label class=\"label\">实力榜:</label><br>\r\n            <input class=\"input\" type=\"text\" style=\"width: 110px;\" v-model=\"inputDate\">\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,1)\">显示总榜1</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,4)\">显示总榜4</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,5)\">显示总榜5</button>\r\n            <button class=\"button\" @click=\"onShowRanking(false)\">隐藏</button> -->\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n        </div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"'>\r\n        <div v-if='isRmOp||isOp' style=\"position: absolute;left: 100px;top:260px;width: 800px\">\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                        正常\r\n                    </label>\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                        加粗\r\n                    </label>\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <br>\r\n            <div v-for=\"(n,idx) in noticeHistory\">\r\n                <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n            </div>\r\n        </div>\r\n        <!-- <label class=\"label\">   fx test：</label> <br>\r\n        <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button> -->\r\n    </div>\r\n</div>";
-
-/***/ },
-/* 100 */,
-/* 101 */,
-/* 102 */,
-/* 103 */,
-/* 104 */,
-/* 105 */,
-/* 106 */,
-/* 107 */,
-/* 108 */,
-/* 109 */,
-/* 110 */,
-/* 111 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var PixiEx_1 = __webpack_require__(46);
-	var const_1 = __webpack_require__(43);
-	var ImgLoader_1 = __webpack_require__(67);
-	var PlayerNow = (function (_super) {
-	    __extends(PlayerNow, _super);
-	    function PlayerNow() {
-	        _super.call(this);
-	        this.bg = new PIXI.Graphics();
-	        this.addChild(this.bg);
-	        this.avtSP = new PIXI.Sprite();
-	        this.addChild(this.avtSP);
-	        this.avtSP.x = 25;
-	        this.avtSP.y = 25;
-	        this.titleBg = new PIXI.Graphics();
-	        this.addChild(this.titleBg);
-	        var ts = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '35px', fill: "#3d4470",
-	            fontWeight: 'bold'
-	        };
-	        this.title = new PIXI.Text('蓝方球员', ts);
-	        this.title.style.fontSize = '25px';
-	        this.title.y = 12;
-	        this.title.x = 125 - this.title.width * .5;
-	        this.addChild(this.title);
-	    }
-	    PlayerNow.prototype.show = function (data) {
-	        var _this = this;
-	        ImgLoader_1.imgLoader.loadTex2(data.avatar, function (_) {
-	            _this.y = data.y;
-	            _this.x = data.x;
-	            _this.title.text = data.title;
-	            _this.bg.clear();
-	            var t = _this.title;
-	            var fw = 250, fh = 400;
-	            _this.bg.beginFill(0xffffff, 0.38)
-	                .drawRect(0, 0, fw, fh)
-	                .endFill()
-	                .beginFill(0x000000, 1)
-	                .drawRect(5, 5, fw - 10, fh - 10)
-	                .endFill();
-	            PixiEx_1.gradientG(_this.bg, 5, 5, fw - 10, fh - 10, 0x414665, 0x1a203e);
-	            _this.titleBg.beginFill(0xffffff, 1)
-	                .moveTo(t.x - 15, t.y + t.height * .5)
-	                .lineTo(t.x - 5, t.y + t.height + 5)
-	                .lineTo(t.x + t.width + 5, t.y + t.height + 5)
-	                .lineTo(t.x + t.width + 15, t.y + t.height * .5)
-	                .drawRect(5, 5, fw - 10, 24);
-	            var tex = ImgLoader_1.imgLoader.getTex(data.avatar);
-	            _this.avtSP.texture = tex;
-	            PixiEx_1.setScale(_this.avtSP, 200 / tex.width);
-	        });
-	    };
-	    return PlayerNow;
-	}(PIXI.Container));
-	exports.PlayerNow = PlayerNow;
-
-
-/***/ },
-/* 112 */
-/***/ function(module, exports) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var StudioPanel = (function (_super) {
-	    __extends(StudioPanel, _super);
-	    function StudioPanel(parent) {
-	        _super.call(this);
-	        this.p = parent;
-	    }
-	    return StudioPanel;
-	}(PIXI.Container));
-	exports.StudioPanel = StudioPanel;
-
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <!-- <label class=\"label\">实力榜:</label><br>\r\n            <input class=\"input\" type=\"text\" style=\"width: 110px;\" v-model=\"inputDate\">\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,1)\">显示总榜1</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,4)\">显示总榜4</button>\r\n            <button class=\"button\" @click=\"onShowRanking(true,true,5)\">显示总榜5</button>\r\n            <button class=\"button\" @click=\"onShowRanking(false)\">隐藏</button> -->\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(false)\">隐藏所有</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(true)\">显示所有</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">修改并显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,'')\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n        </div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"'>\r\n        <div v-if='isRmOp||isOp' style=\"position: absolute;left: 100px;top:260px;width: 800px\">\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                        正常\r\n                    </label>\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                        加粗\r\n                    </label>\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <br>\r\n            <div v-for=\"(n,idx) in noticeHistory\">\r\n                <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n            </div>\r\n        </div>\r\n        <!-- <label class=\"label\">   fx test：</label> <br>\r\n        <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button> -->\r\n    </div>\r\n</div>";
 
 /***/ }
 /******/ ]);
