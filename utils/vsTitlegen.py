@@ -39,7 +39,7 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
         title = table.cell(row + i, 1).value
         plist[n] = title
         # print(n)
-
+    # print(plist)
     print(json.dumps(plist, ensure_ascii=False))
     return plist
 
