@@ -36,7 +36,7 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
     cur = ''
     for i in range(0, 24):
         n = table.cell(row + i, 0).value
-        title = table.cell(row + i, 1).value
+        title = table.cell(row + i, 1).value.replace('\t','')
         plist[n] = title
         # print(n)
     # print(plist)
