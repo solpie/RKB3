@@ -10,6 +10,7 @@ export class ScaleSprite extends PIXI.Container {
     l: PIXI.Sprite
     _w: number
     _h: number
+    
     constructor(img: HTMLImageElement, scaleRect: { x: number, y: number, width: number, height: number }) {
         super()
         let bt = new PIXI.BaseTexture(img)
