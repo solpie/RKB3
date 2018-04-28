@@ -5972,7 +5972,8 @@
 	            var f2 = this.preLoadFont(const_1.FontName.Impact);
 	            stage.addChild(f2);
 	            TweenEx_1.TweenEx.delayedCall(1000, function (_) {
-	                _this.scorePanel = new Score2018_1.Score2018(stage);
+	                if (!_this.isRmOP)
+	                    _this.scorePanel = new Score2018_1.Score2018(stage);
 	                _this.initDelay();
 	            });
 	        }
