@@ -55,6 +55,7 @@ export class ScoreView extends BasePanelView {
         // let s4 = $route.query.s4 == '1'
         this.isM2 = m2
         if (m2) {
+            
             // this.scorePanel = new ScoreM3(stage, darkTheme)
         }
         else {
