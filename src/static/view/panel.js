@@ -8165,13 +8165,13 @@
 	        ctn.addChild(rName);
 	        var is = {
 	            fontFamily: const_1.FontName.Impact,
-	            fontSize: '25px', fill: "#000520"
+	            fontSize: '30px', fill: "#000520"
 	        };
 	        var lHeightWeight = new PIXI.Text('', is);
 	        this.lHeightWeight = lHeightWeight;
 	        ctn.addChild(lHeightWeight);
 	        lHeightWeight.x = 713 - lHeightWeight.width;
-	        lHeightWeight.y = 78;
+	        lHeightWeight.y = 75;
 	        var rHeightWeight = new PIXI.Text('', is);
 	        this.rHeightWeight = rHeightWeight;
 	        ctn.addChild(rHeightWeight);
@@ -8247,10 +8247,20 @@
 	        this.setRightScore(0);
 	    };
 	    Score2018.prototype.setLeftScore = function (data) {
+	        if (Number(data.leftScore) > 9)
+	            PixiEx_1.setScale(this.lScoreText, 0.85);
+	        else
+	            PixiEx_1.setScale(this.lScoreText, 1);
 	        this.lScoreText.text = data + '';
+	        this.lScoreText.x = 865 - this.lScoreText.width * .5;
 	    };
 	    Score2018.prototype.setRightScore = function (data) {
+	        if (Number(data) > 9)
+	            PixiEx_1.setScale(this.rScoreText, 0.85);
+	        else
+	            PixiEx_1.setScale(this.rScoreText, 1);
 	        this.rScoreText.text = data + '';
+	        this.rScoreText.x = 865 + 187 - this.rScoreText.width * .5;
 	    };
 	    Score2018.prototype.setLeftFoul = function (data) {
 	        this.lFoul.text = data + '';

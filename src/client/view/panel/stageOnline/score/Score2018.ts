@@ -197,13 +197,13 @@ export class Score2018 {
 
         let is = {
             fontFamily: FontName.Impact,
-            fontSize: '25px', fill: "#000520"
+            fontSize: '30px', fill: "#000520"
         }
         let lHeightWeight = new PIXI.Text('', is)
         this.lHeightWeight = lHeightWeight
         ctn.addChild(lHeightWeight)
         lHeightWeight.x = 713 - lHeightWeight.width
-        lHeightWeight.y = 78
+        lHeightWeight.y = 75
 
         let rHeightWeight = new PIXI.Text('', is)
         this.rHeightWeight = rHeightWeight
@@ -306,11 +306,23 @@ export class Score2018 {
         this.setRightScore(0)
     }
     setLeftScore(data) {
+        if (Number(data.leftScore) > 9)
+            setScale(this.lScoreText, 0.85)
+        else
+            setScale(this.lScoreText, 1)
         this.lScoreText.text = data + ''
+        this.lScoreText.x = 865 - this.lScoreText.width * .5
     }
 
     setRightScore(data) {
+        if (Number(data) > 9)
+            setScale(this.rScoreText, 0.85)
+        else
+            setScale(this.rScoreText, 1)
         this.rScoreText.text = data + ''
+
+        this.rScoreText.x = 865 + 187 - this.rScoreText.width * .5
+
     }
     setLeftFoul(data) {
         this.lFoul.text = data + ''
