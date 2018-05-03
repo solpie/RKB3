@@ -143,6 +143,8 @@ export const CommandId = {
     sc_toggleTheme: '',
     cs_showNotice: '',
     sc_showNotice: '',
+    cs_showRollText: ``,//roll公告
+    sc_showRollText: ``,
     cs_showChampion: '',
     sc_showChampion: '',
     //实力榜

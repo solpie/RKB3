@@ -55,7 +55,7 @@ export class ScoreView extends BasePanelView {
         // let s4 = $route.query.s4 == '1'
         this.isM2 = m2
         if (m2) {
-            
+
             // this.scorePanel = new ScoreM3(stage, darkTheme)
         }
         else {
@@ -69,10 +69,11 @@ export class ScoreView extends BasePanelView {
                 if (!this.isRmOP)
                     this.scorePanel = new Score2018(stage)
                 this.initDelay()
+                this.eventPanel = new Event2017(stage, darkTheme)
+
             })
         }
         // this.scorePanel = new Score2017(stage, darkTheme)
-        this.eventPanel = new Event2017(stage, darkTheme)
 
         console.log('new ScoreView')
         if (this.isTest) {
@@ -252,6 +253,10 @@ export class ScoreView extends BasePanelView {
             .on(`${CommandId.sc_showVsTitle}`, (data) => {
                 console.log('sc_showVsTitle', data);
                 this.eventPanel.showVsTitle(data)
+            })
+            .on(`${CommandId.sc_showRollText}`, (data) => {
+                console.log('sc_showRollText', data);
+                this.eventPanel.showRollText(data)
             })
             .on(`${CommandId.sc_showStage}`, (data) => {
                 console.log('sc_showStage', data);

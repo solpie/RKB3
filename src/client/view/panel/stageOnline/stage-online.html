@@ -121,6 +121,15 @@
                 <a @click="onClkNoticePresets(n.title,n.content)" style="font-size:35px;">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>
                 <a @click="onDelNoticePresets(n.content)">del</a>
             </div>
+
+            滚动文字：
+            <br>
+            <input class="input" type="text" placeholder="公告" style="width: 280px;" v-model="inputRollText">
+            <br>
+
+            <!-- <el-input v-model="inputRollText" style="width:250px"></el-input> -->
+            <button class="button" @click='showRollText(inputRollText,true)'>发送</button>
+            <button class="button" @click='showRollText(inputRollText,false)'>隐藏</button>
         </div>
         <!-- <label class="label">   fx test：</label> <br>
         <button class="button" @click="onPlayScoreFx()">score fx</button> -->

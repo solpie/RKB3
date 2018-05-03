@@ -69,6 +69,7 @@ class StageOnlineView extends VueBase {
     noticeContent = VueBase.PROP
     isBold = VueBase.PROP
     noticeHistory = VueBase.PROP
+    inputRollText = VueBase.PROP
 
     opReq = (cmdId: string, param: any, callback: any) => {
         $.ajax({
@@ -147,6 +148,10 @@ class StageOnlineView extends VueBase {
             // })
             // .on(`${CommandId.sc_hideOnlinePanel}`, (data) => {
             //     this.showOnly("")
+            // })
+            // .on(`${CommandId.sc_showRollText}`, (data) => {
+            //     this.showOnly("")
+                
             // })
             .on(`${CommandId.sc_showGroup}`, (data) => {
                 console.log('sc_showGroup');
@@ -487,8 +492,11 @@ class StageOnlineView extends VueBase {
                 })
             }
         },
+        showRollText(text, v) {
+            this.opReq(`${CommandId.cs_showRollText}`, { _: null, visible: v, text: text })
+        },
         onClkShowStage(v) {
-            this.opReq(`${CommandId.cs_showStage}`, { _: null, visible: v})
+            this.opReq(`${CommandId.cs_showStage}`, { _: null, visible: v })
         }
     }
 }

@@ -16,6 +16,7 @@ import { Victory2 } from "./Victory2";
 import { Winner } from './Winner';
 import { Top5 } from '../top5/Top5';
 import { VsTitle } from './VsTitle';
+import { RollText } from './RollText';
 
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
@@ -327,7 +328,7 @@ export class Event2017 extends PIXI.Container {
         d.rec = { win: data.winAmount, lose: data.loseAmount }
         d.winner = data
         this.winner.show(d)
-        
+
     }
     hideVictory() {
         if (this.winner) {
@@ -358,5 +359,15 @@ export class Event2017 extends PIXI.Container {
         data.visible ?
             this.vsTitle.show(data)
             : this.vsTitle.hide()
+    }
+    rollText: RollText
+    showRollText(data) {
+        if (!this.rollText) {
+            this.rollText = new RollText()
+            this.rollText.create(this)
+        }
+        data.visible ?
+            this.rollText.show(data)
+            : this.rollText.hide()
     }
 }
