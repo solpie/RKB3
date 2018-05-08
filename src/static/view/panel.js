@@ -8198,17 +8198,18 @@
 	        rHeightWeight.x = 1200;
 	        rHeightWeight.y = lHeightWeight.y;
 	        var rs = {
-	            fontFamily: const_1.FontName.Impact,
-	            fontSize: '30px', fill: "#000520"
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '28px', fill: "#fff",
+	            fontWeight: 'bold'
 	        };
 	        var lRank = new PIXI.Text('', rs);
 	        this.lRank = lRank;
 	        ctn.addChild(lRank);
-	        lRank.y = 32;
+	        lRank.y = 114;
 	        var rRank = new PIXI.Text('', rs);
 	        this.rRank = rRank;
 	        ctn.addChild(rRank);
-	        rRank.x = 1410;
+	        rRank.x = 1410 - 178;
 	        rRank.y = lRank.y;
 	        var gs = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
@@ -8289,31 +8290,31 @@
 	        this.rFoul.text = data + '';
 	    };
 	    Score2018.prototype.setLeftPlayerInfo = function (lPlayer) {
-	        var _this = this;
-	        var lIconUrl = '/img/icon/rankIcon_b' + lPlayer.powerRankType + '.png';
-	        PixiEx_1.loadRes(lIconUrl, function (tex) {
-	            _this.lIcon.texture = PixiEx_1.imgToTex(tex);
-	        }, false);
 	        this.lName.text = lPlayer.name;
 	        BracketGroup_1.fitWidth(this.lName, 258, 35);
 	        this.lName.x = 718 - this.lName.width;
 	        loadAvt(this.lAvt, lPlayer.avatar);
-	        this.lHeightWeight.text = lPlayer.height + 'cm | ' + lPlayer.weight + 'kg';
+	        var rankText;
+	        if (lPlayer.divisionRank == 0)
+	            rankText = '冲榜';
+	        else
+	            rankText = lPlayer.divisionName + ' ' + lPlayer.divisionRank;
+	        this.lHeightWeight.text = lPlayer.height + 'cm | ' + lPlayer.weight + 'kg   ';
 	        this.lHeightWeight.x = 713 - this.lHeightWeight.width;
-	        this.lRank.text = lPlayer.powerRank;
-	        this.lRank.x = 510 - this.lRank.width;
+	        this.lRank.text = rankText;
+	        this.lRank.x = 660 - this.lRank.width;
 	    };
 	    Score2018.prototype.setRightPlayerInfo = function (rPlayer) {
-	        var _this = this;
-	        var rIconUrl = '/img/icon/rankIcon_b' + rPlayer.powerRankType + '.png';
-	        PixiEx_1.loadRes(rIconUrl, function (tex) {
-	            _this.rIcon.texture = PixiEx_1.imgToTex(tex);
-	        }, false);
 	        this.rName.text = rPlayer.name;
 	        BracketGroup_1.fitWidth(this.rName, 258, 35);
 	        loadAvt(this.rAvt, rPlayer.avatar);
-	        this.rHeightWeight.text = rPlayer.height + 'cm | ' + rPlayer.weight + 'kg';
-	        this.rRank.text = rPlayer.powerRank;
+	        var rankText;
+	        if (rPlayer.divisionRank == 0)
+	            rankText = '冲榜';
+	        else
+	            rankText = rPlayer.divisionName + ' ' + rPlayer.divisionRank;
+	        this.rHeightWeight.text = rPlayer.height + 'cm | ' + rPlayer.weight + 'kg   ';
+	        this.rRank.text = rankText;
 	    };
 	    Score2018.prototype.resetTimer = function () {
 	        this.timer.resetTimer();

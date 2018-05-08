@@ -38,3 +38,4 @@ jspm_packages
 p*.png
 **xlsx**
 utils/top5.xlsx
+*.clip

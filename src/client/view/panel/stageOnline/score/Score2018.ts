@@ -212,18 +212,19 @@ export class Score2018 {
         rHeightWeight.y = lHeightWeight.y
 
         let rs = {
-            fontFamily: FontName.Impact,
-            fontSize: '30px', fill: "#000520"
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '28px', fill: "#fff"
+            , fontWeight: 'bold'
         }
         let lRank = new PIXI.Text('', rs)
         this.lRank = lRank
         ctn.addChild(lRank)
-        lRank.y = 32
+        lRank.y = 114
 
         let rRank = new PIXI.Text('', rs)
         this.rRank = rRank
         ctn.addChild(rRank)
-        rRank.x = 1410
+        rRank.x = 1410 - 178
         rRank.y = lRank.y
 
         let gs = {
@@ -331,10 +332,10 @@ export class Score2018 {
         this.rFoul.text = data + ''
     }
     setLeftPlayerInfo(lPlayer) {
-        let lIconUrl = '/img/icon/rankIcon_b' + lPlayer.powerRankType + '.png'
-        loadRes(lIconUrl, tex => {
-            this.lIcon.texture = imgToTex(tex)
-        }, false)
+        // let lIconUrl = '/img/icon/rankIcon_b' + lPlayer.powerRankType + '.png'
+        // loadRes(lIconUrl, tex => {
+        //     this.lIcon.texture = imgToTex(tex)
+        // }, false)
 
         this.lName.text = lPlayer.name
         fitWidth(this.lName, 258, 35)
@@ -342,24 +343,39 @@ export class Score2018 {
 
         loadAvt(this.lAvt, lPlayer.avatar)
 
-
-        this.lHeightWeight.text = lPlayer.height + 'cm | ' + lPlayer.weight + 'kg'
+        let rankText;
+        if (lPlayer.divisionRank == 0)
+            rankText = '冲榜'
+        else
+            rankText = lPlayer.divisionName + ' ' + lPlayer.divisionRank
+        
+        this.lHeightWeight.text = lPlayer.height + 'cm | ' + lPlayer.weight + 'kg   '
+        // this.lHeightWeight.text = rankText + lPlayer.height + 'cm | ' + lPlayer.weight + 'kg   '
         this.lHeightWeight.x = 713 - this.lHeightWeight.width
 
-        this.lRank.text = lPlayer.powerRank
-        this.lRank.x = 510 - this.lRank.width
+        this.lRank.text = rankText
+        this.lRank.x = 660 - this.lRank.width
     }
     setRightPlayerInfo(rPlayer) {
-        let rIconUrl = '/img/icon/rankIcon_b' + rPlayer.powerRankType + '.png'
-        loadRes(rIconUrl, tex => {
-            this.rIcon.texture = imgToTex(tex)
-        }, false)
+        // let rIconUrl = '/img/icon/rankIcon_b' + rPlayer.powerRankType + '.png'
+        // loadRes(rIconUrl, tex => {
+        //     this.rIcon.texture = imgToTex(tex)
+        // }, false)
         this.rName.text = rPlayer.name
         fitWidth(this.rName, 258, 35)
         loadAvt(this.rAvt, rPlayer.avatar)
-        this.rHeightWeight.text = rPlayer.height + 'cm | ' + rPlayer.weight + 'kg'
 
-        this.rRank.text = rPlayer.powerRank
+        let rankText;
+        if (rPlayer.divisionRank == 0)
+            rankText = '冲榜'
+        else
+            rankText = rPlayer.divisionName + ' ' + rPlayer.divisionRank
+        
+        // let rankText = rPlayer.divisionName + ' ' + rPlayer.divisionRank
+
+        this.rHeightWeight.text = rPlayer.height + 'cm | ' + rPlayer.weight + 'kg   ' //+ rankText
+
+        this.rRank.text = rankText
     }
 
     resetTimer() {
