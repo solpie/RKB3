@@ -8295,11 +8295,11 @@
 	        this.lName.x = 718 - this.lName.width;
 	        loadAvt(this.lAvt, lPlayer.avatar);
 	        var rankText;
-	        if (lPlayer.divisionRank == 0)
+	        if (lPlayer.divisionRank == 0 || !lPlayer.divisionRank)
 	            rankText = '冲榜';
 	        else
 	            rankText = lPlayer.divisionName + ' ' + lPlayer.divisionRank;
-	        this.lHeightWeight.text = lPlayer.height + 'cm | ' + lPlayer.weight + 'kg   ';
+	        this.lHeightWeight.text = lPlayer.height + 'cm | ' + lPlayer.weight + 'kg';
 	        this.lHeightWeight.x = 713 - this.lHeightWeight.width;
 	        this.lRank.text = rankText;
 	        this.lRank.x = 660 - this.lRank.width;
@@ -8309,11 +8309,11 @@
 	        BracketGroup_1.fitWidth(this.rName, 258, 35);
 	        loadAvt(this.rAvt, rPlayer.avatar);
 	        var rankText;
-	        if (rPlayer.divisionRank == 0)
+	        if (rPlayer.divisionRank == 0 || !rPlayer.divisionRank)
 	            rankText = '冲榜';
 	        else
 	            rankText = rPlayer.divisionName + ' ' + rPlayer.divisionRank;
-	        this.rHeightWeight.text = rPlayer.height + 'cm | ' + rPlayer.weight + 'kg   ';
+	        this.rHeightWeight.text = rPlayer.height + 'cm | ' + rPlayer.weight + 'kg';
 	        this.rRank.text = rankText;
 	    };
 	    Score2018.prototype.resetTimer = function () {

@@ -344,12 +344,12 @@ export class Score2018 {
         loadAvt(this.lAvt, lPlayer.avatar)
 
         let rankText;
-        if (lPlayer.divisionRank == 0)
+        if (lPlayer.divisionRank == 0||!lPlayer.divisionRank)
             rankText = '冲榜'
         else
             rankText = lPlayer.divisionName + ' ' + lPlayer.divisionRank
         
-        this.lHeightWeight.text = lPlayer.height + 'cm | ' + lPlayer.weight + 'kg   '
+        this.lHeightWeight.text = lPlayer.height + 'cm | ' + lPlayer.weight + 'kg'
         // this.lHeightWeight.text = rankText + lPlayer.height + 'cm | ' + lPlayer.weight + 'kg   '
         this.lHeightWeight.x = 713 - this.lHeightWeight.width
 
@@ -366,14 +366,14 @@ export class Score2018 {
         loadAvt(this.rAvt, rPlayer.avatar)
 
         let rankText;
-        if (rPlayer.divisionRank == 0)
+        if (rPlayer.divisionRank == 0||!rPlayer.divisionRank)
             rankText = '冲榜'
         else
             rankText = rPlayer.divisionName + ' ' + rPlayer.divisionRank
         
         // let rankText = rPlayer.divisionName + ' ' + rPlayer.divisionRank
 
-        this.rHeightWeight.text = rPlayer.height + 'cm | ' + rPlayer.weight + 'kg   ' //+ rankText
+        this.rHeightWeight.text = rPlayer.height + 'cm | ' + rPlayer.weight + 'kg' //+ rankText
 
         this.rRank.text = rankText
     }
