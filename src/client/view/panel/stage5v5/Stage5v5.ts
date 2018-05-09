@@ -8,16 +8,12 @@ import { VueBase } from '../../utils/VueBase';
 import { StudioPanel } from './studioPanel/StudioPanel';
 declare let $
 declare let io
-class Stage5v5 extends VueBase {
+class StageStudio extends VueBase {
     template = require('./stage5v5.html')
     isOp = VueBase.PROP
     isMobile = VueBase.PROP
-    leftScore = VueBase.PROP
-    rightScore = VueBase.PROP
     leftTimeup = VueBase.PROP
     rightTimeup = VueBase.PROP
-    leftPlayerArr = VueBase.PROP
-    rightPlayerArr = VueBase.PROP
     headerText = VueBase.PROP
     timeString = VueBase.PROP
     headerTextSec = VueBase.PROP
@@ -46,14 +42,14 @@ class Stage5v5 extends VueBase {
         this.stuioPanel = new StudioPanel(BasePanelView.initPixi())
     }
     protected created() {
-        this.leftScore = this.rightScore = 0
-        this.leftPlayerArr = [0, 0, 0, 0, 0]
-        this.rightPlayerArr = [0, 0, 0, 0, 0]
         this.initCanvas()
+        this.initIO()
     }
     initIO() {
         io.connect(`/${PanelId.rkbPanel}`)
-            .on(`${CommandId.sc_showHeaderText}`, (data) => {
+            .on(`${CommandId.sc_showBottle}`, (data) => {
+                console.log('sc_showBottle');
+                this.stuioPanel.showBottle()
             })
     }
     methods = {
@@ -134,4 +130,4 @@ class Stage5v5 extends VueBase {
         }
     }
 }
-export let studio = new Stage5v5()
+export let studio = new StageStudio()

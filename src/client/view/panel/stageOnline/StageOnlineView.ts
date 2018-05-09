@@ -426,6 +426,9 @@ class StageOnlineView extends VueBase {
         onShowRank(visible,  page = 1) {
             this.opReq(`${CommandId.cs_showRanking}`, { _: null, visible: visible, page: page })
         },
+        onShowFx(visible,  fxIdx = 1) {
+            this.opReq(`${CommandId.cs_showBottle}`, { _: null, visible: visible, fxIdx: fxIdx })
+        },
         onShowPlayerRanking(playerId) {
             $post('/online/ranking/raw', { date: '2017-07-19' }, res => {
                 console.log('Top10player', playerId, res.doc);

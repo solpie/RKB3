@@ -118,6 +118,9 @@ export const CommandId = {
     //ft bracket
     cs_ftBracketInfo: '',
     sc_ftBracketInfo: '',
+    ////////////studio panel
+    cs_showBottle: '',
+    sc_showBottle: '',
     //---------------- 5v5 panel
     cs_showHeaderText: '',
     sc_showHeaderText: '',
