@@ -4095,9 +4095,12 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var FrameFx_1 = __webpack_require__(90);
+	var ImgLoader_1 = __webpack_require__(67);
+	var JsFunc_1 = __webpack_require__(17);
 	var StudioPanel = (function (_super) {
 	    __extends(StudioPanel, _super);
 	    function StudioPanel(parent) {
+	        var _this = this;
 	        _super.call(this);
 	        this.p = parent;
 	        console.log('new studio panel');
@@ -4130,21 +4133,29 @@
 	        setInterval(function (_) {
 	            turn();
 	        }, 30000);
-	        var bt = new FrameFx_1.FramesFx('/img/fx/mizone/bottle/bt_', 0, 52);
-	        this.bottle = bt;
-	        bt.setSpeed(0.28);
-	        this.addChild(bt);
-	        this.bottle.visible = false;
+	        var imgArr = [];
+	        for (var i = 0; i < 53; i++) {
+	            imgArr.push('/img/fx/mizone/bottle/bt_' + JsFunc_1.paddy(i, 2) + '.png');
+	        }
+	        ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
+	            var bt = new FrameFx_1.FramesFx('/img/fx/mizone/bottle/bt_', 0, 52);
+	            _this.bottle = bt;
+	            bt.setSpeed(0.28);
+	            _this.addChild(bt);
+	            _this.bottle.visible = false;
+	        });
 	    }
 	    StudioPanel.prototype.showBottle = function () {
 	        var _this = this;
-	        if (this.bottle.visible)
-	            return;
-	        this.bottle.visible = true;
-	        this.bottle.playOnce();
-	        setTimeout(function (_) {
-	            _this.bottle.visible = false;
-	        }, 6000);
+	        if (this.bottle) {
+	            if (this.bottle.visible)
+	                return;
+	            this.bottle.visible = true;
+	            this.bottle.playOnce();
+	            setTimeout(function (_) {
+	                _this.bottle.visible = false;
+	            }, 6000);
+	        }
 	    };
 	    return StudioPanel;
 	}(PIXI.Container));

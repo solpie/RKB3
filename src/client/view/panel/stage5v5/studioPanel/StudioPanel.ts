@@ -1,5 +1,7 @@
 import { newModal } from "../../../utils/PixiEx";
 import { FramesFx } from "../../../utils/FrameFx";
+import { imgLoader } from '../../../utils/ImgLoader';
+import { paddy } from "../../../utils/JsFunc";
 
 export class StudioPanel extends PIXI.Container {
     p: any
@@ -43,22 +45,29 @@ export class StudioPanel extends PIXI.Container {
         setInterval(_ => {
             turn()
         }, 30000)
+        let imgArr = []
+        for (let i = 0; i < 53; i++) {
+            imgArr.push('/img/fx/mizone/bottle/bt_' + paddy(i, 2) + '.png')
+        }
+        imgLoader.loadTexArr(imgArr, _ => {
+            let bt = new FramesFx('/img/fx/mizone/bottle/bt_', 0, 52)
+            this.bottle = bt
+            bt.setSpeed(0.28)
+            this.addChild(bt)
+            this.bottle.visible = false
+        })
 
-        let bt = new FramesFx('/img/fx/mizone/bottle/bt_', 0, 52)
-        this.bottle = bt
-        bt.setSpeed(0.28)
-        this.addChild(bt)
-        this.bottle.visible = false
-        
     }
 
     showBottle() {
-        if(this.bottle.visible)
-            return
-        this.bottle.visible = true        
-        this.bottle.playOnce()
-        setTimeout(_ => {
-            this.bottle.visible = false
-        }, 6000)
+        if (this.bottle) {
+            if (this.bottle.visible)
+                return
+            this.bottle.visible = true
+            this.bottle.playOnce()
+            setTimeout(_ => {
+                this.bottle.visible = false
+            }, 6000)
+        }
     }
 }
