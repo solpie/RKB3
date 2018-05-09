@@ -4137,6 +4137,8 @@
 	    }
 	    StudioPanel.prototype.showBottle = function () {
 	        var _this = this;
+	        if (this.bottle.visible)
+	            return;
 	        this.bottle.visible = true;
 	        this.bottle.playOnce();
 	        setTimeout(function (_) {

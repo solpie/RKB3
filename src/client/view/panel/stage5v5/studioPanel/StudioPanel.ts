@@ -51,6 +51,8 @@ export class StudioPanel extends PIXI.Container {
     }
 
     showBottle() {
+        if(this.bottle.visible)
+            return
         this.bottle.visible = true        
         this.bottle.playOnce()
         setTimeout(_ => {
