@@ -4134,6 +4134,7 @@
 	        this.bottle = bt;
 	        bt.setSpeed(0.28);
 	        this.addChild(bt);
+	        this.bottle.visible = false;
 	    }
 	    StudioPanel.prototype.showBottle = function () {
 	        var _this = this;

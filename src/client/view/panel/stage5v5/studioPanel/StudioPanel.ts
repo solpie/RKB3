@@ -48,6 +48,8 @@ export class StudioPanel extends PIXI.Container {
         this.bottle = bt
         bt.setSpeed(0.28)
         this.addChild(bt)
+        this.bottle.visible = false
+        
     }
 
     showBottle() {
