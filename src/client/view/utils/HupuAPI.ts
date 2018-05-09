@@ -63,6 +63,11 @@ export function getGroupData(gameId, callback) {
     _get(proxy(url), callback)
 }
 
+export function getRankSection(section, callback) {
+    let url = 'http://api.liangle.com/api/division/power/rank/' + section
+    _get(proxy(url), callback)
+}
+
 let _get = (url, callback) => {
     $.get(url, callback)
 }

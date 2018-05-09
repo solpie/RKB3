@@ -17,6 +17,7 @@ import { Winner } from './Winner';
 import { Top5 } from '../top5/Top5';
 import { VsTitle } from './VsTitle';
 import { RollText } from './RollText';
+import { RankSection } from '../rank/RankSection';
 
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
@@ -305,10 +306,11 @@ export class Event2017 extends PIXI.Container {
         this.topInfo.hide()
     }
 
-    ranking: Ranking
-    showRanking(data, rankingData) {
+    ranking: RankSection
+    showRanking(data) {
         if (!this.ranking) {
-            this.ranking = new Ranking(this, rankingData)
+            this.ranking = new RankSection()
+            this.ranking.create(this, data)
         }
         data.visible ?
             this.ranking.show(data)

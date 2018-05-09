@@ -9,7 +9,7 @@ import { PanelId, TimerState, FontName } from '../../../const';
 import { getHupuWS } from '../../../utils/HupuAPI';
 import { TweenEx } from '../../../utils/TweenEx';
 import { BasePanelView } from '../../BasePanelView';
-import { RankingData } from './RankingData';
+// import { RankingData } from './RankingData';
 import { Score2017 } from './Score2017';
 import { ScoreM3 } from './ScoreM2';
 import { ScorePanel2 } from './ScorePanel2';
@@ -25,7 +25,7 @@ function logEvent(...a) {
 export class ScoreView extends BasePanelView {
     scorePanel: Score2018
     eventPanel: Event2017
-    rankingData: RankingData
+    // rankingData: RankingData
     stage: any
 
     delayTimeMS = 0
@@ -232,7 +232,7 @@ export class ScoreView extends BasePanelView {
 
             })
             .on(`${CommandId.sc_showRanking}`, (data) => {
-                // this.eventPanel.showRanking(data, this.rankingData)
+                this.eventPanel.showRanking(data)
             })
             //score fx
             .on(`${CommandId.sc_setFxPoint}`, (data) => {

@@ -1051,6 +1051,11 @@
 	    _get(WebJsFunc_1.proxy(url), callback);
 	}
 	exports.getGroupData = getGroupData;
+	function getRankSection(section, callback) {
+	    var url = 'http://api.liangle.com/api/division/power/rank/' + section;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getRankSection = getRankSection;
 	var _get = function (url, callback) {
 	    $.get(url, callback);
 	};
