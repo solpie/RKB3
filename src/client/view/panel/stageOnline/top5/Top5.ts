@@ -4,6 +4,7 @@ import { FontName } from '../../../const';
 import { paddy } from '../../../utils/JsFunc';
 import { $post } from '../../../utils/WebJsFunc';
 import { getTop5Data } from '../../../utils/HupuAPI';
+import { fitWidth } from '../bracket/BracketGroup';
 class Tab2 extends PIXI.Container {
     playerName: PIXI.Text
     playerName2: PIXI.Text
@@ -50,6 +51,7 @@ class Tab2 extends PIXI.Container {
 
     setInfo(data) {
         this.playerName.text = data.name
+        fitWidth(this.playerName,275,48)
         this.setGameIdx(0)
     }
     setGameIdx(idx) {

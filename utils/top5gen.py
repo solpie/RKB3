@@ -37,15 +37,14 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
     for i in range(0,5):
         n = table.cell(row + i, 0).value
         # hupuID = table.cell(1 + i, 1).value
-        hupuID = ''
         a = int(table.cell(row + i, 1).value)
         h = int(table.cell(row + i, 2).value)
         w = int(table.cell(row + i, 3).value)
         t = table.cell(row + i, 4).value
+        print(n,'p'+str(i+1))
         # t = ''
         info = table.cell(row + i, 5).value.replace(',', '\n').replace(' ', '\n').replace('，','\n').replace('\t','')
-        plist.append({'name': n, 'hupuID': hupuID,
-                      'hwa': [h, w, a], 'tag1': t,'info':info,'img':'p'+str(i+1)})
+        plist.append({'name': n,                      'hwa': [h, w, a], 'tag1': t,'info':info,'img':'p'+str(i+1)})
 
     print(json.dumps(plist, ensure_ascii=False))
     return plist

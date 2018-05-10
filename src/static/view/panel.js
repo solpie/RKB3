@@ -7349,6 +7349,7 @@
 	var const_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(17);
 	var HupuAPI_1 = __webpack_require__(22);
+	var BracketGroup_1 = __webpack_require__(72);
 	var Tab2 = (function (_super) {
 	    __extends(Tab2, _super);
 	    function Tab2() {
@@ -7385,6 +7386,7 @@
 	    }
 	    Tab2.prototype.setInfo = function (data) {
 	        this.playerName.text = data.name;
+	        BracketGroup_1.fitWidth(this.playerName, 275, 48);
 	        this.setGameIdx(0);
 	    };
 	    Tab2.prototype.setGameIdx = function (idx) {
