@@ -342,7 +342,7 @@ export class ScoreView extends BasePanelView {
 
                     //vs title
                     if (lPlayer.title && rPlayer.title)
-                        this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title })
+                        this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title.replace(" ",'') + ' ' + rPlayer.title.replace(" ",'') })
                 };
 
                 eventMap['updateScore'] = () => {
@@ -385,7 +385,7 @@ export class ScoreView extends BasePanelView {
                     setPlayer(data.player.left, data.player.right);
                     // window.location.reload();
                     if (lPlayer.title && rPlayer.title)
-                        this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title })
+                        this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title.replace(" ",'') + ' ' + rPlayer.title.replace(" ",'') })
 
                 };
 

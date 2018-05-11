@@ -6255,7 +6255,7 @@
 	                        _this.scorePanel.resetTimer();
 	                    }
 	                    if (lPlayer.title && rPlayer.title)
-	                        _this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title });
+	                        _this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title.replace(" ", '') + ' ' + rPlayer.title.replace(" ", '') });
 	                };
 	                eventMap['updateScore'] = function () {
 	                    console.log('updateScore', data);
@@ -6293,7 +6293,7 @@
 	                    _this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
 	                    setPlayer(data.player.left, data.player.right);
 	                    if (lPlayer.title && rPlayer.title)
-	                        _this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title + ' ' + rPlayer.title });
+	                        _this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title.replace(" ", '') + ' ' + rPlayer.title.replace(" ", '') });
 	                };
 	                eventMap['commitGame'] = function () {
 	                    console.log('commitGame', data);
