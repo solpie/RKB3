@@ -54,7 +54,7 @@
 	var stage3point_1 = __webpack_require__(42);
 	var KOA_1 = __webpack_require__(48);
 	var Stage5v5_1 = __webpack_require__(63);
-	var StageOnlineView_1 = __webpack_require__(66);
+	var StageOnlineView_1 = __webpack_require__(68);
 	var routes = [
 	    {
 	        path: '/koa/:op',
@@ -3967,7 +3967,7 @@
 	    __extends(StageStudio, _super);
 	    function StageStudio() {
 	        _super.call(this);
-	        this.template = __webpack_require__(65);
+	        this.template = __webpack_require__(67);
 	        this.isOp = VueBase_1.VueBase.PROP;
 	        this.isMobile = VueBase_1.VueBase.PROP;
 	        this.leftTimeup = VueBase_1.VueBase.PROP;
@@ -4094,8 +4094,8 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var FrameFx_1 = __webpack_require__(90);
-	var ImgLoader_1 = __webpack_require__(67);
+	var FrameFx_1 = __webpack_require__(65);
+	var ImgLoader_1 = __webpack_require__(66);
 	var JsFunc_1 = __webpack_require__(17);
 	var StudioPanel = (function (_super) {
 	    __extends(StudioPanel, _super);
@@ -4164,12 +4164,6 @@
 
 /***/ },
 /* 65 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n</div>";
-
-/***/ },
-/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4178,8 +4172,126 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var ImgLoader_1 = __webpack_require__(67);
-	var timers_1 = __webpack_require__(68);
+	var JsFunc_1 = __webpack_require__(17);
+	var FramesFx = (function (_super) {
+	    __extends(FramesFx, _super);
+	    function FramesFx(imgUrlBase, from, to, numPad) {
+	        var _this = this;
+	        if (numPad === void 0) { numPad = 2; }
+	        _super.call(this);
+	        var imgArr = [];
+	        for (var i = from; i < to + 1; i++) {
+	            imgArr.push(imgUrlBase + JsFunc_1.paddy(i, numPad) + '.png');
+	        }
+	        var textureArray = [];
+	        for (var i_1 = 0; i_1 < imgArr.length; i_1++) {
+	            var texture = PIXI.Texture.fromImage(imgArr[i_1]);
+	            textureArray.push(texture);
+	        }
+	        ;
+	        var mc = new PIXI.extras['AnimatedSprite'](textureArray);
+	        mc.animationSpeed = .3;
+	        mc.loop = false;
+	        this.addChild(mc);
+	        this.mc = mc;
+	        mc.onComplete = function () {
+	            _this.emit('complete');
+	        };
+	    }
+	    FramesFx.prototype.onComplete = function (callback) {
+	    };
+	    FramesFx.prototype.show = function () {
+	        this.mc.play();
+	    };
+	    FramesFx.prototype.setSpeed = function (sp) {
+	        this.mc.animationSpeed = sp;
+	    };
+	    FramesFx.prototype.gotoAndStop = function (frame) {
+	        this.mc.gotoAndStop(frame);
+	    };
+	    FramesFx.prototype.playOnce = function () {
+	        this.mc.gotoAndStop(0);
+	        this.mc.play();
+	    };
+	    return FramesFx;
+	}(PIXI.Container));
+	exports.FramesFx = FramesFx;
+
+
+/***/ },
+/* 66 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var PixiEx_1 = __webpack_require__(46);
+	var ImgLoader = (function () {
+	    function ImgLoader() {
+	        this._texMap = {};
+	    }
+	    ImgLoader.prototype.loadTex = function (url, callback) {
+	        var _this = this;
+	        if (!this._texMap[url]) {
+	            PixiEx_1.loadRes(url, function (img) {
+	                _this._texMap[url] = PixiEx_1.imgToTex(img);
+	                callback(_this._texMap[url]);
+	            }, true);
+	        }
+	        else
+	            callback(this._texMap[url]);
+	    };
+	    ImgLoader.prototype.loadTex2 = function (url, callback, isCrossOrigin) {
+	        var _this = this;
+	        if (isCrossOrigin === void 0) { isCrossOrigin = true; }
+	        if (url.charAt(0) == '/')
+	            isCrossOrigin = false;
+	        if (!this._texMap[url]) {
+	            PixiEx_1.loadRes(url, function (img) {
+	                _this._texMap[url] = img;
+	                callback(_this._texMap[url]);
+	            }, isCrossOrigin);
+	        }
+	        else
+	            callback(this._texMap[url]);
+	    };
+	    ImgLoader.prototype.loadTexArr = function (urlArr, callback, isCrossOrigin) {
+	        var _this = this;
+	        if (isCrossOrigin === void 0) { isCrossOrigin = false; }
+	        var recur = function () {
+	            if (urlArr.length)
+	                _this.loadTex2(urlArr.pop(), function (_) {
+	                    recur();
+	                }, isCrossOrigin);
+	            else
+	                callback();
+	        };
+	        recur();
+	    };
+	    ImgLoader.prototype.getTex = function (url) {
+	        return PixiEx_1.imgToTex(this._texMap[url]);
+	    };
+	    return ImgLoader;
+	}());
+	exports.imgLoader = window['imgLoader'] = new ImgLoader();
+
+
+/***/ },
+/* 67 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n</div>";
+
+/***/ },
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var ImgLoader_1 = __webpack_require__(66);
+	var timers_1 = __webpack_require__(69);
 	var Command_1 = __webpack_require__(61);
 	var const_1 = __webpack_require__(43);
 	var HupuAPI_1 = __webpack_require__(22);
@@ -4187,10 +4299,10 @@
 	var VueBase_1 = __webpack_require__(18);
 	var WebJsFunc_1 = __webpack_require__(23);
 	var BasePanelView_1 = __webpack_require__(44);
-	var BracketView_1 = __webpack_require__(70);
-	var Lottery_1 = __webpack_require__(75);
-	var RankView_1 = __webpack_require__(78);
-	var ScoreView_1 = __webpack_require__(80);
+	var BracketView_1 = __webpack_require__(71);
+	var Lottery_1 = __webpack_require__(76);
+	var RankView_1 = __webpack_require__(79);
+	var ScoreView_1 = __webpack_require__(81);
 	var GroupSp2_1 = __webpack_require__(97);
 	var rankView;
 	var bracketView;
@@ -4359,9 +4471,10 @@
 	                    _this.onGetClientDelay();
 	                });
 	            },
-	            onShowRank: function (visible, page) {
+	            onShowRank: function (visible, page, section) {
 	                if (page === void 0) { page = 1; }
-	                this.opReq("" + Command_1.CommandId.cs_showRanking, { _: null, visible: visible, page: page });
+	                if (section === void 0) { section = 1; }
+	                this.opReq("" + Command_1.CommandId.cs_showRanking, { _: null, visible: visible, page: page, section: section });
 	            },
 	            onShowFx: function (visible, fxIdx) {
 	                if (fxIdx === void 0) { fxIdx = 1; }
@@ -4630,66 +4743,10 @@
 
 
 /***/ },
-/* 67 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-	var PixiEx_1 = __webpack_require__(46);
-	var ImgLoader = (function () {
-	    function ImgLoader() {
-	        this._texMap = {};
-	    }
-	    ImgLoader.prototype.loadTex = function (url, callback) {
-	        var _this = this;
-	        if (!this._texMap[url]) {
-	            PixiEx_1.loadRes(url, function (img) {
-	                _this._texMap[url] = PixiEx_1.imgToTex(img);
-	                callback(_this._texMap[url]);
-	            }, true);
-	        }
-	        else
-	            callback(this._texMap[url]);
-	    };
-	    ImgLoader.prototype.loadTex2 = function (url, callback, isCrossOrigin) {
-	        var _this = this;
-	        if (isCrossOrigin === void 0) { isCrossOrigin = true; }
-	        if (url.charAt(0) == '/')
-	            isCrossOrigin = false;
-	        if (!this._texMap[url]) {
-	            PixiEx_1.loadRes(url, function (img) {
-	                _this._texMap[url] = img;
-	                callback(_this._texMap[url]);
-	            }, isCrossOrigin);
-	        }
-	        else
-	            callback(this._texMap[url]);
-	    };
-	    ImgLoader.prototype.loadTexArr = function (urlArr, callback, isCrossOrigin) {
-	        var _this = this;
-	        if (isCrossOrigin === void 0) { isCrossOrigin = false; }
-	        var recur = function () {
-	            if (urlArr.length)
-	                _this.loadTex2(urlArr.pop(), function (_) {
-	                    recur();
-	                }, isCrossOrigin);
-	            else
-	                callback();
-	        };
-	        recur();
-	    };
-	    ImgLoader.prototype.getTex = function (url) {
-	        return PixiEx_1.imgToTex(this._texMap[url]);
-	    };
-	    return ImgLoader;
-	}());
-	exports.imgLoader = window['imgLoader'] = new ImgLoader();
-
-
-/***/ },
-/* 68 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(69).nextTick;
+	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(70).nextTick;
 	var apply = Function.prototype.apply;
 	var slice = Array.prototype.slice;
 	var immediateIds = {};
@@ -4765,10 +4822,10 @@
 	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
 	  delete immediateIds[id];
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(68).setImmediate, __webpack_require__(68).clearImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(69).setImmediate, __webpack_require__(69).clearImmediate))
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -4954,7 +5011,7 @@
 
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4963,13 +5020,13 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var WebDBCmd_1 = __webpack_require__(71);
+	var WebDBCmd_1 = __webpack_require__(72);
 	var Command_1 = __webpack_require__(61);
 	var HupuAPI_1 = __webpack_require__(22);
 	var BasePanelView_1 = __webpack_require__(44);
 	var const_1 = __webpack_require__(43);
-	var BracketGroup_1 = __webpack_require__(72);
-	var Bracket2018_1 = __webpack_require__(73);
+	var BracketGroup_1 = __webpack_require__(73);
+	var Bracket2018_1 = __webpack_require__(74);
 	var BracketView = (function (_super) {
 	    __extends(BracketView, _super);
 	    function BracketView(stage, gameId, $route) {
@@ -5140,7 +5197,7 @@
 
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -5177,7 +5234,7 @@
 
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5251,7 +5308,7 @@
 
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5261,12 +5318,12 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var JsFunc_1 = __webpack_require__(17);
-	var BracketGroup_1 = __webpack_require__(72);
+	var BracketGroup_1 = __webpack_require__(73);
 	var TweenEx_1 = __webpack_require__(50);
 	var Fx_1 = __webpack_require__(56);
 	var const_1 = __webpack_require__(43);
 	var PixiEx_1 = __webpack_require__(46);
-	var BracketGroup2018_1 = __webpack_require__(74);
+	var BracketGroup2018_1 = __webpack_require__(75);
 	var Bracket2018 = (function (_super) {
 	    __extends(Bracket2018, _super);
 	    function Bracket2018(parent) {
@@ -5358,7 +5415,7 @@
 
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5431,7 +5488,7 @@
 
 
 /***/ },
-/* 75 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5442,11 +5499,11 @@
 	};
 	var JsFunc_1 = __webpack_require__(17);
 	var WebJsFunc_1 = __webpack_require__(23);
-	var RollFx_1 = __webpack_require__(76);
-	var BracketGroup_1 = __webpack_require__(72);
+	var RollFx_1 = __webpack_require__(77);
+	var BracketGroup_1 = __webpack_require__(73);
 	var const_1 = __webpack_require__(43);
 	var PixiEx_1 = __webpack_require__(46);
-	var RandomFx_1 = __webpack_require__(77);
+	var RandomFx_1 = __webpack_require__(78);
 	var Lottery = (function (_super) {
 	    __extends(Lottery, _super);
 	    function Lottery(parent, k, id) {
@@ -5636,7 +5693,7 @@
 
 
 /***/ },
-/* 76 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5679,7 +5736,7 @@
 
 
 /***/ },
-/* 77 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5688,7 +5745,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var BracketGroup_1 = __webpack_require__(72);
+	var BracketGroup_1 = __webpack_require__(73);
 	var const_1 = __webpack_require__(43);
 	var TweenEx_1 = __webpack_require__(50);
 	var RandomFx = (function (_super) {
@@ -5745,7 +5802,7 @@
 
 
 /***/ },
-/* 78 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5757,7 +5814,7 @@
 	var PlayerInfo_1 = __webpack_require__(29);
 	var BasePanelView_1 = __webpack_require__(44);
 	var const_1 = __webpack_require__(43);
-	var FTInfo_1 = __webpack_require__(79);
+	var FTInfo_1 = __webpack_require__(80);
 	var PixiEx_1 = __webpack_require__(46);
 	var JsFunc_1 = __webpack_require__(17);
 	var RankView = (function (_super) {
@@ -5961,7 +6018,7 @@
 
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -5990,7 +6047,7 @@
 
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5999,7 +6056,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Event2017_1 = __webpack_require__(81);
+	var Event2017_1 = __webpack_require__(82);
 	var home_1 = __webpack_require__(16);
 	var Command_1 = __webpack_require__(61);
 	var const_1 = __webpack_require__(43);
@@ -6359,7 +6416,7 @@
 
 
 /***/ },
-/* 81 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6372,15 +6429,15 @@
 	var JsFunc_1 = __webpack_require__(17);
 	var PixiEx_1 = __webpack_require__(46);
 	var TweenEx_1 = __webpack_require__(50);
-	var BracketGroup_1 = __webpack_require__(72);
-	var Champion_1 = __webpack_require__(82);
-	var Com2017_1 = __webpack_require__(83);
-	var Group_1 = __webpack_require__(84);
-	var LogoFx_1 = __webpack_require__(85);
-	var NoticeSprite_1 = __webpack_require__(86);
-	var ScoreFx_1 = __webpack_require__(87);
-	var TopInfo_1 = __webpack_require__(88);
-	var Winner_1 = __webpack_require__(89);
+	var BracketGroup_1 = __webpack_require__(73);
+	var Champion_1 = __webpack_require__(83);
+	var Com2017_1 = __webpack_require__(84);
+	var Group_1 = __webpack_require__(85);
+	var LogoFx_1 = __webpack_require__(86);
+	var NoticeSprite_1 = __webpack_require__(87);
+	var ScoreFx_1 = __webpack_require__(88);
+	var TopInfo_1 = __webpack_require__(89);
+	var Winner_1 = __webpack_require__(90);
 	var Top5_1 = __webpack_require__(91);
 	var VsTitle_1 = __webpack_require__(92);
 	var RollText_1 = __webpack_require__(93);
@@ -6656,7 +6713,7 @@
 
 
 /***/ },
-/* 82 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6766,7 +6823,7 @@
 
 
 /***/ },
-/* 83 */
+/* 84 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -6807,7 +6864,7 @@
 
 
 /***/ },
-/* 84 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6816,7 +6873,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Com2017_1 = __webpack_require__(83);
+	var Com2017_1 = __webpack_require__(84);
 	var const_1 = __webpack_require__(43);
 	var PixiEx_1 = __webpack_require__(46);
 	var Group = (function (_super) {
@@ -6900,7 +6957,7 @@
 
 
 /***/ },
-/* 85 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6940,7 +6997,7 @@
 
 
 /***/ },
-/* 86 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7033,7 +7090,7 @@
 
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7077,7 +7134,7 @@
 
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7126,7 +7183,7 @@
 
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7139,8 +7196,8 @@
 	var JsFunc_1 = __webpack_require__(17);
 	var PixiEx_1 = __webpack_require__(46);
 	var TweenEx_1 = __webpack_require__(50);
-	var FrameFx_1 = __webpack_require__(90);
-	var ImgLoader_1 = __webpack_require__(67);
+	var FrameFx_1 = __webpack_require__(65);
+	var ImgLoader_1 = __webpack_require__(66);
 	var Winner = (function (_super) {
 	    __extends(Winner, _super);
 	    function Winner() {
@@ -7279,62 +7336,6 @@
 
 
 /***/ },
-/* 90 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var JsFunc_1 = __webpack_require__(17);
-	var FramesFx = (function (_super) {
-	    __extends(FramesFx, _super);
-	    function FramesFx(imgUrlBase, from, to, numPad) {
-	        var _this = this;
-	        if (numPad === void 0) { numPad = 2; }
-	        _super.call(this);
-	        var imgArr = [];
-	        for (var i = from; i < to + 1; i++) {
-	            imgArr.push(imgUrlBase + JsFunc_1.paddy(i, numPad) + '.png');
-	        }
-	        var textureArray = [];
-	        for (var i_1 = 0; i_1 < imgArr.length; i_1++) {
-	            var texture = PIXI.Texture.fromImage(imgArr[i_1]);
-	            textureArray.push(texture);
-	        }
-	        ;
-	        var mc = new PIXI.extras['AnimatedSprite'](textureArray);
-	        mc.animationSpeed = .3;
-	        mc.loop = false;
-	        this.addChild(mc);
-	        this.mc = mc;
-	        mc.onComplete = function () {
-	            _this.emit('complete');
-	        };
-	    }
-	    FramesFx.prototype.onComplete = function (callback) {
-	    };
-	    FramesFx.prototype.show = function () {
-	        this.mc.play();
-	    };
-	    FramesFx.prototype.setSpeed = function (sp) {
-	        this.mc.animationSpeed = sp;
-	    };
-	    FramesFx.prototype.gotoAndStop = function (frame) {
-	        this.mc.gotoAndStop(frame);
-	    };
-	    FramesFx.prototype.playOnce = function () {
-	        this.mc.gotoAndStop(0);
-	        this.mc.play();
-	    };
-	    return FramesFx;
-	}(PIXI.Container));
-	exports.FramesFx = FramesFx;
-
-
-/***/ },
 /* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -7345,11 +7346,11 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var PixiEx_1 = __webpack_require__(46);
-	var ImgLoader_1 = __webpack_require__(67);
+	var ImgLoader_1 = __webpack_require__(66);
 	var const_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(17);
 	var HupuAPI_1 = __webpack_require__(22);
-	var BracketGroup_1 = __webpack_require__(72);
+	var BracketGroup_1 = __webpack_require__(73);
 	var Tab2 = (function (_super) {
 	    __extends(Tab2, _super);
 	    function Tab2() {
@@ -7703,11 +7704,11 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var PixiEx_1 = __webpack_require__(46);
-	var ImgLoader_1 = __webpack_require__(67);
+	var ImgLoader_1 = __webpack_require__(66);
 	var const_1 = __webpack_require__(43);
 	var JsFunc_1 = __webpack_require__(17);
 	var HupuAPI_1 = __webpack_require__(22);
-	var BracketGroup_1 = __webpack_require__(72);
+	var BracketGroup_1 = __webpack_require__(73);
 	var Tab2 = (function (_super) {
 	    __extends(Tab2, _super);
 	    function Tab2() {
@@ -7771,7 +7772,7 @@
 	        var imgArr = [];
 	        this.curPlayer = new PIXI.Sprite();
 	        this.addChild(this.curPlayer);
-	        HupuAPI_1.getRankSection(4, function (res) {
+	        HupuAPI_1.getRankSection(data.section, function (res) {
 	            var d = res;
 	            _this.playerArr = [];
 	            _this.rankMap = {};
@@ -7795,17 +7796,39 @@
 	                _this.addChild(t);
 	            }
 	            _this.cacheTime = new Date().getTime();
-	            var bgUrl = '/img/panel/rank/bg4_0.png';
+	            var bgUrl = "/img/panel/rank/bg" + data.section + "_0.png";
 	            imgArr.push(bgUrl);
 	            ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
 	                var bg = PixiEx_1.newBitmap({ url: bgUrl });
 	                _this.addChildAt(bg, 0);
+	                _this.bg = bg;
 	                _this.show(data);
 	            });
 	        });
 	    };
-	    RankSection.prototype.show = function (data) {
-	        console.log('show player ', data);
+	    RankSection.prototype._getData = function (section, callback) {
+	        var _this = this;
+	        HupuAPI_1.getRankSection(section, function (res) {
+	            var d = res;
+	            JsFunc_1.loadImg("/img/panel/rank/bg" + section + "_0.png", function (img) {
+	                _this.bg.texture = PixiEx_1.imgToTex(img);
+	            });
+	            _this.playerArr = [];
+	            _this.rankMap = {};
+	            for (var i = 0; i < d.data.length; i++) {
+	                var p = d.data[i];
+	                _this.rankMap[p.rank] = {
+	                    name: p.name,
+	                    champion: p.total_champion,
+	                    rank: p.rank,
+	                    hwaText: p.height + ' /cm' + p.weight + ' /kg ' + p.age,
+	                    avatar: p.head,
+	                };
+	            }
+	            callback();
+	        });
+	    };
+	    RankSection.prototype._fillData = function (data) {
 	        if (this.rankMap) {
 	            var s = this.start;
 	            if (data.page == 3)
@@ -7827,6 +7850,17 @@
 	            }
 	        }
 	        this.p.addChild(this);
+	    };
+	    RankSection.prototype.show = function (data) {
+	        var _this = this;
+	        console.log('show player ', data);
+	        if (data.section) {
+	            this._getData(data.section, function (_) {
+	                _this._fillData(data);
+	            });
+	        }
+	        else
+	            this._fillData(data);
 	    };
 	    RankSection.prototype.setDetail = function (data) {
 	        console.log('show detail', data);
@@ -7885,10 +7919,10 @@
 	"use strict";
 	var PixiEx_1 = __webpack_require__(46);
 	var JsFunc_1 = __webpack_require__(17);
-	var ImgLoader_1 = __webpack_require__(67);
+	var ImgLoader_1 = __webpack_require__(66);
 	var const_1 = __webpack_require__(43);
 	var TextTimer_1 = __webpack_require__(52);
-	var BracketGroup_1 = __webpack_require__(72);
+	var BracketGroup_1 = __webpack_require__(73);
 	var TweenEx_1 = __webpack_require__(50);
 	var skin = {
 	    bg: '/img/panel/score2018/bg.png',
@@ -8212,7 +8246,7 @@
 	};
 	var PixiEx_1 = __webpack_require__(46);
 	var const_1 = __webpack_require__(43);
-	var ImgLoader_1 = __webpack_require__(67);
+	var ImgLoader_1 = __webpack_require__(66);
 	var PlayerNow = (function (_super) {
 	    __extends(PlayerNow, _super);
 	    function PlayerNow() {
@@ -8282,8 +8316,8 @@
 	var const_1 = __webpack_require__(43);
 	var HupuAPI_1 = __webpack_require__(22);
 	var thenBy_1 = __webpack_require__(98);
-	var ImgLoader_1 = __webpack_require__(67);
-	var BracketGroup_1 = __webpack_require__(72);
+	var ImgLoader_1 = __webpack_require__(66);
+	var BracketGroup_1 = __webpack_require__(73);
 	var Row1 = (function (_super) {
 	    __extends(Row1, _super);
 	    function Row1() {
@@ -8603,7 +8637,7 @@
 /* 99 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(false)\">隐藏所有</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(true)\">显示所有</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">修改并显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,'')\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button>\r\n\r\n            <label class=\"label\">  赛区实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRank(true,1)\">显示 1</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,2)\">上一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,3)\">下一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(false,-1)\">隐藏</button>\r\n            <label class=\"label\">  脉动广告:</label><br>\r\n            <button class=\"button\" @click=\"onShowFx(true,1)\">转瓶</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n        </div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"'>\r\n        <div v-if='isRmOp||isOp' style=\"position: absolute;left: 100px;top:260px;width: 800px\">\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                        正常\r\n                    </label>\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                        加粗\r\n                    </label>\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <br>\r\n            <div v-for=\"(n,idx) in noticeHistory\">\r\n                <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n            </div>\r\n\r\n            滚动文字：\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"inputRollText\">\r\n            <br>\r\n\r\n            <!-- <el-input v-model=\"inputRollText\" style=\"width:250px\"></el-input> -->\r\n            <button class=\"button\" @click='showRollText(inputRollText,true)'>发送</button>\r\n            <button class=\"button\" @click='showRollText(inputRollText,false)'>隐藏</button>\r\n        </div>\r\n        <!-- <label class=\"label\">   fx test：</label> <br>\r\n        <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button> -->\r\n    </div>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(false)\">隐藏所有</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(true)\">显示所有</button>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n                <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">修改并显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,'')\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button>\r\n\r\n            <label class=\"label\">  赛区实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,1)\">东南 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,2)\">东北 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,3)\">西方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,4)\">南方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1)\">首页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,2)\">上一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,3)\">下一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(false,-1)\">隐藏</button>\r\n            <label class=\"label\">  脉动广告:</label><br>\r\n            <button class=\"button\" @click=\"onShowFx(true,1)\">转瓶</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n        </div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"'>\r\n        <div v-if='isRmOp||isOp' style=\"position: absolute;left: 100px;top:260px;width: 800px\">\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                        正常\r\n                    </label>\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                        加粗\r\n                    </label>\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <br>\r\n            <div v-for=\"(n,idx) in noticeHistory\">\r\n                <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n            </div>\r\n\r\n            滚动文字：\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"inputRollText\">\r\n            <br>\r\n\r\n            <!-- <el-input v-model=\"inputRollText\" style=\"width:250px\"></el-input> -->\r\n            <button class=\"button\" @click='showRollText(inputRollText,true)'>发送</button>\r\n            <button class=\"button\" @click='showRollText(inputRollText,false)'>隐藏</button>\r\n        </div>\r\n        <!-- <label class=\"label\">   fx test：</label> <br>\r\n        <button class=\"button\" @click=\"onPlayScoreFx()\">score fx</button> -->\r\n    </div>\r\n</div>";
 
 /***/ }
 /******/ ]);

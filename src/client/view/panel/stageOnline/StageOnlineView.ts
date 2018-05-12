@@ -151,7 +151,7 @@ class StageOnlineView extends VueBase {
             // })
             // .on(`${CommandId.sc_showRollText}`, (data) => {
             //     this.showOnly("")
-                
+
             // })
             .on(`${CommandId.sc_showGroup}`, (data) => {
                 console.log('sc_showGroup');
@@ -423,10 +423,10 @@ class StageOnlineView extends VueBase {
                 this.onGetClientDelay()
             })
         },
-        onShowRank(visible,  page = 1) {
-            this.opReq(`${CommandId.cs_showRanking}`, { _: null, visible: visible, page: page })
+        onShowRank(visible, page = 1, section = 1) {
+            this.opReq(`${CommandId.cs_showRanking}`, { _: null, visible: visible, page: page,section:section })
         },
-        onShowFx(visible,  fxIdx = 1) {
+        onShowFx(visible, fxIdx = 1) {
             this.opReq(`${CommandId.cs_showBottle}`, { _: null, visible: visible, fxIdx: fxIdx })
         },
         onShowPlayerRanking(playerId) {

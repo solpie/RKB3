@@ -945,7 +945,8 @@
 /* 68 */,
 /* 69 */,
 /* 70 */,
-/* 71 */
+/* 71 */,
+/* 72 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -982,7 +983,6 @@
 
 
 /***/ },
-/* 72 */,
 /* 73 */,
 /* 74 */,
 /* 75 */,
@@ -1044,7 +1044,7 @@
 	var thenBy_1 = __webpack_require__(108);
 	var JsFunc_1 = __webpack_require__(17);
 	var GameInfo_1 = __webpack_require__(109);
-	var WebDBCmd_1 = __webpack_require__(71);
+	var WebDBCmd_1 = __webpack_require__(72);
 	var VueBase_1 = __webpack_require__(18);
 	var HupuAPI_1 = __webpack_require__(22);
 	var $post = function (url, param, callback) {
@@ -1503,7 +1503,7 @@
 
 	"use strict";
 	var RawDayClient_1 = __webpack_require__(103);
-	var WebDBCmd_1 = __webpack_require__(71);
+	var WebDBCmd_1 = __webpack_require__(72);
 	var JsFunc_1 = __webpack_require__(17);
 	var PlayerInfo_1 = __webpack_require__(105);
 	var RawDayCmd_1 = __webpack_require__(106);

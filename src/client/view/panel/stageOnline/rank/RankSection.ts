@@ -1,7 +1,7 @@
-import { newBitmap, loadRes, setScale } from '../../../utils/PixiEx';
+import { newBitmap, loadRes, setScale, imgToTex } from '../../../utils/PixiEx';
 import { imgLoader } from '../../../utils/ImgLoader';
 import { FontName } from '../../../const';
-import { paddy } from '../../../utils/JsFunc';
+import { paddy, loadImg } from '../../../utils/JsFunc';
 import { $post } from '../../../utils/WebJsFunc';
 import { getTop5Data, getRankSection } from '../../../utils/HupuAPI';
 import { fitWidth } from '../bracket/BracketGroup';
@@ -79,12 +79,13 @@ export class RankSection extends PIXI.Container {
     cacheTime: Number
     playerArr: any
     rankMap: any
+    bg: PIXI.Sprite
     create(parent: any, data) {
         this.p = parent
         let imgArr = []
         this.curPlayer = new PIXI.Sprite()
         this.addChild(this.curPlayer)
-        getRankSection(4, res => {
+        getRankSection(data.section, res => {
             let d = res
             this.playerArr = []
             this.rankMap = {}
@@ -108,7 +109,7 @@ export class RankSection extends PIXI.Container {
                 this.addChild(t)
             }
             this.cacheTime = new Date().getTime()
-            let bgUrl = '/img/panel/rank/bg4_0.png'
+            let bgUrl = `/img/panel/rank/bg${data.section}_0.png`
             imgArr.push(bgUrl)
 
             imgLoader.loadTexArr(imgArr, _ => {
@@ -117,6 +118,7 @@ export class RankSection extends PIXI.Container {
                 // });
                 let bg = newBitmap({ url: bgUrl })
                 this.addChildAt(bg, 0)
+                this.bg = bg
                 // let tagBg = newBitmap({ url: '/img/panel/top5/tag.png' })
                 // this.addChild(tagBg)
                 // this.tag2Bg = tagBg
@@ -127,8 +129,30 @@ export class RankSection extends PIXI.Container {
         })
     }
     start = 0
-    show(data) {
-        console.log('show player ', data);
+    _getData(section, callback) {
+        getRankSection(section, res => {
+            let d = res
+            loadImg(`/img/panel/rank/bg${section}_0.png`,
+            img => {
+                this.bg.texture = imgToTex(img)
+            })
+
+            this.playerArr = []
+            this.rankMap = {}
+            for (let i = 0; i < d.data.length; i++) {
+                let p = d.data[i];
+                this.rankMap[p.rank] = {
+                    name: p.name,
+                    champion: p.total_champion,
+                    rank: p.rank,
+                    hwaText: p.height + ' /cm' + p.weight + ' /kg ' + p.age,
+                    avatar: p.head,
+                }
+            }
+            callback()
+        })
+    }
+    _fillData(data) {
         if (this.rankMap) {
             let s = this.start
             if (data.page == 3)
@@ -149,20 +173,17 @@ export class RankSection extends PIXI.Container {
                 t.setInfo(p)
             }
         }
-        // this.setTab(data.idx)
-        // if (data.gameIdxArr) {
-        //     let a = data.gameIdxArr.split(' ')
-        //     if (a.length > 1) {
-        //         for (let i = 0; i < this.tabArr.length; i++) {
-        //             let t: Tab2 = this.tabArr[i];
-        //             if (a[i])
-        //                 t.setGameIdx(a[i])
-        //             else
-        //                 t.setGameIdx(0)
-        //         }
-        //     }
-        // }
         this.p.addChild(this)
+    }
+    show(data) {
+        console.log('show player ', data);
+        if (data.section) {
+            this._getData(data.section, _ => {
+                this._fillData(data)
+            })
+        }
+        else
+            this._fillData(data)
     }
 
 
