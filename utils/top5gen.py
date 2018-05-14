@@ -23,7 +23,10 @@ def open_excel(file='top5.xlsx'):
 #         "info": "实力榜排名第24名 \n路人王广州站冠军 \n多次参与冠军赛 \n2018年总决赛成员"
 #     },
 
-
+import os
+def addToClipBoard(text):
+    command = 'echo ' + text.strip() + '| clip'
+    os.system(command)
 def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
     data = open_excel(file)
     table = data.sheets()[by_index]
@@ -46,7 +49,9 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
         info = table.cell(row + i, 5).value.replace(',', '\n').replace(' ', '\n').replace('，','\n').replace('\t','')
         plist.append({'name': n,                      'hwa': [h, w, a], 'tag1': t,'info':info,'img':'p'+str(i+1)})
 
-    print(json.dumps(plist, ensure_ascii=False))
+    jstr = json.dumps(plist, ensure_ascii=False)
+    addToClipBoard(jstr)
+    print(jstr)
     return plist
 
 
