@@ -185,6 +185,16 @@ export class ScoreView extends BasePanelView {
             .on(`${CommandId.sc_setDelayTime}`, (data) => {
                 this.delayTimeMS = data.delayTimeMS
             })
+            .on(`${CommandId.sc_updateScore}`, (data) => {
+                if (data.isLeft) {
+                    data.leftScore = data.score
+                    this.scorePanel.setLeftScore(data.score)
+                }
+                else {
+                    data.rightScore = data.score
+                    this.scorePanel.setRightScore(data.score)
+                }
+            })
             .on(`${CommandId.sc_setTimer}`, (data) => {
                 this.scorePanel.setTimer(data.time)
             })
@@ -342,7 +352,7 @@ export class ScoreView extends BasePanelView {
 
                     //vs title
                     if (lPlayer.title && rPlayer.title)
-                        this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title.replace(" ",'') + ' ' + rPlayer.title.replace(" ",'') })
+                        this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title.replace(" ", '') + ' ' + rPlayer.title.replace(" ", '') })
                 };
 
                 eventMap['updateScore'] = () => {
@@ -385,7 +395,7 @@ export class ScoreView extends BasePanelView {
                     setPlayer(data.player.left, data.player.right);
                     // window.location.reload();
                     if (lPlayer.title && rPlayer.title)
-                        this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title.replace(" ",'') + ' ' + rPlayer.title.replace(" ",'') })
+                        this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title.replace(" ", '') + ' ' + rPlayer.title.replace(" ", '') })
 
                 };
 

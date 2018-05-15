@@ -64,7 +64,6 @@ export class Score2018 {
 
         let imgArr = []
         imgArr.push({ name: 'score', url: skin.score });
-        // imgArr.push({ name: 'scoreTex', url: skin.scoreTex });
 
         loadImgArr(imgArr, imgCol => {
             // loadRes(skin.score, (img) => {
@@ -187,13 +186,11 @@ export class Score2018 {
         lName.x = 600 + 113 - lName.width
         ctn.addChild(lName)
 
-
         let rName = new PIXI.Text('', ns)
         this.rName = rName
         rName.x = 1200
         this.rName.y = this.lName.y
         ctn.addChild(rName)
-
 
         let is = {
             fontFamily: FontName.Impact,
@@ -306,21 +303,21 @@ export class Score2018 {
         this.setLeftScore(0)
         this.setRightScore(0)
     }
-    setLeftScore(data) {
-        if (Number(data.leftScore) > 9)
+    setLeftScore(score) {
+        if (Number(score) > 9)
             setScale(this.lScoreText, 0.85)
         else
             setScale(this.lScoreText, 1)
-        this.lScoreText.text = data + ''
+        this.lScoreText.text = score + ''
         this.lScoreText.x = 865 - this.lScoreText.width * .5
     }
 
-    setRightScore(data) {
-        if (Number(data) > 9)
+    setRightScore(score) {
+        if (Number(score) > 9)
             setScale(this.rScoreText, 0.85)
         else
             setScale(this.rScoreText, 1)
-        this.rScoreText.text = data + ''
+        this.rScoreText.text = score + ''
 
         this.rScoreText.x = 865 + 187 - this.rScoreText.width * .5
 
@@ -344,11 +341,11 @@ export class Score2018 {
         loadAvt(this.lAvt, lPlayer.avatar)
 
         let rankText;
-        if (lPlayer.divisionRank == 0||!lPlayer.divisionRank)
+        if (lPlayer.divisionRank == 0 || !lPlayer.divisionRank)
             rankText = '冲榜'
         else
             rankText = lPlayer.divisionName + ' ' + lPlayer.divisionRank
-        
+
         this.lHeightWeight.text = lPlayer.height + 'cm | ' + lPlayer.weight + 'kg'
         // this.lHeightWeight.text = rankText + lPlayer.height + 'cm | ' + lPlayer.weight + 'kg   '
         this.lHeightWeight.x = 713 - this.lHeightWeight.width
@@ -366,11 +363,11 @@ export class Score2018 {
         loadAvt(this.rAvt, rPlayer.avatar)
 
         let rankText;
-        if (rPlayer.divisionRank == 0||!rPlayer.divisionRank)
+        if (rPlayer.divisionRank == 0 || !rPlayer.divisionRank)
             rankText = '冲榜'
         else
             rankText = rPlayer.divisionName + ' ' + rPlayer.divisionRank
-        
+
         // let rankText = rPlayer.divisionName + ' ' + rPlayer.divisionRank
 
         this.rHeightWeight.text = rPlayer.height + 'cm | ' + rPlayer.weight + 'kg' //+ rankText

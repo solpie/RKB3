@@ -424,7 +424,7 @@ class StageOnlineView extends VueBase {
             })
         },
         onShowRank(visible, page = 1, section = 1) {
-            this.opReq(`${CommandId.cs_showRanking}`, { _: null, visible: visible, page: page,section:section })
+            this.opReq(`${CommandId.cs_showRanking}`, { _: null, visible: visible, page: page, section: section })
         },
         onShowFx(visible, fxIdx = 1) {
             this.opReq(`${CommandId.cs_showBottle}`, { _: null, visible: visible, fxIdx: fxIdx })
@@ -497,6 +497,11 @@ class StageOnlineView extends VueBase {
         },
         showRollText(text, v) {
             this.opReq(`${CommandId.cs_showRollText}`, { _: null, visible: v, text: text })
+        },
+        onUpdateScore(isLeft, v) {
+            let score = Number(v)
+            if (score > -1)
+                this.opReq(`${CommandId.cs_updateScore}`, { _: null, score: v, isLeft: isLeft })
         },
         onClkShowStage(v) {
             this.opReq(`${CommandId.cs_showStage}`, { _: null, visible: v })

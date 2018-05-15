@@ -2,9 +2,11 @@ export const CommandId = {
     resetTimer: '',
     // cs_resetTimer:'',
     disableTracker: '',
-    updateLeftScore: '',
+    cs_updateScore: '',
+    sc_updateScore: '',
+    cs_updateRightScore: '',
+    sc_updateRightScore: '',
     cs_addLeftScore: '',//1000010
-    updateRightScore: '',
     cs_addRightScore: '',
 
 
