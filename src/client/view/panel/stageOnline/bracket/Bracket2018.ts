@@ -10,6 +10,7 @@ export class Bracket2018 extends PIXI.Container {
     hint1Tex: PIXI.Texture
     hint2Tex: PIXI.Texture
     groupSpMap: any
+
     constructor(parent: PIXI.Container) {
         super()
         parent.addChild(this)
@@ -79,6 +80,8 @@ export class Bracket2018 extends PIXI.Container {
                 // else
                 //     this.setWinHint(group1.hint2)
                 closeGame[gameIdx] = true;
+                gsp.setScore(dataObj.left.score, dataObj.right.score)
+
             }
             // if (dataObj.left.name) {
             //     // (group1.labels[0] as PIXI.Text).style = s;

@@ -5394,6 +5394,7 @@
 	            gsp.setGameIdx(gameIdx);
 	            if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
 	                closeGame[gameIdx] = true;
+	                gsp.setScore(dataObj.left.score, dataObj.right.score);
 	            }
 	            var group2 = BracketGroup_1.groupPosMap[gameIdx];
 	            var hints = group2.hints;
@@ -5466,6 +5467,24 @@
 	        gameIdx.x = -15;
 	        gameIdx.y = 49;
 	        this.gameIdx = gameIdx;
+	        var ss = {
+	            fontFamily: const_1.FontName.Impact,
+	            fontSize: '30px', fill: "#369beb",
+	            stroke: '#4a1850',
+	            strokeThickness: 5,
+	            dropShadow: true,
+	            dropShadowColor: '#000000',
+	            dropShadowBlur: 2,
+	            dropShadowAngle: Math.PI / 6,
+	            dropShadowDistance: 2,
+	        };
+	        var lScore = new PIXI.Text('', ss);
+	        this.lScore = lScore;
+	        this.addChild(lScore);
+	        ss.fill = '#ff1919';
+	        var rScore = new PIXI.Text('', ss);
+	        this.rScore = rScore;
+	        this.addChild(rScore);
 	    }
 	    BracketGroup2018.prototype.setLeftName = function (str, isHint) {
 	        if (isHint === void 0) { isHint = false; }
@@ -5484,6 +5503,14 @@
 	            this.rName.alpha = 0.3;
 	        else
 	            this.rName.alpha = 1;
+	    };
+	    BracketGroup2018.prototype.setScore = function (left, right) {
+	        this.lScore.text = left + "";
+	        this.rScore.text = right + "";
+	        this.lScore.x =
+	            this.rScore.x = 232;
+	        this.lScore.y = this.lName.y;
+	        this.rScore.y = this.rName.y;
 	    };
 	    BracketGroup2018.prototype.setGameIdx = function (gameIdx) {
 	        this.gameIdx.text = gameIdx + '.';

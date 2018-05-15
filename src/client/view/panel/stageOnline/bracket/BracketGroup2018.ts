@@ -5,6 +5,9 @@ export class BracketGroup2018 extends PIXI.Container {
     lName: PIXI.Text
     rName: PIXI.Text
     gameIdx: PIXI.Text
+
+    lScore: PIXI.Text
+    rScore: PIXI.Text
     constructor(bgTex) {
         super()
         let bg = new PIXI.Sprite()
@@ -41,6 +44,27 @@ export class BracketGroup2018 extends PIXI.Container {
         gameIdx.x = -15
         gameIdx.y = 49
         this.gameIdx = gameIdx
+
+        let ss = {
+            fontFamily: FontName.Impact,
+            fontSize: '30px', fill: "#369beb",
+            stroke: '#4a1850',
+            strokeThickness: 5,
+            dropShadow: true,
+            dropShadowColor: '#000000',
+            dropShadowBlur: 2,
+            dropShadowAngle: Math.PI / 6,
+            dropShadowDistance: 2,
+            // fontWeight: 'bold'
+        }
+
+        let lScore = new PIXI.Text('', ss)
+        this.lScore = lScore
+        this.addChild(lScore)
+        ss.fill = '#ff1919'
+        let rScore = new PIXI.Text('', ss)
+        this.rScore = rScore
+        this.addChild(rScore)
     }
 
     setLeftName(str, isHint = false) {
@@ -61,6 +85,14 @@ export class BracketGroup2018 extends PIXI.Container {
             this.rName.alpha = 1
     }
 
+    setScore(left, right) {
+        this.lScore.text = left + ""
+        this.rScore.text = right + ""
+        this.lScore.x =// 75 - this.lScore.width
+            this.rScore.x = 232
+        this.lScore.y = this.lName.y
+        this.rScore.y = this.rName.y// 45
+    }
     setGameIdx(gameIdx) {
         this.gameIdx.text = gameIdx + '.'
         this.gameIdx.x = -3 - this.gameIdx.width

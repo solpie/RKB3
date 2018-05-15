@@ -30,23 +30,6 @@ export class BracketView extends BasePanelView {
             this.initManmaul()
         else {
             this.bracket.visible = false
-            // this.preRound = new PreRound(stage)
-            // window.onkeyup = (e) => {
-            //     console.log(e)
-            //     if (e.key == 'ArrowLeft') {
-            //         this.preRound.showRight(false)
-            //     }
-            //     else if (e.key == 'ArrowRight') {
-            //         this.preRound.showRight(true)
-            //     }
-            //     else if (e.key == 'Tab') {
-            //         // this.bracket.visible = !this.bracket.visible
-            //         // this.preRound.visible = !this.preRound.visible
-            //     }
-            //     else if (e.key == 'ArrowUp') {
-            //         this.preRound.toggleTheme()
-            //     }
-            // }
             this.getPreRoundInfo(gameId)
             this.initAuto(Number(gameId));
         }
