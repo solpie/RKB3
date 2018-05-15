@@ -41,7 +41,7 @@ export function getRoundList(callback) {
     let url = 'http://api.liangle.com/api/passerbyking/game/list'
     _get(proxy(url), callback)
 }
-export function getRoundRawDate(gameId, callback) {
+export function getRoundRawData(gameId, callback) {
     let url = 'http://api.liangle.com/api/passerbyking/game/match/' + gameId
     _get(proxy(url), callback)
 }

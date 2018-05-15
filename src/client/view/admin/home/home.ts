@@ -1,5 +1,6 @@
 import { ascendingProp } from '../../utils/JsFunc';
 import { VueBase } from "../../utils/VueBase";
+import { downloadGameData } from '../../../model/PlayerS4';
 /**
  * Created by toramisu on 2016/10/24.
  */
@@ -44,7 +45,7 @@ class HomeView extends VueBase {
             for (var i = 0; i < gameDataArr.length; i++) {
                 // var gameData = gameDataArr[i];
                 var gameData = gameDataArr[gameDataArr.length - 1 - i];
-                if (Number(gameData.id) > 573) {
+                if (Number(gameData.id) > 613) {
                     gameData.text = "[" + gameData.id + "]:" + gameData.title;
                     gameData.value = gameData.id;
                     this.gameDataArr.push(gameData);
@@ -119,10 +120,9 @@ class HomeView extends VueBase {
             });
         },
         onClkQRCode() {
-            // var $s = $($('script')[0])
-            // console.log($s);
-            this.genQRCode()
-        }
+            // this.genQRCode()
+            downloadGameData()
+        },
     };
 }
 

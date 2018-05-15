@@ -768,11 +768,11 @@
 	    _get(WebJsFunc_1.proxy(url), callback);
 	}
 	exports.getRoundList = getRoundList;
-	function getRoundRawDate(gameId, callback) {
+	function getRoundRawData(gameId, callback) {
 	    var url = 'http://api.liangle.com/api/passerbyking/game/match/' + gameId;
 	    _get(WebJsFunc_1.proxy(url), callback);
 	}
-	exports.getRoundRawDate = getRoundRawDate;
+	exports.getRoundRawData = getRoundRawData;
 	function getRanking(callback) {
 	    var url = 'http://lrw.smartcourt.cn/getRanking';
 	    var data = { page: 1, pageSize: 100 };

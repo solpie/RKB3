@@ -1,4 +1,4 @@
-import { getRoundList, getRoundRawDate } from '../../utils/HupuAPI';
+import { getRoundList, getRoundRawData } from '../../utils/HupuAPI';
 import { VueBase } from '../../utils/VueBase';
 import { mapToArr, descendingProp } from "../../utils/JsFunc";
 import { getEloRank } from "./elo";
@@ -31,7 +31,7 @@ class RankView extends VueBase {
         var getGameData = (i) => {
             if (i < gameIdArr.length) {
                 gameId = gameIdArr[i];
-                getRoundRawDate(gameId, (res1) => {
+                getRoundRawData(gameId, (res1) => {
                     console.log(res1)
                     let data = res1
                     // if (data.data.length) {

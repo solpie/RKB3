@@ -523,6 +523,7 @@
 	};
 	var JsFunc_1 = __webpack_require__(17);
 	var VueBase_1 = __webpack_require__(18);
+	var PlayerS4_1 = __webpack_require__(111);
 	function getScorePanelUrl(gameId, isDark, isOb) {
 	    if (isOb === void 0) { isOb = true; }
 	    var op = 'op';
@@ -570,8 +571,8 @@
 	                });
 	            },
 	            onClkQRCode: function () {
-	                this.genQRCode();
-	            }
+	                PlayerS4_1.downloadGameData();
+	            },
 	        };
 	        VueBase_1.VueBase.initProps(this);
 	    }
@@ -585,7 +586,7 @@
 	            _this.gameDataArr = [];
 	            for (var i = 0; i < gameDataArr.length; i++) {
 	                var gameData = gameDataArr[gameDataArr.length - 1 - i];
-	                if (Number(gameData.id) > 573) {
+	                if (Number(gameData.id) > 613) {
 	                    gameData.text = "[" + gameData.id + "]:" + gameData.title;
 	                    gameData.value = gameData.id;
 	                    _this.gameDataArr.push(gameData);
@@ -1030,11 +1031,11 @@
 	    _get(WebJsFunc_1.proxy(url), callback);
 	}
 	exports.getRoundList = getRoundList;
-	function getRoundRawDate(gameId, callback) {
+	function getRoundRawData(gameId, callback) {
 	    var url = 'http://api.liangle.com/api/passerbyking/game/match/' + gameId;
 	    _get(WebJsFunc_1.proxy(url), callback);
 	}
-	exports.getRoundRawDate = getRoundRawDate;
+	exports.getRoundRawData = getRoundRawData;
 	function getRanking(callback) {
 	    var url = 'http://lrw.smartcourt.cn/getRanking';
 	    var data = { page: 1, pageSize: 100 };
@@ -1245,7 +1246,7 @@
 	        var getGameData = function (i) {
 	            if (i < gameIdArr.length) {
 	                gameId = gameIdArr[i];
-	                HupuAPI_1.getRoundRawDate(gameId, function (res1) {
+	                HupuAPI_1.getRoundRawData(gameId, function (res1) {
 	                    console.log(res1);
 	                    var data = res1;
 	                    data.round = gameId;
@@ -1670,6 +1671,216 @@
 /***/ function(module, exports) {
 
 	module.exports = "<!--<script src=\"../../../../../yqbe/src/utils/nmserver/app.js\"></script>-->\r\n<div>\r\n    <progress id=\"progress1\" class=\"progress is-success\" value=\"0\" max=\"100\"></progress>\r\n    <div class=\"ui two column grid\" style=\"\">\r\n        <table class=\"table is-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th width=\"50px\"></th>\r\n                    <th width=\"150px\">ID</th>\r\n                    <th width=\"50px\" @click=\"onSortGameCount\">场数</th>\r\n                    <th width=\"70px\" @click=\"onSortWinPercent\">胜率</th>\r\n                    <th width=\"70px\">贡献值</th>\r\n                    <th width=\"70px\">天梯分</th>\r\n                    <th width=\"70px\">最快胜利</th>\r\n                    <th width=\"70px\">最慢胜利</th>\r\n                    <th width=\"70px\">平均胜利</th>\r\n                    <th>战绩</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr v-for=\"(playerDoc,index) in playerDocArr\">\r\n                    <!--<td><img src=\"{{playerDoc.avatar}}\" style=\"width: 100px\"></td>-->\r\n                    <td v-text=\"index+1\"></td>\r\n                    <td v-text=\"playerDoc.name\"></td>\r\n                    <td v-text=\"(playerDoc.winGameCount+playerDoc.loseGameCount)||0\"></td>\r\n                    <td v-text=\"(playerDoc.winGameCount/(playerDoc.winGameCount+playerDoc.loseGameCount)*100||0).toFixed(2)+'%'\"></td>\r\n                    <td v-text=\"playerDoc.score\"></td>\r\n                    <td v-text=\"playerDoc.eloScore\"></td>\r\n                    <td v-text=\"playerDoc.minTimeWin\"></td>\r\n                    <td v-text=\"playerDoc.maxTimeWin\"></td>\r\n                    <td v-text=\"playerDoc.avgTimeWin\"></td>\r\n                    <td>\r\n                        <button class=\"ui right labeled icon button showRec\" @click=\"onShowRec(playerDoc.name)\">\r\n                        <i class=\"right arrow icon\"></i>\r\n                        查看\r\n                    </button>\r\n                    </td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n\r\n        <div class=\"four wide column\" style=\"position: fixed;left:650px;top: 60px;\">\r\n            <table class=\"ui striped table\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>round</th>\r\n                        <th width=\"150px\">ID</th>\r\n                        <th width=\"80px\">VS</th>\r\n                        <th width=\"150px\">ID</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(rec,index) in playerGameRecArr\" :class=\"[{ positive: rec.win }, { negative: !rec.win }]\">\r\n                        <td v-text=\"rec.round\"></td>\r\n                        <td v-text=\"rec.left.name\" :class=\"{bold:rec.name==rec.left.name}\"></td>\r\n                        <td v-text=\"rec.left.score+' : '+rec.right.score\"></td>\r\n                        <td v-text=\"rec.right.name\" :class=\"{bold:rec.name==rec.right.name}\"></td>\r\n                    </tr>\r\n                </tbody>\r\n                <tfoot>\r\n                    <tr>\r\n                        <th colspan=\"3\">\r\n                            <div class=\"ui right floated pagination menu\">\r\n                                <a class=\"icon item\">\r\n                                    <i class=\"left chevron icon\"></i>\r\n                                </a>\r\n                                <a class=\"item \" v-for=\"(page,pageIdx) in playerGameRecPageArr\" @click=\"onClkGameRecPage(pageIdx)\">{{pageIdx+1}}</a>\r\n                                <a class=\"icon item\">\r\n                                    <i class=\"right chevron icon\"></i>\r\n                                </a>\r\n                            </div>\r\n                        </th>\r\n                    </tr>\r\n                </tfoot>\r\n            </table>\r\n        </div>\r\n    </div>\r\n</div>";
+
+/***/ },
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */,
+/* 36 */,
+/* 37 */,
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */,
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */,
+/* 88 */,
+/* 89 */,
+/* 90 */,
+/* 91 */,
+/* 92 */,
+/* 93 */,
+/* 94 */,
+/* 95 */,
+/* 96 */,
+/* 97 */,
+/* 98 */,
+/* 99 */,
+/* 100 */,
+/* 101 */,
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */,
+/* 111 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var HupuAPI_1 = __webpack_require__(22);
+	var JsFunc_1 = __webpack_require__(17);
+	var Rec = (function () {
+	    function Rec() {
+	        this.score = 0;
+	        this.netScore = 0;
+	        this.isPerfect = false;
+	        this.matchType = -1;
+	    }
+	    return Rec;
+	}());
+	var PlayerS4 = (function () {
+	    function PlayerS4(pid) {
+	        this.perfectCount = 0;
+	        this.gameCount = 0;
+	        this.player_id = '';
+	        this.name = '';
+	        this.recArr = [];
+	        this.player_id = pid;
+	    }
+	    Object.defineProperty(PlayerS4.prototype, "subNetScore", {
+	        get: function () {
+	            var v = 0;
+	            for (var _i = 0, _a = this.recArr; _i < _a.length; _i++) {
+	                var r = _a[_i];
+	                v += r.netScore;
+	            }
+	            return v;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(PlayerS4.prototype, "subPerfect", {
+	        get: function () {
+	            var v = 0;
+	            for (var _i = 0, _a = this.recArr; _i < _a.length; _i++) {
+	                var r = _a[_i];
+	                if (r.isPerfect)
+	                    v += 1;
+	            }
+	            return v;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    return PlayerS4;
+	}());
+	exports.PlayerS4 = PlayerS4;
+	exports.downloadGameData = function (fromGameId) {
+	    if (fromGameId === void 0) { fromGameId = 614; }
+	    var gameIdArr = [];
+	    var gameDataArr = [];
+	    var gameId;
+	    var getGameData = function (i) {
+	        if (i < gameIdArr.length) {
+	            gameId = gameIdArr[i].gameId;
+	            var gameTitle_1 = gameIdArr[i].title;
+	            HupuAPI_1.getRoundRawData(gameId, function (res1) {
+	                console.log(res1);
+	                var data = res1;
+	                gameDataArr.push({ gameId: gameId, title: gameTitle_1, gameMap: res1.data });
+	                var p = Math.floor((i + 1) / gameIdArr.length * 100);
+	                console.log('progress', p);
+	                getGameData(i + 1);
+	            });
+	        }
+	        else {
+	            console.log('done', gameId, gameDataArr);
+	            calcGameData(gameDataArr);
+	        }
+	    };
+	    HupuAPI_1.getRoundList(function (res2) {
+	        var data = res2.data;
+	        for (var i = 0; i < data.length; i++) {
+	            var obj = data[i];
+	            if (obj.id > fromGameId - 1)
+	                gameIdArr.push({ gameId: obj.id, title: obj.title });
+	        }
+	        gameIdArr.sort(JsFunc_1.ascendingProp('gameId'));
+	        console.log(gameIdArr);
+	        getGameData(0);
+	    });
+	};
+	var calcGameData = function (gameDataArr) {
+	    var playerMap = {};
+	    var subPlayerMap = {};
+	    var _p = function (data) {
+	        var pid = data.player_id;
+	        var p;
+	        if (!playerMap[pid]) {
+	            p = playerMap[pid] = new PlayerS4(pid);
+	            p.name = data.name;
+	        }
+	        p = playerMap[pid];
+	        return p;
+	    };
+	    for (var _i = 0, gameDataArr_1 = gameDataArr; _i < gameDataArr_1.length; _i++) {
+	        var item = gameDataArr_1[_i];
+	        for (var i = 0; i < 38; i++) {
+	            var game = item.gameMap[i + 1];
+	            if (!game)
+	                break;
+	            var lPlayerId = game.left.player_id;
+	            var rPlayerId = game.right.player_id;
+	            var lPlayer = _p(game.left);
+	            var rPlayer = _p(game.right);
+	            var lRec = new Rec();
+	            var rRec = new Rec();
+	            lRec.matchType = rRec.matchType = Number(game.match_type);
+	            lRec.netScore = game.left.score - game.right.score;
+	            lRec.score = game.left.score;
+	            rRec.score = game.right.score;
+	            rRec.netScore = -lRec.netScore;
+	            if (rRec.score == 0)
+	                lRec.isPerfect = true;
+	            if (lRec.score == 0)
+	                rRec.isPerfect = true;
+	            lPlayer.recArr.push(lRec);
+	            rPlayer.recArr.push(rRec);
+	        }
+	    }
+	    console.log('player', playerMap);
+	    window['player'] = playerMap;
+	};
+
 
 /***/ }
 /******/ ]);
