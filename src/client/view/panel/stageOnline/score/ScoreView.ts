@@ -65,8 +65,10 @@ export class ScoreView extends BasePanelView {
             stage.addChild(f1)
             let f2 = this.preLoadFont(FontName.Impact)
             stage.addChild(f2)
+            let f4 = this.preLoadFont(FontName.DigiLED)
+            stage.addChild(f4)
             let f3 = this.preLoadFont(FontName.Geodet)
-            stage.addChild(f2)
+            stage.addChild(f3)
             TweenEx.delayedCall(1000, _ => {
                 if (!this.isRmOP)
                     this.scorePanel = new Score2018(stage)

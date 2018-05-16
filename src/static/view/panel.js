@@ -6138,8 +6138,10 @@
 	            stage.addChild(f1);
 	            var f2 = this.preLoadFont(const_1.FontName.Impact);
 	            stage.addChild(f2);
+	            var f4 = this.preLoadFont(const_1.FontName.DigiLED);
+	            stage.addChild(f4);
 	            var f3 = this.preLoadFont(const_1.FontName.Geodet);
-	            stage.addChild(f2);
+	            stage.addChild(f3);
 	            TweenEx_1.TweenEx.delayedCall(1000, function (_) {
 	                if (!_this.isRmOP)
 	                    _this.scorePanel = new Score2018_1.Score2018(stage);
