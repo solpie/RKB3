@@ -144,13 +144,13 @@ export class Score2018 {
         setScale(rIcon, 0.40)
 
         let fts = {
-            fontFamily: FontName.Impact,
-            fontSize: '30px', fill: "#c2c1d4",
-            fontWeight: 'bold'
+            fontFamily: FontName.Gamer,
+            fontSize: '32px', fill: "#c2c1d4",
+            // fontWeight: 'bold'
         }
         let foulL = new PIXI.Text("8", fts)
         foulL.x = 719
-        foulL.y = 115
+        foulL.y = 121
         ctn.addChild(foulL)
         this.lFoul = foulL
 
@@ -161,14 +161,14 @@ export class Score2018 {
         this.rFoul = foulR
 
         let tts = {
-            fontFamily: FontName.Impact,
-            fontSize: '37px', fill: "#ff7e00",
-            fontWeight: 'bold'
+            fontFamily: FontName.DigiLED,
+            fontSize: '39px', fill: "#ff7e00",
+            // fontWeight: 'bold'
         }
         let t = new TextTimer('', tts)
         ctn.addChild(t)
         t.x = 915
-        t.y = 103
+        t.y = 98
         TweenEx.delayedCall(1500, _ => {
             t.textInSec = 0
         })
@@ -193,8 +193,9 @@ export class Score2018 {
         ctn.addChild(rName)
 
         let is = {
-            fontFamily: FontName.Impact,
+            fontFamily: FontName.Gamer,
             fontSize: '30px', fill: "#000520"
+            // ,fontWeight:'italic'
         }
         let lHeightWeight = new PIXI.Text('', is)
         this.lHeightWeight = lHeightWeight

@@ -1131,6 +1131,7 @@
 	exports.FontName = {
 	    MicrosoftYahei: "Microsoft Yahei",
 	    Impact: "impact",
+	    Gamer: "gamer",
 	    DigiLED: "digital"
 	};
 	exports.ServerConst = {
@@ -8070,13 +8071,12 @@
 	        PixiEx_1.setScale(lIcon, 0.40);
 	        PixiEx_1.setScale(rIcon, 0.40);
 	        var fts = {
-	            fontFamily: const_1.FontName.Impact,
-	            fontSize: '30px', fill: "#c2c1d4",
-	            fontWeight: 'bold'
+	            fontFamily: const_1.FontName.Gamer,
+	            fontSize: '32px', fill: "#c2c1d4",
 	        };
 	        var foulL = new PIXI.Text("8", fts);
 	        foulL.x = 719;
-	        foulL.y = 115;
+	        foulL.y = 121;
 	        ctn.addChild(foulL);
 	        this.lFoul = foulL;
 	        var foulR = new PIXI.Text("5", fts);
@@ -8085,14 +8085,13 @@
 	        ctn.addChild(foulR);
 	        this.rFoul = foulR;
 	        var tts = {
-	            fontFamily: const_1.FontName.Impact,
-	            fontSize: '37px', fill: "#ff7e00",
-	            fontWeight: 'bold'
+	            fontFamily: const_1.FontName.DigiLED,
+	            fontSize: '39px', fill: "#ff7e00",
 	        };
 	        var t = new TextTimer_1.TextTimer('', tts);
 	        ctn.addChild(t);
 	        t.x = 915;
-	        t.y = 103;
+	        t.y = 98;
 	        TweenEx_1.TweenEx.delayedCall(1500, function (_) {
 	            t.textInSec = 0;
 	        });
@@ -8113,7 +8112,7 @@
 	        this.rName.y = this.lName.y;
 	        ctn.addChild(rName);
 	        var is = {
-	            fontFamily: const_1.FontName.Impact,
+	            fontFamily: const_1.FontName.Gamer,
 	            fontSize: '30px', fill: "#000520"
 	        };
 	        var lHeightWeight = new PIXI.Text('', is);
