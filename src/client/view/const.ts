@@ -15,6 +15,7 @@ export const FontName = {
     MicrosoftYahei: "Microsoft Yahei",
     Impact: "impact",
     Gamer: "gamer",
+    Geodet: "geodet",
     DigiLED: "digital"
 };
 export const ServerConst = {

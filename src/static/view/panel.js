@@ -1132,6 +1132,7 @@
 	    MicrosoftYahei: "Microsoft Yahei",
 	    Impact: "impact",
 	    Gamer: "gamer",
+	    Geodet: "geodet",
 	    DigiLED: "digital"
 	};
 	exports.ServerConst = {
@@ -6137,6 +6138,8 @@
 	            stage.addChild(f1);
 	            var f2 = this.preLoadFont(const_1.FontName.Impact);
 	            stage.addChild(f2);
+	            var f3 = this.preLoadFont(const_1.FontName.Geodet);
+	            stage.addChild(f2);
 	            TweenEx_1.TweenEx.delayedCall(1000, function (_) {
 	                if (!_this.isRmOP)
 	                    _this.scorePanel = new Score2018_1.Score2018(stage);
@@ -8071,12 +8074,12 @@
 	        PixiEx_1.setScale(lIcon, 0.40);
 	        PixiEx_1.setScale(rIcon, 0.40);
 	        var fts = {
-	            fontFamily: const_1.FontName.Gamer,
+	            fontFamily: const_1.FontName.Geodet,
 	            fontSize: '32px', fill: "#c2c1d4",
 	        };
 	        var foulL = new PIXI.Text("8", fts);
 	        foulL.x = 719;
-	        foulL.y = 121;
+	        foulL.y = 115;
 	        ctn.addChild(foulL);
 	        this.lFoul = foulL;
 	        var foulR = new PIXI.Text("5", fts);
@@ -8112,7 +8115,7 @@
 	        this.rName.y = this.lName.y;
 	        ctn.addChild(rName);
 	        var is = {
-	            fontFamily: const_1.FontName.Gamer,
+	            fontFamily: const_1.FontName.Geodet,
 	            fontSize: '30px', fill: "#000520"
 	        };
 	        var lHeightWeight = new PIXI.Text('', is);
@@ -8137,7 +8140,7 @@
 	        var rRank = new PIXI.Text('', rs);
 	        this.rRank = rRank;
 	        ctn.addChild(rRank);
-	        rRank.x = 1410 - 178;
+	        rRank.x = 1410 - 158;
 	        rRank.y = lRank.y;
 	        var gs = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,

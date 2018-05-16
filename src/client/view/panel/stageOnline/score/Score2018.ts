@@ -144,13 +144,13 @@ export class Score2018 {
         setScale(rIcon, 0.40)
 
         let fts = {
-            fontFamily: FontName.Gamer,
+            fontFamily: FontName.Geodet,
             fontSize: '32px', fill: "#c2c1d4",
             // fontWeight: 'bold'
         }
         let foulL = new PIXI.Text("8", fts)
         foulL.x = 719
-        foulL.y = 121
+        foulL.y = 115
         ctn.addChild(foulL)
         this.lFoul = foulL
 
@@ -193,7 +193,7 @@ export class Score2018 {
         ctn.addChild(rName)
 
         let is = {
-            fontFamily: FontName.Gamer,
+            fontFamily: FontName.Geodet,
             fontSize: '30px', fill: "#000520"
             // ,fontWeight:'italic'
         }
@@ -222,7 +222,7 @@ export class Score2018 {
         let rRank = new PIXI.Text('', rs)
         this.rRank = rRank
         ctn.addChild(rRank)
-        rRank.x = 1410 - 178
+        rRank.x = 1410 - 158
         rRank.y = lRank.y
 
         let gs = {
