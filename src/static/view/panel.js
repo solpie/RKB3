@@ -1130,7 +1130,7 @@
 	};
 	exports.FontName = {
 	    MicrosoftYahei: "Microsoft Yahei",
-	    NotoSansHans: "NotoSansHans",
+	    NotoSansHans: "Noto Sans S Chinese",
 	    Impact: "impact",
 	    Gamer: "gamer",
 	    Geodet: "geodet",
