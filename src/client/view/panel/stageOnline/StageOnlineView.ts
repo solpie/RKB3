@@ -15,6 +15,7 @@ import { RankView } from './rank/RankView';
 import { ScoreView } from './score/ScoreView';
 import { GroupSp2 } from './groupSp/GroupSp2';
 import { VsTitle } from './score/VsTitle';
+import { WebDBCmd } from '../../WebDBCmd';
 
 declare let $
 declare let io
@@ -469,6 +470,9 @@ class StageOnlineView extends VueBase {
         },
         onClkVsTitle(v, vs) {
             this.opReq(`${CommandId.cs_showVsTitle}`, { _: null, visible: v, vs: vs })
+        },
+        showCommentator(v, vs) {
+            this.opReq(`${WebDBCmd.cs_commentator}`, { _: null, visible: v, vs: vs })
         },
         onClkLoadVsTitle() {
             if (this.vsTitleMap) {

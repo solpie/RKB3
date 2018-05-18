@@ -2,12 +2,18 @@ import { newModal } from "../../../utils/PixiEx";
 import { FramesFx } from "../../../utils/FrameFx";
 import { imgLoader } from '../../../utils/ImgLoader';
 import { paddy } from "../../../utils/JsFunc";
+import { PopupView } from '../../../utils/PopupView';
+import { WebDBCmd } from "../../../WebDBCmd";
+import { Commentator } from "./Commentator";
 
 export class StudioPanel extends PIXI.Container {
     p: any
     fx: FramesFx
     l2m: FramesFx
     bottle: FramesFx
+
+    popupView: PopupView
+
     constructor(parent) {
         super()
         this.p = parent
@@ -57,6 +63,23 @@ export class StudioPanel extends PIXI.Container {
             this.bottle.visible = false
         })
 
+        this.popupView = new PopupView(this)
+    }
+
+    initLocalWS(io) {
+        let pv = this.popupView
+        io.on(WebDBCmd.sc_commentator, data => {
+            data.lName = '堂主'
+            data.lInfo = '微博@信堂堂主'
+            
+            data.rName = '堂主'
+            data.rInfo = '微博@信堂堂主'
+            console.log('sc_commentator', data);
+            if (data.visible)
+                pv.show(Commentator, data)
+            else
+                pv.hide(Commentator)
+        })
     }
 
     showBottle() {

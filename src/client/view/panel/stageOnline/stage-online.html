@@ -9,7 +9,7 @@
                 </li>
                 <li v-bind:class="{ 'is-active': actTab== 'tab2'}" @click='tab("tab2")'>
                     <a>
-                        <span>公告</span>
+                        <span>公告 MISC</span>
                     </a>
                 </li>
             </ul>
@@ -36,7 +36,7 @@
             </p>
 
             <!--<button class="button" @click="onClkRenderData">刷新现场数据到面板</button><br>-->
-            <label class="label" style="font-size: 50px;">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>
+            <label class="label" style="font-size: 50px;font-family: 'NotoSansHans-Regular'">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>
             <label class="label">比分面板:</label><br>
             <button class="button" @click="onClkShowScore(true)">显示</button>
             <button class="button" @click="onClkShowScore(false)">隐藏</button>
@@ -141,13 +141,12 @@
             <!-- <el-input v-model="inputRollText" style="width:250px"></el-input> -->
             <button class="button" @click='showRollText(inputRollText,true)'>发送</button>
             <button class="button" @click='showRollText(inputRollText,false)'>隐藏</button>
+            <button class="button" @click='showCommentator(true,1)'>堂主</button>
 
 
             <label class="label">  脉动广告:</label><br>
             <button class="button" @click="onShowFx(true,1)">转瓶</button>
 
         </div>
-        <!-- <label class="label">   fx test：</label> <br>
-        <button class="button" @click="onPlayScoreFx()">score fx</button> -->
     </div>
 </div>

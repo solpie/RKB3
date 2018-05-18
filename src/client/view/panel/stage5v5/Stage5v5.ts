@@ -38,19 +38,21 @@ class StageStudio extends VueBase {
         VueBase.initProps(this)
     }
     initCanvas() {
-        // this.panel = new Score5v5(BasePanelView.initPixi())
         this.stuioPanel = new StudioPanel(BasePanelView.initPixi())
     }
     protected created() {
         this.initCanvas()
         this.initIO()
     }
+
     initIO() {
-        io.connect(`/${PanelId.rkbPanel}`)
+       let localWS = io.connect(`/${PanelId.rkbPanel}`)
             .on(`${CommandId.sc_showBottle}`, (data) => {
                 console.log('sc_showBottle');
                 this.stuioPanel.showBottle()
             })
+
+        this.stuioPanel.initLocalWS(localWS)
     }
     methods = {
         onShowHeaderText(text, sec) {

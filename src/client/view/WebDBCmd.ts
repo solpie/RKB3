@@ -3,6 +3,9 @@ export const WebDBCmd = {
     init: '',
     pull: ``,
     cs_pull: ``,
+    //
+    cs_commentator: '',
+    sc_commentator: '',
     //game month
     cs_init: ``,
     sc_init: ``,

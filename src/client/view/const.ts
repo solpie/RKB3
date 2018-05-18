@@ -13,6 +13,7 @@ export const PanelId = {
 };
 export const FontName = {
     MicrosoftYahei: "Microsoft Yahei",
+    NotoSansHans: "NotoSansHans",
     Impact: "impact",
     Gamer: "gamer",
     Geodet: "geodet",

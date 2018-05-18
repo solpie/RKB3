@@ -352,6 +352,7 @@ export class Event2017 extends PIXI.Container {
                 : this.top5.hide()
         }
     }
+
     vsTitle: VsTitle
     showVsTitle(data) {
         if (!this.vsTitle) {
@@ -362,6 +363,7 @@ export class Event2017 extends PIXI.Container {
             this.vsTitle.show(data)
             : this.vsTitle.hide()
     }
+
     rollText: RollText
     showRollText(data) {
         if (!this.rollText) {

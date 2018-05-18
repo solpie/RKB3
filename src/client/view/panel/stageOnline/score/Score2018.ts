@@ -210,9 +210,9 @@ export class Score2018 {
         rHeightWeight.y = lHeightWeight.y
 
         let rs = {
-            fontFamily: FontName.MicrosoftYahei,
+            fontFamily: FontName.NotoSansHans,
             fontSize: '28px', fill: "#fff"
-            , fontWeight: 'bold'
+            // , fontWeight: 'bold'
         }
         let lRank = new PIXI.Text('', rs)
         this.lRank = lRank
