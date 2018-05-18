@@ -818,6 +818,11 @@
 	exports.getVsTitleData = function (callback) {
 	    _get('/db/vs.json?t=' + new Date(), callback);
 	};
+	function getCommentators(callback) {
+	    var url = 'http://rtmp.icassi.us:8090/commentator';
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getCommentators = getCommentators;
 
 
 /***/ },

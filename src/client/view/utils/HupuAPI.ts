@@ -68,6 +68,7 @@ export function getRankSection(section, callback) {
     _get(proxy(url), callback)
 }
 
+
 let _get = (url, callback) => {
     $.get(url, callback)
 }
@@ -91,8 +92,15 @@ export let _avatar = (filename) => {
 }
 
 export let getTop5Data = (callback) => {
-    _get('/db/top5.json?t='+new Date(), callback)
+    _get('/db/top5.json?t=' + new Date(), callback)
 }
 export let getVsTitleData = (callback) => {
-    _get('/db/vs.json?t='+new Date(), callback)
+    _get('/db/vs.json?t=' + new Date(), callback)
+}
+
+
+
+export function getCommentators(callback) {
+    let url = 'http://rtmp.icassi.us:8090/commentator'
+    _get(proxy(url), callback)
 }

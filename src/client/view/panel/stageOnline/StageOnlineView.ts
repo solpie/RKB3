@@ -472,7 +472,7 @@ class StageOnlineView extends VueBase {
             this.opReq(`${CommandId.cs_showVsTitle}`, { _: null, visible: v, vs: vs })
         },
         showCommentator(v, vs) {
-            this.opReq(`${WebDBCmd.cs_commentator}`, { _: null, visible: v, vs: vs })
+            this.opReq(`${WebDBCmd.cs_commentator}`, { _: null, visible: v, CIdArr: vs })
         },
         onClkLoadVsTitle() {
             if (this.vsTitleMap) {

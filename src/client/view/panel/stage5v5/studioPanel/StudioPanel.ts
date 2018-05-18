@@ -5,6 +5,7 @@ import { paddy } from "../../../utils/JsFunc";
 import { PopupView } from '../../../utils/PopupView';
 import { WebDBCmd } from "../../../WebDBCmd";
 import { Commentator } from "./Commentator";
+import { getAllPlayer, getCommentators } from '../../../utils/HupuAPI';
 
 export class StudioPanel extends PIXI.Container {
     p: any
@@ -21,36 +22,37 @@ export class StudioPanel extends PIXI.Container {
         // this.addChild(newModal(0.8))
         this.p.addChild(this)
 
-        let m2l = new FramesFx('/img/fx/logo/m2l_', 0, 12)
-        this.fx = m2l
-        m2l.setSpeed(0.28)
-        this.addChild(m2l)
+        // let m2l = new FramesFx('/img/fx/logo/m2l_', 0, 12)
+        // this.fx = m2l
+        // m2l.setSpeed(0.28)
+        // this.addChild(m2l)
 
-        let l2m = new FramesFx('/img/fx/logo/l2m/l2m_', 0, 15)
-        this.fx = l2m
-        l2m.setSpeed(0.28)
-        this.addChild(l2m)
-        // l2m.show()
-        l2m.visible = false
-        m2l.visible = false
-        let isl2m = false
-        let turn = () => {
-            isl2m = !isl2m
-            if (isl2m) {
-                l2m.visible = true
-                m2l.visible = false
-                l2m.playOnce()
-            }
-            else {
-                m2l.visible = true
-                l2m.visible = false
-                m2l.playOnce()
-            }
-        }
-        turn()
-        setInterval(_ => {
-            turn()
-        }, 30000)
+        // let l2m = new FramesFx('/img/fx/logo/l2m/l2m_', 0, 15)
+        // this.fx = l2m
+        // l2m.setSpeed(0.28)
+        // this.addChild(l2m)
+        // // l2m.show()
+        // l2m.visible = false
+        // m2l.visible = false
+        // let isl2m = false
+        // let turn = () => {
+        //     isl2m = !isl2m
+        //     if (isl2m) {
+        //         l2m.visible = true
+        //         m2l.visible = false
+        //         l2m.playOnce()
+        //     }
+        //     else {
+        //         m2l.visible = true
+        //         l2m.visible = false
+        //         m2l.playOnce()
+        //     }
+        // }
+        // turn()
+        // setInterval(_ => {
+        //     turn()
+        // }, 30000)
+
         let imgArr = []
         for (let i = 0; i < 53; i++) {
             imgArr.push('/img/fx/mizone/bottle/bt_' + paddy(i, 2) + '.png')
@@ -68,18 +70,14 @@ export class StudioPanel extends PIXI.Container {
 
     initLocalWS(io) {
         let pv = this.popupView
+
         io.on(WebDBCmd.sc_commentator, data => {
-            data.lName = '堂主'
-            data.lInfo = '微博@信堂堂主'
-            
-            data.rName = '堂主'
-            data.rInfo = '微博@信堂堂主'
-            console.log('sc_commentator', data);
             if (data.visible)
                 pv.show(Commentator, data)
             else
                 pv.hide(Commentator)
         })
+       
     }
 
     showBottle() {
