@@ -3,9 +3,11 @@ export const WebDBCmd = {
     init: '',
     pull: ``,
     cs_pull: ``,
-    //
+    //studio panel
     cs_commentator: '',
     sc_commentator: '',
+    cs_staticImg: '',
+    sc_staticImg: '',
     //game month
     cs_init: ``,
     sc_init: ``,

@@ -957,6 +957,8 @@
 	    cs_pull: "",
 	    cs_commentator: '',
 	    sc_commentator: '',
+	    cs_staticImg: '',
+	    sc_staticImg: '',
 	    cs_init: "",
 	    sc_init: "",
 	    cs_bracketInit: "",

@@ -483,6 +483,11 @@ class StageOnlineView extends VueBase {
             let commentatorArr = [this.liveConf.commentator1, this.liveConf.commentator2]
             this.opReq(`${WebDBCmd.cs_commentator}`, { _: null, visible: v, commentatorArr: commentatorArr, style: style })
         },
+        showStaticImage(v, imgId) {
+            let imgMap = { 1: 'http://rtmp.icassi.us:8090/uploads/932b0a2eb5dc45399820871305ad2a1e.png' }
+            let url = imgMap[imgId]
+            this.opReq(`${WebDBCmd.cs_staticImg}`, { _: null, visible: v, url: url })
+        },
         onClkLoadVsTitle() {
             if (this.vsTitleMap) {
                 // this.lLiveName = '丁绍祺'

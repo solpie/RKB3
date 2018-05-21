@@ -1,26 +1,30 @@
 import { FontName, ViewConst } from "../../../const";
-import { newModal } from "../../../utils/PixiEx";
+import { newModal, newBitmap } from "../../../utils/PixiEx";
 import { TweenEx } from "../../../utils/TweenEx";
 
-export class RollText extends PIXI.Container  {
+export class RollText extends PIXI.Container {
     static class = 'RollText'
     rollText: PIXI.Text
     public create(parent) {
         parent.addChild(this)
         let ts = {
-            fontFamily: FontName.MicrosoftYahei,
-            fontSize: '32px', fill: "#fff",
+            fontFamily: FontName.NotoSansHans,
+            fontSize: '35px', fill: "#000",
             fontWeight: 'bold'
         }
 
         this.rollText = new PIXI.Text('', ts)
         // this.rollText.style.fontSize = '25px'
-        this.rollText.y = ViewConst.STAGE_HEIGHT - 50
-
-        let bg = newModal()
-        bg.y = this.rollText.y - 10
-        this.addChild(bg)
+        this.rollText.y = ViewConst.STAGE_HEIGHT - 55
+        let texBlack = new PIXI.Graphics()
+        texBlack.beginFill(0xffffff)
+            .drawRect(112, 1012, 1920, 100)
+        this.addChild(texBlack)
+        // texBlack.mask = this.rollText
+        let bg = newBitmap({ url: '/img/panel/score2018/scrollBg.png' })
+        // bg.y = this.rollText.y - 10
         this.addChild(this.rollText)
+        this.addChild(bg)
     }
 
     public show(param: any) {
