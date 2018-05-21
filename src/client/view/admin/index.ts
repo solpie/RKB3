@@ -14,7 +14,6 @@ import { Navbar } from "./navbar/Navbar";
 import { homeView } from "./home/home";
 
 import { playerView } from './player/player';
-import { rankView } from './rank/rank';
 //////////////
 var routes = [
     {
@@ -29,10 +28,10 @@ var routes = [
     //     path: '/panel', name: 'panel',
     //     components: { content: PanelView, Navbar: Navbar },
     // },
-    {
-        path: '/rank', name: 'rank',
-        components: { content: rankView, Navbar: Navbar },
-    }
+    // {
+    //     path: '/rank', name: 'rank',
+    //     components: { content: rankView, Navbar: Navbar },
+    // }
 ];
 
 declare let VueRouter;

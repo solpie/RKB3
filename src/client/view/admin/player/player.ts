@@ -14,6 +14,7 @@ class PlayerView extends VueBase {
     }
 
     protected created() {
+        console.log('create!!!');
         getPlayerDoc( (res) => {
             this.playerArr = res.sort(ascendingProp('id'))
             console.log(this.playerArr);

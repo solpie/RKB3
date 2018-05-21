@@ -4,7 +4,7 @@ import { setInterval } from 'timers';
 import { type } from 'os';
 import { CommandId } from '../../Command';
 import { PanelId } from '../../const';
-import { getClientDelay, setClientDelay, getVsTitleData } from '../../utils/HupuAPI';
+import { getClientDelay, setClientDelay, getVsTitleData, getLive } from '../../utils/HupuAPI';
 import { DateFormat } from '../../utils/JsFunc';
 import { VueBase } from '../../utils/VueBase';
 import { dynamicLoading, $post } from '../../utils/WebJsFunc';
@@ -71,7 +71,7 @@ class StageOnlineView extends VueBase {
     isBold = VueBase.PROP
     noticeHistory = VueBase.PROP
     inputRollText = VueBase.PROP
-
+    liveConf: any
     opReq = (cmdId: string, param: any, callback: any) => {
         $.ajax({
             url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
@@ -96,14 +96,22 @@ class StageOnlineView extends VueBase {
         if (this.isRmOp) {
             this.actTab = 'tab2'
             dynamicLoading.css('/css/bulma.min.css')
+
         }
         else if (this.isOp) {
             this.actTab = 'tab1'
+            this.initLiveConf()
             dynamicLoading.css('/css/bulma.min.css')
         }
         console.log('stageOnlineView created!')
     }
-
+    initLiveConf() {
+        getLive(confArr => {
+            let conf = confArr[0]
+            this.liveConf = conf
+            console.log('inti live conf', conf);
+        })
+    }
     protected mounted() {
         canvasStage = BasePanelView.initPixi()
         // this.bracket = new BracketView()
@@ -471,8 +479,9 @@ class StageOnlineView extends VueBase {
         onClkVsTitle(v, vs) {
             this.opReq(`${CommandId.cs_showVsTitle}`, { _: null, visible: v, vs: vs })
         },
-        showCommentator(v, vs) {
-            this.opReq(`${WebDBCmd.cs_commentator}`, { _: null, visible: v, CIdArr: vs })
+        showCommentator(v, style) {
+            let commentatorArr = [this.liveConf.commentator1, this.liveConf.commentator2]
+            this.opReq(`${WebDBCmd.cs_commentator}`, { _: null, visible: v, commentatorArr: commentatorArr, style: style })
         },
         onClkLoadVsTitle() {
             if (this.vsTitleMap) {

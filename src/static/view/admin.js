@@ -52,8 +52,7 @@
 	__webpack_require__(12);
 	var Navbar_1 = __webpack_require__(14);
 	var home_1 = __webpack_require__(16);
-	var player_1 = __webpack_require__(20);
-	var rank_1 = __webpack_require__(26);
+	var player_1 = __webpack_require__(23);
 	var routes = [
 	    {
 	        path: '/', name: 'home',
@@ -63,10 +62,6 @@
 	        path: '/player', name: 'player',
 	        components: { content: player_1.playerView, Navbar: Navbar_1.Navbar },
 	    },
-	    {
-	        path: '/rank', name: 'rank',
-	        components: { content: rank_1.rankView, Navbar: Navbar_1.Navbar },
-	    }
 	];
 	var router = new VueRouter({
 	    routes: routes
@@ -523,7 +518,7 @@
 	};
 	var JsFunc_1 = __webpack_require__(17);
 	var VueBase_1 = __webpack_require__(18);
-	var PlayerS4_1 = __webpack_require__(111);
+	var PlayerS4_1 = __webpack_require__(19);
 	function getScorePanelUrl(gameId, isDark, isOb) {
 	    if (isOb === void 0) { isOb = true; }
 	    var op = 'op';
@@ -538,7 +533,7 @@
 	    __extends(HomeView, _super);
 	    function HomeView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(19);
+	        this.template = __webpack_require__(22);
 	        this.links = VueBase_1.VueBase.PROP;
 	        this.opUrlArr = VueBase_1.VueBase.PROP;
 	        this.selected = VueBase_1.VueBase.PROP;
@@ -880,888 +875,10 @@
 
 /***/ },
 /* 19 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"container\">\r\n    <nav class=\"panel\">\r\n        <p class=\"panel-heading\">\r\n            直播面板op入口 Game ID: {{ selected }}\r\n            <span class=\"select\">\r\n                <select v-model=\"selected\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n        </p>\r\n        <vue v-for=\"link in links\">\r\n            <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                <span class=\"panel-icon\">\r\n            <i class=\"fa fa-book\"></i>\r\n            </span> {{link.url}}\r\n                <br> {{link.title}}\r\n            </a>\r\n            <!--<button class=\"button\">复制地址</button>-->\r\n        </vue>\r\n        <div>\r\n            抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n            <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n            <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n               {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n            </a>\r\n        </div>\r\n\r\n        <p>\r\n            command:\r\n            <br> /game/bracket/clear\r\n            <br>/game/clear/bracketIdx\r\n            <br>/git/pull\r\n    </nav>\r\n    播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n    <p>\r\n        推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            播放地址2:<input type=\"text\" v-model=\"playUrl2\" style=\"width: 1000px\">\r\n            <p>\r\n                推流地址2:<input type=\"text\" v-model=\"rmtpUrl2\" style=\"width: 1000px\">\r\n                <p>\r\n                    <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n                    <div id=\"qrcode\"></div>\r\n</div>";
-
-/***/ },
-/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var editForm_1 = __webpack_require__(21);
-	var HupuAPI_1 = __webpack_require__(22);
-	var JsFunc_1 = __webpack_require__(17);
-	var VueBase_1 = __webpack_require__(18);
-	var PlayerView = (function (_super) {
-	    __extends(PlayerView, _super);
-	    function PlayerView() {
-	        _super.call(this);
-	        this.template = __webpack_require__(25);
-	        this.playerArr = VueBase_1.VueBase.PROP;
-	        this.editPlayerDoc = VueBase_1.VueBase.PROP;
-	        this.components = { "editForm": editForm_1.editForm };
-	        this.isEdit = VueBase_1.VueBase.PROP;
-	        this.methods = {
-	            onEdit: function (playerDoc) {
-	                console.log('onEdit player id:', playerDoc.id);
-	                this.editPlayerDoc = playerDoc;
-	                this.isEdit = true;
-	            }
-	        };
-	        VueBase_1.VueBase.initProps(this);
-	    }
-	    PlayerView.prototype.created = function () {
-	        var _this = this;
-	        HupuAPI_1.getPlayerDoc(function (res) {
-	            _this.playerArr = res.sort(JsFunc_1.ascendingProp('id'));
-	            console.log(_this.playerArr);
-	        });
-	    };
-	    return PlayerView;
-	}(VueBase_1.VueBase));
-	exports.playerView = new PlayerView();
-
-
-/***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var HupuAPI_1 = __webpack_require__(22);
-	var VueBase_1 = __webpack_require__(18);
-	var EditForm = (function (_super) {
-	    __extends(EditForm, _super);
-	    function EditForm() {
-	        _super.call(this);
-	        this.isShow = VueBase_1.VueBase.PROP;
-	        this.playerInfo = VueBase_1.VueBase.PROP;
-	        this.template = __webpack_require__(24);
-	        this.watch = { "playerInfo": "onPlayerInfo" };
-	        this.methods = {
-	            onPlayerInfo: function (v) {
-	                this.setPlayerDoc(v);
-	            },
-	            onCancel: function () {
-	                this.$parent.isEdit = false;
-	            },
-	            onUpdate: function () {
-	                var playerDoc = this.editor.get();
-	                playerDoc._id = this.player_id;
-	                console.log('playerDoc', playerDoc);
-	                if (playerDoc._id) {
-	                    HupuAPI_1.updatePlayerDoc(playerDoc, function (res) {
-	                        console.log('playerDoc update', res);
-	                        if (res && res._id) {
-	                            window.location.reload();
-	                        }
-	                    });
-	                    this.$parent.isEdit = false;
-	                }
-	            }
-	        };
-	        VueBase_1.VueBase.initProps(this);
-	    }
-	    EditForm.prototype.created = function () {
-	        this.player_id = '';
-	    };
-	    EditForm.prototype.mounted = function () {
-	        var container = document.getElementById("jsoneditor");
-	        this.editor = new JSONEditor(container);
-	        this.setPlayerDoc(this.playerInfo);
-	    };
-	    EditForm.prototype.setPlayerDoc = function (v) {
-	        console.log(v);
-	        if (v) {
-	            this.player_id = v._id;
-	            delete v._id;
-	            this.editor.set(v);
-	        }
-	    };
-	    return EditForm;
-	}(VueBase_1.VueBase));
-	exports.editForm = new EditForm();
-
-
-/***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var WebJsFunc_1 = __webpack_require__(23);
-	exports.getHupuWS = function (callback) {
-	    var ws = 'tcp.lb.liangle.com:3081';
-	    console.log('ws:', ws);
-	    callback(ws);
-	};
-	function setClientDelay(gameId, sec, callback) {
-	    var url = "http://pre.liangle.com/api/pbk/event/delay/" + gameId;
-	    var data = { ':game_id': gameId + "", ctd: sec + '' };
-	    console.log(setClientDelay, data);
-	    WebJsFunc_1.$post(WebJsFunc_1.proxy(url), data, callback);
-	}
-	exports.setClientDelay = setClientDelay;
-	function getClientDelay(gameId, callback) {
-	    var url = "http://pre.liangle.com/api/pbk/event/delay/" + gameId;
-	    _get(WebJsFunc_1.proxy(url), callback);
-	}
-	exports.getClientDelay = getClientDelay;
-	function getPreRoundPlayer(gameId, callback) {
-	    var url = 'http://api.liangle.com/api/passerbyking/game/wheel/ready/' + gameId;
-	    _get(WebJsFunc_1.proxy(url), callback);
-	}
-	exports.getPreRoundPlayer = getPreRoundPlayer;
-	function getAllPlayer(gameId, callback) {
-	    var url = 'http://api.liangle.com/api/passerbyking/game/players/' + gameId;
-	    _get(WebJsFunc_1.proxy(url), callback);
-	}
-	exports.getAllPlayer = getAllPlayer;
-	function getRoundList(callback) {
-	    var url = 'http://api.liangle.com/api/passerbyking/game/list';
-	    _get(WebJsFunc_1.proxy(url), callback);
-	}
-	exports.getRoundList = getRoundList;
-	function getRoundRawData(gameId, callback) {
-	    var url = 'http://api.liangle.com/api/passerbyking/game/match/' + gameId;
-	    _get(WebJsFunc_1.proxy(url), callback);
-	}
-	exports.getRoundRawData = getRoundRawData;
-	function getRanking(callback) {
-	    var url = 'http://lrw.smartcourt.cn/getRanking';
-	    var data = { page: 1, pageSize: 100 };
-	    WebJsFunc_1.$post(WebJsFunc_1.proxy(url), data, callback);
-	}
-	exports.getRanking = getRanking;
-	function getCurRanking(hupuIdArr, callback) {
-	    var url = 'http://lrw.smartcourt.cn/queryUsersRanking';
-	    var data = hupuIdArr;
-	    WebJsFunc_1.$post(WebJsFunc_1.proxy(url), data, callback);
-	}
-	exports.getCurRanking = getCurRanking;
-	function getGroupData(gameId, callback) {
-	    var url = 'http://api.liangle.com/api/passerbyking/game/group/' + gameId;
-	    _get(WebJsFunc_1.proxy(url), callback);
-	}
-	exports.getGroupData = getGroupData;
-	function getRankSection(section, callback) {
-	    var url = 'http://api.liangle.com/api/division/power/rank/' + section;
-	    _get(WebJsFunc_1.proxy(url), callback);
-	}
-	exports.getRankSection = getRankSection;
-	var _get = function (url, callback) {
-	    $.get(url, callback);
-	};
-	exports.getPlayerDoc = function (callback) {
-	    $.get('/game/player', function (res) {
-	        callback(res);
-	    });
-	};
-	exports.updatePlayerDoc = function (playerDoc, callback) {
-	    WebJsFunc_1.$post('/game/player/update', playerDoc, callback);
-	};
-	exports.getGameInfo = function (callback) {
-	    _get('/game/', callback);
-	};
-	exports._avatar = function (filename) {
-	    return '/img/player/avatar/' + filename;
-	};
-	exports.getTop5Data = function (callback) {
-	    _get('/db/top5.json?t=' + new Date(), callback);
-	};
-	exports.getVsTitleData = function (callback) {
-	    _get('/db/vs.json?t=' + new Date(), callback);
-	};
-	function getCommentators(callback) {
-	    var url = 'http://rtmp.icassi.us:8090/commentator';
-	    _get(WebJsFunc_1.proxy(url), callback);
-	}
-	exports.getCommentators = getCommentators;
-
-
-/***/ },
-/* 23 */
-/***/ function(module, exports) {
-
-	"use strict";
-	exports.dynamicLoading = {
-	    css: function (path) {
-	        if (!path || path.length === 0) {
-	            throw new Error('argument "path" is required !');
-	        }
-	        var head = document.getElementsByTagName('head')[0];
-	        var link = document.createElement('link');
-	        link.href = path;
-	        link.rel = 'stylesheet';
-	        link.type = 'text/css';
-	        head.appendChild(link);
-	    },
-	    js: function (path) {
-	        if (!path || path.length === 0) {
-	            throw new Error('argument "path" is required !');
-	        }
-	        var head = document.getElementsByTagName('head')[0];
-	        var script = document.createElement('script');
-	        script.src = path;
-	        script.type = 'text/javascript';
-	        head.appendChild(script);
-	    }
-	};
-	exports.proxy = function (url) {
-	    return "/proxy?url=" + url;
-	};
-	var OpReq = (function () {
-	    function OpReq(io, reqFunc) {
-	        this.cmdMap = {};
-	        this.reqFunc = reqFunc;
-	        this.io = io;
-	    }
-	    OpReq.prototype.send = function (cmd, data) {
-	        var _this = this;
-	        this.reqFunc(cmd, data);
-	        if (!this.cmdMap[cmd]) {
-	            this.cmdMap[cmd] = true;
-	            return {
-	                on: function (resCmd, callback) {
-	                    _this.io.on(resCmd, function (data) {
-	                        callback(data);
-	                    });
-	                }
-	            };
-	        }
-	        return { on: function (resCmd, callback) { } };
-	    };
-	    return OpReq;
-	}());
-	exports.OpReq = OpReq;
-	exports.$post = function (url, data, callback) {
-	    $.ajax({
-	        url: url,
-	        type: 'post',
-	        data: JSON.stringify(data),
-	        headers: { "Content-Type": "application/json" },
-	        dataType: 'json',
-	        success: callback
-	    });
-	};
-
-
-/***/ },
-/* 24 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"box\" style=\"position:fixed;left:200px;top:60px;width:500px\">\r\n    {{player_id}}\r\n    <div id=\"jsoneditor\" style=\"width: 400px; height: 400px;\"></div>\r\n    <button class=\"button\" @click=\"onUpdate()\">update</button>\r\n    <button class=\"button\" @click=\"onCancel()\">cancel</button>\r\n</div>";
-
-/***/ },
-/* 25 */
-/***/ function(module, exports) {
-
-	module.exports = "<div>\r\n    <aside class=\"menu\" style=\"width:250px\">\r\n        <p class=\"menu-label\">\r\n            Player\r\n        </p>\r\n        <ul class=\"menu-list\">\r\n            <ul>\r\n                <li><a href=\"#\">添加Player</a></li>\r\n                <li><a href=\"#\">同步数据</a></li>\r\n            </ul>\r\n        </ul>\r\n    </aside>\r\n\r\n    <div id=\"player-grid\" style=\"position: relative;left: 290px;width: 800px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width:200px;\">\r\n            <img v-bind:src=\"player.portrait\" @click=\"onEdit(player)\">\r\n            <img v-bind:src=\"'/img/player/avatar/'+player.avatar\" style=\"width: 50px\">\r\n            <div class=\"content\">\r\n                {{player.name}} id:{{player.id}}\r\n                <br> 背号:{{player.number}}\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <editForm :playerInfo='editPlayerDoc' v-if='isEdit'>\r\n    </editform>\r\n</div>";
-
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var HupuAPI_1 = __webpack_require__(22);
-	var VueBase_1 = __webpack_require__(18);
-	var JsFunc_1 = __webpack_require__(17);
-	var elo_1 = __webpack_require__(27);
-	var PlayerInfo_1 = __webpack_require__(29);
-	var RankView = (function (_super) {
-	    __extends(RankView, _super);
-	    function RankView() {
-	        _super.call(this);
-	        this.template = __webpack_require__(31);
-	        this.playerDocArr = VueBase_1.VueBase.PROP;
-	        this.gameRecArr = VueBase_1.VueBase.PROP;
-	        this.playerMap = VueBase_1.VueBase.PROP;
-	        this.playerGameRecArr = VueBase_1.VueBase.PROP;
-	        this.pageIdx = VueBase_1.VueBase.PROP;
-	        this.playerGameRecPageArr = VueBase_1.VueBase.PROP;
-	        this.methods = {
-	            onSortWinPercent: function () {
-	                console.log('onSortWinPercent');
-	            },
-	            onClkGameRecPage: function (pageIdx) {
-	                this.playerGameRecArr = this.playerGameRecPageArr[pageIdx];
-	            },
-	            onShowRec: function (playerName) {
-	                this.playerGameRecArr = [];
-	                this.playerGameRecPageArr = [];
-	                var pageNum = 10;
-	                var page = [];
-	                for (var i = 0; i < this.gameRecArr.length; i++) {
-	                    var gameRec = this.gameRecArr[i];
-	                    if (gameRec.left.name == playerName || gameRec.right.name == playerName) {
-	                        if (gameRec.left.name == playerName) {
-	                            gameRec.win = gameRec.left.score > gameRec.right.score;
-	                        }
-	                        if (gameRec.right.name == playerName) {
-	                            gameRec.win = gameRec.left.score < gameRec.right.score;
-	                        }
-	                        gameRec.name = playerName;
-	                        page.push(gameRec);
-	                        if ((page.length % pageNum) == 0) {
-	                            this.playerGameRecPageArr.push(page);
-	                            page = [];
-	                        }
-	                    }
-	                }
-	                if (page.length)
-	                    this.playerGameRecPageArr.push(page);
-	                this.playerGameRecArr = this.playerGameRecPageArr[0];
-	                console.log('onShowRec', playerName, this.playerGameRecPageArr.length);
-	            },
-	            onSortGameCount: function () {
-	                for (var _i = 0, _a = this.playerDocArr; _i < _a.length; _i++) {
-	                    var p = _a[_i];
-	                    p.gameCount = PlayerInfo_1.PlayerInfo.gameCount(p);
-	                }
-	                this.playerDocArr.sort(JsFunc_1.descendingProp('gameCount'));
-	                console.log('onSortGameCount');
-	            }
-	        };
-	        VueBase_1.VueBase.initProps(this);
-	    }
-	    RankView.prototype.mounted = function () {
-	        var _this = this;
-	        console.log("rank");
-	        this.playerGameRecArr = [{
-	                left: { name: "player3", score: 1 },
-	                right: { name: "player1", score: 2 }
-	            }];
-	        var gameIdArr = [];
-	        var gameDataArr = [];
-	        var gameId;
-	        var getGameData = function (i) {
-	            if (i < gameIdArr.length) {
-	                gameId = gameIdArr[i];
-	                HupuAPI_1.getRoundRawData(gameId, function (res1) {
-	                    console.log(res1);
-	                    var data = res1;
-	                    data.round = gameId;
-	                    gameDataArr.push(data);
-	                    var p = Math.floor((i + 1) / gameIdArr.length * 100);
-	                    console.log('progress', p);
-	                    $('#progress1').val(p);
-	                    getGameData(i + 1);
-	                });
-	            }
-	            else {
-	                _this.gameRecArr = [];
-	                var playerMap = elo_1.getEloRank(gameDataArr, _this.gameRecArr);
-	                _this.playerMap = playerMap;
-	                setInterval(function () {
-	                    $('#progress1').hide();
-	                    _this.playerDocArr = JsFunc_1.mapToArr(playerMap).sort(JsFunc_1.descendingProp('eloScore'));
-	                }, 500);
-	            }
-	        };
-	        HupuAPI_1.getRoundList(function (res2) {
-	            var data = res2.data;
-	            console.log(data);
-	            for (var i = 0; i < data.length; i++) {
-	                var obj = data[i];
-	                gameIdArr.push(obj.id);
-	            }
-	            getGameData(0);
-	        });
-	    };
-	    return RankView;
-	}(VueBase_1.VueBase));
-	exports.rankView = new RankView();
-
-
-/***/ },
-/* 27 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var EloUtil_1 = __webpack_require__(28);
-	var PlayerData = (function () {
-	    function PlayerData(name) {
-	        this.winGameCount = 0;
-	        this.loseGameCount = 0;
-	        this.roundCount = 0;
-	        this.score = 0;
-	        this.eloScore = 2000;
-	        this.minTimeWin = -1;
-	        this.maxTimeWin = -1;
-	        this.sumTimeWin = 0;
-	        this.minTimeLose = -1;
-	        this.maxTimeLose = -1;
-	        this.sumTimeLose = 0;
-	        this.name = name;
-	    }
-	    Object.defineProperty(PlayerData.prototype, "avgTimeWin", {
-	        get: function () {
-	            return Math.ceil(this.sumTimeWin / this.winGameCount);
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    Object.defineProperty(PlayerData.prototype, "avgTimeLose", {
-	        get: function () {
-	            return Math.ceil(this.sumTimeLose / this.loseGameCount);
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    return PlayerData;
-	}());
-	function updateGameTime(p, gameTimeInSec, isWin) {
-	    if (gameTimeInSec < 20) {
-	        return;
-	    }
-	    if (isWin) {
-	        if (p.minTimeWin < 0)
-	            p.minTimeWin = gameTimeInSec;
-	        p.minTimeWin = Math.min(gameTimeInSec, p.minTimeWin);
-	        if (p.maxTimeWin < 0)
-	            p.maxTimeWin = gameTimeInSec;
-	        p.maxTimeWin = Math.max(gameTimeInSec, p.maxTimeWin);
-	        p.sumTimeWin += gameTimeInSec;
-	    }
-	    else {
-	        p.sumTimeLose += gameTimeInSec;
-	        if (p.minTimeLose < 0)
-	            p.minTimeLose = gameTimeInSec;
-	        p.minTimeLose = Math.min(gameTimeInSec, p.minTimeLose);
-	        if (p.maxTimeLose < 0)
-	            p.maxTimeLose = gameTimeInSec;
-	        p.maxTimeLose = Math.max(gameTimeInSec, p.maxTimeLose);
-	    }
-	}
-	exports.getEloRank = function (gameDataArr, gameRecArr) {
-	    var playerMap = {};
-	    var gameArr = gameDataArr;
-	    for (var j = 0; j < gameArr.length; j++) {
-	        var game = gameArr[j];
-	        for (var i = 1;; i++) {
-	            var gameData = game.data[i];
-	            if (gameData) {
-	                var leftPlayerData = gameData.left;
-	                var rightPlayerData = gameData.right;
-	                if (!playerMap[leftPlayerData.name])
-	                    playerMap[leftPlayerData.name] = new PlayerData(leftPlayerData.name);
-	                if (!playerMap[rightPlayerData.name])
-	                    playerMap[rightPlayerData.name] = new PlayerData(rightPlayerData.name);
-	                var leftPlayer = playerMap[leftPlayerData.name];
-	                var rightPlayer = playerMap[rightPlayerData.name];
-	                gameRecArr.push({
-	                    round: game.round,
-	                    left: { name: leftPlayer.name, score: leftPlayerData.score },
-	                    right: { name: rightPlayer.name, score: rightPlayerData.score }
-	                });
-	                var dt = EloUtil_1.EloUtil.classicMethod(leftPlayer.eloScore, rightPlayer.eloScore);
-	                leftPlayer.score += leftPlayerData.score;
-	                rightPlayer.score += rightPlayerData.score;
-	                var gameTimeInSec = (gameData.end - gameData.start);
-	                if (leftPlayerData.score > rightPlayerData.score) {
-	                    leftPlayer.eloScore += dt;
-	                    rightPlayer.eloScore -= dt;
-	                    leftPlayer.winGameCount += 1;
-	                    rightPlayer.loseGameCount += 1;
-	                    if (gameTimeInSec > 0) {
-	                        updateGameTime(leftPlayer, gameTimeInSec, true);
-	                        updateGameTime(rightPlayer, gameTimeInSec, false);
-	                    }
-	                }
-	                else {
-	                    leftPlayer.eloScore -= dt;
-	                    rightPlayer.eloScore += dt;
-	                    leftPlayer.loseGameCount += 1;
-	                    rightPlayer.winGameCount += 1;
-	                    if (gameTimeInSec > 0) {
-	                        updateGameTime(leftPlayer, gameTimeInSec, false);
-	                        updateGameTime(rightPlayer, gameTimeInSec, true);
-	                    }
-	                }
-	            }
-	            else
-	                break;
-	        }
-	    }
-	    return playerMap;
-	};
-
-
-/***/ },
-/* 28 */
-/***/ function(module, exports) {
-
-	"use strict";
-	exports.EloConf = {
-	    score: 2000,
-	    K: 32
-	};
-	var EloUtil = (function () {
-	    function EloUtil() {
-	    }
-	    EloUtil.classicMethod = function (winEloScore, loseEloScore) {
-	        var Elo1 = winEloScore;
-	        var Elo2 = loseEloScore;
-	        var K = exports.EloConf.K;
-	        var EloDifference = Elo2 - Elo1;
-	        var percentage = 1 / (1 + Math.pow(10, EloDifference / 400));
-	        var win = Math.round(K * (1 - percentage));
-	        return win;
-	    };
-	    EloUtil.playerToWinMethod = function (winEloScore, loseEloScore) {
-	    };
-	    return EloUtil;
-	}());
-	exports.EloUtil = EloUtil;
-
-
-/***/ },
-/* 29 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var BaseInfo_1 = __webpack_require__(30);
-	var PlayerDoc = (function () {
-	    function PlayerDoc() {
-	        this.id = 0;
-	        this.name = '';
-	        this.phone = 0;
-	        this.eloScore = 0;
-	        this.style = 0;
-	        this.avatar = "";
-	        this.height = 0;
-	        this.weight = 0;
-	        this.dtScore = 0;
-	        this.activityId = 0;
-	        this.gameRec = [];
-	        this.loseGameCount = 0;
-	        this.winGameCount = 0;
-	        this.ftId = 0;
-	        this.ftScore = 0;
-	        this.playerNum = 0;
-	        this.curFtScore = 0;
-	        this.location = '上海';
-	    }
-	    return PlayerDoc;
-	}());
-	exports.PlayerDoc = PlayerDoc;
-	exports.PlayerState1v1 = {
-	    FIGHTING: ' ',
-	    PIGEON: '鸽子',
-	    WAITING: '  ',
-	    Dead: '淘汰'
-	};
-	var PlayerInfo = (function (_super) {
-	    __extends(PlayerInfo, _super);
-	    function PlayerInfo(playerData) {
-	        _super.call(this);
-	        this.playerData = new PlayerDoc();
-	        this.isRed = true;
-	        this.isMvp = false;
-	        this.backNumber = 0;
-	        if (playerData) {
-	            if (playerData['playerData'] != null) {
-	                this.playerData = BaseInfo_1.obj2Class(playerData.playerData, PlayerDoc);
-	                this.setPlayerInfoFromData(playerData);
-	            }
-	            else {
-	                this.playerData = BaseInfo_1.obj2Class(playerData, PlayerDoc);
-	                this.setPlayerInfoFromData(playerData);
-	            }
-	        }
-	    }
-	    PlayerInfo.prototype.setPlayerInfoFromData = function (data) {
-	        if (data['isRed'] != null)
-	            this.isRed = data.isRed;
-	        if (data['isMvp'] != null)
-	            this.isMvp = data.isMvp;
-	        if (data['backNumber'] != null)
-	            this.backNumber = data.backNumber;
-	    };
-	    PlayerInfo.prototype.getPlayerData = function () {
-	        this.playerData['isRed'] = this.isRed;
-	        this.playerData['isMvp'] = this.isMvp;
-	        this.playerData['backNumber'] = this.backNumber;
-	        return this.playerData;
-	    };
-	    PlayerInfo.prototype.id = function (val) {
-	        return BaseInfo_1.prop(this.playerData, "id", val);
-	    };
-	    PlayerInfo.prototype.phone = function (val) {
-	        return BaseInfo_1.prop(this.playerData, "phone", val);
-	    };
-	    PlayerInfo.prototype.name = function (val) {
-	        return BaseInfo_1.prop(this.playerData, "name", val);
-	    };
-	    PlayerInfo.prototype.activityId = function (val) {
-	        return BaseInfo_1.prop(this.playerData, "activityId", val);
-	    };
-	    PlayerInfo.prototype.eloScore = function (val) {
-	        return BaseInfo_1.prop(this.playerData, "eloScore", val);
-	    };
-	    PlayerInfo.prototype.dtScore = function (val) {
-	        return BaseInfo_1.prop(this.playerData, "dtScore", val);
-	    };
-	    PlayerInfo.prototype.style = function (val) {
-	        return BaseInfo_1.prop(this.playerData, "style", val);
-	    };
-	    PlayerInfo.prototype.avatar = function (val) {
-	        return BaseInfo_1.prop(this.playerData, "avatar", val);
-	    };
-	    PlayerInfo.prototype.gameRec = function (val) {
-	        return BaseInfo_1.prop(this.playerData, "gameRec", val);
-	    };
-	    PlayerInfo.winPercent = function (playerDoc) {
-	        var p = playerDoc.winGameCount / PlayerInfo.gameCount(playerDoc);
-	        if (!p)
-	            p = 0;
-	        return p;
-	    };
-	    PlayerInfo.winPercentStr = function (playerDoc) {
-	        return (PlayerInfo.winPercent(playerDoc) * 100).toFixed(1) + "%";
-	    };
-	    PlayerInfo.weight = function (playerDoc) {
-	        return playerDoc.weight || playerDoc.playerData.weight;
-	    };
-	    PlayerInfo.height = function (playerDoc) {
-	        return playerDoc.height || playerDoc.playerData.height;
-	    };
-	    PlayerInfo.intro = function (playerDoc) {
-	        return playerDoc.intro || playerDoc.playerData.intro;
-	    };
-	    PlayerInfo.prototype.winpercent = function (val) {
-	        return this.winGameCount() / this.gameCount();
-	    };
-	    PlayerInfo.gameCount = function (playerDoc) {
-	        return (playerDoc.loseGameCount + playerDoc.winGameCount) || 0;
-	    };
-	    PlayerInfo.addWinGameAmount = function (playerDoc) {
-	        playerDoc.winGameCount++;
-	        return playerDoc.winGameCount;
-	    };
-	    PlayerInfo.addLoseGameAmount = function (playerDoc) {
-	        playerDoc.loseGameCount++;
-	        return playerDoc.loseGameCount;
-	    };
-	    PlayerInfo.prototype.gameCount = function () {
-	        return this.loseGameCount() + this.winGameCount();
-	    };
-	    PlayerInfo.prototype.winGameCount = function (val) {
-	        return BaseInfo_1.prop(this.playerData, "winGameCount", val);
-	    };
-	    PlayerInfo.prototype.loseGameCount = function (val) {
-	        return BaseInfo_1.prop(this.playerData, "loseGameCount", val);
-	    };
-	    PlayerInfo.prototype.getWinPercent = function () {
-	        return (this.winpercent() * 100).toFixed(1) + "%";
-	    };
-	    PlayerInfo.getStyleIcon = function (style) {
-	        var path = '/img/panel/stage/';
-	        if (style === 1) {
-	            path += 'feng.png';
-	        }
-	        else if (style === 2) {
-	            path += 'lin.png';
-	        }
-	        else if (style === 3) {
-	            path += 'huo.png';
-	        }
-	        else if (style === 4) {
-	            path += 'shan.png';
-	        }
-	        return path;
-	    };
-	    PlayerInfo.prototype.getWinStyleIcon = function () {
-	        var path = '/img/panel/stage/win/';
-	        if (this.style() == 1) {
-	            path += 'fengWin.png';
-	        }
-	        else if (this.style() == 2) {
-	            path += 'linWin.png';
-	        }
-	        else if (this.style() == 3) {
-	            path += 'huoWin.png';
-	        }
-	        else if (this.style() == 4) {
-	            path += 'shanWin.png';
-	        }
-	        return path;
-	    };
-	    PlayerInfo.prototype.getRec = function () {
-	        return { id: this.id(), eloScore: this.eloScore(), dtScore: this.dtScore() };
-	    };
-	    PlayerInfo.prototype.saveScore = function (dtScore, isWin) {
-	        this.dtScore(dtScore);
-	        this.eloScore(this.eloScore() + dtScore);
-	        if (isWin) {
-	            this.winGameCount(this.winGameCount() + 1);
-	        }
-	        else
-	            this.loseGameCount(this.loseGameCount() + 1);
-	    };
-	    PlayerInfo.prototype.getCurWinningPercent = function () {
-	        return this.winGameCount() / (this.loseGameCount() + this.winGameCount());
-	    };
-	    return PlayerInfo;
-	}(BaseInfo_1.BaseInfo));
-	exports.PlayerInfo = PlayerInfo;
-
-
-/***/ },
-/* 30 */
-/***/ function(module, exports) {
-
-	"use strict";
-	exports.isdef = function (val) {
-	    return val != undefined;
-	};
-	exports.prop = function (obj, paramName, v, callback) {
-	    if (exports.isdef(v)) {
-	        obj[paramName] = v;
-	        if (callback)
-	            callback();
-	    }
-	    else
-	        return obj[paramName];
-	};
-	exports.obj2Class = function (obj, cls) {
-	    var c = new cls;
-	    for (var paramName in obj) {
-	        c[paramName] = obj[paramName];
-	    }
-	    return c;
-	};
-	function setPropTo(data, obj) {
-	    for (var key in data) {
-	        if (obj.hasOwnProperty(key))
-	            obj[key] = data[key];
-	    }
-	}
-	exports.setPropTo = setPropTo;
-	var BaseDoc = (function () {
-	    function BaseDoc() {
-	    }
-	    return BaseDoc;
-	}());
-	exports.BaseDoc = BaseDoc;
-	var BaseInfo = (function () {
-	    function BaseInfo() {
-	    }
-	    return BaseInfo;
-	}());
-	exports.BaseInfo = BaseInfo;
-
-
-/***/ },
-/* 31 */
-/***/ function(module, exports) {
-
-	module.exports = "<!--<script src=\"../../../../../yqbe/src/utils/nmserver/app.js\"></script>-->\r\n<div>\r\n    <progress id=\"progress1\" class=\"progress is-success\" value=\"0\" max=\"100\"></progress>\r\n    <div class=\"ui two column grid\" style=\"\">\r\n        <table class=\"table is-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th width=\"50px\"></th>\r\n                    <th width=\"150px\">ID</th>\r\n                    <th width=\"50px\" @click=\"onSortGameCount\">场数</th>\r\n                    <th width=\"70px\" @click=\"onSortWinPercent\">胜率</th>\r\n                    <th width=\"70px\">贡献值</th>\r\n                    <th width=\"70px\">天梯分</th>\r\n                    <th width=\"70px\">最快胜利</th>\r\n                    <th width=\"70px\">最慢胜利</th>\r\n                    <th width=\"70px\">平均胜利</th>\r\n                    <th>战绩</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr v-for=\"(playerDoc,index) in playerDocArr\">\r\n                    <!--<td><img src=\"{{playerDoc.avatar}}\" style=\"width: 100px\"></td>-->\r\n                    <td v-text=\"index+1\"></td>\r\n                    <td v-text=\"playerDoc.name\"></td>\r\n                    <td v-text=\"(playerDoc.winGameCount+playerDoc.loseGameCount)||0\"></td>\r\n                    <td v-text=\"(playerDoc.winGameCount/(playerDoc.winGameCount+playerDoc.loseGameCount)*100||0).toFixed(2)+'%'\"></td>\r\n                    <td v-text=\"playerDoc.score\"></td>\r\n                    <td v-text=\"playerDoc.eloScore\"></td>\r\n                    <td v-text=\"playerDoc.minTimeWin\"></td>\r\n                    <td v-text=\"playerDoc.maxTimeWin\"></td>\r\n                    <td v-text=\"playerDoc.avgTimeWin\"></td>\r\n                    <td>\r\n                        <button class=\"ui right labeled icon button showRec\" @click=\"onShowRec(playerDoc.name)\">\r\n                        <i class=\"right arrow icon\"></i>\r\n                        查看\r\n                    </button>\r\n                    </td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n\r\n        <div class=\"four wide column\" style=\"position: fixed;left:650px;top: 60px;\">\r\n            <table class=\"ui striped table\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>round</th>\r\n                        <th width=\"150px\">ID</th>\r\n                        <th width=\"80px\">VS</th>\r\n                        <th width=\"150px\">ID</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(rec,index) in playerGameRecArr\" :class=\"[{ positive: rec.win }, { negative: !rec.win }]\">\r\n                        <td v-text=\"rec.round\"></td>\r\n                        <td v-text=\"rec.left.name\" :class=\"{bold:rec.name==rec.left.name}\"></td>\r\n                        <td v-text=\"rec.left.score+' : '+rec.right.score\"></td>\r\n                        <td v-text=\"rec.right.name\" :class=\"{bold:rec.name==rec.right.name}\"></td>\r\n                    </tr>\r\n                </tbody>\r\n                <tfoot>\r\n                    <tr>\r\n                        <th colspan=\"3\">\r\n                            <div class=\"ui right floated pagination menu\">\r\n                                <a class=\"icon item\">\r\n                                    <i class=\"left chevron icon\"></i>\r\n                                </a>\r\n                                <a class=\"item \" v-for=\"(page,pageIdx) in playerGameRecPageArr\" @click=\"onClkGameRecPage(pageIdx)\">{{pageIdx+1}}</a>\r\n                                <a class=\"icon item\">\r\n                                    <i class=\"right chevron icon\"></i>\r\n                                </a>\r\n                            </div>\r\n                        </th>\r\n                    </tr>\r\n                </tfoot>\r\n            </table>\r\n        </div>\r\n    </div>\r\n</div>";
-
-/***/ },
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */,
-/* 36 */,
-/* 37 */,
-/* 38 */,
-/* 39 */,
-/* 40 */,
-/* 41 */,
-/* 42 */,
-/* 43 */,
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */,
-/* 58 */,
-/* 59 */,
-/* 60 */,
-/* 61 */,
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */,
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */,
-/* 71 */,
-/* 72 */,
-/* 73 */,
-/* 74 */,
-/* 75 */,
-/* 76 */,
-/* 77 */,
-/* 78 */,
-/* 79 */,
-/* 80 */,
-/* 81 */,
-/* 82 */,
-/* 83 */,
-/* 84 */,
-/* 85 */,
-/* 86 */,
-/* 87 */,
-/* 88 */,
-/* 89 */,
-/* 90 */,
-/* 91 */,
-/* 92 */,
-/* 93 */,
-/* 94 */,
-/* 95 */,
-/* 96 */,
-/* 97 */,
-/* 98 */,
-/* 99 */,
-/* 100 */,
-/* 101 */,
-/* 102 */,
-/* 103 */,
-/* 104 */,
-/* 105 */,
-/* 106 */,
-/* 107 */,
-/* 108 */,
-/* 109 */,
-/* 110 */,
-/* 111 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var HupuAPI_1 = __webpack_require__(22);
+	var HupuAPI_1 = __webpack_require__(20);
 	var JsFunc_1 = __webpack_require__(17);
 	var Rec = (function () {
 	    function Rec() {
@@ -1886,6 +1003,301 @@
 	    window['player'] = playerMap;
 	};
 
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var WebJsFunc_1 = __webpack_require__(21);
+	exports.getHupuWS = function (callback) {
+	    var ws = 'tcp.lb.liangle.com:3081';
+	    console.log('ws:', ws);
+	    callback(ws);
+	};
+	function setClientDelay(gameId, sec, callback) {
+	    var url = "http://pre.liangle.com/api/pbk/event/delay/" + gameId;
+	    var data = { ':game_id': gameId + "", ctd: sec + '' };
+	    console.log(setClientDelay, data);
+	    WebJsFunc_1.$post(WebJsFunc_1.proxy(url), data, callback);
+	}
+	exports.setClientDelay = setClientDelay;
+	function getClientDelay(gameId, callback) {
+	    var url = "http://pre.liangle.com/api/pbk/event/delay/" + gameId;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getClientDelay = getClientDelay;
+	function getPreRoundPlayer(gameId, callback) {
+	    var url = 'http://api.liangle.com/api/passerbyking/game/wheel/ready/' + gameId;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getPreRoundPlayer = getPreRoundPlayer;
+	function getAllPlayer(gameId, callback) {
+	    var url = 'http://api.liangle.com/api/passerbyking/game/players/' + gameId;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getAllPlayer = getAllPlayer;
+	function getRoundList(callback) {
+	    var url = 'http://api.liangle.com/api/passerbyking/game/list';
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getRoundList = getRoundList;
+	function getRoundRawData(gameId, callback) {
+	    var url = 'http://api.liangle.com/api/passerbyking/game/match/' + gameId;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getRoundRawData = getRoundRawData;
+	function getRanking(callback) {
+	    var url = 'http://lrw.smartcourt.cn/getRanking';
+	    var data = { page: 1, pageSize: 100 };
+	    WebJsFunc_1.$post(WebJsFunc_1.proxy(url), data, callback);
+	}
+	exports.getRanking = getRanking;
+	function getCurRanking(hupuIdArr, callback) {
+	    var url = 'http://lrw.smartcourt.cn/queryUsersRanking';
+	    var data = hupuIdArr;
+	    WebJsFunc_1.$post(WebJsFunc_1.proxy(url), data, callback);
+	}
+	exports.getCurRanking = getCurRanking;
+	function getGroupData(gameId, callback) {
+	    var url = 'http://api.liangle.com/api/passerbyking/game/group/' + gameId;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getGroupData = getGroupData;
+	function getRankSection(section, callback) {
+	    var url = 'http://api.liangle.com/api/division/power/rank/' + section;
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getRankSection = getRankSection;
+	var _get = function (url, callback) {
+	    $.get(url, callback);
+	};
+	exports.getPlayerDoc = function (callback) {
+	    $.get('/game/player', function (res) {
+	        callback(res);
+	    });
+	};
+	exports.updatePlayerDoc = function (playerDoc, callback) {
+	    WebJsFunc_1.$post('/game/player/update', playerDoc, callback);
+	};
+	exports.getGameInfo = function (callback) {
+	    _get('/game/', callback);
+	};
+	exports._avatar = function (filename) {
+	    return '/img/player/avatar/' + filename;
+	};
+	exports.getTop5Data = function (callback) {
+	    _get('/db/top5.json?t=' + new Date(), callback);
+	};
+	exports.getVsTitleData = function (callback) {
+	    _get('/db/vs.json?t=' + new Date(), callback);
+	};
+	function getCommentators(callback) {
+	    var url = 'http://rtmp.icassi.us:8090/commentator';
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getCommentators = getCommentators;
+	function getLive(callback) {
+	    var url = 'http://rtmp.icassi.us:8090/live';
+	    _get(WebJsFunc_1.proxy(url), callback);
+	}
+	exports.getLive = getLive;
+
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.dynamicLoading = {
+	    css: function (path) {
+	        if (!path || path.length === 0) {
+	            throw new Error('argument "path" is required !');
+	        }
+	        var head = document.getElementsByTagName('head')[0];
+	        var link = document.createElement('link');
+	        link.href = path;
+	        link.rel = 'stylesheet';
+	        link.type = 'text/css';
+	        head.appendChild(link);
+	    },
+	    js: function (path) {
+	        if (!path || path.length === 0) {
+	            throw new Error('argument "path" is required !');
+	        }
+	        var head = document.getElementsByTagName('head')[0];
+	        var script = document.createElement('script');
+	        script.src = path;
+	        script.type = 'text/javascript';
+	        head.appendChild(script);
+	    }
+	};
+	exports.proxy = function (url) {
+	    return "/proxy?url=" + url;
+	};
+	var OpReq = (function () {
+	    function OpReq(io, reqFunc) {
+	        this.cmdMap = {};
+	        this.reqFunc = reqFunc;
+	        this.io = io;
+	    }
+	    OpReq.prototype.send = function (cmd, data) {
+	        var _this = this;
+	        this.reqFunc(cmd, data);
+	        if (!this.cmdMap[cmd]) {
+	            this.cmdMap[cmd] = true;
+	            return {
+	                on: function (resCmd, callback) {
+	                    _this.io.on(resCmd, function (data) {
+	                        callback(data);
+	                    });
+	                }
+	            };
+	        }
+	        return { on: function (resCmd, callback) { } };
+	    };
+	    return OpReq;
+	}());
+	exports.OpReq = OpReq;
+	exports.$post = function (url, data, callback) {
+	    $.ajax({
+	        url: url,
+	        type: 'post',
+	        data: JSON.stringify(data),
+	        headers: { "Content-Type": "application/json" },
+	        dataType: 'json',
+	        success: callback
+	    });
+	};
+
+
+/***/ },
+/* 22 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"container\">\r\n    <nav class=\"panel\">\r\n        <p class=\"panel-heading\">\r\n            直播面板op入口 Game ID: {{ selected }}\r\n            <span class=\"select\">\r\n                <select v-model=\"selected\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n        </p>\r\n        <vue v-for=\"link in links\">\r\n            <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                <span class=\"panel-icon\">\r\n            <i class=\"fa fa-book\"></i>\r\n            </span> {{link.url}}\r\n                <br> {{link.title}}\r\n            </a>\r\n            <!--<button class=\"button\">复制地址</button>-->\r\n        </vue>\r\n        <div>\r\n            抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n            <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n            <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n               {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n            </a>\r\n        </div>\r\n\r\n        <p>\r\n            command:\r\n            <br> /game/bracket/clear\r\n            <br>/game/clear/bracketIdx\r\n            <br>/git/pull\r\n    </nav>\r\n    播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n    <p>\r\n        推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            播放地址2:<input type=\"text\" v-model=\"playUrl2\" style=\"width: 1000px\">\r\n            <p>\r\n                推流地址2:<input type=\"text\" v-model=\"rmtpUrl2\" style=\"width: 1000px\">\r\n                <p>\r\n                    <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n                    <div id=\"qrcode\"></div>\r\n</div>";
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var editForm_1 = __webpack_require__(24);
+	var HupuAPI_1 = __webpack_require__(20);
+	var JsFunc_1 = __webpack_require__(17);
+	var VueBase_1 = __webpack_require__(18);
+	var PlayerView = (function (_super) {
+	    __extends(PlayerView, _super);
+	    function PlayerView() {
+	        _super.call(this);
+	        this.template = __webpack_require__(26);
+	        this.playerArr = VueBase_1.VueBase.PROP;
+	        this.editPlayerDoc = VueBase_1.VueBase.PROP;
+	        this.components = { "editForm": editForm_1.editForm };
+	        this.isEdit = VueBase_1.VueBase.PROP;
+	        this.methods = {
+	            onEdit: function (playerDoc) {
+	                console.log('onEdit player id:', playerDoc.id);
+	                this.editPlayerDoc = playerDoc;
+	                this.isEdit = true;
+	            }
+	        };
+	        VueBase_1.VueBase.initProps(this);
+	    }
+	    PlayerView.prototype.created = function () {
+	        var _this = this;
+	        console.log('create!!!');
+	        HupuAPI_1.getPlayerDoc(function (res) {
+	            _this.playerArr = res.sort(JsFunc_1.ascendingProp('id'));
+	            console.log(_this.playerArr);
+	        });
+	    };
+	    return PlayerView;
+	}(VueBase_1.VueBase));
+	exports.playerView = new PlayerView();
+
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var HupuAPI_1 = __webpack_require__(20);
+	var VueBase_1 = __webpack_require__(18);
+	var EditForm = (function (_super) {
+	    __extends(EditForm, _super);
+	    function EditForm() {
+	        _super.call(this);
+	        this.isShow = VueBase_1.VueBase.PROP;
+	        this.playerInfo = VueBase_1.VueBase.PROP;
+	        this.template = __webpack_require__(25);
+	        this.watch = { "playerInfo": "onPlayerInfo" };
+	        this.methods = {
+	            onPlayerInfo: function (v) {
+	                this.setPlayerDoc(v);
+	            },
+	            onCancel: function () {
+	                this.$parent.isEdit = false;
+	            },
+	            onUpdate: function () {
+	                var playerDoc = this.editor.get();
+	                playerDoc._id = this.player_id;
+	                console.log('playerDoc', playerDoc);
+	                if (playerDoc._id) {
+	                    HupuAPI_1.updatePlayerDoc(playerDoc, function (res) {
+	                        console.log('playerDoc update', res);
+	                        if (res && res._id) {
+	                            window.location.reload();
+	                        }
+	                    });
+	                    this.$parent.isEdit = false;
+	                }
+	            }
+	        };
+	        VueBase_1.VueBase.initProps(this);
+	    }
+	    EditForm.prototype.created = function () {
+	        this.player_id = '';
+	    };
+	    EditForm.prototype.mounted = function () {
+	        var container = document.getElementById("jsoneditor");
+	        this.editor = new JSONEditor(container);
+	        this.setPlayerDoc(this.playerInfo);
+	    };
+	    EditForm.prototype.setPlayerDoc = function (v) {
+	        console.log(v);
+	        if (v) {
+	            this.player_id = v._id;
+	            delete v._id;
+	            this.editor.set(v);
+	        }
+	    };
+	    return EditForm;
+	}(VueBase_1.VueBase));
+	exports.editForm = new EditForm();
+
+
+/***/ },
+/* 25 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"box\" style=\"position:fixed;left:200px;top:60px;width:500px\">\r\n    {{player_id}}\r\n    <div id=\"jsoneditor\" style=\"width: 400px; height: 400px;\"></div>\r\n    <button class=\"button\" @click=\"onUpdate()\">update</button>\r\n    <button class=\"button\" @click=\"onCancel()\">cancel</button>\r\n</div>";
+
+/***/ },
+/* 26 */
+/***/ function(module, exports) {
+
+	module.exports = "<div>\r\n    <aside class=\"menu\" style=\"width:250px\">\r\n        <p class=\"menu-label\">\r\n            Player\r\n        </p>\r\n        <ul class=\"menu-list\">\r\n            <ul>\r\n                <li><a href=\"#\">添加Player</a></li>\r\n                <li><a href=\"#\">同步数据</a></li>\r\n            </ul>\r\n        </ul>\r\n    </aside>\r\n\r\n    <div id=\"player-grid\" style=\"position: relative;left: 290px;width: 800px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width:200px;\">\r\n            <img v-bind:src=\"player.portrait\" @click=\"onEdit(player)\">\r\n            <img v-bind:src=\"'/img/player/avatar/'+player.avatar\" style=\"width: 50px\">\r\n            <div class=\"content\">\r\n                {{player.name}} id:{{player.id}}\r\n                <br> 背号:{{player.number}}\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <editForm :playerInfo='editPlayerDoc' v-if='isEdit'>\r\n    </editform>\r\n</div>";
 
 /***/ }
 /******/ ]);

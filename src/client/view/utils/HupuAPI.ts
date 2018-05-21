@@ -98,9 +98,14 @@ export let getVsTitleData = (callback) => {
     _get('/db/vs.json?t=' + new Date(), callback)
 }
 
-
+////8090 
 
 export function getCommentators(callback) {
     let url = 'http://rtmp.icassi.us:8090/commentator'
+    _get(proxy(url), callback)
+}
+
+export function getLive(callback) {
+    let url = 'http://rtmp.icassi.us:8090/live'
     _get(proxy(url), callback)
 }
