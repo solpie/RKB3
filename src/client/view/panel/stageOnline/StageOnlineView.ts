@@ -384,6 +384,10 @@ class StageOnlineView extends VueBase {
             }
             this.noticeHistory = a
         },
+        onNoticePresets(key) {
+            let textPresets = { 'network': '当前直播网络略有波\n动,工作人员正在紧急\n处理,请大家稍作等待\n马上回到精彩赛事中!' }
+            this.noticeContent = textPresets[key]
+        },
 
         onClkNotice(visible, isLeft, isPreview?) {
             if (this.noticeContent) {

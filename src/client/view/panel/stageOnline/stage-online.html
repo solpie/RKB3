@@ -128,6 +128,8 @@
             <button class="button" @click="onClkNotice(true,false)">右边显示</button>
             <button class="button" @click="onClkNotice(false,false)">隐藏</button>
             <br>
+            <button class="button" @click="onNoticePresets('network')">网络故障 模版</button>
+            <br>
             <div v-for="(n,idx) in noticeHistory">
                 <a @click="onClkNoticePresets(n.title,n.content)" style="font-size:35px;">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>
                 <a @click="onDelNoticePresets(n.content)">del</a>
