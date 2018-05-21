@@ -484,7 +484,7 @@ class StageOnlineView extends VueBase {
             this.opReq(`${CommandId.cs_showVsTitle}`, { _: null, visible: v, vs: vs })
         },
         showCommentator(v, style) {
-            let commentatorArr = [this.liveConf.commentator1, this.liveConf.commentator2]
+            let commentatorArr = [this.liveConf.commentator1[0], this.liveConf.commentator2[0]]
             this.opReq(`${WebDBCmd.cs_commentator}`, { _: null, visible: v, commentatorArr: commentatorArr, style: style })
         },
         showStaticImage(v, imgId) {

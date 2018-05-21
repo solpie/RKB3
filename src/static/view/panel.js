@@ -4680,7 +4680,7 @@
 	                this.opReq("" + Command_1.CommandId.cs_showVsTitle, { _: null, visible: v, vs: vs });
 	            },
 	            showCommentator: function (v, style) {
-	                var commentatorArr = [this.liveConf.commentator1, this.liveConf.commentator2];
+	                var commentatorArr = [this.liveConf.commentator1[0], this.liveConf.commentator2[0]];
 	                this.opReq("" + WebDBCmd_1.WebDBCmd.cs_commentator, { _: null, visible: v, commentatorArr: commentatorArr, style: style });
 	            },
 	            showStaticImage: function (v, imgId) {
