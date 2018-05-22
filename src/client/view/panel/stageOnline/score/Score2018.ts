@@ -330,10 +330,6 @@ export class Score2018 {
         this.rFoul.text = data + ''
     }
     setLeftPlayerInfo(lPlayer) {
-        // let lIconUrl = '/img/icon/rankIcon_b' + lPlayer.powerRankType + '.png'
-        // loadRes(lIconUrl, tex => {
-        //     this.lIcon.texture = imgToTex(tex)
-        // }, false)
 
         this.lName.text = lPlayer.name
         fitWidth(this.lName, 258, 35)

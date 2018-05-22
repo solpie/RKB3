@@ -31,14 +31,15 @@ class StageStudio extends VueBase {
         // return this.lo
     }
     panel: Score5v5
-    stuioPanel: StudioPanel
+    studioPanel: StudioPanel
     playerMap: any
     constructor() {
         super()
         VueBase.initProps(this)
     }
     initCanvas() {
-        this.stuioPanel = new StudioPanel(BasePanelView.initPixi())
+        
+        this.studioPanel = new StudioPanel(BasePanelView.initPixi(),this.$route)
     }
     protected created() {
         this.initCanvas()
@@ -49,10 +50,10 @@ class StageStudio extends VueBase {
        let localWS = io.connect(`/${PanelId.rkbPanel}`)
             .on(`${CommandId.sc_showBottle}`, (data) => {
                 console.log('sc_showBottle');
-                this.stuioPanel.showBottle()
+                this.studioPanel.showBottle()
             })
 
-        this.stuioPanel.initLocalWS(localWS)
+        this.studioPanel.initLocalWS(localWS)
     }
     methods = {
         onShowHeaderText(text, sec) {

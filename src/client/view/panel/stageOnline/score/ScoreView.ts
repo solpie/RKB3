@@ -15,6 +15,7 @@ import { ScoreM3 } from './ScoreM2';
 import { ScorePanel2 } from './ScorePanel2';
 import { Score2018 } from './Score2018';
 import { PlayerNow } from '../playerNow/PlayerNow';
+import { Score2018v3 } from './Score2018v3';
 declare let io;
 declare let $;
 function logEvent(...a) {
@@ -23,6 +24,7 @@ function logEvent(...a) {
     console.info(t, a)
 }
 export class ScoreView extends BasePanelView {
+    scorePanelV3: Score2018v3
     scorePanel: Score2018
     eventPanel: Event2017
     // rankingData: RankingData
@@ -70,8 +72,11 @@ export class ScoreView extends BasePanelView {
             let f3 = this.preLoadFont(FontName.Geodet)
             stage.addChild(f3)
             TweenEx.delayedCall(1000, _ => {
-                if (!this.isRmOP)
+                if (!this.isRmOP) {
+
                     this.scorePanel = new Score2018(stage)
+                    this.scorePanelV3 = new Score2018v3(stage)
+                }
                 this.initDelay()
                 this.eventPanel = new Event2017(stage, darkTheme)
 
@@ -296,15 +301,11 @@ export class ScoreView extends BasePanelView {
         getHupuWS((hupuWsUrl) => {
             let remoteIO = io.connect(hupuWsUrl);
             let setPlayer = (leftPlayer, rightPlayer) => {
-                console.log(leftPlayer)
-                let leftRankingData;
-                let rightRankingData;
-
-                // powerRankType  1.大魔王，2.精英，3.实力选手，4.路人，5.新秀，6.冲榜
-                console.log('rankingData', leftRankingData, rightRankingData);
                 // player level 0 其他 1 至少一个胜场  2 大师赛 3冠军
                 this.scorePanel.setLeftPlayerInfo(leftPlayer)
                 this.scorePanel.setRightPlayerInfo(rightPlayer)
+                this.scorePanelV3.setLeftPlayer(leftPlayer)
+                this.scorePanelV3.setRightPlayer(rightPlayer)
             };
 
             remoteIO.on('error', (e) => {
@@ -354,7 +355,7 @@ export class ScoreView extends BasePanelView {
                         this.scorePanel.resetTimer();
                     }
 
-                    //vs title
+                    //vs titletitle
                     if (lPlayer.title && rPlayer.title)
                         this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title.replace(" ", '') + ' ' + rPlayer.title.replace(" ", '') })
                 };

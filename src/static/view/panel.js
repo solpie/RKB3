@@ -3966,7 +3966,7 @@
 	        VueBase_1.VueBase.initProps(this);
 	    }
 	    StageStudio.prototype.initCanvas = function () {
-	        this.stuioPanel = new StudioPanel_1.StudioPanel(BasePanelView_1.BasePanelView.initPixi());
+	        this.studioPanel = new StudioPanel_1.StudioPanel(BasePanelView_1.BasePanelView.initPixi(), this.$route);
 	    };
 	    StageStudio.prototype.created = function () {
 	        this.initCanvas();
@@ -3977,9 +3977,9 @@
 	        var localWS = io.connect("/" + const_1.PanelId.rkbPanel)
 	            .on("" + Command_1.CommandId.sc_showBottle, function (data) {
 	            console.log('sc_showBottle');
-	            _this.stuioPanel.showBottle();
+	            _this.studioPanel.showBottle();
 	        });
-	        this.stuioPanel.initLocalWS(localWS);
+	        this.studioPanel.initLocalWS(localWS);
 	    };
 	    return StageStudio;
 	}(VueBase_1.VueBase));
@@ -4004,20 +4004,27 @@
 	var Commentator_1 = __webpack_require__(64);
 	var StudioPanel = (function (_super) {
 	    __extends(StudioPanel, _super);
-	    function StudioPanel(parent) {
+	    function StudioPanel(parent, $route) {
 	        _super.call(this);
+	        this.$route = $route;
 	        this.p = parent;
 	        console.log('new studio panel');
 	        this.staticImg = new PIXI.Sprite;
 	        this.p.addChild(this);
 	        this.popupView = new PopupView_1.PopupView(this);
+	        this.rotLogo();
 	    }
 	    StudioPanel.prototype.rotLogo = function () {
-	        var m2l = new FrameFx_1.FramesFx('/img/fx/logo/m2l_', 0, 12);
+	        var isBlueLogo = this.$route.query.logo == "blue";
+	        var col = 'white';
+	        if (isBlueLogo)
+	            col = 'blue';
+	        console.log('isblue', this.$route);
+	        var m2l = new FrameFx_1.FramesFx("/img/fx/logo/" + col + "/m2l/m2l_", 0, 12);
 	        this.fx = m2l;
 	        m2l.setSpeed(0.28);
 	        this.addChild(m2l);
-	        var l2m = new FrameFx_1.FramesFx('/img/fx/logo/l2m/l2m_', 0, 15);
+	        var l2m = new FrameFx_1.FramesFx("/img/fx/logo/" + col + "/l2m/l2m_", 0, 15);
 	        this.fx = l2m;
 	        l2m.setSpeed(0.28);
 	        this.addChild(l2m);
@@ -4054,6 +4061,8 @@
 	            .on(WebDBCmd_1.WebDBCmd.sc_staticImg, function (data) {
 	            console.log('sc_staticImg', data);
 	            _this.showStaticImg(data);
+	        })
+	            .on(WebDBCmd_1.WebDBCmd.sc_staticImg, function (data) {
 	        });
 	    };
 	    StudioPanel.prototype.showStaticImg = function (data) {
@@ -4377,7 +4386,7 @@
 
 /***/ },
 /* 65 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -4385,6 +4394,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var BracketGroup_1 = __webpack_require__(71);
 	var Text2 = (function (_super) {
 	    __extends(Text2, _super);
 	    function Text2() {
@@ -4409,6 +4419,18 @@
 	    Text2.prototype.setPos = function (x, y) {
 	        this.x = x;
 	        this.y = y;
+	        return this;
+	    };
+	    Text2.prototype.setFill = function (v) {
+	        this.style.fill = v;
+	        return this;
+	    };
+	    Text2.prototype.setSize = function (v) {
+	        this.style.fontSize = v;
+	        return this;
+	    };
+	    Text2.prototype.setLimitWidth = function (width, sizeFrom) {
+	        BracketGroup_1.fitWidth(this, width, sizeFrom);
 	        return this;
 	    };
 	    Text2.prototype.setAlignRight = function (v) {
@@ -6485,6 +6507,7 @@
 	var BasePanelView_1 = __webpack_require__(39);
 	var Score2018_1 = __webpack_require__(95);
 	var PlayerNow_1 = __webpack_require__(96);
+	var Score2018v3_1 = __webpack_require__(111);
 	function logEvent() {
 	    var a = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
@@ -6526,8 +6549,10 @@
 	            var f3 = this.preLoadFont(const_1.FontName.Geodet);
 	            stage.addChild(f3);
 	            TweenEx_1.TweenEx.delayedCall(1000, function (_) {
-	                if (!_this.isRmOP)
+	                if (!_this.isRmOP) {
 	                    _this.scorePanel = new Score2018_1.Score2018(stage);
+	                    _this.scorePanelV3 = new Score2018v3_1.Score2018v3(stage);
+	                }
 	                _this.initDelay();
 	                _this.eventPanel = new Event2017_1.Event2017(stage, darkTheme);
 	            });
@@ -6701,12 +6726,10 @@
 	        HupuAPI_1.getHupuWS(function (hupuWsUrl) {
 	            var remoteIO = io.connect(hupuWsUrl);
 	            var setPlayer = function (leftPlayer, rightPlayer) {
-	                console.log(leftPlayer);
-	                var leftRankingData;
-	                var rightRankingData;
-	                console.log('rankingData', leftRankingData, rightRankingData);
 	                _this.scorePanel.setLeftPlayerInfo(leftPlayer);
 	                _this.scorePanel.setRightPlayerInfo(rightPlayer);
+	                _this.scorePanelV3.setLeftPlayer(leftPlayer);
+	                _this.scorePanelV3.setRightPlayer(rightPlayer);
 	            };
 	            remoteIO.on('error', function (e) {
 	                console.log('connect_error', e);
@@ -9053,6 +9076,70 @@
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告 MISC</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒\r\n                <br>timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 50px;font-family: 'NotoSansHans-Regular'\">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(false)\">隐藏所有</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(true)\">显示所有</button>\r\n            <br>时间控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">设定时间(秒)</button>\r\n\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            </p>\r\n            比分控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onUpdateScore(true ,panelTime2Set)\">蓝方比分</button>\r\n            <button class=\"button\" @click=\"onUpdateScore(false,panelTime2Set)\">红方比分</button>\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">修改并显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,'')\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button>\r\n\r\n            <label class=\"label\">  赛区实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,1)\">东南 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,2)\">东北 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,3)\">西方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,4)\">南方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,0)\">首页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,2,0)\">上一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,3,0)\">下一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n        </div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"'>\r\n        <div v-if='isRmOp||isOp' style=\"position: absolute;left: 100px;top:260px;width: 800px\">\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                        正常\r\n                    </label>\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                        加粗\r\n                    </label>\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onNoticePresets('network')\">网络故障 模版</button>\r\n            <br>\r\n            <div v-for=\"(n,idx) in noticeHistory\">\r\n                <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n            </div>\r\n\r\n            滚动文字：\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"inputRollText\">\r\n            <br>\r\n\r\n            <!-- <el-input v-model=\"inputRollText\" style=\"width:250px\"></el-input> -->\r\n            <button class=\"button\" @click='showRollText(inputRollText,true)'>发送</button>\r\n            <button class=\"button\" @click='showRollText(inputRollText,false)'>隐藏</button>\r\n            <br> 主播面板:\r\n            <br>\r\n            <button class=\"button\" @click='showCommentator(true,1)'>显示主播</button>\r\n            <button class=\"button\" @click='showCommentator(true,2)'>显示主播 合并</button>\r\n            <button class=\"button\" @click='showCommentator(false)'>隐藏</button>\r\n            <br>图片:\r\n            <br>\r\n            <button class=\"button\" @click='showStaticImage(true,1)'>微信小程序</button>\r\n            <button class=\"button\" @click='showStaticImage(false,1)'>隐藏</button>\r\n\r\n            <label class=\"label\">  脉动广告:</label><br>\r\n            <button class=\"button\" @click=\"onShowFx(true,1)\">转瓶</button>\r\n\r\n        </div>\r\n    </div>\r\n</div>";
+
+/***/ },
+/* 100 */,
+/* 101 */,
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */,
+/* 111 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var PixiEx_1 = __webpack_require__(41);
+	var TextFac_1 = __webpack_require__(65);
+	var const_1 = __webpack_require__(38);
+	var Score2018v3 = (function (_super) {
+	    __extends(Score2018v3, _super);
+	    function Score2018v3(parent) {
+	        _super.call(this);
+	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/score2018v3/bg.png' });
+	        this.addChild(bg);
+	        var ns = {
+	            fontFamily: const_1.FontName.NotoSansHans,
+	            fontSize: '32px', fill: "#c2c1d4",
+	        };
+	        this.lName = TextFac_1.TextFac.new_(ns, this)
+	            .setY(965)
+	            .setFill("#484848");
+	        this.rName = TextFac_1.TextFac.new_(ns, this)
+	            .setPos(1215, this.lName.y)
+	            .setFill("#484848");
+	        ns.fontSize = '28px';
+	        ns.fill = '#fff';
+	        this.lTitle = TextFac_1.TextFac.new_(ns, this)
+	            .setY(914);
+	        this.rTitle = TextFac_1.TextFac.new_(ns, this)
+	            .setPos(1123, this.lTitle.y);
+	    }
+	    Score2018v3.prototype.setRightPlayer = function (rPlayer) {
+	        this.rName.setText(rPlayer.name)
+	            .setLimitWidth(298, 40);
+	        this.rTitle.setText(rPlayer.title);
+	    };
+	    Score2018v3.prototype.setLeftPlayer = function (lPlayer) {
+	        this.lName.setText(lPlayer.name)
+	            .setLimitWidth(298, 40)
+	            .setAlignCenter(600);
+	        this.lTitle.setText(lPlayer.title)
+	            .setAlignRight(795);
+	    };
+	    return Score2018v3;
+	}(PIXI.Container));
+	exports.Score2018v3 = Score2018v3;
+
 
 /***/ }
 /******/ ]);

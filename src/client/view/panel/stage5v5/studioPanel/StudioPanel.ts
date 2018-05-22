@@ -15,8 +15,11 @@ export class StudioPanel extends PIXI.Container {
 
     popupView: PopupView
     staticImg: PIXI.Sprite
-    constructor(parent) {
+
+    $route: any
+    constructor(parent, $route) {
         super()
+        this.$route = $route
         this.p = parent
         console.log('new studio panel');
         // this.addChild(newModal(0.8))
@@ -26,16 +29,21 @@ export class StudioPanel extends PIXI.Container {
 
 
         this.popupView = new PopupView(this)
+        this.rotLogo()
     }
 
     rotLogo() {
-
-        let m2l = new FramesFx('/img/fx/logo/m2l_', 0, 12)
+        let isBlueLogo = this.$route.query.logo == "blue"
+        let col = 'white'
+        if (isBlueLogo)
+            col = 'blue'
+        console.log('isblue',this.$route);
+        let m2l = new FramesFx(`/img/fx/logo/${col}/m2l/m2l_`, 0, 12)
         this.fx = m2l
         m2l.setSpeed(0.28)
         this.addChild(m2l)
 
-        let l2m = new FramesFx('/img/fx/logo/l2m/l2m_', 0, 15)
+        let l2m = new FramesFx(`/img/fx/logo/${col}/l2m/l2m_`, 0, 15)
         this.fx = l2m
         l2m.setSpeed(0.28)
         this.addChild(l2m)
@@ -74,6 +82,11 @@ export class StudioPanel extends PIXI.Container {
             .on(WebDBCmd.sc_staticImg, data => {
                 console.log('sc_staticImg', data);
                 this.showStaticImg(data)
+            })
+            .on(WebDBCmd.sc_staticImg, data => {
+
+                // let isBlueLogo = this.$route.params.op == "rmop"
+                // console.log('is');
             })
     }
 
