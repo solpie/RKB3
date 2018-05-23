@@ -5,7 +5,7 @@ import { paddy } from "../../../utils/JsFunc";
 import { PopupView } from '../../../utils/PopupView';
 import { WebDBCmd } from "../../../WebDBCmd";
 import { Commentator } from "./Commentator";
-import { getAllPlayer, getCommentators } from '../../../utils/HupuAPI';
+import { getAllPlayer, getCommentators, getLive } from '../../../utils/HupuAPI';
 
 export class StudioPanel extends PIXI.Container {
     p: any
@@ -15,7 +15,7 @@ export class StudioPanel extends PIXI.Container {
 
     popupView: PopupView
     staticImg: PIXI.Sprite
-
+    liveConf: any
     $route: any
     constructor(parent, $route) {
         super()
@@ -29,45 +29,56 @@ export class StudioPanel extends PIXI.Container {
 
 
         this.popupView = new PopupView(this)
-        this.rotLogo()
+        getLive(confArr => {
+            let conf = confArr[0]
+            this.liveConf = conf
+            console.log('inti live conf', conf);
+            this.rotLogo()
+        })
     }
 
     rotLogo() {
-        let isBlueLogo = this.$route.query.logo == "blue"
-        let col = 'white'
-        if (isBlueLogo)
-            col = 'blue'
-        console.log('isblue',this.$route);
-        let m2l = new FramesFx(`/img/fx/logo/${col}/m2l/m2l_`, 0, 12)
-        this.fx = m2l
-        m2l.setSpeed(0.28)
-        this.addChild(m2l)
+        if (this.liveConf.mizone_logo) {
+            let isBlueLogo = this.liveConf.mizone_logo == "blue"
+            let col = 'white'
+            if (isBlueLogo)
+                col = 'blue'
+            console.log('isblue', this.$route);
+            let m2l = new FramesFx(`/img/fx/logo/${col}/m2l/m2l_`, 0, 12)
+            this.fx = m2l
+            m2l.setSpeed(0.28)
+            this.addChild(m2l)
 
-        let l2m = new FramesFx(`/img/fx/logo/${col}/l2m/l2m_`, 0, 15)
-        this.fx = l2m
-        l2m.setSpeed(0.28)
-        this.addChild(l2m)
-        // l2m.show()
-        l2m.visible = false
-        m2l.visible = false
-        let isl2m = false
-        let turn = () => {
-            isl2m = !isl2m
-            if (isl2m) {
-                l2m.visible = true
-                m2l.visible = false
-                l2m.playOnce()
+            let l2m = new FramesFx(`/img/fx/logo/${col}/l2m/l2m_`, 0, 15)
+            this.fx = l2m
+            l2m.setSpeed(0.28)
+            this.addChild(l2m)
+            // l2m.show()
+            l2m.visible = false
+            m2l.visible = false
+            let isl2m = false
+            let turn = () => {
+                isl2m = !isl2m
+                if (isl2m) {
+                    l2m.visible = true
+                    m2l.visible = false
+                    l2m.playOnce()
+                }
+                else {
+                    m2l.visible = true
+                    l2m.visible = false
+                    m2l.playOnce()
+                }
             }
-            else {
-                m2l.visible = true
-                l2m.visible = false
-                m2l.playOnce()
-            }
-        }
-        turn()
-        setInterval(_ => {
             turn()
-        }, 30000)
+            setInterval(_ => {
+                turn()
+            }, 30000)
+        }
+        else {
+
+        }
+
     }
 
     initLocalWS(io) {

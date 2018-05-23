@@ -4009,9 +4009,11 @@
 	var PopupView_1 = __webpack_require__(62);
 	var WebDBCmd_1 = __webpack_require__(63);
 	var Commentator_1 = __webpack_require__(64);
+	var HupuAPI_1 = __webpack_require__(20);
 	var StudioPanel = (function (_super) {
 	    __extends(StudioPanel, _super);
 	    function StudioPanel(parent, $route) {
+	        var _this = this;
 	        _super.call(this);
 	        this.$route = $route;
 	        this.p = parent;
@@ -4019,42 +4021,51 @@
 	        this.staticImg = new PIXI.Sprite;
 	        this.p.addChild(this);
 	        this.popupView = new PopupView_1.PopupView(this);
-	        this.rotLogo();
+	        HupuAPI_1.getLive(function (confArr) {
+	            var conf = confArr[0];
+	            _this.liveConf = conf;
+	            console.log('inti live conf', conf);
+	            _this.rotLogo();
+	        });
 	    }
 	    StudioPanel.prototype.rotLogo = function () {
-	        var isBlueLogo = this.$route.query.logo == "blue";
-	        var col = 'white';
-	        if (isBlueLogo)
-	            col = 'blue';
-	        console.log('isblue', this.$route);
-	        var m2l = new FrameFx_1.FramesFx("/img/fx/logo/" + col + "/m2l/m2l_", 0, 12);
-	        this.fx = m2l;
-	        m2l.setSpeed(0.28);
-	        this.addChild(m2l);
-	        var l2m = new FrameFx_1.FramesFx("/img/fx/logo/" + col + "/l2m/l2m_", 0, 15);
-	        this.fx = l2m;
-	        l2m.setSpeed(0.28);
-	        this.addChild(l2m);
-	        l2m.visible = false;
-	        m2l.visible = false;
-	        var isl2m = false;
-	        var turn = function () {
-	            isl2m = !isl2m;
-	            if (isl2m) {
-	                l2m.visible = true;
-	                m2l.visible = false;
-	                l2m.playOnce();
-	            }
-	            else {
-	                m2l.visible = true;
-	                l2m.visible = false;
-	                m2l.playOnce();
-	            }
-	        };
-	        turn();
-	        setInterval(function (_) {
-	            turn();
-	        }, 30000);
+	        if (this.liveConf.mizone_logo) {
+	            var isBlueLogo = this.liveConf.mizone_logo == "blue";
+	            var col = 'white';
+	            if (isBlueLogo)
+	                col = 'blue';
+	            console.log('isblue', this.$route);
+	            var m2l_1 = new FrameFx_1.FramesFx("/img/fx/logo/" + col + "/m2l/m2l_", 0, 12);
+	            this.fx = m2l_1;
+	            m2l_1.setSpeed(0.28);
+	            this.addChild(m2l_1);
+	            var l2m_1 = new FrameFx_1.FramesFx("/img/fx/logo/" + col + "/l2m/l2m_", 0, 15);
+	            this.fx = l2m_1;
+	            l2m_1.setSpeed(0.28);
+	            this.addChild(l2m_1);
+	            l2m_1.visible = false;
+	            m2l_1.visible = false;
+	            var isl2m_1 = false;
+	            var turn_1 = function () {
+	                isl2m_1 = !isl2m_1;
+	                if (isl2m_1) {
+	                    l2m_1.visible = true;
+	                    m2l_1.visible = false;
+	                    l2m_1.playOnce();
+	                }
+	                else {
+	                    m2l_1.visible = true;
+	                    l2m_1.visible = false;
+	                    m2l_1.playOnce();
+	                }
+	            };
+	            turn_1();
+	            setInterval(function (_) {
+	                turn_1();
+	            }, 30000);
+	        }
+	        else {
+	        }
 	    };
 	    StudioPanel.prototype.initLocalWS = function (io) {
 	        var _this = this;
