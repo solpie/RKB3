@@ -4,7 +4,7 @@ import { setInterval } from 'timers';
 import { type } from 'os';
 import { CommandId } from '../../Command';
 import { PanelId } from '../../const';
-import { getClientDelay, setClientDelay, getVsTitleData, getLive } from '../../utils/HupuAPI';
+import { getClientDelay, setClientDelay, getVsTitleData, getLive, getAllPlayer } from '../../utils/HupuAPI';
 import { DateFormat } from '../../utils/JsFunc';
 import { VueBase } from '../../utils/VueBase';
 import { dynamicLoading, $post } from '../../utils/WebJsFunc';
@@ -71,6 +71,8 @@ class StageOnlineView extends VueBase {
     isBold = VueBase.PROP
     noticeHistory = VueBase.PROP
     inputRollText = VueBase.PROP
+    vsPlayer = VueBase.PROP
+    gamePlayerArr: any
     liveConf: any
     opReq = (cmdId: string, param: any, callback: any) => {
         $.ajax({
@@ -368,6 +370,11 @@ class StageOnlineView extends VueBase {
             if (this.liveData)
                 scoreView.setScoreFoul(this.liveData)
         },
+
+        onTogglePlayerState(v) {
+            this.opReq(`${CommandId.cs_togglePlayerState}`, { _: null, visible: v })
+        },
+
         onClkNoticePresets(title, content) {
             if (content) {
                 this.noticeContent = content
@@ -463,16 +470,37 @@ class StageOnlineView extends VueBase {
                 }
             })
         },
-        onShowDateRanking(date) {
-            // $.get('/online/ranking/top10/' + date, res => {
-            //     console.log('Top10player', date);
-            //     let playerArr: Array<any> = res.top10
-            //     let idx = 1
-            //     for (let p of playerArr) {
-            //         console.log("#" + idx, "*", p.dtRanking, p.playerName);
-            //         idx++
-            //     }
-            // })
+        emitPlayer(playerArr) {
+            let lp, rp
+            for (let p of this.gamePlayerArr) {
+                if (p.name == playerArr[0]) {
+                    lp = p
+                }
+                if (p.name == playerArr[1])
+                    rp = p
+            }
+            this.opReq(`${CommandId.cs_setPlayer}`, { _: null, leftPlayer: lp, rightPlayer: rp })
+
+        },
+        onSetPlayer(vsPlayer) {
+            let a = vsPlayer.split(' ')
+            if (a.length == 2) {
+                if (!this.gamePlayerArr) {
+                    getAllPlayer( this.gameId, data => {
+                        console.log('get player', data);
+                        this.gamePlayerArr = data.data
+                        this.emitPlayer(a)
+                    })
+                }
+                else
+                    this.emitPlayer(a)
+            }
+
+            else {
+
+
+            }
+
         },
         onClkTop5(v, idx, g) {
             this.opReq(`${CommandId.cs_showTop5}`, { _: null, visible: v, idx: idx, gameIdxArr: g })

@@ -25,7 +25,7 @@ function logEvent(...a) {
 }
 export class ScoreView extends BasePanelView {
     scorePanelV3: Score2018v3
-    scorePanel: Score2018
+    // scorePanel: Score2018
     eventPanel: Event2017
     // rankingData: RankingData
     stage: any
@@ -57,24 +57,22 @@ export class ScoreView extends BasePanelView {
         // let s4 = $route.query.s4 == '1'
         this.isM2 = m2
         if (m2) {
-
             // this.scorePanel = new ScoreM3(stage, darkTheme)
         }
         else {
             //preload font
             // let f1 = this.preLoadFont(FontName.DigiLED)
-            let f1 = this.preLoadFont(FontName.MicrosoftYahei)
-            stage.addChild(f1)
-            let f2 = this.preLoadFont(FontName.Impact)
-            stage.addChild(f2)
-            let f4 = this.preLoadFont(FontName.DigiLED)
-            stage.addChild(f4)
-            let f3 = this.preLoadFont(FontName.Geodet)
+            // let f1 = this.preLoadFont(FontName.MicrosoftYahei)
+            // stage.addChild(f1)
+            // let f2 = this.preLoadFont(FontName.Impact)
+            // stage.addChild(f2)
+            // let f4 = this.preLoadFont(FontName.DigiLED)
+            // stage.addChild(f4)
+            let f3 = this.preLoadFont(FontName.dinCondensedC)
             stage.addChild(f3)
             TweenEx.delayedCall(1000, _ => {
                 if (!this.isRmOP) {
-
-                    this.scorePanel = new Score2018(stage)
+                    // this.scorePanel = new Score2018(stage)
                     this.scorePanelV3 = new Score2018v3(stage)
                 }
                 this.initDelay()
@@ -183,29 +181,36 @@ export class ScoreView extends BasePanelView {
             // localWs.emit("opUrl", { opUrl: window.location.host })
         })
             .on(`${CommandId.sc_startTimer}`, (data) => {
-                this.scorePanel.toggleTimer(TimerState.RUNNING)
+                this.scorePanelV3.toggleTimer(TimerState.RUNNING)
             })
             .on(`${CommandId.sc_pauseTimer}`, (data) => {
-                this.scorePanel.toggleTimer(TimerState.PAUSE)
+                this.scorePanelV3.toggleTimer(TimerState.PAUSE)
             })
             .on(`${CommandId.sc_resetTimer}`, (data) => {
-                this.scorePanel.resetTimer()
+                this.scorePanelV3.resetTimer()
             })
             .on(`${CommandId.sc_setDelayTime}`, (data) => {
                 this.delayTimeMS = data.delayTimeMS
             })
+            .on(`${CommandId.sc_setPlayer}`, (data) => {
+                let lp = data.leftPlayer
+                let rp = data.rightPlayer
+                this.scorePanelV3.setLeftPlayer(lp)
+                this.scorePanelV3.setRightPlayer(rp)
+                this.scorePanelV3.resetScore()
+            })
             .on(`${CommandId.sc_updateScore}`, (data) => {
                 if (data.isLeft) {
                     data.leftScore = data.score
-                    this.scorePanel.setLeftScore(data.score)
+                    this.scorePanelV3.setLeftScore(data.score)
                 }
                 else {
                     data.rightScore = data.score
-                    this.scorePanel.setRightScore(data.score)
+                    this.scorePanelV3.setRightScore(data.score)
                 }
             })
             .on(`${CommandId.sc_setTimer}`, (data) => {
-                this.scorePanel.setTimer(data.time)
+                this.scorePanelV3.setTimer(data.time)
             })
             .on(`${CommandId.sc_toggleTheme}`, (data) => {
                 let isDark = data.isDark
@@ -214,17 +219,18 @@ export class ScoreView extends BasePanelView {
                 window.location.reload()
             })
             .on(`${CommandId.sc_showChampion}`, (data) => {
-                let player = this.scorePanel.getPlayerInfo(data.isLeft)
+                // let player = this.scorePanel.getPlayerInfo(data.isLeft)
+                let player = this.scorePanelV3.getPlayerInfo(data.isLeft)
                 this.eventPanel.showChampion(data.title, player)
                 this.eventPanel.champion.show()
-                this.scorePanel.hide()
+                this.scorePanelV3.hide()
             })
             .on(`${CommandId.sc_toggleScorePanel}`, (data) => {
                 if (data.visible) {
-                    this.scorePanel.show()
+                    this.scorePanelV3.show()
                 }
                 else {
-                    this.scorePanel.hide()
+                    this.scorePanelV3.hide()
                     this.eventPanel.hideVictory()
                 }
             })
@@ -260,18 +266,13 @@ export class ScoreView extends BasePanelView {
             .on(`${CommandId.sc_playScoreFx}`, (data) => {
                 this.eventPanel.showScoreFx()
             })
-            .on(`${CommandId.sc_setBdVisible}`, (data) => {
-                this.eventPanel.showBd(data.v)
-                data.v ? this.scorePanel.hide()
-                    : this.scorePanel.show()
-            })
             .on(`${CommandId.sc_showTop5}`, (data) => {
                 console.log('sc_showTop5');
                 this.eventPanel.showTop5(data)
             })
             .on(`${CommandId.sc_showVsTitle}`, (data) => {
                 console.log('sc_showVsTitle', data);
-                this.eventPanel.showVsTitle(data)
+                this.scorePanelV3.showTitle(data)
             })
             .on(`${CommandId.sc_showRollText}`, (data) => {
                 console.log('sc_showRollText', data);
@@ -280,6 +281,10 @@ export class ScoreView extends BasePanelView {
             .on(`${CommandId.sc_showStage}`, (data) => {
                 console.log('sc_showStage', data);
                 this.showStage(data.visible)
+            })
+            .on(`${CommandId.sc_togglePlayerState}`, (data) => {
+                console.log('sc_togglePlayerState', data);
+                this.scorePanelV3.toggleState(data)
             })
     }
     showStage(v) {
@@ -302,8 +307,6 @@ export class ScoreView extends BasePanelView {
             let remoteIO = io.connect(hupuWsUrl);
             let setPlayer = (leftPlayer, rightPlayer) => {
                 // player level 0 其他 1 至少一个胜场  2 大师赛 3冠军
-                this.scorePanel.setLeftPlayerInfo(leftPlayer)
-                this.scorePanel.setRightPlayerInfo(rightPlayer)
                 this.scorePanelV3.setLeftPlayer(leftPlayer)
                 this.scorePanelV3.setRightPlayer(rightPlayer)
             };
@@ -335,51 +338,52 @@ export class ScoreView extends BasePanelView {
                     logEvent('init', data);
                     let lPlayer = data.player.left
                     let rPlayer = data.player.right
-                    this.scorePanel.set35ScoreLight(data.winScore);
-                    this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
+                    this.scorePanelV3.setGameIdx(Number(data.gameIdx), Number(data.matchType));
                     setPlayer(data.player.left, data.player.right);
-                    this.scorePanel.setLeftScore(data.player.left.leftScore);
-                    this.scorePanel.setRightScore(data.player.right.rightScore);
-                    this.scorePanel.setLeftFoul(data.player.left.leftFoul);
-                    this.scorePanel.setRightFoul(data.player.right.rightFoul);
+                    this.scorePanelV3.setLeftScore(data.player.left.leftScore);
+                    this.scorePanelV3.setRightScore(data.player.right.rightScore);
+                    this.scorePanelV3.setLeftFoul(data.player.left.leftFoul);
+                    this.scorePanelV3.setRightFoul(data.player.right.rightFoul);
                     data.delayTimeMS = this.delayTimeMS
 
                     let gameStatus = Number(data.status)
                     if (data.status == 0) {//status字段吧 0 进行中 1已结束 2 ready
                         let gameTime = Math.floor(data.t / 1000 - Number(data.st))
-                        this.scorePanel.setTimer(gameTime)
-                        this.scorePanel.toggleTimer(TimerState.RUNNING);
+
+                        this.scorePanelV3.setTimer(gameTime)
+                        this.scorePanelV3.toggleTimer(TimerState.RUNNING);
                     }
                     else if (data.status == 2) {
-                        this.scorePanel.toggleTimer(TimerState.PAUSE);
-                        this.scorePanel.resetTimer();
+
+                        this.scorePanelV3.toggleTimer(TimerState.PAUSE);
+                        this.scorePanelV3.resetTimer();
                     }
 
                     //vs titletitle
-                    if (lPlayer.title && rPlayer.title)
-                        this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title.replace(" ", '') + ' ' + rPlayer.title.replace(" ", '') })
+                    // if (lPlayer.title && rPlayer.title)
+                    //     this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title.replace(" ", '') + ' ' + rPlayer.title.replace(" ", '') })
                 };
 
                 eventMap['updateScore'] = () => {
                     console.log('updateScore', data);
                     logEvent('updateScore', data);
                     if (data.leftScore != null) {
-                        this.scorePanel.setLeftScore(data.leftScore);
+                        this.scorePanelV3.setLeftScore(data.leftScore);
                     }
                     if (data.rightScore != null) {
-                        this.scorePanel.setRightScore(data.rightScore);
+                        this.scorePanelV3.setRightScore(data.rightScore);
                     }
                     if (data.rightFoul != null) {
-                        this.scorePanel.setRightFoul(data.rightFoul);
+                        this.scorePanelV3.setRightFoul(data.rightFoul);
                     }
                     if (data.leftFoul != null) {
-                        this.scorePanel.setLeftFoul(data.leftFoul);
+                        this.scorePanelV3.setLeftFoul(data.leftFoul);
                     }
                 };
 
                 eventMap['timeStart'] = () => {
                     console.log('timeStart', data);
-                    this.scorePanel.toggleTimer(TimerState.RUNNING);
+                    this.scorePanelV3.toggleTimer(TimerState.RUNNING);
                 }
                 eventMap['timeDiff'] = () => {
                     console.log('timeDiff', data);
@@ -389,18 +393,17 @@ export class ScoreView extends BasePanelView {
                 eventMap['startGame'] = () => {
                     console.log('startGame', data);
                     logEvent('startGame', data)
-                    this.scorePanel.toggleTimer(TimerState.PAUSE);
-                    this.scorePanel.resetScore();
-                    this.scorePanel.resetTimer();
+                    this.scorePanelV3.toggleTimer(TimerState.PAUSE);
+                    this.scorePanelV3.resetScore();
+                    this.scorePanelV3.resetTimer();
 
                     let lPlayer = data.player.left
                     let rPlayer = data.player.right
-                    this.scorePanel.set35ScoreLight(data.winScore);
-                    this.scorePanel.setGameIdx(Number(data.gameIdx), Number(data.matchType));
+                    this.scorePanelV3.setGameIdx(Number(data.gameIdx), Number(data.matchType));
                     setPlayer(data.player.left, data.player.right);
                     // window.location.reload();
-                    if (lPlayer.title && rPlayer.title)
-                        this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title.replace(" ", '') + ' ' + rPlayer.title.replace(" ", '') })
+                    // if (lPlayer.title && rPlayer.title)
+                    //     this.eventPanel.showVsTitle({ visible: true, vs: lPlayer.title.replace(" ", '') + ' ' + rPlayer.title.replace(" ", '') })
 
                 };
 
@@ -409,8 +412,8 @@ export class ScoreView extends BasePanelView {
                     logEvent('commitGame', data)
                     let player = data.player
                     // if (this.isM2)
-                    if (this.scorePanel.baseCtn.visible)
-                        this.eventPanel.showVictory(player)
+                    // if (this.scorePanel.baseCtn.visible)
+                    //     this.eventPanel.showVictory(player)
 
                     // else
                     //     this.eventPanel.showWin(player)
@@ -435,16 +438,16 @@ export class ScoreView extends BasePanelView {
     setScoreFoul(data) {
         logEvent('setScoreFoul', data)
         if (data.leftScore != null) {
-            this.scorePanel.setLeftScore(data.leftScore);
+            this.scorePanelV3.setLeftScore(data.leftScore);
         }
         if (data.rightScore != null) {
-            this.scorePanel.setRightScore(data.rightScore);
+            this.scorePanelV3.setRightScore(data.rightScore);
         }
         if (data.rightFoul != null) {
-            this.scorePanel.setRightFoul(data.rightFoul);
+            this.scorePanelV3.setRightFoul(data.rightFoul);
         }
         if (data.leftFoul != null) {
-            this.scorePanel.setLeftFoul(data.leftFoul);
+            this.scorePanelV3.setLeftFoul(data.leftFoul);
         }
     }
 
@@ -459,14 +462,14 @@ export class ScoreView extends BasePanelView {
                 this.delayTimeMS = data.delayTimeMS;
             })
             .on(CommandId.sc_startTimer, (data) => {
-                this.scorePanel.toggleTimer(TimerState.RUNNING)
+                this.scorePanelV3.toggleTimer(TimerState.RUNNING)
             })
             .on(CommandId.sc_pauseTimer, (data) => {
-                this.scorePanel.toggleTimer(TimerState.PAUSE)
+                this.scorePanelV3.toggleTimer(TimerState.PAUSE)
             })
             .on(CommandId.sc_resetTimer, (data) => {
                 console.log("CommandId.sc_resetTimer", data);
-                this.scorePanel.resetTimer()
+                this.scorePanelV3.resetTimer()
             })
     }
 

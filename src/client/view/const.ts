@@ -17,6 +17,7 @@ export const FontName = {
     Impact: "impact",
     Gamer: "gamer",
     Geodet: "geodet",
+    dinCondensedC: "dinCondensedC",
     DigiLED: "digital"
 };
 export const ServerConst = {

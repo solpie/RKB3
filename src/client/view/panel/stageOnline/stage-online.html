@@ -51,12 +51,21 @@
 
             <p class="control">
                 <input class="input" type="text" onkeypress='var c = event.charCode;
-                   return c >= 48 && c <= 57 ||c==46' placeholder="" style="width: 50px;" v-model="panelTime2Set">
+                return c >= 48 && c <= 57 ||c==46' placeholder="" style="width: 50px;" v-model="panelTime2Set">
             </p>
             比分控制:
             <br>
+            <input class="input" type="text" placeholder="蓝方名字 红方名字" style="width: 300px;" v-model="vsPlayer">
             <button class="button" @click="onUpdateScore(true ,panelTime2Set)">蓝方比分</button>
             <button class="button" @click="onUpdateScore(false,panelTime2Set)">红方比分</button>
+            <button class="button" @click="onTogglePlayerState(true)">切换攻守</button>
+            <button class="button" @click="onTogglePlayerState(false)">隐藏</button>
+            <br>
+            <button class="button" @click="onSetPlayer(vsPlayer)">设置球员</button>
+
+            <button class="button" @click="onUpdateFoul(true ,panelTime2Set)">蓝方犯规</button>
+            <button class="button" @click="onUpdateFoul(false,panelTime2Set)">红方犯规</button>
+
 
             <label class="label">  小组面板:</label><br>
             <button class="button" @click="onClkGroup(true,-1)">显示</button>

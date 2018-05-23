@@ -9,6 +9,8 @@ export const CommandId = {
     cs_addLeftScore: '',//1000010
     cs_addRightScore: '',
 
+    cs_togglePlayerState: '',
+    sc_togglePlayerState: '',
 
     minLeftScore: '',
     cs_minLeftScore: '',//1000010
@@ -123,6 +125,8 @@ export const CommandId = {
     ////////////studio panel
     cs_showBottle: '',
     sc_showBottle: '',
+    cs_setPlayer:'',
+    sc_setPlayer:'',
     //---------------- 5v5 panel
     cs_showHeaderText: '',
     sc_showHeaderText: '',
