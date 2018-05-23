@@ -198,6 +198,7 @@ export class ScoreView extends BasePanelView {
                 this.scorePanelV3.setLeftPlayer(lp)
                 this.scorePanelV3.setRightPlayer(rp)
                 this.scorePanelV3.resetScore()
+                this.scorePanelV3.gameTitle.text = ''
             })
             .on(`${CommandId.sc_updateScore}`, (data) => {
                 if (data.isLeft) {

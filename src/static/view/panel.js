@@ -6683,6 +6683,7 @@
 	            _this.scorePanelV3.setLeftPlayer(lp);
 	            _this.scorePanelV3.setRightPlayer(rp);
 	            _this.scorePanelV3.resetScore();
+	            _this.scorePanelV3.gameTitle.text = '';
 	        })
 	            .on("" + Command_1.CommandId.sc_updateScore, function (data) {
 	            if (data.isLeft) {
