@@ -209,6 +209,14 @@ export class ScoreView extends BasePanelView {
                     this.scorePanelV3.setRightScore(data.score)
                 }
             })
+            .on(`${CommandId.sc_updateFoul}`, (data) => {
+                if (data.isLeft) {
+                    this.scorePanelV3.setLeftFoul(data.foul)
+                }
+                else {
+                    this.scorePanelV3.setRightFoul(data.foul)
+                }
+            })
             .on(`${CommandId.sc_setTimer}`, (data) => {
                 this.scorePanelV3.setTimer(data.time)
             })

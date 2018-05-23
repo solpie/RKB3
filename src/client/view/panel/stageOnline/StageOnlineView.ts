@@ -486,7 +486,7 @@ class StageOnlineView extends VueBase {
             let a = vsPlayer.split(' ')
             if (a.length == 2) {
                 if (!this.gamePlayerArr) {
-                    getAllPlayer( this.gameId, data => {
+                    getAllPlayer(this.gameId, data => {
                         console.log('get player', data);
                         this.gamePlayerArr = data.data
                         this.emitPlayer(a)
@@ -552,6 +552,11 @@ class StageOnlineView extends VueBase {
             let score = Number(v)
             if (score > -1)
                 this.opReq(`${CommandId.cs_updateScore}`, { _: null, score: v, isLeft: isLeft })
+        },
+        onUpdateFoul(isLeft, v) {
+            let score = Number(v)
+            if (score > -1)
+                this.opReq(`${CommandId.cs_updateFoul}`, { _: null, foul: v, isLeft: isLeft })
         },
         onClkShowStage(v) {
             this.opReq(`${CommandId.cs_showStage}`, { _: null, visible: v })

@@ -3692,6 +3692,8 @@
 	exports.CommandId = {
 	    resetTimer: '',
 	    disableTracker: '',
+	    cs_updateFoul: '',
+	    sc_updateFoul: '',
 	    cs_updateScore: '',
 	    sc_updateScore: '',
 	    cs_updateRightScore: '',
@@ -4851,6 +4853,11 @@
 	                var score = Number(v);
 	                if (score > -1)
 	                    this.opReq("" + Command_1.CommandId.cs_updateScore, { _: null, score: v, isLeft: isLeft });
+	            },
+	            onUpdateFoul: function (isLeft, v) {
+	                var score = Number(v);
+	                if (score > -1)
+	                    this.opReq("" + Command_1.CommandId.cs_updateFoul, { _: null, foul: v, isLeft: isLeft });
 	            },
 	            onClkShowStage: function (v) {
 	                this.opReq("" + Command_1.CommandId.cs_showStage, { _: null, visible: v });
@@ -6674,6 +6681,14 @@
 	            else {
 	                data.rightScore = data.score;
 	                _this.scorePanelV3.setRightScore(data.score);
+	            }
+	        })
+	            .on("" + Command_1.CommandId.sc_updateFoul, function (data) {
+	            if (data.isLeft) {
+	                _this.scorePanelV3.setLeftFoul(data.foul);
+	            }
+	            else {
+	                _this.scorePanelV3.setRightFoul(data.foul);
 	            }
 	        })
 	            .on("" + Command_1.CommandId.sc_setTimer, function (data) {
