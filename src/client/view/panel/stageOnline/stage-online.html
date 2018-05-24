@@ -15,8 +15,7 @@
             </ul>
         </div>
         <div v-if='actTab=="tab1"'>
-            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒
-                <br>timeDiff:{{timeDiff}}
+            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒 timeDiff:{{timeDiff}}
             </h2>
             <label class="label">设置延时时间(秒)</label>
             <p class="control">
@@ -28,15 +27,11 @@
             <label class="label">现场时间:{{liveTime}}</label>
             <label class="label">面板时间:{{panelTime}}</label>
 
-            <label class="label">自动开题延时(秒){{clientDelayTimeSrv}}</label>
-            <p class="control">
-                <input class="input" type="text" onkeypress='var c = event.charCode;
-                   return c >= 48 && c <= 57 ||c==46' placeholder="" style="width: 50px;" v-model="clientDelayTime">
-                <button class="button" @click="onSetClientDelay(clientDelayTime)">确定</button>
-            </p>
 
             <!--<button class="button" @click="onClkRenderData">刷新现场数据到面板</button><br>-->
-            <label class="label" style="font-size: 50px;font-family: 'NotoSansHans-Regular'">{{lLiveName}}  vs {{rLiveName}}<br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>
+            <label class="label" style="font-size: 50px;font-family: 'NotoSansHans-Regular'">
+               {{lLiveName}}  vs {{rLiveName}} 
+                <br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>
             <label class="label">比分面板:</label><br>
             <button class="button" @click="onClkShowScore(true)">显示</button>
             <button class="button" @click="onClkShowScore(false)">隐藏</button>
@@ -165,6 +160,12 @@
             <label class="label">  脉动广告:</label><br>
             <button class="button" @click="onShowFx(true,1)">转瓶</button>
 
+            <label class="label">自动开题延时(秒){{clientDelayTimeSrv}}</label>
+            <p class="control">
+                <input class="input" type="text" onkeypress='var c = event.charCode;
+                   return c >= 48 && c <= 57 ||c==46' placeholder="" style="width: 50px;" v-model="clientDelayTime">
+                <button class="button" @click="onSetClientDelay(clientDelayTime)">确定</button>
+            </p>
         </div>
     </div>
 </div>

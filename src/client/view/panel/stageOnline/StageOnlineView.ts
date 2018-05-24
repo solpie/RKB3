@@ -371,8 +371,8 @@ class StageOnlineView extends VueBase {
                 scoreView.setScoreFoul(this.liveData)
         },
 
-        onTogglePlayerState(v) {
-            this.opReq(`${CommandId.cs_togglePlayerState}`, { _: null, visible: v })
+        onTogglePlayerState(v, isLeftPlayer = null) {
+            this.opReq(`${CommandId.cs_togglePlayerState}`, { _: null, visible: v, isLeftPlayer: isLeftPlayer })
         },
 
         onClkNoticePresets(title, content) {
