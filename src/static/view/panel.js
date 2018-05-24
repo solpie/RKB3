@@ -3877,6 +3877,7 @@
 	        _super.call(this);
 	        this.template = __webpack_require__(67);
 	        this.isOp = VueBase_1.VueBase.PROP;
+	        this.isLeftPlayer = VueBase_1.VueBase.PROP;
 	        this.isMobile = VueBase_1.VueBase.PROP;
 	        this.leftTimeup = VueBase_1.VueBase.PROP;
 	        this.rightTimeup = VueBase_1.VueBase.PROP;
@@ -3902,7 +3903,7 @@
 	                });
 	            },
 	            onTogglePlayerState: function (v) {
-	                this.opReq("" + Command_1.CommandId.cs_togglePlayerState, { _: null, visible: v });
+	                this.opReq("" + Command_1.CommandId.cs_togglePlayerState, { _: null, visible: v, isLeftPlayer: this.isLeftPlayer });
 	            },
 	            onTimeup: function (isLeft, t) {
 	                console.log('timeup', t);
@@ -3980,6 +3981,7 @@
 	    };
 	    StageStudio.prototype.created = function () {
 	        this.isOp = this.$route.params.op == "op";
+	        this.isLeftPlayer = this.$route.query.player == "left";
 	        console.log('studio op', this.isOp);
 	        this.initCanvas();
 	        this.initIO();
@@ -4559,7 +4561,7 @@
 /* 67 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"box\" v-if='isOp' style=\"width:1000px;left:10px;top:10px\">\r\n    <div style=\" margin: auto;width: 80%;height: 80%; padding: 10px;\">\r\n        <button class=\"button\" @click=\"onTogglePlayerState(true)\" style=\"width:100%;height:800px\">切换攻守</button>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"box\" v-if='isOp' style=\"width:1000px;left:10px;top:10px\">\r\n    <div style=\" margin: auto;width: 80%;height: 80%; padding: 10px;\">\r\n        <button class=\"button\" @click=\"onTogglePlayerState(true,isLeftPlayer)\" style=\"width:100%;height:800px\">切换攻守</button>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 68 */
@@ -8486,6 +8488,9 @@
 	        if (data.visible) {
 	            var a = ['攻', '守'];
 	            this.state = !this.state;
+	            if (data.isLeftPlayer != null) {
+	                this.state = !data.isLeftPlayer;
+	            }
 	            var idx = Number(this.state);
 	            var idx2 = Number(!this.state);
 	            this.lState.setText(a[idx])

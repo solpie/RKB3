@@ -11,6 +11,7 @@ declare let io
 class StageStudio extends VueBase {
     template = require('./stage5v5.html')
     isOp = VueBase.PROP
+    isLeftPlayer = VueBase.PROP
     isMobile = VueBase.PROP
     leftTimeup = VueBase.PROP
     rightTimeup = VueBase.PROP
@@ -43,6 +44,7 @@ class StageStudio extends VueBase {
     }
     protected created() {
         this.isOp = this.$route.params.op == "op"
+        this.isLeftPlayer = this.$route.query.player == "left"
         console.log('studio op', this.isOp);
         this.initCanvas()
         this.initIO()
@@ -69,7 +71,7 @@ class StageStudio extends VueBase {
         },
 
         onTogglePlayerState(v) {
-            this.opReq(`${CommandId.cs_togglePlayerState}`, { _: null, visible: v })
+            this.opReq(`${CommandId.cs_togglePlayerState}`, { _: null, visible: v, isLeftPlayer: this.isLeftPlayer })
         },
         onTimeup(isLeft, t) {
             console.log('timeup', t);

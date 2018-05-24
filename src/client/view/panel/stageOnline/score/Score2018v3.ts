@@ -152,8 +152,13 @@ export class Score2018v3 extends PIXI.Container {
     state = true
     toggleState(data) {
         if (data.visible) {
+
             let a = ['攻', '守']
             this.state = !this.state
+
+            if (data.isLeftPlayer != null) {
+                this.state = !data.isLeftPlayer
+            }
             let idx = Number(this.state)
             let idx2 = Number(!this.state)
             this.lState.setText(a[idx])
