@@ -34,10 +34,6 @@ let routes = [
         path: '/3/:op',
         components: { default: stage3point }
     },
-    // {
-    //     path: '/loading/:op',
-    //     components: { default: stageLoading }
-    // },
     {
         path: '/ol/:op/:game_id',
         components: { default: stageOnlineView }

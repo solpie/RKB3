@@ -124,7 +124,7 @@ export class Score2018v3 extends PIXI.Container {
         this.avtCtn.addChild(lMask)
         let rMask = newBitmap({ url: '/img/panel/score2018v3/maskR.png' })
         this.avtCtn.addChild(rMask)
-        
+
         let lAvt = new PIXI.Sprite
         this.avtCtn.addChild(lAvt)
         this.lAvt = lAvt
@@ -288,8 +288,10 @@ export class Score2018v3 extends PIXI.Container {
             if (a.length == 2) {
                 let ln = a[0]
                 let rn = a[1]//data.right
-                this.lTitle.text = ln
-                this.rTitle.text = rn
+                this.lTitle.setText(ln)
+                    .setAlignCenter(600)
+                this.rTitle.setText(rn)
+                    .setAlignCenter(1320)
             }
         }
         if (!data.visible)

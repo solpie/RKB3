@@ -37,17 +37,19 @@ class StageStudio extends VueBase {
         super()
         VueBase.initProps(this)
     }
+
     initCanvas() {
-        
-        this.studioPanel = new StudioPanel(BasePanelView.initPixi(),this.$route)
+        this.studioPanel = new StudioPanel(BasePanelView.initPixi(), this.$route)
     }
     protected created() {
+        this.isOp = this.$route.params.op == "op"
+        console.log('studio op', this.isOp);
         this.initCanvas()
         this.initIO()
     }
 
     initIO() {
-       let localWS = io.connect(`/${PanelId.rkbPanel}`)
+        let localWS = io.connect(`/${PanelId.rkbPanel}`)
             .on(`${CommandId.sc_showBottle}`, (data) => {
                 console.log('sc_showBottle');
                 this.studioPanel.showBottle()
@@ -61,6 +63,10 @@ class StageStudio extends VueBase {
                 _: null,
                 text: text, sec: Number(sec)
             })
+        },
+
+        onTogglePlayerState(v) {
+            this.opReq(`${CommandId.cs_togglePlayerState}`, { _: null, visible: v })
         },
         onTimeup(isLeft, t) {
             console.log('timeup', t);

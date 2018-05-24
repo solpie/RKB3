@@ -3,11 +3,9 @@
  * Created by toramisu on 2016/10/22.
  */
 require('../../../static/css/bulma.min.css');
-// require('../../../static/css/jsoneditor.min.css');
 
 require(`script!./../../libs/jquery.min.js`);
 require(`script!./../../libs/qrcode.min.js`);
-// require(`script!./../../libs/jsoneditor.min.js`);
 require(`script!./../../libs/vue/vue.min.js`);
 require(`script!./../../libs/vue/vue-router.min.js`);
 import { Navbar } from "./navbar/Navbar";

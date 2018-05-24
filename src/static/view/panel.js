@@ -3901,6 +3901,9 @@
 	                    text: text, sec: Number(sec)
 	                });
 	            },
+	            onTogglePlayerState: function (v) {
+	                this.opReq("" + Command_1.CommandId.cs_togglePlayerState, { _: null, visible: v });
+	            },
 	            onTimeup: function (isLeft, t) {
 	                console.log('timeup', t);
 	                this.opReq("" + Command_1.CommandId.cs_5v5timeup, {
@@ -3976,6 +3979,8 @@
 	        this.studioPanel = new StudioPanel_1.StudioPanel(BasePanelView_1.BasePanelView.initPixi(), this.$route);
 	    };
 	    StageStudio.prototype.created = function () {
+	        this.isOp = this.$route.params.op == "op";
+	        console.log('studio op', this.isOp);
 	        this.initCanvas();
 	        this.initIO();
 	    };
@@ -4552,7 +4557,7 @@
 /* 67 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n</div>";
+	module.exports = "<div class=\"box\" v-if='isOp' style=\"width:1000px;left:10px;top:10px\">\r\n    <button class=\"button\" @click=\"onTogglePlayerState(true)\" style=\"width:300px;height:300px\">切换攻守</button>\r\n</div>";
 
 /***/ },
 /* 68 */
@@ -8586,8 +8591,10 @@
 	            if (a.length == 2) {
 	                var ln = a[0];
 	                var rn = a[1];
-	                this.lTitle.text = ln;
-	                this.rTitle.text = rn;
+	                this.lTitle.setText(ln)
+	                    .setAlignCenter(600);
+	                this.rTitle.setText(rn)
+	                    .setAlignCenter(1320);
 	            }
 	        }
 	        if (!data.visible)
