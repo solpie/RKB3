@@ -46,6 +46,9 @@ class StageStudio extends VueBase {
         console.log('studio op', this.isOp);
         this.initCanvas()
         this.initIO()
+
+        if (this.isOp)
+            this.studioPanel.parent.visible = false
     }
 
     initIO() {

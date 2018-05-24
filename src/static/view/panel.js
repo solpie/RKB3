@@ -3983,6 +3983,8 @@
 	        console.log('studio op', this.isOp);
 	        this.initCanvas();
 	        this.initIO();
+	        if (this.isOp)
+	            this.studioPanel.parent.visible = false;
 	    };
 	    StageStudio.prototype.initIO = function () {
 	        var _this = this;
@@ -4557,7 +4559,7 @@
 /* 67 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"box\" v-if='isOp' style=\"width:1000px;left:10px;top:10px\">\r\n    <button class=\"button\" @click=\"onTogglePlayerState(true)\" style=\"width:300px;height:300px\">切换攻守</button>\r\n</div>";
+	module.exports = "<div class=\"box\" v-if='isOp' style=\"width:1000px;left:10px;top:10px\">\r\n    <div style=\" margin: auto;width: 80%;height: 80%; padding: 10px;\">\r\n        <button class=\"button\" @click=\"onTogglePlayerState(true)\" style=\"width:100%;height:800px\">切换攻守</button>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 68 */
