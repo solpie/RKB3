@@ -108,6 +108,14 @@
             <button class="button" @click="onClkToggleChampionPanel(true)">显示</button>
             <button class="button" @click="onClkToggleChampionPanel(false)">隐藏</button>
             <br>
+
+            <div v-if=0 style="position: fixed;top: 260px;right: 10px;">
+                蓝方: <button class="button" @click="onClkToggleChampionPanel(false)">+1</button> 比分
+                <button class="button" @click="onClkToggleChampionPanel(false)">-1</button>:红方
+                <br><br> -----
+                <button class="button" @click="onClkToggleChampionPanel(false)">+1</button> 犯规
+                <button class="button" @click="onClkToggleChampionPanel(false)">-1</button>-----
+            </div>
         </div>
     </div>
 
@@ -168,4 +176,5 @@
             </p>
         </div>
     </div>
+
 </div>
