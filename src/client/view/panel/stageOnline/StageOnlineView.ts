@@ -72,6 +72,7 @@ class StageOnlineView extends VueBase {
     noticeHistory = VueBase.PROP
     inputRollText = VueBase.PROP
     vsPlayer = VueBase.PROP
+    gameTitleType = VueBase.PROP
     gamePlayerArr: any
     liveConf: any
     opReq = (cmdId: string, param: any, callback: any) => {
@@ -156,13 +157,6 @@ class StageOnlineView extends VueBase {
             // .on(`${CommandId.sc_showBracket}`, (data) => {
             //     console.log("CommandId.sc_showBracket", data)
             //     this.showBracket()
-            // })
-            // .on(`${CommandId.sc_hideOnlinePanel}`, (data) => {
-            //     this.showOnly("")
-            // })
-            // .on(`${CommandId.sc_showRollText}`, (data) => {
-            //     this.showOnly("")
-
             // })
             .on(`${CommandId.sc_showGroup}`, (data) => {
                 console.log('sc_showGroup');
@@ -357,8 +351,6 @@ class StageOnlineView extends VueBase {
         onClkRightChampion() {
             this.opReq(`${CommandId.cs_showChampion}`, { _: null, isLeft: false, title: this.championTitle })
         },
-        onClkRegularPlayer() {
-        },
 
         onClkShowScore(v) {
             this.opReq(`${CommandId.cs_toggleScorePanel}`, { _: null, visible: v })
@@ -470,7 +462,7 @@ class StageOnlineView extends VueBase {
                 }
             })
         },
-        emitPlayer(playerArr) {
+        emitPlayer(playerArr, gameTitle?) {
             let lp, rp
             for (let p of this.gamePlayerArr) {
                 if (p.name == playerArr[0]) {
@@ -479,28 +471,24 @@ class StageOnlineView extends VueBase {
                 if (p.name == playerArr[1])
                     rp = p
             }
-            this.opReq(`${CommandId.cs_setPlayer}`, { _: null, leftPlayer: lp, rightPlayer: rp })
+            this.opReq(`${CommandId.cs_setPlayer}`, { _: null, leftPlayer: lp, rightPlayer: rp, gameTitle: gameTitle })
 
         },
-        onSetPlayer(vsPlayer) {
-            let a = vsPlayer.split(' ')
+        onSetPlayer(vsPlayer, gameTitleType?) {
+            let a = vsPlayer.split('-')
+            let titleMap = { 1: '八进四', 2: '四进二', 3: '决赛' }
+            let gameTitle = titleMap[gameTitleType]
             if (a.length == 2) {
                 if (!this.gamePlayerArr) {
                     getAllPlayer(this.gameId, data => {
                         console.log('get player', data);
                         this.gamePlayerArr = data.data
-                        this.emitPlayer(a)
+                        this.emitPlayer(a, gameTitle)
                     })
                 }
                 else
-                    this.emitPlayer(a)
+                    this.emitPlayer(a, gameTitle)
             }
-
-            else {
-
-
-            }
-
         },
         onClkTop5(v, idx, g) {
             this.opReq(`${CommandId.cs_showTop5}`, { _: null, visible: v, idx: idx, gameIdxArr: g })
@@ -547,6 +535,12 @@ class StageOnlineView extends VueBase {
         },
         showRollText(text, v) {
             this.opReq(`${CommandId.cs_showRollText}`, { _: null, visible: v, text: text })
+        },
+        onAddScore(isLeft, v) {
+            this.opReq(`${CommandId.cs_updateScore}`, { _: null, dtScore: v, isLeft: isLeft })
+        },
+        onAddFoul(isLeft, v) {
+            this.opReq(`${CommandId.cs_updateFoul}`, { _: null, dtFoul: v, isLeft: isLeft })
         },
         onUpdateScore(isLeft, v) {
             let score = Number(v)

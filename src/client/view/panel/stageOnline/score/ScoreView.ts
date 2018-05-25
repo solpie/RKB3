@@ -198,24 +198,36 @@ export class ScoreView extends BasePanelView {
                 this.scorePanelV3.setLeftPlayer(lp)
                 this.scorePanelV3.setRightPlayer(rp)
                 this.scorePanelV3.resetScore()
-                this.scorePanelV3.gameTitle.text = ''
+                this.scorePanelV3.resetTimer()
+                this.scorePanelV3.toggleTimer(TimerState.PAUSE)
+                this.scorePanelV3.setGameTitle(data.gameTitle||'')
             })
             .on(`${CommandId.sc_updateScore}`, (data) => {
-                if (data.isLeft) {
-                    data.leftScore = data.score
-                    this.scorePanelV3.setLeftScore(data.score)
+                if (data.dtScore != null) {
+
+                    this.scorePanelV3.setDtScore(data)
                 }
                 else {
-                    data.rightScore = data.score
-                    this.scorePanelV3.setRightScore(data.score)
+                    if (data.isLeft) {
+                        data.leftScore = data.score
+                        this.scorePanelV3.setLeftScore(data.score)
+                    }
+                    else {
+                        data.rightScore = data.score
+                        this.scorePanelV3.setRightScore(data.score)
+                    }
                 }
             })
             .on(`${CommandId.sc_updateFoul}`, (data) => {
-                if (data.isLeft) {
-                    this.scorePanelV3.setLeftFoul(data.foul)
+                if (data.dtFoul != null) {
+                    this.scorePanelV3.setDtFoul(data)
+
                 }
                 else {
-                    this.scorePanelV3.setRightFoul(data.foul)
+                    if (data.isLeft)
+                        this.scorePanelV3.setLeftFoul(data.foul)
+                    else
+                        this.scorePanelV3.setRightFoul(data.foul)
                 }
             })
             .on(`${CommandId.sc_setTimer}`, (data) => {
@@ -228,7 +240,6 @@ export class ScoreView extends BasePanelView {
                 window.location.reload()
             })
             .on(`${CommandId.sc_showChampion}`, (data) => {
-                // let player = this.scorePanel.getPlayerInfo(data.isLeft)
                 let player = this.scorePanelV3.getPlayerInfo(data.isLeft)
                 this.eventPanel.showChampion(data.title, player)
                 this.eventPanel.champion.show()

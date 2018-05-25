@@ -8,6 +8,9 @@ export class Text2 extends PIXI.Text {
         this.text = str
         return this
     }
+    setAddNum(v) {
+        return this.setText(Number(this.text) + v)
+    }
     setX(x) {
         this.x = x
         return this

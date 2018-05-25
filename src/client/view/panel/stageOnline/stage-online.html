@@ -29,7 +29,7 @@
 
 
             <!--<button class="button" @click="onClkRenderData">刷新现场数据到面板</button><br>-->
-            <label class="label" style="font-size: 50px;font-family: 'NotoSansHans-Regular'">
+            <label class="label" style="font-size: 30px;font-family: 'NotoSansHans-Regular'">
                {{lLiveName}}  vs {{rLiveName}} 
                 <br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>
             <label class="label">比分面板:</label><br>
@@ -50,13 +50,11 @@
             </p>
             比分控制:
             <br>
-            <input class="input" type="text" placeholder="蓝方名字 红方名字" style="width: 300px;" v-model="vsPlayer">
             <button class="button" @click="onUpdateScore(true ,panelTime2Set)">蓝方比分</button>
             <button class="button" @click="onUpdateScore(false,panelTime2Set)">红方比分</button>
             <button class="button" @click="onTogglePlayerState(true)">切换攻守</button>
             <button class="button" @click="onTogglePlayerState(false)">隐藏</button>
             <br>
-            <button class="button" @click="onSetPlayer(vsPlayer)">设置球员</button>
 
             <button class="button" @click="onUpdateFoul(true ,panelTime2Set)">蓝方犯规</button>
             <button class="button" @click="onUpdateFoul(false,panelTime2Set)">红方犯规</button>
@@ -80,7 +78,7 @@
             <button class="button" @click="onClkVsTitle(true,vsTitle)">修改并显示</button>
             <button class="button" @click="onClkVsTitle(true,'')">显示</button>
             <button class="button" @click="onClkVsTitle(false,vsTitle)">隐藏</button>
-            <button class="button" @click="onClkLoadVsTitle()">自动加载配置文件</button>
+            <!-- <button class="button" @click="onClkLoadVsTitle()">自动加载配置文件</button> -->
 
             <label class="label">  赛区实力榜:</label><br>
             <button class="button" @click="onShowRank(true,1,1)">东南 </button>
@@ -108,13 +106,16 @@
             <button class="button" @click="onClkToggleChampionPanel(true)">显示</button>
             <button class="button" @click="onClkToggleChampionPanel(false)">隐藏</button>
             <br>
-
-            <div v-if=0 style="position: fixed;top: 260px;right: 10px;">
-                蓝方: <button class="button" @click="onClkToggleChampionPanel(false)">+1</button> 比分
-                <button class="button" @click="onClkToggleChampionPanel(false)">-1</button>:红方
-                <br><br> -----
-                <button class="button" @click="onClkToggleChampionPanel(false)">+1</button> 犯规
-                <button class="button" @click="onClkToggleChampionPanel(false)">-1</button>-----
+            <div v-if=1 class='column is-one-quarter' style="position: fixed;top: 260px;right: 10px;">
+                <input class="input" type="text" style="width: 30px;" v-model="gameTitleType">1 '8进4' 2 '4进2' 3 '2进1'
+                <br>
+                <input class="input" type="text" placeholder="蓝方名字-红方名字" style="width: 300px;" v-model="vsPlayer">
+                <button class="button" @click="onSetPlayer(vsPlayer,gameTitleType)">设置球员</button>
+                <br> <button class="button" @click="onAddScore(true,-1)">-1</button>蓝方: <button class="button" @click="onAddScore(true,1)">+1</button> 比分
+                <button class="button" @click="onAddScore(false,1)">+1</button>:红方<button class="button" @click="onAddScore(false,-1)">-1</button>
+                <br><br> <button class="button" @click="onAddFoul(true,-1)">-1</button>-----
+                <button class="button" @click="onAddFoul(true,1)">+1</button> 犯规
+                <button class="button" @click="onAddFoul(false,+1)">+1</button>-----<button class="button" @click="onAddFoul(false,-1)">-1</button>
             </div>
         </div>
     </div>

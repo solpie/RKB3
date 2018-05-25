@@ -53,7 +53,7 @@ export class Row1 extends PIXI.Container {
     }
     setData(data) {
         this.playerName.text = data.name
-        fitWidth(this.playerName,300,50)
+        fitWidth(this.playerName, 300, 50)
 
         this.winLose.text = data.win + '/' + data.lose
         this.winLose.x = 1100 - this.winLose.width * .5
@@ -189,7 +189,7 @@ export class GroupSp2 extends PIXI.Container {
 
             remoteIO.on('wall', (data: any) => {
                 let event = data.et;
-                if (event == 'commitGame') {
+                if (event == 'commitGame' || event == 'startGame') {
                     this.updateData()
                 }
             })

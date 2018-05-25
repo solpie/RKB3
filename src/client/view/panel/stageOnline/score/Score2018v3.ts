@@ -96,9 +96,17 @@ export class Score2018v3 extends PIXI.Container {
         ns.fill = '#505050'
         ns.fontFamily = FontName.NotoSansHans
         this.lFoul = TextFac.new_(ns, this)
-            .setPos(315, 915)
+            .setPos(315 + 57, 915)
 
         this.rFoul = TextFac.new_(ns, this)
+            .setPos(1536 + 57, this.lFoul.y)
+
+        TextFac.new_(ns, this)
+            .setText('犯规:')
+            .setPos(315, this.lFoul.y)
+
+        TextFac.new_(ns, this)
+            .setText('犯规:')
             .setPos(1536, this.lFoul.y)
 
         ns.fontSize = '40px'
@@ -139,7 +147,6 @@ export class Score2018v3 extends PIXI.Container {
         this.lAvt.y = this.rAvt.y = 954
         this.resetScore()
         this.toggleState({ visible: true })
-
     }
 
     resetScore() {
@@ -169,6 +176,24 @@ export class Score2018v3 extends PIXI.Container {
         else
             this.lState.text = this.rState.text = ''
     }
+
+    setDtFoul(data) {
+        if (data.isLeft)
+            this.lFoul.setAddNum(data.dtFoul)
+        else
+            this.rFoul.setAddNum(data.dtFoul)
+    }
+
+    setDtScore(data) {
+        if (data.isLeft) {
+            this.lScore.setAddNum(data.dtScore)
+                .setAlignCenter(855)
+        }
+        else {
+            this.rScore.setAddNum(data.dtScore)
+                .setAlignCenter(1068)
+        }
+    }
     setLeftScore(score) {
         this.lScore.setText(score + '')
             .setAlignCenter(855)
@@ -180,10 +205,10 @@ export class Score2018v3 extends PIXI.Container {
     }
 
     setLeftFoul(data) {
-        this.lFoul.setText("犯规:" + (data || 0))
+        this.lFoul.setText((data || 0))
     }
     setRightFoul(data) {
-        this.rFoul.setText("犯规:" + (data || 0))
+        this.rFoul.setText((data || 0))
     }
 
     setRightPlayer(rPlayer) {
@@ -271,6 +296,11 @@ export class Score2018v3 extends PIXI.Container {
 
         this.gameTitle.text += gameIdxNum
         this.gameTitle.setAlignCenter(960)
+    }
+
+    setGameTitle(str) {
+        this.gameTitle.setText(str)
+            .setAlignCenter(960)
     }
 
     getPlayerInfo(isLeft) {
