@@ -8607,15 +8607,18 @@
 	                this.gameTitle.text = '决赛';
 	            else
 	                this.gameTitle.text = '大师赛';
+	            gameIdxNum = '';
 	        }
 	        else if (type == 4) {
 	            this.gameTitle.text = '席位战';
+	            gameIdxNum = '第' + gameIdxNum + '场';
 	        }
 	        else if (type == 1) {
 	            this.gameTitle.text = '车轮赛';
 	        }
 	        else if (type == 3) {
 	            this.gameTitle.text = '决赛';
+	            gameIdxNum = '';
 	        }
 	        this.gameTitle.text += gameIdxNum;
 	        this.gameTitle.setAlignCenter(960);
