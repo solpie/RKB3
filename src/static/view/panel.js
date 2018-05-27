@@ -8593,21 +8593,26 @@
 	        console.log('gameIdx', gameIdx, 'type', type);
 	        var gameIdxNum = '' + JsFunc_1.paddy(gameIdx, 2);
 	        if (type == 2) {
+	            gameIdxNum = '第' + gameIdxNum + '场';
 	            if (this.to8.indexOf(gameIdx) > -1)
-	                this.gameTitle.text = '八强分组赛';
+	                this.gameTitle.text = '大师赛八强';
 	            else if (this.to6.indexOf(gameIdx) > -1)
 	                this.gameTitle.text = '六强争夺赛';
-	            else if (this.to4.indexOf(gameIdx) > -1)
-	                this.gameTitle.text = '四强争夺赛';
+	            else if (this.to4.indexOf(gameIdx) > -1) {
+	                gameIdxNum = '' + JsFunc_1.paddy(gameIdx - 6, 2);
+	                this.gameTitle.text = '半决赛';
+	                gameIdxNum = '第' + gameIdxNum + '场';
+	            }
 	            else if (this.to2.indexOf(gameIdx) > -1)
 	                this.gameTitle.text = '四强赛';
 	            else if (gameIdx == 13)
 	                this.gameTitle.text = '半决赛';
-	            else if (gameIdx == 14)
+	            else if (gameIdx == 14) {
 	                this.gameTitle.text = '决赛';
+	                gameIdxNum = '';
+	            }
 	            else
 	                this.gameTitle.text = '大师赛';
-	            gameIdxNum = '';
 	        }
 	        else if (type == 4) {
 	            this.gameTitle.text = '席位战';
