@@ -39,10 +39,7 @@ export class StudioPanel extends PIXI.Container {
 
     rotLogo() {
         if (this.liveConf.mizone_logo) {
-            let isBlueLogo = this.liveConf.mizone_logo == "blue"
-            let col = 'white'
-            if (isBlueLogo)
-                col = 'blue'
+            let col = this.liveConf.mizone_logo 
             console.log('isblue', this.$route);
             let m2l = new FramesFx(`/img/fx/logo/${col}/m2l/m2l_`, 0, 12)
             this.fx = m2l

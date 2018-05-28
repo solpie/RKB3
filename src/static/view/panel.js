@@ -4039,10 +4039,7 @@
 	    }
 	    StudioPanel.prototype.rotLogo = function () {
 	        if (this.liveConf.mizone_logo) {
-	            var isBlueLogo = this.liveConf.mizone_logo == "blue";
-	            var col = 'white';
-	            if (isBlueLogo)
-	                col = 'blue';
+	            var col = this.liveConf.mizone_logo;
 	            console.log('isblue', this.$route);
 	            var m2l_1 = new FrameFx_1.FramesFx("/img/fx/logo/" + col + "/m2l/m2l_", 0, 12);
 	            this.fx = m2l_1;
