@@ -217,8 +217,10 @@ export class Score2018v3 extends PIXI.Container {
 
         this.rName.setText(rPlayer.name)
             .setLimitWidth(298, 40)
-
-        this.rHW.setText(rPlayer.height + 'CM  ' + rPlayer.weight + 'KG')
+        let age = ''
+        if (rPlayer.age)
+            age = rPlayer.age + '岁'
+        this.rHW.setText(rPlayer.height + 'CM  ' + rPlayer.weight + 'KG  ' + age)
         loadAvt(this.rAvt, rPlayer.avatar, 1109)
     }
 
@@ -230,8 +232,10 @@ export class Score2018v3 extends PIXI.Container {
             .setLimitWidth(298, 40)
             .setAlignRight(702)
 
-
-        this.lHW.setText(lPlayer.height + 'CM  ' + lPlayer.weight + 'KG')
+        let age = ''
+        if (lPlayer.age)
+            age = lPlayer.age + '岁'
+        this.lHW.setText(lPlayer.height + 'CM  ' + lPlayer.weight + 'KG  ' + age)
             .setAlignRight(702)
         loadAvt(this.lAvt, lPlayer.avatar, 725)
     }
@@ -264,33 +268,32 @@ export class Score2018v3 extends PIXI.Container {
     //1 车轮 2 大师 3 决赛    4 小组赛
     setGameIdx(gameIdx, type) {
         console.log('gameIdx', gameIdx, 'type', type)
+        // this.gameIdxTxt.text = '' + paddy(gameIdx, 2)
         let gameIdxNum = '' + paddy(gameIdx, 2)
         // this.gameIdxTxt.text = '四强'
         if (type == 2) {
-            gameIdxNum = '第' + gameIdxNum + '场'
+            // if (this.winSectionArr.indexOf(gameIdx) > -1)
+            //     this.gameTitle.text = '胜者组'
+            // else if (this.loseSectionArr.indexOf(gameIdx) > -1)
+            //     this.gameTitle.text = '败者组'
             if (this.to8.indexOf(gameIdx) > -1)
-                this.gameTitle.text = '大师赛八强'
-            // this.gameTitle.text = '八强分组赛'
+                this.gameTitle.text = '八强分组赛'
             else if (this.to6.indexOf(gameIdx) > -1)
                 this.gameTitle.text = '六强争夺赛'
-            else if (this.to4.indexOf(gameIdx) > -1) { 
-              gameIdxNum = '' + paddy(gameIdx-6, 2)
-                this.gameTitle.text = '半决赛'
-             gameIdxNum = '第' + gameIdxNum + '场'
-            // this.gameTitle.text = '四强争夺赛'
-        }    
+            else if (this.to4.indexOf(gameIdx) > -1)
+                this.gameTitle.text = '四强争夺赛'
             else if (this.to2.indexOf(gameIdx) > -1)
                 this.gameTitle.text = '四强赛'
+            // else if (gameIdx == 11)
+            //     this.gameTitle.text = '半决赛'
             else if (gameIdx == 13)
                 this.gameTitle.text = '半决赛'
-            else if (gameIdx == 14) { 
+            else if (gameIdx == 14) {
+                gameIdxNum = ''
                 this.gameTitle.text = '决赛'
-            gameIdxNum = ''
-        }    
+            }
             else
                 this.gameTitle.text = '大师赛'
-            
-            // gameIdxNum = ''
         }
         else if (type == 4) {
             this.gameTitle.text = '席位战'
@@ -307,6 +310,51 @@ export class Score2018v3 extends PIXI.Container {
         this.gameTitle.text += gameIdxNum
         this.gameTitle.setAlignCenter(960)
     }
+    // setGameIdx2(gameIdx, type) {
+    //     console.log('gameIdx', gameIdx, 'type', type)
+    //     let gameIdxNum = '' + paddy(gameIdx, 2)
+    //     // this.gameIdxTxt.text = '四强'
+    //     if (type == 2) {
+    //         gameIdxNum = '第' + gameIdxNum + '场'
+    //         if (this.to8.indexOf(gameIdx) > -1)
+    //             this.gameTitle.text = '大师赛八强'
+    //         // this.gameTitle.text = '八强分组赛'
+    //         else if (this.to6.indexOf(gameIdx) > -1)
+    //             this.gameTitle.text = '六强争夺赛'
+    //         else if (this.to4.indexOf(gameIdx) > -1) {
+    //             gameIdxNum = '' + paddy(gameIdx - 6, 2)
+    //             this.gameTitle.text = '半决赛'
+    //             gameIdxNum = '第' + gameIdxNum + '场'
+    //             // this.gameTitle.text = '四强争夺赛'
+    //         }
+    //         else if (this.to2.indexOf(gameIdx) > -1)
+    //             this.gameTitle.text = '四强赛'
+    //         else if (gameIdx == 13)
+    //             this.gameTitle.text = '半决赛'
+    //         else if (gameIdx == 14) {
+    //             this.gameTitle.text = '决赛'
+    //             gameIdxNum = ''
+    //         }
+    //         else
+    //             this.gameTitle.text = '大师赛'
+
+    //         // gameIdxNum = ''
+    //     }
+    //     else if (type == 4) {
+    //         this.gameTitle.text = '席位战'
+    //         gameIdxNum = '第' + gameIdxNum + '场'
+    //     }
+    //     else if (type == 1) {
+    //         this.gameTitle.text = '车轮赛'
+    //     }
+    //     else if (type == 3) {
+    //         this.gameTitle.text = '决赛'
+    //         gameIdxNum = ''
+    //     }
+
+    //     this.gameTitle.text += gameIdxNum
+    //     this.gameTitle.setAlignCenter(960)
+    // }
 
     setGameTitle(str) {
         this.gameTitle.setText(str)

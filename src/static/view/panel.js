@@ -8561,7 +8561,10 @@
 	            .setAlignCenter(1320);
 	        this.rName.setText(rPlayer.name)
 	            .setLimitWidth(298, 40);
-	        this.rHW.setText(rPlayer.height + 'CM  ' + rPlayer.weight + 'KG');
+	        var age = '';
+	        if (rPlayer.age)
+	            age = rPlayer.age + '岁';
+	        this.rHW.setText(rPlayer.height + 'CM  ' + rPlayer.weight + 'KG  ' + age);
 	        loadAvt(this.rAvt, rPlayer.avatar, 1109);
 	    };
 	    Score2018v3.prototype.setLeftPlayer = function (lPlayer) {
@@ -8570,7 +8573,10 @@
 	        this.lName.setText(lPlayer.name)
 	            .setLimitWidth(298, 40)
 	            .setAlignRight(702);
-	        this.lHW.setText(lPlayer.height + 'CM  ' + lPlayer.weight + 'KG')
+	        var age = '';
+	        if (lPlayer.age)
+	            age = lPlayer.age + '岁';
+	        this.lHW.setText(lPlayer.height + 'CM  ' + lPlayer.weight + 'KG  ' + age)
 	            .setAlignRight(702);
 	        loadAvt(this.lAvt, lPlayer.avatar, 725);
 	    };
@@ -8593,23 +8599,19 @@
 	        console.log('gameIdx', gameIdx, 'type', type);
 	        var gameIdxNum = '' + JsFunc_1.paddy(gameIdx, 2);
 	        if (type == 2) {
-	            gameIdxNum = '第' + gameIdxNum + '场';
 	            if (this.to8.indexOf(gameIdx) > -1)
-	                this.gameTitle.text = '大师赛八强';
+	                this.gameTitle.text = '八强分组赛';
 	            else if (this.to6.indexOf(gameIdx) > -1)
 	                this.gameTitle.text = '六强争夺赛';
-	            else if (this.to4.indexOf(gameIdx) > -1) {
-	                gameIdxNum = '' + JsFunc_1.paddy(gameIdx - 6, 2);
-	                this.gameTitle.text = '半决赛';
-	                gameIdxNum = '第' + gameIdxNum + '场';
-	            }
+	            else if (this.to4.indexOf(gameIdx) > -1)
+	                this.gameTitle.text = '四强争夺赛';
 	            else if (this.to2.indexOf(gameIdx) > -1)
 	                this.gameTitle.text = '四强赛';
 	            else if (gameIdx == 13)
 	                this.gameTitle.text = '半决赛';
 	            else if (gameIdx == 14) {
-	                this.gameTitle.text = '决赛';
 	                gameIdxNum = '';
+	                this.gameTitle.text = '决赛';
 	            }
 	            else
 	                this.gameTitle.text = '大师赛';
