@@ -4,24 +4,20 @@ import { getGroupData, getHupuWS } from "../../../utils/HupuAPI";
 import { firstBy } from "../../../utils/thenBy";
 import { imgLoader } from "../../../utils/ImgLoader";
 import { fitWidth } from '../bracket/BracketGroup';
-import { Text2, TextFac } from '../../../utils/TextFac';
 declare let io;
 export class Row1 extends PIXI.Container {
     playerName: PIXI.Text
     winLose: PIXI.Text
     score: PIXI.Text
     avt: PIXI.Sprite
-    constructor(avtCtn) {
+    constructor() {
         super()
         this.avt = new PIXI.Sprite()
-        this.avt.x = 546 - 360
-        this.avt.y = 314-52
+        this.avt.x = 546
+        this.avt.y = 314
         // this.avt.alpha = 0.5
         this.addChild(this.avt)
-        // let mask = newBitmap({ url: '/img/panel/group/v3Mask.png' })
-        // avtCtn.addChild(mask)
-        // this.avt.mask = mask
-        // this.addChild(newBitmap({ url: '/img/panel/group/groupBg2item.png' }))
+        this.addChild(newBitmap({ url: '/img/panel/group/groupBg2item.png' }))
 
 
         let avtMask = new PIXI.Graphics
@@ -29,17 +25,16 @@ export class Row1 extends PIXI.Container {
             .drawCircle(0, 0, 53)
         avtMask.x = 603
         avtMask.y = 372
-
         // this.avt.mask = avtMask
         // this.addChild(avtMask)
 
         let rs = {
             fontFamily: FontName.MicrosoftYahei,
-            fontSize: '50px', fill: "#585858",
+            fontSize: '50px', fill: "#000520",
             fontWeight: 'bold'
         }
         let l = new PIXI.Text('', rs)
-        l.x = 380
+        l.x = 740
         l.y = 320
         this.playerName = l
         this.addChild(l)
@@ -61,15 +56,15 @@ export class Row1 extends PIXI.Container {
         fitWidth(this.playerName, 300, 50)
 
         this.winLose.text = data.win + '/' + data.lose
-        this.winLose.x = 832 - this.winLose.width * .5
+        this.winLose.x = 1100 - this.winLose.width * .5
 
         this.score.text = data.score + ''
-        this.score.x = 662 - this.score.width * .5
+        this.score.x = 1320 - this.score.width * .5
 
         imgLoader.loadTex(data.avatar, tex => {
             let avt = this.avt
             avt.texture = tex
-            let s = 180 / tex.height
+            let s = 110 / tex.height
             // let s2 = 110 /tex.height
             // avt.x = avt.mask.x - avt.texture.width * .5 * s
             // avt.y = avt.mask.y - avt.texture.height * .5 * s
@@ -122,8 +117,6 @@ export class GroupSp2 extends PIXI.Container {
     groupTitle: PIXI.Text
 
     tabFocus: PIXI.Sprite
-
-    location: Text2
     // updateTime = 3000
     // updateCount = 3000
     p: any
@@ -133,45 +126,33 @@ export class GroupSp2 extends PIXI.Container {
         parent.addChild(this)
         this.p = parent
         // this.addChild(newModal(0.7, null, null, 0x232b3b))
-        let avtCtn = new PIXI.Container()
-        this.addChild(avtCtn)
-        this.addChild(newBitmap({ url: '/img/panel/group/v3Bg.png' }))
+        this.addChild(newBitmap({ url: '/img/panel/group/groupBg.png' }))
 
 
         let rs = {
             fontFamily: FontName.MicrosoftYahei,
-            fontSize: '215px', fill: "#536dfe",
+            fontSize: '40px', fill: "#4d5167",
             fontWeight: 'bold'
         }
-        let l = new PIXI.Text('A', rs)
-        l.x = 65
-        l.y = 50
+        let l = new PIXI.Text('小组赛第一轮', rs)
+        l.x = 365 + 466
+        l.y = 130
         this.groupTitle = l
         this.addChild(l)
 
-        this.location = TextFac.new_(rs, this)
-            .setPos(325, 977)
-            .setText('')
-            .setSize('38px')
-            .setFill('#585858')
         for (let i = 0; i < 3; i++) {
-            let r = new Row1(this)
-            r.y = 185 * i + 110
-            // r.avt.y += r.y
-            let mask = newBitmap({ url: `/img/panel/group/v3Mask${i + 1}.png` })
-            this.addChild(mask)
-            r.avt.mask = mask
+            let r = new Row1()
+            r.y = 150 * i
             this.addChild(r)
             this.rowArr.push(r)
         }
-
         for (let i = 0; i < 8; i++) {
             let t = new Tab1()
             t.setText(gArr[i] + " 组")
             t.setIdx(i)
             t.x = 360
             t.y = 280 + 57 * i
-            // this.addChild(t)
+            this.addChild(t)
             this.groupArr.push(t)
         }
 
@@ -179,9 +160,17 @@ export class GroupSp2 extends PIXI.Container {
         this.tabFocus = newBitmap({ url: '/img/panel/group/groupBg2tabFocus.png' })
         this.tabFocus.x = -12
         this.tabFocus.y = -13
-        // this.addChild(this.tabFocus)
+        this.addChild(this.tabFocus)
 
         this.updateData()
+        // setInterval(_ => {
+        //     this.updateCount -= 1000
+        //     if (this.updateCount < 0) {
+        //         this.updateCount = this.updateTime
+        //         this.updateData()
+        //     }
+        // }, 1000)
+        // this.initMouse()
         this.initWS()
     }
 
@@ -231,7 +220,6 @@ export class GroupSp2 extends PIXI.Container {
         this.tabFocus.x = groupTab.x - 12
         this.tabFocus.y = groupTab.y - 13
         let data = this.dataArr[idx]
-        this
         let round = 0;
         if (data.playerArr) {
             let playerArr = data.playerArr
@@ -268,20 +256,16 @@ export class GroupSp2 extends PIXI.Container {
             return round
         }
     }
-    showGroup(idx, liveConf?) {
+    showGroup(idx) {
         this.p.addChild(this)
         if (idx < 0)
             return -1
         this._fillData(idx)
-        this.setRoundIdx(idx)
-        if (liveConf) {
-            this.location.setText(liveConf.round_title)
-        }
     }
-    setRoundIdx(idx) {
+    setRoundIdx(round, idx) {
         let groupName = gArr[idx]
-        this.groupTitle.text = String.fromCharCode(65 + idx)
-        // this.groupTitle.x = 960 - this.groupTitle.width * .5
+        this.groupTitle.text = '小组赛第' + round + '轮 ' + groupName + '组'
+        this.groupTitle.x = 960 - this.groupTitle.width * .5
     }
     calcRound(data) {
         let round = 0
@@ -334,6 +318,7 @@ export class GroupSp2 extends PIXI.Container {
             // console.log('group game map', groupGameCountMap, 'round', curRound, 'group', curGroupIdx);
             // this.showGroup(curGroupIdx)
             this._fillData(curGroupIdx)
+            this.setRoundIdx(curRound, curGroupIdx)
         })
     }
 }

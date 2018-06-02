@@ -4828,7 +4828,7 @@
 	                this.opReq("" + Command_1.CommandId.cs_showTop5, { _: null, visible: v, idx: idx, gameIdxArr: g });
 	            },
 	            onClkGroup: function (v, idx) {
-	                this.opReq("" + Command_1.CommandId.cs_showGroup, { _: null, visible: v, idx: idx });
+	                this.opReq("" + Command_1.CommandId.cs_showGroup, { _: null, visible: v, idx: idx, liveConf: this.liveConf });
 	            },
 	            onClkVsTitle: function (v, vs) {
 	                this.opReq("" + Command_1.CommandId.cs_showVsTitle, { _: null, visible: v, vs: vs });
@@ -4959,7 +4959,7 @@
 	            groupSp = new GroupSp2_1.GroupSp2(canvasStage, this.gameId);
 	        else {
 	            if (data.visible)
-	                groupSp.showGroup(data.idx - 1);
+	                groupSp.showGroup(data.idx - 1, data.liveConf);
 	            else
 	                groupSp.hide();
 	        }
@@ -8680,15 +8680,15 @@
 	var thenBy_1 = __webpack_require__(97);
 	var ImgLoader_1 = __webpack_require__(61);
 	var BracketGroup_1 = __webpack_require__(66);
+	var TextFac_1 = __webpack_require__(65);
 	var Row1 = (function (_super) {
 	    __extends(Row1, _super);
-	    function Row1() {
+	    function Row1(avtCtn) {
 	        _super.call(this);
 	        this.avt = new PIXI.Sprite();
-	        this.avt.x = 546;
-	        this.avt.y = 314;
+	        this.avt.x = 546 - 360;
+	        this.avt.y = 314 - 52;
 	        this.addChild(this.avt);
-	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/group/groupBg2item.png' }));
 	        var avtMask = new PIXI.Graphics;
 	        avtMask.beginFill(0xff0000)
 	            .drawCircle(0, 0, 53);
@@ -8696,11 +8696,11 @@
 	        avtMask.y = 372;
 	        var rs = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '50px', fill: "#000520",
+	            fontSize: '50px', fill: "#585858",
 	            fontWeight: 'bold'
 	        };
 	        var l = new PIXI.Text('', rs);
-	        l.x = 740;
+	        l.x = 380;
 	        l.y = 320;
 	        this.playerName = l;
 	        this.addChild(l);
@@ -8720,13 +8720,13 @@
 	        this.playerName.text = data.name;
 	        BracketGroup_1.fitWidth(this.playerName, 300, 50);
 	        this.winLose.text = data.win + '/' + data.lose;
-	        this.winLose.x = 1100 - this.winLose.width * .5;
+	        this.winLose.x = 832 - this.winLose.width * .5;
 	        this.score.text = data.score + '';
-	        this.score.x = 1320 - this.score.width * .5;
+	        this.score.x = 662 - this.score.width * .5;
 	        ImgLoader_1.imgLoader.loadTex(data.avatar, function (tex) {
 	            var avt = _this.avt;
 	            avt.texture = tex;
-	            var s = 110 / tex.height;
+	            var s = 180 / tex.height;
 	            avt.scale.x = avt.scale.y = s;
 	        });
 	    };
@@ -8780,20 +8780,30 @@
 	        this.gameId = gameId;
 	        parent.addChild(this);
 	        this.p = parent;
-	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/group/groupBg.png' }));
+	        var avtCtn = new PIXI.Container();
+	        this.addChild(avtCtn);
+	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/group/v3Bg.png' }));
 	        var rs = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '40px', fill: "#4d5167",
+	            fontSize: '215px', fill: "#536dfe",
 	            fontWeight: 'bold'
 	        };
-	        var l = new PIXI.Text('小组赛第一轮', rs);
-	        l.x = 365 + 466;
-	        l.y = 130;
+	        var l = new PIXI.Text('A', rs);
+	        l.x = 65;
+	        l.y = 50;
 	        this.groupTitle = l;
 	        this.addChild(l);
+	        this.location = TextFac_1.TextFac.new_(rs, this)
+	            .setPos(325, 977)
+	            .setText('')
+	            .setSize('38px')
+	            .setFill('#585858');
 	        for (var i = 0; i < 3; i++) {
-	            var r = new Row1();
-	            r.y = 150 * i;
+	            var r = new Row1(this);
+	            r.y = 185 * i + 110;
+	            var mask = PixiEx_1.newBitmap({ url: "/img/panel/group/v3Mask" + (i + 1) + ".png" });
+	            this.addChild(mask);
+	            r.avt.mask = mask;
 	            this.addChild(r);
 	            this.rowArr.push(r);
 	        }
@@ -8803,13 +8813,11 @@
 	            t.setIdx(i);
 	            t.x = 360;
 	            t.y = 280 + 57 * i;
-	            this.addChild(t);
 	            this.groupArr.push(t);
 	        }
 	        this.tabFocus = PixiEx_1.newBitmap({ url: '/img/panel/group/groupBg2tabFocus.png' });
 	        this.tabFocus.x = -12;
 	        this.tabFocus.y = -13;
-	        this.addChild(this.tabFocus);
 	        this.updateData();
 	        this.initWS();
 	    }
@@ -8856,6 +8864,7 @@
 	        this.tabFocus.x = groupTab.x - 12;
 	        this.tabFocus.y = groupTab.y - 13;
 	        var data = this.dataArr[idx];
+	        this;
 	        var round = 0;
 	        if (data.playerArr) {
 	            var playerArr = data.playerArr;
@@ -8891,16 +8900,19 @@
 	            return round;
 	        }
 	    };
-	    GroupSp2.prototype.showGroup = function (idx) {
+	    GroupSp2.prototype.showGroup = function (idx, liveConf) {
 	        this.p.addChild(this);
 	        if (idx < 0)
 	            return -1;
 	        this._fillData(idx);
+	        this.setRoundIdx(idx);
+	        if (liveConf) {
+	            this.location.setText(liveConf.round_title);
+	        }
 	    };
-	    GroupSp2.prototype.setRoundIdx = function (round, idx) {
+	    GroupSp2.prototype.setRoundIdx = function (idx) {
 	        var groupName = gArr[idx];
-	        this.groupTitle.text = '小组赛第' + round + '轮 ' + groupName + '组';
-	        this.groupTitle.x = 960 - this.groupTitle.width * .5;
+	        this.groupTitle.text = String.fromCharCode(65 + idx);
 	    };
 	    GroupSp2.prototype.calcRound = function (data) {
 	        var round = 0;
@@ -8950,7 +8962,6 @@
 	            }
 	            console.log('data arr', _this.dataArr);
 	            _this._fillData(curGroupIdx);
-	            _this.setRoundIdx(curRound, curGroupIdx);
 	        });
 	    };
 	    return GroupSp2;

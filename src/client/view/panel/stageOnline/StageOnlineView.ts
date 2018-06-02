@@ -175,7 +175,7 @@ class StageOnlineView extends VueBase {
             groupSp = new GroupSp2(canvasStage, this.gameId)
         else {
             if (data.visible)
-                groupSp.showGroup(data.idx - 1)
+                groupSp.showGroup(data.idx - 1, data.liveConf)
             else
                 groupSp.hide()
         }
@@ -494,7 +494,7 @@ class StageOnlineView extends VueBase {
             this.opReq(`${CommandId.cs_showTop5}`, { _: null, visible: v, idx: idx, gameIdxArr: g })
         },
         onClkGroup(v, idx) {
-            this.opReq(`${CommandId.cs_showGroup}`, { _: null, visible: v, idx: idx })
+            this.opReq(`${CommandId.cs_showGroup}`, { _: null, visible: v, idx: idx, liveConf: this.liveConf })
         },
         onClkVsTitle(v, vs) {
             this.opReq(`${CommandId.cs_showVsTitle}`, { _: null, visible: v, vs: vs })
