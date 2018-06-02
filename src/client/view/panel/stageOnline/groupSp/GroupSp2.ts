@@ -15,7 +15,7 @@ export class Row1 extends PIXI.Container {
         super()
         this.avt = new PIXI.Sprite()
         this.avt.x = 546 - 360
-        this.avt.y = 314-52
+        this.avt.y = 314 - 52
         // this.avt.alpha = 0.5
         this.addChild(this.avt)
         // let mask = newBitmap({ url: '/img/panel/group/v3Mask.png' })
@@ -61,10 +61,10 @@ export class Row1 extends PIXI.Container {
         fitWidth(this.playerName, 300, 50)
 
         this.winLose.text = data.win + '/' + data.lose
-        this.winLose.x = 832 - this.winLose.width * .5
+        this.winLose.x = 662 - this.winLose.width * .5
 
         this.score.text = data.score + ''
-        this.score.x = 662 - this.score.width * .5
+        this.score.x = 832 - this.score.width * .5
 
         imgLoader.loadTex(data.avatar, tex => {
             let avt = this.avt

@@ -8720,9 +8720,9 @@
 	        this.playerName.text = data.name;
 	        BracketGroup_1.fitWidth(this.playerName, 300, 50);
 	        this.winLose.text = data.win + '/' + data.lose;
-	        this.winLose.x = 832 - this.winLose.width * .5;
+	        this.winLose.x = 662 - this.winLose.width * .5;
 	        this.score.text = data.score + '';
-	        this.score.x = 662 - this.score.width * .5;
+	        this.score.x = 832 - this.score.width * .5;
 	        ImgLoader_1.imgLoader.loadTex(data.avatar, function (tex) {
 	            var avt = _this.avt;
 	            avt.texture = tex;
