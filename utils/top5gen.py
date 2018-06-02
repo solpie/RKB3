@@ -24,9 +24,13 @@ def open_excel(file='top5.xlsx'):
 #     },
 
 import os
+
+
 def addToClipBoard(text):
     command = 'echo ' + text.strip() + '| clip'
     os.system(command)
+
+
 def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
     data = open_excel(file)
     table = data.sheets()[by_index]
@@ -37,17 +41,19 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
     v = table.cell(2, 0)
     print(v)
     row = 1
-    for i in range(0,3):
+    for i in range(0, 5):
         n = table.cell(row + i, 0).value
         # hupuID = table.cell(1 + i, 1).value
         a = int(table.cell(row + i, 1).value)
         h = int(table.cell(row + i, 2).value)
         w = int(table.cell(row + i, 3).value)
-        t = table.cell(row + i, 4).value.replace('、',' ')
-        print(n,'p'+str(i+1))
+        t = table.cell(row + i, 4).value.replace('、', ' ')
+        print(n, 'p' + str(i + 1))
         # t = ''
-        info = table.cell(row + i, 5).value.replace(',', '\n').replace(' ', '\n').replace('，','\n').replace('\t','').replace('、','\n')
-        plist.append({'name': n,                      'hwa': [h, w, a], 'tag1': t,'info':info,'img':'p'+str(i+1)})
+        info = table.cell(row + i, 5).value.replace(',', '\n').replace(' ',
+                                                                       '\n').replace('，', '\n').replace('\t', '').replace('、', '\n')
+        plist.append({'name': n,                      'hwa': [
+                     h, w, a], 'tag1': t, 'info': info, 'img': 'p' + str(i + 1)})
 
     jstr = json.dumps(plist, ensure_ascii=False)
     addToClipBoard(jstr)
