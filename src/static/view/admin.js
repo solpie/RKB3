@@ -1099,7 +1099,13 @@
 	exports.getCommentators = getCommentators;
 	function getLive(callback) {
 	    var url = 'http://rtmp.icassi.us:8090/live';
-	    _get(WebJsFunc_1.proxy(url), callback);
+	    _get(WebJsFunc_1.proxy(url), function (res) {
+	        for (var _i = 0, res_1 = res; _i < res_1.length; _i++) {
+	            var conf = res_1[_i];
+	            if (conf.port == location.port)
+	                callback(conf);
+	        }
+	    });
 	}
 	exports.getLive = getLive;
 

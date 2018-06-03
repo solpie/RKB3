@@ -26,11 +26,10 @@ export class StudioPanel extends PIXI.Container {
         this.staticImg = new PIXI.Sprite
         this.p.addChild(this)
 
-
+        
 
         this.popupView = new PopupView(this)
-        getLive(confArr => {
-            let conf = confArr[0]
+        getLive(conf => {
             this.liveConf = conf
             console.log('inti live conf', conf);
             this.rotLogo()

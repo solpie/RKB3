@@ -736,7 +736,13 @@
 	exports.getCommentators = getCommentators;
 	function getLive(callback) {
 	    var url = 'http://rtmp.icassi.us:8090/live';
-	    _get(WebJsFunc_1.proxy(url), callback);
+	    _get(WebJsFunc_1.proxy(url), function (res) {
+	        for (var _i = 0, res_1 = res; _i < res_1.length; _i++) {
+	            var conf = res_1[_i];
+	            if (conf.port == location.port)
+	                callback(conf);
+	        }
+	    });
 	}
 	exports.getLive = getLive;
 
@@ -4030,8 +4036,7 @@
 	        this.staticImg = new PIXI.Sprite;
 	        this.p.addChild(this);
 	        this.popupView = new PopupView_1.PopupView(this);
-	        HupuAPI_1.getLive(function (confArr) {
-	            var conf = confArr[0];
+	        HupuAPI_1.getLive(function (conf) {
 	            _this.liveConf = conf;
 	            console.log('inti live conf', conf);
 	            _this.rotLogo();
@@ -4909,8 +4914,7 @@
 	    };
 	    StageOnlineView.prototype.initLiveConf = function () {
 	        var _this = this;
-	        HupuAPI_1.getLive(function (confArr) {
-	            var conf = confArr[0];
+	        HupuAPI_1.getLive(function (conf) {
 	            _this.liveConf = conf;
 	            console.log('inti live conf', conf);
 	        });

@@ -109,8 +109,7 @@ class StageOnlineView extends VueBase {
         console.log('stageOnlineView created!')
     }
     initLiveConf() {
-        getLive(confArr => {
-            let conf = confArr[0]
+        getLive(conf => {
             this.liveConf = conf
             console.log('inti live conf', conf);
         })

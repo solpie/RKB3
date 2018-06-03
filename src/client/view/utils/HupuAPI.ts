@@ -107,5 +107,11 @@ export function getCommentators(callback) {
 
 export function getLive(callback) {
     let url = 'http://rtmp.icassi.us:8090/live'
-    _get(proxy(url), callback)
+
+    _get(proxy(url), res => {
+        for (let conf of res) {
+            if (conf.port == location.port)
+                callback(conf)
+        }
+    })
 }
