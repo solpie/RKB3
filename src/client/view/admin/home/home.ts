@@ -120,6 +120,7 @@ class HomeView extends VueBase {
         this.links = [
             // { title: "比分面板（蓝色）", url: getScorePanelUrl(gameId, true) },
             { title: "比分面板（S4）", url: getScorePanelUrl(gameId, false) },
+            { title: "赛前轮播面板", url: `/panel/#/studio/ob?pre=1` },
             { title: "直播间面板", url: `/panel/#/studio/ob/` },
             { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
             { title: "八强面板", url: `/panel/#/ol/ob/${gameId}?panel=bracket` },
@@ -235,7 +236,6 @@ class HomeView extends VueBase {
                             getPlayer(this.playerInEdit.player_id, res1 => {
                                 let player = res1[0]
                                 img.related.push(player._id)
-                                delete img['__v']
                                 player.hot_player = img
                                 console.log('update player1', player);
                                 updatePlayer({ '_id': player._id, 'hot_player': img }, res => {

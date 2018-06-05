@@ -114,8 +114,9 @@ export function getLive(callback) {
     _get(proxy(url), res => {
         for (let conf of res) {
             if (conf.port == location.port)
-                callback(conf)
+                return callback(conf)
         }
+        callback(res[0])
     })
 }
 export function createPlayer(data, callback) {
@@ -128,11 +129,11 @@ export function uploadImage(file, callback) {
 }
 export function updatePlayer(playerData, callback) {
     let strJson = JSON.stringify(playerData)
-    console.log('strJson',strJson);
+    console.log('strJson', strJson);
     $.ajax('http://rtmp.icassi.us:8090/player/' + playerData._id, {
         method: 'PUT',
         processData: false,
-        contentType : 'application/json',
+        contentType: 'application/json',
         data: strJson,
         success: callback,
     })

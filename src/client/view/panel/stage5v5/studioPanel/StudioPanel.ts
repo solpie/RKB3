@@ -6,6 +6,7 @@ import { PopupView } from '../../../utils/PopupView';
 import { WebDBCmd } from "../../../WebDBCmd";
 import { Commentator } from "./Commentator";
 import { getAllPlayer, getCommentators, getLive } from '../../../utils/HupuAPI';
+import { LiveComing } from './LiveComing';
 
 export class StudioPanel extends PIXI.Container {
     p: any
@@ -26,19 +27,25 @@ export class StudioPanel extends PIXI.Container {
         this.staticImg = new PIXI.Sprite
         this.p.addChild(this)
 
-        
 
-        this.popupView = new PopupView(this)
-        getLive(conf => {
-            this.liveConf = conf
-            console.log('inti live conf', conf);
-            this.rotLogo()
-        })
+
+        if (this.$route.query['pre'] == 1) {
+            let liveComing = new LiveComing()
+            this.addChild(liveComing)
+        }
+        else {
+            this.popupView = new PopupView(this)
+            getLive(conf => {
+                this.liveConf = conf
+                console.log('inti live conf', conf);
+                this.rotLogo()
+            })
+        }
     }
 
     rotLogo() {
         if (this.liveConf.mizone_logo) {
-            let col = this.liveConf.mizone_logo 
+            let col = this.liveConf.mizone_logo
             console.log('isblue', this.$route);
             let m2l = new FramesFx(`/img/fx/logo/${col}/m2l/m2l_`, 0, 12)
             this.fx = m2l

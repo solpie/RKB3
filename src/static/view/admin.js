@@ -687,7 +687,6 @@
 	                                HupuAPI_1.getPlayer(_this.playerInEdit.player_id, function (res1) {
 	                                    var player = res1[0];
 	                                    img.related.push(player._id);
-	                                    delete img['__v'];
 	                                    player.hot_player = img;
 	                                    console.log('update player1', player);
 	                                    HupuAPI_1.updatePlayer({ '_id': player._id, 'hot_player': img }, function (res) {
@@ -779,6 +778,7 @@
 	    HomeView.prototype.updateLinks = function (gameId) {
 	        this.links = [
 	            { title: "比分面板（S4）", url: getScorePanelUrl(gameId, false) },
+	            { title: "赛前轮播面板", url: "/panel/#/studio/ob?pre=1" },
 	            { title: "直播间面板", url: "/panel/#/studio/ob/" },
 	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
@@ -1290,8 +1290,9 @@
 	        for (var _i = 0, res_1 = res; _i < res_1.length; _i++) {
 	            var conf = res_1[_i];
 	            if (conf.port == location.port)
-	                callback(conf);
+	                return callback(conf);
 	        }
+	        callback(res[0]);
 	    });
 	}
 	exports.getLive = getLive;

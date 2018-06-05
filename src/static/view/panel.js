@@ -274,7 +274,6 @@
 	                                HupuAPI_1.getPlayer(_this.playerInEdit.player_id, function (res1) {
 	                                    var player = res1[0];
 	                                    img.related.push(player._id);
-	                                    delete img['__v'];
 	                                    player.hot_player = img;
 	                                    console.log('update player1', player);
 	                                    HupuAPI_1.updatePlayer({ '_id': player._id, 'hot_player': img }, function (res) {
@@ -366,6 +365,7 @@
 	    HomeView.prototype.updateLinks = function (gameId) {
 	        this.links = [
 	            { title: "比分面板（S4）", url: getScorePanelUrl(gameId, false) },
+	            { title: "赛前轮播面板", url: "/panel/#/studio/ob?pre=1" },
 	            { title: "直播间面板", url: "/panel/#/studio/ob/" },
 	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
@@ -877,8 +877,9 @@
 	        for (var _i = 0, res_1 = res; _i < res_1.length; _i++) {
 	            var conf = res_1[_i];
 	            if (conf.port == location.port)
-	                callback(conf);
+	                return callback(conf);
 	        }
+	        callback(res[0]);
 	    });
 	}
 	exports.getLive = getLive;
@@ -4189,6 +4190,7 @@
 	var WebDBCmd_1 = __webpack_require__(67);
 	var Commentator_1 = __webpack_require__(68);
 	var HupuAPI_1 = __webpack_require__(24);
+	var LiveComing_1 = __webpack_require__(114);
 	var StudioPanel = (function (_super) {
 	    __extends(StudioPanel, _super);
 	    function StudioPanel(parent, $route) {
@@ -4199,12 +4201,18 @@
 	        console.log('new studio panel');
 	        this.staticImg = new PIXI.Sprite;
 	        this.p.addChild(this);
-	        this.popupView = new PopupView_1.PopupView(this);
-	        HupuAPI_1.getLive(function (conf) {
-	            _this.liveConf = conf;
-	            console.log('inti live conf', conf);
-	            _this.rotLogo();
-	        });
+	        if (this.$route.query['pre'] == 1) {
+	            var liveComing = new LiveComing_1.LiveComing();
+	            this.addChild(liveComing);
+	        }
+	        else {
+	            this.popupView = new PopupView_1.PopupView(this);
+	            HupuAPI_1.getLive(function (conf) {
+	                _this.liveConf = conf;
+	                console.log('inti live conf', conf);
+	                _this.rotLogo();
+	            });
+	        }
 	    }
 	    StudioPanel.prototype.rotLogo = function () {
 	        if (this.liveConf.mizone_logo) {
@@ -9179,6 +9187,144 @@
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告 MISC</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒 timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 30px;font-family: 'NotoSansHans-Regular'\">\r\n               {{lLiveName}}  vs {{rLiveName}} \r\n                <br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(false)\">隐藏所有</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(true)\">显示所有</button>\r\n            <br>时间控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">设定时间(秒)</button>\r\n\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            </p>\r\n            比分控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onUpdateScore(true ,panelTime2Set)\">蓝方比分</button>\r\n            <button class=\"button\" @click=\"onUpdateScore(false,panelTime2Set)\">红方比分</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(true)\">切换攻守</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(false)\">隐藏</button>\r\n            <br>\r\n\r\n            <button class=\"button\" @click=\"onUpdateFoul(true ,panelTime2Set)\">蓝方犯规</button>\r\n            <button class=\"button\" @click=\"onUpdateFoul(false,panelTime2Set)\">红方犯规</button>\r\n\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">修改并显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,'')\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <!-- <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button> -->\r\n\r\n            <label class=\"label\">  赛区实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,1)\">东南 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,2)\">东北 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,3)\">西方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,4)\">南方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,0)\">首页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,2,0)\">上一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,3,0)\">下一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <div v-if=1 class='column is-one-quarter' style=\"position: fixed;top: 260px;right: 10px;\">\r\n                <input class=\"input\" type=\"text\" style=\"width: 30px;\" v-model=\"gameTitleType\">1 '8进4' 2 '4进2' 3 '2进1'\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"蓝方名字-红方名字\" style=\"width: 300px;\" v-model=\"vsPlayer\">\r\n                <button class=\"button\" @click=\"onSetPlayer(vsPlayer,gameTitleType)\">设置球员</button>\r\n                <br> <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button>蓝方: <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button> 比分\r\n                <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>:红方<button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n                <br><br> <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button>-----\r\n                <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button> 犯规\r\n                <button class=\"button\" @click=\"onAddFoul(false,+1)\">+1</button>-----<button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"'>\r\n        <div v-if='isRmOp||isOp' style=\"position: absolute;left: 100px;top:260px;width: 800px\">\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                        正常\r\n                    </label>\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                        加粗\r\n                    </label>\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onNoticePresets('network')\">网络故障 模版</button>\r\n            <br>\r\n            <div v-for=\"(n,idx) in noticeHistory\">\r\n                <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n            </div>\r\n\r\n            滚动文字：\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"inputRollText\">\r\n            <br>\r\n\r\n            <!-- <el-input v-model=\"inputRollText\" style=\"width:250px\"></el-input> -->\r\n            <button class=\"button\" @click='showRollText(inputRollText,true)'>发送</button>\r\n            <button class=\"button\" @click='showRollText(inputRollText,false)'>隐藏</button>\r\n            <br> 主播面板:\r\n            <br>\r\n            <button class=\"button\" @click='showCommentator(true,1)'>显示主播</button>\r\n            <button class=\"button\" @click='showCommentator(true,2)'>显示主播 合并</button>\r\n            <button class=\"button\" @click='showCommentator(false)'>隐藏</button>\r\n            <br>图片:\r\n            <br>\r\n            <button class=\"button\" @click='showStaticImage(true,1)'>微信小程序</button>\r\n            <button class=\"button\" @click='showStaticImage(false,1)'>隐藏</button>\r\n\r\n            <label class=\"label\">  脉动广告:</label><br>\r\n            <button class=\"button\" @click=\"onShowFx(true,1)\">转瓶</button>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n        </div>\r\n    </div>\r\n\r\n</div>";
+
+/***/ },
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */,
+/* 111 */,
+/* 112 */,
+/* 113 */,
+/* 114 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var PixiEx_1 = __webpack_require__(45);
+	var HupuAPI_1 = __webpack_require__(24);
+	var ImgLoader_1 = __webpack_require__(65);
+	var TextFac_1 = __webpack_require__(69);
+	var const_1 = __webpack_require__(42);
+	var JsFunc_1 = __webpack_require__(21);
+	var TextTimer_1 = __webpack_require__(51);
+	var LiveComing = (function (_super) {
+	    __extends(LiveComing, _super);
+	    function LiveComing() {
+	        var _this = this;
+	        _super.call(this);
+	        this.curIdx = 0;
+	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/studio/comingFg.png' }));
+	        var playerMask = PixiEx_1.newBitmap({ url: '/img/panel/studio/comingMask.png' });
+	        this.addChild(playerMask);
+	        this.avt = new PIXI.Sprite;
+	        this.addChild(this.avt);
+	        var s = 635 / 550;
+	        this.avt.x = -678 * s;
+	        this.avt.y = -185 * s;
+	        this.avt.mask = playerMask;
+	        var ns = {
+	            fontFamily: const_1.FontName.NotoSansHans,
+	            fontSize: '38px', fill: "#303030",
+	            fontWeight: 'bold'
+	        };
+	        this.playerName = TextFac_1.TextFac.new_(ns, this)
+	            .setPos(122, 700)
+	            .setText('');
+	        ns.fontSize = '32px';
+	        ns.fill = '#000';
+	        this.address = TextFac_1.TextFac.new_(ns, this)
+	            .setPos(652, 882);
+	        ns.fontSize = '32px';
+	        ns.fontWeight = '';
+	        ns.fill = '#606060';
+	        this.playerHWA = TextFac_1.TextFac.new_(ns, this)
+	            .setPos(this.playerName.x, 794)
+	            .setText('');
+	        var info = '';
+	        this.playerInfo = TextFac_1.TextFac.new_(ns, this)
+	            .setPos(this.playerName.x, 872)
+	            .setText(JsFunc_1.cnWrap(info + info + info, 20, 79));
+	        window.onkeyup = function (e) {
+	            console.log('key up', e.key, e.keyCode);
+	            if (e.key == 'q' || e.keyCode == 81) {
+	                _this.showPlayer();
+	            }
+	        };
+	        HupuAPI_1.getTop5Data(function (res) {
+	            var d = JSON.parse(res);
+	            console.log('top5 data', res, d);
+	            _this.infoArr = d;
+	            var tabArr = [];
+	            var imgArr = [];
+	            _this.cacheTime = new Date().getTime();
+	            for (var i = 0; i < 5; i++) {
+	                imgArr.push(("/img/player/top5/" + _this.infoArr[i].img + ".png?t=") + _this.cacheTime);
+	            }
+	            ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
+	                if (_this.infoArr.length)
+	                    _this.showPlayer();
+	            });
+	        });
+	        var gameId = 645;
+	        HupuAPI_1.getRoundList(function (res) {
+	            for (var i = 0; i < res.data.length; i++) {
+	                var roundData = res.data[i];
+	                if (roundData.id == gameId) {
+	                    var addr = roundData.site_address;
+	                    _this.address.setText(addr);
+	                    console.log('get location', roundData);
+	                    return;
+	                }
+	            }
+	        });
+	        ns.fontSize = '38px';
+	        ns.fill = '#000';
+	        var timer = new TextTimer_1.TextTimer('', ns);
+	        timer.isMin = true;
+	        timer.x = 1730;
+	        timer.y = 90;
+	        this.addChild(timer);
+	        var pd = function (d) {
+	            if (d < 10)
+	                return '0' + d;
+	            return d + "";
+	        };
+	        var d = new Date();
+	        var endTime = '19:30';
+	        var end = new Date(pd(d.getMonth() + 1) + '/' + pd(d.getDate()) + "/" + d.getFullYear() + ' ' + endTime);
+	        var distance = Math.floor((end - d) / 1000);
+	        timer.setTimeBySec(distance);
+	        timer.toggleTimer();
+	        setInterval(function (_) {
+	            _this.showPlayer();
+	        }, 9000);
+	    }
+	    LiveComing.prototype.showPlayer = function () {
+	        var player = this.infoArr[this.curIdx];
+	        this.playerHWA.setText(player.hwa[2] + '岁 '
+	            + player.hwa[0] + 'cm '
+	            + player.hwa[1] + 'kg ');
+	        this.playerName.setText(player.name);
+	        var info = player.info.replace(/\n/g, ",");
+	        console.log('show info', info);
+	        this.playerInfo.setText(JsFunc_1.cnWrap(info, 20, 79));
+	        this.curIdx = (this.curIdx + 1) % this.infoArr.length;
+	        this.avt.texture = ImgLoader_1.imgLoader.getTex(("/img/player/top5/" + player.img + ".png?t=") + this.cacheTime);
+	        PixiEx_1.setScale(this.avt, 635 / 550);
+	    };
+	    return LiveComing;
+	}(PIXI.Container));
+	exports.LiveComing = LiveComing;
+
 
 /***/ }
 /******/ ]);

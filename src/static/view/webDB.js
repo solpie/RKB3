@@ -836,8 +836,9 @@
 	        for (var _i = 0, res_1 = res; _i < res_1.length; _i++) {
 	            var conf = res_1[_i];
 	            if (conf.port == location.port)
-	                callback(conf);
+	                return callback(conf);
 	        }
+	        callback(res[0]);
 	    });
 	}
 	exports.getLive = getLive;
