@@ -6,6 +6,8 @@ require('../../../static/css/bulma.min.css');
 
 require(`script!./../../libs/jquery.min.js`);
 require(`script!./../../libs/qrcode.min.js`);
+require(`script!./../../libs/cropper.min.js`);
+require(`../../libs/cropper.min.css`);
 require(`script!./../../libs/vue/vue.min.js`);
 require(`script!./../../libs/vue/vue-router.min.js`);
 import { Navbar } from "./navbar/Navbar";

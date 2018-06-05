@@ -67,7 +67,10 @@ export function getRankSection(section, callback) {
     let url = 'http://api.liangle.com/api/division/power/rank/' + section
     _get(proxy(url), callback)
 }
-
+export function getPlayerInfoFromLiangle(player_id, callback) {
+    let url = 'http://api.liangle.com/api/passerbyking/player/info/' + player_id
+    _get(proxy(url), callback)
+}
 
 let _get = (url, callback) => {
     $.get(url, callback)
@@ -114,4 +117,28 @@ export function getLive(callback) {
                 callback(conf)
         }
     })
+}
+export function createPlayer(data, callback) {
+    let url = 'http://rtmp.icassi.us:8090/player'
+    $post(url, data, callback)
+}
+export function uploadImage(file, callback) {
+    let url = 'http://rtmp.icassi.us:8090/upload'
+    $post(url, file, callback)
+}
+export function updatePlayer(playerData, callback) {
+    let strJson = JSON.stringify(playerData)
+    console.log('strJson',strJson);
+    $.ajax('http://rtmp.icassi.us:8090/player/' + playerData._id, {
+        method: 'PUT',
+        processData: false,
+        contentType : 'application/json',
+        data: strJson,
+        success: callback,
+    })
+    // $post('http://rtmp.icassi.us:8090/player/update/' + playerData._id,playerData,callback)
+}
+export function getPlayer(player_id, callback) {
+    let url = 'http://rtmp.icassi.us:8090/player?player_id=' + player_id
+    _get(proxy(url), callback)
 }

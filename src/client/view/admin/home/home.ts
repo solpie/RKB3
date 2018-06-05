@@ -1,11 +1,15 @@
 import { ascendingProp } from '../../utils/JsFunc';
 import { VueBase } from "../../utils/VueBase";
 import { downloadGameData } from '../../../model/PlayerS4';
+import { $post } from '../../utils/WebJsFunc';
+import { getPlayerInfoFromLiangle, createPlayer, getPlayer, uploadImage, updatePlayer } from '../../utils/HupuAPI';
 /**
  * Created by toramisu on 2016/10/24.
  */
 declare var $;
 declare var QRCode;
+declare var Cropper;
+let cropper;
 export function getScorePanelUrl(gameId, isDark, isOb = true) {
     let op = 'op'
     if (isOb)
@@ -28,6 +32,13 @@ class HomeView extends VueBase {
     playUrl2 = VueBase.String;
     lotteryId = VueBase.PROP;
     lotteryIdx = VueBase.PROP;
+    player_id = VueBase.PROP;
+    actTab = VueBase.PROP;
+
+
+    fileCrop = VueBase.PROP;
+    cropper = VueBase.PROP;
+    playerInEdit = VueBase.PROP
     qrcode;
     constructor() {
         super();
@@ -53,11 +64,56 @@ class HomeView extends VueBase {
             }
             this.gameDataArr.sort(ascendingProp('id'))
             this.options = this.gameDataArr;
+
+            this.initCropper()
+        });
+
+    }
+    isInitCropper = false
+    initCropper() {
+        if (this.isInitCropper)
+            return;
+        this.isInitCropper = true
+
+        ///cropperjs
+        let avatar = document.getElementById('avatar');
+        let input = document.getElementById('input');
+
+        let done = (url) => {
+            input['value'] = '';
+            avatar['src'] = url;
+            $('#input').hide()
+            let image = document.getElementById('avatar');
+            cropper = new Cropper(image, {
+                aspectRatio: 442 / 634,
+                width: 442,
+                height: 634,
+                crop: function (event) {
+                    console.log(event.detail.x, cropper.toBlob);
+                }
+            });
+        };
+        input.addEventListener('change', (e) => {
+            var files = e.target['files'];
+            var reader;
+            var file;
+            var url;
+            if (files && files.length > 0) {
+                file = files[0];
+                this.fileCrop = file
+                if (FileReader) {
+                    reader = new FileReader();
+                    reader.onload = function (e) {
+                        done(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
         });
     }
-
     mounted() {
         this.updateLinks(79);
+        this.actTab = 'tab2'
     }
 
     updateLinks(gameId) {
@@ -104,6 +160,9 @@ class HomeView extends VueBase {
     }
 
     methods = {
+        tab(s) {
+            this.actTab = s
+        },
         onSelGameID(gameId) {
             this.updateLinks(gameId);
             var url = 'http://api.liangle.com/api/passerbyking/game/info/' + gameId;
@@ -118,6 +177,87 @@ class HomeView extends VueBase {
                 this.rmtpUrl2 = p.url + "/" + p.stream
                 this.playUrl2 = res1.data.stream2.play
             });
+        },
+        onSyncPlayerToStrapi(player_id) {
+            if (player_id != '') {
+                getPlayerInfoFromLiangle(player_id, res1 => {
+                    console.log(res1);
+                    if (res1.data && res1.data.name) {
+                        let player = res1.data
+                        createPlayer({ 'player_id': Number(player.player_id), 'name': player.name, 'raw': JSON.stringify(player) }, res => {
+                            console.log('on create player', res);
+                            alert(JSON.stringify(res))
+                        })
+                    }
+                    else {
+                        alert('无法在亮了网后台找到 球员编号' + player_id)
+                    }
+                })
+            }
+            this.initCropper()
+            //update put
+        },
+        onPullPlayerData(player_id) {
+            getPlayer(player_id, res => {
+                console.log('8090', res);
+                this.playerInEdit = JSON.parse(JSON.stringify(res[0]))
+                // this.initCropper()
+            })
+        },
+        onCrop() {
+            if (this.playerInEdit.player_id) {
+                let image = this.fileCrop
+                cropper.getCroppedCanvas().toBlob((blob) => {
+                    var formData = new FormData();
+                    formData.append('files', blob, 'player.png');
+                    console.log('blob', blob);
+                    $.ajax('http://rtmp.icassi.us:8090/upload', {
+                        method: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        xhr: () => {
+                            var xhr = new XMLHttpRequest();
+                            xhr.upload.onprogress = function (e) {
+                                var percent = '0';
+                                var percentage = '0%';
+                                if (e.lengthComputable) {
+                                    percent = Math.round((e.loaded / e.total) * 100) + '';
+                                    percentage = percent + '%';
+                                    console.log('upload', percentage);
+                                }
+                            };
+                            return xhr;
+                        },
+                        success: (res) => {
+                            console.log('on uploaded', res);
+                            let img = res[0]
+                            getPlayer(this.playerInEdit.player_id, res1 => {
+                                let player = res1[0]
+                                img.related.push(player._id)
+                                delete img['__v']
+                                player.hot_player = img
+                                console.log('update player1', player);
+                                updatePlayer({ '_id': player._id, 'hot_player': img }, res => {
+                                    console.log('update player done!!!!!!', res);
+                                })
+                            })
+                        },
+                        error: function () {
+                            // avatar['src'] = initialAvatarURL;
+                            // $alert.show().addClass('alert-warning').text('Upload error');
+                        },
+                        complete: function () {
+                            console.log('on complete');
+                            // alert('上传成功')
+                        },
+                    });
+                });
+            }
+            else {
+
+            }
+
         },
         onClkQRCode() {
             // this.genQRCode()

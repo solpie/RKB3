@@ -1,46 +1,77 @@
 <div class="container">
-    <nav class="panel">
-        <p class="panel-heading">
-            直播面板op入口 Game ID: {{ selected }}
-            <span class="select">
-                <select v-model="selected">
-                    <option v-for="option in options" v-bind:value="option.value">
-                        {{ option.text }}
-                    </option>
-                </select>
-            </span>
-        </p>
-        <vue v-for="link in links">
-            <a class="panel-block" :href="link.url" target="_blank">
-                <span class="panel-icon">
-            <i class="fa fa-book"></i>
-            </span> {{link.url}}
-                <br> {{link.title}}
-            </a>
-            <!--<button class="button">复制地址</button>-->
-        </vue>
-        <div>
-            抽奖id（编号）:<input type="text" v-model="lotteryId" style="width: 60px"> 次序k:
-            <input type="text" v-model="lotteryIdx" style="width: 60px">
-            <a v-if='lotteryId&&lotteryIdx' class="panel-block" :href="'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx" target="_blank">
-               {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}
-            </a>
-        </div>
+    <div class="tabs  is-boxed">
+        <ul>
+            <li v-bind:class="{ 'is-active': actTab== 'tab1'}" @click='tab("tab1")'>
+                <a>
+                    <span>home</span>
+                </a>
+            </li>
+            <li v-bind:class="{ 'is-active': actTab== 'tab2'}" @click='tab("tab2")'>
+                <a>
+                    <span>热门球员编辑</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div v-if='actTab=="tab1"'>
+        <nav class="panel">
+            <p class="panel-heading">
+                直播面板op入口 Game ID: {{ selected }}
+                <span class="select">
+                            <select v-model="selected">
+                                <option v-for="option in options" v-bind:value="option.value">
+                                    {{ option.text }}
+                                </option>
+                            </select>
+                        </span>
+            </p>
+            <vue v-for="link in links">
+                <a class="panel-block" :href="link.url" target="_blank">
+                    <span class="panel-icon">
+                        <i class="fa fa-book"></i>
+                        </span> {{link.url}}
+                    <br> {{link.title}}
+                </a>
+                <!--<button class="button">复制地址</button>-->
+            </vue>
+            <div>
+                抽奖id（编号）:<input type="text" v-model="lotteryId" style="width: 60px"> 次序k:
+                <input type="text" v-model="lotteryIdx" style="width: 60px">
+                <a v-if='lotteryId&&lotteryIdx' class="panel-block" :href="'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx" target="_blank">
+                           {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}
+                        </a>
+            </div>
 
-        <p>
-            command:
-            <br> /game/bracket/clear
-            <br>/game/clear/bracketIdx
-            <br>/git/pull
-    </nav>
-    播放地址:<input type="text" v-model="playUrl" style="width: 1000px">
-    <p>
-        推流地址:<input type="text" v-model="rmtpUrl" style="width: 1000px">
-        <p>
-            播放地址2:<input type="text" v-model="playUrl2" style="width: 1000px">
             <p>
-                推流地址2:<input type="text" v-model="rmtpUrl2" style="width: 1000px">
+                command:
+                <br> /game/bracket/clear
+                <br>/game/clear/bracketIdx
+                <br>/git/pull
+        </nav>
+        播放地址:<input type="text" v-model="playUrl" style="width: 1000px">
+        <p>
+            推流地址:<input type="text" v-model="rmtpUrl" style="width: 1000px">
+            <p>
+                播放地址2:<input type="text" v-model="playUrl2" style="width: 1000px">
                 <p>
-                    <button class="button is-primary" @click="onClkQRCode">生成IOS二维码</button> {{iosParam | json}}
-                    <div id="qrcode"></div>
+                    推流地址2:<input type="text" v-model="rmtpUrl2" style="width: 1000px">
+                    <p>
+                        <button class="button is-primary" @click="onClkQRCode">生成IOS二维码</button> {{iosParam | json}}
+                        <div id="qrcode"></div>
+    </div>
+
+    <div v-if='actTab=="tab2"' class="panel">
+        <p class="panel-heading">
+            亮了网后台数据导入8090
+        </p>
+        球员编号:<input type="text" v-model="player_id" style="width: 80px" value="574">
+        <button class="button is-primary" @click="onSyncPlayerToStrapi(player_id)">导入球员</button>
+        <button class="button is-primary" @click="onPullPlayerData(player_id)">8090球员</button>
+        <div class="container" style="height: 700px">
+            <h1>上传热门球员图片</h1>
+            <button class="button is-primary" @click="onCrop(player_id)">更新</button> {{playerInEdit | json}}
+            <img id="avatar" alt="avatar" style="max-width: 100%;">
+            <input type="file" class="sr-only" id="input" name="image" accept="image/*">
+        </div>
+    </div>
 </div>
