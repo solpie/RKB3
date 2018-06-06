@@ -4203,7 +4203,7 @@
 	        this.p.addChild(this);
 	        if (this.$route.query['pre'] == 1) {
 	            HupuAPI_1.getLive(function (conf) {
-	                var liveComing = new LiveComing_1.LiveComing(conf.game_id);
+	                var liveComing = new LiveComing_1.LiveComing(conf);
 	                _this.addChild(liveComing);
 	                _this.liveConf = conf;
 	            });
@@ -9221,10 +9221,11 @@
 	var TextTimer_1 = __webpack_require__(51);
 	var LiveComing = (function (_super) {
 	    __extends(LiveComing, _super);
-	    function LiveComing(gameId) {
+	    function LiveComing(conf) {
 	        var _this = this;
 	        _super.call(this);
 	        this.curIdx = 0;
+	        console.log('live conf', conf);
 	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/studio/comingFg.png' }));
 	        var playerMask = PixiEx_1.newBitmap({ url: '/img/panel/studio/comingMask.png' });
 	        this.addChild(playerMask);
@@ -9277,17 +9278,21 @@
 	                    _this.showPlayer();
 	            });
 	        });
-	        HupuAPI_1.getRoundList(function (res) {
-	            for (var i = 0; i < res.data.length; i++) {
-	                var roundData = res.data[i];
-	                if (String(roundData.id) == String(gameId)) {
-	                    var addr = roundData.site_address;
-	                    _this.address.setText(addr);
-	                    console.log('get location', roundData);
-	                    return;
+	        var gameId = conf.game_id;
+	        if (conf.address)
+	            this.address.setText(conf.address);
+	        else
+	            HupuAPI_1.getRoundList(function (res) {
+	                for (var i = 0; i < res.data.length; i++) {
+	                    var roundData = res.data[i];
+	                    if (String(roundData.id) == String(gameId)) {
+	                        var addr = roundData.site_address;
+	                        _this.address.setText(addr);
+	                        console.log('get location', roundData);
+	                        return;
+	                    }
 	                }
-	            }
-	        });
+	            });
 	        ns.fontSize = '38px';
 	        ns.fill = '#000';
 	        var timer = new TextTimer_1.TextTimer('', ns);

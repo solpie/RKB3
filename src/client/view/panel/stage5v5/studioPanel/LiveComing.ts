@@ -18,8 +18,9 @@ export class LiveComing extends PIXI.Container {
 
     address: Text2
 
-    constructor(gameId) {
+    constructor(conf) {
         super()
+        console.log('live conf', conf);
         this.addChild(newBitmap({ url: '/img/panel/studio/comingFg.png' }))
 
         let playerMask = newBitmap({ url: '/img/panel/studio/comingMask.png' })
@@ -91,17 +92,22 @@ export class LiveComing extends PIXI.Container {
             })
         })
 
-        getRoundList(res => {
-            for (let i = 0; i < res.data.length; i++) {
-                let roundData = res.data[i];
-                if (String(roundData.id) == String(gameId)) {
-                    let addr = roundData.site_address
-                    this.address.setText(addr)
-                    console.log('get location', roundData);
-                    return
+
+        let gameId = conf.game_id
+        if (conf.address)
+            this.address.setText(conf.address)
+        else
+            getRoundList(res => {
+                for (let i = 0; i < res.data.length; i++) {
+                    let roundData = res.data[i];
+                    if (String(roundData.id) == String(gameId)) {
+                        let addr = roundData.site_address
+                        this.address.setText(addr)
+                        console.log('get location', roundData);
+                        return
+                    }
                 }
-            }
-        })
+            })
 
 
         ns.fontSize = '38px'
@@ -118,13 +124,13 @@ export class LiveComing extends PIXI.Container {
         var d = new Date()
         var endTime = '19:30'
         var end = new Date(pd(d.getMonth() + 1) + '/' + pd(d.getDate()) + "/" + d.getFullYear() + ' ' + endTime);
-        var distance = Math.floor((end - d)/1000);
+        var distance = Math.floor((end - d) / 1000);
         timer.setTimeBySec(distance)
         timer.toggleTimer()
 
         setInterval(_ => {
             this.showPlayer()
-        },9000)
+        }, 9000)
     }
 
 

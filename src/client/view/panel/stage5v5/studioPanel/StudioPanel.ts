@@ -31,7 +31,7 @@ export class StudioPanel extends PIXI.Container {
 
         if (this.$route.query['pre'] == 1) {
             getLive(conf => {
-                let liveComing = new LiveComing(conf.game_id)
+                let liveComing = new LiveComing(conf)
                 this.addChild(liveComing)
                 this.liveConf = conf
             })
