@@ -30,8 +30,12 @@ export class StudioPanel extends PIXI.Container {
 
 
         if (this.$route.query['pre'] == 1) {
-            let liveComing = new LiveComing()
-            this.addChild(liveComing)
+            getLive(conf => {
+                let liveComing = new LiveComing(conf.game_id)
+                this.addChild(liveComing)
+                this.liveConf = conf
+            })
+         
         }
         else {
             this.popupView = new PopupView(this)

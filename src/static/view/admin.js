@@ -773,7 +773,7 @@
 	    };
 	    HomeView.prototype.mounted = function () {
 	        this.updateLinks(79);
-	        this.actTab = 'tab2';
+	        this.actTab = 'tab1';
 	    };
 	    HomeView.prototype.updateLinks = function (gameId) {
 	        this.links = [
@@ -1292,7 +1292,7 @@
 	            if (conf.port == location.port)
 	                return callback(conf);
 	        }
-	        callback(res[0]);
+	        callback(res[2]);
 	    });
 	}
 	exports.getLive = getLive;

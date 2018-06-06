@@ -52,9 +52,12 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
         # t = ''
         info = table.cell(row + i, 5).value.replace(',', '\n').replace(' ',
                                                                        '\n').replace('，', '\n').replace('\t', '').replace('、', '\n')
+        while(t.find('  ')>-1):
+            t  = t.replace('  ',' ')
+        while(info.find('\n\n')>-1):
+            info  = info.replace('\n\n','\n')
         plist.append({'name': n,                      'hwa': [
                      h, w, a], 'tag1': t, 'info': info, 'img': 'p' + str(i + 1)})
-
     jstr = json.dumps(plist, ensure_ascii=False)
     addToClipBoard(jstr)
     print(jstr)

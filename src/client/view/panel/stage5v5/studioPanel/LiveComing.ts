@@ -18,7 +18,7 @@ export class LiveComing extends PIXI.Container {
 
     address: Text2
 
-    constructor() {
+    constructor(gameId) {
         super()
         this.addChild(newBitmap({ url: '/img/panel/studio/comingFg.png' }))
 
@@ -91,11 +91,10 @@ export class LiveComing extends PIXI.Container {
             })
         })
 
-        let gameId = 645
         getRoundList(res => {
             for (let i = 0; i < res.data.length; i++) {
                 let roundData = res.data[i];
-                if (roundData.id == gameId) {
+                if (String(roundData.id) == String(gameId)) {
                     let addr = roundData.site_address
                     this.address.setText(addr)
                     console.log('get location', roundData);

@@ -838,7 +838,7 @@
 	            if (conf.port == location.port)
 	                return callback(conf);
 	        }
-	        callback(res[0]);
+	        callback(res[2]);
 	    });
 	}
 	exports.getLive = getLive;

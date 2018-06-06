@@ -116,7 +116,7 @@ export function getLive(callback) {
             if (conf.port == location.port)
                 return callback(conf)
         }
-        callback(res[0])
+        callback(res[2])
     })
 }
 export function createPlayer(data, callback) {

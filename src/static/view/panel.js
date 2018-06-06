@@ -360,7 +360,7 @@
 	    };
 	    HomeView.prototype.mounted = function () {
 	        this.updateLinks(79);
-	        this.actTab = 'tab2';
+	        this.actTab = 'tab1';
 	    };
 	    HomeView.prototype.updateLinks = function (gameId) {
 	        this.links = [
@@ -879,7 +879,7 @@
 	            if (conf.port == location.port)
 	                return callback(conf);
 	        }
-	        callback(res[0]);
+	        callback(res[2]);
 	    });
 	}
 	exports.getLive = getLive;
@@ -4202,8 +4202,11 @@
 	        this.staticImg = new PIXI.Sprite;
 	        this.p.addChild(this);
 	        if (this.$route.query['pre'] == 1) {
-	            var liveComing = new LiveComing_1.LiveComing();
-	            this.addChild(liveComing);
+	            HupuAPI_1.getLive(function (conf) {
+	                var liveComing = new LiveComing_1.LiveComing(conf.game_id);
+	                _this.addChild(liveComing);
+	                _this.liveConf = conf;
+	            });
 	        }
 	        else {
 	            this.popupView = new PopupView_1.PopupView(this);
@@ -9218,7 +9221,7 @@
 	var TextTimer_1 = __webpack_require__(51);
 	var LiveComing = (function (_super) {
 	    __extends(LiveComing, _super);
-	    function LiveComing() {
+	    function LiveComing(gameId) {
 	        var _this = this;
 	        _super.call(this);
 	        this.curIdx = 0;
@@ -9274,11 +9277,10 @@
 	                    _this.showPlayer();
 	            });
 	        });
-	        var gameId = 645;
 	        HupuAPI_1.getRoundList(function (res) {
 	            for (var i = 0; i < res.data.length; i++) {
 	                var roundData = res.data[i];
-	                if (roundData.id == gameId) {
+	                if (String(roundData.id) == String(gameId)) {
 	                    var addr = roundData.site_address;
 	                    _this.address.setText(addr);
 	                    console.log('get location', roundData);
