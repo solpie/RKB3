@@ -77,7 +77,7 @@ export class LiveComing extends PIXI.Container {
             let tabArr = []
             let imgArr = []
             this.cacheTime = new Date().getTime()
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < this.infoArr[i].length; i++) {
                 // if (infoArr[i]) {
                 imgArr.push(`/img/player/top5/${this.infoArr[i].img}.png?t=` + this.cacheTime)
                 //     this.infoArr[i] //player info
