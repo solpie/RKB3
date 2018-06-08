@@ -4800,7 +4800,6 @@
 	        };
 	        HupuAPI_1.getTop5Data(function (res) {
 	            var d = JSON.parse(res);
-	            console.log('top5 data', res, d);
 	            _this.infoArr = d;
 	            var tabArr = [];
 	            var imgArr = [];
@@ -4808,6 +4807,7 @@
 	            for (var i = 0; i < _this.infoArr[i].length; i++) {
 	                imgArr.push(("/img/player/top5/" + _this.infoArr[i].img + ".png?t=") + _this.cacheTime);
 	            }
+	            console.log('top5 data', res, d, imgArr);
 	            ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
 	                if (_this.infoArr.length)
 	                    _this.showPlayer();

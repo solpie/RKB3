@@ -72,7 +72,6 @@ export class LiveComing extends PIXI.Container {
 
         getTop5Data(res => {
             let d = JSON.parse(res)
-            console.log('top5 data', res, d);
             this.infoArr = d// JSON.parse(res)
             let tabArr = []
             let imgArr = []
@@ -84,6 +83,7 @@ export class LiveComing extends PIXI.Container {
                 // }
             }
 
+            console.log('top5 data', res, d, imgArr);
             // imgArr.push('/img/panel/top5/bg.png')
 
             imgLoader.loadTexArr(imgArr, _ => {
