@@ -76,14 +76,14 @@ export class LiveComing extends PIXI.Container {
             let tabArr = []
             let imgArr = []
             this.cacheTime = new Date().getTime()
-            for (let i = 0; i < this.infoArr[i].length; i++) {
-                // if (infoArr[i]) {
+            for (let i = 0; i < 10; i++) {
+                if (this.infoArr[i]) {
                 imgArr.push(`/img/player/top5/${this.infoArr[i].img}.png?t=` + this.cacheTime)
                 //     this.infoArr[i] //player info
-                // }
+                }
             }
 
-            console.log('top5 data', res, d, imgArr);
+            console.log('top5 data2', res, this.infoArr, imgArr);
             // imgArr.push('/img/panel/top5/bg.png')
 
             imgLoader.loadTexArr(imgArr, _ => {
@@ -124,7 +124,7 @@ export class LiveComing extends PIXI.Container {
         var d = new Date()
         var endTime = '19:30'
         var end = new Date(pd(d.getMonth() + 1) + '/' + pd(d.getDate()) + "/" + d.getFullYear() + ' ' + endTime);
-        var distance = Math.floor((end - d) / 1000);
+        var distance = Math.floor((end as any - (d as any)) / 1000);
         timer.setTimeBySec(distance)
         timer.toggleTimer()
 

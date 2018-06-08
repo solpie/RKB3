@@ -4804,10 +4804,12 @@
 	            var tabArr = [];
 	            var imgArr = [];
 	            _this.cacheTime = new Date().getTime();
-	            for (var i = 0; i < _this.infoArr[i].length; i++) {
-	                imgArr.push(("/img/player/top5/" + _this.infoArr[i].img + ".png?t=") + _this.cacheTime);
+	            for (var i = 0; i < 10; i++) {
+	                if (_this.infoArr[i]) {
+	                    imgArr.push(("/img/player/top5/" + _this.infoArr[i].img + ".png?t=") + _this.cacheTime);
+	                }
 	            }
-	            console.log('top5 data', res, d, imgArr);
+	            console.log('top5 data2', res, _this.infoArr, imgArr);
 	            ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
 	                if (_this.infoArr.length)
 	                    _this.showPlayer();
