@@ -8250,6 +8250,7 @@
 	                + data.hwa[1] + ' kg/ '
 	                + data.hwa[2] + ' 岁';
 	        this.info.text = data.info;
+	        this.info.y = (470 - 46 + 124) - this.info.height * .5;
 	        this.tag2.text = '';
 	        var a = data.tag1.split(' ');
 	        if (data.tag2) {
@@ -8261,23 +8262,21 @@
 	    Top5.prototype.initDetail = function () {
 	        var rs = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '33px', fill: "#515151",
+	            fontSize: '45px', fill: "#515151",
 	            fontWeight: 'bold'
 	        };
 	        var pn = new PIXI.Text('', rs);
 	        this.playerName = pn;
 	        this.addChild(pn);
 	        pn.x = 1018;
-	        pn.y = 228 - 66;
-	        var hupuID = new PIXI.Text('', rs);
-	        this.hupuID = hupuID;
-	        hupuID.x = pn.x;
-	        hupuID.y = 232 + 76;
+	        pn.y = 228 - 70;
+	        rs.fontSize = '28px';
 	        var hwa = new PIXI.Text('', rs);
 	        this.hwa = hwa;
 	        this.addChild(hwa);
 	        hwa.x = pn.x;
-	        hwa.y = 304 - 53;
+	        hwa.y = 304 - 47;
+	        rs.fontSize = '33px';
 	        var tag1 = new PIXI.Text('', rs);
 	        this.tag1 = tag1;
 	        this.addChild(tag1);
@@ -8288,6 +8287,8 @@
 	        this.addChild(tag2);
 	        tag2.x = tag1.x + 230;
 	        tag2.y = tag1.y;
+	        rs.fontSize = '28px';
+	        rs['lineHeight'] = 39;
 	        var info = new PIXI.Text('', rs);
 	        this.info = info;
 	        this.addChild(info);
