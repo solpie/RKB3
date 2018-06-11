@@ -68,7 +68,6 @@ class HomeView extends VueBase {
 
             this.initCropper()
         });
-
     }
     isInitCropper = false
     initCropper() {
@@ -212,7 +211,6 @@ class HomeView extends VueBase {
             getPlayer(player_id, res => {
                 console.log('8090', res);
                 this.playerInEdit = JSON.parse(JSON.stringify(res[0]))
-                // this.initCropper()
             })
         },
         onCrop() {
@@ -225,11 +223,19 @@ class HomeView extends VueBase {
             this.imgBase64 = base64
             document.getElementById('imgToDownload')['src'] = base64
 
-            navigator.clipboard.writeText(base64).then(function () {
-                console.log('Async: Copying to clipboard was successful!');
-            }, function (err) {
-                console.error('Async: Could not copy text: ', err);
-            });
+            getPlayer(this.player_id, res1 => {
+                let player = res1[0]
+                console.log('update player1', player);
+                updatePlayer({ '_id': player._id, 'avatar': base64 }, res => {
+                    alert('头像上传成功!')
+                })
+            })
+
+            // navigator.clipboard.writeText(base64).then(function () {
+            //     console.log('Async: Copying to clipboard was successful!');
+            // }, function (err) {
+            //     console.error('Async: Could not copy text: ', err);
+            // });
             // $('#input').show()
             // cropper.getCroppedCanvas().toBlob((blob) => {
             //     var formData = new FormData();
@@ -256,15 +262,15 @@ class HomeView extends VueBase {
             //         success: (res) => {
             //             console.log('on uploaded', res);
             //             let img = res[0]
-            //             getPlayer(this.playerInEdit.player_id, res1 => {
-            //                 let player = res1[0]
-            //                 img.related.push(player._id)
-            //                 player.hot_player = img
-            //                 console.log('update player1', player);
-            //                 updatePlayer({ '_id': player._id, 'hot_player': img }, res => {
-            //                     console.log('update player done!!!!!!', res);
-            //                 })
-            //             })
+                        // getPlayer(this.playerInEdit.player_id, res1 => {
+                        //     let player = res1[0]
+                        //     img.related.push(player._id)
+                        //     player.hot_player = img
+                        //     console.log('update player1', player);
+                        //     updatePlayer({ '_id': player._id, 'hot_player': img }, res => {
+                        //         console.log('update player done!!!!!!', res);
+                        //     })
+                        // })
             //         },
             //         error: function () {
             //             // avatar['src'] = initialAvatarURL;
