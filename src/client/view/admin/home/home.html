@@ -64,14 +64,18 @@
         <p class="panel-heading">
             亮了网后台数据导入8090
         </p>
-        球员编号:<input type="text" v-model="player_id" style="width: 80px" value="574">
+        <!-- 球员编号:<input type="text" v-model="player_id" style="width: 80px" value="574">
         <button class="button is-primary" @click="onSyncPlayerToStrapi(player_id)">导入球员</button>
-        <button class="button is-primary" @click="onPullPlayerData(player_id)">8090球员</button>
+        <button class="button is-primary" @click="onPullPlayerData(player_id)">8090球员</button> -->
         <div class="container" style="height: 700px">
             <h1>上传热门球员图片</h1>
-            <button class="button is-primary" @click="onCrop(player_id)">更新</button> {{playerInEdit | json}}
-            <img id="avatar" alt="avatar" style="max-width: 100%;">
-            <input type="file" class="sr-only" id="input" name="image" accept="image/*">
+            <button class="button is-primary" @click="onUpload">上传</button>
+            <input type="text" v-model="imgBase64" style="width: 200px;">
+            <button class="button is-primary" @click="onCrop(player_id)">裁切</button>
+            <input type="file" class="sr-only" id="input" name="image" @change='onImgLoaded' accept="image/*" hidden>
+            <div class='result'></div>
+            <img id="imgToDownload" style="max-width: 100%;">
+
         </div>
     </div>
 </div>

@@ -34,7 +34,6 @@ export class PlayerNow extends PIXI.Container {
         this.title.y = 12
         this.title.x = 125 - this.title.width * .5
         this.addChild(this.title)
-
        
     }
 

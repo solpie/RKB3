@@ -1,9 +1,9 @@
 import { newBitmap, setScale } from '../../../utils/PixiEx';
-import { getTop5Data, getRoundList } from "../../../utils/HupuAPI";
+import { getTop5Data, getRoundList, getTop5Data2 } from "../../../utils/HupuAPI";
 import { imgLoader } from "../../../utils/ImgLoader";
 import { Text2, TextFac } from '../../../utils/TextFac';
 import { FontName } from "../../../const";
-import { cnWrap } from "../../../utils/JsFunc";
+import { cnWrap, ascendingProp } from "../../../utils/JsFunc";
 import { TextTimer } from '../../../utils/TextTimer';
 
 export class LiveComing extends PIXI.Container {
@@ -28,9 +28,8 @@ export class LiveComing extends PIXI.Container {
 
         this.avt = new PIXI.Sprite
         this.addChild(this.avt)
-        let s = 635 / 550
-        this.avt.x = -678 * s
-        this.avt.y = -185 * s
+        this.avt.x = 40
+        this.avt.y = 39
         this.avt.mask = playerMask
         //todo gameid to get location
         //todo key press to check
@@ -69,28 +68,42 @@ export class LiveComing extends PIXI.Container {
                 this.showPlayer()
             }
         }
-
-        getTop5Data(res => {
-            let d = JSON.parse(res)
-            this.infoArr = d// JSON.parse(res)
-            let tabArr = []
-            let imgArr = []
-            this.cacheTime = new Date().getTime()
-            for (let i = 0; i < 10; i++) {
-                if (this.infoArr[i]) {
-                imgArr.push(`/img/player/top5/${this.infoArr[i].img}.png?t=` + this.cacheTime)
-                //     this.infoArr[i] //player info
-                }
+        getTop5Data2(res2 => {
+            let playerArr: Array<any> = res2
+            playerArr.sort(ascendingProp('player_id'))
+            console.log('top5 8090 playerArr', playerArr);
+            for (let player of playerArr) {
+                player.hwa = [player.height, player.weight, player.age]
+                player.name = player.live_name
+                player.info = player.brief
             }
+            this.infoArr = playerArr
 
-            console.log('top5 data2', res, this.infoArr, imgArr);
-            // imgArr.push('/img/panel/top5/bg.png')
-
-            imgLoader.loadTexArr(imgArr, _ => {
-                if (this.infoArr.length)
-                    this.showPlayer()
-            })
+            this.showPlayer()
         })
+
+
+        // getTop5Data(res => {
+        //     let d = JSON.parse(res)
+        //     this.infoArr = d// JSON.parse(res)
+        //     let tabArr = []
+        //     let imgArr = []
+        //     this.cacheTime = new Date().getTime()
+        //     for (let i = 0; i < 10; i++) {
+        //         if (this.infoArr[i]) {
+        //         imgArr.push(`/img/player/top5/${this.infoArr[i].img}.png?t=` + this.cacheTime)
+        //         //     this.infoArr[i] //player info
+        //         }
+        //     }
+
+        //     console.log('top5 data2', res, this.infoArr, imgArr);
+        //     // imgArr.push('/img/panel/top5/bg.png')
+
+        //     imgLoader.loadTexArr(imgArr, _ => {
+        //         if (this.infoArr.length)
+        //             this.showPlayer()
+        //     })
+        // })
 
 
         let gameId = conf.game_id
@@ -135,20 +148,30 @@ export class LiveComing extends PIXI.Container {
 
 
     curIdx = 0
+    texMap = {}
+
     showPlayer() {
-        let player = this.infoArr[this.curIdx]
-        this.playerHWA.setText(player.hwa[2] + '岁 '
-            + player.hwa[0] + 'cm '
-            + player.hwa[1] + 'kg '
-        )
-        this.playerName.setText(player.name)
-        let info = player.info.replace(/\n/g, ",")
-        console.log('show info', info);
-        this.playerInfo.setText(cnWrap(info, 20, 79))
+        if (this.infoArr && this.infoArr.length) {
 
-        this.curIdx = (this.curIdx + 1) % this.infoArr.length
+            let player = this.infoArr[this.curIdx]
+            this.playerHWA.setText(player.hwa[2] + '岁 '
+                + player.hwa[0] + 'cm '
+                + player.hwa[1] + 'kg '
+            )
+            this.playerName.setText(player.name)
+            let info = player.info.replace(/\n/g, ",")
+            console.log('show info', info);
+            this.playerInfo.setText(cnWrap(info, 20, 79))
 
-        this.avt.texture = imgLoader.getTex(`/img/player/top5/${player.img}.png?t=` + this.cacheTime)
-        setScale(this.avt, 635 / 550)
+            this.curIdx = (this.curIdx + 1) % this.infoArr.length
+
+            let idx = this.curIdx
+            if (!this.texMap[idx])
+                this.texMap[idx] = PIXI.Texture.fromImage(player.avatar)
+            this.avt.texture = this.texMap[idx]
+            // this.avt.texture = imgLoader.getTex(`/img/player/top5/${player.img}.png?t=` + this.cacheTime)
+            setScale(this.avt, 635 / 595)
+        }
+
     }
 }

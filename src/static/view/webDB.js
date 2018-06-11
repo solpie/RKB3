@@ -864,6 +864,9 @@
 	    });
 	}
 	exports.updatePlayer = updatePlayer;
+	exports.getTop5Data2 = function (callback) {
+	    _get('http://rtmp.icassi.us:8090/player/', callback);
+	};
 	function getPlayer(player_id, callback) {
 	    var url = 'http://rtmp.icassi.us:8090/player?player_id=' + player_id;
 	    _get(WebJsFunc_1.proxy(url), callback);

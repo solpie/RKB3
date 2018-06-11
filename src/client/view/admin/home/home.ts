@@ -39,6 +39,7 @@ class HomeView extends VueBase {
     fileCrop = VueBase.PROP;
     cropper = VueBase.PROP;
     playerInEdit = VueBase.PROP
+    imgBase64 = VueBase.PROP
     qrcode;
     constructor() {
         super();
@@ -93,24 +94,8 @@ class HomeView extends VueBase {
                 }
             });
         };
-        input.addEventListener('change', (e) => {
-            var files = e.target['files'];
-            var reader;
-            var file;
-            var url;
-            if (files && files.length > 0) {
-                file = files[0];
-                this.fileCrop = file
-                if (FileReader) {
-                    reader = new FileReader();
-                    reader.onload = function (e) {
-                        done(reader.result);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }
-        });
     }
+
     mounted() {
         this.updateLinks(79);
         this.actTab = 'tab1'
@@ -132,11 +117,6 @@ class HomeView extends VueBase {
             // { title: "八强面板", url: `/panel/#/ol/ob/${gameId}?panel=bracket` + '&m=1' },
             // { title: "DmkLeecher", url: `/dmk` },
 
-            // { title: "---------------------Final--------------------", url: `/panel/#/ol/ob/0?panel=bracket` },
-            // { title: "K.O.A", url: `/panel/#/koa/op/` },
-            // { title: "战团双败", url: `/panel/#/ol/ob/0?panel=bracket` },
-            // { title: "5v5", url: `/panel/#/5v5/op/` },
-            // { title: "5v5 手机", url: `/panel/#/5v5/op/?m=1` },
         ];
     }
 
@@ -163,6 +143,36 @@ class HomeView extends VueBase {
     methods = {
         tab(s) {
             this.actTab = s
+        },
+        onUpload(e) {
+            document.getElementById('input').click()
+            this.imgBase64 = ''
+        },
+        onImgLoaded(e) {
+            let result = document.querySelector('.result')
+            if (e.target.files.length) {
+                // start file reader
+                $('#input').hide()
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (e.target.result) {
+                        // create new image
+                        let img = document.createElement('img');
+                        img.id = 'image';
+                        img.src = e.target.result
+                        // clean result before
+                        result.innerHTML = '';
+                        // append new image
+                        result.appendChild(img);
+                        cropper = new Cropper(img, {
+                            aspectRatio: 420 / 595,
+                            width: 420,
+                            height: 595
+                        });
+                    }
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
         },
         onSelGameID(gameId) {
             this.updateLinks(gameId);
@@ -206,57 +216,70 @@ class HomeView extends VueBase {
             })
         },
         onCrop() {
-            if (this.playerInEdit.player_id) {
-                let image = this.fileCrop
-                cropper.getCroppedCanvas().toBlob((blob) => {
-                    var formData = new FormData();
-                    formData.append('files', blob, 'player.png');
-                    console.log('blob', blob);
-                    $.ajax('http://rtmp.icassi.us:8090/upload', {
-                        method: 'POST',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        xhr: () => {
-                            var xhr = new XMLHttpRequest();
-                            xhr.upload.onprogress = function (e) {
-                                var percent = '0';
-                                var percentage = '0%';
-                                if (e.lengthComputable) {
-                                    percent = Math.round((e.loaded / e.total) * 100) + '';
-                                    percentage = percent + '%';
-                                    console.log('upload', percentage);
-                                }
-                            };
-                            return xhr;
-                        },
-                        success: (res) => {
-                            console.log('on uploaded', res);
-                            let img = res[0]
-                            getPlayer(this.playerInEdit.player_id, res1 => {
-                                let player = res1[0]
-                                img.related.push(player._id)
-                                player.hot_player = img
-                                console.log('update player1', player);
-                                updatePlayer({ '_id': player._id, 'hot_player': img }, res => {
-                                    console.log('update player done!!!!!!', res);
-                                })
-                            })
-                        },
-                        error: function () {
-                            // avatar['src'] = initialAvatarURL;
-                            // $alert.show().addClass('alert-warning').text('Upload error');
-                        },
-                        complete: function () {
-                            console.log('on complete');
-                            // alert('上传成功')
-                        },
-                    });
-                });
-            }
-            else {
+            // if (this.playerInEdit.player_id) {
+            let image = this.fileCrop
 
-            }
+            let base64 = cropper.getCroppedCanvas({
+                width: 420, height: 595
+            }).toDataURL()
+            this.imgBase64 = base64
+            document.getElementById('imgToDownload')['src'] = base64
+
+            navigator.clipboard.writeText(base64).then(function () {
+                console.log('Async: Copying to clipboard was successful!');
+            }, function (err) {
+                console.error('Async: Could not copy text: ', err);
+            });
+            // $('#input').show()
+            // cropper.getCroppedCanvas().toBlob((blob) => {
+            //     var formData = new FormData();
+            //     formData.append('files', blob, 'player.png');
+            //     console.log('blob', blob);
+            //     $.ajax('http://rtmp.icassi.us:8090/upload', {
+            //         method: 'POST',
+            //         data: formData,
+            //         processData: false,
+            //         contentType: false,
+            //         xhr: () => {
+            //             var xhr = new XMLHttpRequest();
+            //             xhr.upload.onprogress = function (e) {
+            //                 var percent = '0';
+            //                 var percentage = '0%';
+            //                 if (e.lengthComputable) {
+            //                     percent = Math.round((e.loaded / e.total) * 100) + '';
+            //                     percentage = percent + '%';
+            //                     console.log('upload', percentage);
+            //                 }
+            //             };
+            //             return xhr;
+            //         },
+            //         success: (res) => {
+            //             console.log('on uploaded', res);
+            //             let img = res[0]
+            //             getPlayer(this.playerInEdit.player_id, res1 => {
+            //                 let player = res1[0]
+            //                 img.related.push(player._id)
+            //                 player.hot_player = img
+            //                 console.log('update player1', player);
+            //                 updatePlayer({ '_id': player._id, 'hot_player': img }, res => {
+            //                     console.log('update player done!!!!!!', res);
+            //                 })
+            //             })
+            //         },
+            //         error: function () {
+            //             // avatar['src'] = initialAvatarURL;
+            //             // $alert.show().addClass('alert-warning').text('Upload error');
+            //         },
+            //         complete: function () {
+            //             console.log('on complete');
+            //             // alert('上传成功')
+            //         },
+            //     });
+            // });
+            // }
+            // else {
+
+            // }
 
         },
         onClkQRCode() {

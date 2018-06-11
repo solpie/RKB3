@@ -139,6 +139,9 @@ export function updatePlayer(playerData, callback) {
     })
     // $post('http://rtmp.icassi.us:8090/player/update/' + playerData._id,playerData,callback)
 }
+export let getTop5Data2 = (callback) => {
+    _get('http://rtmp.icassi.us:8090/player/', callback)
+}
 export function getPlayer(player_id, callback) {
     let url = 'http://rtmp.icassi.us:8090/player?player_id=' + player_id
     _get(proxy(url), callback)

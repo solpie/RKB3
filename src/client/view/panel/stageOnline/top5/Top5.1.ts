@@ -1,11 +1,10 @@
 import { newBitmap, loadRes, setScale } from '../../../utils/PixiEx';
 import { imgLoader } from '../../../utils/ImgLoader';
 import { FontName } from '../../../const';
-import { paddy, ascendingProp } from '../../../utils/JsFunc';
+import { paddy } from '../../../utils/JsFunc';
 import { $post } from '../../../utils/WebJsFunc';
-import { getTop5Data, getTop5Data2 } from '../../../utils/HupuAPI';
+import { getTop5Data } from '../../../utils/HupuAPI';
 import { fitWidth } from '../bracket/BracketGroup';
-import { Text2, TextFac } from '../../../utils/TextFac';
 class Tab2 extends PIXI.Container {
     playerName: PIXI.Text
     playerName2: PIXI.Text
@@ -14,8 +13,8 @@ class Tab2 extends PIXI.Container {
     gameIdx: PIXI.Text
     constructor() {
         super()
-        // let bg = newBitmap({ url: '/img/panel/top5/hotPlayerBg.png' })
-        // this.addChild(bg)
+        let bg = newBitmap({ url: '/img/panel/top5/tabBg.png' })
+        this.addChild(bg)
 
         let rs = {
             fontFamily: FontName.MicrosoftYahei,
@@ -52,7 +51,7 @@ class Tab2 extends PIXI.Container {
 
     setInfo(data) {
         this.playerName.text = data.name
-        fitWidth(this.playerName, 275, 48)
+        fitWidth(this.playerName,275,48)
         this.setGameIdx(0)
     }
     setGameIdx(idx) {
@@ -64,7 +63,7 @@ export class Top5 extends PIXI.Container {
     static class = 'Top5'
     p: any
     curPlayer: PIXI.Sprite
-    // tabArr = []
+    tabArr = []
 
     playerName: PIXI.Text
     hupuID: PIXI.Text
@@ -72,76 +71,49 @@ export class Top5 extends PIXI.Container {
     tag1: PIXI.Text
     tag2: PIXI.Text
     info: PIXI.Text
-    playerGameIdx: Text2
-    // title: PIXI.Text
+    title: PIXI.Text
     cacheTime: Number
-    // tag2Bg: PIXI.Sprite
+    tag2Bg: PIXI.Sprite
     create(parent: any, data) {
         this.p = parent
         let imgArr = []
         this.curPlayer = new PIXI.Sprite()
-        this.curPlayer.x = 487
-        this.curPlayer.y = 157
         this.addChild(this.curPlayer)
-        getTop5Data2(res2 => {
-            let playerArr: Array<any> = res2
-            playerArr.sort(ascendingProp('player_id'))
-            console.log('top5 8090 playerArr', playerArr);
-            for (let player of playerArr) {
-                player.hwa = [player.height, player.weight, player.age]
-                player.name = player.live_name
-                player.info = player.brief
+        getTop5Data(res => {
+            let d = JSON.parse(res)
+            console.log('top5 data', res, d);
+            this.infoArr = d// JSON.parse(res)
+            let tabArr = []
+            this.cacheTime = new Date().getTime()
+            for (let i = 0; i < 5; i++) {
+                if (this.infoArr[i]) {
+                    let t = new Tab2()
+                    this.addChild(t)
+                    this.tabArr.push(t)
+                    t.x = 253
+                    t.y = 204 + i * 125
+                    imgArr.push(`/img/player/top5/${this.infoArr[i].img}.png?t=` + this.cacheTime)
+                    t.visible = false
+                    t.setInfo(this.infoArr[i])
+                    tabArr.push(t)
+                }
             }
-            this.infoArr = playerArr
-            imgArr = []
-            imgArr.push('/img/panel/top5/hotPlayerBg.png')
+            imgArr.push('/img/panel/top5/bg.png')
 
             imgLoader.loadTexArr(imgArr, _ => {
-                let bg = newBitmap({ url: '/img/panel/top5/hotPlayerBg.png' })
+                tabArr.forEach(t => {
+                    t.visible = true
+                });
+                let bg = newBitmap({ url: '/img/panel/top5/bg.png' })
                 this.addChildAt(bg, 0)
-                // let tagBg = newBitmap({ url: '/img/panel/top5/tag.png' })
-                // this.addChild(tagBg)
-                // this.tag2Bg = tagBg
-                // this.tag2Bg.visible = false
+                let tagBg = newBitmap({ url: '/img/panel/top5/tag.png' })
+                this.addChild(tagBg)
+                this.tag2Bg = tagBg
+                this.tag2Bg.visible = false
                 this.initDetail()
                 this.show(data)
             })
         })
-        // getTop5Data(res => {
-        //     let d = JSON.parse(res)
-        //     console.log('top5 data', res, d);
-        //     this.infoArr = d// JSON.parse(res)
-        //     let tabArr = []
-        //     this.cacheTime = new Date().getTime()
-        //     for (let i = 0; i < 10; i++) {
-        //         if (this.infoArr[i]) {
-        //             // let t = new Tab2()
-        //             // this.addChild(t)
-        //             // this.tabArr.push(t)
-        //             // t.x = 253
-        //             // t.y = 204 + i * 125
-        //             imgArr.push(`/img/player/top5/${this.infoArr[i].img}.png?t=` + this.cacheTime)
-        //             // t.visible = false
-        //             // t.setInfo(this.infoArr[i])
-        //             // tabArr.push(t)
-        //         }
-        //     }
-        //     imgArr.push('/img/panel/top5/hotPlayerBg.png')
-
-        //     imgLoader.loadTexArr(imgArr, _ => {
-        //         tabArr.forEach(t => {
-        //             t.visible = true
-        //         });
-        //         let bg = newBitmap({ url: '/img/panel/top5/hotPlayerBg.png' })
-        //         this.addChildAt(bg, 0)
-        //         // let tagBg = newBitmap({ url: '/img/panel/top5/tag.png' })
-        //         // this.addChild(tagBg)
-        //         // this.tag2Bg = tagBg
-        //         // this.tag2Bg.visible = false
-        //         this.initDetail()
-        //         this.show(data)
-        //     })
-        // })
     }
     show(data) {
         console.log('show player ', data);
@@ -149,8 +121,13 @@ export class Top5 extends PIXI.Container {
         if (data.gameIdxArr) {
             let a = data.gameIdxArr.split(' ')
             if (a.length > 1) {
-                this.playerGameIdx.setText(`即将在席位战${paddy(data.idx, 2)}登场`)
-
+                for (let i = 0; i < this.tabArr.length; i++) {
+                    let t: Tab2 = this.tabArr[i];
+                    if (a[i])
+                        t.setGameIdx(a[i])
+                    else
+                        t.setGameIdx(0)
+                }
             }
         }
         this.p.addChild(this)
@@ -158,13 +135,10 @@ export class Top5 extends PIXI.Container {
 
     infoArr: any
 
-    texMap = {}
     setTab(idx) {
         idx = Number(idx)
         let data = this.infoArr[idx - 1]
-        if (!this.texMap[idx])
-            this.texMap[idx] = PIXI.Texture.fromImage(data.avatar)
-        this.curPlayer.texture =  this.texMap[idx]
+        this.curPlayer.texture = imgLoader.getTex(`/img/player/top5/${data.img}.png?t=` + this.cacheTime)
         this.setDetail(data)
     }
 
@@ -180,8 +154,12 @@ export class Top5 extends PIXI.Container {
             + data.hwa[2] + ' 岁';
         this.info.text = data.info
         this.tag2.text = ''
+        this.tag2Bg.visible = false
         let a = data.tag1.split(' ')
         if (a.length == 2) {
+            this.tag2Bg.x = this.tag2.x - 28
+            this.tag2Bg.y = this.tag2.y - 14
+            this.tag2Bg.visible = true
             this.tag1.text = a[0]
             this.tag2.text = a[1]
         }
@@ -192,7 +170,7 @@ export class Top5 extends PIXI.Container {
     initDetail() {
         let rs = {
             fontFamily: FontName.MicrosoftYahei,
-            fontSize: '33px', fill: "#515151",
+            fontSize: '33px', fill: "#2e3352",
             fontWeight: 'bold'
         }
 
@@ -200,8 +178,8 @@ export class Top5 extends PIXI.Container {
         let pn = new PIXI.Text('', rs)
         this.playerName = pn
         this.addChild(pn)
-        pn.x = 1018
-        pn.y = 228 - 66
+        pn.x = 1146
+        pn.y = 228
 
         let hupuID = new PIXI.Text('', rs)
         this.hupuID = hupuID
@@ -213,29 +191,31 @@ export class Top5 extends PIXI.Container {
         this.hwa = hwa
         this.addChild(hwa)
         hwa.x = pn.x
-        hwa.y = 304 - 53
+        hwa.y = 304
 
         let tag1 = new PIXI.Text('', rs)
         this.tag1 = tag1
         this.addChild(tag1)
         tag1.x = pn.x
-        tag1.y = 380 - 36
+        tag1.y = 380
 
         let tag2 = new PIXI.Text('', rs)
         this.tag2 = tag2
         this.addChild(tag2)
-        tag2.x = tag1.x + 230
+        tag2.x = tag1.x + 280
         tag2.y = tag1.y
 
         let info = new PIXI.Text('', rs)
         this.info = info
         this.addChild(info)
         info.x = pn.x
-        info.y = 470 - 46
+        info.y = 470
 
-
-        this.playerGameIdx = TextFac.new_(rs, this)
-            .setPos(pn.x, 701)
+        rs.fontSize = '48px'
+        let title = new PIXI.Text('夺冠热门球员', rs)
+        this.addChild(title)
+        title.x = 960 - title.width * .5
+        title.y = 120
     }
 
     hide() {

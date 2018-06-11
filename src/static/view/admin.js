@@ -607,6 +607,7 @@
 	        this.fileCrop = VueBase_1.VueBase.PROP;
 	        this.cropper = VueBase_1.VueBase.PROP;
 	        this.playerInEdit = VueBase_1.VueBase.PROP;
+	        this.imgBase64 = VueBase_1.VueBase.PROP;
 	        this.isInitCropper = false;
 	        this.watch = {
 	            selected: "onSelGameID"
@@ -614,6 +615,32 @@
 	        this.methods = {
 	            tab: function (s) {
 	                this.actTab = s;
+	            },
+	            onUpload: function (e) {
+	                document.getElementById('input').click();
+	                this.imgBase64 = '';
+	            },
+	            onImgLoaded: function (e) {
+	                var result = document.querySelector('.result');
+	                if (e.target.files.length) {
+	                    $('#input').hide();
+	                    var reader = new FileReader();
+	                    reader.onload = function (e) {
+	                        if (e.target.result) {
+	                            var img = document.createElement('img');
+	                            img.id = 'image';
+	                            img.src = e.target.result;
+	                            result.innerHTML = '';
+	                            result.appendChild(img);
+	                            cropper = new Cropper(img, {
+	                                aspectRatio: 420 / 595,
+	                                width: 420,
+	                                height: 595
+	                            });
+	                        }
+	                    };
+	                    reader.readAsDataURL(e.target.files[0]);
+	                }
 	            },
 	            onSelGameID: function (gameId) {
 	                var _this = this;
@@ -656,54 +683,17 @@
 	                });
 	            },
 	            onCrop: function () {
-	                var _this = this;
-	                if (this.playerInEdit.player_id) {
-	                    var image = this.fileCrop;
-	                    cropper.getCroppedCanvas().toBlob(function (blob) {
-	                        var formData = new FormData();
-	                        formData.append('files', blob, 'player.png');
-	                        console.log('blob', blob);
-	                        $.ajax('http://rtmp.icassi.us:8090/upload', {
-	                            method: 'POST',
-	                            data: formData,
-	                            processData: false,
-	                            contentType: false,
-	                            xhr: function () {
-	                                var xhr = new XMLHttpRequest();
-	                                xhr.upload.onprogress = function (e) {
-	                                    var percent = '0';
-	                                    var percentage = '0%';
-	                                    if (e.lengthComputable) {
-	                                        percent = Math.round((e.loaded / e.total) * 100) + '';
-	                                        percentage = percent + '%';
-	                                        console.log('upload', percentage);
-	                                    }
-	                                };
-	                                return xhr;
-	                            },
-	                            success: function (res) {
-	                                console.log('on uploaded', res);
-	                                var img = res[0];
-	                                HupuAPI_1.getPlayer(_this.playerInEdit.player_id, function (res1) {
-	                                    var player = res1[0];
-	                                    img.related.push(player._id);
-	                                    player.hot_player = img;
-	                                    console.log('update player1', player);
-	                                    HupuAPI_1.updatePlayer({ '_id': player._id, 'hot_player': img }, function (res) {
-	                                        console.log('update player done!!!!!!', res);
-	                                    });
-	                                });
-	                            },
-	                            error: function () {
-	                            },
-	                            complete: function () {
-	                                console.log('on complete');
-	                            },
-	                        });
-	                    });
-	                }
-	                else {
-	                }
+	                var image = this.fileCrop;
+	                var base64 = cropper.getCroppedCanvas({
+	                    width: 420, height: 595
+	                }).toDataURL();
+	                this.imgBase64 = base64;
+	                document.getElementById('imgToDownload')['src'] = base64;
+	                navigator.clipboard.writeText(base64).then(function () {
+	                    console.log('Async: Copying to clipboard was successful!');
+	                }, function (err) {
+	                    console.error('Async: Could not copy text: ', err);
+	                });
 	            },
 	            onClkQRCode: function () {
 	                PlayerS4_1.downloadGameData();
@@ -733,7 +723,6 @@
 	        });
 	    };
 	    HomeView.prototype.initCropper = function () {
-	        var _this = this;
 	        if (this.isInitCropper)
 	            return;
 	        this.isInitCropper = true;
@@ -753,23 +742,6 @@
 	                }
 	            });
 	        };
-	        input.addEventListener('change', function (e) {
-	            var files = e.target['files'];
-	            var reader;
-	            var file;
-	            var url;
-	            if (files && files.length > 0) {
-	                file = files[0];
-	                _this.fileCrop = file;
-	                if (FileReader) {
-	                    reader = new FileReader();
-	                    reader.onload = function (e) {
-	                        done(reader.result);
-	                    };
-	                    reader.readAsDataURL(file);
-	                }
-	            }
-	        });
 	    };
 	    HomeView.prototype.mounted = function () {
 	        this.updateLinks(79);
@@ -1318,6 +1290,9 @@
 	    });
 	}
 	exports.updatePlayer = updatePlayer;
+	exports.getTop5Data2 = function (callback) {
+	    _get('http://rtmp.icassi.us:8090/player/', callback);
+	};
 	function getPlayer(player_id, callback) {
 	    var url = 'http://rtmp.icassi.us:8090/player?player_id=' + player_id;
 	    _get(WebJsFunc_1.proxy(url), callback);
@@ -1396,7 +1371,7 @@
 /* 26 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <div class=\"tabs  is-boxed\">\r\n        <ul>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                <a>\r\n                    <span>home</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                <a>\r\n                    <span>热门球员编辑</span>\r\n                </a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n    <div v-if='actTab==\"tab1\"'>\r\n        <nav class=\"panel\">\r\n            <p class=\"panel-heading\">\r\n                直播面板op入口 Game ID: {{ selected }}\r\n                <span class=\"select\">\r\n                            <select v-model=\"selected\">\r\n                                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                                    {{ option.text }}\r\n                                </option>\r\n                            </select>\r\n                        </span>\r\n            </p>\r\n            <vue v-for=\"link in links\">\r\n                <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                    <span class=\"panel-icon\">\r\n                        <i class=\"fa fa-book\"></i>\r\n                        </span> {{link.url}}\r\n                    <br> {{link.title}}\r\n                </a>\r\n                <!--<button class=\"button\">复制地址</button>-->\r\n            </vue>\r\n            <div>\r\n                抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n                <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n                <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n                           {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n                        </a>\r\n            </div>\r\n\r\n            <p>\r\n                command:\r\n                <br> /game/bracket/clear\r\n                <br>/game/clear/bracketIdx\r\n                <br>/git/pull\r\n        </nav>\r\n        播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n            <p>\r\n                播放地址2:<input type=\"text\" v-model=\"playUrl2\" style=\"width: 1000px\">\r\n                <p>\r\n                    推流地址2:<input type=\"text\" v-model=\"rmtpUrl2\" style=\"width: 1000px\">\r\n                    <p>\r\n                        <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n                        <div id=\"qrcode\"></div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"' class=\"panel\">\r\n        <p class=\"panel-heading\">\r\n            亮了网后台数据导入8090\r\n        </p>\r\n        球员编号:<input type=\"text\" v-model=\"player_id\" style=\"width: 80px\" value=\"574\">\r\n        <button class=\"button is-primary\" @click=\"onSyncPlayerToStrapi(player_id)\">导入球员</button>\r\n        <button class=\"button is-primary\" @click=\"onPullPlayerData(player_id)\">8090球员</button>\r\n        <div class=\"container\" style=\"height: 700px\">\r\n            <h1>上传热门球员图片</h1>\r\n            <button class=\"button is-primary\" @click=\"onCrop(player_id)\">更新</button> {{playerInEdit | json}}\r\n            <img id=\"avatar\" alt=\"avatar\" style=\"max-width: 100%;\">\r\n            <input type=\"file\" class=\"sr-only\" id=\"input\" name=\"image\" accept=\"image/*\">\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <div class=\"tabs  is-boxed\">\r\n        <ul>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                <a>\r\n                    <span>home</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                <a>\r\n                    <span>热门球员编辑</span>\r\n                </a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n    <div v-if='actTab==\"tab1\"'>\r\n        <nav class=\"panel\">\r\n            <p class=\"panel-heading\">\r\n                直播面板op入口 Game ID: {{ selected }}\r\n                <span class=\"select\">\r\n                            <select v-model=\"selected\">\r\n                                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                                    {{ option.text }}\r\n                                </option>\r\n                            </select>\r\n                        </span>\r\n            </p>\r\n            <vue v-for=\"link in links\">\r\n                <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                    <span class=\"panel-icon\">\r\n                        <i class=\"fa fa-book\"></i>\r\n                        </span> {{link.url}}\r\n                    <br> {{link.title}}\r\n                </a>\r\n                <!--<button class=\"button\">复制地址</button>-->\r\n            </vue>\r\n            <div>\r\n                抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n                <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n                <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n                           {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n                        </a>\r\n            </div>\r\n\r\n            <p>\r\n                command:\r\n                <br> /game/bracket/clear\r\n                <br>/game/clear/bracketIdx\r\n                <br>/git/pull\r\n        </nav>\r\n        播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n            <p>\r\n                播放地址2:<input type=\"text\" v-model=\"playUrl2\" style=\"width: 1000px\">\r\n                <p>\r\n                    推流地址2:<input type=\"text\" v-model=\"rmtpUrl2\" style=\"width: 1000px\">\r\n                    <p>\r\n                        <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n                        <div id=\"qrcode\"></div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"' class=\"panel\">\r\n        <p class=\"panel-heading\">\r\n            亮了网后台数据导入8090\r\n        </p>\r\n        <!-- 球员编号:<input type=\"text\" v-model=\"player_id\" style=\"width: 80px\" value=\"574\">\r\n        <button class=\"button is-primary\" @click=\"onSyncPlayerToStrapi(player_id)\">导入球员</button>\r\n        <button class=\"button is-primary\" @click=\"onPullPlayerData(player_id)\">8090球员</button> -->\r\n        <div class=\"container\" style=\"height: 700px\">\r\n            <h1>上传热门球员图片</h1>\r\n            <button class=\"button is-primary\" @click=\"onUpload\">上传</button>\r\n            <input type=\"text\" v-model=\"imgBase64\" style=\"width: 200px;\">\r\n            <button class=\"button is-primary\" @click=\"onCrop(player_id)\">裁切</button>\r\n            <input type=\"file\" class=\"sr-only\" id=\"input\" name=\"image\" @change='onImgLoaded' accept=\"image/*\" hidden>\r\n            <div class='result'></div>\r\n            <img id=\"imgToDownload\" style=\"max-width: 100%;\">\r\n\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 27 */

@@ -194,6 +194,7 @@
 	        this.fileCrop = VueBase_1.VueBase.PROP;
 	        this.cropper = VueBase_1.VueBase.PROP;
 	        this.playerInEdit = VueBase_1.VueBase.PROP;
+	        this.imgBase64 = VueBase_1.VueBase.PROP;
 	        this.isInitCropper = false;
 	        this.watch = {
 	            selected: "onSelGameID"
@@ -201,6 +202,32 @@
 	        this.methods = {
 	            tab: function (s) {
 	                this.actTab = s;
+	            },
+	            onUpload: function (e) {
+	                document.getElementById('input').click();
+	                this.imgBase64 = '';
+	            },
+	            onImgLoaded: function (e) {
+	                var result = document.querySelector('.result');
+	                if (e.target.files.length) {
+	                    $('#input').hide();
+	                    var reader = new FileReader();
+	                    reader.onload = function (e) {
+	                        if (e.target.result) {
+	                            var img = document.createElement('img');
+	                            img.id = 'image';
+	                            img.src = e.target.result;
+	                            result.innerHTML = '';
+	                            result.appendChild(img);
+	                            cropper = new Cropper(img, {
+	                                aspectRatio: 420 / 595,
+	                                width: 420,
+	                                height: 595
+	                            });
+	                        }
+	                    };
+	                    reader.readAsDataURL(e.target.files[0]);
+	                }
 	            },
 	            onSelGameID: function (gameId) {
 	                var _this = this;
@@ -243,54 +270,17 @@
 	                });
 	            },
 	            onCrop: function () {
-	                var _this = this;
-	                if (this.playerInEdit.player_id) {
-	                    var image = this.fileCrop;
-	                    cropper.getCroppedCanvas().toBlob(function (blob) {
-	                        var formData = new FormData();
-	                        formData.append('files', blob, 'player.png');
-	                        console.log('blob', blob);
-	                        $.ajax('http://rtmp.icassi.us:8090/upload', {
-	                            method: 'POST',
-	                            data: formData,
-	                            processData: false,
-	                            contentType: false,
-	                            xhr: function () {
-	                                var xhr = new XMLHttpRequest();
-	                                xhr.upload.onprogress = function (e) {
-	                                    var percent = '0';
-	                                    var percentage = '0%';
-	                                    if (e.lengthComputable) {
-	                                        percent = Math.round((e.loaded / e.total) * 100) + '';
-	                                        percentage = percent + '%';
-	                                        console.log('upload', percentage);
-	                                    }
-	                                };
-	                                return xhr;
-	                            },
-	                            success: function (res) {
-	                                console.log('on uploaded', res);
-	                                var img = res[0];
-	                                HupuAPI_1.getPlayer(_this.playerInEdit.player_id, function (res1) {
-	                                    var player = res1[0];
-	                                    img.related.push(player._id);
-	                                    player.hot_player = img;
-	                                    console.log('update player1', player);
-	                                    HupuAPI_1.updatePlayer({ '_id': player._id, 'hot_player': img }, function (res) {
-	                                        console.log('update player done!!!!!!', res);
-	                                    });
-	                                });
-	                            },
-	                            error: function () {
-	                            },
-	                            complete: function () {
-	                                console.log('on complete');
-	                            },
-	                        });
-	                    });
-	                }
-	                else {
-	                }
+	                var image = this.fileCrop;
+	                var base64 = cropper.getCroppedCanvas({
+	                    width: 420, height: 595
+	                }).toDataURL();
+	                this.imgBase64 = base64;
+	                document.getElementById('imgToDownload')['src'] = base64;
+	                navigator.clipboard.writeText(base64).then(function () {
+	                    console.log('Async: Copying to clipboard was successful!');
+	                }, function (err) {
+	                    console.error('Async: Could not copy text: ', err);
+	                });
 	            },
 	            onClkQRCode: function () {
 	                PlayerS4_1.downloadGameData();
@@ -320,7 +310,6 @@
 	        });
 	    };
 	    HomeView.prototype.initCropper = function () {
-	        var _this = this;
 	        if (this.isInitCropper)
 	            return;
 	        this.isInitCropper = true;
@@ -340,23 +329,6 @@
 	                }
 	            });
 	        };
-	        input.addEventListener('change', function (e) {
-	            var files = e.target['files'];
-	            var reader;
-	            var file;
-	            var url;
-	            if (files && files.length > 0) {
-	                file = files[0];
-	                _this.fileCrop = file;
-	                if (FileReader) {
-	                    reader = new FileReader();
-	                    reader.onload = function (e) {
-	                        done(reader.result);
-	                    };
-	                    reader.readAsDataURL(file);
-	                }
-	            }
-	        });
 	    };
 	    HomeView.prototype.mounted = function () {
 	        this.updateLinks(79);
@@ -905,6 +877,9 @@
 	    });
 	}
 	exports.updatePlayer = updatePlayer;
+	exports.getTop5Data2 = function (callback) {
+	    _get('http://rtmp.icassi.us:8090/player/', callback);
+	};
 	function getPlayer(player_id, callback) {
 	    var url = 'http://rtmp.icassi.us:8090/player?player_id=' + player_id;
 	    _get(WebJsFunc_1.proxy(url), callback);
@@ -983,7 +958,7 @@
 /* 26 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <div class=\"tabs  is-boxed\">\r\n        <ul>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                <a>\r\n                    <span>home</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                <a>\r\n                    <span>热门球员编辑</span>\r\n                </a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n    <div v-if='actTab==\"tab1\"'>\r\n        <nav class=\"panel\">\r\n            <p class=\"panel-heading\">\r\n                直播面板op入口 Game ID: {{ selected }}\r\n                <span class=\"select\">\r\n                            <select v-model=\"selected\">\r\n                                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                                    {{ option.text }}\r\n                                </option>\r\n                            </select>\r\n                        </span>\r\n            </p>\r\n            <vue v-for=\"link in links\">\r\n                <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                    <span class=\"panel-icon\">\r\n                        <i class=\"fa fa-book\"></i>\r\n                        </span> {{link.url}}\r\n                    <br> {{link.title}}\r\n                </a>\r\n                <!--<button class=\"button\">复制地址</button>-->\r\n            </vue>\r\n            <div>\r\n                抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n                <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n                <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n                           {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n                        </a>\r\n            </div>\r\n\r\n            <p>\r\n                command:\r\n                <br> /game/bracket/clear\r\n                <br>/game/clear/bracketIdx\r\n                <br>/git/pull\r\n        </nav>\r\n        播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n            <p>\r\n                播放地址2:<input type=\"text\" v-model=\"playUrl2\" style=\"width: 1000px\">\r\n                <p>\r\n                    推流地址2:<input type=\"text\" v-model=\"rmtpUrl2\" style=\"width: 1000px\">\r\n                    <p>\r\n                        <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n                        <div id=\"qrcode\"></div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"' class=\"panel\">\r\n        <p class=\"panel-heading\">\r\n            亮了网后台数据导入8090\r\n        </p>\r\n        球员编号:<input type=\"text\" v-model=\"player_id\" style=\"width: 80px\" value=\"574\">\r\n        <button class=\"button is-primary\" @click=\"onSyncPlayerToStrapi(player_id)\">导入球员</button>\r\n        <button class=\"button is-primary\" @click=\"onPullPlayerData(player_id)\">8090球员</button>\r\n        <div class=\"container\" style=\"height: 700px\">\r\n            <h1>上传热门球员图片</h1>\r\n            <button class=\"button is-primary\" @click=\"onCrop(player_id)\">更新</button> {{playerInEdit | json}}\r\n            <img id=\"avatar\" alt=\"avatar\" style=\"max-width: 100%;\">\r\n            <input type=\"file\" class=\"sr-only\" id=\"input\" name=\"image\" accept=\"image/*\">\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <div class=\"tabs  is-boxed\">\r\n        <ul>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                <a>\r\n                    <span>home</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                <a>\r\n                    <span>热门球员编辑</span>\r\n                </a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n    <div v-if='actTab==\"tab1\"'>\r\n        <nav class=\"panel\">\r\n            <p class=\"panel-heading\">\r\n                直播面板op入口 Game ID: {{ selected }}\r\n                <span class=\"select\">\r\n                            <select v-model=\"selected\">\r\n                                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                                    {{ option.text }}\r\n                                </option>\r\n                            </select>\r\n                        </span>\r\n            </p>\r\n            <vue v-for=\"link in links\">\r\n                <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                    <span class=\"panel-icon\">\r\n                        <i class=\"fa fa-book\"></i>\r\n                        </span> {{link.url}}\r\n                    <br> {{link.title}}\r\n                </a>\r\n                <!--<button class=\"button\">复制地址</button>-->\r\n            </vue>\r\n            <div>\r\n                抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n                <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n                <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n                           {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n                        </a>\r\n            </div>\r\n\r\n            <p>\r\n                command:\r\n                <br> /game/bracket/clear\r\n                <br>/game/clear/bracketIdx\r\n                <br>/git/pull\r\n        </nav>\r\n        播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n            <p>\r\n                播放地址2:<input type=\"text\" v-model=\"playUrl2\" style=\"width: 1000px\">\r\n                <p>\r\n                    推流地址2:<input type=\"text\" v-model=\"rmtpUrl2\" style=\"width: 1000px\">\r\n                    <p>\r\n                        <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n                        <div id=\"qrcode\"></div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"' class=\"panel\">\r\n        <p class=\"panel-heading\">\r\n            亮了网后台数据导入8090\r\n        </p>\r\n        <!-- 球员编号:<input type=\"text\" v-model=\"player_id\" style=\"width: 80px\" value=\"574\">\r\n        <button class=\"button is-primary\" @click=\"onSyncPlayerToStrapi(player_id)\">导入球员</button>\r\n        <button class=\"button is-primary\" @click=\"onPullPlayerData(player_id)\">8090球员</button> -->\r\n        <div class=\"container\" style=\"height: 700px\">\r\n            <h1>上传热门球员图片</h1>\r\n            <button class=\"button is-primary\" @click=\"onUpload\">上传</button>\r\n            <input type=\"text\" v-model=\"imgBase64\" style=\"width: 200px;\">\r\n            <button class=\"button is-primary\" @click=\"onCrop(player_id)\">裁切</button>\r\n            <input type=\"file\" class=\"sr-only\" id=\"input\" name=\"image\" @change='onImgLoaded' accept=\"image/*\" hidden>\r\n            <div class='result'></div>\r\n            <img id=\"imgToDownload\" style=\"max-width: 100%;\">\r\n\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 27 */,
@@ -4749,7 +4724,6 @@
 	};
 	var PixiEx_1 = __webpack_require__(45);
 	var HupuAPI_1 = __webpack_require__(24);
-	var ImgLoader_1 = __webpack_require__(65);
 	var TextFac_1 = __webpack_require__(69);
 	var const_1 = __webpack_require__(42);
 	var JsFunc_1 = __webpack_require__(21);
@@ -4760,15 +4734,15 @@
 	        var _this = this;
 	        _super.call(this);
 	        this.curIdx = 0;
+	        this.texMap = {};
 	        console.log('live conf', conf);
 	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/studio/comingFg.png' }));
 	        var playerMask = PixiEx_1.newBitmap({ url: '/img/panel/studio/comingMask.png' });
 	        this.addChild(playerMask);
 	        this.avt = new PIXI.Sprite;
 	        this.addChild(this.avt);
-	        var s = 635 / 550;
-	        this.avt.x = -678 * s;
-	        this.avt.y = -185 * s;
+	        this.avt.x = 40;
+	        this.avt.y = 39;
 	        this.avt.mask = playerMask;
 	        var ns = {
 	            fontFamily: const_1.FontName.NotoSansHans,
@@ -4798,22 +4772,18 @@
 	                _this.showPlayer();
 	            }
 	        };
-	        HupuAPI_1.getTop5Data(function (res) {
-	            var d = JSON.parse(res);
-	            _this.infoArr = d;
-	            var tabArr = [];
-	            var imgArr = [];
-	            _this.cacheTime = new Date().getTime();
-	            for (var i = 0; i < 10; i++) {
-	                if (_this.infoArr[i]) {
-	                    imgArr.push(("/img/player/top5/" + _this.infoArr[i].img + ".png?t=") + _this.cacheTime);
-	                }
+	        HupuAPI_1.getTop5Data2(function (res2) {
+	            var playerArr = res2;
+	            playerArr.sort(JsFunc_1.ascendingProp('player_id'));
+	            console.log('top5 8090 playerArr', playerArr);
+	            for (var _i = 0, playerArr_1 = playerArr; _i < playerArr_1.length; _i++) {
+	                var player = playerArr_1[_i];
+	                player.hwa = [player.height, player.weight, player.age];
+	                player.name = player.live_name;
+	                player.info = player.brief;
 	            }
-	            console.log('top5 data2', res, _this.infoArr, imgArr);
-	            ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
-	                if (_this.infoArr.length)
-	                    _this.showPlayer();
-	            });
+	            _this.infoArr = playerArr;
+	            _this.showPlayer();
 	        });
 	        var gameId = conf.game_id;
 	        if (conf.address)
@@ -4853,17 +4823,22 @@
 	        }, 9000);
 	    }
 	    LiveComing.prototype.showPlayer = function () {
-	        var player = this.infoArr[this.curIdx];
-	        this.playerHWA.setText(player.hwa[2] + '岁 '
-	            + player.hwa[0] + 'cm '
-	            + player.hwa[1] + 'kg ');
-	        this.playerName.setText(player.name);
-	        var info = player.info.replace(/\n/g, ",");
-	        console.log('show info', info);
-	        this.playerInfo.setText(JsFunc_1.cnWrap(info, 20, 79));
-	        this.curIdx = (this.curIdx + 1) % this.infoArr.length;
-	        this.avt.texture = ImgLoader_1.imgLoader.getTex(("/img/player/top5/" + player.img + ".png?t=") + this.cacheTime);
-	        PixiEx_1.setScale(this.avt, 635 / 550);
+	        if (this.infoArr && this.infoArr.length) {
+	            var player = this.infoArr[this.curIdx];
+	            this.playerHWA.setText(player.hwa[2] + '岁 '
+	                + player.hwa[0] + 'cm '
+	                + player.hwa[1] + 'kg ');
+	            this.playerName.setText(player.name);
+	            var info = player.info.replace(/\n/g, ",");
+	            console.log('show info', info);
+	            this.playerInfo.setText(JsFunc_1.cnWrap(info, 20, 79));
+	            this.curIdx = (this.curIdx + 1) % this.infoArr.length;
+	            var idx = this.curIdx;
+	            if (!this.texMap[idx])
+	                this.texMap[idx] = PIXI.Texture.fromImage(player.avatar);
+	            this.avt.texture = this.texMap[idx];
+	            PixiEx_1.setScale(this.avt, 635 / 595);
+	        }
 	    };
 	    return LiveComing;
 	}(PIXI.Container));
@@ -8167,12 +8142,11 @@
 	var JsFunc_1 = __webpack_require__(21);
 	var HupuAPI_1 = __webpack_require__(24);
 	var BracketGroup_1 = __webpack_require__(70);
+	var TextFac_1 = __webpack_require__(69);
 	var Tab2 = (function (_super) {
 	    __extends(Tab2, _super);
 	    function Tab2() {
 	        _super.call(this);
-	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/top5/tabBg.png' });
-	        this.addChild(bg);
 	        var rs = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
 	            fontSize: '48px', fill: "#4d5167",
@@ -8216,44 +8190,32 @@
 	    __extends(Top5, _super);
 	    function Top5() {
 	        _super.apply(this, arguments);
-	        this.tabArr = [];
+	        this.texMap = {};
 	    }
 	    Top5.prototype.create = function (parent, data) {
 	        var _this = this;
 	        this.p = parent;
 	        var imgArr = [];
 	        this.curPlayer = new PIXI.Sprite();
+	        this.curPlayer.x = 487;
+	        this.curPlayer.y = 157;
 	        this.addChild(this.curPlayer);
-	        HupuAPI_1.getTop5Data(function (res) {
-	            var d = JSON.parse(res);
-	            console.log('top5 data', res, d);
-	            _this.infoArr = d;
-	            var tabArr = [];
-	            _this.cacheTime = new Date().getTime();
-	            for (var i = 0; i < 5; i++) {
-	                if (_this.infoArr[i]) {
-	                    var t = new Tab2();
-	                    _this.addChild(t);
-	                    _this.tabArr.push(t);
-	                    t.x = 253;
-	                    t.y = 204 + i * 125;
-	                    imgArr.push(("/img/player/top5/" + _this.infoArr[i].img + ".png?t=") + _this.cacheTime);
-	                    t.visible = false;
-	                    t.setInfo(_this.infoArr[i]);
-	                    tabArr.push(t);
-	                }
+	        HupuAPI_1.getTop5Data2(function (res2) {
+	            var playerArr = res2;
+	            playerArr.sort(JsFunc_1.ascendingProp('player_id'));
+	            console.log('top5 8090 playerArr', playerArr);
+	            for (var _i = 0, playerArr_1 = playerArr; _i < playerArr_1.length; _i++) {
+	                var player = playerArr_1[_i];
+	                player.hwa = [player.height, player.weight, player.age];
+	                player.name = player.live_name;
+	                player.info = player.brief;
 	            }
-	            imgArr.push('/img/panel/top5/bg.png');
+	            _this.infoArr = playerArr;
+	            imgArr = [];
+	            imgArr.push('/img/panel/top5/hotPlayerBg.png');
 	            ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
-	                tabArr.forEach(function (t) {
-	                    t.visible = true;
-	                });
-	                var bg = PixiEx_1.newBitmap({ url: '/img/panel/top5/bg.png' });
+	                var bg = PixiEx_1.newBitmap({ url: '/img/panel/top5/hotPlayerBg.png' });
 	                _this.addChildAt(bg, 0);
-	                var tagBg = PixiEx_1.newBitmap({ url: '/img/panel/top5/tag.png' });
-	                _this.addChild(tagBg);
-	                _this.tag2Bg = tagBg;
-	                _this.tag2Bg.visible = false;
 	                _this.initDetail();
 	                _this.show(data);
 	            });
@@ -8265,13 +8227,7 @@
 	        if (data.gameIdxArr) {
 	            var a = data.gameIdxArr.split(' ');
 	            if (a.length > 1) {
-	                for (var i = 0; i < this.tabArr.length; i++) {
-	                    var t = this.tabArr[i];
-	                    if (a[i])
-	                        t.setGameIdx(a[i]);
-	                    else
-	                        t.setGameIdx(0);
-	                }
+	                this.playerGameIdx.setText("\u5373\u5C06\u5728\u5E2D\u4F4D\u6218" + JsFunc_1.paddy(data.idx, 2) + "\u767B\u573A");
 	            }
 	        }
 	        this.p.addChild(this);
@@ -8279,7 +8235,9 @@
 	    Top5.prototype.setTab = function (idx) {
 	        idx = Number(idx);
 	        var data = this.infoArr[idx - 1];
-	        this.curPlayer.texture = ImgLoader_1.imgLoader.getTex(("/img/player/top5/" + data.img + ".png?t=") + this.cacheTime);
+	        if (!this.texMap[idx])
+	            this.texMap[idx] = PIXI.Texture.fromImage(data.avatar);
+	        this.curPlayer.texture = this.texMap[idx];
 	        this.setDetail(data);
 	    };
 	    Top5.prototype.setDetail = function (data) {
@@ -8291,12 +8249,8 @@
 	                + data.hwa[2] + ' 岁';
 	        this.info.text = data.info;
 	        this.tag2.text = '';
-	        this.tag2Bg.visible = false;
 	        var a = data.tag1.split(' ');
 	        if (a.length == 2) {
-	            this.tag2Bg.x = this.tag2.x - 28;
-	            this.tag2Bg.y = this.tag2.y - 14;
-	            this.tag2Bg.visible = true;
 	            this.tag1.text = a[0];
 	            this.tag2.text = a[1];
 	        }
@@ -8306,14 +8260,14 @@
 	    Top5.prototype.initDetail = function () {
 	        var rs = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '33px', fill: "#2e3352",
+	            fontSize: '33px', fill: "#515151",
 	            fontWeight: 'bold'
 	        };
 	        var pn = new PIXI.Text('', rs);
 	        this.playerName = pn;
 	        this.addChild(pn);
-	        pn.x = 1146;
-	        pn.y = 228;
+	        pn.x = 1018;
+	        pn.y = 228 - 66;
 	        var hupuID = new PIXI.Text('', rs);
 	        this.hupuID = hupuID;
 	        hupuID.x = pn.x;
@@ -8322,27 +8276,24 @@
 	        this.hwa = hwa;
 	        this.addChild(hwa);
 	        hwa.x = pn.x;
-	        hwa.y = 304;
+	        hwa.y = 304 - 53;
 	        var tag1 = new PIXI.Text('', rs);
 	        this.tag1 = tag1;
 	        this.addChild(tag1);
 	        tag1.x = pn.x;
-	        tag1.y = 380;
+	        tag1.y = 380 - 36;
 	        var tag2 = new PIXI.Text('', rs);
 	        this.tag2 = tag2;
 	        this.addChild(tag2);
-	        tag2.x = tag1.x + 280;
+	        tag2.x = tag1.x + 230;
 	        tag2.y = tag1.y;
 	        var info = new PIXI.Text('', rs);
 	        this.info = info;
 	        this.addChild(info);
 	        info.x = pn.x;
-	        info.y = 470;
-	        rs.fontSize = '48px';
-	        var title = new PIXI.Text('夺冠热门球员', rs);
-	        this.addChild(title);
-	        title.x = 960 - title.width * .5;
-	        title.y = 120;
+	        info.y = 470 - 46;
+	        this.playerGameIdx = TextFac_1.TextFac.new_(rs, this)
+	            .setPos(pn.x, 701);
 	    };
 	    Top5.prototype.hide = function () {
 	        if (this.parent)
