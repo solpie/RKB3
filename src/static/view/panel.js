@@ -8252,9 +8252,8 @@
 	        this.info.text = data.info;
 	        this.tag2.text = '';
 	        var a = data.tag1.split(' ');
-	        if (a.length == 2) {
-	            this.tag1.text = a[0];
-	            this.tag2.text = a[1];
+	        if (data.tag2) {
+	            this.tag1.text = data.tag1 + " , " + data.tag2;
 	        }
 	        else
 	            this.tag1.text = data.tag1;
