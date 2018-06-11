@@ -159,7 +159,7 @@ export class LiveComing extends PIXI.Container {
                 + player.hwa[1] + 'kg '
             )
             this.playerName.setText(player.name)
-            let info = player.info.replace(/\n/g, ",")
+            let info = player.info.replace(/\r\n/g, ",")
             console.log('show info', info);
             this.playerInfo.setText(cnWrap(info, 20, 79))
 

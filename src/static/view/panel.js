@@ -4831,7 +4831,7 @@
 	                + player.hwa[0] + 'cm '
 	                + player.hwa[1] + 'kg ');
 	            this.playerName.setText(player.name);
-	            var info = player.info.replace(/\n/g, ",");
+	            var info = player.info.replace(/\r\n/g, ",");
 	            console.log('show info', info);
 	            this.playerInfo.setText(JsFunc_1.cnWrap(info, 20, 79));
 	            this.curIdx = (this.curIdx + 1) % this.infoArr.length;
