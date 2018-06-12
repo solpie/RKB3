@@ -852,6 +852,22 @@
 	    WebJsFunc_1.$post(url, file, callback);
 	}
 	exports.uploadImage = uploadImage;
+	var _put = function (url, data, callback) {
+	    var strJson = JSON.stringify(data);
+	    console.log('strJson', strJson);
+	    $.ajax(url, {
+	        method: 'PUT',
+	        processData: false,
+	        contentType: 'application/json',
+	        data: strJson,
+	        success: callback,
+	    });
+	};
+	function updateLiveConf(data, callback) {
+	    var url = 'http://rtmp.icassi.us:8090/live/' + data._id;
+	    _put(url, data, callback);
+	}
+	exports.updateLiveConf = updateLiveConf;
 	function updatePlayer(playerData, callback) {
 	    var strJson = JSON.stringify(playerData);
 	    console.log('strJson', strJson);
@@ -872,6 +888,25 @@
 	    _get(WebJsFunc_1.proxy(url), callback);
 	}
 	exports.getPlayer = getPlayer;
+	function getPlayerArr(player_idArr, callback) {
+	    var a = player_idArr.split('-');
+	    a.reverse();
+	    var resArr = [];
+	    console.log('get player arr', a);
+	    var recurGet = function (arr) {
+	        if (a.length > 0) {
+	            var player_id = a.pop();
+	            getPlayer(player_id, function (res) {
+	                resArr.push(res[0]);
+	                recurGet(a);
+	            });
+	        }
+	        else
+	            callback(resArr);
+	    };
+	    recurGet(a);
+	}
+	exports.getPlayerArr = getPlayerArr;
 
 
 /***/ },

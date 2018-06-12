@@ -127,6 +127,23 @@ export function uploadImage(file, callback) {
     let url = 'http://rtmp.icassi.us:8090/upload'
     $post(url, file, callback)
 }
+let _put = (url, data, callback) => {
+    let strJson = JSON.stringify(data)
+    console.log('strJson', strJson);
+    $.ajax(url, {
+        method: 'PUT',
+        processData: false,
+        contentType: 'application/json',
+        data: strJson,
+        success: callback,
+    })
+}
+export function updateLiveConf(data, callback) {
+    let url = 'http://rtmp.icassi.us:8090/live/' + data._id
+    _put(url, data, callback)
+}
+
+
 export function updatePlayer(playerData, callback) {
     let strJson = JSON.stringify(playerData)
     console.log('strJson', strJson);
@@ -145,4 +162,23 @@ export let getTop5Data2 = (callback) => {
 export function getPlayer(player_id, callback) {
     let url = 'http://rtmp.icassi.us:8090/player?player_id=' + player_id
     _get(proxy(url), callback)
+}
+
+export function getPlayerArr(player_idArr, callback) {
+    let a = player_idArr.split('-')
+    a.reverse()
+    let resArr = []
+    console.log('get player arr',a);
+    let recurGet = (arr) => {
+        if (a.length > 0) {
+            let player_id = a.pop()
+            getPlayer(player_id, res => {
+                resArr.push(res[0])
+                recurGet(a)
+            })
+        }
+        else
+            callback(resArr)
+    }
+    recurGet(a)
 }

@@ -1,5 +1,5 @@
 import { newBitmap, setScale } from '../../../utils/PixiEx';
-import { getTop5Data, getRoundList, getTop5Data2 } from "../../../utils/HupuAPI";
+import { getTop5Data, getRoundList, getTop5Data2, getPlayerArr } from '../../../utils/HupuAPI';
 import { imgLoader } from "../../../utils/ImgLoader";
 import { Text2, TextFac } from '../../../utils/TextFac';
 import { FontName } from "../../../const";
@@ -68,42 +68,36 @@ export class LiveComing extends PIXI.Container {
                 this.showPlayer()
             }
         }
-        getTop5Data2(res2 => {
-            let playerArr: Array<any> = res2
-            playerArr.sort(ascendingProp('player_id'))
-            console.log('top5 8090 playerArr', playerArr);
-            for (let player of playerArr) {
+        let starPlayerArr = conf.star_players.split('-')
+        getPlayerArr(conf.star_players, pArr => {
+            console.log('pArr', pArr);
+            for (let player of pArr) {
                 player.hwa = [player.height, player.weight, player.age]
                 player.name = player.live_name
                 player.info = player.brief
             }
-            this.infoArr = playerArr
-
+            this.infoArr = pArr
             this.showPlayer()
+            
         })
-
-
-        // getTop5Data(res => {
-        //     let d = JSON.parse(res)
-        //     this.infoArr = d// JSON.parse(res)
-        //     let tabArr = []
-        //     let imgArr = []
-        //     this.cacheTime = new Date().getTime()
-        //     for (let i = 0; i < 10; i++) {
-        //         if (this.infoArr[i]) {
-        //         imgArr.push(`/img/player/top5/${this.infoArr[i].img}.png?t=` + this.cacheTime)
-        //         //     this.infoArr[i] //player info
+        // getTop5Data2(res2 => {
+        //     let playerArr: Array<any> = res2
+        //     playerArr.sort(ascendingProp('player_id'))
+        //     let a = []
+        //     for (let player of playerArr) {
+        //         player.hwa = [player.height, player.weight, player.age]
+        //         player.name = player.live_name
+        //         player.info = player.brief
+        //         if (starPlayerArr.indexOf(player.player_id) > 0) {
+        //             a.push(player)
         //         }
         //     }
+        //     console.log('top5 8090 star  playerArr', a);
+        //     this.infoArr = a
 
-        //     console.log('top5 data2', res, this.infoArr, imgArr);
-        //     // imgArr.push('/img/panel/top5/bg.png')
-
-        //     imgLoader.loadTexArr(imgArr, _ => {
-        //         if (this.infoArr.length)
-        //             this.showPlayer()
-        //     })
+        //     this.showPlayer()
         // })
+
 
 
         let gameId = conf.game_id

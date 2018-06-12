@@ -3,7 +3,7 @@ import { imgLoader } from '../../../utils/ImgLoader';
 import { FontName } from '../../../const';
 import { paddy, ascendingProp } from '../../../utils/JsFunc';
 import { $post } from '../../../utils/WebJsFunc';
-import { getTop5Data, getTop5Data2 } from '../../../utils/HupuAPI';
+import { getTop5Data, getTop5Data2, getLive, getPlayerArr } from '../../../utils/HupuAPI';
 import { fitWidth } from '../bracket/BracketGroup';
 import { Text2, TextFac } from '../../../utils/TextFac';
 class Tab2 extends PIXI.Container {
@@ -83,26 +83,45 @@ export class Top5 extends PIXI.Container {
         this.curPlayer.x = 487
         this.curPlayer.y = 157
         this.addChild(this.curPlayer)
-        getTop5Data2(res2 => {
-            let playerArr: Array<any> = res2
-            playerArr.sort(ascendingProp('player_id'))
-            console.log('top5 8090 playerArr', playerArr);
-            for (let player of playerArr) {
-                player.hwa = [player.height, player.weight, player.age]
-                player.name = player.live_name
-                player.info = player.brief
-            }
-            this.infoArr = playerArr
-            imgArr = []
-            imgArr.push('/img/panel/top5/hotPlayerBg.png')
+        getLive(conf => {
+            getPlayerArr(conf.star_players, playerArr => {
+                for (let player of playerArr) {
+                    player.hwa = [player.height, player.weight, player.age]
+                    player.name = player.live_name
+                    player.info = player.brief
+                }
+                this.infoArr = playerArr
+                imgArr = []
+                imgArr.push('/img/panel/top5/hotPlayerBg.png')
 
-            imgLoader.loadTexArr(imgArr, _ => {
-                let bg = newBitmap({ url: '/img/panel/top5/hotPlayerBg.png' })
-                this.addChildAt(bg, 0)
-                this.initDetail()
-                this.show(data)
+                imgLoader.loadTexArr(imgArr, _ => {
+                    let bg = newBitmap({ url: '/img/panel/top5/hotPlayerBg.png' })
+                    this.addChildAt(bg, 0)
+                    this.initDetail()
+                    this.show(data)
+                })
             })
         })
+        // getTop5Data2(res2 => {
+        //     let playerArr: Array<any> = res2
+        //     playerArr.sort(ascendingProp('player_id'))
+        //     console.log('top5 8090 playerArr', playerArr);
+        //     for (let player of playerArr) {
+        //         player.hwa = [player.height, player.weight, player.age]
+        //         player.name = player.live_name
+        //         player.info = player.brief
+        //     }
+        //     this.infoArr = playerArr
+        //     imgArr = []
+        //     imgArr.push('/img/panel/top5/hotPlayerBg.png')
+
+        //     imgLoader.loadTexArr(imgArr, _ => {
+        //         let bg = newBitmap({ url: '/img/panel/top5/hotPlayerBg.png' })
+        //         this.addChildAt(bg, 0)
+        //         this.initDetail()
+        //         this.show(data)
+        //     })
+        // })
     }
     show(data) {
         console.log('show player ', data);

@@ -39,6 +39,7 @@ class HomeView extends VueBase {
     fileCrop = VueBase.PROP;
     cropper = VueBase.PROP;
     playerInEdit = VueBase.PROP
+    playerArrStr = VueBase.PROP
     imgBase64 = VueBase.PROP
     qrcode;
     constructor() {
@@ -211,7 +212,19 @@ class HomeView extends VueBase {
             getPlayer(player_id, res => {
                 console.log('8090', res);
                 this.playerInEdit = JSON.parse(JSON.stringify(res[0]))
+                let img = document.createElement('img');
+                img.id = 'imagePreview';
+                img.src = this.playerInEdit.avatar
+                let result = document.querySelector('.preview')
+                result.innerHTML = ''
+                result.appendChild(img);
             })
+        },
+        onSetStarPlayer(playerArrStr) {
+            let a = playerArrStr.split('-')
+            if (a.length > 0) {
+                
+            }
         },
         onCrop() {
             // if (this.playerInEdit.player_id) {
@@ -230,63 +243,6 @@ class HomeView extends VueBase {
                     alert('头像上传成功!')
                 })
             })
-
-            // navigator.clipboard.writeText(base64).then(function () {
-            //     console.log('Async: Copying to clipboard was successful!');
-            // }, function (err) {
-            //     console.error('Async: Could not copy text: ', err);
-            // });
-            // $('#input').show()
-            // cropper.getCroppedCanvas().toBlob((blob) => {
-            //     var formData = new FormData();
-            //     formData.append('files', blob, 'player.png');
-            //     console.log('blob', blob);
-            //     $.ajax('http://rtmp.icassi.us:8090/upload', {
-            //         method: 'POST',
-            //         data: formData,
-            //         processData: false,
-            //         contentType: false,
-            //         xhr: () => {
-            //             var xhr = new XMLHttpRequest();
-            //             xhr.upload.onprogress = function (e) {
-            //                 var percent = '0';
-            //                 var percentage = '0%';
-            //                 if (e.lengthComputable) {
-            //                     percent = Math.round((e.loaded / e.total) * 100) + '';
-            //                     percentage = percent + '%';
-            //                     console.log('upload', percentage);
-            //                 }
-            //             };
-            //             return xhr;
-            //         },
-            //         success: (res) => {
-            //             console.log('on uploaded', res);
-            //             let img = res[0]
-                        // getPlayer(this.playerInEdit.player_id, res1 => {
-                        //     let player = res1[0]
-                        //     img.related.push(player._id)
-                        //     player.hot_player = img
-                        //     console.log('update player1', player);
-                        //     updatePlayer({ '_id': player._id, 'hot_player': img }, res => {
-                        //         console.log('update player done!!!!!!', res);
-                        //     })
-                        // })
-            //         },
-            //         error: function () {
-            //             // avatar['src'] = initialAvatarURL;
-            //             // $alert.show().addClass('alert-warning').text('Upload error');
-            //         },
-            //         complete: function () {
-            //             console.log('on complete');
-            //             // alert('上传成功')
-            //         },
-            //     });
-            // });
-            // }
-            // else {
-
-            // }
-
         },
         onClkQRCode() {
             // this.genQRCode()
