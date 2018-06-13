@@ -65,11 +65,12 @@
             <p class="panel-heading">
                 亮了网后台数据导入8090
             </p>
-            <input type="text" v-model="player_id" style="width: 50px;">
+            球员编号player_id
+            <input type="text" v-model="player_id" style="width: 100px;">
             <button class="button is-primary" @click="onSyncPlayerToStrapi(player_id)">导入亮了网球员</button>
-            <button class="button is-primary" @click="onPullPlayerData(player_id)">导入8090球员</button>
-            <input type="text" v-model="playerArrStr" style="width: 150px;">
-            <button class="button is-primary" @click="onSetStarPlayer(playerArrStr)">设定热门球员</button>
+            <button class="button is-primary" @click="onPullPlayerData(player_id)">编辑8090球员</button>
+            <!-- <input type="text" v-model="playerArrStr" style="width: 150px;">
+            <button class="button is-primary" @click="onSetStarPlayer(playerArrStr)">设定热门球员</button> -->
             <div v-if='playerInEdit'>
                 <div class="container" style="height: 700px">
                     <h1>上传热门球员图片</h1>
