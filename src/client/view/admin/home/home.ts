@@ -198,7 +198,9 @@ class HomeView extends VueBase {
                         console.log(player);
                         
                         createPlayer({
-                            'player_id': Number(player.player_id), 'name': player.name,
+                            'player_id': Number(player.player_id),
+                            'name': player.name,
+                            'live_name': player.name,
                             'height':player.height,
                             'weight':player.weight,
                             'age':player.age,
