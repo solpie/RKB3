@@ -192,16 +192,23 @@ class HomeView extends VueBase {
         onSyncPlayerToStrapi(player_id) {
             if (player_id != '') {
                 getPlayerInfoFromLiangle(player_id, res1 => {
-                    console.log(res1);
+                    // console.log(res1);
                     if (res1.data && res1.data.name) {
                         let player = res1.data
-                        createPlayer({ 'player_id': Number(player.player_id), 'name': player.name, 'raw': JSON.stringify(player) }, res => {
+                        console.log(player);
+                        
+                        createPlayer({
+                            'player_id': Number(player.player_id), 'name': player.name,
+                            'height':player.height,
+                            'weight':player.weight,
+                            'age':player.age,
+                            'raw': JSON.stringify(player)
+                        }, res => {
                             console.log('on create player', res);
                             alert(JSON.stringify(res))
+                        }, e => {
+                            alert('导入失败')
                         })
-                    }
-                    else {
-                        alert('无法在亮了网后台找到 球员编号' + player_id)
                     }
                 })
             }
@@ -223,7 +230,7 @@ class HomeView extends VueBase {
         onSetStarPlayer(playerArrStr) {
             let a = playerArrStr.split('-')
             if (a.length > 0) {
-                
+
             }
         },
         onCrop() {

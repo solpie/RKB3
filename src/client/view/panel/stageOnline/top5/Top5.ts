@@ -129,8 +129,7 @@ export class Top5 extends PIXI.Container {
         if (data.gameIdxArr) {
             let a = data.gameIdxArr.split(' ')
             if (a.length > 1) {
-                this.playerGameIdx.setText(`即将在席位战${paddy(data.idx, 2)}登场`)
-
+                this.playerGameIdx.setText(`即将在席位战${paddy(a[Number(data.idx - 1)], 2)}登场`)
             }
         }
         this.p.addChild(this)

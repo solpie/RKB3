@@ -119,9 +119,9 @@ export function getLive(callback) {
         callback(res[2])
     })
 }
-export function createPlayer(data, callback) {
+export function createPlayer(data, callback, errorCallback) {
     let url = 'http://rtmp.icassi.us:8090/player'
-    $post(url, data, callback)
+    $post(url, data, callback, errorCallback)
 }
 export function uploadImage(file, callback) {
     let url = 'http://rtmp.icassi.us:8090/upload'
@@ -168,7 +168,7 @@ export function getPlayerArr(player_idArr, callback) {
     let a = player_idArr.split('-')
     a.reverse()
     let resArr = []
-    console.log('get player arr',a);
+    console.log('get player arr', a);
     let recurGet = (arr) => {
         if (a.length > 0) {
             let player_id = a.pop()

@@ -842,9 +842,9 @@
 	    });
 	}
 	exports.getLive = getLive;
-	function createPlayer(data, callback) {
+	function createPlayer(data, callback, errorCallback) {
 	    var url = 'http://rtmp.icassi.us:8090/player';
-	    WebJsFunc_1.$post(url, data, callback);
+	    WebJsFunc_1.$post(url, data, callback, errorCallback);
 	}
 	exports.createPlayer = createPlayer;
 	function uploadImage(file, callback) {
@@ -964,14 +964,15 @@
 	    return OpReq;
 	}());
 	exports.OpReq = OpReq;
-	exports.$post = function (url, data, callback) {
+	exports.$post = function (url, data, callback, error) {
 	    $.ajax({
 	        url: url,
 	        type: 'post',
 	        data: JSON.stringify(data),
 	        headers: { "Content-Type": "application/json" },
 	        dataType: 'json',
-	        success: callback
+	        success: callback,
+	        error: error
 	    });
 	};
 
