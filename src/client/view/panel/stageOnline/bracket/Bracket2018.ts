@@ -105,7 +105,11 @@ export class Bracket2018 extends PIXI.Container {
         }
         for (let gameIdx in res.data) {
             let dataObj = res.data[gameIdx];
+
             let gsp = this.groupSpMap[gameIdx] as BracketGroup2018
+            if (!gsp) {
+                continue;
+            }
             // group1.idx = Number(gameIdx);
             gsp.setGameIdx(gameIdx)
             if (Number(dataObj.left.score) || Number(dataObj.right.score)) {

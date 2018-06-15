@@ -5982,6 +5982,9 @@
 	        for (var gameIdx in res.data) {
 	            var dataObj = res.data[gameIdx];
 	            var gsp = this.groupSpMap[gameIdx];
+	            if (!gsp) {
+	                continue;
+	            }
 	            gsp.setGameIdx(gameIdx);
 	            if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
 	                closeGame[gameIdx] = true;
