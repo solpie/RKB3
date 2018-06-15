@@ -6,7 +6,7 @@ import { CommandId } from '../../../Command';
 import { getHupuWS, getPreRoundPlayer } from '../../../utils/HupuAPI';
 import { BasePanelView } from "../../BasePanelView";
 import { PanelId, ViewConst, FontName } from "../../../const";
-import { fitWidth, groupPosMap, PlayerSvg } from './BracketGroup';
+import { fitWidth, groupPosMap } from './BracketGroup';
 import { newBitmap } from "../../../utils/PixiEx";
 import { drawLine1, drawLine2, drawLine4 } from "./GroupLine";
 import { blink2 } from "../../../utils/Fx";
