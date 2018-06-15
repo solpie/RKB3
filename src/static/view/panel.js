@@ -4720,6 +4720,7 @@
 	    p2.y = p1.y + 50;
 	    return {
 	        x: x, y: y, labels: [p1, p2], hints: hints,
+	        p2y: parameters.p2y,
 	        winIdx: -1,
 	        scores: [s1, s2]
 	    };
@@ -4733,40 +4734,23 @@
 	    }
 	}
 	exports.fitWidth = fitWidth;
-	var l1 = 290;
+	var c1 = 92, y1 = 60, c2 = 531;
 	exports.groupPosMap = {
-	    "1": _mkGroup({ x: l1, y: 91, hints: ['1号种子 ', "8号种子 "] }),
-	    "2": _mkGroup({ x: l1, y: 95 + 137, hints: ['4号种子 ', "5号种子 "] }),
-	    "3": _mkGroup({ x: l1, y: 95 + 145 * 2 + 18, hints: ['2号种子 ', "7号种子 "] }),
-	    "4": _mkGroup({ x: l1, y: 95 + 145 * 3 + 14, hints: ['3号种子 ', "6号种子 "] }),
-	    "5": _mkGroup({ x: l1, y: 756, hints: ['第1场败者 ', "第2场败者 "] }),
-	    "6": _mkGroup({ x: l1, y: 755 + 142, hints: ['第3场败者 ', "第4场败者 "] }),
-	    "7": _mkGroup({ x: 671, y: 162 }),
-	    "8": _mkGroup({ x: 671, y: 476 }),
-	    "9": _mkGroup({ x: 671, y: 843, hints: ['第7场败者 ', ""] }),
+	    "1": _mkGroup({ x: c1, y: y1, p2y: 96, hints: ['1号种子 ', "8号种子 "] }),
+	    "2": _mkGroup({ x: c1, y: y1 + 175, p2y: 96, hints: ['4号种子 ', "5号种子 "] }),
+	    "3": _mkGroup({ x: c1, y: y1 + 175 * 2, p2y: 96, hints: ['2号种子 ', "7号种子 "] }),
+	    "4": _mkGroup({ x: c1, y: y1 + 175 * 3, p2y: 96, hints: ['3号种子 ', "6号种子 "] }),
+	    "5": _mkGroup({ x: c1, y: 756, hints: ['第1场败者 ', "第2场败者 "] }),
+	    "6": _mkGroup({ x: c1, y: 897, hints: ['第3场败者 ', "第4场败者 "] }),
+	    "7": _mkGroup({ x: c2, y: 114, p2y: 174 }),
+	    "8": _mkGroup({ x: c2, y: 462, p2y: 174 }),
+	    "9": _mkGroup({ x: c2, y: 843, hints: ['第7场败者 ', ""] }),
 	    "10": _mkGroup({ x: 671, y: 701, hints: ['第8场败者 ', ""] }),
-	    "11": _mkGroup({ x: 1067, y: 319 }),
-	    "12": _mkGroup({ x: 1067, y: 760 }),
-	    "13": _mkGroup({ x: 1368, y: 720, hints: ['第11场败者 ', ""] }),
-	    "14": _mkGroup({ x: 1463, y: 319, hints: ['', "第13场胜者 "] }),
+	    "11": _mkGroup({ x: 995, y: 319 }),
+	    "12": _mkGroup({ x: 995, y: 760 }),
+	    "13": _mkGroup({ x: c2, y: 802, p2y: 176, hints: [' ', ""] }),
+	    "14": _mkGroup({ x: 952, y: 196, p2y: 350, hints: ['', " "] }),
 	};
-	var BracketGroup = (function () {
-	    function BracketGroup(idx) {
-	        this.idx = idx;
-	        this.playerArr = [new PlayerSvg, new PlayerSvg];
-	    }
-	    return BracketGroup;
-	}());
-	exports.BracketGroup = BracketGroup;
-	var PlayerSvg = (function () {
-	    function PlayerSvg() {
-	        this.isHint = false;
-	        this.isWin = false;
-	        this.score = 0;
-	    }
-	    return PlayerSvg;
-	}());
-	exports.PlayerSvg = PlayerSvg;
 
 
 /***/ },
@@ -5923,12 +5907,15 @@
 	        });
 	        bg.alpha = 0.8;
 	        this.addChild(bg);
-	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/bracket/s4/route.png' }));
+	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/bracket/s4v3/route.png' }));
 	        var hintCtn = new PIXI.Container();
 	        this.addChild(hintCtn);
 	        this.groupSpMap = [];
-	        JsFunc_1.loadImg('/img/panel/bracket/s4/group.png', function (img) {
+	        var bypass = [5, 6, 9, 10, 11, 12];
+	        JsFunc_1.loadImg('/img/panel/bracket/s4v3/playerBg.png', function (img) {
 	            for (var i = 0; i < 14; i++) {
+	                if (bypass.indexOf(i + 1) > -1)
+	                    continue;
 	                var gsp = new BracketGroup2018_1.BracketGroup2018(PixiEx_1.imgToTex(img));
 	                var gameIdx = i + 1;
 	                _this.groupSpMap[gameIdx] = gsp;
@@ -5937,11 +5924,25 @@
 	                gsp.x = g.x;
 	                gsp.y = g.y;
 	                _this.addChild(gsp);
+	                if (g.p2y != undefined) {
+	                    gsp.setP2Y(g.p2y);
+	                }
+	                else {
+	                }
 	            }
+	            var gsp14winner = new BracketGroup2018_1.BracketGroup2018(PixiEx_1.imgToTex(img), true);
+	            gsp14winner.x = 1434;
+	            gsp14winner.y = 369 - 8;
+	            _this.addChild(gsp14winner);
+	            _this.groupSpMap[14.1] = gsp14winner;
+	            var gsp13winner = new BracketGroup2018_1.BracketGroup2018(PixiEx_1.imgToTex(img));
+	            gsp13winner.x = 956;
+	            gsp13winner.y = 880;
+	            _this.addChild(gsp13winner);
+	            _this.groupSpMap[13.1] = gsp13winner;
 	        });
 	        this.comingTitle = PixiEx_1.newBitmap({ url: '/img/panel/bracket/s4/focus.png' });
 	        this.comingTitle.visible = false;
-	        this.addChild(this.comingTitle);
 	    }
 	    Bracket2018.prototype.setWinHint = function (sp, isFlip) {
 	        if (isFlip === void 0) { isFlip = false; }
@@ -5966,6 +5967,18 @@
 	    Bracket2018.prototype.onBracketData = function (res) {
 	        var closeGame = {};
 	        console.log('onBracketData', res.data);
+	        var fillWinner = function (gsp, dataObj) {
+	            var lScore = Number(dataObj.left.score);
+	            var rScore = Number(dataObj.right.score);
+	            if (lScore || rScore) {
+	                if (lScore > rScore) {
+	                    gsp.setLeftName(dataObj.left.name);
+	                }
+	                else {
+	                    gsp.setLeftName(dataObj.right.name);
+	                }
+	            }
+	        };
 	        for (var gameIdx in res.data) {
 	            var dataObj = res.data[gameIdx];
 	            var gsp = this.groupSpMap[gameIdx];
@@ -5984,6 +5997,14 @@
 	                gsp.setRightName(dataObj.right.name);
 	            else
 	                gsp.setRightName(hints ? hints[1] : '', true);
+	            if (Number(gameIdx) == 13) {
+	                gsp = this.groupSpMap[13.1];
+	                fillWinner(gsp, dataObj);
+	            }
+	            if (Number(gameIdx) == 14) {
+	                gsp = this.groupSpMap[14.1];
+	                fillWinner(gsp, dataObj);
+	            }
 	        }
 	        var comingIdx = 1;
 	        for (var i = 0; i < 14; i++) {
@@ -5993,7 +6014,6 @@
 	                break;
 	            }
 	        }
-	        this.showComingIdx(comingIdx);
 	    };
 	    return Bracket2018;
 	}(PIXI.Container));
@@ -6014,15 +6034,20 @@
 	var PixiEx_1 = __webpack_require__(45);
 	var BracketGroup2018 = (function (_super) {
 	    __extends(BracketGroup2018, _super);
-	    function BracketGroup2018(bgTex) {
+	    function BracketGroup2018(bgTex, isLarge) {
 	        _super.call(this);
 	        var bg = new PIXI.Sprite();
 	        bg.texture = bgTex;
 	        this.addChild(bg);
-	        PixiEx_1.setScale(bg, 1);
+	        var p2 = new PIXI.Sprite();
+	        p2.texture = bgTex;
+	        this.addChild(p2);
+	        this.p2 = p2;
+	        this.p2.visible = false;
+	        PixiEx_1.setScale(p2, bg.scale.x);
 	        var ns = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '30px', fill: "#fff",
+	            fontSize: '32px', fill: "#8f8f8f",
 	            fontWeight: 'bold'
 	        };
 	        var lName = new PIXI.Text('', ns);
@@ -6032,67 +6057,46 @@
 	        this.addChild(lName);
 	        var rName = new PIXI.Text('', ns);
 	        this.rName = rName;
-	        rName.y = 80;
+	        rName.y = 84;
 	        this.rName.x = this.lName.x;
 	        this.addChild(rName);
-	        var gs = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '28px', fill: "#333",
-	            fontWeight: 'bold'
-	        };
-	        var gameIdx = new PIXI.Text('', gs);
-	        this.addChild(gameIdx);
-	        gameIdx.x = -15;
-	        gameIdx.y = 49;
-	        this.gameIdx = gameIdx;
 	        var ss = {
-	            fontFamily: const_1.FontName.Impact,
-	            fontSize: '30px', fill: "#369beb",
-	            stroke: '#4a1850',
-	            strokeThickness: 5,
-	            dropShadow: true,
-	            dropShadowColor: '#000000',
-	            dropShadowBlur: 2,
-	            dropShadowAngle: Math.PI / 6,
-	            dropShadowDistance: 2,
+	            fontFamily: const_1.FontName.dinCondensedC,
+	            fontSize: '32px', fill: "#9ba0bd",
 	        };
 	        var lScore = new PIXI.Text('', ss);
 	        this.lScore = lScore;
 	        this.addChild(lScore);
-	        ss.fill = '#ff1919';
 	        var rScore = new PIXI.Text('', ss);
 	        this.rScore = rScore;
 	        this.addChild(rScore);
+	        if (isLarge)
+	            PixiEx_1.setScale(this, 390 / 294);
 	    }
+	    BracketGroup2018.prototype.setP2Y = function (y) {
+	        this.p2.visible = true;
+	        this.p2.y = y;
+	        this.rName.y = y + 5;
+	    };
 	    BracketGroup2018.prototype.setLeftName = function (str, isHint) {
 	        if (isHint === void 0) { isHint = false; }
 	        this.lName.text = str.toUpperCase();
-	        this.lName.x = 111 - 0.5 * this.lName.width;
-	        if (isHint)
-	            this.lName.alpha = 0.3;
-	        else
-	            this.lName.alpha = 1;
+	        this.lName.x = 164 - 0.5 * this.lName.width;
 	    };
 	    BracketGroup2018.prototype.setRightName = function (str, isHint) {
 	        if (isHint === void 0) { isHint = false; }
 	        this.rName.text = str.toUpperCase();
-	        this.rName.x = 111 - 0.5 * this.rName.width;
-	        if (isHint)
-	            this.rName.alpha = 0.3;
-	        else
-	            this.rName.alpha = 1;
+	        this.rName.x = 164 - 0.5 * this.rName.width;
 	    };
 	    BracketGroup2018.prototype.setScore = function (left, right) {
 	        this.lScore.text = left + "";
 	        this.rScore.text = right + "";
 	        this.lScore.x =
-	            this.rScore.x = 232;
-	        this.lScore.y = this.lName.y;
-	        this.rScore.y = this.rName.y;
+	            this.rScore.x = 19;
+	        this.lScore.y = this.lName.y + 5;
+	        this.rScore.y = this.rName.y + 5;
 	    };
 	    BracketGroup2018.prototype.setGameIdx = function (gameIdx) {
-	        this.gameIdx.text = gameIdx + '.';
-	        this.gameIdx.x = -3 - this.gameIdx.width;
 	    };
 	    return BracketGroup2018;
 	}(PIXI.Container));
@@ -8914,19 +8918,23 @@
 	        console.log('gameIdx', gameIdx, 'type', type);
 	        var gameIdxNum = '' + JsFunc_1.paddy(gameIdx, 2);
 	        if (type == 2) {
+	            gameIdxNum = '第' + gameIdxNum + '场';
 	            if (this.to8.indexOf(gameIdx) > -1)
-	                this.gameTitle.text = '八强分组赛';
+	                this.gameTitle.text = '大师赛八强';
 	            else if (this.to6.indexOf(gameIdx) > -1)
 	                this.gameTitle.text = '六强争夺赛';
-	            else if (this.to4.indexOf(gameIdx) > -1)
-	                this.gameTitle.text = '四强争夺赛';
+	            else if (this.to4.indexOf(gameIdx) > -1) {
+	                gameIdxNum = '' + JsFunc_1.paddy(gameIdx - 6, 2);
+	                this.gameTitle.text = '半决赛';
+	                gameIdxNum = '第' + gameIdxNum + '场';
+	            }
 	            else if (this.to2.indexOf(gameIdx) > -1)
 	                this.gameTitle.text = '四强赛';
-	            else if (gameIdx == 13)
-	                this.gameTitle.text = '半决赛';
+	            if (gameIdx == 13)
+	                this.gameTitle.text = '季军赛';
 	            else if (gameIdx == 14) {
-	                gameIdxNum = '';
 	                this.gameTitle.text = '决赛';
+	                gameIdxNum = '';
 	            }
 	            else
 	                this.gameTitle.text = '大师赛';
