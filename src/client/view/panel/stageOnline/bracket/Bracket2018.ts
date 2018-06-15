@@ -1,7 +1,7 @@
 import { loadImg, loadImgArr } from '../../../utils/JsFunc';
 import { groupPosMap, fitWidth } from './BracketGroup';
 import { TweenEx } from '../../../utils/TweenEx';
-import { blink2 } from '../../../utils/Fx';
+import { blink2, delayCall } from '../../../utils/Fx';
 import { ViewConst } from '../../../const';
 import { imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
 import { BracketGroup2018 } from './BracketGroup2018';
@@ -10,7 +10,7 @@ export class Bracket2018 extends PIXI.Container {
     hint1Tex: PIXI.Texture
     hint2Tex: PIXI.Texture
     groupSpMap: any
-
+    isLoaded = false
     constructor(parent: PIXI.Container) {
         super()
         parent.addChild(this)
@@ -58,7 +58,10 @@ export class Bracket2018 extends PIXI.Container {
             gsp13winner.y = 880
             this.addChild(gsp13winner)
             this.groupSpMap[13.1] = gsp13winner
-
+            this.isLoaded = true
+            if (this._res) {
+                this.onBracketData(this._res)
+            }
         })
 
         this.comingTitle = newBitmap({ url: '/img/panel/bracket/s4/focus.png' })
@@ -85,8 +88,14 @@ export class Bracket2018 extends PIXI.Container {
             }
         })
     }
-
+    _res = null
     onBracketData(res) {
+        if (!this.isLoaded) {
+            // TweenEx.delayedCall(3000,)
+            this._res = res
+            return
+        }
+        this._res = null
         let closeGame = {};
         // let s = { font: '25px', fill: '#e1e1e1', align: 'right', fontFamily: FontName.MicrosoftYahei };
         console.log('onBracketData', res.data)

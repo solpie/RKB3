@@ -5898,6 +5898,8 @@
 	    function Bracket2018(parent) {
 	        var _this = this;
 	        _super.call(this);
+	        this.isLoaded = false;
+	        this._res = null;
 	        parent.addChild(this);
 	        var bg = PixiEx_1.newBitmap({
 	            url: "/img/panel/bracket/tile2.png",
@@ -5940,6 +5942,10 @@
 	            gsp13winner.y = 880;
 	            _this.addChild(gsp13winner);
 	            _this.groupSpMap[13.1] = gsp13winner;
+	            _this.isLoaded = true;
+	            if (_this._res) {
+	                _this.onBracketData(_this._res);
+	            }
 	        });
 	        this.comingTitle = PixiEx_1.newBitmap({ url: '/img/panel/bracket/s4/focus.png' });
 	        this.comingTitle.visible = false;
@@ -5965,6 +5971,11 @@
 	        });
 	    };
 	    Bracket2018.prototype.onBracketData = function (res) {
+	        if (!this.isLoaded) {
+	            this._res = res;
+	            return;
+	        }
+	        this._res = null;
 	        var closeGame = {};
 	        console.log('onBracketData', res.data);
 	        var fillWinner = function (gsp, dataObj) {
