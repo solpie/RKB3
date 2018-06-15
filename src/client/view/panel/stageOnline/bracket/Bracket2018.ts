@@ -130,11 +130,13 @@ export class Bracket2018 extends PIXI.Container {
             //fill 1st 3rd
             if (Number(gameIdx) == 13) {
                 gsp = this.groupSpMap[13.1] as BracketGroup2018
-                fillWinner(gsp, dataObj)
+                if (gsp)
+                    fillWinner(gsp, dataObj)
             }
             if (Number(gameIdx) == 14) {
                 gsp = this.groupSpMap[14.1] as BracketGroup2018
-                fillWinner(gsp, dataObj)
+                if (gsp)
+                    fillWinner(gsp, dataObj)
             }
         }
 

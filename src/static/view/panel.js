@@ -5999,11 +5999,13 @@
 	                gsp.setRightName(hints ? hints[1] : '', true);
 	            if (Number(gameIdx) == 13) {
 	                gsp = this.groupSpMap[13.1];
-	                fillWinner(gsp, dataObj);
+	                if (gsp)
+	                    fillWinner(gsp, dataObj);
 	            }
 	            if (Number(gameIdx) == 14) {
 	                gsp = this.groupSpMap[14.1];
-	                fillWinner(gsp, dataObj);
+	                if (gsp)
+	                    fillWinner(gsp, dataObj);
 	            }
 	        }
 	        var comingIdx = 1;
