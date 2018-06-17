@@ -8929,22 +8929,24 @@
 	    };
 	    Score2018v3.prototype.setGameIdx = function (gameIdx, type) {
 	        console.log('gameIdx22', gameIdx, 'type', type);
-	        var gameIdxNum1 = '' + JsFunc_1.paddy(gameIdx, 2);
-	        var gameIdxNum;
+	        var gameIdxNum = '' + JsFunc_1.paddy(gameIdx, 2);
 	        if (type == 2) {
-	            gameIdxNum = '第' + gameIdxNum1 + '场';
+	            var gameIdxNum2 = void 0;
+	            gameIdxNum2 = '第' + gameIdxNum + '场';
 	            if (this.to8.indexOf(gameIdx) > -1)
 	                this.gameTitle.text = '大师赛八强';
 	            gameIdx = Number(gameIdx);
 	            if (gameIdx == 7 || gameIdx == 8) {
 	                this.gameTitle.text = '四强赛';
-	                gameIdxNum = '第' + JsFunc_1.paddy(gameIdx - 6, 2) + '场';
+	                gameIdxNum2 = '第' + JsFunc_1.paddy(gameIdx - 6, 2) + '场';
 	            }
-	            else if (gameIdx == 13)
+	            else if (gameIdx == 13) {
 	                this.gameTitle.text = '季军赛';
+	                gameIdxNum2 = '';
+	            }
 	            else if (gameIdx == 14) {
 	                this.gameTitle.text = '决赛';
-	                gameIdxNum = '';
+	                gameIdxNum2 = '';
 	            }
 	            else
 	                this.gameTitle.text = '大师赛';

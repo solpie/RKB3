@@ -312,23 +312,25 @@ export class Score2018v3 extends PIXI.Container {
     // }
     setGameIdx(gameIdx, type) {
         console.log('gameIdx22', gameIdx, 'type', type)
-        let gameIdxNum1 = '' + paddy(gameIdx, 2)
+        let gameIdxNum = '' + paddy(gameIdx, 2)
         // this.gameIdxTxt.text = '四强'
-        let gameIdxNum
         if (type == 2) {
-            gameIdxNum = '第' + gameIdxNum1 + '场'
+            let gameIdxNum2
+            gameIdxNum2 = '第' + gameIdxNum + '场'
             if (this.to8.indexOf(gameIdx) > -1)
                 this.gameTitle.text = '大师赛八强'
             gameIdx = Number(gameIdx)
             if (gameIdx == 7 || gameIdx == 8) {
                 this.gameTitle.text = '四强赛'
-                gameIdxNum = '第' + paddy(gameIdx-6, 2) + '场'
+                gameIdxNum2 = '第' + paddy(gameIdx - 6, 2) + '场'
             }
-            else if (gameIdx == 13)
+            else if (gameIdx == 13) {
                 this.gameTitle.text = '季军赛'
+                gameIdxNum2 = ''
+            }
             else if (gameIdx == 14) {
                 this.gameTitle.text = '决赛'
-                gameIdxNum = ''
+                gameIdxNum2 = ''
             }
             else
                 this.gameTitle.text = '大师赛'
