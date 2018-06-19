@@ -196,14 +196,14 @@ class HomeView extends VueBase {
                     if (res1.data && res1.data.name) {
                         let player = res1.data
                         console.log(player);
-                        
+
                         createPlayer({
                             'player_id': Number(player.player_id),
                             'name': player.name,
                             'live_name': player.name,
-                            'height':player.height,
-                            'weight':player.weight,
-                            'age':player.age,
+                            'height': player.height,
+                            'weight': player.weight,
+                            'age': player.age,
                             'raw': JSON.stringify(player)
                         }, res => {
                             console.log('on create player', res);
@@ -234,6 +234,24 @@ class HomeView extends VueBase {
             if (a.length > 0) {
 
             }
+        },
+        onEditPlayer(player_id) {
+            // let updateData = {
+            //     "brief": player.brief,
+            //     "tag1": player.tag1,
+            //     "tag2": player.tag2,
+            // }
+            getPlayer(this.player_id, res1 => {
+                let player = this.playerInEdit
+                let player1 = res1[0]
+                player1.brief = player.brief.replace(/\n/g, "\r\n")
+                player1.tag1 = player.tag1
+                player1.tag2 = player.tag2
+                console.log('update player1', player1);
+                updatePlayer(player1, res => {
+                    alert('上传完成!')
+                })
+            })
         },
         onCrop() {
             // if (this.playerInEdit.player_id) {

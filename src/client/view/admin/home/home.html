@@ -82,14 +82,18 @@
                 </div>
             </div>
         </div>
-        <div class="panel" style="width:20%;">
+        <div class="panel" style="width:250px;">
             <p class="panel-heading">
                 预览
             </p>
-            <label v-if='playerInEdit' style="font-size: 30px;">{{ playerInEdit.player_id+playerInEdit.live_name}}</label>
-            <div class="preview" style="width: 100px;"></div>
-
+            <div v-if='playerInEdit'>
+                <label style="font-size: 30px;">{{ playerInEdit.player_id+playerInEdit.live_name}}</label>
+                <div class="preview" style="width: 100px;"></div>
+                <textarea v-model="playerInEdit.brief" name="" id="" width="350" height="150"></textarea>
+                <input type="text" v-model="playerInEdit.tag1" style="width: 100px;">
+                <input type="text" v-model="playerInEdit.tag2" style="width: 100px;">
+                <button class="button is-primary" @click="onEditPlayer(player_id)">更新</button>
+            </div>
         </div>
-
     </div>
 </div>
