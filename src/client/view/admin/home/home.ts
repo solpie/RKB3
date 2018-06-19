@@ -155,11 +155,11 @@ class HomeView extends VueBase {
                 $('#input').hide()
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    if (e.target.result) {
+                    if (e.target['result']) {
                         // create new image
                         let img = document.createElement('img');
                         img.id = 'image';
-                        img.src = e.target.result
+                        img.src = e.target['result']
                         // clean result before
                         result.innerHTML = '';
                         // append new image
@@ -204,6 +204,7 @@ class HomeView extends VueBase {
                             'height': player.height,
                             'weight': player.weight,
                             'age': player.age,
+                            level: player.level,
                             'raw': JSON.stringify(player)
                         }, res => {
                             console.log('on create player', res);
@@ -236,19 +237,17 @@ class HomeView extends VueBase {
             }
         },
         onEditPlayer(player_id) {
-            // let updateData = {
-            //     "brief": player.brief,
-            //     "tag1": player.tag1,
-            //     "tag2": player.tag2,
-            // }
             getPlayer(this.player_id, res1 => {
                 let player = this.playerInEdit
                 let player1 = res1[0]
-                player1.brief = player.brief.replace(/\n/g, "\r\n")
-                player1.tag1 = player.tag1
-                player1.tag2 = player.tag2
-                console.log('update player1', player1);
-                updatePlayer(player1, res => {
+                let update = {
+                    _id: player1._id,
+                    brief: player.brief.replace(/\n/g, "\r\n"),
+                    tag1: player.tag1,
+                    tag2: player.tag2
+                }
+                console.log('update player1', update);
+                updatePlayer(update, res => {
                     alert('上传完成!')
                 })
             })

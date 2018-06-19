@@ -92,7 +92,9 @@
                 <textarea v-model="playerInEdit.brief" name="" id="" width="350" height="150"></textarea>
                 <input type="text" v-model="playerInEdit.tag1" style="width: 100px;">
                 <input type="text" v-model="playerInEdit.tag2" style="width: 100px;">
-                <button class="button is-primary" @click="onEditPlayer(player_id)">更新</button>
+                <br> level:
+                <input type="text" v-model="playerInEdit.level" style="width: 50px;">1-6 S+ S A+ A B C
+                <br> <button class="button is-primary" @click="onEditPlayer(player_id)">更新</button>
             </div>
         </div>
     </div>
