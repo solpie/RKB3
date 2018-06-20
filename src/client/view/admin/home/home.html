@@ -67,6 +67,7 @@
             </p>
             球员编号player_id
             <input type="text" v-model="player_id" style="width: 100px;">
+            <button class="button is-primary" @click="onViewPlayer(player_id)">查看亮了网球员</button>
             <button class="button is-primary" @click="onSyncPlayerToStrapi(player_id)">导入亮了网球员</button>
             <button class="button is-primary" @click="onPullPlayerData(player_id)">编辑8090球员</button>
             <!-- <input type="text" v-model="playerArrStr" style="width: 150px;">

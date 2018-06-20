@@ -189,6 +189,19 @@ class HomeView extends VueBase {
                 this.playUrl2 = res1.data.stream2.play
             });
         },
+        onViewPlayer(player_id) {
+            getPlayerInfoFromLiangle(player_id, res1 => {
+                // console.log(res1);
+                if (res1.data && res1.data.name) {
+                    let player = res1.data
+                   alert(
+                        `${player.name} 身高${player.height} 体重${player.weight} level:${player.level}`
+                    );
+
+                }
+            })
+        },
+
         onSyncPlayerToStrapi(player_id) {
             if (player_id != '') {
                 getPlayerInfoFromLiangle(player_id, res1 => {
@@ -238,13 +251,14 @@ class HomeView extends VueBase {
         },
         onEditPlayer(player_id) {
             getPlayer(this.player_id, res1 => {
-                let player = this.playerInEdit
+                let edit = this.playerInEdit
                 let player1 = res1[0]
                 let update = {
                     _id: player1._id,
-                    brief: player.brief.replace(/\n/g, "\r\n"),
-                    tag1: player.tag1,
-                    tag2: player.tag2
+                    brief: edit.brief.replace(/\n/g, "\r\n"),
+                    tag1: edit.tag1,
+                    tag2: edit.tag2,
+                    level: edit.level
                 }
                 console.log('update player1', update);
                 updatePlayer(update, res => {

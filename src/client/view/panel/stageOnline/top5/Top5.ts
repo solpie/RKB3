@@ -65,7 +65,7 @@ export class Top5 extends PIXI.Container {
     p: any
     curPlayer: PIXI.Sprite
     // tabArr = []
-
+    levelSP: PIXI.Sprite
     playerName: PIXI.Text
     hupuID: PIXI.Text
     hwa: PIXI.Text
@@ -83,6 +83,12 @@ export class Top5 extends PIXI.Container {
         this.curPlayer.x = 487
         this.curPlayer.y = 157
         this.addChild(this.curPlayer)
+
+        this.levelSP = new PIXI.Sprite()
+        this.addChild(this.levelSP)
+        this.levelSP.x = 495
+        this.levelSP.y = 156
+
         getLive(conf => {
             getPlayerArr(conf.star_players, playerArr => {
                 for (let player of playerArr) {
@@ -102,26 +108,6 @@ export class Top5 extends PIXI.Container {
                 })
             })
         })
-        // getTop5Data2(res2 => {
-        //     let playerArr: Array<any> = res2
-        //     playerArr.sort(ascendingProp('player_id'))
-        //     console.log('top5 8090 playerArr', playerArr);
-        //     for (let player of playerArr) {
-        //         player.hwa = [player.height, player.weight, player.age]
-        //         player.name = player.live_name
-        //         player.info = player.brief
-        //     }
-        //     this.infoArr = playerArr
-        //     imgArr = []
-        //     imgArr.push('/img/panel/top5/hotPlayerBg.png')
-
-        //     imgLoader.loadTexArr(imgArr, _ => {
-        //         let bg = newBitmap({ url: '/img/panel/top5/hotPlayerBg.png' })
-        //         this.addChildAt(bg, 0)
-        //         this.initDetail()
-        //         this.show(data)
-        //     })
-        // })
     }
     show(data) {
         console.log('show player ', data);
@@ -144,6 +130,19 @@ export class Top5 extends PIXI.Container {
         if (!this.texMap[idx])
             this.texMap[idx] = PIXI.Texture.fromImage(data.avatar)
         this.curPlayer.texture = this.texMap[idx]
+
+        if (data.level) {
+            let url = `/img/panel/top5/${data.level}.png`
+            imgLoader.loadTex2(url, tex => {
+                console.log('set tex');
+                this.levelSP.texture = imgLoader.getTex(url)
+                this.levelSP.visible = true
+            })
+        }
+        else {
+            this.levelSP.visible = false
+        }
+
         this.setDetail(data)
     }
 
