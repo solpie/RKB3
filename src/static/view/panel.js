@@ -4792,6 +4792,7 @@
 	};
 	var PixiEx_1 = __webpack_require__(45);
 	var HupuAPI_1 = __webpack_require__(24);
+	var ImgLoader_1 = __webpack_require__(65);
 	var TextFac_1 = __webpack_require__(69);
 	var const_1 = __webpack_require__(42);
 	var JsFunc_1 = __webpack_require__(21);
@@ -4834,6 +4835,10 @@
 	        this.playerInfo = TextFac_1.TextFac.new_(ns, this)
 	            .setPos(this.playerName.x, 872)
 	            .setText(JsFunc_1.cnWrap(info + info + info, 20, 79));
+	        this.levelSP = new PIXI.Sprite();
+	        this.addChild(this.levelSP);
+	        this.levelSP.x = 30 + 15 + 8;
+	        this.levelSP.y = 30 + 6 + 3;
 	        window.onkeyup = function (e) {
 	            console.log('key up', e.key, e.keyCode);
 	            if (e.key == 'q' || e.keyCode == 81) {
@@ -4890,6 +4895,7 @@
 	        }, 9000);
 	    }
 	    LiveComing.prototype.showPlayer = function () {
+	        var _this = this;
 	        if (this.infoArr && this.infoArr.length) {
 	            var player = this.infoArr[this.curIdx];
 	            this.playerHWA.setText(player.hwa[2] + '岁 '
@@ -4899,6 +4905,17 @@
 	            var info = player.info.replace(/\r\n/g, ",");
 	            console.log('show info', info);
 	            this.playerInfo.setText(JsFunc_1.cnWrap(info, 20, 79));
+	            if (player.level) {
+	                var url_1 = "/img/panel/top5/" + player.level + ".png";
+	                ImgLoader_1.imgLoader.loadTex2(url_1, function (tex) {
+	                    console.log('set tex');
+	                    _this.levelSP.texture = ImgLoader_1.imgLoader.getTex(url_1);
+	                    _this.levelSP.visible = true;
+	                });
+	            }
+	            else {
+	                this.levelSP.visible = false;
+	            }
 	            this.curIdx = (this.curIdx + 1) % this.infoArr.length;
 	            var idx = this.curIdx;
 	            if (!this.texMap[idx])

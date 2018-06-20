@@ -12,6 +12,8 @@ export class LiveComing extends PIXI.Container {
 
 
     avt: PIXI.Sprite
+    levelSP: PIXI.Sprite
+
     playerName: Text2
     playerHWA: Text2
     playerInfo: Text2
@@ -62,6 +64,11 @@ export class LiveComing extends PIXI.Container {
             .setPos(this.playerName.x, 872)
             .setText(cnWrap(info + info + info, 20, 79))
 
+        this.levelSP = new PIXI.Sprite()
+        this.addChild(this.levelSP)
+        this.levelSP.x = 30+15+8
+        this.levelSP.y = 30+6+3
+
         window.onkeyup = (e) => {
             console.log('key up', e.key, e.keyCode);
             if (e.key == 'q' || e.keyCode == 81) {
@@ -78,25 +85,8 @@ export class LiveComing extends PIXI.Container {
             }
             this.infoArr = pArr
             this.showPlayer()
-            
-        })
-        // getTop5Data2(res2 => {
-        //     let playerArr: Array<any> = res2
-        //     playerArr.sort(ascendingProp('player_id'))
-        //     let a = []
-        //     for (let player of playerArr) {
-        //         player.hwa = [player.height, player.weight, player.age]
-        //         player.name = player.live_name
-        //         player.info = player.brief
-        //         if (starPlayerArr.indexOf(player.player_id) > 0) {
-        //             a.push(player)
-        //         }
-        //     }
-        //     console.log('top5 8090 star  playerArr', a);
-        //     this.infoArr = a
 
-        //     this.showPlayer()
-        // })
+        })
 
 
 
@@ -157,6 +147,20 @@ export class LiveComing extends PIXI.Container {
             console.log('show info', info);
             this.playerInfo.setText(cnWrap(info, 20, 79))
 
+
+
+
+            if (player.level) {
+                let url = `/img/panel/top5/${player.level}.png`
+                imgLoader.loadTex2(url, tex => {
+                    console.log('set tex');
+                    this.levelSP.texture = imgLoader.getTex(url)
+                    this.levelSP.visible = true
+                })
+            }
+            else {
+                this.levelSP.visible = false
+            }
             this.curIdx = (this.curIdx + 1) % this.infoArr.length
 
             let idx = this.curIdx
