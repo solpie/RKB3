@@ -4886,6 +4886,12 @@
 	        };
 	        var d = new Date();
 	        var endTime = '19:30';
+	        if (conf.count_down) {
+	            var a = conf.count_down.split('T');
+	            var b = a[1].split(':');
+	            endTime = b[0] + ':' + b[1];
+	        }
+	        console.log('count down', conf.count_down, endTime);
 	        var end = new Date(pd(d.getMonth() + 1) + '/' + pd(d.getDate()) + "/" + d.getFullYear() + ' ' + endTime);
 	        var distance = Math.floor((end - d) / 1000);
 	        timer.setTimeBySec(distance);
