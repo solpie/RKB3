@@ -4911,7 +4911,7 @@
 	            var info = player.info.replace(/\r\n/g, ",");
 	            console.log('show info', info);
 	            this.playerInfo.setText(JsFunc_1.cnWrap(info, 20, 79));
-	            if (player.level) {
+	            if (player.level && Number(player.level) != 0) {
 	                var url_1 = "/img/panel/top5/" + player.level + ".png";
 	                ImgLoader_1.imgLoader.loadTex2(url_1, function (tex) {
 	                    console.log('set tex');
@@ -8365,7 +8365,7 @@
 	        if (!this.texMap[idx])
 	            this.texMap[idx] = PIXI.Texture.fromImage(data.avatar);
 	        this.curPlayer.texture = this.texMap[idx];
-	        if (data.level) {
+	        if (data.level && Number(data.level) != 0) {
 	            var url_1 = "/img/panel/top5/" + data.level + ".png";
 	            ImgLoader_1.imgLoader.loadTex2(url_1, function (tex) {
 	                console.log('set tex');
@@ -9002,15 +9002,15 @@
 	            if (this.to8.indexOf(gameIdx) > -1)
 	                this.gameTitle.text = '大师赛八强';
 	            gameIdx = Number(gameIdx);
-	            if (gameIdx == 7 || gameIdx == 8) {
+	            if (gameIdx == 5 || gameIdx == 6) {
 	                this.gameTitle.text = '四强赛';
 	                gameIdxNum = '第' + JsFunc_1.paddy(gameIdx - 6, 2) + '场';
 	            }
-	            else if (gameIdx == 13) {
+	            else if (gameIdx == 7) {
 	                this.gameTitle.text = '季军赛';
 	                gameIdxNum = '';
 	            }
-	            else if (gameIdx == 14) {
+	            else if (gameIdx == 8) {
 	                this.gameTitle.text = '决赛';
 	                gameIdxNum = '';
 	            }

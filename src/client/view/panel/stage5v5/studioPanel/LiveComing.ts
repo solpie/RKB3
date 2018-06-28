@@ -124,9 +124,9 @@ export class LiveComing extends PIXI.Container {
         if (conf.count_down) {
             let a = conf.count_down.split('T')
             let b = a[1].split(':')
-            endTime = b[0]+ ':' + b[1]
+            endTime = b[0] + ':' + b[1]
         }
-        
+
         console.log('count down', conf.count_down, endTime);
 
         var end = new Date(pd(d.getMonth() + 1) + '/' + pd(d.getDate()) + "/" + d.getFullYear() + ' ' + endTime);
@@ -159,7 +159,7 @@ export class LiveComing extends PIXI.Container {
 
 
 
-            if (player.level) {
+            if (player.level && Number(player.level) != 0) {
                 let url = `/img/panel/top5/${player.level}.png`
                 imgLoader.loadTex2(url, tex => {
                     console.log('set tex');

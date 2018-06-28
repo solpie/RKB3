@@ -131,7 +131,7 @@ export class Top5 extends PIXI.Container {
             this.texMap[idx] = PIXI.Texture.fromImage(data.avatar)
         this.curPlayer.texture = this.texMap[idx]
 
-        if (data.level) {
+        if (data.level&& Number(data.level) != 0) {
             let url = `/img/panel/top5/${data.level}.png`
             imgLoader.loadTex2(url, tex => {
                 console.log('set tex');

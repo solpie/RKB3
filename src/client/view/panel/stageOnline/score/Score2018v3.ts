@@ -266,50 +266,6 @@ export class Score2018v3 extends PIXI.Container {
     to4 = [7, 8, 9, 10]
     to2 = [11, 12]
     //1 车轮 2 大师 3 决赛    4 小组赛
-    // setGameIdx2(gameIdx, type) {
-    //     console.log('gameIdx', gameIdx, 'type', type)
-    //     // this.gameIdxTxt.text = '' + paddy(gameIdx, 2)
-    //     let gameIdxNum = '' + paddy(gameIdx, 2)
-    //     // this.gameIdxTxt.text = '四强'
-    //     if (type == 2) {
-    //         // if (this.winSectionArr.indexOf(gameIdx) > -1)
-    //         //     this.gameTitle.text = '胜者组'
-    //         // else if (this.loseSectionArr.indexOf(gameIdx) > -1)
-    //         //     this.gameTitle.text = '败者组'
-    //         if (this.to8.indexOf(gameIdx) > -1)
-    //             this.gameTitle.text = '八强分组赛'
-    //         else if (this.to6.indexOf(gameIdx) > -1)
-    //             this.gameTitle.text = '六强争夺赛'
-    //         else if (this.to4.indexOf(gameIdx) > -1)
-    //             this.gameTitle.text = '四强争夺赛'
-    //         else if (this.to2.indexOf(gameIdx) > -1)
-    //             this.gameTitle.text = '四强赛'
-    //         // else if (gameIdx == 11)
-    //         //     this.gameTitle.text = '半决赛'
-    //         else if (gameIdx == 13)
-    //             this.gameTitle.text = '半决赛'
-    //         else if (gameIdx == 14) {
-    //             gameIdxNum = ''
-    //             this.gameTitle.text = '决赛'
-    //         }
-    //         else
-    //             this.gameTitle.text = '大师赛'
-    //     }
-    //     else if (type == 4) {
-    //         this.gameTitle.text = '席位战'
-    //         gameIdxNum = '第' + gameIdxNum + '场'
-    //     }
-    //     else if (type == 1) {
-    //         this.gameTitle.text = '车轮赛'
-    //     }
-    //     else if (type == 3) {
-    //         this.gameTitle.text = '决赛'
-    //         gameIdxNum = ''
-    //     }
-
-    //     this.gameTitle.text += gameIdxNum
-    //     this.gameTitle.setAlignCenter(960)
-    // }
     setGameIdx(gameIdx, type) {
         console.log('gameIdx22', gameIdx, 'type', type)
         let gameIdxNum = '' + paddy(gameIdx, 2)
@@ -320,16 +276,16 @@ export class Score2018v3 extends PIXI.Container {
             if (this.to8.indexOf(gameIdx) > -1)
                 this.gameTitle.text = '大师赛八强'
             gameIdx = Number(gameIdx)
-            if (gameIdx == 7 || gameIdx == 8) {
+            if (gameIdx == 5 || gameIdx == 6) {
                 this.gameTitle.text = '四强赛'
                 // gameIdxNum2 = '第' + paddy(gameIdx - 6, 2) + '场'
                 gameIdxNum= '第' + paddy(gameIdx - 6, 2) + '场'
             }
-            else if (gameIdx == 13) {
+            else if (gameIdx == 7) {
                 this.gameTitle.text = '季军赛'
                 gameIdxNum = ''
             }
-            else if (gameIdx == 14) {
+            else if (gameIdx == 8) {
                 this.gameTitle.text = '决赛'
                 gameIdxNum = ''
             }
