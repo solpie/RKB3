@@ -4767,16 +4767,10 @@
 	    "2": _mkGroup({ x: c1, y: y1 + 175, p2y: 96, hints: ['4号种子 ', "5号种子 "] }),
 	    "3": _mkGroup({ x: c1, y: y1 + 175 * 2, p2y: 96, hints: ['2号种子 ', "7号种子 "] }),
 	    "4": _mkGroup({ x: c1, y: y1 + 175 * 3, p2y: 96, hints: ['3号种子 ', "6号种子 "] }),
-	    "5": _mkGroup({ x: c1, y: 756, hints: ['第1场败者 ', "第2场败者 "] }),
-	    "6": _mkGroup({ x: c1, y: 897, hints: ['第3场败者 ', "第4场败者 "] }),
-	    "7": _mkGroup({ x: c2, y: 114, p2y: 174 }),
-	    "8": _mkGroup({ x: c2, y: 462, p2y: 174 }),
-	    "9": _mkGroup({ x: c2, y: 843, hints: ['第7场败者 ', ""] }),
-	    "10": _mkGroup({ x: 671, y: 701, hints: ['第8场败者 ', ""] }),
-	    "11": _mkGroup({ x: 995, y: 319 }),
-	    "12": _mkGroup({ x: 995, y: 760 }),
-	    "13": _mkGroup({ x: c2, y: 802, p2y: 176, hints: [' ', ""] }),
-	    "14": _mkGroup({ x: 952, y: 196, p2y: 350, hints: ['', " "] }),
+	    "5": _mkGroup({ x: c2, y: 114, p2y: 174 }),
+	    "6": _mkGroup({ x: c2, y: 462, p2y: 174 }),
+	    "7": _mkGroup({ x: c2, y: 802, p2y: 176, hints: [' ', ""] }),
+	    "8": _mkGroup({ x: 952, y: 196, p2y: 350, hints: ['', " "] }),
 	};
 
 
@@ -5912,10 +5906,10 @@
 	            group1.scores[1].text = dataObj.right.score || "0";
 	        }
 	        var comingIdx = 1;
-	        for (var i = 0; i < 14; i++) {
-	            var isClose = closeGame[14 - i];
+	        for (var i = 0; i < 8; i++) {
+	            var isClose = closeGame[8 - i];
 	            if (isClose) {
-	                comingIdx = 14 - i + 1;
+	                comingIdx = 8 - i + 1;
 	                break;
 	            }
 	        }
@@ -5963,9 +5957,9 @@
 	        var hintCtn = new PIXI.Container();
 	        this.addChild(hintCtn);
 	        this.groupSpMap = [];
-	        var bypass = [5, 6, 9, 10, 11, 12];
+	        var bypass = [];
 	        JsFunc_1.loadImg('/img/panel/bracket/s4v3/playerBg.png', function (img) {
-	            for (var i = 0; i < 14; i++) {
+	            for (var i = 0; i < 8; i++) {
 	                if (bypass.indexOf(i + 1) > -1)
 	                    continue;
 	                var gsp = new BracketGroup2018_1.BracketGroup2018(PixiEx_1.imgToTex(img));
@@ -6043,6 +6037,7 @@
 	        for (var gameIdx in res.data) {
 	            var dataObj = res.data[gameIdx];
 	            var gsp = this.groupSpMap[gameIdx];
+	            console.log('gameidx', gameIdx);
 	            gsp.setGameIdx(gameIdx);
 	            if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
 	                closeGame[gameIdx] = true;
@@ -6058,22 +6053,23 @@
 	                gsp.setRightName(dataObj.right.name);
 	            else
 	                gsp.setRightName(hints ? hints[1] : '', true);
-	            if (Number(gameIdx) == 13) {
-	                gsp = this.groupSpMap[13.1];
+	            if (Number(gameIdx) == 7) {
+	                gsp = this.groupSpMap[7.1];
 	                if (gsp)
 	                    fillWinner(gsp, dataObj);
 	            }
-	            if (Number(gameIdx) == 14) {
-	                gsp = this.groupSpMap[14.1];
+	            if (Number(gameIdx) == 8) {
+	                gsp = this.groupSpMap[8.1];
 	                if (gsp)
 	                    fillWinner(gsp, dataObj);
 	            }
 	        }
 	        var comingIdx = 1;
-	        for (var i = 0; i < 14; i++) {
-	            var isClose = closeGame[14 - i];
+	        var t = 8;
+	        for (var i = 0; i < t; i++) {
+	            var isClose = closeGame[t - i];
 	            if (isClose) {
-	                comingIdx = 14 - i + 1;
+	                comingIdx = t - i + 1;
 	                break;
 	            }
 	        }

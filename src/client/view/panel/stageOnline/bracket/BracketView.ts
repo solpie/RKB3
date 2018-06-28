@@ -220,10 +220,10 @@ export class BracketView extends BasePanelView {
 
 
         var comingIdx = 1;
-        for (var i = 0; i < 14; i++) {
-            var isClose = closeGame[14 - i];
+        for (var i = 0; i < 8; i++) {
+            var isClose = closeGame[8 - i];
             if (isClose) {
-                comingIdx = 14 - i + 1;
+                comingIdx = 8 - i + 1;
                 break;
             }
         }

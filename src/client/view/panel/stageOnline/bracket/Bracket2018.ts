@@ -28,9 +28,9 @@ export class Bracket2018 extends PIXI.Container {
         this.addChild(hintCtn)
 
         this.groupSpMap = []
-        let bypass = [5, 6, 9, 10, 11, 12]
+        let bypass = []
         loadImg('/img/panel/bracket/s4v3/playerBg.png', img => {
-            for (let i = 0; i < 14; i++) {
+            for (let i = 0; i < 8; i++) {
                 if (bypass.indexOf(i + 1) > -1)
                     continue;
                 let gsp = new BracketGroup2018(imgToTex(img))
@@ -119,6 +119,7 @@ export class Bracket2018 extends PIXI.Container {
             // if (!gsp) {
             //     continue;
             // }
+            console.log('gameidx',gameIdx);
             gsp.setGameIdx(gameIdx)
             if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
                 closeGame[gameIdx] = true;
@@ -137,13 +138,13 @@ export class Bracket2018 extends PIXI.Container {
                 gsp.setRightName(hints ? hints[1] : '', true)
 
             //fill 1st 3rd
-            if (Number(gameIdx) == 13) {
-                gsp = this.groupSpMap[13.1] as BracketGroup2018
+            if (Number(gameIdx) == 7) {
+                gsp = this.groupSpMap[7.1] as BracketGroup2018
                 if (gsp)
                     fillWinner(gsp, dataObj)
             }
-            if (Number(gameIdx) == 14) {
-                gsp = this.groupSpMap[14.1] as BracketGroup2018
+            if (Number(gameIdx) == 8) {
+                gsp = this.groupSpMap[8.1] as BracketGroup2018
                 if (gsp)
                     fillWinner(gsp, dataObj)
             }
@@ -151,10 +152,11 @@ export class Bracket2018 extends PIXI.Container {
 
 
         var comingIdx = 1;
-        for (var i = 0; i < 14; i++) {
-            var isClose = closeGame[14 - i];
+        let t = 8
+        for (var i = 0; i < t; i++) {
+            var isClose = closeGame[t - i];
             if (isClose) {
-                comingIdx = 14 - i + 1;
+                comingIdx = t - i + 1;
                 break;
             }
         }
