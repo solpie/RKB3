@@ -9004,7 +9004,7 @@
 	            gameIdx = Number(gameIdx);
 	            if (gameIdx == 5 || gameIdx == 6) {
 	                this.gameTitle.text = '四强赛';
-	                gameIdxNum = '第' + JsFunc_1.paddy(gameIdx - 6, 2) + '场';
+	                gameIdxNum = '第' + JsFunc_1.paddy(gameIdx - 4, 2) + '场';
 	            }
 	            else if (gameIdx == 7) {
 	                this.gameTitle.text = '季军赛';
