@@ -52,12 +52,12 @@ export class Bracket2018 extends PIXI.Container {
             gsp14winner.x = 1434
             gsp14winner.y = 369 - 8
             this.addChild(gsp14winner)
-            this.groupSpMap[14.1] = gsp14winner
+            this.groupSpMap[8.1] = gsp14winner
             let gsp13winner = new BracketGroup2018(imgToTex(img))
             gsp13winner.x = 956
             gsp13winner.y = 880
             this.addChild(gsp13winner)
-            this.groupSpMap[13.1] = gsp13winner
+            this.groupSpMap[7.1] = gsp13winner
             this.isLoaded = true
             if (this._res) {
                 this.onBracketData(this._res)
@@ -119,12 +119,11 @@ export class Bracket2018 extends PIXI.Container {
             // if (!gsp) {
             //     continue;
             // }
-            console.log('gameidx',gameIdx);
+            console.log('gameidx',gameIdx,dataObj.left.score,":",dataObj.right.score);
             gsp.setGameIdx(gameIdx)
             if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
                 closeGame[gameIdx] = true;
                 gsp.setScore(dataObj.left.score, dataObj.right.score)
-
             }
             let group2 = groupPosMap[gameIdx];
             let hints = group2.hints;

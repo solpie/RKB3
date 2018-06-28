@@ -5980,12 +5980,12 @@
 	            gsp14winner.x = 1434;
 	            gsp14winner.y = 369 - 8;
 	            _this.addChild(gsp14winner);
-	            _this.groupSpMap[14.1] = gsp14winner;
+	            _this.groupSpMap[8.1] = gsp14winner;
 	            var gsp13winner = new BracketGroup2018_1.BracketGroup2018(PixiEx_1.imgToTex(img));
 	            gsp13winner.x = 956;
 	            gsp13winner.y = 880;
 	            _this.addChild(gsp13winner);
-	            _this.groupSpMap[13.1] = gsp13winner;
+	            _this.groupSpMap[7.1] = gsp13winner;
 	            _this.isLoaded = true;
 	            if (_this._res) {
 	                _this.onBracketData(_this._res);
@@ -6037,7 +6037,7 @@
 	        for (var gameIdx in res.data) {
 	            var dataObj = res.data[gameIdx];
 	            var gsp = this.groupSpMap[gameIdx];
-	            console.log('gameidx', gameIdx);
+	            console.log('gameidx', gameIdx, dataObj.left.score, ":", dataObj.right.score);
 	            gsp.setGameIdx(gameIdx);
 	            if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
 	                closeGame[gameIdx] = true;
