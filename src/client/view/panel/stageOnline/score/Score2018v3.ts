@@ -276,16 +276,16 @@ export class Score2018v3 extends PIXI.Container {
             if (this.to8.indexOf(gameIdx) > -1)
                 this.gameTitle.text = '大师赛八强'
             gameIdx = Number(gameIdx)
-            if (gameIdx == 5 || gameIdx == 6) {
+            if (gameIdx == 7 || gameIdx == 8) {
                 this.gameTitle.text = '四强赛'
                 // gameIdxNum2 = '第' + paddy(gameIdx - 6, 2) + '场'
                 gameIdxNum= '第' + paddy(gameIdx - 6, 2) + '场'
             }
-            else if (gameIdx == 7) {
+            else if (gameIdx == 13) {
                 this.gameTitle.text = '季军赛'
                 gameIdxNum = ''
             }
-            else if (gameIdx == 8) {
+            else if (gameIdx == 14) {
                 this.gameTitle.text = '决赛'
                 gameIdxNum = ''
             }
