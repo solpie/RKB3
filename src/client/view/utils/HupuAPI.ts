@@ -100,7 +100,9 @@ export let getTop5Data = (callback) => {
 export let getVsTitleData = (callback) => {
     _get('/db/vs.json?t=' + new Date(), callback)
 }
-
+export let getBO3Data = (callback) => {
+    _get('/db/BO3.json?t=' + new Date(), callback)
+}
 ////8090 
 
 export function getCommentators(callback) {
@@ -181,4 +183,9 @@ export function getPlayerArr(player_idArr, callback) {
             callback(resArr)
     }
     recurGet(a)
+}
+
+export function getEventConf(event_id, callback) {
+    let url = 'http://rtmp.icassi.us:8090/event?event_id=' + event_id
+    _get(proxy(url), callback)
 }

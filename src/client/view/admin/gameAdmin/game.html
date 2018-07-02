@@ -1,0 +1,14 @@
+<div class="container">
+    game admin
+    <span class="select">
+                <select v-model="selected">
+                    <option v-for="option in options" v-bind:value="option.value">
+                        {{ option.text }}
+                    </option>
+                </select>
+            </span>
+    <input type="file" id="files" accept="*.json" hidden>
+    <button class="button is-primary" @click="onFile">打开配置</button>
+    <button class="button is-primary" id="reloadFile" @click="reloadFile">reload</button>
+
+</div>

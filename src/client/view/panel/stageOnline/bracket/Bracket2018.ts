@@ -21,6 +21,7 @@ export class Bracket2018 extends PIXI.Container {
             width: ViewConst.STAGE_WIDTH,
             height: ViewConst.STAGE_HEIGHT
         });
+        
         bg.alpha = 0.8;
         this.addChild(bg)
         this.addChild(newBitmap({ url: '/img/panel/bracket/s4v3/route.png' }))

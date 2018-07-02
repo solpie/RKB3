@@ -1,0 +1,67 @@
+<html>
+
+<head>
+    <style>
+        .bg {
+            position: static;
+            padding: 10px;
+        }
+        
+        .player {
+            position: absolute;
+            padding: 10px;
+            font-size: 50px;
+            color: #fff;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="/js/socket.io.slim.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <img src="bg.png" />
+        <div>
+            <span class="player" v-for="(item, index) in items" :key="item.name" :style="item.s">{{item.name}}</span>
+        </div>
+    </div>
+    <script>
+        var _p = function(x, y) {
+            return 'left:' + x + 'px;' + 'top:' + y + 'px;'
+        }
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue22!',
+                items: []
+            },
+            // mounted: function() {
+            created: function() {
+                console.log(this);
+                var _this = this
+                var pos = [
+                    [10, 100],
+                    [10, 400],
+                    [10, 500],
+                    [10, 60],
+                ]
+
+
+                var localWs = io.connect('/rkb')
+                localWs.on('connect', () => {
+                        console.log('connect', window.location.host)
+                    })
+                    .on('sc_data', (data) => {
+                        console.log('sc_data', data)
+                        for (var i = 0; i < data.playerArr.length; i++) {
+                            var p = data.playerArr[i];
+                            _this.items.push({
+                                s: _p(pos[i][0], pos[i][1]),
+                                name: p.name
+                            })
+                        }
+                    })
+            }
+        })
+    </script>
+</body>

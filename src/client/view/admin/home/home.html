@@ -11,6 +11,11 @@
                     <span>热门球员编辑</span>
                 </a>
             </li>
+            <li v-bind:class="{ 'is-active': actTab== 'tab3'}" @click='tab("tab3")'>
+                <a>
+                    <span>自定义比赛</span>
+                </a>
+            </li>
         </ul>
     </div>
     <div v-if='actTab=="tab1"'>
@@ -98,5 +103,8 @@
                 <br> <button class="button is-primary" @click="onEditPlayer(player_id)">更新</button>
             </div>
         </div>
+    </div>
+    <div v-if='actTab=="tab3"' class="ctn2" style="display: inline-flex;">
+        <GameAdmin/>
     </div>
 </div>

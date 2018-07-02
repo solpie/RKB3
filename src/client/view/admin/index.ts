@@ -5,6 +5,7 @@
 require('../../../static/css/bulma.min.css');
 
 require(`script!./../../libs/jquery.min.js`);
+require(`script!./../../libs/socket.io-1.4.5.min.js`);
 require(`script!./../../libs/qrcode.min.js`);
 require(`script!./../../libs/cropper.min.js`);
 require(`../../libs/cropper.min.css`);
@@ -14,11 +15,12 @@ import { Navbar } from "./navbar/Navbar";
 import { homeView } from "./home/home";
 
 import { playerView } from './player/player';
+import { GameAdmin } from './gameAdmin/GameAdmin';
 //////////////
 var routes = [
     {
         path: '/', name: 'home',
-        components: { content: homeView, Navbar: Navbar }
+        components: { content: homeView, Navbar: Navbar, GameAdmin: GameAdmin }
     },
     {
         path: '/player', name: 'player',
