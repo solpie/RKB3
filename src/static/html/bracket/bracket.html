@@ -6,11 +6,11 @@
             position: static;
             padding: 10px;
         }
-        
+
         .player {
             position: absolute;
             padding: 10px;
-            font-size: 50px;
+            font-size: 35px;
             color: #fff;
         }
     </style>
@@ -26,7 +26,7 @@
         </div>
     </div>
     <script>
-        var _p = function(x, y) {
+        var _p = function (x, y) {
             return 'left:' + x + 'px;' + 'top:' + y + 'px;'
         }
         var app = new Vue({
@@ -36,21 +36,78 @@
                 items: []
             },
             // mounted: function() {
-            created: function() {
+            created: function () {
                 console.log(this);
                 var _this = this
+                var x1 = 97
+                var x1r = 1680
+
                 var pos = [
-                    [10, 100],
-                    [10, 400],
-                    [10, 500],
-                    [10, 60],
+                    [x1, 75 + 5],
+                    [x1, 75 + 5 + 122],
+
+                    [x1, 330 - 5],
+                    [x1, 330 - 5 + 122],
+
+                    [x1, 535 + 40],
+                    [x1, 535 + 40 + 122],
+
+                    [x1, 800 + 20],
+                    [x1, 800 + 20 + 122],
+                ]
+                //x1r
+                let a = []
+                for (let i = 0; i < pos.length; i++) {
+                    let p = pos[i];
+                    a.push([x1r, p[1]])
+                }
+
+                pos = pos.concat(a)
+
+                let x2 =342+5,x2r = 1435
+                a = [
+                    [x2, 143],
+                    [x2, 143+246],
+
+                    [x2, 633+3],
+                    [x2, 633+3+246],
                 ]
 
+                pos = pos.concat(a)
+
+                
+                for (let i = 0; i < a.length; i++) {
+                    let p = a[i];
+                    pos.push([x2r, p[1]])
+                }
+
+
+                let x3 = 593,x3r = 1185
+                a = [
+                    [x3,265],
+                    [x3,265+492],
+                ]
+                pos = pos.concat(a)
+
+              for (let i = 0; i < a.length; i++) {
+                    let p = a[i];
+                    pos.push([x3r, p[1]])
+                }
+
+
+                for (let i = 0; i < pos.length; i++) {
+                    let p = pos[i];
+                    this.items.push({
+                        s: _p(p[0], p[1])
+                        ,
+                        name: '好天氣其' + i
+                    })
+                }
 
                 var localWs = io.connect('/rkb')
                 localWs.on('connect', () => {
-                        console.log('connect', window.location.host)
-                    })
+                    console.log('connect', window.location.host)
+                })
                     .on('sc_data', (data) => {
                         console.log('sc_data', data)
                         for (var i = 0; i < data.playerArr.length; i++) {
