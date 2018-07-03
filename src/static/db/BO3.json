@@ -2,15 +2,40 @@
     "date": "2018-03-17",
     "dbIdx": "1021",
     "panel": "BO3",
-    "gameTitle": "哈登11",
+    "gameTitle": "kd",
     "avatarUrlBase": "http://127.0.0.1:8088/img/player/bo3/",
     "groupScore": [
-        { "score": [0, 0], "player": ["p4", "p1"] },
-        { "score": [0, 0], "player": ["p7", "p2"] },
-        { "score": [0, 0], "player": ["p6", "p9"] },
-        { "score": [0, 0], "player": ["p3", "p8"] },
-        { "score": [0, 0], "player": ["p5", "p10"] },
-        { "score": [0, 0], "player": ["p5", "p10"] }
+        {"idx":"A1", "score": [0, 0], "player": ["p1", "p2"] },
+        {"idx":"B1", "score": [0, 0], "player": ["p3", "p4"] },
+        {"idx":"C1", "score": [0, 0], "player": ["p5", "p6"] },
+        {"idx":"D1", "score": [0, 0], "player": ["p7", "p8"] },
+        {"idx":"E1", "score": [0, 0], "player": ["p9", "p10"] },
+        {"idx":"F1", "score": [0, 0], "player": ["p11", "p12"] },
+        {"idx":"G1", "score": [0, 0], "player": ["p13", "p14"] },
+        {"idx":"H1", "score": [0, 0], "player": ["p15", "p16"] },
+
+        {"idx":"A2", "score": [0, 0], "player": ["p17", "p18"] },
+        {"idx":"B2", "score": [0, 0], "player": ["p19", "p20"] },
+        {"idx":"C2", "score": [0, 0], "player": ["p21", "p22"] },
+        {"idx":"D2", "score": [0, 0], "player": ["p23", "p24"] },
+        {"idx":"E2", "score": [0, 0], "player": ["p25", "p26"] },
+        {"idx":"F2", "score": [0, 0], "player": ["p27", "p28"] },
+        {"idx":"G2", "score": [0, 0], "player": ["p29", "p30"] },
+        {"idx":"H2", "score": [0, 0], "player": ["p31", "p32"] },
+
+        {"idx":"A1A2", "score": [0, 0], "player": ["p4", "p1"] },
+        {"idx":"B1B2", "score": [0, 0], "player": ["p7", "p2"] },
+        {"idx":"C1C2", "score": [0, 0], "player": ["p6", "p9"] },
+        {"idx":"D1D2", "score": [0, 0], "player": ["p3", "p8"] },
+        {"idx":"E1E2", "score": [0, 0], "player": ["p5", "p10"] },
+        {"idx":"F1F2", "score": [0, 0], "player": ["p5", "p10"] },
+        {"idx":"G1G2", "score": [0, 0], "player": ["p5", "p10"] },
+        {"idx":"H1H2", "score": [0, 0], "player": ["p5", "p10"] },
+
+        {"idx":"A3E3", "score": [0, 0], "player": ["p5", "p10"] },
+        {"idx":"B3F3", "score": [0, 0], "player": ["p5", "p10"] },
+        {"idx":"C3G3", "score": [0, 0], "player": ["p5", "p10"] },
+        {"idx":"D3H3", "score": [0, 0], "player": ["p5", "p10"] }
     ],
     "playerArr": [{ "name": "李豪", "hwa": [180, 82, 23], "title": "S4赛季成都站两连冠\n四川师范大学男篮队长", "playerId": "p1" }, { "name": "董康潮", "hwa": [172, 70, 23], "title": "库里中国行成都站MVP\n2017年11月冠军赛第十名", "playerId": "p2" }, { "name": "王佳委", "hwa": [181, 80, 20], "title": "六月月赛亚军\n年中决赛季军\n五次分站赛冠军", "playerId": "p3" }, { "name": "俞鑫敏", "hwa": [180, 80, 21], "title": "CUBA南京理工大学球员", "playerId": "p4" }, { "name": "方良超", "hwa": [174, 73, 26], "title": "上海站2冠王\n9月冠军赛亚军\n上海X-Battle街球队队员", "playerId": "p5" }, { "name": "杨雨", "hwa": [173, 70, 24], "title": "西安站冠军\n西安DLT街球队队员", "playerId": "p6" }, { "name": "柳杨杰", "hwa": [182, 70, 22], "title": "S2赛季上海站6冠王\nCUBA阳光组上海海事大学核心球员", "playerId": "p7" }, { "name": "韩曙光", "hwa": [179, 74, 25], "title": "路人王武汉站2冠王\n冠军赛选手", "playerId": "p8" }, { "name": "黄宇军", "hwa": [172, 68, 24], "title": "路人王7冠11亚\n路人王人气第一人", "playerId": "p9" }, { "name": "周锐", "hwa": [174, 73, 29], "title": "武汉313街球队队长\n厦门\n武汉站均全胜夺冠", "playerId": "p10" }]
 

@@ -39,3 +39,4 @@ p*.png
 **xlsx**
 utils/top5.xlsx
 *.clip
+src/static/img/player/32/**
