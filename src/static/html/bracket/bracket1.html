@@ -19,12 +19,9 @@
             font-size: 35px;
             color: #fff;
         }
-        .player-right {
-            position: absolute;
-            padding: 0px;
-            font-size: 35px;
+        .blue {
             
-            color: #fff;
+            color: #003da7;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
@@ -37,13 +34,15 @@
         <div>
             <div class="player" v-for="(item, index) in items" :key="item.name" :style="item.s">
                
-                <span class="player" style="left: 150px;top:10px;text-align:right; "> {{item.name[0]}}</span>
-                <span class="player" style="left: 50px;top:80px; font-size: 28px;"> {{item.hwa[0][2]}}岁 {{item.hwa[0][0]}}CM {{item.hwa[0][1]}}KG</span>
+                <span class="player blue" style="left: 150px;top:10px;text-align:right; "> {{item.name[0]}}</span>
+                <span class="player blue" style="left: 50px;top:80px; font-size: 28px;"> 球员头衔短板最多只有</span>
+                <!-- <span class="player blue" style="left: 50px;top:80px; font-size: 28px;"> {{item.hwa[0][2]}}岁 {{item.hwa[0][0]}}CM {{item.hwa[0][1]}}KG</span> -->
 
-                <span class="player" style="left: 860px;top:10px;"> {{item.name[1]}}</span>
-                <span class="player" style="left: 860px;top:80px; font-size: 28px;"> {{item.hwa[1][2]}}岁 {{item.hwa[1][0]}}CM {{item.hwa[1][1]}}KG</span>
+                <span class="player blue" style="left: 860px;top:10px;"> {{item.name[1]}}</span>
+                <span class="player blue" style="left: 860px;top:80px; font-size: 28px;"> {{item.hwa[1][2]}}岁 {{item.hwa[1][0]}}CM {{item.hwa[1][1]}}KG</span>
 
                 <span class="player" style="left: 435px;top:26px; text-align:center;width:300px;font-size: 50px;"> {{item.score[0]}}-{{item.score[1]}}</span>
+               
                 <img class="player" style="left:334px;width:128px;" :src = 'item.avatar[0]' />
                 <img class="player" style="left:704px;width:128px;" :src = 'item.avatar[1]' />
 
@@ -84,7 +83,7 @@
                 localWs.on('connect', () => {
                     console.log('connect', window.location.host)
                 })
-                    .on('sc_data_bracket1', (data) => {
+                    .on('sc_data_bracket32', (data) => {
                         console.log('sc_data', data)
                         for (var i = 0; i < data.playerArr.length; i++) {
                             var p = data.playerArr[i];
