@@ -1073,6 +1073,7 @@
 	        dataType: 'json'
 	    });
 	};
+	var _exData;
 	var _GameAdmin = (function (_super) {
 	    __extends(_GameAdmin, _super);
 	    function _GameAdmin() {
@@ -1081,6 +1082,10 @@
 	        this.selected = VueBase_1.VueBase.PROP;
 	        this.options = VueBase_1.VueBase.PROP;
 	        this.methods = {
+	            onShowPage: function (page, pageItemCount) {
+	                console.log('show page from', page);
+	                this.reloadFile(null, { page: page, pageItemCount: pageItemCount });
+	            },
 	            onFile: function () {
 	                if (!confFile) {
 	                    if (!filesInput)
@@ -1092,34 +1097,26 @@
 	                }
 	                document.getElementById("files").click();
 	            },
-	            reloadFile: function () {
+	            reloadFile: function (e, exData) {
 	                var _ = function (d) {
 	                    return d.getMinutes() + 'm' + d.getSeconds() + 's';
 	                };
+	                console.log("exData", exData);
+	                _exData = exData;
 	                if (!reader) {
 	                    reader = new FileReader();
 	                    reader.addEventListener("load", function (event) {
-	                        console.log("EVENT_ON_FILE", event.target['result']);
-	                        opReq('cs_data', {
-	                            "_": null,
-	                            "title": "222",
-	                            "playerArr": [{
-	                                    "name": "好端端的2333"
-	                                },
-	                                {
-	                                    "name": "好端端的3"
-	                                },
-	                                {
-	                                    "name": "好端端的4"
-	                                }
-	                            ]
-	                        });
+	                        var data = JSON.parse(event.target['result']);
+	                        data._ = null;
+	                        if (_exData) {
+	                            for (var k in _exData) {
+	                                console.log('exData', k);
+	                                data[k] = _exData[k];
+	                            }
+	                        }
+	                        console.log("EVENT_ON_FILE", data, _exData);
+	                        opReq('cs_data', data);
 	                        var f = confFile;
-	                        var output = [];
-	                        output.push("<li><strong>", f.name, "</strong>", "last modified: ", f.lastModifiedDate
-	                            ? _(f.lastModifiedDate)
-	                            : "n/a", "</li>");
-	                        var str = "<ul>" + output.join("") + "</ul>";
 	                    });
 	                }
 	                reader.readAsText(confFile, "utf-8");
@@ -1140,7 +1137,7 @@
 /* 27 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    game admin\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    game admin\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n</div>";
 
 /***/ },
 /* 28 */

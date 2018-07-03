@@ -15,6 +15,7 @@ let opReq = (cmdId: string, param: any) => {
         dataType: 'json'
     });
 }
+let _exData
 class _GameAdmin extends VueBase {
     template = require('./game.html');
     selected = VueBase.PROP;
@@ -32,6 +33,10 @@ class _GameAdmin extends VueBase {
         rkbIO = io.connect('/rkb')
     }
     methods = {
+        onShowPage(page, pageItemCount) {
+            console.log('show page from', page);
+            this.reloadFile(null, { page: page, pageItemCount: pageItemCount })
+        },
         onFile() {
             if (!confFile) {
                 if (!filesInput) filesInput = document.getElementById("files");
@@ -46,70 +51,30 @@ class _GameAdmin extends VueBase {
             }
             document.getElementById("files").click();
         },
-
-        reloadFile() {
-            // this.$vm.finalData
+        reloadFile(e, exData?) {
             let _ = (d) => {
                 return d.getMinutes() + 'm' + d.getSeconds() + 's'
             }
+            console.log("exData", exData);
+            _exData = exData
             if (!reader) {
                 reader = new FileReader();
                 reader.addEventListener("load", (event) => {
-                    console.log("EVENT_ON_FILE", event.target['result']);
-                    // this.emit("EVENT_ON_FILE", event.target['result']);
-                    opReq('cs_data', {
-                        "_":null,
-                        "title": "222",
-                        "playerArr": [{
-                            "name": "好端端的2333"
-                        },
-                        {
-                            "name": "好端端的3"
-                        },
-                        {
-                            "name": "好端端的4"
+                    let data = JSON.parse(event.target['result'])
+                    data._ = null
+                    if (_exData) {
+                        for (let k in _exData) {
+                            console.log('exData', k);
+                            data[k] = _exData[k]
                         }
-                        ]
-                    })
+                    }
+                    console.log("EVENT_ON_FILE", data, _exData);
+                    opReq('cs_data', data)
                     let f = confFile
-                    var output = [];
-                    output.push(
-                        "<li><strong>",
-                        f.name,
-                        "</strong>",
-                        "last modified: ",
-                        f.lastModifiedDate
-                            ? _(f.lastModifiedDate)
-                            : "n/a",
-                        "</li>"
-                    );
-                    let str =
-                        "<ul>" + output.join("") + "</ul>";
                 });
             }
             reader.readAsText(confFile, "utf-8");
         },
-        // onFileLoaded(e) {
-        //     // let reader = this.reader
-        //     if (!this.confFile) {
-        //         this.confFile = e.target.files[0]
-        //         if (e.target.files.length) {
-        //             reader.addEventListener("load", (event) => {
-        //                 let conf = event.target['result']
-        //                 if (conf) {
-        //                     conf = JSON.parse(conf)
-        //                     console.log(conf);
-        //                 }
-        //             })
-        //             reader.readAsText(e.target.files[0], "utf-8");
-        //         }
-        //     }
-        //     else {
-        //         console.log('reload');
-        //         reader.readAsText(this.confFile, "utf-8");
-        //     }
-
-        // }
     }
 }
 

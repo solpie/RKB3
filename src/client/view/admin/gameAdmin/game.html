@@ -10,5 +10,7 @@
     <input type="file" id="files" accept="*.json" hidden>
     <button class="button is-primary" @click="onFile">打开配置</button>
     <button class="button is-primary" id="reloadFile" @click="reloadFile">reload</button>
-
+    <button class="button is-primary" @click="onShowPage(0,6)">page 1</button>
+    <button class="button is-primary" @click="onShowPage(6,6)">page 2</button>
+    <button class="button is-primary" @click="onShowPage(12,4)">page 3</button>
 </div>

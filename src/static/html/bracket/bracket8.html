@@ -6,7 +6,7 @@
             position: static;
             padding: 10px;
         }
-
+        
         .player {
             position: absolute;
             padding: 0px;
@@ -14,10 +14,8 @@
             color: #fff;
             width: 300px;
         }
-
-
+        
         .blue {
-
             color: #003da7;
         }
     </style>
@@ -35,7 +33,7 @@
         </div>
     </div>
     <script>
-        var _p = function (x, y) {
+        var _p = function(x, y) {
             return 'left:' + x + 'px;' + 'top:' + y + 'px;'
         }
         var app = new Vue({
@@ -45,11 +43,12 @@
                 items: []
             },
             // mounted: function() {
-            created: function () {
+            created: function() {
                 console.log(this);
                 let pos = []
 
-                let x1 = 110, x1r = 1670
+                let x1 = 110,
+                    x1r = 1670
                 pos = pos.concat([
                     [x1, 154 + 0],
                     [x1, 154 + 244]
@@ -58,35 +57,57 @@
                     [x1, 638 + 5],
                     [x1, 638 + 5 + 244]
                 ])
-                let a = [], ar = []
+                let a = [],
+                    ar = []
                 for (let i = 0; i < pos.length; i++) {
                     let p = pos[i]
-                    a.push({ s: _p(p[0], p[1]), name: '好天氣其' })
-                    ar.push({ s: _p(x1r, p[1]), name: '好天氣其' })
+                    a.push({
+                        s: _p(p[0], p[1]),
+                        name: '好天氣其'
+                    })
+                    ar.push({
+                        s: _p(x1r, p[1]),
+                        name: '好天氣其'
+                    })
                 }
                 this.items = a.concat(ar)
 
-                this.items.push({ s: _p(480, 270), name: "好天氣其9" })
-                this.items.push({ s: _p(480, 767), name: "好天氣其0" })
+                this.items.push({
+                    s: _p(480, 270),
+                    name: "好天氣其9"
+                })
+                this.items.push({
+                    s: _p(480, 767),
+                    name: "好天氣其0"
+                })
 
-                this.items.push({ s: _p(1290, 270), name: "好天氣其1" })
-                this.items.push({ s: _p(1290, 767), name: "好天氣其2" })
+                this.items.push({
+                    s: _p(1290, 270),
+                    name: "好天氣其1"
+                })
+                this.items.push({
+                    s: _p(1290, 767),
+                    name: "好天氣其2"
+                })
 
-                this.items.push({ s: _p(860, 500) + 'font-size:50px;', name: "好天氣" })
+                this.items.push({
+                    s: _p(860, 500) + 'font-size:50px;',
+                    name: "好天氣"
+                })
 
                 var localWs = io.connect('/rkb')
                 localWs.on('connect', () => {
-                    console.log('connect', window.location.host)
-                })
-                    .on('sc_data_bracket32', (data) => {
+                        console.log('connect', window.location.host)
+                    })
+                    .on('sc_data', (data) => {
                         console.log('sc_data', data)
-                        for (var i = 0; i < data.playerArr.length; i++) {
-                            var p = data.playerArr[i];
-                            _this.items.push({
-                                s: _p(pos[i][0], pos[i][1]),
-                                name: p.name
-                            })
-                        }
+                            // for (var i = 0; i < data.playerArr.length; i++) {
+                            //     var p = data.playerArr[i];
+                            //     _this.items.push({
+                            //         s: _p(pos[i][0], pos[i][1]),
+                            //         name: p.name
+                            //     })
+                            // }
                     })
             }
         })

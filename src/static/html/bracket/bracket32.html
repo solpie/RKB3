@@ -1,0 +1,112 @@
+<html>
+
+<head>
+    <style>
+        .bg {
+            position: static;
+            padding: 10px;
+        }
+        
+        .player {
+            position: absolute;
+            padding: 0px;
+            font-size: 40px;
+            color: #fff;
+            font-family: "微软雅黑"
+        }
+        
+        .blue {
+            color: #003da7;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="/js/socket.io.slim.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <img src="bg1.png" />
+        <div>
+            <div class="player" v-for="(item, index) in items" :key="item.idx" :style="item.s">
+                <div class="player" style="left:0px;width: 312px;text-align: right;">
+                    <span class="player blue" style="top:20px;right: 0px"> {{item.name[0]}}</span>
+                    <!-- <span class="player blue" style="left: 50px;top:80px; font-size: 28px;"> 球员头衔短板最多只有</span> -->
+                    <span class="player blue" style="right: 0px;top:80px; font-size: 28px;"> {{item.hwa[0][2]}}岁 {{item.hwa[0][0]}}CM {{item.hwa[0][1]}}KG</span>
+                </div>
+
+                <span class="player blue" style="left: 860px;top:20px;"> {{item.name[1]}}</span>
+                <span class="player blue" style="left: 860px;top:80px; font-size: 28px;"> {{item.hwa[1][2]}}岁 {{item.hwa[1][0]}}CM {{item.hwa[1][1]}}KG</span>
+
+                <span class="player" style="left: 435px;top:26px; text-align:center;width:300px;font-size: 50px;"> {{item.score[0]}}-{{item.score[1]}}</span>
+
+                <img class="player" style="left:334px;width:128px;" :src='item.avatar[0]' />
+                <img class="player" style="left:704px;width:128px;" :src='item.avatar[1]' />
+                <img src="item1.png" />
+            </div>
+        </div>
+    </div>
+    <script>
+        var _p = function(x, y) {
+            return 'left:' + x + 'px;' + 'top:' + y + 'px;'
+        }
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue22!',
+                items: []
+            },
+            // mounted: function() {
+            created: function() {
+                console.log(this);
+                // let pos = []
+                // let count = 4
+                // let top = (1080 - count * 162) / 2
+                // for (let i = 0; i < count; i++) {
+                //     pos.push({
+                //         s: _p(500 - 70 - 5, i * 162 + top),
+                //         name: ['好天气的', 'huangyujun'],
+                //         hwa: [
+                //             ['192', '80', '24'],
+                //             ['193', '90', '34']
+                //         ],
+                //         score: [2, 11],
+                //         avatar: ["/img/player/32/p1.jpg", "/img/player/32/p1.jpg"],
+                //         idx: i + 1
+                //     })
+                // }
+                // this.items = pos
+                var localWs = io.connect('/rkb')
+                localWs.on('connect', () => {
+                        console.log('connect', window.location.host)
+                    })
+                    .on('sc_data', (data) => {
+                        console.log('sc_data', data)
+                        let page = data.page || 0
+                        let pageItemCount = data.pageItemCount || 6
+                        this.items = []
+                        let count = pageItemCount
+                        let top = (1080 - count * 162) / 2
+                        let avtPath = data.avatarUrlBase
+                        for (let i = 0; i < count; i++) {
+                            let rec = data.rec[i + page];
+                            if (rec) {
+                                let p1 = data.playerMap[rec.player[0]]
+                                let p2 = data.playerMap[rec.player[1]]
+                                this.items.push({
+                                    s: _p(500 - 70 - 5, i * 162 + top),
+                                    name: [p1.name, p2.name],
+                                    hwa: [
+                                        p1.hwa,
+                                        p2.hwa
+                                    ],
+                                    score: rec.score,
+                                    avatar: [avtPath + p1.playerId + '.png', avtPath + p2.playerId + '.png'],
+                                    idx: i + 1
+                                })
+                            }
+                        }
+                    })
+            }
+        })
+    </script>
+</body>
