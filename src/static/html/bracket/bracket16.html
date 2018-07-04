@@ -32,7 +32,7 @@
     <div id="app">
         <img src="bg.png" />
         <div>
-            <div v-for="(item, index) in items" :key="item.name">
+            <div v-for="(item, index) in items" :key="item.idx">
                 <div class="player blue" :style="item.s">
                     <span>{{item.name}} </span>
                 </div>
@@ -115,6 +115,7 @@
                 for (let i = 0; i < pos.length; i++) {
                     let p = pos[i];
                     this.items.push({
+                        idx: i + 1,
                         s: _p(p[0], p[1]),
                         score: 0,
                         name: '好天氣其'
