@@ -1,43 +1,17 @@
 {
-    "date": "2018-03-17",
+    "date": "2018-07-06",
     "dbIdx": "1021",
     "panel": "BO3",
-    "gameTitle": "kd day1",
+    "gameTitle": "kd2",
     "avatarUrlBase": "http://127.0.0.1:8088/img/player/bo3/",
     "rec": [
-        { "idx": "1#A1", "score": [1, 0], "player": ["p1", "p2"] },
-        { "idx": "1#B1", "score": [0, 1], "player": ["p5", "p6"] },
-        { "idx": "1#C1", "score": [1, 0], "player": ["p9", "p10"] },
-        { "idx": "1#D1", "score": [0, 1], "player": ["p13", "p14"] },
-        { "idx": "1#E1", "score": [0, 1], "player": ["p17", "p18"] },
-        { "idx": "1#F1", "score": [1, 0], "player": ["p21", "p22"] },
-        { "idx": "1#G1", "score": [0, 1], "player": ["p25", "p26"] },
-        { "idx": "1#H1", "score": [0, 1], "player": ["p29", "p30"] },
-
-        { "idx": "1#A2", "score": [1, 0], "player": ["p3", "p4"] },
-        { "idx": "1#B2", "score": [1, 0], "player": ["p7", "p8"] },
-        { "idx": "1#C2", "score": [0, 1], "player": ["p11", "p12"] },
-        { "idx": "1#D2", "score": [0, 1], "player": ["p15", "p16"] },
-        { "idx": "1#E2", "score": [0, 1], "player": ["p19", "p20"] },
-        { "idx": "1#F2", "score": [1, 0], "player": ["p23", "p24"] },
-        { "idx": "1#G2", "score": [1, 0], "player": ["p27", "p28"] },
-        { "idx": "1#H2", "score": [1, 0], "player": ["p31", "p32"] },
-
-
-
-        { "idx": "2#A1A2", "score": [1, 0], "player": ["", ""] },
-        { "idx": "2#E1E2", "score": [0, 1], "player": ["", ""] },
-        { "idx": "2#B1B2", "score": [1, 0], "player": ["", ""] },
-        { "idx": "2#F1F2", "score": [0, 1], "player": ["", ""] },
-        { "idx": "2#C1C2", "score": [0, 1], "player": ["", ""] },
-        { "idx": "2#G1G2", "score": [1, 0], "player": ["", ""] },
-        { "idx": "2#D1D2", "score": [1, 0], "player": ["", ""] },
-        { "idx": "2#H1H2", "score": [0, 1], "player": ["", ""] },
-
-        { "idx": "4#A1A2E1E2", "score": [1, 0], "player": ["", ""] },
-        { "idx": "4#B1B2F1F2", "score": [0, 1], "player": ["", ""] },
-        { "idx": "4#C1C2G1G2", "score": [0, 1], "player": ["", ""] },
-        { "idx": "4#D1D2H1H2", "score": [3, 0], "player": ["", ""] }
+        { "idx": "1", "score": [1, 0], "player": ["p1", "p2"] },
+        { "idx": "2", "score": [0, 1], "player": ["p5", "p6"] },
+        { "idx": "3", "score": [1, 0], "player": ["p9", "p10"] },
+        { "idx": "4", "score": [0, 1], "player": ["p13", "p14"] },
+        { "idx": "5", "score": [0, 1], "player": ["p17", "p18"] },
+        { "idx": "6", "score": [0, 1], "player": ["p17", "p18"] },
+        { "idx": "7", "score": [1, 0], "player": ["p21", "p22"] }
     ],
     "playerMap": { "p1": { "name": "安云鹏", "hwa": [190, 100, 31], "title": "前CUBA华中师范大学队长", "playerId": "p1" }, "p2": { "name": "李金洋", "hwa": [197, 100, 20], "title": "路人王西安站两冠王\n西安浓眉哥", "playerId": "p2" }, "p3": { "name": "李军", "hwa": [184, 85, 24], "title": "路人王成都站亚军", "playerId": "p3" }, "p4": { "name": "祁锦弘", "hwa": [181, 80, 20], "title": "路人王五冠王\n三分神射手", "playerId": "p4" }, "p5": { "name": "杨展坤", "hwa": [190, 87, 30], "title": "路人王4冠王\n最强特警", "playerId": "p5" }, "p6": { "name": "程南", "hwa": [191, 85, 24], "title": "北京站7战7冠的霸主", "playerId": "p6" }, "p7": { "name": "马克", "hwa": [188, 85, 26], "title": "路人王鬼才“soma”", "playerId": "p7" }, "p8": { "name": "谢世杰", "hwa": [189, 85, 27], "title": "斗鱼超人气户外主播", "playerId": "p8" }, "p9": { "name": "陈泽文", "hwa": [187, 78, 22], "title": "CUBA全明星西安交大核心球员", "playerId": "p9" }, "p10": { "name": "白斌", "hwa": [186, 86, 22], "title": "路人王最帅投篮手型", "playerId": "p10" }, "p11": { "name": "李光琦", "hwa": [183, 72, 26], "title": "路人王上海站冠军", "playerId": "p11" }, "p12": { "name": "叶开凡", "hwa": [172, 68, 24], "title": "路人王人气第一人\n网红军哥", "playerId": "p12" }, "p13": { "name": "周瑞", "hwa": [0, 0, 0], "title": "明星教练\nNBA新科MVP哈登", "playerId": "p13" }, "p14": { "name": "喂鸽子", "hwa": [0, 0, 0], "title": "明星教练\nCBA总冠军\n明星后卫刘晓宇", "playerId": "p14" }, "p15": { "name": "李豪", "hwa": [0, 0, 0], "title": "NBA常规赛MVP", "playerId": "p15" }, "p16": { "name": "丁守军", "hwa": [0, 0, 0], "title": "CBA四届总冠军\n明星后卫", "playerId": "p16" }, "p17": { "name": "郭凌川", "hwa": [0, 0, 0], "title": "哈登队", "playerId": "p17" }, "p18": { "name": "周煜皓", "hwa": [0, 0, 0], "title": "刘晓宇队", "playerId": "p18" }, "p19": { "name": "李江", "hwa": [0, 0, 0], "title": "刘晓宇队", "playerId": "p19" }, "p20": { "name": "猴子雨", "hwa": [0, 0, 0], "title": "刘晓宇队", "playerId": "p20" }, "p21": { "name": "陈鼎", "hwa": [0, 0, 0], "title": "刘晓宇队", "playerId": "p21" }, "p22": { "name": "张家园", "hwa": [0, 0, 0], "title": "刘晓宇队", "playerId": "p22" }, "p23": { "name": "唐日辉", "hwa": [0, 0, 0], "title": "刘晓宇队", "playerId": "p23" }, "p24": { "name": "钟显超", "hwa": [0, 0, 0], "title": "刘晓宇队", "playerId": "p24" }, "p25": { "name": "王晶", "hwa": [0, 0, 0], "title": "刘晓宇队", "playerId": "p25" }, "p26": { "name": "李洪亮", "hwa": [0, 0, 0], "title": "刘晓宇队", "playerId": "p26" }, "p27": { "name": "宋流轩", "hwa": [0, 0, 0], "title": "刘晓宇队", "playerId": "p27" }, "p28": { "name": "梁爽", "hwa": [0, 0, 0], "title": "刘晓宇队", "playerId": "p28" }, "p29": { "name": "韩曙光", "hwa": [0, 0, 0], "title": "刘晓宇队", "playerId": "p29" }, "p30": { "name": "孤战疼", "hwa": [0, 0, 0], "title": "刘晓宇队", "playerId": "p30" }, "p31": { "name": "杨柳街", "hwa": [0, 0, 0], "title": "刘晓宇队", "playerId": "p31" }, "p32": { "name": "张亚龙", "hwa": [0, 0, 0], "title": "刘晓宇队", "playerId": "p32" } }
 }

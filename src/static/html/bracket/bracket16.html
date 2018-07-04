@@ -14,6 +14,7 @@
             color: #fff;
             width: 150px;
             text-align: center;
+            font-family: "微软雅黑";
         }
         
         .blue {
@@ -51,6 +52,56 @@
                 items: []
             },
             // mounted: function() {
+            methods: {
+                route: (recArr, playerMap, items) => {
+                    let getWinner = (rec) => {
+                        if (rec.score[0] != 0 || rec.score[1] != 0) {
+                            if (rec.score[0] > rec.score[1])
+                                return rec.player[0]
+                            else
+                                return rec.player[1]
+                        }
+                        return ''
+                    }
+                    let fillWinner = (fromGameId, playerId) => {
+                        for (let i = 0; i < recArr.length; i++) {
+                            let rec = recArr[i];
+                            let a = rec.idx.split('#')
+                            let gameId = a[1]
+                            if (gameId.length > fromGameId.length) {
+                                let pos = gameId.search(fromGameId)
+                                if (pos > -1) {
+                                    let arrIdx = Math.floor(pos / Number(a[0]))
+                                    console.log('fillWinner from', fromGameId, 'to', gameId, arrIdx, playerMap[playerId].name);
+                                    rec.player[arrIdx] = playerId
+                                }
+                            }
+                        }
+                    }
+                    let m = {
+                        'A1A2E1E2': 24,
+                        'B1B2F1F2': 25,
+                        'C1C2G1G2': 26,
+                        'D1D2H1H2': 27,
+                    }
+                    for (let i = 0; i < recArr.length; i++) {
+                        let rec = recArr[i];
+                        let a = rec.idx.split('#')
+                        let gameId = a[1]
+                        let winner = getWinner(rec) //ret playerId
+                        if (winner) {
+                            console.log(gameId, 'winner', playerMap[winner].name);
+                            fillWinner(gameId, winner)
+                            if (m[gameId]) {
+                                item = items[m[gameId]]
+                                let p1 = playerMap[winner]
+                                item.name = p1.name
+                            }
+                        }
+                    }
+
+                }
+            },
             created: function() {
                 console.log(this);
                 var _this = this
@@ -118,17 +169,16 @@
                         idx: i + 1,
                         s: _p(p[0], p[1]),
                         score: 0,
-                        name: '好天氣其'
+                        name: ''
                     })
                 }
-
                 var localWs = io.connect('/rkb')
                 localWs.on('connect', () => {
                         console.log('connect', window.location.host)
                     })
                     .on('sc_data', (data) => {
                         console.log('sc_data', data)
-
+                        this.route(data.rec, data.playerMap, this.items)
                         for (let i = 0; i < 12; i++) {
                             let rec = data.rec[i + 16];
                             let item1 = this.items[i * 2]
