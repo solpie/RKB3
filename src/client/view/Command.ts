@@ -6,7 +6,7 @@ export const CommandId = {
     sc_updateFoul: '',
     cs_updateScore: '',
     sc_updateScore: '',
-    
+
     cs_updateRightScore: '',
     sc_updateRightScore: '',
     cs_addLeftScore: '',//1000010
@@ -128,8 +128,8 @@ export const CommandId = {
     ////////////studio panel
     cs_showBottle: '',
     sc_showBottle: '',
-    cs_setPlayer:'',
-    sc_setPlayer:'',
+    cs_setPlayer: '',
+    sc_setPlayer: '',
     //---------------- 5v5 panel
     cs_showHeaderText: '',
     sc_showHeaderText: '',

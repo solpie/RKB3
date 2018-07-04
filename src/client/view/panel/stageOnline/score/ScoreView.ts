@@ -200,7 +200,7 @@ export class ScoreView extends BasePanelView {
                 this.scorePanelV3.resetScore()
                 this.scorePanelV3.resetTimer()
                 this.scorePanelV3.toggleTimer(TimerState.PAUSE)
-                this.scorePanelV3.setGameTitle(data.gameTitle||'')
+                this.scorePanelV3.setGameTitle(data.gameTitle || '')
             })
             .on(`${CommandId.sc_updateScore}`, (data) => {
                 if (data.dtScore != null) {

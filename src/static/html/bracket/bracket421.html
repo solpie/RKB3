@@ -26,7 +26,7 @@
 
 <body>
     <div id="app">
-        <img src="bg8.png" />
+        <img src="bg421.png" />
         <div>
             <div class="player" v-for="(item, index) in items" :key="item.s" :style="item.s">
                 <span class="player blue"> {{item.name}}</span>
@@ -40,7 +40,6 @@
         var app = new Vue({
             el: '#app',
             data: {
-                message: 'Hello Vue22!',
                 items: []
             },
             // mounted: function() {

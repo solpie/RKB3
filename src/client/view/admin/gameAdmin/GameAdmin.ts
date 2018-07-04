@@ -3,10 +3,9 @@ import { PanelId } from '../../const';
 let confFile = null;
 let reader;
 let filesInput;
-declare let io;
-let rkbIO;
 declare let $
 let opReq = (cmdId: string, param: any) => {
+    param._ = null
     $.ajax({
         url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
         type: 'post',
@@ -20,9 +19,8 @@ class _GameAdmin extends VueBase {
     template = require('./game.html');
     selected = VueBase.PROP;
     options = VueBase.PROP;
-
-
-
+    gameConf = VueBase.PROP;
+    vsPlayer = VueBase.PROP;
     constructor() {
         super();
         VueBase.initProps(this);
@@ -30,13 +28,97 @@ class _GameAdmin extends VueBase {
 
     created() {
         console.log('Game admin');
-        rkbIO = io.connect('/rkb')
+    }
+    createOption(data) {
+        this.route(data.rec, data.playerMap)
+        let a = [];
+        let playerMap = data.playerMap
+        for (var i = 0; i < data.rec.length; i++) {
+            let rec = data.rec[i]
+            console.log('player', rec.player);
+            let p1 = playerMap[rec.player[0]]
+            let p2 = playerMap[rec.player[1]]
+            if (p1) {
+                let option = { text: rec.idx + p1.name + ' vs ' + p2.name, value: rec.idx }
+                a.push(option);
+            }
+        }
+        this.options = a
+        this.gameConf = data
+        console.log('create option ', a, this.options);
+    }
+
+    route(recArr, playerMap) {
+
+        let getWinner = (rec) => {
+            if (rec.score[0] != 0 || rec.score[1] != 0) {
+                if (rec.score[0] > rec.score[1])
+                    return rec.player[0]
+                else
+                    return rec.player[1]
+            }
+            return ''
+        }
+        let fillWinner = (fromGameId, playerId) => {
+            for (let i = 0; i < recArr.length; i++) {
+                let rec = recArr[i];
+                let a = rec.idx.split('#')
+                let gameId = a[1]
+                if (gameId.length > fromGameId.length) {
+                    let pos = gameId.search(fromGameId)
+                    if (pos > -1) {
+                        let arrIdx = Math.floor(pos / Number(a[0]))
+                        console.log('fillWinner from', fromGameId, 'to', gameId, arrIdx, playerMap[playerId].name);
+                        rec.player[arrIdx] = playerId
+                    }
+                }
+            }
+        }
+        for (let i = 0; i < recArr.length; i++) {
+            let rec = recArr[i];
+            let a = rec.idx.split('#')
+            let gameId = a[1]
+            let winner = getWinner(rec) //ret playerId
+            if (winner) {
+                console.log(gameId, 'winner', playerMap[winner].name);
+                fillWinner(gameId, winner)
+            }
+        }
+
     }
     methods = {
+        onSelectGame() {
+            console.log('on init game', this.selected);
+            let playerMap = this.gameConf.playerMap
+            let recArr = this.gameConf.rec
+            for (let i = 0; i < recArr.length; i++) {
+                let rec = recArr[i];
+                if (rec.idx == this.selected) {
+                    let p1 = rec.player[0]
+                    let p2 = rec.player[1]
+                    this.vsPlayer = p1 + ' ' + p2
+                    return
+                }
+            }
+        },
+        onInitGame() {
+            // cs_initGame
+            let playerMap = this.gameConf.playerMap
+            let recArr = this.gameConf.rec
+            for (let i = 0; i < recArr.length; i++) {
+                let rec = recArr[i];
+                if (rec.idx == this.selected) {
+                    let p1 = rec.player[0]
+                    let p2 = rec.player[1]
+                    opReq('cs_setPlayer', { leftPlayer: playerMap[p1], rightPlayer: playerMap[p2] })
+                }
+            }
+        },
         onShowPage(page, pageItemCount) {
             console.log('show page from', page);
             this.reloadFile(null, { page: page, pageItemCount: pageItemCount })
         },
+
         onFile() {
             if (!confFile) {
                 if (!filesInput) filesInput = document.getElementById("files");
@@ -68,6 +150,8 @@ class _GameAdmin extends VueBase {
                             data[k] = _exData[k]
                         }
                     }
+                    this.createOption(data)
+
                     console.log("EVENT_ON_FILE", data, _exData);
                     opReq('cs_data', data)
                     let f = confFile

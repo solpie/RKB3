@@ -211,12 +211,22 @@ export class Score2018v3 extends PIXI.Container {
         this.rFoul.setText((data || 0))
     }
 
+    _setHWA(playerData) {
+        if (playerData.hwa) {
+            playerData.height = playerData.hwa[0]
+            playerData.weight = playerData.hwa[1]
+            playerData.age = playerData.hwa[2]
+        }
+    }
+
     setRightPlayer(rPlayer) {
         this.rTitle.setText(rPlayer.title)
             .setAlignCenter(1320)
 
         this.rName.setText(rPlayer.name)
             .setLimitWidth(298, 40)
+
+        this._setHWA(rPlayer)
         let age = ''
         if (rPlayer.age)
             age = rPlayer.age + '岁'
@@ -232,6 +242,7 @@ export class Score2018v3 extends PIXI.Container {
             .setLimitWidth(298, 40)
             .setAlignRight(702)
 
+        this._setHWA(lPlayer)
         let age = ''
         if (lPlayer.age)
             age = lPlayer.age + '岁'

@@ -147,16 +147,7 @@ class StageOnlineView extends VueBase {
         let localWs = io.connect(`/${PanelId.rkbPanel}`)
         localWs.on('connect', (msg) => {
             console.log('connect', window.location.host)
-            // localWs.emit("opUrl", { opUrl: window.location.host })
         })
-            // .on(`${CommandId.sc_showRank}`, (data) => {
-            //     console.log("CommandId.sc_showRank", data)
-            //     this.showRank()
-            // })
-            // .on(`${CommandId.sc_showBracket}`, (data) => {
-            //     console.log("CommandId.sc_showBracket", data)
-            //     this.showBracket()
-            // })
             .on(`${CommandId.sc_showGroup}`, (data) => {
                 console.log('sc_showGroup');
                 this.showGroup(data)
@@ -164,9 +155,9 @@ class StageOnlineView extends VueBase {
 
     }
     showLottery(k, id) {
-        if (!lottery) {
-            lottery = new Lottery(canvasStage, k, id)
-        }
+        // if (!lottery) {
+        //     lottery = new Lottery(canvasStage, k, id)
+        // }
     }
     groupSp: any
     showGroup(data?) {

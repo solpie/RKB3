@@ -1478,8 +1478,8 @@
 	var confFile = null;
 	var reader;
 	var filesInput;
-	var rkbIO;
 	var opReq = function (cmdId, param) {
+	    param._ = null;
 	    $.ajax({
 	        url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
 	        type: 'post',
@@ -1496,7 +1496,35 @@
 	        this.template = __webpack_require__(27);
 	        this.selected = VueBase_1.VueBase.PROP;
 	        this.options = VueBase_1.VueBase.PROP;
+	        this.gameConf = VueBase_1.VueBase.PROP;
+	        this.vsPlayer = VueBase_1.VueBase.PROP;
 	        this.methods = {
+	            onSelectGame: function () {
+	                console.log('on init game', this.selected);
+	                var playerMap = this.gameConf.playerMap;
+	                var recArr = this.gameConf.rec;
+	                for (var i = 0; i < recArr.length; i++) {
+	                    var rec = recArr[i];
+	                    if (rec.idx == this.selected) {
+	                        var p1 = rec.player[0];
+	                        var p2 = rec.player[1];
+	                        this.vsPlayer = p1 + ' ' + p2;
+	                        return;
+	                    }
+	                }
+	            },
+	            onInitGame: function () {
+	                var playerMap = this.gameConf.playerMap;
+	                var recArr = this.gameConf.rec;
+	                for (var i = 0; i < recArr.length; i++) {
+	                    var rec = recArr[i];
+	                    if (rec.idx == this.selected) {
+	                        var p1 = rec.player[0];
+	                        var p2 = rec.player[1];
+	                        opReq('cs_setPlayer', { leftPlayer: playerMap[p1], rightPlayer: playerMap[p2] });
+	                    }
+	                }
+	            },
 	            onShowPage: function (page, pageItemCount) {
 	                console.log('show page from', page);
 	                this.reloadFile(null, { page: page, pageItemCount: pageItemCount });
@@ -1513,6 +1541,7 @@
 	                document.getElementById("files").click();
 	            },
 	            reloadFile: function (e, exData) {
+	                var _this = this;
 	                var _ = function (d) {
 	                    return d.getMinutes() + 'm' + d.getSeconds() + 's';
 	                };
@@ -1529,6 +1558,7 @@
 	                                data[k] = _exData[k];
 	                            }
 	                        }
+	                        _this.createOption(data);
 	                        console.log("EVENT_ON_FILE", data, _exData);
 	                        opReq('cs_data', data);
 	                        var f = confFile;
@@ -1541,7 +1571,60 @@
 	    }
 	    _GameAdmin.prototype.created = function () {
 	        console.log('Game admin');
-	        rkbIO = io.connect('/rkb');
+	    };
+	    _GameAdmin.prototype.createOption = function (data) {
+	        this.route(data.rec, data.playerMap);
+	        var a = [];
+	        var playerMap = data.playerMap;
+	        for (var i = 0; i < data.rec.length; i++) {
+	            var rec = data.rec[i];
+	            console.log('player', rec.player);
+	            var p1 = playerMap[rec.player[0]];
+	            var p2 = playerMap[rec.player[1]];
+	            if (p1) {
+	                var option = { text: rec.idx + p1.name + ' vs ' + p2.name, value: rec.idx };
+	                a.push(option);
+	            }
+	        }
+	        this.options = a;
+	        this.gameConf = data;
+	        console.log('create option ', a, this.options);
+	    };
+	    _GameAdmin.prototype.route = function (recArr, playerMap) {
+	        var getWinner = function (rec) {
+	            if (rec.score[0] != 0 || rec.score[1] != 0) {
+	                if (rec.score[0] > rec.score[1])
+	                    return rec.player[0];
+	                else
+	                    return rec.player[1];
+	            }
+	            return '';
+	        };
+	        var fillWinner = function (fromGameId, playerId) {
+	            for (var i = 0; i < recArr.length; i++) {
+	                var rec = recArr[i];
+	                var a = rec.idx.split('#');
+	                var gameId = a[1];
+	                if (gameId.length > fromGameId.length) {
+	                    var pos = gameId.search(fromGameId);
+	                    if (pos > -1) {
+	                        var arrIdx = Math.floor(pos / Number(a[0]));
+	                        console.log('fillWinner from', fromGameId, 'to', gameId, arrIdx, playerMap[playerId].name);
+	                        rec.player[arrIdx] = playerId;
+	                    }
+	                }
+	            }
+	        };
+	        for (var i = 0; i < recArr.length; i++) {
+	            var rec = recArr[i];
+	            var a = rec.idx.split('#');
+	            var gameId = a[1];
+	            var winner = getWinner(rec);
+	            if (winner) {
+	                console.log(gameId, 'winner', playerMap[winner].name);
+	                fillWinner(gameId, winner);
+	            }
+	        }
 	    };
 	    return _GameAdmin;
 	}(VueBase_1.VueBase));
@@ -1552,7 +1635,7 @@
 /* 27 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    game admin\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    game admin\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n</div>";
 
 /***/ },
 /* 28 */

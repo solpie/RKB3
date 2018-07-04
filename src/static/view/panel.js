@@ -1063,8 +1063,8 @@
 	var confFile = null;
 	var reader;
 	var filesInput;
-	var rkbIO;
 	var opReq = function (cmdId, param) {
+	    param._ = null;
 	    $.ajax({
 	        url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
 	        type: 'post',
@@ -1081,7 +1081,35 @@
 	        this.template = __webpack_require__(27);
 	        this.selected = VueBase_1.VueBase.PROP;
 	        this.options = VueBase_1.VueBase.PROP;
+	        this.gameConf = VueBase_1.VueBase.PROP;
+	        this.vsPlayer = VueBase_1.VueBase.PROP;
 	        this.methods = {
+	            onSelectGame: function () {
+	                console.log('on init game', this.selected);
+	                var playerMap = this.gameConf.playerMap;
+	                var recArr = this.gameConf.rec;
+	                for (var i = 0; i < recArr.length; i++) {
+	                    var rec = recArr[i];
+	                    if (rec.idx == this.selected) {
+	                        var p1 = rec.player[0];
+	                        var p2 = rec.player[1];
+	                        this.vsPlayer = p1 + ' ' + p2;
+	                        return;
+	                    }
+	                }
+	            },
+	            onInitGame: function () {
+	                var playerMap = this.gameConf.playerMap;
+	                var recArr = this.gameConf.rec;
+	                for (var i = 0; i < recArr.length; i++) {
+	                    var rec = recArr[i];
+	                    if (rec.idx == this.selected) {
+	                        var p1 = rec.player[0];
+	                        var p2 = rec.player[1];
+	                        opReq('cs_setPlayer', { leftPlayer: playerMap[p1], rightPlayer: playerMap[p2] });
+	                    }
+	                }
+	            },
 	            onShowPage: function (page, pageItemCount) {
 	                console.log('show page from', page);
 	                this.reloadFile(null, { page: page, pageItemCount: pageItemCount });
@@ -1098,6 +1126,7 @@
 	                document.getElementById("files").click();
 	            },
 	            reloadFile: function (e, exData) {
+	                var _this = this;
 	                var _ = function (d) {
 	                    return d.getMinutes() + 'm' + d.getSeconds() + 's';
 	                };
@@ -1114,6 +1143,7 @@
 	                                data[k] = _exData[k];
 	                            }
 	                        }
+	                        _this.createOption(data);
 	                        console.log("EVENT_ON_FILE", data, _exData);
 	                        opReq('cs_data', data);
 	                        var f = confFile;
@@ -1126,7 +1156,60 @@
 	    }
 	    _GameAdmin.prototype.created = function () {
 	        console.log('Game admin');
-	        rkbIO = io.connect('/rkb');
+	    };
+	    _GameAdmin.prototype.createOption = function (data) {
+	        this.route(data.rec, data.playerMap);
+	        var a = [];
+	        var playerMap = data.playerMap;
+	        for (var i = 0; i < data.rec.length; i++) {
+	            var rec = data.rec[i];
+	            console.log('player', rec.player);
+	            var p1 = playerMap[rec.player[0]];
+	            var p2 = playerMap[rec.player[1]];
+	            if (p1) {
+	                var option = { text: rec.idx + p1.name + ' vs ' + p2.name, value: rec.idx };
+	                a.push(option);
+	            }
+	        }
+	        this.options = a;
+	        this.gameConf = data;
+	        console.log('create option ', a, this.options);
+	    };
+	    _GameAdmin.prototype.route = function (recArr, playerMap) {
+	        var getWinner = function (rec) {
+	            if (rec.score[0] != 0 || rec.score[1] != 0) {
+	                if (rec.score[0] > rec.score[1])
+	                    return rec.player[0];
+	                else
+	                    return rec.player[1];
+	            }
+	            return '';
+	        };
+	        var fillWinner = function (fromGameId, playerId) {
+	            for (var i = 0; i < recArr.length; i++) {
+	                var rec = recArr[i];
+	                var a = rec.idx.split('#');
+	                var gameId = a[1];
+	                if (gameId.length > fromGameId.length) {
+	                    var pos = gameId.search(fromGameId);
+	                    if (pos > -1) {
+	                        var arrIdx = Math.floor(pos / Number(a[0]));
+	                        console.log('fillWinner from', fromGameId, 'to', gameId, arrIdx, playerMap[playerId].name);
+	                        rec.player[arrIdx] = playerId;
+	                    }
+	                }
+	            }
+	        };
+	        for (var i = 0; i < recArr.length; i++) {
+	            var rec = recArr[i];
+	            var a = rec.idx.split('#');
+	            var gameId = a[1];
+	            var winner = getWinner(rec);
+	            if (winner) {
+	                console.log(gameId, 'winner', playerMap[winner].name);
+	                fillWinner(gameId, winner);
+	            }
+	        }
 	    };
 	    return _GameAdmin;
 	}(VueBase_1.VueBase));
@@ -1137,7 +1220,7 @@
 /* 27 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    game admin\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    game admin\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n</div>";
 
 /***/ },
 /* 28 */
@@ -5056,7 +5139,6 @@
 	var WebJsFunc_1 = __webpack_require__(25);
 	var BasePanelView_1 = __webpack_require__(45);
 	var BracketView_1 = __webpack_require__(78);
-	var Lottery_1 = __webpack_require__(81);
 	var RankView_1 = __webpack_require__(84);
 	var ScoreView_1 = __webpack_require__(88);
 	var GroupSp2_1 = __webpack_require__(103);
@@ -5422,9 +5504,6 @@
 	        });
 	    };
 	    StageOnlineView.prototype.showLottery = function (k, id) {
-	        if (!lottery) {
-	            lottery = new Lottery_1.Lottery(canvasStage, k, id);
-	        }
 	    };
 	    StageOnlineView.prototype.showGroup = function (data) {
 	        if (!groupSp)
@@ -6264,320 +6343,9 @@
 
 
 /***/ },
-/* 81 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var JsFunc_1 = __webpack_require__(21);
-	var WebJsFunc_1 = __webpack_require__(25);
-	var RollFx_1 = __webpack_require__(82);
-	var BracketGroup_1 = __webpack_require__(72);
-	var const_1 = __webpack_require__(44);
-	var PixiEx_1 = __webpack_require__(47);
-	var RandomFx_1 = __webpack_require__(83);
-	var Lottery = (function (_super) {
-	    __extends(Lottery, _super);
-	    function Lottery(parent, k, id) {
-	        var _this = this;
-	        _super.call(this);
-	        this.k = k;
-	        this.id = id;
-	        parent.addChild(this);
-	        var modal = new PIXI.Graphics();
-	        modal.beginFill(0, .8)
-	            .drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT);
-	        this.addChild(modal);
-	        this.fxCtn = new PIXI.Container();
-	        this.addChild(this.fxCtn);
-	        var modal2 = new PIXI.Graphics();
-	        modal2.beginFill(0, .6)
-	            .drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT);
-	        this.addChild(modal2);
-	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/lottery/bg.png' });
-	        this.addChild(bg);
-	        this.titleText = new PIXI.Text('');
-	        this.titleText.style.fontFamily = const_1.FontName.MicrosoftYahei;
-	        this.titleText.style.fill = 0xffffff;
-	        this.titleText.style.fontSize = '70px';
-	        this.titleText.style.fontWeight = 'bold';
-	        this.addChild(this.titleText);
-	        this.stateText = new PIXI.Text('START');
-	        this.stateText.style.fontFamily = const_1.FontName.MicrosoftYahei;
-	        this.stateText.style.fill = 0xffffff;
-	        this.stateText.style.fontSize = '40px';
-	        this.stateText.style.fontWeight = 'bold';
-	        this.stateText.visible = false;
-	        this.stateText.x = 905;
-	        this.stateText.y = 890;
-	        this.addChild(this.stateText);
-	        this.pinLCtn = new PIXI.Container;
-	        this.pinLCtn.x = 742;
-	        this.pinLCtn.y = 761;
-	        this.addChild(this.pinLCtn);
-	        this.pinRCtn = new PIXI.Container;
-	        this.pinRCtn.x = 1200;
-	        this.pinRCtn.y = 765;
-	        this.addChild(this.pinRCtn);
-	        this.pointL = PixiEx_1.newBitmap({ url: '/img/panel/lottery/pointL.png' });
-	        this.pointL.x = -21;
-	        this.pointL.y = -42;
-	        this.pinLCtn.addChild(this.pointL);
-	        this.pinL = PixiEx_1.newBitmap({ url: '/img/panel/lottery/pinL.png' });
-	        this.pinL.x = this.pinLCtn.x + this.pointL.x;
-	        this.pinL.y = this.pinLCtn.y + this.pointL.y;
-	        this.addChild(this.pinL);
-	        this.pointR = PixiEx_1.newBitmap({ url: '/img/panel/lottery/pointR.png' });
-	        this.pointR.x = -81;
-	        this.pointR.y = -42;
-	        this.pinRCtn.addChild(this.pointR);
-	        this.pinR = PixiEx_1.newBitmap({ url: '/img/panel/lottery/pinR.png' });
-	        this.pinR.x = this.pinRCtn.x + this.pointR.x;
-	        this.pinR.y = this.pinRCtn.y + this.pointR.y;
-	        this.addChild(this.pinR);
-	        this.fx = new RollFx_1.RollFx();
-	        this.fx.x = 785;
-	        this.fx.y = 560;
-	        this.addChild(this.fx);
-	        this.rewardCtn = new PIXI.Container;
-	        this.addChild(this.rewardCtn);
-	        window.onkeyup = function (e) {
-	            console.log(e);
-	            if (e.key == 'Enter') {
-	                console.log(e, _this);
-	                if (_this.nameArr) {
-	                }
-	            }
-	            else if (e.key == 'Down') {
-	            }
-	        };
-	        window.onmouseup = function (e) {
-	            var mx = e.clientX;
-	            var my = e.clientY;
-	            var t = _this.stateText;
-	            if (mx > t.x && mx < t.x + t.width && my > t.y && my < t.y + t.height) {
-	                _this.isRunning ? _this.stop()
-	                    : _this.start();
-	            }
-	        };
-	        this.getResult(id);
-	    }
-	    Lottery.prototype.test = function () {
-	        this.setTitle('哈登第二代ad战靴', null);
-	    };
-	    Lottery.prototype.getResult = function (id, callback) {
-	        var _this = this;
-	        $.get(WebJsFunc_1.proxy('http://api.liangle.com/api/lot/list/' + id), function (res) {
-	            console.log(res.data);
-	            if (res.data.list && _this.k) {
-	                var resultName = '';
-	                if (Number(_this.k) == 0) {
-	                    var arr = res.data.list;
-	                    resultName = arr[Math.floor(Math.random() * arr.length)];
-	                }
-	                if (res.data.winner.length) {
-	                    resultName = res.data.winner[Number(_this.k) - 1];
-	                    resultName = JsFunc_1.cnWrap(resultName, 20, 20).replace('\n', '');
-	                }
-	                _this.setResult(res.data.list, resultName);
-	                _this.stateText.visible = true;
-	                _this.setTitle(res.data.title, res.data.img);
-	                if (callback)
-	                    callback();
-	            }
-	        });
-	    };
-	    Lottery.prototype.setTitle = function (title, rewardImgArr) {
-	        var _this = this;
-	        this.titleText.text = title;
-	        BracketGroup_1.fitWidth(this.titleText, 765, 115);
-	        this.titleText.x = 960 - this.titleText.width * .5;
-	        this.titleText.y = 165 - this.titleText.height * .5;
-	        this.rewardImg = new PIXI.Sprite();
-	        this.rewardCtn.addChild(this.rewardImg);
-	        PixiEx_1.loadRes(rewardImgArr, function (img) {
-	            var avt = _this.rewardImg;
-	            avt.texture = PixiEx_1.imgToTex(img);
-	            avt.x = 960 - img.width * .5;
-	            avt.y = 460 - img.height * .5;
-	        }, true);
-	    };
-	    Lottery.prototype.rotFx = function () {
-	        var _this = this;
-	        this.rotTimer = setInterval(function () {
-	            _this.pinLCtn.rotation = (Math.random() * 30 * PIXI.DEG_TO_RAD);
-	            _this.pinRCtn.rotation = ((-25 + Math.random() * 45) * PIXI.DEG_TO_RAD);
-	        }, 50);
-	    };
-	    Lottery.prototype.setResult = function (nameArr1, name) {
-	        this.isRunning = false;
-	        var resultIdx = 1;
-	        if (!this.fxArr) {
-	            this.fxArr = [];
-	            this.nameArr = nameArr1;
-	            for (var i = 0; i < 20; i++) {
-	                var rf = new RandomFx_1.RandomFx(this.nameArr);
-	                rf.x = i * 20 + Math.random() * 100;
-	                rf.y = i * 40 + Math.random() * 100;
-	                this.fxCtn.addChild(rf);
-	                if (i == resultIdx) {
-	                    rf.result = name;
-	                    rf.resultCtn = this;
-	                    rf.nameText.style.fontSize = '50px';
-	                }
-	                this.fxArr.push(rf);
-	            }
-	        }
-	        else {
-	            this.fxArr[resultIdx].result = name;
-	        }
-	    };
-	    Lottery.prototype.reset = function (name) {
-	        this.isRunning = false;
-	    };
-	    Lottery.prototype.start = function () {
-	        var _this = this;
-	        this.getResult(this.id, function (_) {
-	            for (var i = 0; i < _this.fxArr.length; i++) {
-	                var f = _this.fxArr[i];
-	                f.start();
-	            }
-	            _this.rotFx();
-	            _this.fx.playOne();
-	            _this.isRunning = true;
-	            _this.stateText.text = ' STOP ';
-	        });
-	    };
-	    Lottery.prototype.stop = function () {
-	        for (var i = 0; i < this.fxArr.length; i++) {
-	            var f = this.fxArr[i];
-	            f.stop();
-	        }
-	        clearInterval(this.rotTimer);
-	        this.pinLCtn.rotation = (70 * PIXI.DEG_TO_RAD);
-	        this.pinRCtn.rotation = ((-65) * PIXI.DEG_TO_RAD);
-	        this.fx.stop();
-	        this.stateText.text = '  ';
-	    };
-	    return Lottery;
-	}(PIXI.Container));
-	exports.Lottery = Lottery;
-
-
-/***/ },
-/* 82 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var JsFunc_1 = __webpack_require__(21);
-	var RollFx = (function (_super) {
-	    __extends(RollFx, _super);
-	    function RollFx() {
-	        _super.call(this);
-	        var alienImages = [];
-	        for (var i = 1; i < 11; i++) {
-	            alienImages.push('/img/fx/lottery/FX_L_' + JsFunc_1.paddy(i, 2) + '.png');
-	        }
-	        var textureArray = [];
-	        for (var i_1 = 0; i_1 < alienImages.length; i_1++) {
-	            var texture = PIXI.Texture.fromImage(alienImages[i_1]);
-	            textureArray.push(texture);
-	        }
-	        ;
-	        var mc = new PIXI.extras['AnimatedSprite'](textureArray);
-	        mc.animationSpeed = .6;
-	        mc.loop = true;
-	        this.addChild(mc);
-	        this.mc = mc;
-	    }
-	    RollFx.prototype.stop = function () {
-	        this.mc.gotoAndStop(12);
-	    };
-	    RollFx.prototype.playOne = function () {
-	        this.mc.gotoAndStop(0);
-	        this.mc.play();
-	    };
-	    return RollFx;
-	}(PIXI.Container));
-	exports.RollFx = RollFx;
-
-
-/***/ },
-/* 83 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var BracketGroup_1 = __webpack_require__(72);
-	var const_1 = __webpack_require__(44);
-	var TweenEx_1 = __webpack_require__(51);
-	var RandomFx = (function (_super) {
-	    __extends(RandomFx, _super);
-	    function RandomFx(nameArr) {
-	        _super.call(this);
-	        this.result = '';
-	        this.nameArr = nameArr;
-	        this.nameText = new PIXI.Text('');
-	        this.nameText.style.fontFamily = const_1.FontName.MicrosoftYahei;
-	        this.nameText.style.fill = 0xffffff;
-	        this.addChild(this.nameText);
-	    }
-	    RandomFx.prototype.start = function () {
-	        var _this = this;
-	        var arr = this.nameArr;
-	        if (!this._x) {
-	            this._x = this.x;
-	            this._y = this.y;
-	        }
-	        this.alpha = 1;
-	        this.timer = setInterval(function () {
-	            var name = arr[Math.floor(Math.random() * arr.length)];
-	            _this.nameText.text = name;
-	            _this.x = _this._x + Math.random() * 100 + (_this.x) % 1000;
-	            _this.y = _this._y + Math.random() * 100;
-	            _this.scale.x =
-	                _this.scale.y = 1 + Math.random() * .8;
-	        }, 40);
-	    };
-	    RandomFx.prototype.stop = function () {
-	        var _this = this;
-	        clearInterval(this.timer);
-	        var cx = 970 - this.nameText.width * .5;
-	        var cy = 760 - this.nameText.height * .5;
-	        TweenEx_1.TweenEx.to(this, 100, { x: cx, y: cy }, function () {
-	            if (_this.result != "") {
-	                _this.nameText.text = _this.result;
-	                BracketGroup_1.fitWidth(_this.nameText, 377, 75);
-	                _this.scale.x = _this.scale.y = 1;
-	                _this.nameText.x = 970 - _this.nameText.width * .5;
-	                _this.nameText.y = 760 - _this.nameText.height * .5;
-	                if (_this.resultCtn)
-	                    _this.resultCtn.addChild(_this.nameText);
-	            }
-	            else {
-	                _this.alpha = 0;
-	            }
-	        });
-	    };
-	    return RandomFx;
-	}(PIXI.Container));
-	exports.RandomFx = RandomFx;
-
-
-/***/ },
+/* 81 */,
+/* 82 */,
+/* 83 */,
 /* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -9051,11 +8819,19 @@
 	    Score2018v3.prototype.setRightFoul = function (data) {
 	        this.rFoul.setText((data || 0));
 	    };
+	    Score2018v3.prototype._setHWA = function (playerData) {
+	        if (playerData.hwa) {
+	            playerData.height = playerData.hwa[0];
+	            playerData.weight = playerData.hwa[1];
+	            playerData.age = playerData.hwa[2];
+	        }
+	    };
 	    Score2018v3.prototype.setRightPlayer = function (rPlayer) {
 	        this.rTitle.setText(rPlayer.title)
 	            .setAlignCenter(1320);
 	        this.rName.setText(rPlayer.name)
 	            .setLimitWidth(298, 40);
+	        this._setHWA(rPlayer);
 	        var age = '';
 	        if (rPlayer.age)
 	            age = rPlayer.age + '岁';
@@ -9068,6 +8844,7 @@
 	        this.lName.setText(lPlayer.name)
 	            .setLimitWidth(298, 40)
 	            .setAlignRight(702);
+	        this._setHWA(lPlayer);
 	        var age = '';
 	        if (lPlayer.age)
 	            age = lPlayer.age + '岁';
