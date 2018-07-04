@@ -6,7 +6,7 @@
             position: static;
             padding: 10px;
         }
-        
+
         .player {
             position: absolute;
             padding: 0px;
@@ -14,9 +14,10 @@
             color: #fff;
             width: 300px;
         }
-        
+
         .blue {
             color: #003da7;
+            text-align: center;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
@@ -33,7 +34,7 @@
         </div>
     </div>
     <script>
-        var _p = function(x, y) {
+        var _p = function (x, y) {
             return 'left:' + x + 'px;' + 'top:' + y + 'px;'
         }
         var app = new Vue({
@@ -43,7 +44,7 @@
                 items: []
             },
             // mounted: function() {
-            created: function() {
+            created: function () {
                 console.log(this);
                 let pos = []
 
@@ -91,23 +92,28 @@
                 })
 
                 this.items.push({
-                    s: _p(860, 500) + 'font-size:50px;',
+                    s: _p(960 - 150, 520) + 'font-size:50px;',
                     name: "好天氣"
                 })
 
                 var localWs = io.connect('/rkb')
                 localWs.on('connect', () => {
-                        console.log('connect', window.location.host)
-                    })
+                    console.log('connect', window.location.host)
+                })
                     .on('sc_data', (data) => {
                         console.log('sc_data', data)
-                            // for (var i = 0; i < data.playerArr.length; i++) {
-                            //     var p = data.playerArr[i];
-                            //     _this.items.push({
-                            //         s: _p(pos[i][0], pos[i][1]),
-                            //         name: p.name
-                            //     })
-                            // }
+                        if (data.dbIdx == '180706') {
+                            for (var i = 0; i < data.rec.length; i++) {
+                                let rec = data.rec[i];
+
+                                let item1 = this.items[i * 2]
+                                let item2 = this.items[i * 2 + 1]
+                                let p1 = data.playerMap[rec.player[0]]
+                                let p2 = data.playerMap[rec.player[1]]
+                                item1.name = p1.name
+                                item2.name = p2.name
+                            }
+                        }
                     })
             }
         })
