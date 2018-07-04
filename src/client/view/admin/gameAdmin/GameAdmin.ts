@@ -105,16 +105,21 @@ class _GameAdmin extends VueBase {
             // cs_initGame
             let playerMap = this.gameConf.playerMap
             let recArr = this.gameConf.rec
+
             for (let i = 0; i < recArr.length; i++) {
                 let rec = recArr[i];
                 if (rec.idx == this.selected) {
                     let p1 = rec.player[0]
                     let p2 = rec.player[1]
+                    let a = this.vsPlayer.split(' ')
+                    p1 = a[0]
+                    p2 = a[1]
                     p1 = playerMap[p1]
                     p2 = playerMap[p2]
                     p1.avatar = this.gameConf.avatarUrlBase + p1.playerId + '.png'
                     p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png'
-                    opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2 })
+                    opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2, gameTitle: rec.title })
+                    return
                 }
             }
         },
