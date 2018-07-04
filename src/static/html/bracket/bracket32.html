@@ -81,28 +81,30 @@
                     })
                     .on('sc_data', (data) => {
                         console.log('sc_data', data)
-                        let page = data.page || 0
-                        let pageItemCount = data.pageItemCount || 6
-                        this.items = []
-                        let count = pageItemCount
-                        let top = (1080 - count * 162) / 2
-                        let avtPath = data.avatarUrlBase
-                        for (let i = 0; i < count; i++) {
-                            let rec = data.rec[i + page];
-                            if (rec) {
-                                let p1 = data.playerMap[rec.player[0]]
-                                let p2 = data.playerMap[rec.player[1]]
-                                this.items.push({
-                                    s: _p(500 - 70 - 5, i * 162 + top),
-                                    name: [p1.name, p2.name],
-                                    hwa: [
-                                        p1.hwa,
-                                        p2.hwa
-                                    ],
-                                    score: rec.score,
-                                    avatar: [avtPath + p1.playerId + '.png', avtPath + p2.playerId + '.png'],
-                                    idx: i + 1
-                                })
+                        if (data.dbIdx == 'G32') {
+                            let page = data.page || 0
+                            let pageItemCount = data.pageItemCount || 6
+                            this.items = []
+                            let count = pageItemCount
+                            let top = (1080 - count * 162) / 2
+                            let avtPath = data.avatarUrlBase
+                            for (let i = 0; i < count; i++) {
+                                let rec = data.rec[i + page];
+                                if (rec) {
+                                    let p1 = data.playerMap[rec.player[0]]
+                                    let p2 = data.playerMap[rec.player[1]]
+                                    this.items.push({
+                                        s: _p(500 - 70 - 5, i * 162 + top),
+                                        name: [p1.name, p2.name],
+                                        hwa: [
+                                            p1.hwa,
+                                            p2.hwa
+                                        ],
+                                        score: rec.score,
+                                        avatar: [avtPath + p1.playerId + '.png', avtPath + p2.playerId + '.png'],
+                                        idx: i + 1
+                                    })
+                                }
                             }
                         }
                     })

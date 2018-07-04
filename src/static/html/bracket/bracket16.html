@@ -178,16 +178,19 @@
                     })
                     .on('sc_data', (data) => {
                         console.log('sc_data', data)
-                        this.route(data.rec, data.playerMap, this.items)
-                        for (let i = 0; i < 12; i++) {
-                            let rec = data.rec[i + 16];
-                            let item1 = this.items[i * 2]
-                            let item2 = this.items[i * 2 + 1]
-                            let p1 = data.playerMap[rec.player[0]]
-                            let p2 = data.playerMap[rec.player[1]]
-                            item1.name = p1.name
-                            item2.name = p2.name
+                        if (data.dbIdx == 'G32') {
+                            this.route(data.rec, data.playerMap, this.items)
+                            for (let i = 0; i < 12; i++) {
+                                let rec = data.rec[i + 16];
+                                let item1 = this.items[i * 2]
+                                let item2 = this.items[i * 2 + 1]
+                                let p1 = data.playerMap[rec.player[0]]
+                                let p2 = data.playerMap[rec.player[1]]
+                                item1.name = p1.name
+                                item2.name = p2.name
+                            }
                         }
+
                     })
             }
         })

@@ -45,55 +45,35 @@
             // mounted: function() {
             created: function() {
                 console.log(this);
-                let pos = []
 
-                let x1 = 42,
-                    x1r = 1593
-                pos = pos.concat([
-                    [x1, 152 + 0],
-                    [x1, 152 + 244]
-                ])
-                pos = pos.concat([
-                    [x1, 638 + 5],
-                    [x1, 638 + 5 + 244]
-                ])
-                let a = [],
-                    ar = []
-                for (let i = 0; i < pos.length; i++) {
-                    let p = pos[i]
-                    a.push({
+                let x1 = 125,
+                    x2 = 850 + 5,
+                    x3 = 490
+
+                let pos = [
+                    [x1, 101],
+                    [x1, 101 + 205],
+
+                    [x1, 428],
+                    [x1, 428 + 205],
+
+
+                    [x3, 778],
+                    [x3, 778 + 205],
+
+                    [x2, 204],
+                    [x2, 204 + 328],
+
+                    [869 + 5, 883],
+                    [1450, 368],
+                ]
+
+                for (let p of pos) {
+                    this.items.push({
                         s: _p(p[0], p[1]),
-                        name: '好天氣其'
-                    })
-                    ar.push({
-                        s: _p(x1r, p[1]),
-                        name: '好天氣其'
+                        name: '申屠土匪'
                     })
                 }
-                this.items = a.concat(ar)
-
-                this.items.push({
-                    s: _p(415, 270),
-                    name: "好天氣其9"
-                })
-                this.items.push({
-                    s: _p(415, 767),
-                    name: "好天氣其0"
-                })
-
-                this.items.push({
-                    s: _p(1227, 270),
-                    name: "好天氣其1"
-                })
-                this.items.push({
-                    s: _p(1227, 767),
-                    name: "好天氣其2"
-                })
-
-                this.items.push({
-                    s: _p(960 - 150, 520) + 'font-size:50px;',
-                    name: "好天氣"
-                })
 
                 var localWs = io.connect('/rkb')
                 localWs.on('connect', () => {
@@ -101,7 +81,7 @@
                     })
                     .on('sc_data', (data) => {
                         console.log('sc_data', data)
-                        if (data.dbIdx == '180706') {
+                        if (data.dbIdx == 'G421') {
                             for (var i = 0; i < data.rec.length; i++) {
                                 let rec = data.rec[i];
 

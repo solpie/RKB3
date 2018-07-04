@@ -110,7 +110,11 @@ class _GameAdmin extends VueBase {
                 if (rec.idx == this.selected) {
                     let p1 = rec.player[0]
                     let p2 = rec.player[1]
-                    opReq('cs_setPlayer', { leftPlayer: playerMap[p1], rightPlayer: playerMap[p2] })
+                    p1 = playerMap[p1]
+                    p2 = playerMap[p2]
+                    p1.avatar = this.gameConf.avatarUrlBase + p1.playerId + '.png'
+                    p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png'
+                    opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2 })
                 }
             }
         },
@@ -150,6 +154,7 @@ class _GameAdmin extends VueBase {
                             data[k] = _exData[k]
                         }
                     }
+
                     this.createOption(data)
 
                     console.log("EVENT_ON_FILE", data, _exData);

@@ -1106,7 +1106,11 @@
 	                    if (rec.idx == this.selected) {
 	                        var p1 = rec.player[0];
 	                        var p2 = rec.player[1];
-	                        opReq('cs_setPlayer', { leftPlayer: playerMap[p1], rightPlayer: playerMap[p2] });
+	                        p1 = playerMap[p1];
+	                        p2 = playerMap[p2];
+	                        p1.avatar = this.gameConf.avatarUrlBase + p1.playerId + '.png';
+	                        p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png';
+	                        opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2 });
 	                    }
 	                }
 	            },
@@ -1220,7 +1224,7 @@
 /* 27 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    game admin\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n</div>";
 
 /***/ },
 /* 28 */
