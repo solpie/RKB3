@@ -74,6 +74,7 @@
                                     let arrIdx = Math.floor(pos / Number(a[0]))
                                     console.log('fillWinner from', fromGameId, 'to', gameId, arrIdx, playerMap[playerId].name);
                                     rec.player[arrIdx] = playerId
+                                    return
                                 }
                             }
                         }
