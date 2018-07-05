@@ -3,7 +3,7 @@
     "dbIdx": "G32",
     "panel": "BO3",
     "gameTitle": "kd day1",
-    "avatarUrlBase": "http://rtmp.icassi.us:8088/img/player/kd/",
+    "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/kd/",
     "rec": [
         { "title": "32进16单败淘汰赛", "idx": "1#A1", "score": [1, 0], "player": ["p1", "p2"] },
         { "title": "32进16单败淘汰赛", "idx": "1#B1", "score": [0, 1], "player": ["p5", "p6"] },
