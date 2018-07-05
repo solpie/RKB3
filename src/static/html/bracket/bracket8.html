@@ -28,8 +28,11 @@
     <div id="app">
         <img src="bg8.png" />
         <div>
-            <div class="player" v-for="(item, index) in items" :key="item.s" :style="item.s">
-                <span class="player blue"> {{item.name}}</span>
+            <div v-for="(item, index) in items" :key="item.idx">
+                <div class="player blue" :style="item.s">
+                    <span>{{item.name}} </span>
+                </div>
+                <span class="player white" :style="item.ss">{{item.score>-1?item.score:""}} </span>
             </div>
         </div>
     </div>
@@ -50,49 +53,37 @@
 
                 let x1 = 42,
                     x1r = 1593
+                let scoreOfs = 130 + 119
                 pos = pos.concat([
-                    [x1, 152 + 0],
-                    [x1, 152 + 244]
-                ])
-                pos = pos.concat([
-                    [x1, 638 + 5],
-                    [x1, 638 + 5 + 244]
+                    [x1, 152, x1 + scoreOfs],
+                    [x1, 152 + 244, x1 + scoreOfs],
+                    [x1, 643, x1 + scoreOfs],
+                    [x1, 643 + 244, x1 + scoreOfs]
                 ])
                 let a = [],
                     ar = []
+
                 for (let i = 0; i < pos.length; i++) {
                     let p = pos[i]
-                    a.push({
+                    ar.push([x1r, p[1], x1r - scoreOfs + 280])
+                }
+
+                pos = pos.concat(ar)
+                pos.push([415, 270, 415 + scoreOfs])
+                pos.push([415, 767, 415 + scoreOfs])
+                pos.push([1227, 270, 1227 - scoreOfs + 275])
+                pos.push([1227, 767, 1227 - scoreOfs + 275])
+                for (let i = 0; i < pos.length; i++) {
+                    let p = pos[i]
+                    this.items.push({
                         s: _p(p[0], p[1]),
-                        name: '好天氣其'
-                    })
-                    ar.push({
-                        s: _p(x1r, p[1]),
-                        name: '好天氣其'
+                        ss: _p(p[2], p[1]),
+                        score: -1,
+                        name: ""
                     })
                 }
-                this.items = a.concat(ar)
-
                 this.items.push({
-                    s: _p(415, 270),
-                    name: "好天氣其9"
-                })
-                this.items.push({
-                    s: _p(415, 767),
-                    name: "好天氣其0"
-                })
-
-                this.items.push({
-                    s: _p(1227, 270),
-                    name: "好天氣其1"
-                })
-                this.items.push({
-                    s: _p(1227, 767),
-                    name: "好天氣其2"
-                })
-
-                this.items.push({
-                    s: _p(960 - 150, 520) + 'font-size:50px;',
+                    s: _p(960 - 150, 510) + 'font-size:50px;',
                     name: "好天氣"
                 })
 
@@ -102,7 +93,7 @@
                     })
                     .on('sc_data', (data) => {
                         console.log('sc_data', data)
-                        if (data.dbIdx == '180706') {
+                        if (data.dbIdx == 'kd2') {
                             for (var i = 0; i < data.rec.length; i++) {
                                 let rec = data.rec[i];
 
@@ -112,6 +103,9 @@
                                 let p2 = data.playerMap[rec.player[1]]
                                 item1.name = p1.name
                                 item2.name = p2.name
+
+                                item1.score = rec.score[0]
+                                item2.score = rec.score[1]
                             }
                         }
                     })

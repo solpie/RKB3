@@ -28,8 +28,11 @@
     <div id="app">
         <img src="bg421.png" />
         <div>
-            <div class="player" v-for="(item, index) in items" :key="item.s" :style="item.s">
-                <span class="player blue"> {{item.name}}</span>
+            <div v-for="(item, index) in items" :key="item.idx">
+                <div class="player blue" :style="item.s">
+                    <span>{{item.name}} </span>
+                </div>
+                <span class="player white" :style="item.ss">{{item.score>-1?item.score:""}} </span>
             </div>
         </div>
     </div>
@@ -49,20 +52,20 @@
                 let x1 = 125,
                     x2 = 850 + 5,
                     x3 = 490
-
+                let scoreofs = 98 + 150
                 let pos = [
-                    [x1, 101],
-                    [x1, 101 + 205],
+                    [x1, 101, x1 + scoreofs],
+                    [x1, 101 + 205, x1 + scoreofs],
 
-                    [x1, 428],
-                    [x1, 428 + 205],
+                    [x1, 428, x1 + scoreofs],
+                    [x1, 428 + 205, x1 + scoreofs],
 
 
-                    [x3, 778],
-                    [x3, 778 + 205],
+                    [x3, 778, x3 + scoreofs],
+                    [x3, 778 + 205, x3 + scoreofs],
 
-                    [x2, 204],
-                    [x2, 204 + 328],
+                    [x2, 204, x2 + scoreofs],
+                    [x2, 204 + 328, x2 + scoreofs],
 
                     [869 + 5, 883],
                     [1450, 368],
@@ -71,7 +74,9 @@
                 for (let p of pos) {
                     this.items.push({
                         s: _p(p[0], p[1]),
-                        name: '申屠土匪'
+                        ss: _p(p[2], p[1]),
+                        score: -1,
+                        name: ''
                     })
                 }
 
@@ -91,6 +96,9 @@
                                 let p2 = data.playerMap[rec.player[1]]
                                 item1.name = p1.name
                                 item2.name = p2.name
+
+                                item1.score = rec.score[0]
+                                item2.score = rec.score[1]
                             }
                         }
                     })
