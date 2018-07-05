@@ -31,13 +31,13 @@
 
 <body>
     <div id="app">
-        <img src="bg.png" />
+        <img src="bg16.png" />
         <div>
             <div v-for="(item, index) in items" :key="item.idx">
                 <div class="player blue" :style="item.s">
                     <span>{{item.name}} </span>
                 </div>
-                <span class="white">{{item.score}} </span>
+                <span class="player white" :style="item.ss">{{item.score>-1?item.score:""}} </span>
             </div>
         </div>
     </div>
@@ -105,39 +105,39 @@
             created: function() {
                 console.log(this);
                 var _this = this
-                var x1 = 97
-                var x1r = 1680
-
+                var x1 = 112
+                var x1r = 1652
+                var scoreOfs = 93
                 var pos = [
-                        [x1, 75 + 5],
-                        [x1, 75 + 5 + 122],
+                        [x1, 80, x1 + scoreOfs],
+                        [x1, 80 + 122, x1 + scoreOfs],
 
-                        [x1, 330 - 5],
-                        [x1, 330 - 5 + 122],
+                        [x1, 325, x1 + scoreOfs],
+                        [x1, 325 + 122, x1 + scoreOfs],
 
-                        [x1, 535 + 40],
-                        [x1, 535 + 40 + 122],
+                        [x1, 575, x1 + scoreOfs],
+                        [x1, 575 + 122, x1 + scoreOfs],
 
-                        [x1, 800 + 20],
-                        [x1, 800 + 20 + 122],
+                        [x1, 820, x1 + scoreOfs],
+                        [x1, 820 + 122, x1 + scoreOfs],
                     ]
                     //x1r
                 let a = []
                 for (let i = 0; i < pos.length; i++) {
                     let p = pos[i];
-                    a.push([x1r, p[1]])
+                    a.push([x1r, p[1], x1r - scoreOfs])
                 }
 
                 pos = pos.concat(a)
 
-                let x2 = 342 + 5,
-                    x2r = 1435
+                let x2 = 359,
+                    x2r = 1407
                 a = [
-                    [x2, 143],
-                    [x2, 143 + 246],
+                    [x2, 143, x2 + scoreOfs],
+                    [x2, 143 + 246, x2 + scoreOfs],
 
-                    [x2, 633 + 3],
-                    [x2, 633 + 3 + 246],
+                    [x2, 633 + 3, x2 + scoreOfs],
+                    [x2, 633 + 3 + 246, x2 + scoreOfs],
                 ]
 
                 pos = pos.concat(a)
@@ -145,21 +145,21 @@
 
                 for (let i = 0; i < a.length; i++) {
                     let p = a[i];
-                    pos.push([x2r, p[1]])
+                    pos.push([x2r, p[1], x2r - scoreOfs])
                 }
 
 
-                let x3 = 593,
-                    x3r = 1185
+                let x3 = 593 + 15,
+                    x3r = 1185 - 28
                 a = [
-                    [x3, 265],
-                    [x3, 265 + 492],
+                    [x3, 265, x3 + scoreOfs],
+                    [x3, 265 + 492, x3 + scoreOfs],
                 ]
                 pos = pos.concat(a)
 
                 for (let i = 0; i < a.length; i++) {
                     let p = a[i];
-                    pos.push([x3r, p[1]])
+                    pos.push([x3r, p[1], x3r - scoreOfs])
                 }
 
 
@@ -168,7 +168,8 @@
                     this.items.push({
                         idx: i + 1,
                         s: _p(p[0], p[1]),
-                        score: 0,
+                        ss: _p(p[2], p[1]),
+                        score: -1,
                         name: ''
                     })
                 }
@@ -188,6 +189,8 @@
                                 let p2 = data.playerMap[rec.player[1]]
                                 item1.name = p1.name
                                 item2.name = p2.name
+                                item1.score = rec.score[0]
+                                item2.score = rec.score[1]
                             }
                         }
 
