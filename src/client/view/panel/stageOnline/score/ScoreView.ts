@@ -306,6 +306,12 @@ export class ScoreView extends BasePanelView {
                 console.log('sc_togglePlayerState', data);
                 this.scorePanelV3.toggleState(data)
             })
+            .on(CommandId.sc_showTagFx, (data) => {
+                console.log('sc_showTagFx', data);
+                let player = this.scorePanelV3.getPlayerInfo(data.isLeft)
+                data.player = player
+                this.eventPanel.showTagFx(data)
+            })
     }
     showStage(v) {
         this.stage.visible = v

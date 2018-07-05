@@ -88,8 +88,8 @@ class _GameAdmin extends VueBase {
 
     }
     methods = {
-        onShowTag(tagName, v) {
-            opReq(CommandId.cs_showTagFx, { visible: v, tag: tagName + '.png' })
+        onShowTag(tagName, v, isLeft) {
+            opReq(CommandId.cs_showTagFx, { visible: v, tag: tagName + '.png' ,isLeft:isLeft})
         },
         onSelectGame() {
             console.log('on init game', this.selected);

@@ -1085,8 +1085,8 @@
 	        this.gameConf = VueBase_1.VueBase.PROP;
 	        this.vsPlayer = VueBase_1.VueBase.PROP;
 	        this.methods = {
-	            onShowTag: function (tagName, v) {
-	                opReq(Command_1.CommandId.cs_showTagFx, { visible: v, tag: tagName + '.png' });
+	            onShowTag: function (tagName, v, isLeft) {
+	                opReq(Command_1.CommandId.cs_showTagFx, { visible: v, tag: tagName + '.png', isLeft: isLeft });
 	            },
 	            onSelectGame: function () {
 	                console.log('on init game', this.selected);
@@ -1232,7 +1232,7 @@
 /* 27 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onShowTag('tag1_1',true)\">小钢炮</button>\r\n    <button class=\"button is-primary\" @click=\"onShowTag('tag1_2',true)\">脚踝终结者</button>\r\n    <button class=\"button is-primary\" @click=\"onShowTag('tag2_1',true)\">碾压坦克</button>\r\n    <button class=\"button is-primary\" @click=\"onShowTag('tag2_2',true)\">大心脏</button>\r\n    <button class=\"button is-primary\" @click=\"onShowTag('tag3_1',true)\">三分雨</button>\r\n    <button class=\"button is-primary\" @click=\"onShowTag('tag4_1',true)\">万花筒</button>\r\n    <button class=\"button is-primary\" @click=\"onShowTag('tag2_2',false)\">隐藏</button>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n    <br>\r\n    <br>\r\n    <div style=\"width: 1400px\">\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag1_1',true,true)\">小钢炮</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag1_2',true,true)\">脚踝终结者</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag2_1',true,true)\">碾压坦克</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag2_2',true,true)\">大心脏</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag3_1',true,true)\">三分雨</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag4_1',true,true)\">万花筒</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag2_2',false)\">隐藏</button> ------------\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag1_1',true,false)\">小钢炮</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag1_2',true,false)\">脚踝终结者</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag2_1',true,false)\">碾压坦克</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag2_2',true,false)\">大心脏</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag3_1',true,false)\">三分雨</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag4_1',true,false)\">万花筒</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag2_2',false)\">隐藏</button>\r\n    </div>\r\n\r\n</div>";
 
 /***/ },
 /* 28 */
@@ -7090,6 +7090,12 @@
 	            .on("" + Command_1.CommandId.sc_togglePlayerState, function (data) {
 	            console.log('sc_togglePlayerState', data);
 	            _this.scorePanelV3.toggleState(data);
+	        })
+	            .on(Command_1.CommandId.sc_showTagFx, function (data) {
+	            console.log('sc_showTagFx', data);
+	            var player = _this.scorePanelV3.getPlayerInfo(data.isLeft);
+	            data.player = player;
+	            _this.eventPanel.showTagFx(data);
 	        });
 	    };
 	    ScoreView.prototype.showStage = function (v) {
@@ -9347,6 +9353,12 @@
 	            '/img/panel/tagFx/tag2_2.png',
 	            '/img/panel/tagFx/tag3_1.png',
 	            '/img/panel/tagFx/tag4_1.png',
+	            '/img/panel/tagFx/title1_1.png',
+	            '/img/panel/tagFx/title1_2.png',
+	            '/img/panel/tagFx/title2_1.png',
+	            '/img/panel/tagFx/title2_2.png',
+	            '/img/panel/tagFx/title3_1.png',
+	            '/img/panel/tagFx/title4_1.png',
 	        ];
 	        ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
 	            var bg = PixiEx_1.newBitmap({ url: '/img/panel/tagFx/bg.png' });
@@ -9356,6 +9368,7 @@
 	        });
 	    }
 	    TagFx.prototype.show = function (data) {
+	        this.p.addChild(this);
 	    };
 	    return TagFx;
 	}(PIXI.Container));
