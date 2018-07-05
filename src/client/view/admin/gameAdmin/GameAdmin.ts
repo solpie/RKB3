@@ -39,8 +39,10 @@ class _GameAdmin extends VueBase {
             console.log('player', rec.player);
             let p1 = playerMap[rec.player[0]]
             let p2 = playerMap[rec.player[1]]
-            if (p1||p2) {
-                let option = { text: rec.idx + p1.name + ' vs ' + p2.name, value: rec.idx }
+            if (p1 || p2) {
+                let p1name = p1 ? p1.name : '';
+                let p2name = p2 ? p2.name : '';
+                let option = { text: rec.idx + p1name + ' vs ' + p2name, value: rec.idx }
                 a.push(option);
             }
         }
@@ -89,7 +91,7 @@ class _GameAdmin extends VueBase {
     }
     methods = {
         onShowTag(tagName, v, isLeft) {
-            opReq(CommandId.cs_showTagFx, { visible: v, tag: tagName + '.png' ,isLeft:isLeft})
+            opReq(CommandId.cs_showTagFx, { visible: v, tag: tagName + '.png', isLeft: isLeft })
         },
         onSelectGame() {
             console.log('on init game', this.selected);

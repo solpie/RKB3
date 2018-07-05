@@ -1179,7 +1179,9 @@
 	            var p1 = playerMap[rec.player[0]];
 	            var p2 = playerMap[rec.player[1]];
 	            if (p1 || p2) {
-	                var option = { text: rec.idx + p1.name + ' vs ' + p2.name, value: rec.idx };
+	                var p1name = p1 ? p1.name : '';
+	                var p2name = p2 ? p2.name : '';
+	                var option = { text: rec.idx + p1name + ' vs ' + p2name, value: rec.idx };
 	                a.push(option);
 	            }
 	        }
