@@ -43,6 +43,9 @@ export class Score2018v3 extends PIXI.Container {
     lAvt: PIXI.Sprite
     rAvt: PIXI.Sprite
 
+    lAvtUrl: String
+    rAvtUrl: String
+
     avtCtn: PIXI.Container
     constructor(parent) {
         super()
@@ -231,6 +234,7 @@ export class Score2018v3 extends PIXI.Container {
         if (rPlayer.age)
             age = rPlayer.age + '岁'
         this.rHW.setText(rPlayer.height + 'CM  ' + rPlayer.weight + 'KG  ' + age)
+        this.rAvtUrl = rPlayer.avatar
         loadAvt(this.rAvt, rPlayer.avatar, 1109)
     }
 
@@ -248,6 +252,7 @@ export class Score2018v3 extends PIXI.Container {
             age = lPlayer.age + '岁'
         this.lHW.setText(lPlayer.height + 'CM  ' + lPlayer.weight + 'KG  ' + age)
             .setAlignRight(702)
+        this.lAvtUrl = lPlayer.avatar
         loadAvt(this.lAvt, lPlayer.avatar, 725)
     }
 
@@ -330,10 +335,12 @@ export class Score2018v3 extends PIXI.Container {
         if (isLeft) {
             player.name = this.lName.text
             player.info = this.lHW.text
+            player.avatar = this.lAvtUrl
         }
         else {
             player.name = this.rName.text
             player.info = this.rHW.text
+            player.avatar = this.rAvtUrl
         }
         return player
     }

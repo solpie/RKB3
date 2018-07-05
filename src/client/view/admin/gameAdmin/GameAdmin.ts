@@ -67,7 +67,7 @@ class _GameAdmin extends VueBase {
                 let rec = recArr[i];
                 let a = rec.idx.split('#')
                 let gameId = a[1]
-                if (gameId.length > fromGameId.length) {
+                if (gameId != '_' && gameId.length > fromGameId.length) {
                     let pos = gameId.search(fromGameId)
                     if (pos > -1) {
                         let arrIdx = Math.floor(pos / Number(a[0]))
@@ -91,8 +91,9 @@ class _GameAdmin extends VueBase {
     }
     methods = {
         onShowTag(tagName, v, isLeft) {
-            opReq(CommandId.cs_showTagFx, { visible: v, tag: tagName + '.png', isLeft: isLeft })
+            opReq(CommandId.cs_showTagFx, { visible: v, tag: tagName, isLeft: isLeft })
         },
+
         onSelectGame() {
             console.log('on init game', this.selected);
             let playerMap = this.gameConf.playerMap
@@ -107,6 +108,7 @@ class _GameAdmin extends VueBase {
                 }
             }
         },
+
         onInitGame() {
             // cs_initGame
             let playerMap = this.gameConf.playerMap
@@ -129,6 +131,7 @@ class _GameAdmin extends VueBase {
                 }
             }
         },
+
         onShowPage(page, pageItemCount) {
             console.log('show page from', page);
             this.reloadFile(null, { page: page, pageItemCount: pageItemCount })

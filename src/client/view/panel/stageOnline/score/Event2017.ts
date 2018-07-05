@@ -354,24 +354,17 @@ export class Event2017 extends PIXI.Container {
         }
     }
 
-    // vsTitle: VsTitle
-    // showVsTitle(data) {
-    //     if (!this.vsTitle) {
-    //         this.vsTitle = new VsTitle()
-    //         this.vsTitle.create(this)
-    //     }
-    //     data.visible ?
-    //         this.vsTitle.show(data)
-    //         : this.vsTitle.hide()
-    // }
-
     tagFx: TagFx
     showTagFx(data) {
-        if (!this.tagFx) 
+        if (!this.tagFx)
             this.tagFx = new TagFx(this, data)
-        else
-            this.tagFx.show(data)
+        else {
+            data.visible ?
+                this.tagFx.show(data)
+                : this.tagFx.hide()
+        }
     }
+
     rollText: RollText
     showRollText(data) {
         if (!this.rollText) {

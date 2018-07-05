@@ -1086,7 +1086,7 @@
 	        this.vsPlayer = VueBase_1.VueBase.PROP;
 	        this.methods = {
 	            onShowTag: function (tagName, v, isLeft) {
-	                opReq(Command_1.CommandId.cs_showTagFx, { visible: v, tag: tagName + '.png', isLeft: isLeft });
+	                opReq(Command_1.CommandId.cs_showTagFx, { visible: v, tag: tagName, isLeft: isLeft });
 	            },
 	            onSelectGame: function () {
 	                console.log('on init game', this.selected);
@@ -1204,7 +1204,7 @@
 	                var rec = recArr[i];
 	                var a = rec.idx.split('#');
 	                var gameId = a[1];
-	                if (gameId.length > fromGameId.length) {
+	                if (gameId != '_' && gameId.length > fromGameId.length) {
 	                    var pos = gameId.search(fromGameId);
 	                    if (pos > -1) {
 	                        var arrIdx = Math.floor(pos / Number(a[0]));
@@ -1234,7 +1234,7 @@
 /* 27 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n    <br>\r\n    <br>\r\n    <div style=\"width: 1400px\">\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag1_1',true,true)\">小钢炮</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag1_2',true,true)\">脚踝终结者</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag2_1',true,true)\">碾压坦克</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag2_2',true,true)\">大心脏</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag3_1',true,true)\">三分雨</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag4_1',true,true)\">万花筒</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag2_2',false)\">隐藏</button> ------------\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag1_1',true,false)\">小钢炮</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag1_2',true,false)\">脚踝终结者</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag2_1',true,false)\">碾压坦克</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag2_2',true,false)\">大心脏</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag3_1',true,false)\">三分雨</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag4_1',true,false)\">万花筒</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('tag2_2',false)\">隐藏</button>\r\n    </div>\r\n\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n    <br>\r\n    <br>\r\n    <div style=\"width: 1400px\">\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,true)\">小钢炮</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,true)\">脚踝终结者</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,true)\">碾压坦克</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,true)\">大心脏</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('3_1',true,true)\">三分雨</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('4_1',true,true)\">万花筒</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',false)\">隐藏</button> ------------\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,false)\">小钢炮</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,false)\">脚踝终结者</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,false)\">碾压坦克</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,false)\">大心脏</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('3_1',true,false)\">三分雨</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('4_1',true,false)\">万花筒</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',false)\">隐藏</button>\r\n    </div>\r\n\r\n</div>";
 
 /***/ },
 /* 28 */
@@ -7522,8 +7522,11 @@
 	    Event2017.prototype.showTagFx = function (data) {
 	        if (!this.tagFx)
 	            this.tagFx = new TagFx_1.TagFx(this, data);
-	        else
-	            this.tagFx.show(data);
+	        else {
+	            data.visible ?
+	                this.tagFx.show(data)
+	                : this.tagFx.hide();
+	        }
 	    };
 	    Event2017.prototype.showRollText = function (data) {
 	        if (!this.rollText) {
@@ -8865,6 +8868,7 @@
 	        if (rPlayer.age)
 	            age = rPlayer.age + '岁';
 	        this.rHW.setText(rPlayer.height + 'CM  ' + rPlayer.weight + 'KG  ' + age);
+	        this.rAvtUrl = rPlayer.avatar;
 	        loadAvt(this.rAvt, rPlayer.avatar, 1109);
 	    };
 	    Score2018v3.prototype.setLeftPlayer = function (lPlayer) {
@@ -8879,6 +8883,7 @@
 	            age = lPlayer.age + '岁';
 	        this.lHW.setText(lPlayer.height + 'CM  ' + lPlayer.weight + 'KG  ' + age)
 	            .setAlignRight(702);
+	        this.lAvtUrl = lPlayer.avatar;
 	        loadAvt(this.lAvt, lPlayer.avatar, 725);
 	    };
 	    Score2018v3.prototype.resetTimer = function () {
@@ -8943,10 +8948,12 @@
 	        if (isLeft) {
 	            player.name = this.lName.text;
 	            player.info = this.lHW.text;
+	            player.avatar = this.lAvtUrl;
 	        }
 	        else {
 	            player.name = this.rName.text;
 	            player.info = this.rHW.text;
+	            player.avatar = this.rAvtUrl;
 	        }
 	        return player;
 	    };
@@ -9342,6 +9349,8 @@
 	};
 	var PixiEx_1 = __webpack_require__(47);
 	var ImgLoader_1 = __webpack_require__(67);
+	var TextFac_1 = __webpack_require__(71);
+	var const_1 = __webpack_require__(44);
 	var TagFx = (function (_super) {
 	    __extends(TagFx, _super);
 	    function TagFx(parent, data) {
@@ -9355,6 +9364,12 @@
 	            '/img/panel/tagFx/tag2_2.png',
 	            '/img/panel/tagFx/tag3_1.png',
 	            '/img/panel/tagFx/tag4_1.png',
+	            '/img/panel/tagFx/icon1_1.png',
+	            '/img/panel/tagFx/icon1_2.png',
+	            '/img/panel/tagFx/icon2_1.png',
+	            '/img/panel/tagFx/icon2_2.png',
+	            '/img/panel/tagFx/icon3_1.png',
+	            '/img/panel/tagFx/icon4_1.png',
 	            '/img/panel/tagFx/title1_1.png',
 	            '/img/panel/tagFx/title1_2.png',
 	            '/img/panel/tagFx/title2_1.png',
@@ -9366,11 +9381,56 @@
 	            var bg = PixiEx_1.newBitmap({ url: '/img/panel/tagFx/bg.png' });
 	            _this.addChild(bg);
 	            _this.p = parent;
+	            var ns = {
+	                fontFamily: const_1.FontName.NotoSansHans,
+	                fontWeight: 'bold',
+	                fontSize: '32px', fill: "#fff",
+	            };
+	            _this.playerName = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(853);
+	            _this.tagSp = new PIXI.Sprite();
+	            _this.tagSp.x = 1108;
+	            _this.tagSp.y = 710;
+	            _this.addChild(_this.tagSp);
+	            _this.iconSp = new PIXI.Sprite();
+	            _this.iconSp.x = 960 - 149;
+	            _this.iconSp.y = 711 - 7;
+	            _this.addChild(_this.iconSp);
+	            _this.avtSp = new PIXI.Sprite();
+	            _this.addChild(_this.avtSp);
+	            _this.avtSp.x = 643;
+	            _this.avtSp.y = 732;
+	            _this.lTitleSp = new PIXI.Sprite();
+	            _this.lTitleSp.x = 397;
+	            _this.addChild(_this.lTitleSp);
+	            _this.rTitleSp = new PIXI.Sprite();
+	            _this.rTitleSp.x = 1112;
+	            _this.addChild(_this.rTitleSp);
+	            _this.rTitleSp.y = _this.lTitleSp.y = 909;
 	            _this.show(data);
 	        });
 	    }
 	    TagFx.prototype.show = function (data) {
+	        var _this = this;
+	        this.playerName.setText(data.player.name)
+	            .setAlignCenter(694);
+	        this.tagSp.texture = ImgLoader_1.imgLoader.getTex('/img/panel/tagFx/tag' + data.tag + '.png');
+	        this.iconSp.texture = ImgLoader_1.imgLoader.getTex('/img/panel/tagFx/icon' + data.tag + '.png');
+	        if (data.isLeft) {
+	            this.lTitleSp.texture = ImgLoader_1.imgLoader.getTex('/img/panel/tagFx/title' + data.tag + '.png');
+	        }
+	        else {
+	            this.rTitleSp.texture = ImgLoader_1.imgLoader.getTex('/img/panel/tagFx/title' + data.tag + '.png');
+	        }
+	        console.log('tag fx load url ', data.player.avatar);
+	        ImgLoader_1.imgLoader.loadTex(data.player.avatar, function (tex) {
+	            _this.avtSp.texture = tex;
+	            PixiEx_1.setScale(_this.avtSp, 105 / tex.width);
+	        });
 	        this.p.addChild(this);
+	    };
+	    TagFx.prototype.hide = function () {
+	        this.p.removeChild(this);
 	    };
 	    return TagFx;
 	}(PIXI.Container));

@@ -52,7 +52,7 @@
                 let x1 = 125,
                     x2 = 850 + 5,
                     x3 = 490
-                let scoreofs = 98 + 150
+                let scoreofs = 255
                 let pos = [
                     [x1, 101, x1 + scoreofs],
                     [x1, 101 + 205, x1 + scoreofs],
@@ -94,11 +94,14 @@
                                 let item2 = this.items[i * 2 + 1]
                                 let p1 = data.playerMap[rec.player[0]]
                                 let p2 = data.playerMap[rec.player[1]]
-                                item1.name = p1.name
-                                item2.name = p2.name
-
-                                item1.score = rec.score[0]
-                                item2.score = rec.score[1]
+                                if (p1) {
+                                    item1.name = p1.name
+                                    item1.score = rec.score[0]
+                                }
+                                if (p2) {
+                                    item2.name = p2.name
+                                    item2.score = rec.score[1]
+                                }
                             }
                         }
                     })

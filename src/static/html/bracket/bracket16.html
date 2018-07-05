@@ -55,13 +55,14 @@
             methods: {
                 route: (recArr, playerMap, items) => {
                     let getWinner = (rec) => {
-                        if (rec.score[0] != 0 || rec.score[1] != 0) {
+                        if (rec.score[0] == 0 && rec.score[1] == 0) {
+                            return ''
+                        } else {
                             if (rec.score[0] > rec.score[1])
                                 return rec.player[0]
                             else
                                 return rec.player[1]
                         }
-                        return ''
                     }
                     let fillWinner = (fromGameId, playerId) => {
                         for (let i = 0; i < recArr.length; i++) {
@@ -182,22 +183,31 @@
                     .on('sc_data', (data) => {
                         console.log('sc_data', data)
                         if (data.dbIdx == 'G32') {
+                            let data2 = JSON.parse(JSON.stringify(data))
                             this.route(data.rec, data.playerMap, this.items)
+                            let dataF;
                             for (let i = 0; i < 12; i++) {
-                                let rec = data.rec[i + 16];
+                                // if (i > 11) {
+                                //     dataF = data2
+                                // } else {
+                                //     dataF = data
+                                // }
+                                dataF = data
+
+                                let rec = dataF.rec[i + 16];
                                 let item1 = this.items[i * 2]
                                 let item2 = this.items[i * 2 + 1]
-                                let p1 = data.playerMap[rec.player[0]]
-                                let p2 = data.playerMap[rec.player[1]]
+                                let p1 = dataF.playerMap[rec.player[0]]
+                                let p2 = dataF.playerMap[rec.player[1]]
 
                                 item1.name = p1.name
                                 item2.name = p2.name
                                 item1.score = rec.score[0]
                                 item2.score = rec.score[1]
-                                if (i > 11) {
-                                    item1.name = ''
-                                    item2.name = ''
-                                }
+                                    // if (i > 11) {
+                                    //     item1.name = ''
+                                    //     item2.name = ''
+                                    // }
                             }
                         }
 
