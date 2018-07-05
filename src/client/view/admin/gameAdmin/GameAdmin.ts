@@ -39,7 +39,7 @@ class _GameAdmin extends VueBase {
             console.log('player', rec.player);
             let p1 = playerMap[rec.player[0]]
             let p2 = playerMap[rec.player[1]]
-            if (p1) {
+            if (p1||p2) {
                 let option = { text: rec.idx + p1.name + ' vs ' + p2.name, value: rec.idx }
                 a.push(option);
             }
