@@ -1475,6 +1475,7 @@
 	};
 	var VueBase_1 = __webpack_require__(22);
 	var const_1 = __webpack_require__(44);
+	var Command_1 = __webpack_require__(62);
 	var confFile = null;
 	var reader;
 	var filesInput;
@@ -1499,6 +1500,9 @@
 	        this.gameConf = VueBase_1.VueBase.PROP;
 	        this.vsPlayer = VueBase_1.VueBase.PROP;
 	        this.methods = {
+	            onShowTag: function (tagName, v) {
+	                opReq(Command_1.CommandId.cs_showTagFx, { visible: v, tag: tagName + '.png' });
+	            },
 	            onSelectGame: function () {
 	                console.log('on init game', this.selected);
 	                var playerMap = this.gameConf.playerMap;
@@ -1643,7 +1647,7 @@
 /* 27 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onShowTag('tag1_1',true)\">小钢炮</button>\r\n    <button class=\"button is-primary\" @click=\"onShowTag('tag1_2',true)\">脚踝终结者</button>\r\n    <button class=\"button is-primary\" @click=\"onShowTag('tag2_1',true)\">碾压坦克</button>\r\n    <button class=\"button is-primary\" @click=\"onShowTag('tag2_2',true)\">大心脏</button>\r\n    <button class=\"button is-primary\" @click=\"onShowTag('tag3_1',true)\">三分雨</button>\r\n    <button class=\"button is-primary\" @click=\"onShowTag('tag4_1',true)\">万花筒</button>\r\n    <button class=\"button is-primary\" @click=\"onShowTag('tag2_2',false)\">隐藏</button>\r\n</div>";
 
 /***/ },
 /* 28 */
@@ -1845,6 +1849,191 @@
 	    return param;
 	}
 	exports.ScParam = ScParam;
+
+
+/***/ },
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.CommandId = {
+	    resetTimer: '',
+	    disableTracker: '',
+	    cs_updateFoul: '',
+	    sc_updateFoul: '',
+	    cs_updateScore: '',
+	    sc_updateScore: '',
+	    cs_updateRightScore: '',
+	    sc_updateRightScore: '',
+	    cs_addLeftScore: '',
+	    cs_addRightScore: '',
+	    cs_togglePlayerState: '',
+	    sc_togglePlayerState: '',
+	    minLeftScore: '',
+	    cs_minLeftScore: '',
+	    minRightScore: '',
+	    cs_minRightScore: '',
+	    updateLeftFoul: '',
+	    cs_addLeftFoul: '',
+	    cs_minLeftFoul: '',
+	    updateRightFoul: '',
+	    cs_addRightFoul: '',
+	    cs_minRightFoul: '',
+	    cs_updateLeftSkill: '',
+	    updateLeftSkill: '',
+	    cs_updateRightSkill: '',
+	    updateRightSkill: '',
+	    cs_showTagFx: '',
+	    sc_showTagFx: '',
+	    cs_setGameIdx: '',
+	    setGameIdx: '',
+	    fadeInWinPanel: '',
+	    cs_fadeInWinPanel: '',
+	    fadeOutWinPanel: '',
+	    cs_fadeOutWinPanel: '',
+	    saveGameRec: '',
+	    cs_saveGameRec: '',
+	    cs_fadeInFinalPlayer: '',
+	    fadeInFinalPlayer: '',
+	    cs_fadeOutFinalPlayer: '',
+	    fadeOutFinalPlayer: '',
+	    cs_setActPlayer: '',
+	    cs_setBracketPlayer: '',
+	    cs_clearActPlayerGameRec: '',
+	    cs_getBracketPlayerByIdx: '',
+	    cs_refreshClient: '',
+	    refreshClient: '',
+	    cs_updateWinScore: '',
+	    updateWinScore: '',
+	    cs_updateKingPlayer: '',
+	    updateKingPlayer: '',
+	    cs_setCursorPlayer: '',
+	    setCursorPlayer: '',
+	    cs_saveToTotalScore: '',
+	    cs_setScorePanelVisible: '',
+	    setScorePanelVisible: '',
+	    cs_autoSaveGameRec: '',
+	    cs_setDelayTime: '',
+	    sc_setDelayTime: '',
+	    cs_showRank: '',
+	    sc_showRank: '',
+	    cs_showBracket: '',
+	    sc_showBracket: '',
+	    cs_showGroup: '',
+	    sc_showGroup: '',
+	    cs_showStage: '',
+	    sc_showStage: '',
+	    cs_showVsTitle: '',
+	    sc_showVsTitle: '',
+	    cs_hideOnlinePanel: '',
+	    sc_hideOnlinePanel: '',
+	    cs_setPreRoundPosition: '',
+	    sc_setPreRoundPosition: '',
+	    cs_togglePreRoundTheme: '',
+	    sc_togglePreRoundTheme: '',
+	    cs_setBdVisible: '',
+	    sc_setBdVisible: '',
+	    cs_setFxPoint: '',
+	    sc_setFxPoint: '',
+	    cs_playScoreFx: '',
+	    sc_playScoreFx: '',
+	    cs_resetTimer: '',
+	    sc_resetTimer: '',
+	    cs_setTimer: '',
+	    sc_setTimer: '',
+	    cs_startTimer: '',
+	    sc_startTimer: '',
+	    cs_pauseTimer: '',
+	    sc_pauseTimer: '',
+	    cs_showPickup: '',
+	    sc_showPickup: '',
+	    cs_startGame: '',
+	    sc_startGame: '',
+	    cs_commitGame: '',
+	    sc_commitGame: '',
+	    cs_commitTeam: '',
+	    sc_commitTeam: '',
+	    cs_toggleTimer: '',
+	    sc_toggleTimer: '',
+	    cs_setBlood: '',
+	    sc_setBlood: '',
+	    cs_setFoul: '',
+	    sc_setFoul: '',
+	    cs_setSt: '',
+	    sc_setSt: '',
+	    cs_hideSt: '',
+	    sc_hideSt: '',
+	    cs_ftBracketInfo: '',
+	    sc_ftBracketInfo: '',
+	    cs_showBottle: '',
+	    sc_showBottle: '',
+	    cs_setPlayer: '',
+	    sc_setPlayer: '',
+	    cs_showHeaderText: '',
+	    sc_showHeaderText: '',
+	    cs_5v5score: '',
+	    sc_5v5score: '',
+	    cs_5v5timeup: '',
+	    sc_5v5timeup: '',
+	    cs_5v5queter: '',
+	    sc_5v5queter: '',
+	    cs_5v5toggleTimer: '',
+	    sc_5v5toggleTimer: '',
+	    cs_5v5resetTimer: '',
+	    sc_5v5resetTimer: '',
+	    cs_5v5setPlayer: '',
+	    sc_5v5setPlayer: '',
+	    cs_5v5hidePlayer: '',
+	    sc_5v5hidePlayer: '',
+	    cs_5v5setTimeString: '',
+	    sc_5v5setTimeString: '',
+	    cs_toggleTheme: '',
+	    sc_toggleTheme: '',
+	    cs_showNotice: '',
+	    sc_showNotice: '',
+	    cs_showRollText: "",
+	    sc_showRollText: "",
+	    cs_showChampion: '',
+	    sc_showChampion: '',
+	    cs_showRanking: '',
+	    sc_showRanking: '',
+	    cs_toggleScorePanel: '',
+	    sc_toggleScorePanel: '',
+	    cs_toggleChampionPanel: '',
+	    sc_toggleChampionPanel: '',
+	    initPanel: '',
+	    cs_showTop5: '',
+	    sc_showTop5: '',
+	    cs_inScreenScore: '',
+	    inScreenScore: '',
+	    cs_attack: '',
+	    attack: '',
+	    cs_addHealth: '',
+	    addHealth: '',
+	    fadeInOK: '',
+	    cs_combo: '',
+	    combo: ''
+	};
+	for (var k in exports.CommandId) {
+	    exports.CommandId[k] = k;
+	}
 
 
 /***/ }

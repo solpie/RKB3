@@ -19,6 +19,11 @@
             color: #003da7;
             text-align: center;
         }
+        
+        .white {
+            color: #fff;
+            font-family: 'gkhs-n3'
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
     <script src="/js/socket.io.slim.min.js"></script>
@@ -43,7 +48,6 @@
         var app = new Vue({
             el: '#app',
             data: {
-                message: 'Hello Vue22!',
                 items: []
             },
             // mounted: function() {
@@ -73,18 +77,21 @@
                 pos.push([415, 767, 415 + scoreOfs])
                 pos.push([1227, 270, 1227 - scoreOfs + 275])
                 pos.push([1227, 767, 1227 - scoreOfs + 275])
+
+                pos.push([415, 522, 415 + scoreOfs])
+                pos.push([1227, 522, 1227 - scoreOfs + 275])
                 for (let i = 0; i < pos.length; i++) {
                     let p = pos[i]
                     this.items.push({
                         s: _p(p[0], p[1]),
                         ss: _p(p[2], p[1]),
-                        score: -1,
+                        score: 0,
                         name: ""
                     })
                 }
                 this.items.push({
                     s: _p(960 - 150, 510) + 'font-size:50px;',
-                    name: "好天氣"
+                    name: ""
                 })
 
                 var localWs = io.connect('/rkb')
@@ -107,6 +114,8 @@
                                 item1.score = rec.score[0]
                                 item2.score = rec.score[1]
                             }
+                            let itemChampion = this.items[14]
+                            itemChampion.name = data.champion
                         }
                     })
             }

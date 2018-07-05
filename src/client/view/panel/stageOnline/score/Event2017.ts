@@ -18,6 +18,7 @@ import { Top5 } from '../top5/Top5';
 import { VsTitle } from './VsTitle';
 import { RollText } from './RollText';
 import { RankSection } from '../rank/RankSection';
+import { TagFx } from './TagFx';
 
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
@@ -364,6 +365,13 @@ export class Event2017 extends PIXI.Container {
     //         : this.vsTitle.hide()
     // }
 
+    tagFx: TagFx
+    showTagFx(data) {
+        if (!this.tagFx) 
+            this.tagFx = new TagFx(this, data)
+        else
+            this.tagFx.show(data)
+    }
     rollText: RollText
     showRollText(data) {
         if (!this.rollText) {

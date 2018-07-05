@@ -1,5 +1,6 @@
 import { VueBase } from '../../utils/VueBase';
 import { PanelId } from '../../const';
+import { CommandId } from '../../Command';
 let confFile = null;
 let reader;
 let filesInput;
@@ -87,6 +88,9 @@ class _GameAdmin extends VueBase {
 
     }
     methods = {
+        onShowTag(tagName, v) {
+            opReq(CommandId.cs_showTagFx, { visible: v, tag: tagName + '.png' })
+        },
         onSelectGame() {
             console.log('on init game', this.selected);
             let playerMap = this.gameConf.playerMap

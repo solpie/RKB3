@@ -32,6 +32,9 @@ export const CommandId = {
     cs_updateRightSkill: '',
     updateRightSkill: '',
 
+    cs_showTagFx: '',
+    sc_showTagFx: '',
+
 
     cs_setGameIdx: '',//设置比赛场次
     setGameIdx: '',

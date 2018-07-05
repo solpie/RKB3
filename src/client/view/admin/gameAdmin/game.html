@@ -10,9 +10,19 @@
     <input type="text" v-model="vsPlayer" style="width: 100px;">
     <button class="button is-primary" @click="onInitGame">初始比赛</button>
     <br>
+    <br>
     <button class="button is-primary" @click="onFile">打开配置</button>
     <button class="button is-primary" id="reloadFile" @click="reloadFile">reload</button>
     <button class="button is-primary" @click="onShowPage(0,6)">page 1</button>
     <button class="button is-primary" @click="onShowPage(6,6)">page 2</button>
     <button class="button is-primary" @click="onShowPage(12,4)">page 3</button>
+    <br>
+    <br>
+    <button class="button is-primary" @click="onShowTag('tag1_1',true)">小钢炮</button>
+    <button class="button is-primary" @click="onShowTag('tag1_2',true)">脚踝终结者</button>
+    <button class="button is-primary" @click="onShowTag('tag2_1',true)">碾压坦克</button>
+    <button class="button is-primary" @click="onShowTag('tag2_2',true)">大心脏</button>
+    <button class="button is-primary" @click="onShowTag('tag3_1',true)">三分雨</button>
+    <button class="button is-primary" @click="onShowTag('tag4_1',true)">万花筒</button>
+    <button class="button is-primary" @click="onShowTag('tag2_2',false)">隐藏</button>
 </div>
