@@ -73,7 +73,8 @@
                                 if (pos > -1) {
                                     let arrIdx = Math.floor(pos / Number(a[0]))
                                     console.log('fillWinner from', fromGameId, 'to', gameId, arrIdx, playerMap[playerId].name);
-                                    rec.player[arrIdx] = playerId
+                                    if (!rec.player[arrIdx])
+                                        rec.player[arrIdx] = playerId
                                     return
                                 }
                             }
@@ -188,10 +189,15 @@
                                 let item2 = this.items[i * 2 + 1]
                                 let p1 = data.playerMap[rec.player[0]]
                                 let p2 = data.playerMap[rec.player[1]]
+
                                 item1.name = p1.name
                                 item2.name = p2.name
                                 item1.score = rec.score[0]
                                 item2.score = rec.score[1]
+                                if (i > 11) {
+                                    item1.name = ''
+                                    item2.name = ''
+                                }
                             }
                         }
 
