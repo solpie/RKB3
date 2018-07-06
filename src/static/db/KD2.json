@@ -13,7 +13,7 @@
         { "title": "半决赛", "idx": "2#A1B1", "score": [0, 0], "player": ["", ""] },
         { "title": "半决赛", "idx": "2#C1D1", "score": [0, 0], "player": ["", ""] },
         { "title": "决赛", "idx": "4#A1B1C1D1", "score": [0, 0], "player": ["", ""] },
-        { "title": "杜兰特", "idx": "5#E1", "score": [0, 0], "player": ["p9", "p3"] }
+        { "title": "", "idx": "5#E1", "score": [0, 0], "player": ["p9", "p3"] }
     ],
     "champion": "安云鹏",
     "playerMap": {
