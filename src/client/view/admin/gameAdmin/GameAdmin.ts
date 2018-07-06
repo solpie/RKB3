@@ -90,10 +90,12 @@ class _GameAdmin extends VueBase {
 
     }
     methods = {
-        onShowTag(tagName, v, isLeft) {
-            opReq(CommandId.cs_showTagFx, { visible: v, tag: tagName, isLeft: isLeft })
+        onShowTag(tagName, v, isLeft, is2Title) {
+            opReq(CommandId.cs_showTagFx, { visible: v, tag: tagName, isLeft: isLeft, is2Title: is2Title })
         },
-
+        onHideTag(isHideAll) {
+            opReq(CommandId.cs_showTagFx, { visible: false, isHideAll: isHideAll })
+        },
         onSelectGame() {
             console.log('on init game', this.selected);
             let playerMap = this.gameConf.playerMap

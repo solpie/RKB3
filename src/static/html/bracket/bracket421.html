@@ -87,6 +87,11 @@
                     .on('sc_data', (data) => {
                         console.log('sc_data', data)
                         if (data.dbIdx == 'G421') {
+                            for (let i = 0; i < this.items.length; i++) {
+                                let item = this.items[i];
+                                item.name = ''
+                                item.score = ''
+                            }
                             for (var i = 0; i < data.rec.length; i++) {
                                 let rec = data.rec[i];
 

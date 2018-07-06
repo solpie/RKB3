@@ -1085,8 +1085,11 @@
 	        this.gameConf = VueBase_1.VueBase.PROP;
 	        this.vsPlayer = VueBase_1.VueBase.PROP;
 	        this.methods = {
-	            onShowTag: function (tagName, v, isLeft) {
-	                opReq(Command_1.CommandId.cs_showTagFx, { visible: v, tag: tagName, isLeft: isLeft });
+	            onShowTag: function (tagName, v, isLeft, is2Title) {
+	                opReq(Command_1.CommandId.cs_showTagFx, { visible: v, tag: tagName, isLeft: isLeft, is2Title: is2Title });
+	            },
+	            onHideTag: function (isHideAll) {
+	                opReq(Command_1.CommandId.cs_showTagFx, { visible: false, isHideAll: isHideAll });
 	            },
 	            onSelectGame: function () {
 	                console.log('on init game', this.selected);
@@ -1234,7 +1237,7 @@
 /* 27 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n    <br>\r\n    <br>\r\n    <div style=\"width: 1400px\">\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,true)\">小钢炮</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,true)\">脚踝终结者</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,true)\">碾压坦克</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,true)\">大心脏</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('3_1',true,true)\">三分雨</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('4_1',true,true)\">万花筒</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',false)\">隐藏</button> ------------\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,false)\">小钢炮</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,false)\">脚踝终结者</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,false)\">碾压坦克</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,false)\">大心脏</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('3_1',true,false)\">三分雨</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('4_1',true,false)\">万花筒</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',false)\">隐藏</button>\r\n    </div>\r\n\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n    <br>\r\n    <br>\r\n    <div style=\"width: 1400px\">\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,true)\">小钢炮</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,true)\">脚踝终结者</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,true)\">碾压坦克</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,true)\">大心脏</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('3_1',true,true)\">三分雨</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('4_1',true,true)\">万花筒</button>\r\n        <button class=\"button is-primary\" @click=\"onHideTag(false)\">隐藏</button> ------------\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,false)\">小钢炮</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,false)\">脚踝终结者</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,false)\">碾压坦克</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,false)\">大心脏</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('3_1',true,false)\">三分雨</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('4_1',true,false)\">万花筒</button>\r\n        <button class=\"button is-primary\" @click=\"onHideTag(true)\">隐藏All</button>\r\n        <br>\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,true,true)\">脚踝终结者</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,true,true)\">小钢炮</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,true,true)\">大心脏</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,true,true)\">碾压坦克</button> ----------------------------------------------\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,false,true)\">脚踝终结者</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,false,true)\">小钢炮</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,false,true)\">大心脏</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,false,true)\">碾压坦克</button> -\r\n    </div>\r\n\r\n</div>";
 
 /***/ },
 /* 28 */
@@ -7525,7 +7528,7 @@
 	        else {
 	            data.visible ?
 	                this.tagFx.show(data)
-	                : this.tagFx.hide();
+	                : this.tagFx.hide(data);
 	        }
 	    };
 	    Event2017.prototype.showRollText = function (data) {
@@ -9351,6 +9354,7 @@
 	var ImgLoader_1 = __webpack_require__(67);
 	var TextFac_1 = __webpack_require__(71);
 	var const_1 = __webpack_require__(44);
+	var TweenEx_1 = __webpack_require__(51);
 	var TagFx = (function (_super) {
 	    __extends(TagFx, _super);
 	    function TagFx(parent, data) {
@@ -9376,28 +9380,32 @@
 	            '/img/panel/tagFx/title2_2.png',
 	            '/img/panel/tagFx/title3_1.png',
 	            '/img/panel/tagFx/title4_1.png',
+	            '/img/panel/tagFx/title2_.png',
+	            '/img/panel/tagFx/title1_.png',
 	        ];
 	        ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
+	            _this.popupCtn = new PIXI.Container();
+	            _this.addChild(_this.popupCtn);
 	            var bg = PixiEx_1.newBitmap({ url: '/img/panel/tagFx/bg.png' });
-	            _this.addChild(bg);
+	            _this.popupCtn.addChild(bg);
 	            _this.p = parent;
 	            var ns = {
 	                fontFamily: const_1.FontName.NotoSansHans,
 	                fontWeight: 'bold',
 	                fontSize: '32px', fill: "#fff",
 	            };
-	            _this.playerName = TextFac_1.TextFac.new_(ns, _this)
+	            _this.playerName = TextFac_1.TextFac.new_(ns, _this.popupCtn)
 	                .setY(853);
 	            _this.tagSp = new PIXI.Sprite();
 	            _this.tagSp.x = 1108;
 	            _this.tagSp.y = 710;
-	            _this.addChild(_this.tagSp);
+	            _this.popupCtn.addChild(_this.tagSp);
 	            _this.iconSp = new PIXI.Sprite();
 	            _this.iconSp.x = 960 - 149;
 	            _this.iconSp.y = 711 - 7;
-	            _this.addChild(_this.iconSp);
+	            _this.popupCtn.addChild(_this.iconSp);
 	            _this.avtSp = new PIXI.Sprite();
-	            _this.addChild(_this.avtSp);
+	            _this.popupCtn.addChild(_this.avtSp);
 	            _this.avtSp.x = 643;
 	            _this.avtSp.y = 732;
 	            _this.lTitleSp = new PIXI.Sprite();
@@ -9416,21 +9424,36 @@
 	            .setAlignCenter(694);
 	        this.tagSp.texture = ImgLoader_1.imgLoader.getTex('/img/panel/tagFx/tag' + data.tag + '.png');
 	        this.iconSp.texture = ImgLoader_1.imgLoader.getTex('/img/panel/tagFx/icon' + data.tag + '.png');
+	        if (data.is2Title) {
+	            data.tag = data.tag.substring(0, 2);
+	        }
 	        if (data.isLeft) {
 	            this.lTitleSp.texture = ImgLoader_1.imgLoader.getTex('/img/panel/tagFx/title' + data.tag + '.png');
+	            this.lTitleSp.visible = true;
 	        }
 	        else {
 	            this.rTitleSp.texture = ImgLoader_1.imgLoader.getTex('/img/panel/tagFx/title' + data.tag + '.png');
+	            this.rTitleSp.visible = true;
 	        }
 	        console.log('tag fx load url ', data.player.avatar);
 	        ImgLoader_1.imgLoader.loadTex(data.player.avatar, function (tex) {
 	            _this.avtSp.texture = tex;
 	            PixiEx_1.setScale(_this.avtSp, 105 / tex.width);
 	        });
+	        this.popupCtn.visible = true;
+	        TweenEx_1.TweenEx.delayedCall(3000, function (_) {
+	            _this.popupCtn.visible = false;
+	        });
 	        this.p.addChild(this);
 	    };
-	    TagFx.prototype.hide = function () {
-	        this.p.removeChild(this);
+	    TagFx.prototype.hide = function (data) {
+	        if (data.isHideAll) {
+	            this.lTitleSp.visible = false;
+	            this.rTitleSp.visible = false;
+	            this.p.removeChild(this);
+	        }
+	        else
+	            this.popupCtn.visible = false;
 	    };
 	    return TagFx;
 	}(PIXI.Container));

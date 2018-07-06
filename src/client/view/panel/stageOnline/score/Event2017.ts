@@ -361,7 +361,7 @@ export class Event2017 extends PIXI.Container {
         else {
             data.visible ?
                 this.tagFx.show(data)
-                : this.tagFx.hide()
+                : this.tagFx.hide(data)
         }
     }
 

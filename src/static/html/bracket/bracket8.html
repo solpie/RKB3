@@ -75,6 +75,7 @@
                 pos = pos.concat(ar)
                 pos.push([415, 270, 415 + scoreOfs])
                 pos.push([415, 767, 415 + scoreOfs])
+
                 pos.push([1227, 270, 1227 - scoreOfs + 275])
                 pos.push([1227, 767, 1227 - scoreOfs + 275])
 
@@ -101,6 +102,11 @@
                     .on('sc_data', (data) => {
                         console.log('sc_data', data)
                         if (data.dbIdx == 'kd2') {
+                            for (let i = 0; i < this.items.length; i++) {
+                                let item = this.items[i];
+                                item.name = ''
+                                item.score = ''
+                            }
                             for (var i = 0; i < data.rec.length; i++) {
                                 let rec = data.rec[i];
 
