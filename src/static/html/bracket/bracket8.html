@@ -25,6 +25,12 @@
             color: #fff;
             font-family: "微软雅黑";
         }
+        
+        body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
     <script src="/js/socket.io.slim.min.js"></script>
@@ -56,14 +62,14 @@
                 console.log(this);
                 let pos = []
 
-                let x1 = 42,
-                    x1r = 1593
+                let x1 = 42 - 6,
+                    x1r = 1593 - 8
                 let scoreOfs = 130 + 119
                 pos = pos.concat([
-                    [x1, 152, x1 + scoreOfs],
-                    [x1, 152 + 244, x1 + scoreOfs],
-                    [x1, 643, x1 + scoreOfs],
-                    [x1, 643 + 244, x1 + scoreOfs]
+                    [x1, 152 - 8, x1 + scoreOfs],
+                    [x1, 152 - 8 + 244, x1 + scoreOfs],
+                    [x1, 643 - 8, x1 + scoreOfs],
+                    [x1, 643 - 8 + 244, x1 + scoreOfs]
                 ])
                 let a = [],
                     ar = []
@@ -74,14 +80,14 @@
                 }
 
                 pos = pos.concat(ar)
-                pos.push([415, 270, 415 + scoreOfs])
-                pos.push([415, 767, 415 + scoreOfs])
+                pos.push([415 - 8, 270, 415 - 8 + scoreOfs])
+                pos.push([415 - 8, 767 - 8, 415 - 8 + scoreOfs])
 
-                pos.push([1227, 270, 1227 - scoreOfs + 275])
-                pos.push([1227, 767, 1227 - scoreOfs + 275])
+                pos.push([1219, 270, 1227 - 8 - scoreOfs + 275])
+                pos.push([1219, 767 - 8, 1227 - 8 - scoreOfs + 275])
 
-                pos.push([415, 522, 415 + scoreOfs])
-                pos.push([1227, 522, 1227 - scoreOfs + 275])
+                pos.push([407, 514, 415 - 8 + scoreOfs])
+                pos.push([1219, 514, 1227 - 8 - scoreOfs + 275])
                 for (let i = 0; i < pos.length; i++) {
                     let p = pos[i]
                     this.items.push({

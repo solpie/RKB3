@@ -25,6 +25,12 @@
             color: #fff;
             font-family: "微软雅黑";
         }
+        
+        body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
     <script src="/js/socket.io.slim.min.js"></script>
@@ -79,10 +85,10 @@
 
                 for (let p of pos) {
                     this.items.push({
-                        s: _p(p[0], p[1]),
-                        ss: _p(p[2], p[1]),
-                        score: -1,
-                        name: ''
+                        s: _p(p[0] - 8, p[1] - 8),
+                        ss: _p(p[2] - 8, p[1] - 8),
+                        score: 1,
+                        name: '號添加劑'
                     })
                 }
 
