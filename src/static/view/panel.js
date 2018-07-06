@@ -5002,11 +5002,15 @@
 	        this.curIdx = 0;
 	        this.texMap = {};
 	        console.log('live conf', conf);
-	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/studio/comingFg.png' }));
+	        var ctn1 = new PIXI.Container();
+	        this.addChild(ctn1);
+	        ctn1.addChild(PixiEx_1.newBitmap({ url: '/img/panel/studio/comingFg.png' }));
+	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/studio/cdBg.png' }));
+	        ctn1.visible = false;
 	        var playerMask = PixiEx_1.newBitmap({ url: '/img/panel/studio/comingMask.png' });
-	        this.addChild(playerMask);
+	        ctn1.addChild(playerMask);
 	        this.avt = new PIXI.Sprite;
-	        this.addChild(this.avt);
+	        ctn1.addChild(this.avt);
 	        this.avt.x = 40;
 	        this.avt.y = 39;
 	        this.avt.mask = playerMask;
@@ -5015,25 +5019,25 @@
 	            fontSize: '38px', fill: "#303030",
 	            fontWeight: 'bold'
 	        };
-	        this.playerName = TextFac_1.TextFac.new_(ns, this)
+	        this.playerName = TextFac_1.TextFac.new_(ns, ctn1)
 	            .setPos(122, 700)
 	            .setText('');
 	        ns.fontSize = '32px';
 	        ns.fill = '#000';
-	        this.address = TextFac_1.TextFac.new_(ns, this)
+	        this.address = TextFac_1.TextFac.new_(ns, ctn1)
 	            .setPos(652, 882);
 	        ns.fontSize = '32px';
 	        ns.fontWeight = '';
 	        ns.fill = '#606060';
-	        this.playerHWA = TextFac_1.TextFac.new_(ns, this)
+	        this.playerHWA = TextFac_1.TextFac.new_(ns, ctn1)
 	            .setPos(this.playerName.x, 794)
 	            .setText('');
 	        var info = '';
-	        this.playerInfo = TextFac_1.TextFac.new_(ns, this)
+	        this.playerInfo = TextFac_1.TextFac.new_(ns, ctn1)
 	            .setPos(this.playerName.x, 872)
 	            .setText(JsFunc_1.cnWrap(info + info + info, 20, 79));
 	        this.levelSP = new PIXI.Sprite();
-	        this.addChild(this.levelSP);
+	        ctn1.addChild(this.levelSP);
 	        this.levelSP.x = 30 + 15 + 8;
 	        this.levelSP.y = 30 + 6 + 3;
 	        window.onkeyup = function (e) {

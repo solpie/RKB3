@@ -23,13 +23,17 @@ export class LiveComing extends PIXI.Container {
     constructor(conf) {
         super()
         console.log('live conf', conf);
-        this.addChild(newBitmap({ url: '/img/panel/studio/comingFg.png' }))
+        let ctn1 = new PIXI.Container()
+        this.addChild(ctn1)
 
+        ctn1.addChild(newBitmap({ url: '/img/panel/studio/comingFg.png' }))
+        this.addChild(newBitmap({ url: '/img/panel/studio/cdBg.png' }))
+        ctn1.visible =false
         let playerMask = newBitmap({ url: '/img/panel/studio/comingMask.png' })
-        this.addChild(playerMask)
+        ctn1.addChild(playerMask)
 
         this.avt = new PIXI.Sprite
-        this.addChild(this.avt)
+        ctn1.addChild(this.avt)
         this.avt.x = 40
         this.avt.y = 39
         this.avt.mask = playerMask
@@ -41,31 +45,31 @@ export class LiveComing extends PIXI.Container {
             fontWeight: 'bold'
         }
 
-        this.playerName = TextFac.new_(ns, this)
+        this.playerName = TextFac.new_(ns, ctn1)
             .setPos(122, 700)
             .setText('')
 
         ns.fontSize = '32px'
         ns.fill = '#000'
-        this.address = TextFac.new_(ns, this)
+        this.address = TextFac.new_(ns, ctn1)
             .setPos(652, 882)
 
         ns.fontSize = '32px'
         ns.fontWeight = ''
         ns.fill = '#606060'
-        this.playerHWA = TextFac.new_(ns, this)
+        this.playerHWA = TextFac.new_(ns, ctn1)
             .setPos(this.playerName.x, 794)
             .setText('')
 
 
         let info = ''
 
-        this.playerInfo = TextFac.new_(ns, this)
+        this.playerInfo = TextFac.new_(ns, ctn1)
             .setPos(this.playerName.x, 872)
             .setText(cnWrap(info + info + info, 20, 79))
 
         this.levelSP = new PIXI.Sprite()
-        this.addChild(this.levelSP)
+        ctn1.addChild(this.levelSP)
         this.levelSP.x = 30 + 15 + 8
         this.levelSP.y = 30 + 6 + 3
 
