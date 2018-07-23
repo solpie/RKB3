@@ -4,17 +4,15 @@ import { FontName } from '../../../const';
 import { fitWidth } from '../bracket/BracketGroup';
 import { paddy } from '../../../utils/JsFunc';
 import { TextTimer } from '../../../utils/TextTimer';
-import { BaseAvatar } from '../../base/BaseAvatar';
+// import { BaseAvatar } from '../../base/BaseAvatar';
 import { imgLoader } from '../../../utils/ImgLoader';
 const loadAvt = (avtSp, url, left) => {
     console.log('loadAvt', url);
     imgLoader.loadTex(url, tex => {
         let s = 86 / tex.height
-        // avtSp.visible = false
         avtSp.texture = tex
         avtSp.x = left
         setScale(avtSp, s)
-        // avtSp.visible = true
     })
 }
 
@@ -93,7 +91,6 @@ export class Score2018v3 extends PIXI.Container {
             .setY(960)
         this.rScore = TextFac.new_(ns, this.avtCtn)
             .setY(this.lScore.y)
-
 
         ns.fontSize = '24px'
         ns.fill = '#505050'

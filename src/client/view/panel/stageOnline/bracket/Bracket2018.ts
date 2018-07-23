@@ -5,8 +5,123 @@ import { blink2, delayCall } from '../../../utils/Fx';
 import { ViewConst } from '../../../const';
 import { imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
 import { BracketGroup2018 } from './BracketGroup2018';
+import { BracketPlayerV3 } from './BracketPlayerV3';
+
+
+const isTest = false
+class Section2 extends PIXI.Container {
+    groupPlayerMap = {}
+
+    constructor() {
+
+        super()
+
+        this.addChild(newBitmap({ url: '/img/panel/bracket/s4v31/bg2.png' }))
+
+        let y1 = 247
+        let y2 = 208
+        let lNameX = 90
+        let lScoreX = 195
+        let rNameX = 135
+        let rScoreX = 18
+        const playerPos = {
+            '5': { p: [188, 98], y: y2, align: [lNameX, lScoreX], isLeft: true },
+            '6': { p: [188, 427], y: y2, align: [lNameX, lScoreX], isLeft: true },
+            '7': { p: [546, 777], y: y2, align: [lNameX, lScoreX], isLeft: true },
+            '8': { p: [917, 202], y: 329, align: [lNameX, lScoreX], isLeft: true }
+        }
+        let gm = this.groupPlayerMap
+        for (let i = 0; i < 4; i++) {
+            let g = gm[i + 5] = { playerArr: [] }
+            let p = playerPos[i + 5]
+            let p1 = new BracketPlayerV3(p.isLeft, p.align)
+            let p2 = new BracketPlayerV3(p.isLeft, p.align)
+            p1.x = p.p[0]
+            p1.y = p.p[1]
+
+            p2.x = p.p[0]
+            p2.y = p.p[1] + p.y
+            g.playerArr.push(p1)
+            g.playerArr.push(p2)
+            g['group'] = [p1, p2]
+            this.addChild(p1)
+            this.addChild(p2)
+            //test
+            if (isTest)
+                this.test(p1, p2)
+        }
+
+        let pWin7 = new BracketPlayerV3(true, [lNameX, lScoreX])
+        pWin7.x = 935
+        pWin7.y = 878
+        this.addChild(pWin7)
+        pWin7.hideScore()
+        // pWin7.setFont({fontSize:'50px'})
+        let pWin8 = new BracketPlayerV3(true, [lNameX, lScoreX])
+        pWin8.x = 1498
+        pWin8.y = 358
+        this.addChild(pWin8)
+        pWin8.setFont({ fontSize: '50px' })
+        pWin8.hideScore()
+
+        if (isTest)
+            this.test(pWin7, pWin8)
+    }
+    test(p1, p2) {
+        p1.setInfo({ name: '好天氣', score: '12' })
+        p2.setInfo({ name: '好天氣其', score: '0' })
+    }
+}
+class Section1 extends PIXI.Container {
+    groupPlayerMap = {}
+
+    constructor() {
+
+        super()
+        this.addChild(newBitmap({ url: '/img/panel/bracket/s4v31/bg.png' }))
+        let y1 = 247
+        let y2 = 495
+        let lNameX = 90
+        let lScoreX = 195
+        let rNameX = 135
+        let rScoreX = 18
+        const playerPos = {
+            '1': { p: [96, 150], y: y1, align: [lNameX, lScoreX], isLeft: true },
+            '2': { p: [96, 640], y: y1, align: [lNameX, lScoreX], isLeft: true },
+            '3': { p: [1608, 150], y: y1, align: [rNameX, rScoreX], isLeft: false },
+            '4': { p: [1608, 640], y: y1, align: [rNameX, rScoreX], isLeft: false },
+            '5': { p: [469, 272], y: y2, align: [lNameX, lScoreX], isLeft: true },
+            '6': { p: [1234, 272], y: y2, align: [rNameX, rScoreX], isLeft: false }
+        }
+        let gm = this.groupPlayerMap
+        for (let i = 0; i < 6; i++) {
+            let g = gm[i + 1] = { playerArr: [] }
+            let p = playerPos[i + 1]
+            let p1 = new BracketPlayerV3(p.isLeft, p.align)
+            let p2 = new BracketPlayerV3(p.isLeft, p.align)
+            p1.x = p.p[0]
+            p1.y = p.p[1]
+
+            p2.x = p.p[0]
+            p2.y = p.p[1] + p.y
+            g.playerArr.push(p1)
+            g.playerArr.push(p2)
+            g['group'] = [p1, p2]
+            this.addChild(p1)
+            this.addChild(p2)
+            //test
+            if (isTest)
+                this.test(p1, p2)
+        }
+    }
+    test(p1, p2) {
+        p1.setInfo({ name: '好天氣', score: '12' })
+        p2.setInfo({ name: '好天氣其', score: '0' })
+    }
+
+}
 export class Bracket2018 extends PIXI.Container {
-    comingTitle: PIXI.Sprite
+    // comingTitle: PIXI.Sprite
     hint1Tex: PIXI.Texture
     hint2Tex: PIXI.Texture
     groupSpMap: any
@@ -21,53 +136,18 @@ export class Bracket2018 extends PIXI.Container {
             width: ViewConst.STAGE_WIDTH,
             height: ViewConst.STAGE_HEIGHT
         });
-        
+
         bg.alpha = 0.8;
         this.addChild(bg)
-        this.addChild(newBitmap({ url: '/img/panel/bracket/s4v3/route.png' }))
         let hintCtn = new PIXI.Container()
         this.addChild(hintCtn)
 
-        this.groupSpMap = []
-        let bypass = []
-        loadImg('/img/panel/bracket/s4v3/playerBg.png', img => {
-            for (let i = 0; i < 8; i++) {
-                if (bypass.indexOf(i + 1) > -1)
-                    continue;
-                let gsp = new BracketGroup2018(imgToTex(img))
-                let gameIdx = i + 1
-                this.groupSpMap[gameIdx] = gsp
-                let g = groupPosMap[i + 1];
-                console.log(g)
-                gsp.x = g.x
-                gsp.y = g.y
-                this.addChild(gsp)
-                if (g.p2y != undefined) {
-                    gsp.setP2Y(g.p2y)
-                }
-                else {
-                }
-            }
 
-            let gsp14winner = new BracketGroup2018(imgToTex(img), true)
-            gsp14winner.x = 1434
-            gsp14winner.y = 369 - 8
-            this.addChild(gsp14winner)
-            this.groupSpMap[8.1] = gsp14winner
-            let gsp13winner = new BracketGroup2018(imgToTex(img))
-            gsp13winner.x = 956
-            gsp13winner.y = 880
-            this.addChild(gsp13winner)
-            this.groupSpMap[7.1] = gsp13winner
-            this.isLoaded = true
-            if (this._res) {
-                this.onBracketData(this._res)
-            }
-        })
+        let section2 = new Section2()
+        this.addChild(section2)
+        // let section1 = new Section1()
+        // this.addChild(section1)
 
-        this.comingTitle = newBitmap({ url: '/img/panel/bracket/s4/focus.png' })
-        this.comingTitle.visible = false
-        // this.addChild(this.comingTitle)
     }
     setWinHint(sp: PIXI.Sprite, isFlip = false) {
         sp.texture = this.hint2Tex
@@ -75,19 +155,19 @@ export class Bracket2018 extends PIXI.Container {
         //     sp.scale.y = -1
     }
     hideComing() {
-        this.comingTitle.visible = false;
+        // this.comingTitle.visible = false;
     }
     showComingIdx(idx) {
         let g = groupPosMap[idx];
-        this.comingTitle.visible = false
-        TweenEx.delayedCall(610, () => {
-            if (g) {
-                this.comingTitle.visible = true;
-                this.comingTitle.x = g.x //- 38;
-                this.comingTitle.y = g.y //- 43;
-                blink2({ target: this.comingTitle, time: 600 });
-            }
-        })
+        // this.comingTitle.visible = false
+        // TweenEx.delayedCall(610, () => {
+        //     if (g) {
+        //         this.comingTitle.visible = true;
+        //         this.comingTitle.x = g.x //- 38;
+        //         this.comingTitle.y = g.y //- 43;
+        //         blink2({ target: this.comingTitle, time: 600 });
+        //     }
+        // })
     }
     _res = null
     onBracketData(res) {
@@ -120,7 +200,7 @@ export class Bracket2018 extends PIXI.Container {
             // if (!gsp) {
             //     continue;
             // }
-            console.log('gameidx',gameIdx,dataObj.left.score,":",dataObj.right.score);
+            console.log('gameidx', gameIdx, dataObj.left.score, ":", dataObj.right.score);
             gsp.setGameIdx(gameIdx)
             if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
                 closeGame[gameIdx] = true;
