@@ -9342,6 +9342,7 @@
 	            .setY(960);
 	        _this.rState = TextFac_1.TextFac.new_(ns, _this)
 	            .setY(_this.lState.y);
+	        _this.lState.visible = _this.rState.visible = false;
 	        var tts = {
 	            fontFamily: 'dinCondensedC',
 	            fontSize: '45px', fill: "#fff",

@@ -116,7 +116,7 @@ export class Score2018v3 extends PIXI.Container {
             .setY(960)
         this.rState = TextFac.new_(ns, this)
             .setY(this.lState.y)
-
+        this.lState.visible = this.rState.visible = false
         let tts = {
             fontFamily: 'dinCondensedC',
             fontSize: '45px', fill: "#fff",
