@@ -128,6 +128,8 @@ export const CommandId = {
     //ft bracket
     cs_ftBracketInfo: '',
     sc_ftBracketInfo: '',
+    cs_showBracketPage: '',
+    sc_showBracketPage: '',
     ////////////studio panel
     cs_showBottle: '',
     sc_showBottle: '',

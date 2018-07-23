@@ -11,7 +11,8 @@ import { BracketPlayerV3 } from './BracketPlayerV3';
 const isTest = false
 class Section2 extends PIXI.Container {
     groupPlayerMap = {}
-
+    pWin7: BracketPlayerV3
+    pWin8: BracketPlayerV3
     constructor() {
 
         super()
@@ -27,7 +28,7 @@ class Section2 extends PIXI.Container {
         const playerPos = {
             '5': { p: [188, 98], y: y2, align: [lNameX, lScoreX], isLeft: true },
             '6': { p: [188, 427], y: y2, align: [lNameX, lScoreX], isLeft: true },
-            '7': { p: [546, 777], y: y2, align: [lNameX, lScoreX], isLeft: true },
+            '7': { p: [546, 774], y: y2, align: [lNameX, lScoreX], isLeft: true },
             '8': { p: [917, 202], y: 329, align: [lNameX, lScoreX], isLeft: true }
         }
         let gm = this.groupPlayerMap
@@ -56,6 +57,7 @@ class Section2 extends PIXI.Container {
         pWin7.y = 878
         this.addChild(pWin7)
         pWin7.hideScore()
+        this.pWin7 = pWin7
         // pWin7.setFont({fontSize:'50px'})
         let pWin8 = new BracketPlayerV3(true, [lNameX, lScoreX])
         pWin8.x = 1498
@@ -63,10 +65,51 @@ class Section2 extends PIXI.Container {
         this.addChild(pWin8)
         pWin8.setFont({ fontSize: '50px' })
         pWin8.hideScore()
+        this.pWin8 = pWin8
+
 
         if (isTest)
             this.test(pWin7, pWin8)
     }
+
+    setData(data) {
+        console.log('section2 set data', data, this.groupPlayerMap)
+        for (let gameIdx in this.groupPlayerMap) {
+            let dataObj = data[gameIdx]
+            if (dataObj) {
+
+                let group = this.groupPlayerMap[gameIdx].group
+                let p1: BracketPlayerV3 = group[0]
+                let p2: BracketPlayerV3 = group[1]
+
+                if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
+                    p1.setScore(dataObj.left.score)
+                    p2.setScore(dataObj.right.score)
+                }
+                let group2 = groupPosMap[gameIdx];
+                let hints = group2.hints;
+                if (dataObj.left.name)
+                    p1.setLeftName(dataObj.left.name)
+                if (dataObj.right.name)
+                    p2.setLeftName(dataObj.right.name)
+            }
+        }
+        let fillWinner = (player, gameIdx) => {
+            let dataObj7 = data[gameIdx]
+            if (dataObj7) {
+                if (Number(dataObj7.left.score) > Number(dataObj7.right.score)) {
+                    player.setLeftName(dataObj7.left.name)
+                }
+                if (Number(dataObj7.left.score) < Number(dataObj7.right.score)) {
+                    player.setLeftName(dataObj7.right.name)
+                }
+            }
+        }
+        fillWinner(this.pWin7,7)
+        fillWinner(this.pWin8,8)
+    }
+
+
     test(p1, p2) {
         p1.setInfo({ name: '好天氣', score: '12' })
         p2.setInfo({ name: '好天氣其', score: '0' })
@@ -80,7 +123,7 @@ class Section1 extends PIXI.Container {
         super()
         this.addChild(newBitmap({ url: '/img/panel/bracket/s4v31/bg.png' }))
         let y1 = 247
-        let y2 = 495
+        let y2 = 490
         let lNameX = 90
         let lScoreX = 195
         let rNameX = 135
@@ -114,6 +157,30 @@ class Section1 extends PIXI.Container {
                 this.test(p1, p2)
         }
     }
+
+    setData(data) {
+        console.log('section1 set data', data, this.groupPlayerMap)
+        for (let gameIdx in this.groupPlayerMap) {
+            let dataObj = data[gameIdx]
+            if (dataObj) {
+                let group = this.groupPlayerMap[gameIdx].group
+                let p1: BracketPlayerV3 = group[0]
+                let p2: BracketPlayerV3 = group[1]
+
+                if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
+                    p1.setScore(dataObj.left.score)
+                    p2.setScore(dataObj.right.score)
+                }
+                let group2 = groupPosMap[gameIdx];
+                let hints = group2.hints;
+                if (dataObj.left.name)
+                    p1.setLeftName(dataObj.left.name)
+                if (dataObj.right.name)
+                    p2.setLeftName(dataObj.right.name)
+            }
+        }
+    }
+
     test(p1, p2) {
         p1.setInfo({ name: '好天氣', score: '12' })
         p2.setInfo({ name: '好天氣其', score: '0' })
@@ -126,6 +193,8 @@ export class Bracket2018 extends PIXI.Container {
     hint2Tex: PIXI.Texture
     groupSpMap: any
     isLoaded = false
+    section1: Section1
+    section2: Section2
     constructor(parent: PIXI.Container) {
         super()
         parent.addChild(this)
@@ -145,9 +214,13 @@ export class Bracket2018 extends PIXI.Container {
 
         let section2 = new Section2()
         this.addChild(section2)
-        // let section1 = new Section1()
-        // this.addChild(section1)
+        this.section2 = section2
+        // section2.visible = false
 
+        let section1 = new Section1()
+        this.addChild(section1)
+        this.section1 = section1
+        section1.visible = false
     }
     setWinHint(sp: PIXI.Sprite, isFlip = false) {
         sp.texture = this.hint2Tex
@@ -159,87 +232,20 @@ export class Bracket2018 extends PIXI.Container {
     }
     showComingIdx(idx) {
         let g = groupPosMap[idx];
-        // this.comingTitle.visible = false
-        // TweenEx.delayedCall(610, () => {
-        //     if (g) {
-        //         this.comingTitle.visible = true;
-        //         this.comingTitle.x = g.x //- 38;
-        //         this.comingTitle.y = g.y //- 43;
-        //         blink2({ target: this.comingTitle, time: 600 });
-        //     }
-        // })
+    }
+    showPage(data) {
+        if (data.page == 1) {
+            this.section1.visible = true
+            this.section2.visible = false
+        }
+        else if (data.page == 2) {
+            this.section1.visible = false
+            this.section2.visible = true
+        }
     }
     _res = null
     onBracketData(res) {
-        if (!this.isLoaded) {
-            // TweenEx.delayedCall(3000,)
-            this._res = res
-            return
-        }
-        this._res = null
-        let closeGame = {};
-        // let s = { font: '25px', fill: '#e1e1e1', align: 'right', fontFamily: FontName.MicrosoftYahei };
-        console.log('onBracketData', res.data)
-
-        let fillWinner = (gsp, dataObj) => {
-            let lScore = Number(dataObj.left.score)
-            let rScore = Number(dataObj.right.score)
-            if (lScore || rScore) {
-                if (lScore > rScore) {
-                    gsp.setLeftName(dataObj.left.name)
-                }
-                else {
-                    gsp.setLeftName(dataObj.right.name)
-                }
-            }
-        }
-        for (let gameIdx in res.data) {
-            let dataObj = res.data[gameIdx];
-
-            let gsp = this.groupSpMap[gameIdx] as BracketGroup2018
-            // if (!gsp) {
-            //     continue;
-            // }
-            console.log('gameidx', gameIdx, dataObj.left.score, ":", dataObj.right.score);
-            gsp.setGameIdx(gameIdx)
-            if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
-                closeGame[gameIdx] = true;
-                gsp.setScore(dataObj.left.score, dataObj.right.score)
-            }
-            let group2 = groupPosMap[gameIdx];
-            let hints = group2.hints;
-            if (dataObj.left.name)
-                gsp.setLeftName(dataObj.left.name)
-            else
-                gsp.setLeftName(hints ? hints[0] : '', true)
-            if (dataObj.right.name)
-                gsp.setRightName(dataObj.right.name)
-            else
-                gsp.setRightName(hints ? hints[1] : '', true)
-
-            //fill 1st 3rd
-            if (Number(gameIdx) == 7) {
-                gsp = this.groupSpMap[7.1] as BracketGroup2018
-                if (gsp)
-                    fillWinner(gsp, dataObj)
-            }
-            if (Number(gameIdx) == 8) {
-                gsp = this.groupSpMap[8.1] as BracketGroup2018
-                if (gsp)
-                    fillWinner(gsp, dataObj)
-            }
-        }
-
-
-        var comingIdx = 1;
-        let t = 8
-        for (var i = 0; i < t; i++) {
-            var isClose = closeGame[t - i];
-            if (isClose) {
-                comingIdx = t - i + 1;
-                break;
-            }
-        }
-        // this.showComingIdx(comingIdx);
+        this.section1.setData(res.data)
+        this.section2.setData(res.data)
     }
 }

@@ -98,6 +98,10 @@
             <button class="button" @click="onClkTop5(true,4,gameIdxArr)">p4</button>
             <button class="button" @click="onClkTop5(true,5,gameIdxArr)">p5</button>
             <button class="button" @click="onClkTop5(false,1)">隐藏</button>
+            <label class="label">  八强面板:</label><br>
+            <button class="button" @click="onBracketShow(1)">第一页 八进四</button>
+            <button class="button" @click="onBracketShow(2)">第二页</button>
+
             <br>
             <label class="label">  冠军面板:</label><br>
             <input class="input" type="text" placeholder="2017上海站第二轮冠军" style="width: 250px;" v-model="championTitle">

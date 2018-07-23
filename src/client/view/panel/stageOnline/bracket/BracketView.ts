@@ -38,23 +38,23 @@ export class BracketView extends BasePanelView {
     }
 
     initManmaul() {
-        let srvIO = io.connect('/webDB')
-            .on('connect', () => {
-                console.log('connect manmaul!')
-                let url = `/db/cmd/${WebDBCmd.cs_bracketCreated}`
-                let param = { _: null }
-                $.ajax({
-                    url: url,
-                    type: 'post',
-                    data: JSON.stringify(param),
-                    headers: { "Content-Type": "application/json" },
-                    dataType: 'json'
-                });
-            })
-            .on(`${WebDBCmd.sc_bracketInit}`, (data) => {
-                delete data['_']
-                // this.onBracketData({ data: data });
-            })
+        // let srvIO = io.connect('/webDB')
+        //     .on('connect', () => {
+        //         console.log('connect manmaul!')
+        //         let url = `/db/cmd/${WebDBCmd.cs_bracketCreated}`
+        //         let param = { _: null }
+        //         $.ajax({
+        //             url: url,
+        //             type: 'post',
+        //             data: JSON.stringify(param),
+        //             headers: { "Content-Type": "application/json" },
+        //             dataType: 'json'
+        //         });
+        //     })
+        //     .on(`${WebDBCmd.sc_bracketInit}`, (data) => {
+        //         delete data['_']
+        //         // this.onBracketData({ data: data });
+        //     })
     }
 
     getPreRoundInfo(gameId) {
@@ -107,10 +107,9 @@ export class BracketView extends BasePanelView {
         localWs.on('connect', (msg) => {
             console.log('connect', window.location.host)
         })
-            .on(`${CommandId.sc_setPreRoundPosition}`, (data) => {
-                // this.bracket.visible = false
-                // this.preRound.visible = true
-                // this.preRound.showRight(data.isRight)
+            .on(`${CommandId.sc_showBracketPage}`, (data) => {
+                console.log('sc_showBracketPage',data)
+                this.bracket.showPage(data)
             })
             .on(`${CommandId.sc_togglePreRoundTheme}`, (data) => {
                 // this.bracket.visible = false

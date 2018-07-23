@@ -25,6 +25,10 @@ export class BracketPlayerV3 extends PIXI.Container {
     setFont(data) {
         this.pName.style.fontSize = data.fontSize
     }
+    setScore(v) {
+        this.pScore.setText(v)
+            .setAlignCenter(this.alignArr[1])
+    }
     hideScore() {
         this.pScore.visible = false
     }
@@ -33,7 +37,7 @@ export class BracketPlayerV3 extends PIXI.Container {
             .setAlignCenter(this.alignArr[0])
 
     }
-    
+
     setInfo(data) {
         // let nameX = 90
         // let scoreX = 200

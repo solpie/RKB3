@@ -1850,6 +1850,8 @@
 	    sc_hideSt: '',
 	    cs_ftBracketInfo: '',
 	    sc_ftBracketInfo: '',
+	    cs_showBracketPage: '',
+	    sc_showBracketPage: '',
 	    cs_showBottle: '',
 	    sc_showBottle: '',
 	    cs_setPlayer: '',
