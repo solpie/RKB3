@@ -215,12 +215,12 @@ export class Bracket2018 extends PIXI.Container {
         let section2 = new Section2()
         this.addChild(section2)
         this.section2 = section2
-        // section2.visible = false
+        section2.visible = false
 
         let section1 = new Section1()
         this.addChild(section1)
         this.section1 = section1
-        section1.visible = false
+        // section1.visible = false
     }
     setWinHint(sp: PIXI.Sprite, isFlip = false) {
         sp.texture = this.hint2Tex

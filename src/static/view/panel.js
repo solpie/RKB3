@@ -6658,10 +6658,10 @@
 	        var section2 = new Section2();
 	        _this.addChild(section2);
 	        _this.section2 = section2;
+	        section2.visible = false;
 	        var section1 = new Section1();
 	        _this.addChild(section1);
 	        _this.section1 = section1;
-	        section1.visible = false;
 	        return _this;
 	    }
 	    Bracket2018.prototype.setWinHint = function (sp, isFlip) {
