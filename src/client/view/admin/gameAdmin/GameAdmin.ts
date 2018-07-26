@@ -22,6 +22,7 @@ class _GameAdmin extends VueBase {
     options = VueBase.PROP;
     gameConf = VueBase.PROP;
     vsPlayer = VueBase.PROP;
+    gameTitle = VueBase.PROP;
 
     redArr = VueBase.PROP;
     blueArr = VueBase.PROP;
@@ -38,23 +39,23 @@ class _GameAdmin extends VueBase {
     }
 
     createOption(data) {
-        let a = [];
-        let playerMap = data.playerMap
-        for (var i = 0; i < data.rec.length; i++) {
-            let rec = data.rec[i]
-            console.log('player', rec.player);
-            let p1 = playerMap[rec.player[0]]
-            let p2 = playerMap[rec.player[1]]
-            if (p1 || p2) {
-                let p1name = p1 ? p1.name : '';
-                let p2name = p2 ? p2.name : '';
-                let option = { text: rec.idx + p1name + ' vs ' + p2name, value: rec.idx }
-                a.push(option);
-            }
-        }
-        this.options = a
+        // let a = [];
+        // let playerMap = data.playerMap
+        // for (var i = 0; i < data.rec.length; i++) {
+        //     let rec = data.rec[i]
+        //     console.log('player', rec.player);
+        //     let p1 = playerMap[rec.player[0]]
+        //     let p2 = playerMap[rec.player[1]]
+        //     if (p1 || p2) {
+        //         let p1name = p1 ? p1.name : '';
+        //         let p2name = p2 ? p2.name : '';
+        //         let option = { text: rec.idx + p1name + ' vs ' + p2name, value: rec.idx }
+        //         a.push(option);
+        //     }
+        // }
+        // this.options = a
         this.gameConf = data
-        console.log('create option ', a, this.options);
+        console.log('create gameConf ', this.gameConf);
     }
 
     route(recArr, playerMap) {
@@ -102,26 +103,39 @@ class _GameAdmin extends VueBase {
         },
 
         onInitGame() {
+            console.log('init game')
             // cs_initGame
             let playerMap = this.gameConf.playerMap
             let recArr = this.gameConf.rec
 
-            for (let i = 0; i < recArr.length; i++) {
-                let rec = recArr[i];
-                if (rec.idx == this.selected) {
-                    let p1 = rec.player[0]
-                    let p2 = rec.player[1]
-                    let a = this.vsPlayer.split(' ')
-                    p1 = a[0]
-                    p2 = a[1]
-                    p1 = playerMap[p1]
-                    p2 = playerMap[p2]
-                    p1.avatar = this.gameConf.avatarUrlBase + p1.playerId + '.png'
-                    p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png'
-                    opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2, gameTitle: rec.title })
-                    return
-                }
-            }
+
+            let a = this.vsPlayer.split(' ')
+            let p1 = a[0]
+            let p2 = a[1]
+            p1 = playerMap[p1]
+            p2 = playerMap[p2]
+            p1.avatar = this.gameConf.avatarUrlBase + p1.playerId + '.png'
+            p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png'
+            let gameTitle = '';
+            if (this.gameTitle)
+                gameTitle = this.gameConf.gameTitle[this.gameTitle]
+            opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2, gameTitle: gameTitle })
+            // for (let i = 0; i < recArr.length; i++) {
+            //     let rec = recArr[i];
+            //     if (rec.idx == this.selected) {
+            //         let p1 = rec.player[0]
+            //         let p2 = rec.player[1]
+            //         let a = this.vsPlayer.split(' ')
+            //         p1 = a[0]
+            //         p2 = a[1]
+            //         p1 = playerMap[p1]
+            //         p2 = playerMap[p2]
+            //         p1.avatar = this.gameConf.avatarUrlBase + p1.playerId + '.png'
+            //         p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png'
+            //         opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2, gameTitle: rec.title })
+            //         return
+            //     }
+            // }
             // let rankArr = this.gameConf.rank
             // for (let i = 0; i < recArr.length; i++) {
             //     let a = recArr[i].split('_')
@@ -163,7 +177,7 @@ class _GameAdmin extends VueBase {
                             data[k] = _exData[k]
                         }
                     }
-                    this.gameConf = data
+                    this.createOption(data)
                     console.log("EVENT_ON_FILE", data, _exData);
                     opReq('cs_data', data)
                     let f = confFile
