@@ -22,9 +22,6 @@ class _GameAdmin extends VueBase {
     options = VueBase.PROP;
     gameConf = VueBase.PROP;
     vsPlayer = VueBase.PROP;
-
-    redArr = VueBase.PROP;
-    blueArr = VueBase.PROP;
     constructor() {
         super();
         VueBase.initProps(this);
@@ -32,12 +29,9 @@ class _GameAdmin extends VueBase {
 
     created() {
         console.log('Game admin');
-
-        this.blueArr = [{ 'name': '111' }]
-        this.redArr = [{ 'name': '222' }]
     }
-
     createOption(data) {
+        this.route(data.rec, data.playerMap)
         let a = [];
         let playerMap = data.playerMap
         for (var i = 0; i < data.rec.length; i++) {
@@ -58,6 +52,7 @@ class _GameAdmin extends VueBase {
     }
 
     route(recArr, playerMap) {
+
         let getWinner = (rec) => {
             if (rec.score[0] != 0 || rec.score[1] != 0) {
                 if (rec.score[0] > rec.score[1])
@@ -67,7 +62,6 @@ class _GameAdmin extends VueBase {
             }
             return ''
         }
-
         let fillWinner = (fromGameId, playerId) => {
             for (let i = 0; i < recArr.length; i++) {
                 let rec = recArr[i];
@@ -83,7 +77,6 @@ class _GameAdmin extends VueBase {
                 }
             }
         }
-
         for (let i = 0; i < recArr.length; i++) {
             let rec = recArr[i];
             let a = rec.idx.split('#')
@@ -97,8 +90,25 @@ class _GameAdmin extends VueBase {
 
     }
     methods = {
-        onChangePlayer(isBlue, playerId) {
-
+        onShowTag(tagName, v, isLeft, is2Title) {
+            opReq(CommandId.cs_showTagFx, { visible: v, tag: tagName, isLeft: isLeft, is2Title: is2Title })
+        },
+        onHideTag(isHideAll) {
+            opReq(CommandId.cs_showTagFx, { visible: false, isHideAll: isHideAll })
+        },
+        onSelectGame() {
+            console.log('on init game', this.selected);
+            let playerMap = this.gameConf.playerMap
+            let recArr = this.gameConf.rec
+            for (let i = 0; i < recArr.length; i++) {
+                let rec = recArr[i];
+                if (rec.idx == this.selected) {
+                    let p1 = rec.player[0]
+                    let p2 = rec.player[1]
+                    this.vsPlayer = p1 + ' ' + p2
+                    return
+                }
+            }
         },
 
         onInitGame() {
@@ -122,12 +132,11 @@ class _GameAdmin extends VueBase {
                     return
                 }
             }
-            // let rankArr = this.gameConf.rank
-            // for (let i = 0; i < recArr.length; i++) {
-            //     let a = recArr[i].split('_')
-            //     let playerId = a[0]
-            //     this.blueArr.push({})
-            // }
+        },
+
+        onShowPage(page, pageItemCount) {
+            console.log('show page from', page);
+            this.reloadFile(null, { page: page, pageItemCount: pageItemCount })
         },
 
         onFile() {
@@ -144,12 +153,10 @@ class _GameAdmin extends VueBase {
             }
             document.getElementById("files").click();
         },
-
         reloadFile(e, exData?) {
             let _ = (d) => {
                 return d.getMinutes() + 'm' + d.getSeconds() + 's'
             }
-
             console.log("exData", exData);
             _exData = exData
             if (!reader) {
@@ -163,7 +170,9 @@ class _GameAdmin extends VueBase {
                             data[k] = _exData[k]
                         }
                     }
-                    this.gameConf = data
+
+                    this.createOption(data)
+
                     console.log("EVENT_ON_FILE", data, _exData);
                     opReq('cs_data', data)
                     let f = confFile
