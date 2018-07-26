@@ -1507,7 +1507,6 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var VueBase_1 = __webpack_require__(24);
 	var const_1 = __webpack_require__(29);
-	var Command_1 = __webpack_require__(30);
 	var confFile = null;
 	var reader;
 	var filesInput;
@@ -1531,26 +1530,10 @@
 	        _this.options = VueBase_1.VueBase.PROP;
 	        _this.gameConf = VueBase_1.VueBase.PROP;
 	        _this.vsPlayer = VueBase_1.VueBase.PROP;
+	        _this.redArr = VueBase_1.VueBase.PROP;
+	        _this.blueArr = VueBase_1.VueBase.PROP;
 	        _this.methods = {
-	            onShowTag: function (tagName, v, isLeft, is2Title) {
-	                opReq(Command_1.CommandId.cs_showTagFx, { visible: v, tag: tagName, isLeft: isLeft, is2Title: is2Title });
-	            },
-	            onHideTag: function (isHideAll) {
-	                opReq(Command_1.CommandId.cs_showTagFx, { visible: false, isHideAll: isHideAll });
-	            },
-	            onSelectGame: function () {
-	                console.log('on init game', this.selected);
-	                var playerMap = this.gameConf.playerMap;
-	                var recArr = this.gameConf.rec;
-	                for (var i = 0; i < recArr.length; i++) {
-	                    var rec = recArr[i];
-	                    if (rec.idx == this.selected) {
-	                        var p1 = rec.player[0];
-	                        var p2 = rec.player[1];
-	                        this.vsPlayer = p1 + ' ' + p2;
-	                        return;
-	                    }
-	                }
+	            onChangePlayer: function (isBlue, playerId) {
 	            },
 	            onInitGame: function () {
 	                var playerMap = this.gameConf.playerMap;
@@ -1571,10 +1554,6 @@
 	                        return;
 	                    }
 	                }
-	            },
-	            onShowPage: function (page, pageItemCount) {
-	                console.log('show page from', page);
-	                this.reloadFile(null, { page: page, pageItemCount: pageItemCount });
 	            },
 	            onFile: function () {
 	                if (!confFile) {
@@ -1605,7 +1584,7 @@
 	                                data[k] = _exData[k];
 	                            }
 	                        }
-	                        _this.createOption(data);
+	                        _this.gameConf = data;
 	                        console.log("EVENT_ON_FILE", data, _exData);
 	                        opReq('cs_data', data);
 	                        var f = confFile;
@@ -1619,9 +1598,10 @@
 	    }
 	    _GameAdmin.prototype.created = function () {
 	        console.log('Game admin');
+	        this.blueArr = [{ 'name': '111' }];
+	        this.redArr = [{ 'name': '222' }];
 	    };
 	    _GameAdmin.prototype.createOption = function (data) {
-	        this.route(data.rec, data.playerMap);
 	        var a = [];
 	        var playerMap = data.playerMap;
 	        for (var i = 0; i < data.rec.length; i++) {
@@ -1736,181 +1716,11 @@
 
 
 /***/ }),
-/* 30 */
-/***/ (function(module, exports) {
-
-	"use strict";
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.CommandId = {
-	    resetTimer: '',
-	    disableTracker: '',
-	    cs_updateFoul: '',
-	    sc_updateFoul: '',
-	    cs_updateScore: '',
-	    sc_updateScore: '',
-	    cs_updateRightScore: '',
-	    sc_updateRightScore: '',
-	    cs_addLeftScore: '',
-	    cs_addRightScore: '',
-	    cs_togglePlayerState: '',
-	    sc_togglePlayerState: '',
-	    minLeftScore: '',
-	    cs_minLeftScore: '',
-	    minRightScore: '',
-	    cs_minRightScore: '',
-	    updateLeftFoul: '',
-	    cs_addLeftFoul: '',
-	    cs_minLeftFoul: '',
-	    updateRightFoul: '',
-	    cs_addRightFoul: '',
-	    cs_minRightFoul: '',
-	    cs_updateLeftSkill: '',
-	    updateLeftSkill: '',
-	    cs_updateRightSkill: '',
-	    updateRightSkill: '',
-	    cs_showTagFx: '',
-	    sc_showTagFx: '',
-	    cs_setGameIdx: '',
-	    setGameIdx: '',
-	    fadeInWinPanel: '',
-	    cs_fadeInWinPanel: '',
-	    fadeOutWinPanel: '',
-	    cs_fadeOutWinPanel: '',
-	    saveGameRec: '',
-	    cs_saveGameRec: '',
-	    cs_fadeInFinalPlayer: '',
-	    fadeInFinalPlayer: '',
-	    cs_fadeOutFinalPlayer: '',
-	    fadeOutFinalPlayer: '',
-	    cs_setActPlayer: '',
-	    cs_setBracketPlayer: '',
-	    cs_clearActPlayerGameRec: '',
-	    cs_getBracketPlayerByIdx: '',
-	    cs_refreshClient: '',
-	    refreshClient: '',
-	    cs_updateWinScore: '',
-	    updateWinScore: '',
-	    cs_updateKingPlayer: '',
-	    updateKingPlayer: '',
-	    cs_setCursorPlayer: '',
-	    setCursorPlayer: '',
-	    cs_saveToTotalScore: '',
-	    cs_setScorePanelVisible: '',
-	    setScorePanelVisible: '',
-	    cs_autoSaveGameRec: '',
-	    cs_setDelayTime: '',
-	    sc_setDelayTime: '',
-	    cs_showRank: '',
-	    sc_showRank: '',
-	    cs_showBracket: '',
-	    sc_showBracket: '',
-	    cs_showGroup: '',
-	    sc_showGroup: '',
-	    cs_showStage: '',
-	    sc_showStage: '',
-	    cs_showVsTitle: '',
-	    sc_showVsTitle: '',
-	    cs_hideOnlinePanel: '',
-	    sc_hideOnlinePanel: '',
-	    cs_setPreRoundPosition: '',
-	    sc_setPreRoundPosition: '',
-	    cs_togglePreRoundTheme: '',
-	    sc_togglePreRoundTheme: '',
-	    cs_setBdVisible: '',
-	    sc_setBdVisible: '',
-	    cs_setFxPoint: '',
-	    sc_setFxPoint: '',
-	    cs_playScoreFx: '',
-	    sc_playScoreFx: '',
-	    cs_resetTimer: '',
-	    sc_resetTimer: '',
-	    cs_setTimer: '',
-	    sc_setTimer: '',
-	    cs_startTimer: '',
-	    sc_startTimer: '',
-	    cs_pauseTimer: '',
-	    sc_pauseTimer: '',
-	    cs_showPickup: '',
-	    sc_showPickup: '',
-	    cs_startGame: '',
-	    sc_startGame: '',
-	    cs_commitGame: '',
-	    sc_commitGame: '',
-	    cs_commitTeam: '',
-	    sc_commitTeam: '',
-	    cs_toggleTimer: '',
-	    sc_toggleTimer: '',
-	    cs_setBlood: '',
-	    sc_setBlood: '',
-	    cs_setFoul: '',
-	    sc_setFoul: '',
-	    cs_setSt: '',
-	    sc_setSt: '',
-	    cs_hideSt: '',
-	    sc_hideSt: '',
-	    cs_ftBracketInfo: '',
-	    sc_ftBracketInfo: '',
-	    cs_showBracketPage: '',
-	    sc_showBracketPage: '',
-	    cs_showBottle: '',
-	    sc_showBottle: '',
-	    cs_setPlayer: '',
-	    sc_setPlayer: '',
-	    cs_showHeaderText: '',
-	    sc_showHeaderText: '',
-	    cs_5v5score: '',
-	    sc_5v5score: '',
-	    cs_5v5timeup: '',
-	    sc_5v5timeup: '',
-	    cs_5v5queter: '',
-	    sc_5v5queter: '',
-	    cs_5v5toggleTimer: '',
-	    sc_5v5toggleTimer: '',
-	    cs_5v5resetTimer: '',
-	    sc_5v5resetTimer: '',
-	    cs_5v5setPlayer: '',
-	    sc_5v5setPlayer: '',
-	    cs_5v5hidePlayer: '',
-	    sc_5v5hidePlayer: '',
-	    cs_5v5setTimeString: '',
-	    sc_5v5setTimeString: '',
-	    cs_toggleTheme: '',
-	    sc_toggleTheme: '',
-	    cs_showNotice: '',
-	    sc_showNotice: '',
-	    cs_showRollText: "",
-	    sc_showRollText: "",
-	    cs_showChampion: '',
-	    sc_showChampion: '',
-	    cs_showRanking: '',
-	    sc_showRanking: '',
-	    cs_toggleScorePanel: '',
-	    sc_toggleScorePanel: '',
-	    cs_toggleChampionPanel: '',
-	    sc_toggleChampionPanel: '',
-	    initPanel: '',
-	    cs_showTop5: '',
-	    sc_showTop5: '',
-	    cs_inScreenScore: '',
-	    inScreenScore: '',
-	    cs_attack: '',
-	    attack: '',
-	    cs_addHealth: '',
-	    addHealth: '',
-	    fadeInOK: '',
-	    cs_combo: '',
-	    combo: ''
-	};
-	for (var k in exports.CommandId) {
-	    exports.CommandId[k] = k;
-	}
-
-
-/***/ }),
+/* 30 */,
 /* 31 */
 /***/ (function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n    <br>\r\n    <br>\r\n    <div style=\"width: 1400px\">\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,true)\">小钢炮</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,true)\">脚踝终结者</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,true)\">碾压坦克</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,true)\">大心脏</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('3_1',true,true)\">三分雨</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('4_1',true,true)\">万花筒</button>\r\n        <button class=\"button is-primary\" @click=\"onHideTag(false)\">隐藏</button> ------------\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,false)\">小钢炮</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,false)\">脚踝终结者</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,false)\">碾压坦克</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,false)\">大心脏</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('3_1',true,false)\">三分雨</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('4_1',true,false)\">万花筒</button>\r\n        <button class=\"button is-primary\" @click=\"onHideTag(true)\">隐藏All</button>\r\n        <br>\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,true,true)\">脚踝终结者</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,true,true)\">小钢炮</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,true,true)\">大心脏</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,true,true)\">碾压坦克</button> ----------------------------------------------\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,false,true)\">脚踝终结者</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,false,true)\">小钢炮</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,false,true)\">大心脏</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,false,true)\">碾压坦克</button> -\r\n    </div>\r\n\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n    <div>\r\n        <div class=\"button is-primary\" v-for=\"player in blueArr\">\r\n            <button class=\"button is-primary\" @click=\"onFile\">{{player.name}}</button>\r\n        </div>\r\n        <div class=\"button is-primary\" v-for=\"player in redArr\">\r\n            <button class=\"button is-primary\" @click=\"onFile\">{{player.name}}</button>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ }),
 /* 32 */
