@@ -1091,6 +1091,7 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var VueBase_1 = __webpack_require__(24);
 	var const_1 = __webpack_require__(29);
+	var Command_1 = __webpack_require__(30);
 	var confFile = null;
 	var reader;
 	var filesInput;
@@ -1114,10 +1115,26 @@
 	        _this.options = VueBase_1.VueBase.PROP;
 	        _this.gameConf = VueBase_1.VueBase.PROP;
 	        _this.vsPlayer = VueBase_1.VueBase.PROP;
-	        _this.redArr = VueBase_1.VueBase.PROP;
-	        _this.blueArr = VueBase_1.VueBase.PROP;
 	        _this.methods = {
-	            onChangePlayer: function (isBlue, playerId) {
+	            onShowTag: function (tagName, v, isLeft, is2Title) {
+	                opReq(Command_1.CommandId.cs_showTagFx, { visible: v, tag: tagName, isLeft: isLeft, is2Title: is2Title });
+	            },
+	            onHideTag: function (isHideAll) {
+	                opReq(Command_1.CommandId.cs_showTagFx, { visible: false, isHideAll: isHideAll });
+	            },
+	            onSelectGame: function () {
+	                console.log('on init game', this.selected);
+	                var playerMap = this.gameConf.playerMap;
+	                var recArr = this.gameConf.rec;
+	                for (var i = 0; i < recArr.length; i++) {
+	                    var rec = recArr[i];
+	                    if (rec.idx == this.selected) {
+	                        var p1 = rec.player[0];
+	                        var p2 = rec.player[1];
+	                        this.vsPlayer = p1 + ' ' + p2;
+	                        return;
+	                    }
+	                }
 	            },
 	            onInitGame: function () {
 	                var playerMap = this.gameConf.playerMap;
@@ -1138,6 +1155,10 @@
 	                        return;
 	                    }
 	                }
+	            },
+	            onShowPage: function (page, pageItemCount) {
+	                console.log('show page from', page);
+	                this.reloadFile(null, { page: page, pageItemCount: pageItemCount });
 	            },
 	            onFile: function () {
 	                if (!confFile) {
@@ -1168,7 +1189,7 @@
 	                                data[k] = _exData[k];
 	                            }
 	                        }
-	                        _this.gameConf = data;
+	                        _this.createOption(data);
 	                        console.log("EVENT_ON_FILE", data, _exData);
 	                        opReq('cs_data', data);
 	                        var f = confFile;
@@ -1182,10 +1203,9 @@
 	    }
 	    _GameAdmin.prototype.created = function () {
 	        console.log('Game admin');
-	        this.blueArr = [{ 'name': '111' }];
-	        this.redArr = [{ 'name': '222' }];
 	    };
 	    _GameAdmin.prototype.createOption = function (data) {
+	        this.route(data.rec, data.playerMap);
 	        var a = [];
 	        var playerMap = data.playerMap;
 	        for (var i = 0; i < data.rec.length; i++) {
@@ -1474,7 +1494,7 @@
 /* 31 */
 /***/ (function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n    <div>\r\n        <div class=\"button is-primary\" v-for=\"player in blueArr\">\r\n            <button class=\"button is-primary\" @click=\"onFile\">{{player.name}}</button>\r\n        </div>\r\n        <div class=\"button is-primary\" v-for=\"player in redArr\">\r\n            <button class=\"button is-primary\" @click=\"onFile\">{{player.name}}</button>\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <span class=\"select\">\r\n                <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(0,6)\">page 1</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(6,6)\">page 2</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPage(12,4)\">page 3</button>\r\n    <br>\r\n    <br>\r\n    <div style=\"width: 1400px\">\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,true)\">小钢炮</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,true)\">脚踝终结者</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,true)\">碾压坦克</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,true)\">大心脏</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('3_1',true,true)\">三分雨</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('4_1',true,true)\">万花筒</button>\r\n        <button class=\"button is-primary\" @click=\"onHideTag(false)\">隐藏</button> ------------\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,false)\">小钢炮</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,false)\">脚踝终结者</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,false)\">碾压坦克</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,false)\">大心脏</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('3_1',true,false)\">三分雨</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('4_1',true,false)\">万花筒</button>\r\n        <button class=\"button is-primary\" @click=\"onHideTag(true)\">隐藏All</button>\r\n        <br>\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,true,true)\">脚踝终结者</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,true,true)\">小钢炮</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,true,true)\">大心脏</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,true,true)\">碾压坦克</button> ----------------------------------------------\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_2',true,false,true)\">脚踝终结者</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('1_1',true,false,true)\">小钢炮</button> -\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_2',true,false,true)\">大心脏</button>\r\n        <button class=\"button is-primary\" @click=\"onShowTag('2_1',true,false,true)\">碾压坦克</button> -\r\n    </div>\r\n\r\n</div>";
 
 /***/ }),
 /* 32 */
