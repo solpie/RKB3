@@ -105,8 +105,8 @@ class Section2 extends PIXI.Container {
                 }
             }
         }
-        fillWinner(this.pWin7, 7)
-        fillWinner(this.pWin8, 8)
+        fillWinner(this.pWin7,7)
+        fillWinner(this.pWin8,8)
     }
 
 
@@ -221,17 +221,6 @@ export class Bracket2018 extends PIXI.Container {
         this.addChild(section1)
         this.section1 = section1
         // section1.visible = false
-
-        window.onkeyup = (e) => {
-            console.log('key up', e.key, e.keyCode);
-            if (e.key == 'ArrowLeft' || e.keyCode == 37) {
-                // this.combo(true,true)
-                this.showPage({ page: 1 })
-            }
-            else if (e.key == 'ArrowRight' || e.keyCode == 39) {
-                this.showPage({ page: 2 })
-            }
-        }
     }
     setWinHint(sp: PIXI.Sprite, isFlip = false) {
         sp.texture = this.hint2Tex
