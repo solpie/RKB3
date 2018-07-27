@@ -28,7 +28,7 @@ export class LiveComing extends PIXI.Container {
 
         ctn1.addChild(newBitmap({ url: '/img/panel/studio/comingFg.png' }))
         this.addChild(newBitmap({ url: '/img/panel/studio/cdBg.png' }))
-        ctn1.visible =false
+        ctn1.visible =true
         let playerMask = newBitmap({ url: '/img/panel/studio/comingMask.png' })
         ctn1.addChild(playerMask)
 

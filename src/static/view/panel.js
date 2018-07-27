@@ -4979,7 +4979,7 @@
 	        this.addChild(ctn1);
 	        ctn1.addChild(PixiEx_1.newBitmap({ url: '/img/panel/studio/comingFg.png' }));
 	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/studio/cdBg.png' }));
-	        ctn1.visible = false;
+	        ctn1.visible = true;
 	        var playerMask = PixiEx_1.newBitmap({ url: '/img/panel/studio/comingMask.png' });
 	        ctn1.addChild(playerMask);
 	        this.avt = new PIXI.Sprite;
