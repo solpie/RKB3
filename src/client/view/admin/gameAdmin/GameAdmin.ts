@@ -22,8 +22,8 @@ class _GameAdmin extends VueBase {
     options = VueBase.PROP;
     gameConf = VueBase.PROP;
     vsPlayer = VueBase.PROP;
+    vsPlayerArr = VueBase.PROP
     gameTitle = VueBase.PROP;
-
     redArr = VueBase.PROP;
     blueArr = VueBase.PROP;
     constructor() {
@@ -34,26 +34,21 @@ class _GameAdmin extends VueBase {
     created() {
         console.log('Game admin');
 
-        this.blueArr = [{ 'name': '111' }]
-        this.redArr = [{ 'name': '222' }]
+        this.blueArr = []
+        this.redArr = []
+        this.vsPlayerArr = []
     }
 
     createOption(data) {
         // let a = [];
         // let playerMap = data.playerMap
-        // for (var i = 0; i < data.rec.length; i++) {
-        //     let rec = data.rec[i]
-        //     console.log('player', rec.player);
-        //     let p1 = playerMap[rec.player[0]]
-        //     let p2 = playerMap[rec.player[1]]
-        //     if (p1 || p2) {
-        //         let p1name = p1 ? p1.name : '';
-        //         let p2name = p2 ? p2.name : '';
-        //         let option = { text: rec.idx + p1name + ' vs ' + p2name, value: rec.idx }
-        //         a.push(option);
-        //     }
-        // }
+        for (var i = 0; i < 16; i++) {
+            let player = data.playerMap["p" + (i + 1)]
+            this.blueArr.push(player)
+            this.redArr.push(player)
+        }
         // this.options = a
+        // this.blueArr = this.blueArr.concat(this.redArr)
         this.gameConf = data
         console.log('create gameConf ', this.gameConf);
     }
@@ -99,7 +94,8 @@ class _GameAdmin extends VueBase {
     }
     methods = {
         onChangePlayer(isBlue, playerId) {
-
+            isBlue ? this.vsPlayerArr[0] = playerId : this.vsPlayerArr[1] = playerId;
+            this.vsPlayer = this.vsPlayerArr.join(" ")
         },
 
         onInitGame() {
