@@ -9,7 +9,7 @@ class PlayerItem extends PIXI.Container {
     avt: PIXI.Sprite
     bg: PIXI.Sprite
     create(isSmall, data) {
-        let textY = 285-8
+        let textY =277
         let ns = {
             fontFamily: FontName.NotoSansHans,
             fontSize: '50px', fill: "#fff",
@@ -22,7 +22,7 @@ class PlayerItem extends PIXI.Container {
 
 
         if (isSmall) {
-            textY = 290-8
+            textY = 282
             ns.fontSize = '35px'
             this.bg.texture = imgLoader.getTex('/img/panel/scoreRank/itemBg_small1.png')
         }
@@ -32,7 +32,7 @@ class PlayerItem extends PIXI.Container {
 
         this.pName = TextFac.new_(ns, this)
             .setText(data.name)
-            .setPos(150, textY)
+            .setPos(150, textY+8)
 
         ns.fontFamily = 'dinCondensedC'
         ns.fontSize = '60px'

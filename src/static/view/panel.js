@@ -1119,6 +1119,8 @@
 	        _this.gameTitle = VueBase_1.VueBase.PROP;
 	        _this.redArr = VueBase_1.VueBase.PROP;
 	        _this.blueArr = VueBase_1.VueBase.PROP;
+	        _this.lPlayer = VueBase_1.VueBase.PROP;
+	        _this.rPlayer = VueBase_1.VueBase.PROP;
 	        _this.methods = {
 	            onChangePlayer: function (isBlue, playerId) {
 	                isBlue ? this.vsPlayerArr[0] = playerId : this.vsPlayerArr[1] = playerId;
@@ -1135,6 +1137,8 @@
 	                p2 = playerMap[p2];
 	                p1.avatar = this.gameConf.avatarUrlBase + p1.playerId + '.png';
 	                p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png';
+	                this.lPlayer = p1;
+	                this.rPlayer = p2;
 	                var gameTitle = '';
 	                if (this.gameTitle)
 	                    gameTitle = this.gameConf.gameTitle[this.gameTitle];
@@ -10007,7 +10011,7 @@
 	        return _super !== null && _super.apply(this, arguments) || this;
 	    }
 	    PlayerItem.prototype.create = function (isSmall, data) {
-	        var textY = 285 - 8;
+	        var textY = 277;
 	        var ns = {
 	            fontFamily: const_1.FontName.NotoSansHans,
 	            fontSize: '50px', fill: "#fff",
@@ -10018,7 +10022,7 @@
 	        this.avt = new PIXI.Sprite;
 	        this.addChild(this.avt);
 	        if (isSmall) {
-	            textY = 290 - 8;
+	            textY = 282;
 	            ns.fontSize = '35px';
 	            this.bg.texture = ImgLoader_1.imgLoader.getTex('/img/panel/scoreRank/itemBg_small1.png');
 	        }
@@ -10027,7 +10031,7 @@
 	        }
 	        this.pName = TextFac_1.TextFac.new_(ns, this)
 	            .setText(data.name)
-	            .setPos(150, textY);
+	            .setPos(150, textY + 8);
 	        ns.fontFamily = 'dinCondensedC';
 	        ns.fontSize = '60px';
 	        this.pScore = TextFac_1.TextFac.new_(ns, this)

@@ -26,6 +26,8 @@ class _GameAdmin extends VueBase {
     gameTitle = VueBase.PROP;
     redArr = VueBase.PROP;
     blueArr = VueBase.PROP;
+    lPlayer = VueBase.PROP;
+    rPlayer = VueBase.PROP;
     constructor() {
         super();
         VueBase.initProps(this);
@@ -112,6 +114,8 @@ class _GameAdmin extends VueBase {
             p2 = playerMap[p2]
             p1.avatar = this.gameConf.avatarUrlBase + p1.playerId + '.png'
             p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png'
+            this.lPlayer = p1
+            this.rPlayer = p2
             let gameTitle = '';
             if (this.gameTitle)
                 gameTitle = this.gameConf.gameTitle[this.gameTitle]

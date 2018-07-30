@@ -1535,6 +1535,8 @@
 	        _this.gameTitle = VueBase_1.VueBase.PROP;
 	        _this.redArr = VueBase_1.VueBase.PROP;
 	        _this.blueArr = VueBase_1.VueBase.PROP;
+	        _this.lPlayer = VueBase_1.VueBase.PROP;
+	        _this.rPlayer = VueBase_1.VueBase.PROP;
 	        _this.methods = {
 	            onChangePlayer: function (isBlue, playerId) {
 	                isBlue ? this.vsPlayerArr[0] = playerId : this.vsPlayerArr[1] = playerId;
@@ -1551,6 +1553,8 @@
 	                p2 = playerMap[p2];
 	                p1.avatar = this.gameConf.avatarUrlBase + p1.playerId + '.png';
 	                p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png';
+	                this.lPlayer = p1;
+	                this.rPlayer = p2;
 	                var gameTitle = '';
 	                if (this.gameTitle)
 	                    gameTitle = this.gameConf.gameTitle[this.gameTitle];
