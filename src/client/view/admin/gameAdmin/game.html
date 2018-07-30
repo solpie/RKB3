@@ -1,6 +1,7 @@
 <div class="container">
     <input type="file" id="files" accept="*.json" hidden>
-    <input type="text" v-model="vsPlayer" style="width: 100px;"> gameTitle idx<input type="text" v-model="gameTitle" style="width: 100px;">
+    <input type="text" v-model="vsPlayer" style="width: 100px;"> gameTitle idx
+    <input type="text" v-model="gameTitle" style="width: 100px;">
     <button class="button is-primary" @click="onInitGame">初始比赛</button>
     <br>
     <br>
@@ -9,6 +10,11 @@
     <br>
 
     <div>
+        <br>
+        score rank:
+        <button class="button is-primary" @click="onShowScoreRank(true)">show</button>
+        <button class="button is-primary" @click="onShowScoreRank(false)">hide</button>
+
         <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
             <li style="float:left;width:190px;padding:5px" v-for="player in blueArr">
                 <button class="button is-primary" @click="onChangePlayer(true,player.playerId)">{{player.name}}</button>

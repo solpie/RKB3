@@ -73,6 +73,8 @@ export const CommandId = {
     //onlinePanel
     cs_showRank: '',//
     sc_showRank: '',//
+    cs_showScoreRank: '',//
+    sc_showScoreRank: '',//
     cs_showBracket: '',//
     sc_showBracket: '',//
     cs_showGroup: '',//

@@ -1,3 +1,4 @@
+import { ScoreRank } from './../scoreRank/ScoreRank';
 import { FontName, ViewConst } from '../../../const';
 import { cnWrap, loadImg } from '../../../utils/JsFunc';
 import { imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
@@ -34,6 +35,8 @@ export class Event2017 extends PIXI.Container {
 
     winLose: PIXI.Text
     winPanel: PIXI.Container
+
+
     _texMap: any = {}
 
     constructor(stage: PIXI.Container, isDark = false) {
@@ -354,6 +357,7 @@ export class Event2017 extends PIXI.Container {
         }
     }
 
+
     tagFx: TagFx
     showTagFx(data) {
         if (!this.tagFx)
@@ -363,6 +367,14 @@ export class Event2017 extends PIXI.Container {
                 this.tagFx.show(data)
                 : this.tagFx.hide(data)
         }
+    }
+    scoreRank: ScoreRank
+    showScoreRank(data) {
+        if (!this.scoreRank) {
+            this.scoreRank = new ScoreRank()
+            this.scoreRank.create(this)
+        }
+        this.scoreRank.show(data)
     }
 
     rollText: RollText

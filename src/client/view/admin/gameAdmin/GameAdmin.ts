@@ -116,28 +116,19 @@ class _GameAdmin extends VueBase {
             if (this.gameTitle)
                 gameTitle = this.gameConf.gameTitle[this.gameTitle]
             opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2, gameTitle: gameTitle })
-            // for (let i = 0; i < recArr.length; i++) {
-            //     let rec = recArr[i];
-            //     if (rec.idx == this.selected) {
-            //         let p1 = rec.player[0]
-            //         let p2 = rec.player[1]
-            //         let a = this.vsPlayer.split(' ')
-            //         p1 = a[0]
-            //         p2 = a[1]
-            //         p1 = playerMap[p1]
-            //         p2 = playerMap[p2]
-            //         p1.avatar = this.gameConf.avatarUrlBase + p1.playerId + '.png'
-            //         p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png'
-            //         opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2, gameTitle: rec.title })
-            //         return
-            //     }
-            // }
-            // let rankArr = this.gameConf.rank
-            // for (let i = 0; i < recArr.length; i++) {
-            //     let a = recArr[i].split('_')
-            //     let playerId = a[0]
-            //     this.blueArr.push({})
-            // }
+        },
+
+        onShowScoreRank(visible) {
+            opReq(CommandId.cs_showScoreRank, {
+                visible: visible,
+                scoreArr: [
+                    // img\player\89
+                    { score: 1, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png' },
+                    { score: 2, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png' },
+                    { score: 3, name: '好天气', isSmall: false, avatar: '/img/player/89/p1.png' },
+                    { score: 4, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png' },
+                    { score: 5, name: '好天气', isSmall: false, avatar: '/img/player/89/p1.png' }]
+            })
         },
 
         onFile() {
