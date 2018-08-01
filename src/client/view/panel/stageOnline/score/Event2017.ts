@@ -376,6 +376,13 @@ export class Event2017 extends PIXI.Container {
         }
         this.scoreRank.show(data)
     }
+    showScoreFx2(data)
+    {
+        if(this.scoreRank)
+        {
+            this.scoreRank.showScoreFx(data)
+        }
+    }
 
     rollText: RollText
     showRollText(data) {

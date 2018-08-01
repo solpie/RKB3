@@ -310,6 +310,14 @@ export class ScoreView extends BasePanelView {
             .on(CommandId.sc_showScoreRank, (data) => {
                 this.eventPanel.showScoreRank(data)
             })
+
+            // this.opReq(`${CommandId.cs_updateScore}`, { _: null, dtScore: v, isLeft: isLeft })
+            .on(CommandId.sc_updateScore, (data) => {
+                if (data.scoreFx) {
+                    this.eventPanel.showScoreRank(data)
+                }
+            })
+        // 
     }
     showStage(v) {
         this.stage.visible = v

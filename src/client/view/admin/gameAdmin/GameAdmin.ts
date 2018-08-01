@@ -16,6 +16,7 @@ let opReq = (cmdId: string, param: any) => {
     });
 }
 let _exData
+const playerCount = 5;
 class _GameAdmin extends VueBase {
     template = require('./game.html');
     selected = VueBase.PROP;
@@ -44,7 +45,7 @@ class _GameAdmin extends VueBase {
     createOption(data) {
         // let a = [];
         // let playerMap = data.playerMap
-        for (var i = 0; i < 16; i++) {
+        for (var i = 0; i < playerCount; i++) {
             let player = data.playerMap["p" + (i + 1)]
             this.blueArr.push(player)
             this.redArr.push(player)
@@ -99,7 +100,9 @@ class _GameAdmin extends VueBase {
             isBlue ? this.vsPlayerArr[0] = playerId : this.vsPlayerArr[1] = playerId;
             this.vsPlayer = this.vsPlayerArr.join(" ")
         },
-
+        onAddScore(isLeft, dtScore) {
+            opReq(`${CommandId.cs_updateScore}`, { dtScore: dtScore, isLeft: isLeft })
+        },
         onInitGame() {
             console.log('init game')
             // cs_initGame
@@ -123,15 +126,30 @@ class _GameAdmin extends VueBase {
         },
 
         onShowScoreRank(visible) {
+            let p1 = this.lPlayer
+            let p2 = this.rPlayer
+            let scoreArr = []
+            for (let i = 0; i < playerCount; i++) {
+                let pn = 'p' + (i + 1)
+                let player = this.gameConf.playerMap[pn]
+                let scoreFxItem ={ score: i + 1, name: player.name }
+                if (pn == this.vsPlayerArr[0]) {
+
+                }
+                else if (pn == this.vsPlayerArr[1]) {
+
+                    scoreArr.push({ score: i + 1, name: player.name })
+                }
+            }
             opReq(CommandId.cs_showScoreRank, {
                 visible: visible,
                 scoreArr: [
                     // img\player\89
-                    { score: 1, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png' },
-                    { score: 2, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png' },
-                    { score: 3, name: '好天气', isSmall: false, avatar: '/img/player/89/p1.png' },
-                    { score: 4, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png' },
-                    { score: 5, name: '好天气', isSmall: false, avatar: '/img/player/89/p1.png' }]
+                    { score: 1, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png', scoreFx: 0 },
+                    { score: 2, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png', scoreFx: 0 },
+                    { score: 3, name: '好天气', isSmall: false, avatar: '/img/player/89/p1.png', scoreFx: 4 },
+                    { score: 4, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png', scoreFx: 0 },
+                    { score: 5, name: '好天气', isSmall: false, avatar: '/img/player/89/p1.png', scoreFx: 2 }]
             })
         },
 

@@ -8,8 +8,9 @@ class PlayerItem extends PIXI.Container {
     pName: Text2
     avt: PIXI.Sprite
     bg: PIXI.Sprite
+    scoreFx: Text2
     create(isSmall, data) {
-        let textY =277
+        let textY = 277
         let ns = {
             fontFamily: FontName.NotoSansHans,
             fontSize: '50px', fill: "#fff",
@@ -32,16 +33,24 @@ class PlayerItem extends PIXI.Container {
 
         this.pName = TextFac.new_(ns, this)
             .setText(data.name)
-            .setPos(150, textY+8)
+            .setPos(150, textY + 8)
 
         ns.fontFamily = 'dinCondensedC'
         ns.fontSize = '60px'
         this.pScore = TextFac.new_(ns, this)
             .setText(data.score)
             .setPos(90, textY)
+
+        ns.fill = '#ff0000'
+        ns.fontSize = '70px'
+        this.scoreFx = TextFac.new_(ns, this)
+            .setPos(380, textY - 80)
+
         return this
     }
-
+    showScoreFx(score) {
+        this.scoreFx.setText("+" + score)
+    }
     setScore(data) {
         this.pScore.setText(data.score)
             .setAlignCenter(90)
@@ -52,9 +61,9 @@ class PlayerItem extends PIXI.Container {
             imgLoader.loadTexArr([data.avatar], _ => {
                 this.avt.texture = imgLoader.getTex(data.avatar)
                 let s = 0.7625
-                setScale(this.avt,s)
-                this.avt.x= 14  
-                this.avt.y= 73
+                setScale(this.avt, s)
+                this.avt.x = 14
+                this.avt.y = 73
             })
         }
 
@@ -64,8 +73,8 @@ class PlayerItem extends PIXI.Container {
                 this.avt.texture = imgLoader.getTex(data.avatar)
                 setScale(this.avt, 1)
 
-                this.avt.x= 0
-                this.avt.y= 0
+                this.avt.x = 0
+                this.avt.y = 0
             })
             this.pName.setText(data.name)
                 .setAlignCenter(360)
@@ -83,15 +92,35 @@ export class ScoreRank extends PIXI.Container {
         let lastY = 0
         for (let i = 0; i < 5; i++) {
             let pi: PlayerItem = this.itemArr[i]
-            pi.setScore(data.scoreArr[i])
+            let scoreData = data.scoreArr[i]
+            pi.setScore(scoreData)
             pi.y = lastY
-            if (data.scoreArr[i].isSmall)
+            if (scoreData.isSmall)
                 lastY += 130
             else
                 lastY += 120
 
+
+            if (scoreData.scoreFx) {
+
+                pi.showScoreFx(scoreData.scoreFx)
+            }
+        }
+
+    }
+    _showScoreFx(data) {
+        if (data.scoreFx == 2) {
+
+        }
+        else if (data.scoreFx == 3) {
+
         }
     }
+    
+    showScoreFx() {
+
+    }
+
     show(data) {
 
         if (this.itemArr.length) {

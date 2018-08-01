@@ -1106,6 +1106,7 @@
 	    });
 	};
 	var _exData;
+	var playerCount = 5;
 	var _GameAdmin = (function (_super) {
 	    __extends(_GameAdmin, _super);
 	    function _GameAdmin() {
@@ -1126,6 +1127,9 @@
 	                isBlue ? this.vsPlayerArr[0] = playerId : this.vsPlayerArr[1] = playerId;
 	                this.vsPlayer = this.vsPlayerArr.join(" ");
 	            },
+	            onAddScore: function (isLeft, dtScore) {
+	                opReq("" + Command_1.CommandId.cs_updateScore, { dtScore: dtScore, isLeft: isLeft });
+	            },
 	            onInitGame: function () {
 	                console.log('init game');
 	                var playerMap = this.gameConf.playerMap;
@@ -1145,14 +1149,27 @@
 	                opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2, gameTitle: gameTitle });
 	            },
 	            onShowScoreRank: function (visible) {
+	                var p1 = this.lPlayer;
+	                var p2 = this.rPlayer;
+	                var scoreArr = [];
+	                for (var i = 0; i < playerCount; i++) {
+	                    var pn = 'p' + (i + 1);
+	                    var player = this.gameConf.playerMap[pn];
+	                    var scoreFxItem = { score: i + 1, name: player.name };
+	                    if (pn == this.vsPlayerArr[0]) {
+	                    }
+	                    else if (pn == this.vsPlayerArr[1]) {
+	                        scoreArr.push({ score: i + 1, name: player.name });
+	                    }
+	                }
 	                opReq(Command_1.CommandId.cs_showScoreRank, {
 	                    visible: visible,
 	                    scoreArr: [
-	                        { score: 1, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png' },
-	                        { score: 2, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png' },
-	                        { score: 3, name: '好天气', isSmall: false, avatar: '/img/player/89/p1.png' },
-	                        { score: 4, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png' },
-	                        { score: 5, name: '好天气', isSmall: false, avatar: '/img/player/89/p1.png' }
+	                        { score: 1, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png', scoreFx: 0 },
+	                        { score: 2, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png', scoreFx: 0 },
+	                        { score: 3, name: '好天气', isSmall: false, avatar: '/img/player/89/p1.png', scoreFx: 4 },
+	                        { score: 4, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png', scoreFx: 0 },
+	                        { score: 5, name: '好天气', isSmall: false, avatar: '/img/player/89/p1.png', scoreFx: 2 }
 	                    ]
 	                });
 	            },
@@ -1204,7 +1221,7 @@
 	        this.vsPlayerArr = [];
 	    };
 	    _GameAdmin.prototype.createOption = function (data) {
-	        for (var i = 0; i < 16; i++) {
+	        for (var i = 0; i < playerCount; i++) {
 	            var player = data.playerMap["p" + (i + 1)];
 	            this.blueArr.push(player);
 	            this.redArr.push(player);
@@ -1311,7 +1328,7 @@
 /* 30 */
 /***/ (function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\"> gameTitle idx\r\n    <input type=\"text\" v-model=\"gameTitle\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n\r\n    <div>\r\n        <br>\r\n        score rank:\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in blueArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <hr>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in redArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\"> gameTitle idx\r\n    <input type=\"text\" v-model=\"gameTitle\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n\r\n    <div>\r\n        <br> score rank:\r\n        <br> \r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,-3)\">L-3</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,3)\">L+3</button>----------\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,3)\">R+3</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,-3)\">R-3</button>\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,-2)\">L-2</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,2)\">L+2</button>----------\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,2)\">R+2</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,-2)\">R-2</button>\r\n\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in blueArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <hr>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in redArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n\r\n    </div>\r\n</div>";
 
 /***/ }),
 /* 31 */
@@ -7510,6 +7527,11 @@
 	        })
 	            .on(Command_1.CommandId.sc_showScoreRank, function (data) {
 	            _this.eventPanel.showScoreRank(data);
+	        })
+	            .on(Command_1.CommandId.sc_updateScore, function (data) {
+	            if (data.scoreFx) {
+	                _this.eventPanel.showScoreRank(data);
+	            }
 	        });
 	    };
 	    ScoreView.prototype.showStage = function (v) {
@@ -7954,6 +7976,11 @@
 	            this.scoreRank.create(this);
 	        }
 	        this.scoreRank.show(data);
+	    };
+	    Event2017.prototype.showScoreFx2 = function (data) {
+	        if (this.scoreRank) {
+	            this.scoreRank.showScoreFx(data);
+	        }
 	    };
 	    Event2017.prototype.showRollText = function (data) {
 	        if (!this.rollText) {
@@ -10037,7 +10064,14 @@
 	        this.pScore = TextFac_1.TextFac.new_(ns, this)
 	            .setText(data.score)
 	            .setPos(90, textY);
+	        ns.fill = '#ff0000';
+	        ns.fontSize = '70px';
+	        this.scoreFx = TextFac_1.TextFac.new_(ns, this)
+	            .setPos(380, textY - 80);
 	        return this;
+	    };
+	    PlayerItem.prototype.showScoreFx = function (score) {
+	        this.scoreFx.setText("+" + score);
 	    };
 	    PlayerItem.prototype.setScore = function (data) {
 	        var _this = this;
@@ -10082,13 +10116,25 @@
 	        var lastY = 0;
 	        for (var i = 0; i < 5; i++) {
 	            var pi = this.itemArr[i];
-	            pi.setScore(data.scoreArr[i]);
+	            var scoreData = data.scoreArr[i];
+	            pi.setScore(scoreData);
 	            pi.y = lastY;
-	            if (data.scoreArr[i].isSmall)
+	            if (scoreData.isSmall)
 	                lastY += 130;
 	            else
 	                lastY += 120;
+	            if (scoreData.scoreFx) {
+	                pi.showScoreFx(scoreData.scoreFx);
+	            }
 	        }
+	    };
+	    ScoreRank.prototype._showScoreFx = function (data) {
+	        if (data.scoreFx == 2) {
+	        }
+	        else if (data.scoreFx == 3) {
+	        }
+	    };
+	    ScoreRank.prototype.showScoreFx = function () {
 	    };
 	    ScoreRank.prototype.show = function (data) {
 	        var _this = this;
