@@ -10143,14 +10143,14 @@
 	    };
 	    ScoreRank.prototype._arrangeY = function (data) {
 	        var lastY = 0;
+	        var isLastSmall = true;
 	        for (var i = 0; i < 5; i++) {
 	            var pi = this.itemArr[i];
 	            var scoreData = data.scoreArr[i];
-	            pi.y = lastY;
-	            if (scoreData.isSmall)
-	                lastY += 130;
-	            else
-	                lastY += 120;
+	            pi.y = i * 130 + lastY;
+	            if (!scoreData.isSmall) {
+	                lastY += 10;
+	            }
 	            if (scoreData.scoreFx) {
 	                pi.showScoreFx(scoreData.scoreFx);
 	            }

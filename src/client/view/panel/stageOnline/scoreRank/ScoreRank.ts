@@ -96,16 +96,14 @@ export class ScoreRank extends PIXI.Container {
     }
     _arrangeY(data) {
         let lastY = 0
+        let isLastSmall = true
         for (let i = 0; i < 5; i++) {
             let pi: PlayerItem = this.itemArr[i]
             let scoreData = data.scoreArr[i]
-            pi.y = lastY
-            if (scoreData.isSmall)
-                lastY += 130
-            else
-                lastY += 120
-
-
+            pi.y = i * 130+lastY
+            if (!scoreData.isSmall) {
+                lastY += 10
+            }
             if (scoreData.scoreFx) {
                 pi.showScoreFx(scoreData.scoreFx)
             }
