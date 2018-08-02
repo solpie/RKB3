@@ -1092,6 +1092,7 @@
 	var VueBase_1 = __webpack_require__(24);
 	var const_1 = __webpack_require__(29);
 	var Command_1 = __webpack_require__(62);
+	var JsFunc_1 = __webpack_require__(23);
 	var confFile = null;
 	var reader;
 	var filesInput;
@@ -1122,12 +1123,14 @@
 	        _this.blueArr = VueBase_1.VueBase.PROP;
 	        _this.lPlayer = VueBase_1.VueBase.PROP;
 	        _this.rPlayer = VueBase_1.VueBase.PROP;
+	        _this.lastScoreArr = VueBase_1.VueBase.PROP;
 	        _this.methods = {
 	            onChangePlayer: function (isBlue, playerId) {
 	                isBlue ? this.vsPlayerArr[0] = playerId : this.vsPlayerArr[1] = playerId;
 	                this.vsPlayer = this.vsPlayerArr.join(" ");
 	            },
 	            onAddScore: function (isLeft, dtScore) {
+	                this.onShowScoreRank(true, dtScore, isLeft);
 	                opReq("" + Command_1.CommandId.cs_updateScore, { dtScore: dtScore, isLeft: isLeft });
 	            },
 	            onInitGame: function () {
@@ -1147,30 +1150,47 @@
 	                if (this.gameTitle)
 	                    gameTitle = this.gameConf.gameTitle[this.gameTitle];
 	                opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2, gameTitle: gameTitle });
+	                this.onShowScoreRank(true);
 	            },
-	            onShowScoreRank: function (visible) {
+	            onShowScoreRank: function (visible, scoreFx, isLeft) {
 	                var p1 = this.lPlayer;
 	                var p2 = this.rPlayer;
+	                if (p1 && p2) {
+	                }
 	                var scoreArr = [];
+	                var isInitScoreArr = false;
+	                if (!this.lastScoreArr) {
+	                    this.lastScoreArr = [0, 0, 0, 0, 0];
+	                    isInitScoreArr = true;
+	                }
 	                for (var i = 0; i < playerCount; i++) {
 	                    var pn = 'p' + (i + 1);
 	                    var player = this.gameConf.playerMap[pn];
-	                    var scoreFxItem = { score: i + 1, name: player.name };
+	                    var scoreFxItem = {
+	                        score: this.gameConf.scoreRank[i][1],
+	                        name: player.name,
+	                        isSmall: true,
+	                        scoreFx: 0,
+	                        avatar: '/img/player/89/p1.png'
+	                    };
+	                    if (isInitScoreArr)
+	                        this.lastScoreArr[i] = scoreFxItem.score;
+	                    scoreFx = scoreFxItem.score - this.lastScoreArr[i];
+	                    this.lastScoreArr[i] = scoreFxItem.score;
 	                    if (pn == this.vsPlayerArr[0]) {
+	                        scoreFxItem.scoreFx = scoreFx;
+	                        scoreFxItem.isSmall = false;
 	                    }
 	                    else if (pn == this.vsPlayerArr[1]) {
-	                        scoreArr.push({ score: i + 1, name: player.name });
+	                        scoreFxItem.scoreFx = scoreFx;
+	                        scoreFxItem.isSmall = false;
 	                    }
+	                    scoreArr.push(scoreFxItem);
 	                }
+	                scoreArr = scoreArr.sort(JsFunc_1.descendingProp('score'));
 	                opReq(Command_1.CommandId.cs_showScoreRank, {
 	                    visible: visible,
-	                    scoreArr: [
-	                        { score: 1, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png', scoreFx: 0 },
-	                        { score: 2, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png', scoreFx: 0 },
-	                        { score: 3, name: '好天气', isSmall: false, avatar: '/img/player/89/p1.png', scoreFx: 4 },
-	                        { score: 4, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png', scoreFx: 0 },
-	                        { score: 5, name: '好天气', isSmall: false, avatar: '/img/player/89/p1.png', scoreFx: 2 }
-	                    ]
+	                    scoreArr: scoreArr
 	                });
 	            },
 	            onFile: function () {
@@ -1221,6 +1241,8 @@
 	        this.vsPlayerArr = [];
 	    };
 	    _GameAdmin.prototype.createOption = function (data) {
+	        this.blueArr = [];
+	        this.redArr = [];
 	        for (var i = 0; i < playerCount; i++) {
 	            var player = data.playerMap["p" + (i + 1)];
 	            this.blueArr.push(player);
@@ -10028,6 +10050,7 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
+	var TweenEx_1 = __webpack_require__(51);
 	var ImgLoader_1 = __webpack_require__(67);
 	var TextFac_1 = __webpack_require__(71);
 	var const_1 = __webpack_require__(29);
@@ -10070,8 +10093,14 @@
 	            .setPos(380, textY - 80);
 	        return this;
 	    };
-	    PlayerItem.prototype.showScoreFx = function (score) {
-	        this.scoreFx.setText("+" + score);
+	    PlayerItem.prototype.showScoreFx = function (dtScore) {
+	        var _this = this;
+	        if (dtScore > 0) {
+	            this.scoreFx.setText("+" + dtScore);
+	            TweenEx_1.TweenEx.delayedCall(3000, function (_) {
+	                _this.scoreFx.setText("");
+	            });
+	        }
 	    };
 	    PlayerItem.prototype.setScore = function (data) {
 	        var _this = this;
@@ -10117,7 +10146,6 @@
 	        for (var i = 0; i < 5; i++) {
 	            var pi = this.itemArr[i];
 	            var scoreData = data.scoreArr[i];
-	            pi.setScore(scoreData);
 	            pi.y = lastY;
 	            if (scoreData.isSmall)
 	                lastY += 130;
@@ -10126,6 +10154,7 @@
 	            if (scoreData.scoreFx) {
 	                pi.showScoreFx(scoreData.scoreFx);
 	            }
+	            pi.setScore(scoreData);
 	        }
 	    };
 	    ScoreRank.prototype._showScoreFx = function (data) {
@@ -10134,10 +10163,11 @@
 	        else if (data.scoreFx == 3) {
 	        }
 	    };
-	    ScoreRank.prototype.showScoreFx = function () {
+	    ScoreRank.prototype.showScoreFx = function (data) {
 	    };
 	    ScoreRank.prototype.show = function (data) {
 	        var _this = this;
+	        console.log('show socre rank', data);
 	        if (this.itemArr.length) {
 	            this._arrangeY(data);
 	        }
@@ -10145,7 +10175,7 @@
 	            ImgLoader_1.imgLoader.loadTexArr(['/img/panel/scoreRank/itemBg_big1.png', '/img/panel/scoreRank/itemBg_small1.png'], function (_) {
 	                for (var i = 0; i < 5; i++) {
 	                    var isSmall = i > 1;
-	                    var pi = (new PlayerItem()).create(true, { score: 8, name: '好天气' });
+	                    var pi = (new PlayerItem()).create(true, { score: 8, name: '' });
 	                    _this.itemArr.push(pi);
 	                    _this.addChild(pi);
 	                }

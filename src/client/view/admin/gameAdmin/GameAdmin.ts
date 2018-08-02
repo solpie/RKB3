@@ -1,6 +1,7 @@
 import { VueBase } from '../../utils/VueBase';
 import { PanelId } from '../../const';
 import { CommandId } from '../../Command';
+import { descendingProp } from '../../utils/JsFunc';
 let confFile = null;
 let reader;
 let filesInput;
@@ -29,6 +30,8 @@ class _GameAdmin extends VueBase {
     blueArr = VueBase.PROP;
     lPlayer = VueBase.PROP;
     rPlayer = VueBase.PROP;
+
+    lastScoreArr = VueBase.PROP;
     constructor() {
         super();
         VueBase.initProps(this);
@@ -45,6 +48,9 @@ class _GameAdmin extends VueBase {
     createOption(data) {
         // let a = [];
         // let playerMap = data.playerMap
+
+        this.blueArr = []
+        this.redArr = []
         for (var i = 0; i < playerCount; i++) {
             let player = data.playerMap["p" + (i + 1)]
             this.blueArr.push(player)
@@ -101,6 +107,7 @@ class _GameAdmin extends VueBase {
             this.vsPlayer = this.vsPlayerArr.join(" ")
         },
         onAddScore(isLeft, dtScore) {
+            this.onShowScoreRank(true, dtScore, isLeft)
             opReq(`${CommandId.cs_updateScore}`, { dtScore: dtScore, isLeft: isLeft })
         },
         onInitGame() {
@@ -123,33 +130,54 @@ class _GameAdmin extends VueBase {
             if (this.gameTitle)
                 gameTitle = this.gameConf.gameTitle[this.gameTitle]
             opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2, gameTitle: gameTitle })
+            ///89 russ
+            this.onShowScoreRank(true)
         },
 
-        onShowScoreRank(visible) {
+        onShowScoreRank(visible, scoreFx?, isLeft?) {
             let p1 = this.lPlayer
             let p2 = this.rPlayer
+            if (p1 && p2) {
+
+            }
             let scoreArr = []
+            let isInitScoreArr = false
+
+            if (!this.lastScoreArr) {
+                this.lastScoreArr = [0, 0, 0, 0, 0]
+                isInitScoreArr = true
+            }
+
             for (let i = 0; i < playerCount; i++) {
                 let pn = 'p' + (i + 1)
                 let player = this.gameConf.playerMap[pn]
-                let scoreFxItem ={ score: i + 1, name: player.name }
-                if (pn == this.vsPlayerArr[0]) {
 
+                let scoreFxItem = {
+                    score: this.gameConf.scoreRank[i][1]
+                    , name: player.name
+                    , isSmall: true
+                    , scoreFx: 0
+                    , avatar: '/img/player/89/p1.png'
+                }
+                if (isInitScoreArr)
+                    this.lastScoreArr[i] = scoreFxItem.score
+                scoreFx = scoreFxItem.score - this.lastScoreArr[i]
+                this.lastScoreArr[i] = scoreFxItem.score
+                if (pn == this.vsPlayerArr[0]) {
+                    scoreFxItem.scoreFx = scoreFx
+                    scoreFxItem.isSmall = false
                 }
                 else if (pn == this.vsPlayerArr[1]) {
-
-                    scoreArr.push({ score: i + 1, name: player.name })
+                    scoreFxItem.scoreFx = scoreFx
+                    scoreFxItem.isSmall = false
                 }
+                scoreArr.push(scoreFxItem)
             }
+            scoreArr = scoreArr.sort(descendingProp('score'))
+
             opReq(CommandId.cs_showScoreRank, {
                 visible: visible,
-                scoreArr: [
-                    // img\player\89
-                    { score: 1, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png', scoreFx: 0 },
-                    { score: 2, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png', scoreFx: 0 },
-                    { score: 3, name: '好天气', isSmall: false, avatar: '/img/player/89/p1.png', scoreFx: 4 },
-                    { score: 4, name: '好天气', isSmall: true, avatar: '/img/player/89/p1.png', scoreFx: 0 },
-                    { score: 5, name: '好天气', isSmall: false, avatar: '/img/player/89/p1.png', scoreFx: 2 }]
+                scoreArr: scoreArr
             })
         },
 

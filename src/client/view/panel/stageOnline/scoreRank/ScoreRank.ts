@@ -1,3 +1,4 @@
+import { TweenEx } from './../../../utils/TweenEx';
 import { imgLoader } from './../../../utils/ImgLoader';
 import { Text2, TextFac } from './../../../utils/TextFac';
 import { FontName } from '../../../const';
@@ -48,8 +49,14 @@ class PlayerItem extends PIXI.Container {
 
         return this
     }
-    showScoreFx(score) {
-        this.scoreFx.setText("+" + score)
+    showScoreFx(dtScore) {
+        if (dtScore > 0) {
+            this.scoreFx.setText("+" + dtScore)
+            TweenEx.delayedCall(3000, _ => {
+                this.scoreFx.setText("")
+            })
+        }
+
     }
     setScore(data) {
         this.pScore.setText(data.score)
@@ -66,7 +73,6 @@ class PlayerItem extends PIXI.Container {
                 this.avt.y = 73
             })
         }
-
         else {
             this.bg.texture = imgLoader.getTex('/img/panel/scoreRank/itemBg_big1.png')
             imgLoader.loadTexArr([data.avatar], _ => {
@@ -93,7 +99,6 @@ export class ScoreRank extends PIXI.Container {
         for (let i = 0; i < 5; i++) {
             let pi: PlayerItem = this.itemArr[i]
             let scoreData = data.scoreArr[i]
-            pi.setScore(scoreData)
             pi.y = lastY
             if (scoreData.isSmall)
                 lastY += 130
@@ -102,9 +107,11 @@ export class ScoreRank extends PIXI.Container {
 
 
             if (scoreData.scoreFx) {
-
                 pi.showScoreFx(scoreData.scoreFx)
             }
+
+            pi.setScore(scoreData)
+
         }
 
     }
@@ -116,13 +123,13 @@ export class ScoreRank extends PIXI.Container {
 
         }
     }
-    
-    showScoreFx() {
+
+    showScoreFx(data) {
 
     }
 
     show(data) {
-
+        console.log('show socre rank', data)
         if (this.itemArr.length) {
             this._arrangeY(data)
         }
@@ -130,7 +137,7 @@ export class ScoreRank extends PIXI.Container {
             imgLoader.loadTexArr(['/img/panel/scoreRank/itemBg_big1.png', '/img/panel/scoreRank/itemBg_small1.png'], _ => {
                 for (let i = 0; i < 5; i++) {
                     let isSmall = i > 1
-                    let pi = (new PlayerItem()).create(true, { score: 8, name: '好天气' })
+                    let pi = (new PlayerItem()).create(true, { score: 8, name: '' })
                     this.itemArr.push(pi)
                     this.addChild(pi)
                 }

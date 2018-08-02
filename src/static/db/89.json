@@ -5,26 +5,26 @@
     "gameTitle": "rank 5",
     "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/727/",
     "rec": [],
-    "rank": [
+    "scoreRank": [
         [
-            "p1_安云鹏",
-            1
+            "p1_黄于军",
+            2
         ],
         [
-            "p2_安云鹏",
-            1
+            "p2_李秀波",
+            8
         ],
         [
-            "p3_安云鹏",
-            1
+            "p3_肖波",
+            16
         ],
         [
-            "p4_安云鹏",
-            1
+            "p4_特日",
+            10
         ],
         [
-            "p5_安云鹏",
-            1
+            "p5_古展腾",
+            10
         ]
     ],
     "champion": "安云鹏",
