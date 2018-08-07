@@ -102,6 +102,12 @@ class _GameAdmin extends VueBase {
 
     }
     methods = {
+        onReloadShow() {
+            this.reloadFile(null,{callback:_=>{
+                this.onShowScoreRank(true)
+            }})
+        },
+
         onChangePlayer(isBlue, playerId) {
             isBlue ? this.vsPlayerArr[0] = playerId : this.vsPlayerArr[1] = playerId;
             this.vsPlayer = this.vsPlayerArr.join(" ")
@@ -134,15 +140,13 @@ class _GameAdmin extends VueBase {
             this.onShowScoreRank(true)
         },
 
-        onShowScoreRank(visible, scoreFx?, isLeft?) {
+        onShowScoreRank(visible) {
             let p1 = this.lPlayer
             let p2 = this.rPlayer
-            if (p1 && p2) {
 
-            }
             let scoreArr = []
             let isInitScoreArr = false
-
+            let scoreFx = 0
             if (!this.lastScoreArr) {
                 this.lastScoreArr = [0, 0, 0, 0, 0]
                 isInitScoreArr = true
@@ -218,6 +222,8 @@ class _GameAdmin extends VueBase {
                     console.log("EVENT_ON_FILE", data, _exData);
                     opReq('cs_data', data)
                     let f = confFile
+                    if (_exData.callback)
+                        _exData.callback()
                 });
             }
             reader.readAsText(confFile, "utf-8");

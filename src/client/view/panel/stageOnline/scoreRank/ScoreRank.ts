@@ -100,7 +100,7 @@ export class ScoreRank extends PIXI.Container {
         for (let i = 0; i < 5; i++) {
             let pi: PlayerItem = this.itemArr[i]
             let scoreData = data.scoreArr[i]
-            pi.y = i * 130+lastY
+            pi.y = i * 130 + lastY
             if (!scoreData.isSmall) {
                 lastY += 10
             }
@@ -125,8 +125,12 @@ export class ScoreRank extends PIXI.Container {
     showScoreFx(data) {
 
     }
-
-    show(data) {
+    hide() {
+        if (this.parent) {
+            this.parent.removeChild(this)
+        }
+    }
+    _show(data) {
         console.log('show socre rank', data)
         if (this.itemArr.length) {
             this._arrangeY(data)
@@ -143,6 +147,15 @@ export class ScoreRank extends PIXI.Container {
                 this.p.addChild(this)
             })
         }
+    }
+    show(data) {
+        if (data.visible) {
+            this._show(data)
+        }
+        else {
+            this.hide()
+        }
+
 
     }
 }

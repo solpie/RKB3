@@ -56,7 +56,7 @@
 	__webpack_require__(18);
 	var Navbar_1 = __webpack_require__(20);
 	var home_1 = __webpack_require__(22);
-	var player_1 = __webpack_require__(32);
+	var player_1 = __webpack_require__(33);
 	var GameAdmin_1 = __webpack_require__(28);
 	var routes = [
 	    {
@@ -612,7 +612,7 @@
 	    __extends(HomeView, _super);
 	    function HomeView() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(31);
+	        _this.template = __webpack_require__(32);
 	        _this.links = VueBase_1.VueBase.PROP;
 	        _this.components = { "GameAdmin": GameAdmin_1.GameAdmin };
 	        _this.opUrlArr = VueBase_1.VueBase.PROP;
@@ -1507,7 +1507,7 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var VueBase_1 = __webpack_require__(24);
 	var const_1 = __webpack_require__(29);
-	var Command_1 = __webpack_require__(62);
+	var Command_1 = __webpack_require__(30);
 	var JsFunc_1 = __webpack_require__(23);
 	var confFile = null;
 	var reader;
@@ -1528,7 +1528,7 @@
 	    __extends(_GameAdmin, _super);
 	    function _GameAdmin() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(30);
+	        _this.template = __webpack_require__(31);
 	        _this.selected = VueBase_1.VueBase.PROP;
 	        _this.options = VueBase_1.VueBase.PROP;
 	        _this.gameConf = VueBase_1.VueBase.PROP;
@@ -1541,6 +1541,12 @@
 	        _this.rPlayer = VueBase_1.VueBase.PROP;
 	        _this.lastScoreArr = VueBase_1.VueBase.PROP;
 	        _this.methods = {
+	            onReloadShow: function () {
+	                var _this = this;
+	                this.reloadFile(null, { callback: function (_) {
+	                        _this.onShowScoreRank(true);
+	                    } });
+	            },
 	            onChangePlayer: function (isBlue, playerId) {
 	                isBlue ? this.vsPlayerArr[0] = playerId : this.vsPlayerArr[1] = playerId;
 	                this.vsPlayer = this.vsPlayerArr.join(" ");
@@ -1568,13 +1574,12 @@
 	                opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2, gameTitle: gameTitle });
 	                this.onShowScoreRank(true);
 	            },
-	            onShowScoreRank: function (visible, scoreFx, isLeft) {
+	            onShowScoreRank: function (visible) {
 	                var p1 = this.lPlayer;
 	                var p2 = this.rPlayer;
-	                if (p1 && p2) {
-	                }
 	                var scoreArr = [];
 	                var isInitScoreArr = false;
+	                var scoreFx = 0;
 	                if (!this.lastScoreArr) {
 	                    this.lastScoreArr = [0, 0, 0, 0, 0];
 	                    isInitScoreArr = true;
@@ -1642,6 +1647,8 @@
 	                        console.log("EVENT_ON_FILE", data, _exData);
 	                        opReq('cs_data', data);
 	                        var f = confFile;
+	                        if (_exData.callback)
+	                            _exData.callback();
 	                    });
 	                }
 	                reader.readAsText(confFile, "utf-8");
@@ -1764,180 +1771,6 @@
 
 /***/ }),
 /* 30 */
-/***/ (function(module, exports) {
-
-	module.exports = "<div class=\"container\">\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\"> gameTitle idx\r\n    <input type=\"text\" v-model=\"gameTitle\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n\r\n    <div>\r\n        <br> score rank:\r\n        <br> \r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,-3)\">L-3</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,3)\">L+3</button>----------\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,3)\">R+3</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,-3)\">R-3</button>\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,-2)\">L-2</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,2)\">L+2</button>----------\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,2)\">R+2</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,-2)\">R-2</button>\r\n\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in blueArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <hr>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in redArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n\r\n    </div>\r\n</div>";
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports) {
-
-	module.exports = "<div class=\"container\">\r\n    <div class=\"tabs  is-boxed\">\r\n        <ul>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                <a>\r\n                    <span>home</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                <a>\r\n                    <span>热门球员编辑</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab3'}\" @click='tab(\"tab3\")'>\r\n                <a>\r\n                    <span>自定义比赛</span>\r\n                </a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n    <div v-if='actTab==\"tab1\"'>\r\n        <nav class=\"panel\">\r\n            <p class=\"panel-heading\">\r\n                直播面板op入口 Game ID: {{ selected }}\r\n                <span class=\"select\">\r\n                            <select v-model=\"selected\">\r\n                                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                                    {{ option.text }}\r\n                                </option>\r\n                            </select>\r\n                        </span>\r\n            </p>\r\n            <vue v-for=\"link in links\">\r\n                <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                    <span class=\"panel-icon\">\r\n                        <i class=\"fa fa-book\"></i>\r\n                        </span> {{link.url}}\r\n                    <br> {{link.title}}\r\n                </a>\r\n                <!--<button class=\"button\">复制地址</button>-->\r\n            </vue>\r\n            <div>\r\n                抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n                <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n                <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n                           {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n                        </a>\r\n            </div>\r\n\r\n            <p>\r\n                command:\r\n                <br> /game/bracket/clear\r\n                <br>/game/clear/bracketIdx\r\n                <br>/git/pull\r\n        </nav>\r\n        播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n            <p>\r\n                播放地址2:<input type=\"text\" v-model=\"playUrl2\" style=\"width: 1000px\">\r\n                <p>\r\n                    推流地址2:<input type=\"text\" v-model=\"rmtpUrl2\" style=\"width: 1000px\">\r\n                    <p>\r\n                        <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n                        <div id=\"qrcode\"></div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <div class=\"panel\" style=\"width: 500px;\">\r\n            <p class=\"panel-heading\">\r\n                亮了网后台数据导入8090\r\n            </p>\r\n            球员编号player_id\r\n            <input type=\"text\" v-model=\"player_id\" style=\"width: 100px;\">\r\n            <button class=\"button is-primary\" @click=\"onViewPlayer(player_id)\">查看亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onSyncPlayerToStrapi(player_id)\">导入亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onPullPlayerData(player_id)\">编辑8090球员</button>\r\n            <!-- <input type=\"text\" v-model=\"playerArrStr\" style=\"width: 150px;\">\r\n            <button class=\"button is-primary\" @click=\"onSetStarPlayer(playerArrStr)\">设定热门球员</button> -->\r\n            <div v-if='playerInEdit'>\r\n                <div class=\"container\" style=\"height: 700px\">\r\n                    <h1>上传热门球员图片</h1>\r\n                    <button class=\"button is-primary\" @click=\"onUpload\">打开本地图片</button>\r\n                    <button class=\"button is-primary\" @click=\"onCrop(player_id)\">裁切上传</button>\r\n                    <input type=\"file\" class=\"sr-only\" id=\"input\" name=\"image\" @change='onImgLoaded' accept=\"image/*\" hidden>\r\n                    <div class='result'></div>\r\n                    <img id=\"imgToDownload\" style=\"max-width: 100%;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"panel\" style=\"width:250px;\">\r\n            <p class=\"panel-heading\">\r\n                预览\r\n            </p>\r\n            <div v-if='playerInEdit'>\r\n                <label style=\"font-size: 30px;\">{{ playerInEdit.player_id+playerInEdit.live_name}}</label>\r\n                <div class=\"preview\" style=\"width: 100px;\"></div>\r\n                <textarea v-model=\"playerInEdit.brief\" name=\"\" id=\"\" width=\"350\" height=\"150\"></textarea>\r\n                <input type=\"text\" v-model=\"playerInEdit.tag1\" style=\"width: 100px;\">\r\n                <input type=\"text\" v-model=\"playerInEdit.tag2\" style=\"width: 100px;\">\r\n                <br> level:\r\n                <input type=\"text\" v-model=\"playerInEdit.level\" style=\"width: 50px;\">1-6 S+ S A+ A B C\r\n                <br> <button class=\"button is-primary\" @click=\"onEditPlayer(player_id)\">更新</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div v-if='actTab==\"tab3\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <GameAdmin/>\r\n    </div>\r\n</div>";
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var editForm_1 = __webpack_require__(33);
-	var HupuAPI_1 = __webpack_require__(26);
-	var JsFunc_1 = __webpack_require__(23);
-	var VueBase_1 = __webpack_require__(24);
-	var PlayerView = (function (_super) {
-	    __extends(PlayerView, _super);
-	    function PlayerView() {
-	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(35);
-	        _this.playerArr = VueBase_1.VueBase.PROP;
-	        _this.editPlayerDoc = VueBase_1.VueBase.PROP;
-	        _this.components = { "editForm": editForm_1.editForm };
-	        _this.isEdit = VueBase_1.VueBase.PROP;
-	        _this.methods = {
-	            onEdit: function (playerDoc) {
-	                console.log('onEdit player id:', playerDoc.id);
-	                this.editPlayerDoc = playerDoc;
-	                this.isEdit = true;
-	            }
-	        };
-	        VueBase_1.VueBase.initProps(_this);
-	        return _this;
-	    }
-	    PlayerView.prototype.created = function () {
-	        var _this = this;
-	        console.log('create!!!');
-	        HupuAPI_1.getPlayerDoc(function (res) {
-	            _this.playerArr = res.sort(JsFunc_1.ascendingProp('id'));
-	            console.log(_this.playerArr);
-	        });
-	    };
-	    return PlayerView;
-	}(VueBase_1.VueBase));
-	exports.playerView = new PlayerView();
-
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var HupuAPI_1 = __webpack_require__(26);
-	var VueBase_1 = __webpack_require__(24);
-	var EditForm = (function (_super) {
-	    __extends(EditForm, _super);
-	    function EditForm() {
-	        var _this = _super.call(this) || this;
-	        _this.isShow = VueBase_1.VueBase.PROP;
-	        _this.playerInfo = VueBase_1.VueBase.PROP;
-	        _this.template = __webpack_require__(34);
-	        _this.watch = { "playerInfo": "onPlayerInfo" };
-	        _this.methods = {
-	            onPlayerInfo: function (v) {
-	                this.setPlayerDoc(v);
-	            },
-	            onCancel: function () {
-	                this.$parent.isEdit = false;
-	            },
-	            onUpdate: function () {
-	                var playerDoc = this.editor.get();
-	                playerDoc._id = this.player_id;
-	                console.log('playerDoc', playerDoc);
-	                if (playerDoc._id) {
-	                    HupuAPI_1.updatePlayerDoc(playerDoc, function (res) {
-	                        console.log('playerDoc update', res);
-	                        if (res && res._id) {
-	                            window.location.reload();
-	                        }
-	                    });
-	                    this.$parent.isEdit = false;
-	                }
-	            }
-	        };
-	        VueBase_1.VueBase.initProps(_this);
-	        return _this;
-	    }
-	    EditForm.prototype.created = function () {
-	        this.player_id = '';
-	    };
-	    EditForm.prototype.mounted = function () {
-	        var container = document.getElementById("jsoneditor");
-	        this.editor = new JSONEditor(container);
-	        this.setPlayerDoc(this.playerInfo);
-	    };
-	    EditForm.prototype.setPlayerDoc = function (v) {
-	        console.log(v);
-	        if (v) {
-	            this.player_id = v._id;
-	            delete v._id;
-	            this.editor.set(v);
-	        }
-	    };
-	    return EditForm;
-	}(VueBase_1.VueBase));
-	exports.editForm = new EditForm();
-
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports) {
-
-	module.exports = "<div class=\"box\" style=\"position:fixed;left:200px;top:60px;width:500px\">\r\n    {{player_id}}\r\n    <div id=\"jsoneditor\" style=\"width: 400px; height: 400px;\"></div>\r\n    <button class=\"button\" @click=\"onUpdate()\">update</button>\r\n    <button class=\"button\" @click=\"onCancel()\">cancel</button>\r\n</div>";
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports) {
-
-	module.exports = "<div>\r\n    <aside class=\"menu\" style=\"width:250px\">\r\n        <p class=\"menu-label\">\r\n            Player\r\n        </p>\r\n        <ul class=\"menu-list\">\r\n            <ul>\r\n                <li><a href=\"#\">添加Player</a></li>\r\n                <li><a href=\"#\">同步数据</a></li>\r\n            </ul>\r\n        </ul>\r\n    </aside>\r\n\r\n    <div id=\"player-grid\" style=\"position: relative;left: 290px;width: 800px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width:200px;\">\r\n            <img v-bind:src=\"player.portrait\" @click=\"onEdit(player)\">\r\n            <img v-bind:src=\"'/img/player/avatar/'+player.avatar\" style=\"width: 50px\">\r\n            <div class=\"content\">\r\n                {{player.name}} id:{{player.id}}\r\n                <br> 背号:{{player.number}}\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <editForm :playerInfo='editPlayerDoc' v-if='isEdit'>\r\n    </editform>\r\n</div>";
-
-/***/ }),
-/* 36 */,
-/* 37 */,
-/* 38 */,
-/* 39 */,
-/* 40 */,
-/* 41 */,
-/* 42 */,
-/* 43 */,
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */,
-/* 58 */,
-/* 59 */,
-/* 60 */,
-/* 61 */,
-/* 62 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -2108,6 +1941,154 @@
 	    exports.CommandId[k] = k;
 	}
 
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div class=\"container\">\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\"> gameTitle idx\r\n    <input type=\"text\" v-model=\"gameTitle\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n\r\n    <div>\r\n        <br> score rank:\r\n        <br> \r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onReloadShow()\">reload show</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,-1)\">L-1</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,1)\">L+1</button>\r\n        ----------\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,1)\">R+1</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,-1)\">R-1</button>\r\n        <br>\r\n\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in blueArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <hr>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in redArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n\r\n    </div>\r\n</div>";
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div class=\"container\">\r\n    <div class=\"tabs  is-boxed\">\r\n        <ul>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                <a>\r\n                    <span>home</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                <a>\r\n                    <span>热门球员编辑</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab3'}\" @click='tab(\"tab3\")'>\r\n                <a>\r\n                    <span>自定义比赛</span>\r\n                </a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n    <div v-if='actTab==\"tab1\"'>\r\n        <nav class=\"panel\">\r\n            <p class=\"panel-heading\">\r\n                直播面板op入口 Game ID: {{ selected }}\r\n                <span class=\"select\">\r\n                            <select v-model=\"selected\">\r\n                                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                                    {{ option.text }}\r\n                                </option>\r\n                            </select>\r\n                        </span>\r\n            </p>\r\n            <vue v-for=\"link in links\">\r\n                <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                    <span class=\"panel-icon\">\r\n                        <i class=\"fa fa-book\"></i>\r\n                        </span> {{link.url}}\r\n                    <br> {{link.title}}\r\n                </a>\r\n                <!--<button class=\"button\">复制地址</button>-->\r\n            </vue>\r\n            <div>\r\n                抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n                <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n                <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n                           {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n                        </a>\r\n            </div>\r\n\r\n            <p>\r\n                command:\r\n                <br> /game/bracket/clear\r\n                <br>/game/clear/bracketIdx\r\n                <br>/git/pull\r\n        </nav>\r\n        播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n            <p>\r\n                播放地址2:<input type=\"text\" v-model=\"playUrl2\" style=\"width: 1000px\">\r\n                <p>\r\n                    推流地址2:<input type=\"text\" v-model=\"rmtpUrl2\" style=\"width: 1000px\">\r\n                    <p>\r\n                        <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n                        <div id=\"qrcode\"></div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <div class=\"panel\" style=\"width: 500px;\">\r\n            <p class=\"panel-heading\">\r\n                亮了网后台数据导入8090\r\n            </p>\r\n            球员编号player_id\r\n            <input type=\"text\" v-model=\"player_id\" style=\"width: 100px;\">\r\n            <button class=\"button is-primary\" @click=\"onViewPlayer(player_id)\">查看亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onSyncPlayerToStrapi(player_id)\">导入亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onPullPlayerData(player_id)\">编辑8090球员</button>\r\n            <!-- <input type=\"text\" v-model=\"playerArrStr\" style=\"width: 150px;\">\r\n            <button class=\"button is-primary\" @click=\"onSetStarPlayer(playerArrStr)\">设定热门球员</button> -->\r\n            <div v-if='playerInEdit'>\r\n                <div class=\"container\" style=\"height: 700px\">\r\n                    <h1>上传热门球员图片</h1>\r\n                    <button class=\"button is-primary\" @click=\"onUpload\">打开本地图片</button>\r\n                    <button class=\"button is-primary\" @click=\"onCrop(player_id)\">裁切上传</button>\r\n                    <input type=\"file\" class=\"sr-only\" id=\"input\" name=\"image\" @change='onImgLoaded' accept=\"image/*\" hidden>\r\n                    <div class='result'></div>\r\n                    <img id=\"imgToDownload\" style=\"max-width: 100%;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"panel\" style=\"width:250px;\">\r\n            <p class=\"panel-heading\">\r\n                预览\r\n            </p>\r\n            <div v-if='playerInEdit'>\r\n                <label style=\"font-size: 30px;\">{{ playerInEdit.player_id+playerInEdit.live_name}}</label>\r\n                <div class=\"preview\" style=\"width: 100px;\"></div>\r\n                <textarea v-model=\"playerInEdit.brief\" name=\"\" id=\"\" width=\"350\" height=\"150\"></textarea>\r\n                <input type=\"text\" v-model=\"playerInEdit.tag1\" style=\"width: 100px;\">\r\n                <input type=\"text\" v-model=\"playerInEdit.tag2\" style=\"width: 100px;\">\r\n                <br> level:\r\n                <input type=\"text\" v-model=\"playerInEdit.level\" style=\"width: 50px;\">1-6 S+ S A+ A B C\r\n                <br> <button class=\"button is-primary\" @click=\"onEditPlayer(player_id)\">更新</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div v-if='actTab==\"tab3\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <GameAdmin/>\r\n    </div>\r\n</div>";
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var editForm_1 = __webpack_require__(34);
+	var HupuAPI_1 = __webpack_require__(26);
+	var JsFunc_1 = __webpack_require__(23);
+	var VueBase_1 = __webpack_require__(24);
+	var PlayerView = (function (_super) {
+	    __extends(PlayerView, _super);
+	    function PlayerView() {
+	        var _this = _super.call(this) || this;
+	        _this.template = __webpack_require__(36);
+	        _this.playerArr = VueBase_1.VueBase.PROP;
+	        _this.editPlayerDoc = VueBase_1.VueBase.PROP;
+	        _this.components = { "editForm": editForm_1.editForm };
+	        _this.isEdit = VueBase_1.VueBase.PROP;
+	        _this.methods = {
+	            onEdit: function (playerDoc) {
+	                console.log('onEdit player id:', playerDoc.id);
+	                this.editPlayerDoc = playerDoc;
+	                this.isEdit = true;
+	            }
+	        };
+	        VueBase_1.VueBase.initProps(_this);
+	        return _this;
+	    }
+	    PlayerView.prototype.created = function () {
+	        var _this = this;
+	        console.log('create!!!');
+	        HupuAPI_1.getPlayerDoc(function (res) {
+	            _this.playerArr = res.sort(JsFunc_1.ascendingProp('id'));
+	            console.log(_this.playerArr);
+	        });
+	    };
+	    return PlayerView;
+	}(VueBase_1.VueBase));
+	exports.playerView = new PlayerView();
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var HupuAPI_1 = __webpack_require__(26);
+	var VueBase_1 = __webpack_require__(24);
+	var EditForm = (function (_super) {
+	    __extends(EditForm, _super);
+	    function EditForm() {
+	        var _this = _super.call(this) || this;
+	        _this.isShow = VueBase_1.VueBase.PROP;
+	        _this.playerInfo = VueBase_1.VueBase.PROP;
+	        _this.template = __webpack_require__(35);
+	        _this.watch = { "playerInfo": "onPlayerInfo" };
+	        _this.methods = {
+	            onPlayerInfo: function (v) {
+	                this.setPlayerDoc(v);
+	            },
+	            onCancel: function () {
+	                this.$parent.isEdit = false;
+	            },
+	            onUpdate: function () {
+	                var playerDoc = this.editor.get();
+	                playerDoc._id = this.player_id;
+	                console.log('playerDoc', playerDoc);
+	                if (playerDoc._id) {
+	                    HupuAPI_1.updatePlayerDoc(playerDoc, function (res) {
+	                        console.log('playerDoc update', res);
+	                        if (res && res._id) {
+	                            window.location.reload();
+	                        }
+	                    });
+	                    this.$parent.isEdit = false;
+	                }
+	            }
+	        };
+	        VueBase_1.VueBase.initProps(_this);
+	        return _this;
+	    }
+	    EditForm.prototype.created = function () {
+	        this.player_id = '';
+	    };
+	    EditForm.prototype.mounted = function () {
+	        var container = document.getElementById("jsoneditor");
+	        this.editor = new JSONEditor(container);
+	        this.setPlayerDoc(this.playerInfo);
+	    };
+	    EditForm.prototype.setPlayerDoc = function (v) {
+	        console.log(v);
+	        if (v) {
+	            this.player_id = v._id;
+	            delete v._id;
+	            this.editor.set(v);
+	        }
+	    };
+	    return EditForm;
+	}(VueBase_1.VueBase));
+	exports.editForm = new EditForm();
+
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div class=\"box\" style=\"position:fixed;left:200px;top:60px;width:500px\">\r\n    {{player_id}}\r\n    <div id=\"jsoneditor\" style=\"width: 400px; height: 400px;\"></div>\r\n    <button class=\"button\" @click=\"onUpdate()\">update</button>\r\n    <button class=\"button\" @click=\"onCancel()\">cancel</button>\r\n</div>";
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div>\r\n    <aside class=\"menu\" style=\"width:250px\">\r\n        <p class=\"menu-label\">\r\n            Player\r\n        </p>\r\n        <ul class=\"menu-list\">\r\n            <ul>\r\n                <li><a href=\"#\">添加Player</a></li>\r\n                <li><a href=\"#\">同步数据</a></li>\r\n            </ul>\r\n        </ul>\r\n    </aside>\r\n\r\n    <div id=\"player-grid\" style=\"position: relative;left: 290px;width: 800px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width:200px;\">\r\n            <img v-bind:src=\"player.portrait\" @click=\"onEdit(player)\">\r\n            <img v-bind:src=\"'/img/player/avatar/'+player.avatar\" style=\"width: 50px\">\r\n            <div class=\"content\">\r\n                {{player.name}} id:{{player.id}}\r\n                <br> 背号:{{player.number}}\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <editForm :playerInfo='editPlayerDoc' v-if='isEdit'>\r\n    </editform>\r\n</div>";
 
 /***/ })
 /******/ ]);

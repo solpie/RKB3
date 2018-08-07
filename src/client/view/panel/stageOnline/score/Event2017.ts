@@ -368,6 +368,7 @@ export class Event2017 extends PIXI.Container {
                 : this.tagFx.hide(data)
         }
     }
+    
     scoreRank: ScoreRank
     showScoreRank(data) {
         if (!this.scoreRank) {
@@ -376,6 +377,7 @@ export class Event2017 extends PIXI.Container {
         }
         this.scoreRank.show(data)
     }
+
     showScoreFx2(data)
     {
         if(this.scoreRank)

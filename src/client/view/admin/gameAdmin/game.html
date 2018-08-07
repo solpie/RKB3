@@ -13,17 +13,15 @@
         <br> score rank:
         <br> 
         <button class="button is-primary" @click="onShowScoreRank(true)">show</button>
+        <button class="button is-primary" @click="onReloadShow()">reload show</button>
         <button class="button is-primary" @click="onShowScoreRank(false)">hide</button>
         <br>
-        <button class="button is-primary" @click="onAddScore(true,-3)">L-3</button>
-        <button class="button is-primary" @click="onAddScore(true,3)">L+3</button>----------
-        <button class="button is-primary" @click="onAddScore(false,3)">R+3</button>
-        <button class="button is-primary" @click="onAddScore(false,-3)">R-3</button>
+        <button class="button is-primary" @click="onAddScore(true,-1)">L-1</button>
+        <button class="button is-primary" @click="onAddScore(true,1)">L+1</button>
+        ----------
+        <button class="button is-primary" @click="onAddScore(false,1)">R+1</button>
+        <button class="button is-primary" @click="onAddScore(false,-1)">R-1</button>
         <br>
-        <button class="button is-primary" @click="onAddScore(true,-2)">L-2</button>
-        <button class="button is-primary" @click="onAddScore(true,2)">L+2</button>----------
-        <button class="button is-primary" @click="onAddScore(false,2)">R+2</button>
-        <button class="button is-primary" @click="onAddScore(false,-2)">R-2</button>
 
         <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
             <li style="float:left;width:190px;padding:5px" v-for="player in blueArr">
