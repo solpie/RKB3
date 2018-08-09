@@ -1,4 +1,13 @@
 <div class="container">
+
+        <span class="select">
+                <select v-model="selected" @change="onSelectGame">
+                    <option v-for="option in options" v-bind:value="option.value">
+                        {{ option.text }}
+                    </option>
+                </select>
+            </span>
+            
     <input type="file" id="files" accept="*.json" hidden>
     <input type="text" v-model="vsPlayer" style="width: 100px;"> gameTitle idx
     <input type="text" v-model="gameTitle" style="width: 100px;">

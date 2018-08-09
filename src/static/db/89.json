@@ -1,10 +1,16 @@
 {
     "date": "2018-08-09",
-    "dbIdx": "kd2",
+    "dbIdx": "G32",
     "panel": "BO3",
     "gameTitle": "rank 5",
     "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/727/",
-    "rec": [],
+    "rec": [
+        { "title": "32进16单败淘汰赛", "idx": "1#A1", "score": [1, 0], "player": ["p1", "p2"] },
+        { "title": "32进16单败淘汰赛", "idx": "1#B1", "score": [1, 0], "player": ["p3", "p4"] },
+        { "title": "32进16单败淘汰赛", "idx": "1#C1", "score": [1, 0], "player": ["p1", "p5"] },
+        { "title": "32进16单败淘汰赛", "idx": "1#C1", "score": [1, 0], "player": ["p9", "p10"] },
+        { "title": "32进16单败淘汰赛", "idx": "1#C1", "score": [1, 0], "player": ["p9", "p10"] }
+    ],
     "scoreRank": [
         [
             "p1_黄于军",

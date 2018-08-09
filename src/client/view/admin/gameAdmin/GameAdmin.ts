@@ -46,6 +46,23 @@ class _GameAdmin extends VueBase {
     }
 
     createOption(data) {
+
+
+        let a = [];
+        let playerMap = data.playerMap
+        for (var i = 0; i < data.rec.length; i++) {
+            let rec = data.rec[i]
+            console.log('player', rec.player);
+            let p1 = playerMap[rec.player[0]]
+            let p2 = playerMap[rec.player[1]]
+            if (p1 || p2) {
+                let p1name = p1 ? p1.name : '';
+                let p2name = p2 ? p2.name : '';
+                let option = { text: rec.idx + p1name + ' vs ' + p2name, value: rec.idx }
+                a.push(option);
+            }
+        }
+        this.options = a
         // let a = [];
         // let playerMap = data.playerMap
 
@@ -56,8 +73,6 @@ class _GameAdmin extends VueBase {
             this.blueArr.push(player)
             this.redArr.push(player)
         }
-        // this.options = a
-        // this.blueArr = this.blueArr.concat(this.redArr)
         this.gameConf = data
         console.log('create gameConf ', this.gameConf);
     }
@@ -103,11 +118,26 @@ class _GameAdmin extends VueBase {
     }
     methods = {
         onReloadShow() {
-            this.reloadFile(null,{callback:_=>{
-                this.onShowScoreRank(true)
-            }})
+            this.reloadFile(null, {
+                callback: _ => {
+                    this.onShowScoreRank(true)
+                }
+            })
         },
-
+        onSelectGame() {
+            console.log('on init game', this.selected);
+            let playerMap = this.gameConf.playerMap
+            let recArr = this.gameConf.rec
+            for (let i = 0; i < recArr.length; i++) {
+                let rec = recArr[i];
+                if (rec.idx == this.selected) {
+                    let p1 = rec.player[0]
+                    let p2 = rec.player[1]
+                    this.vsPlayer = p1 + ' ' + p2
+                    return
+                }
+            }
+        },
         onChangePlayer(isBlue, playerId) {
             isBlue ? this.vsPlayerArr[0] = playerId : this.vsPlayerArr[1] = playerId;
             this.vsPlayer = this.vsPlayerArr.join(" ")
@@ -217,13 +247,12 @@ class _GameAdmin extends VueBase {
                             console.log('exData', k);
                             data[k] = _exData[k]
                         }
+                        if (_exData.callback)
+                            _exData.callback()
                     }
                     this.createOption(data)
                     console.log("EVENT_ON_FILE", data, _exData);
                     opReq('cs_data', data)
-                    let f = confFile
-                    if (_exData.callback)
-                        _exData.callback()
                 });
             }
             reader.readAsText(confFile, "utf-8");
