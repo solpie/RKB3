@@ -7808,6 +7808,7 @@
 	        console.log('show socre rank', data);
 	        if (this.itemArr.length) {
 	            this._arrangeY(data);
+	            this.p.addChild(this);
 	        }
 	        else {
 	            ImgLoader_1.imgLoader.loadTexArr(['/img/panel/scoreRank/itemBg_big1.png', '/img/panel/scoreRank/itemBg_small1.png'], function (_) {
