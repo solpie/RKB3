@@ -46,8 +46,6 @@ class _GameAdmin extends VueBase {
     }
 
     createOption(data) {
-
-
         let a = [];
         let playerMap = data.playerMap
         for (var i = 0; i < data.rec.length; i++) {
@@ -63,17 +61,19 @@ class _GameAdmin extends VueBase {
             }
         }
         this.options = a
+        this.gameConf = data
         // let a = [];
         // let playerMap = data.playerMap
 
         this.blueArr = []
         this.redArr = []
         for (var i = 0; i < playerCount; i++) {
-            let player = data.playerMap["p" + (i + 1)]
+            let a = this.gameConf.scoreRank[i][0].split('_')
+            let pn = a[0]
+            let player = data.playerMap[pn]
             this.blueArr.push(player)
             this.redArr.push(player)
         }
-        this.gameConf = data
         console.log('create gameConf ', this.gameConf);
     }
 
@@ -183,7 +183,8 @@ class _GameAdmin extends VueBase {
             }
 
             for (let i = 0; i < playerCount; i++) {
-                let pn = 'p' + (i + 1)
+                let a = this.gameConf.scoreRank[i][0].split('_')
+                let pn = a[0]
                 let player = this.gameConf.playerMap[pn]
 
                 let scoreFxItem = {
@@ -191,7 +192,8 @@ class _GameAdmin extends VueBase {
                     , name: player.name
                     , isSmall: true
                     , scoreFx: 0
-                    , avatar: '/img/player/89/p1.png'
+                    , avatar: '/img/player/89/' + player.playerId + '.png'
+                    // , avatar: this.gameConf.avatarUrlBase +'circle/'+ player.playerId + '.png'
                 }
                 if (isInitScoreArr)
                     this.lastScoreArr[i] = scoreFxItem.score
@@ -200,10 +202,13 @@ class _GameAdmin extends VueBase {
                 if (pn == this.vsPlayerArr[0]) {
                     scoreFxItem.scoreFx = scoreFx
                     scoreFxItem.isSmall = false
+                    opReq(`${CommandId.cs_updateScore}`, {score:scoreFxItem.score, isLeft: true })
                 }
                 else if (pn == this.vsPlayerArr[1]) {
                     scoreFxItem.scoreFx = scoreFx
                     scoreFxItem.isSmall = false
+                    opReq(`${CommandId.cs_updateScore}`, {score:scoreFxItem.score, isLeft: false })
+
                 }
                 scoreArr.push(scoreFxItem)
             }
