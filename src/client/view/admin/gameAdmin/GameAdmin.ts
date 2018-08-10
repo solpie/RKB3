@@ -167,7 +167,7 @@ class _GameAdmin extends VueBase {
                 gameTitle = this.gameConf.gameTitle[this.gameTitle]
             opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2, gameTitle: gameTitle })
             ///89 russ
-            this.onShowScoreRank(true)
+            // this.onShowScoreRank(true)
         },
 
         onShowScoreRank(visible) {

@@ -41,3 +41,4 @@ utils/top5.xlsx
 *.clip
 src/static/img/player/32/**
 *.xls
+utils/.~lock.player.xls#

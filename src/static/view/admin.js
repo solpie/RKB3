@@ -1568,7 +1568,6 @@
 	                if (this.gameTitle)
 	                    gameTitle = this.gameConf.gameTitle[this.gameTitle];
 	                opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2, gameTitle: gameTitle });
-	                this.onShowScoreRank(true);
 	            },
 	            onShowScoreRank: function (visible) {
 	                var p1 = this.lPlayer;

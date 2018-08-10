@@ -3,7 +3,7 @@
     "dbIdx": "G32",
     "panel": "BO3",
     "gameTitle": "rank 5",
-    "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/89/",
+    "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/810/",
     "rec": [
         { "title": "", "idx": "1#A1", "score": [0, 0], "player": ["p1", "p2"] },
         { "title": "", "idx": "2#A1", "score": [0, 0], "player": ["p3", "p4"] },
