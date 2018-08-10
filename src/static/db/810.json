@@ -5,11 +5,11 @@
     "gameTitle": "rank 5",
     "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/810/",
     "rec": [
-        { "title": "", "idx": "1#A1", "score": [0, 0], "player": ["p1", "p2"] },
-        { "title": "", "idx": "2#A1", "score": [0, 0], "player": ["p3", "p4"] },
-        { "title": "", "idx": "3#A1", "score": [0, 0], "player": ["p5", "p6"] },
-        { "title": "", "idx": "4#A1", "score": [0, 0], "player": ["p7", "p8"] },
-        { "title": "", "idx": "5#A1", "score": [0, 0], "player": ["p9", "p10"] }
+        { "title": "", "idx": "1#A1", "score": [0, 0], "player": ["p6", "p10"] },
+        { "title": "", "idx": "2#A1", "score": [0, 0], "player": ["p3", "p5"] },
+        { "title": "", "idx": "3#A1", "score": [0, 0], "player": ["p8", "p4"] },
+        { "title": "", "idx": "4#A1", "score": [0, 0], "player": ["p1", "p7"] },
+        { "title": "", "idx": "5#A1", "score": [0, 0], "player": ["p2", "p9"] }
 
     ],
     "scoreRank": [
