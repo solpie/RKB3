@@ -1263,7 +1263,7 @@
 	        this.gameConf = data;
 	        this.blueArr = [];
 	        this.redArr = [];
-	        for (var i = 0; i < playerCount; i++) {
+	        for (var i = 0; i < this.gameConf.scoreRank.length; i++) {
 	            var a_1 = this.gameConf.scoreRank[i][0].split('_');
 	            var pn = a_1[0];
 	            var player = data.playerMap[pn];

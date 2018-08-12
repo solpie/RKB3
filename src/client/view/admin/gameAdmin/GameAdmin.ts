@@ -67,7 +67,7 @@ class _GameAdmin extends VueBase {
 
         this.blueArr = []
         this.redArr = []
-        for (var i = 0; i < playerCount; i++) {
+        for (var i = 0; i < this.gameConf.scoreRank.length; i++) {
             let a = this.gameConf.scoreRank[i][0].split('_')
             let pn = a[0]
             let player = data.playerMap[pn]
