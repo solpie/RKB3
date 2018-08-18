@@ -1,0 +1,19 @@
+<div class="container">
+    <input type="file" id="files" accept="*.json" hidden>
+    <br>
+    <br>
+    <button class="button is-primary" @click="onFile">打开配置</button>
+    <button class="button is-primary" id="reloadFile" @click="reloadFile">reload</button>
+    <br> pick:
+    <button class="button is-primary" @click="onPick(1)">盼盼</button>
+    <button class="button is-primary" @click="onPick(2)">Gary</button>
+    <button class="button is-primary" @click="onPick(3)">安妮</button>
+    <button class="button is-primary" @click="onPick(4)">堂主</button>
+    <button class="button is-primary" @click="onPick(0)">重置</button>
+    <br>call:
+    <button class="button is-primary" @click="onCall(1)">盼盼</button>
+    <button class="button is-primary" @click="onCall(2)">Gary</button>
+    <button class="button is-primary" @click="onCall(3)">安妮</button>
+    <button class="button is-primary" @click="onCall(4)">堂主</button>
+    <button class="button is-primary" @click="onCall(0)">重置</button>
+</div>

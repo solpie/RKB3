@@ -1,0 +1,187 @@
+<html>
+
+<head>
+    <style>
+        .bg {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 0;
+        }
+        
+        .staticImg {
+            position: absolute;
+            padding: 0px;
+            left: 835px;
+            top: 203px;
+            width: 250px;
+            height: 250px;
+            z-index: -1;
+        }
+        
+        .pick-call-def {
+            display: none;
+        }
+        
+        .pick-call-show {
+            position: absolute;
+            padding: 0px;
+            left: 0px;
+            top: 0px;
+            display: block;
+        }
+        
+        .pick-def {
+            position: absolute;
+            padding: 0px;
+            left: 0px;
+            top: 0px;
+        }
+        
+        .pick-def-up {
+            position: absolute;
+            padding: 0px;
+            left: 0px;
+            top: -27px;
+        }
+        
+        .pick-state {
+            position: absolute;
+            padding: 0px;
+            display: none;
+        }
+        
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+        
+        .pick-blink {
+            animation: blinker 1s linear infinite;
+            display: block
+        }
+        
+        .flow {
+            position: absolute;
+            padding: 0px;
+            font-size: 34px;
+            color: #d5d9e7;
+            width: 1300px;
+            font-family: "微软雅黑";
+        }
+        
+        .title {
+            position: absolute;
+            padding: 0px;
+            color: #d5d9e7;
+            font-size: 55px;
+            width: 1920;
+            text-align: center;
+        }
+        
+        .blue {
+            color: #003da7;
+            text-align: center;
+        }
+        
+        .white {
+            color: #fff;
+            font-family: "微软雅黑";
+        }
+        
+        body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="/js/socket.io.slim.min.js"></script>
+</head>
+
+<body>
+
+    <div id="app">
+        <img :src="avatar" class="staticImg" />
+
+        <img src="bg.png" class="bg" />
+
+        <div v-for="(item,index) in pickArr">
+            <img v-bind:class="[item.state ? 'pick-def-up' : 'pick-def']" :src="'c'+(index+1)+'.png'" />
+            <img v-bind:class="{ 'pick-blink': item.state===true}" class="pick-state" src="pick.png" :style="item.s" />
+            <img v-bind:class="[item.call ? 'pick-call-show' : 'pick-call-def']" class="" src="calling.png" :style="item.s" />
+        </div>
+        <span class="title" style="left:0px;top:452px;">
+            {{title+" "+player}}
+        </span>
+        <ul class="flow" style="left:200px;top:170px;">
+            <li v-for="(item,index) in textArr" :key="index" style="list-style-type:none">
+                {{item}}
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        var _p = function(x, y) {
+            return 'left:' + x + 'px;' + 'top:' + y + 'px;'
+        }
+        var app = new Vue({
+            el: '#app',
+            data: {
+                pickArr: [],
+                textArr: [],
+                pickHint: [],
+                picked: [false, false, false, false],
+                player: '',
+                avatar: '',
+                title: ''
+            },
+            created: function() {
+                for (let i = 0; i < 4; i++) {
+                    this.pickArr.push({
+                        state: false,
+                        call: false,
+                        s: _p(i * 253, 0),
+                    })
+                }
+
+                io.connect('/rkb')
+                    .on('connect', () => {
+                        console.log('connect', window.location.host)
+                    })
+                    .on('sc_data', (data) => {
+                        if (data.dbIdx == 'pick') {
+                            this.title = data.title
+                            this.player = data.player
+                            this.pickHint = data.pickHint
+                            this.avatar = data.avatar
+                            console.log('sc_data', data.avatar)
+                        }
+                    })
+                    .on('sc_callState', (data) => {
+                        for (let i = 0; i < 4; i++) {
+                            let p = this.pickArr[i]
+                            p.call = false
+                            if (data.callState == (i + 1))
+                                p.call = true
+                        }
+                    })
+
+                .on('sc_pickState', (data) => {
+                    console.log('sc_pickState', data)
+                    for (let i = 0; i < 4; i++) {
+                        let p = this.pickArr[i]
+                        p.state = data.pickState[i + 1]
+                        if (p.state && this.pickHint[i] && !this.picked[i]) {
+                            this.picked[i] = true
+                            if (this.textArr.length >= 7)
+                                this.textArr.shift()
+                            this.textArr.push(this.pickHint[i] + ' ' + this.player)
+                        }
+                    }
+                })
+            }
+        })
+    </script>
+</body>

@@ -16,6 +16,11 @@
                     <span>自定义比赛</span>
                 </a>
             </li>
+            <li v-bind:class="{ 'is-active': actTab== 'tab4'}" @click='tab("tab4")'>
+                <a>
+                    <span>战队选择</span>
+                </a>
+            </li>
         </ul>
     </div>
     <div v-if='actTab=="tab1"'>
@@ -106,5 +111,8 @@
     </div>
     <div v-if='actTab=="tab3"' class="ctn2" style="display: inline-flex;">
         <GameAdmin/>
+    </div>
+    <div v-if='actTab=="tab4"' class="ctn2" style="display: inline-flex;">
+        <Pick/>
     </div>
 </div>

@@ -1,0 +1,9 @@
+{
+    "date": "2018-08-09",
+    "dbIdx": "pick",
+    "panel": "BO3",
+    "title": "北京站冠军",
+    "player_id": "4",
+    "pickHint": ["盼盼pick了 ", "Gary pick了 ", "安妮pick了 ", "堂主pick了 "],
+    "playerMap": { "p1": { "name": "张子昊", "hwa": [186, 86, 22], "title": "路人王最帅投篮手型", "playerId": "p1" }, "p2": { "name": "董国荣", "hwa": [188, 92, 26], "title": "路人王上海站两冠王", "playerId": "p2" }, "p3": { "name": "杨展坤", "hwa": [193, 90, 18], "title": "最年轻的路人王七冠王", "playerId": "p3" }, "p4": { "name": "赖益烨", "hwa": [187, 78, 22], "title": "CUBA全明星西安交大核心球员", "playerId": "p4" }, "p5": { "name": "郭凌川", "hwa": [190, 90, 23], "title": "24冠怼派代言人大N", "playerId": "p5" }, "p6": { "name": "柳杨杰", "hwa": [178, 70, 22], "title": "中投小王子“打铁哥”", "playerId": "p6" }, "p7": { "name": "檀濠文", "hwa": [183, 80, 17], "title": "路人王太原站季军", "playerId": "p7" }, "p8": { "name": "项麒芸", "hwa": [190, 87, 30], "title": "路人王4冠王,最强特警", "playerId": "p8" }, "p9": { "name": "陈泽文", "hwa": [186, 73, 19], "title": "路人深圳站冠军", "playerId": "p9" }, "p10": { "name": "宋流轩", "hwa": [183, 75, 21], "title": "5冠王,变向狂魔", "playerId": "p10" }, "p11": { "name": "李峙锦", "hwa": [197, 100, 20], "title": "路人王西安站三冠王,西安浓眉哥", "playerId": "p11" }, "p12": { "name": "黄宇军", "hwa": [172, 68, 24], "title": "路人王人气第一人,网红军哥", "playerId": "p12" }, "p13": { "name": "迈克尔·菲巴", "hwa": [196, 90, 34], "title": "2014年德鲁联赛MVP", "playerId": "p13" } }
+}

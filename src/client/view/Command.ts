@@ -174,6 +174,11 @@ export const CommandId = {
     cs_toggleChampionPanel: '',
     sc_toggleChampionPanel: '',
     initPanel: '',
+    //team pick
+    cs_pickState:'',
+    sc_pickState:'',
+    cs_callState:'',
+    sc_callState:'',
     //top 5
     cs_showTop5: '',
     sc_showTop5: '',

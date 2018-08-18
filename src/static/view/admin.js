@@ -589,6 +589,7 @@
 	var PlayerS4_1 = __webpack_require__(25);
 	var HupuAPI_1 = __webpack_require__(26);
 	var GameAdmin_1 = __webpack_require__(28);
+	var Pick_1 = __webpack_require__(116);
 	var cropper;
 	function getScorePanelUrl(gameId, isDark, isOb) {
 	    if (isOb === void 0) { isOb = true; }
@@ -606,7 +607,7 @@
 	        _super.call(this);
 	        this.template = __webpack_require__(32);
 	        this.links = VueBase_1.VueBase.PROP;
-	        this.components = { "GameAdmin": GameAdmin_1.GameAdmin };
+	        this.components = { "GameAdmin": GameAdmin_1.GameAdmin, "Pick": Pick_1.Pick };
 	        this.opUrlArr = VueBase_1.VueBase.PROP;
 	        this.selected = VueBase_1.VueBase.PROP;
 	        this.options = VueBase_1.VueBase.PROP;
@@ -1936,6 +1937,10 @@
 	    cs_toggleChampionPanel: '',
 	    sc_toggleChampionPanel: '',
 	    initPanel: '',
+	    cs_pickState: '',
+	    sc_pickState: '',
+	    cs_callState: '',
+	    sc_callState: '',
 	    cs_showTop5: '',
 	    sc_showTop5: '',
 	    cs_inScreenScore: '',
@@ -1963,7 +1968,7 @@
 /* 32 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <div class=\"tabs  is-boxed\">\r\n        <ul>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                <a>\r\n                    <span>home</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                <a>\r\n                    <span>热门球员编辑</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab3'}\" @click='tab(\"tab3\")'>\r\n                <a>\r\n                    <span>自定义比赛</span>\r\n                </a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n    <div v-if='actTab==\"tab1\"'>\r\n        <nav class=\"panel\">\r\n            <p class=\"panel-heading\">\r\n                直播面板op入口 Game ID: {{ selected }}\r\n                <span class=\"select\">\r\n                            <select v-model=\"selected\">\r\n                                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                                    {{ option.text }}\r\n                                </option>\r\n                            </select>\r\n                        </span>\r\n            </p>\r\n            <vue v-for=\"link in links\">\r\n                <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                    <span class=\"panel-icon\">\r\n                        <i class=\"fa fa-book\"></i>\r\n                        </span> {{link.url}}\r\n                    <br> {{link.title}}\r\n                </a>\r\n                <!--<button class=\"button\">复制地址</button>-->\r\n            </vue>\r\n            <div>\r\n                抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n                <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n                <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n                           {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n                        </a>\r\n            </div>\r\n\r\n            <p>\r\n                command:\r\n                <br> /game/bracket/clear\r\n                <br>/game/clear/bracketIdx\r\n                <br>/git/pull\r\n        </nav>\r\n        播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n            <p>\r\n                播放地址2:<input type=\"text\" v-model=\"playUrl2\" style=\"width: 1000px\">\r\n                <p>\r\n                    推流地址2:<input type=\"text\" v-model=\"rmtpUrl2\" style=\"width: 1000px\">\r\n                    <p>\r\n                        <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n                        <div id=\"qrcode\"></div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <div class=\"panel\" style=\"width: 500px;\">\r\n            <p class=\"panel-heading\">\r\n                亮了网后台数据导入8090\r\n            </p>\r\n            球员编号player_id\r\n            <input type=\"text\" v-model=\"player_id\" style=\"width: 100px;\">\r\n            <button class=\"button is-primary\" @click=\"onViewPlayer(player_id)\">查看亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onSyncPlayerToStrapi(player_id)\">导入亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onPullPlayerData(player_id)\">编辑8090球员</button>\r\n            <!-- <input type=\"text\" v-model=\"playerArrStr\" style=\"width: 150px;\">\r\n            <button class=\"button is-primary\" @click=\"onSetStarPlayer(playerArrStr)\">设定热门球员</button> -->\r\n            <div v-if='playerInEdit'>\r\n                <div class=\"container\" style=\"height: 700px\">\r\n                    <h1>上传热门球员图片</h1>\r\n                    <button class=\"button is-primary\" @click=\"onUpload\">打开本地图片</button>\r\n                    <button class=\"button is-primary\" @click=\"onCrop(player_id)\">裁切上传</button>\r\n                    <input type=\"file\" class=\"sr-only\" id=\"input\" name=\"image\" @change='onImgLoaded' accept=\"image/*\" hidden>\r\n                    <div class='result'></div>\r\n                    <img id=\"imgToDownload\" style=\"max-width: 100%;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"panel\" style=\"width:250px;\">\r\n            <p class=\"panel-heading\">\r\n                预览\r\n            </p>\r\n            <div v-if='playerInEdit'>\r\n                <label style=\"font-size: 30px;\">{{ playerInEdit.player_id+playerInEdit.live_name}}</label>\r\n                <div class=\"preview\" style=\"width: 100px;\"></div>\r\n                <textarea v-model=\"playerInEdit.brief\" name=\"\" id=\"\" width=\"350\" height=\"150\"></textarea>\r\n                <input type=\"text\" v-model=\"playerInEdit.tag1\" style=\"width: 100px;\">\r\n                <input type=\"text\" v-model=\"playerInEdit.tag2\" style=\"width: 100px;\">\r\n                <br> level:\r\n                <input type=\"text\" v-model=\"playerInEdit.level\" style=\"width: 50px;\">1-6 S+ S A+ A B C\r\n                <br> <button class=\"button is-primary\" @click=\"onEditPlayer(player_id)\">更新</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div v-if='actTab==\"tab3\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <GameAdmin/>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <div class=\"tabs  is-boxed\">\r\n        <ul>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                <a>\r\n                    <span>home</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                <a>\r\n                    <span>热门球员编辑</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab3'}\" @click='tab(\"tab3\")'>\r\n                <a>\r\n                    <span>自定义比赛</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab4'}\" @click='tab(\"tab4\")'>\r\n                <a>\r\n                    <span>战队选择</span>\r\n                </a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n    <div v-if='actTab==\"tab1\"'>\r\n        <nav class=\"panel\">\r\n            <p class=\"panel-heading\">\r\n                直播面板op入口 Game ID: {{ selected }}\r\n                <span class=\"select\">\r\n                            <select v-model=\"selected\">\r\n                                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                                    {{ option.text }}\r\n                                </option>\r\n                            </select>\r\n                        </span>\r\n            </p>\r\n            <vue v-for=\"link in links\">\r\n                <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                    <span class=\"panel-icon\">\r\n                        <i class=\"fa fa-book\"></i>\r\n                        </span> {{link.url}}\r\n                    <br> {{link.title}}\r\n                </a>\r\n                <!--<button class=\"button\">复制地址</button>-->\r\n            </vue>\r\n            <div>\r\n                抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n                <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n                <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n                           {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n                        </a>\r\n            </div>\r\n\r\n            <p>\r\n                command:\r\n                <br> /game/bracket/clear\r\n                <br>/game/clear/bracketIdx\r\n                <br>/git/pull\r\n        </nav>\r\n        播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n            <p>\r\n                播放地址2:<input type=\"text\" v-model=\"playUrl2\" style=\"width: 1000px\">\r\n                <p>\r\n                    推流地址2:<input type=\"text\" v-model=\"rmtpUrl2\" style=\"width: 1000px\">\r\n                    <p>\r\n                        <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n                        <div id=\"qrcode\"></div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <div class=\"panel\" style=\"width: 500px;\">\r\n            <p class=\"panel-heading\">\r\n                亮了网后台数据导入8090\r\n            </p>\r\n            球员编号player_id\r\n            <input type=\"text\" v-model=\"player_id\" style=\"width: 100px;\">\r\n            <button class=\"button is-primary\" @click=\"onViewPlayer(player_id)\">查看亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onSyncPlayerToStrapi(player_id)\">导入亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onPullPlayerData(player_id)\">编辑8090球员</button>\r\n            <!-- <input type=\"text\" v-model=\"playerArrStr\" style=\"width: 150px;\">\r\n            <button class=\"button is-primary\" @click=\"onSetStarPlayer(playerArrStr)\">设定热门球员</button> -->\r\n            <div v-if='playerInEdit'>\r\n                <div class=\"container\" style=\"height: 700px\">\r\n                    <h1>上传热门球员图片</h1>\r\n                    <button class=\"button is-primary\" @click=\"onUpload\">打开本地图片</button>\r\n                    <button class=\"button is-primary\" @click=\"onCrop(player_id)\">裁切上传</button>\r\n                    <input type=\"file\" class=\"sr-only\" id=\"input\" name=\"image\" @change='onImgLoaded' accept=\"image/*\" hidden>\r\n                    <div class='result'></div>\r\n                    <img id=\"imgToDownload\" style=\"max-width: 100%;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"panel\" style=\"width:250px;\">\r\n            <p class=\"panel-heading\">\r\n                预览\r\n            </p>\r\n            <div v-if='playerInEdit'>\r\n                <label style=\"font-size: 30px;\">{{ playerInEdit.player_id+playerInEdit.live_name}}</label>\r\n                <div class=\"preview\" style=\"width: 100px;\"></div>\r\n                <textarea v-model=\"playerInEdit.brief\" name=\"\" id=\"\" width=\"350\" height=\"150\"></textarea>\r\n                <input type=\"text\" v-model=\"playerInEdit.tag1\" style=\"width: 100px;\">\r\n                <input type=\"text\" v-model=\"playerInEdit.tag2\" style=\"width: 100px;\">\r\n                <br> level:\r\n                <input type=\"text\" v-model=\"playerInEdit.level\" style=\"width: 50px;\">1-6 S+ S A+ A B C\r\n                <br> <button class=\"button is-primary\" @click=\"onEditPlayer(player_id)\">更新</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div v-if='actTab==\"tab3\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <GameAdmin/>\r\n    </div>\r\n    <div v-if='actTab==\"tab4\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <Pick/>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 33 */
@@ -2086,6 +2091,199 @@
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <aside class=\"menu\" style=\"width:250px\">\r\n        <p class=\"menu-label\">\r\n            Player\r\n        </p>\r\n        <ul class=\"menu-list\">\r\n            <ul>\r\n                <li><a href=\"#\">添加Player</a></li>\r\n                <li><a href=\"#\">同步数据</a></li>\r\n            </ul>\r\n        </ul>\r\n    </aside>\r\n\r\n    <div id=\"player-grid\" style=\"position: relative;left: 290px;width: 800px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width:200px;\">\r\n            <img v-bind:src=\"player.portrait\" @click=\"onEdit(player)\">\r\n            <img v-bind:src=\"'/img/player/avatar/'+player.avatar\" style=\"width: 50px\">\r\n            <div class=\"content\">\r\n                {{player.name}} id:{{player.id}}\r\n                <br> 背号:{{player.number}}\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <editForm :playerInfo='editPlayerDoc' v-if='isEdit'>\r\n    </editform>\r\n</div>";
+
+/***/ },
+/* 37 */,
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */,
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */,
+/* 88 */,
+/* 89 */,
+/* 90 */,
+/* 91 */,
+/* 92 */,
+/* 93 */,
+/* 94 */,
+/* 95 */,
+/* 96 */,
+/* 97 */,
+/* 98 */,
+/* 99 */,
+/* 100 */,
+/* 101 */,
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */,
+/* 111 */,
+/* 112 */,
+/* 113 */,
+/* 114 */,
+/* 115 */,
+/* 116 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var const_1 = __webpack_require__(29);
+	var VueBase_1 = __webpack_require__(24);
+	var Command_1 = __webpack_require__(30);
+	var HupuAPI_1 = __webpack_require__(26);
+	var JsFunc_1 = __webpack_require__(23);
+	var WebJsFunc_1 = __webpack_require__(27);
+	var confFile = null;
+	var reader;
+	var filesInput;
+	function loadRes(url, callback, isCrossOrigin) {
+	    var req = new XMLHttpRequest();
+	    req.open('GET', WebJsFunc_1.proxy(url), true);
+	    req.onload = function (res) {
+	        JsFunc_1.loadImg(req.responseText, callback);
+	    };
+	    req.send();
+	}
+	var opReq = function (cmdId, param) {
+	    param._ = null;
+	    $.ajax({
+	        url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
+	        type: 'post',
+	        data: JSON.stringify(param),
+	        headers: { "Content-Type": "application/json" },
+	        dataType: 'json'
+	    });
+	};
+	var _Pick = (function (_super) {
+	    __extends(_Pick, _super);
+	    function _Pick() {
+	        _super.apply(this, arguments);
+	        this.template = __webpack_require__(117);
+	        this.pickState = VueBase_1.VueBase.PROP;
+	        this.methods = {
+	            onCall: function (zhubo) {
+	                opReq(Command_1.CommandId.cs_callState, { callState: zhubo });
+	            },
+	            onPick: function (zhubo) {
+	                if (zhubo > 0) {
+	                    this.pickState[zhubo] = !this.pickState[zhubo];
+	                }
+	                else {
+	                    this.pickState = { '1': false, '2': false, '3': false, '4': false };
+	                }
+	                opReq(Command_1.CommandId.cs_pickState, { pickState: this.pickState });
+	            },
+	            onInit: function (data) {
+	                HupuAPI_1.getPlayerInfoFromLiangle(data.player_id, function (res1) {
+	                    if (res1.data && res1.data.name) {
+	                        var player_1 = res1.data;
+	                        console.log(player_1);
+	                        loadRes(player_1.avatar, function (imgData) {
+	                            console.log('load img', imgData);
+	                            data.avatar = imgData.src;
+	                            data.player = player_1.name;
+	                            opReq('cs_data', data);
+	                        });
+	                    }
+	                });
+	            },
+	            onFile: function () {
+	                if (!confFile) {
+	                    if (!filesInput)
+	                        filesInput = document.getElementById("files");
+	                    filesInput.addEventListener("change", function (evt) {
+	                        confFile = evt.target.files[0];
+	                        document.getElementById("reloadFile").click();
+	                    }, false);
+	                }
+	                document.getElementById("files").click();
+	            },
+	            reloadFile: function (e) {
+	                var _this = this;
+	                var _ = function (d) {
+	                    return d.getMinutes() + 'm' + d.getSeconds() + 's';
+	                };
+	                if (!reader) {
+	                    reader = new FileReader();
+	                    reader.addEventListener("load", function (event) {
+	                        var data = JSON.parse(event.target['result']);
+	                        data._ = null;
+	                        console.log("EVENT_ON_FILE", data);
+	                        _this.onInit(data);
+	                    });
+	                }
+	                reader.readAsText(confFile, "utf-8");
+	            }
+	        };
+	    }
+	    _Pick.prototype.created = function () {
+	        console.log('pick admin');
+	        this.pickState = { '1': false, '2': false, '3': false, '4': false };
+	    };
+	    return _Pick;
+	}(VueBase_1.VueBase));
+	exports.Pick = new _Pick();
+
+
+/***/ },
+/* 117 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"container\">\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br> pick:\r\n    <button class=\"button is-primary\" @click=\"onPick(1)\">盼盼</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(2)\">Gary</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(3)\">安妮</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(4)\">堂主</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(0)\">重置</button>\r\n    <br>call:\r\n    <button class=\"button is-primary\" @click=\"onCall(1)\">盼盼</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(2)\">Gary</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(3)\">安妮</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(4)\">堂主</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(0)\">重置</button>\r\n</div>";
 
 /***/ }
 /******/ ]);
