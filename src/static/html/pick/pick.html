@@ -173,6 +173,8 @@
                             this.joinHint = data.joinHint
                             this.avatar = data.avatar
                             console.log('sc_data', data.avatar)
+                            this.picked = [false, false, false, false]
+                            this.textArr = []
                         }
                     })
                     .on('sc_joinState', (data) => {
@@ -207,6 +209,7 @@
                                 this.textArr.shift()
                             this.textArr.push(this.pickHint[i].replace('$p', this.player))
                         }
+
                     }
                 })
             }
