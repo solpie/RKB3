@@ -179,6 +179,8 @@ export const CommandId = {
     sc_pickState:'',
     cs_callState:'',
     sc_callState:'',
+    cs_joinState:'',
+    sc_joinState:'',
     //top 5
     cs_showTop5: '',
     sc_showTop5: '',

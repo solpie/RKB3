@@ -48,6 +48,7 @@
         .pick-state {
             position: absolute;
             padding: 0px;
+            top: 27px;
             display: none;
         }
         
@@ -93,11 +94,13 @@
         body {
             padding: 0;
             margin: 0;
+            color: rgb(90, 90, 90);
             overflow: hidden;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
     <script src="/js/socket.io.slim.min.js"></script>
+    <link rel="stylesheet" href="/js/animate.min.css">
 </head>
 
 <body>
@@ -108,9 +111,11 @@
         <img src="bg.png" class="bg" />
 
         <div v-for="(item,index) in pickArr">
-            <img v-bind:class="[item.state ? 'pick-def-up' : 'pick-def']" :src="'c'+(index+1)+'.png'" />
-            <img v-bind:class="{ 'pick-blink': item.state===true}" class="pick-state" src="pick.png" :style="item.s" />
-            <img v-bind:class="[item.call ? 'pick-call-show' : 'pick-call-def']" class="" src="calling.png" :style="item.s" />
+            <div v-bind:class="[item.state ? 'pick-def-up' : 'pick-def','animated',item.out?'bounceOutDown':'']">
+                <img :src="'c'+(index+1)+'.png'" />
+                <img v-bind:class="[  item.state?'pick-blink':'']" class="pick-state" src="pick.png" :style="item.s" />
+                <img v-bind:class="[item.call ? 'pick-call-show' : 'pick-call-def']" src="calling.png" :style="item.s" />
+            </div>
         </div>
         <span class="title" style="left:0px;top:452px;">
             {{title+" "+player}}
@@ -132,6 +137,8 @@
                 pickArr: [],
                 textArr: [],
                 pickHint: [],
+                callHint: [],
+                joinHint: [],
                 picked: [false, false, false, false],
                 player: '',
                 avatar: '',
@@ -142,10 +149,16 @@
                     this.pickArr.push({
                         state: false,
                         call: false,
-                        s: _p(i * 253, 0),
+                        out: false,
+                        s: _p(i * 253, 27),
                     })
                 }
+                let addSysText = (text) => {
+                    if (this.textArr.length >= 7)
+                        this.textArr.shift()
+                    this.textArr.push(text)
 
+                }
                 io.connect('/rkb')
                     .on('connect', () => {
                         console.log('connect', window.location.host)
@@ -155,16 +168,30 @@
                             this.title = data.title
                             this.player = data.player
                             this.pickHint = data.pickHint
+                            this.callHint = data.callHint
+                            this.joinHint = data.joinHint
                             this.avatar = data.avatar
                             console.log('sc_data', data.avatar)
+                        }
+                    })
+                    .on('sc_joinState', (data) => {
+                        console.log('sc_joinState', data.avatar)
+                        for (let i = 0; i < 4; i++) {
+                            let p = this.pickArr[i]
+                            p.out = !data.joinState[i + 1]
+                            if (data.joinState[i + 1]) {
+                                addSysText(this.joinHint[i].replace('$p', this.player))
+                            }
                         }
                     })
                     .on('sc_callState', (data) => {
                         for (let i = 0; i < 4; i++) {
                             let p = this.pickArr[i]
                             p.call = false
-                            if (data.callState == (i + 1))
+                            if (data.callState == (i + 1)) {
                                 p.call = true
+                                addSysText(this.callHint[i].replace('$p', this.player))
+                            }
                         }
                     })
 
@@ -177,7 +204,7 @@
                             this.picked[i] = true
                             if (this.textArr.length >= 7)
                                 this.textArr.shift()
-                            this.textArr.push(this.pickHint[i] + ' ' + this.player)
+                            this.textArr.push(this.pickHint[i].replace('$p', this.player))
                         }
                     }
                 })

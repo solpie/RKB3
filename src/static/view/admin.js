@@ -1941,6 +1941,8 @@
 	    sc_pickState: '',
 	    cs_callState: '',
 	    sc_callState: '',
+	    cs_joinState: '',
+	    sc_joinState: '',
 	    cs_showTop5: '',
 	    sc_showTop5: '',
 	    cs_inScreenScore: '',
@@ -2190,6 +2192,7 @@
 	var confFile = null;
 	var reader;
 	var filesInput;
+	var srvData = null;
 	function loadRes(url, callback, isCrossOrigin) {
 	    var req = new XMLHttpRequest();
 	    req.open('GET', WebJsFunc_1.proxy(url), true);
@@ -2214,9 +2217,31 @@
 	        _super.apply(this, arguments);
 	        this.template = __webpack_require__(117);
 	        this.pickState = VueBase_1.VueBase.PROP;
+	        this.playerId = VueBase_1.VueBase.PROP;
+	        this.playerTitle = VueBase_1.VueBase.PROP;
 	        this.methods = {
+	            onLoadConf: function () {
+	                var _this = this;
+	                $.get('/db/pick.json?' + new Date, function (data) {
+	                    console.log('load conf..', data);
+	                    srvData = JSON.parse(data);
+	                    if (Number(_this.playerId)) {
+	                        _this.onInit(srvData);
+	                    }
+	                });
+	            },
 	            onCall: function (zhubo) {
 	                opReq(Command_1.CommandId.cs_callState, { callState: zhubo });
+	            },
+	            onJoin: function (zhubo) {
+	                var j = { '1': false, '2': false, '3': false, '4': false };
+	                if (zhubo > 0) {
+	                    j[zhubo] = true;
+	                }
+	                else {
+	                    j = { '1': true, '2': true, '3': true, '4': true };
+	                }
+	                opReq(Command_1.CommandId.cs_joinState, { joinState: j });
 	            },
 	            onPick: function (zhubo) {
 	                if (zhubo > 0) {
@@ -2228,7 +2253,11 @@
 	                opReq(Command_1.CommandId.cs_pickState, { pickState: this.pickState });
 	            },
 	            onInit: function (data) {
-	                HupuAPI_1.getPlayerInfoFromLiangle(data.player_id, function (res1) {
+	                var _this = this;
+	                var pid = data.player_id;
+	                if (Number(this.playerId) > 0)
+	                    pid = this.playerId;
+	                HupuAPI_1.getPlayerInfoFromLiangle(pid, function (res1) {
 	                    if (res1.data && res1.data.name) {
 	                        var player_1 = res1.data;
 	                        console.log(player_1);
@@ -2236,6 +2265,7 @@
 	                            console.log('load img', imgData);
 	                            data.avatar = imgData.src;
 	                            data.player = player_1.name;
+	                            data.title = _this.playerTitle;
 	                            opReq('cs_data', data);
 	                        });
 	                    }
@@ -2254,25 +2284,29 @@
 	            },
 	            reloadFile: function (e) {
 	                var _this = this;
-	                var _ = function (d) {
-	                    return d.getMinutes() + 'm' + d.getSeconds() + 's';
-	                };
-	                if (!reader) {
-	                    reader = new FileReader();
-	                    reader.addEventListener("load", function (event) {
-	                        var data = JSON.parse(event.target['result']);
-	                        data._ = null;
-	                        console.log("EVENT_ON_FILE", data);
-	                        _this.onInit(data);
-	                    });
+	                if (!srvData) {
+	                    if (!reader) {
+	                        reader = new FileReader();
+	                        reader.addEventListener("load", function (event) {
+	                            var data = JSON.parse(event.target['result']);
+	                            data._ = null;
+	                            console.log("EVENT_ON_FILE", data);
+	                            _this.onInit(data);
+	                        });
+	                    }
+	                    reader.readAsText(confFile, "utf-8");
 	                }
-	                reader.readAsText(confFile, "utf-8");
+	                else {
+	                    this.onInit(srvData);
+	                }
 	            }
 	        };
 	    }
 	    _Pick.prototype.created = function () {
 	        console.log('pick admin');
 	        this.pickState = { '1': false, '2': false, '3': false, '4': false };
+	        this.playerId = "";
+	        this.playerTitle = "";
 	    };
 	    return _Pick;
 	}(VueBase_1.VueBase));
@@ -2283,7 +2317,7 @@
 /* 117 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br> pick:\r\n    <button class=\"button is-primary\" @click=\"onPick(1)\">盼盼</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(2)\">Gary</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(3)\">安妮</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(4)\">堂主</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(0)\">重置</button>\r\n    <br>call:\r\n    <button class=\"button is-primary\" @click=\"onCall(1)\">盼盼</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(2)\">Gary</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(3)\">安妮</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(4)\">堂主</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(0)\">重置</button>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开本地配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onLoadConf\">加载配置</button>\r\n\r\n    <br>\r\n\r\n    <br> 球员player id:\r\n    <input type=\"text\" v-model=\"playerId\" style=\"width: 100px;\"> 冠军title\r\n    <input type=\"text\" v-model=\"playerTitle\" style=\"width: 200px;\">\r\n    <br>\r\n    <br> pick:\r\n    <button class=\"button is-primary\" @click=\"onPick(1)\">盼盼</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(2)\">Gary</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(3)\">安妮</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(4)\">堂主</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(0)\">重置</button>\r\n    <br>\r\n    <br>call:\r\n    <button class=\"button is-primary\" @click=\"onCall(1)\">盼盼</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(2)\">Gary</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(3)\">安妮</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(4)\">堂主</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(0)\">隐藏</button>\r\n    <br>\r\n    <br>加入:\r\n    <button class=\"button is-primary\" @click=\"onJoin(1)\">盼盼</button>\r\n    <button class=\"button is-primary\" @click=\"onJoin(2)\">Gary</button>\r\n    <button class=\"button is-primary\" @click=\"onJoin(3)\">安妮</button>\r\n    <button class=\"button is-primary\" @click=\"onJoin(4)\">堂主</button>\r\n    <button class=\"button is-primary\" @click=\"onJoin(0)\">重置</button>\r\n</div>";
 
 /***/ }
 /******/ ]);

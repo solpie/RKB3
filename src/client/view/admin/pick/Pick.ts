@@ -7,7 +7,7 @@ import { proxy } from '../../utils/WebJsFunc';
 let confFile = null;
 let reader;
 let filesInput;
-
+let srvData = null
 declare let $
 
 
@@ -34,13 +34,37 @@ let opReq = (cmdId: string, param: any) => {
 class _Pick extends VueBase {
     template = require('./pick.html');
     pickState = VueBase.PROP;
+    playerId = VueBase.PROP;
+    playerTitle = VueBase.PROP;
     created() {
         console.log('pick admin');
         this.pickState = { '1': false, '2': false, '3': false, '4': false }
+        this.playerId = ""
+        this.playerTitle = ""
     }
     methods = {
+        onLoadConf() {
+            $.get('/db/pick.json?'+new Date, data => {
+                console.log('load conf..', data)
+                srvData = JSON.parse(data)
+                if (Number(this.playerId)) {
+                    this.onInit(srvData)
+                }
+            })
+        },
         onCall(zhubo) {
             opReq(CommandId.cs_callState, { callState: zhubo })
+        },
+
+        onJoin(zhubo) {
+            let j = { '1': false, '2': false, '3': false, '4': false }
+            if (zhubo > 0) {
+                j[zhubo] = true
+            }
+            else {
+                j = { '1': true, '2': true, '3': true, '4': true }
+            }
+            opReq(CommandId.cs_joinState, { joinState: j })
         },
 
         onPick(zhubo) {
@@ -53,7 +77,11 @@ class _Pick extends VueBase {
             opReq(CommandId.cs_pickState, { pickState: this.pickState })
         },
         onInit(data) {
-            getPlayerInfoFromLiangle(data.player_id, res1 => {
+            let pid = data.player_id
+            if (Number(this.playerId) > 0)
+                pid = this.playerId
+            
+            getPlayerInfoFromLiangle(pid, res1 => {
                 // console.log(res1);
                 if (res1.data && res1.data.name) {
                     let player = res1.data
@@ -62,14 +90,11 @@ class _Pick extends VueBase {
                         console.log('load img', imgData)
                         data.avatar = imgData.src
                         data.player = player.name
+                        data.title = this.playerTitle
                         opReq('cs_data', data)
                     })
                 }
 
-                // createPlayer({
-                //     'player_id': Number(player.player_id),
-                //     'name': player.name,
-                //     'live_name': player.name,
             })
         },
         //
@@ -89,20 +114,21 @@ class _Pick extends VueBase {
         },
 
         reloadFile(e) {
-            let _ = (d) => {
-                return d.getMinutes() + 'm' + d.getSeconds() + 's'
+            if (!srvData) {
+                if (!reader) {
+                    reader = new FileReader();
+                    reader.addEventListener("load", (event) => {
+                        let data = JSON.parse(event.target['result'])
+                        data._ = null
+                        console.log("EVENT_ON_FILE", data);
+                        this.onInit(data)
+                    });
+                }
+                reader.readAsText(confFile, "utf-8");
             }
-
-            if (!reader) {
-                reader = new FileReader();
-                reader.addEventListener("load", (event) => {
-                    let data = JSON.parse(event.target['result'])
-                    data._ = null
-                    console.log("EVENT_ON_FILE", data);
-                    this.onInit(data)
-                });
+            else {
+                this.onInit(srvData)
             }
-            reader.readAsText(confFile, "utf-8");
         }
     }
 

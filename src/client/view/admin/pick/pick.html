@@ -2,18 +2,34 @@
     <input type="file" id="files" accept="*.json" hidden>
     <br>
     <br>
-    <button class="button is-primary" @click="onFile">打开配置</button>
+    <button class="button is-primary" @click="onFile">打开本地配置</button>
     <button class="button is-primary" id="reloadFile" @click="reloadFile">reload</button>
+    <button class="button is-primary" @click="onLoadConf">加载配置</button>
+
+    <br>
+
+    <br> 球员player id:
+    <input type="text" v-model="playerId" style="width: 100px;"> 冠军title
+    <input type="text" v-model="playerTitle" style="width: 200px;">
+    <br>
     <br> pick:
     <button class="button is-primary" @click="onPick(1)">盼盼</button>
     <button class="button is-primary" @click="onPick(2)">Gary</button>
     <button class="button is-primary" @click="onPick(3)">安妮</button>
     <button class="button is-primary" @click="onPick(4)">堂主</button>
     <button class="button is-primary" @click="onPick(0)">重置</button>
+    <br>
     <br>call:
     <button class="button is-primary" @click="onCall(1)">盼盼</button>
     <button class="button is-primary" @click="onCall(2)">Gary</button>
     <button class="button is-primary" @click="onCall(3)">安妮</button>
     <button class="button is-primary" @click="onCall(4)">堂主</button>
-    <button class="button is-primary" @click="onCall(0)">重置</button>
+    <button class="button is-primary" @click="onCall(0)">隐藏</button>
+    <br>
+    <br>加入:
+    <button class="button is-primary" @click="onJoin(1)">盼盼</button>
+    <button class="button is-primary" @click="onJoin(2)">Gary</button>
+    <button class="button is-primary" @click="onJoin(3)">安妮</button>
+    <button class="button is-primary" @click="onJoin(4)">堂主</button>
+    <button class="button is-primary" @click="onJoin(0)">重置</button>
 </div>
