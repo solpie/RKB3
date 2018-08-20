@@ -8,7 +8,7 @@
             top: 0px;
             z-index: 0;
         }
-        
+
         .staticImg {
             position: absolute;
             padding: 0px;
@@ -18,11 +18,11 @@
             height: 250px;
             z-index: -1;
         }
-        
+
         .pick-call-def {
             display: none;
         }
-        
+
         .pick-call-show {
             position: absolute;
             padding: 0px;
@@ -30,39 +30,39 @@
             top: 0px;
             display: block;
         }
-        
+
         .pick-def {
             position: absolute;
             padding: 0px;
             left: 0px;
             top: 0px;
         }
-        
+
         .pick-def-up {
             position: absolute;
             padding: 0px;
             left: 0px;
             top: -27px;
         }
-        
+
         .pick-state {
             position: absolute;
             padding: 0px;
             top: 27px;
             display: none;
         }
-        
+
         @keyframes blinker {
             50% {
                 opacity: 0;
             }
         }
-        
+
         .pick-blink {
             animation: blinker 1s linear infinite;
             display: block
         }
-        
+
         .flow {
             position: absolute;
             padding: 0px;
@@ -71,7 +71,7 @@
             width: 1300px;
             font-family: "微软雅黑";
         }
-        
+
         .title {
             position: absolute;
             padding: 0px;
@@ -81,17 +81,17 @@
             text-align: center;
             font-family: "微软雅黑";
         }
-        
+
         .blue {
             color: #003da7;
             text-align: center;
         }
-        
+
         .white {
             color: #fff;
             font-family: "微软雅黑";
         }
-        
+
         body {
             padding: 0;
             margin: 0;
@@ -129,7 +129,7 @@
     </div>
 
     <script>
-        var _p = function(x, y) {
+        var _p = function (x, y) {
             return 'left:' + x + 'px;' + 'top:' + y + 'px;'
         }
         var app = new Vue({
@@ -145,7 +145,7 @@
                 avatar: '',
                 title: ''
             },
-            created: function() {
+            created: function () {
                 for (let i = 0; i < 4; i++) {
                     this.pickArr.push({
                         state: false,
@@ -186,6 +186,8 @@
                                 addSysText(this.joinHint[i].replace('$p', this.player))
                             }
                         }
+                        if (data.isReset)
+                            this.textArr = []
                     })
                     .on('sc_callState', (data) => {
                         for (let i = 0; i < 4; i++) {
@@ -198,20 +200,20 @@
                         }
                     })
 
-                .on('sc_pickState', (data) => {
-                    console.log('sc_pickState', data)
-                    for (let i = 0; i < 4; i++) {
-                        let p = this.pickArr[i]
-                        p.state = data.pickState[i + 1]
-                        if (p.state && this.pickHint[i] && !this.picked[i]) {
-                            this.picked[i] = true
-                            if (this.textArr.length >= 7)
-                                this.textArr.shift()
-                            this.textArr.push(this.pickHint[i].replace('$p', this.player))
-                        }
+                    .on('sc_pickState', (data) => {
+                        console.log('sc_pickState', data)
+                        for (let i = 0; i < 4; i++) {
+                            let p = this.pickArr[i]
+                            p.state = data.pickState[i + 1]
+                            if (p.state && this.pickHint[i] && !this.picked[i]) {
+                                this.picked[i] = true
+                                if (this.textArr.length >= 7)
+                                    this.textArr.shift()
+                                this.textArr.push(this.pickHint[i].replace('$p', this.player))
+                            }
 
-                    }
-                })
+                        }
+                    })
             }
         })
     </script>

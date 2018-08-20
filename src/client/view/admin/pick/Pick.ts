@@ -44,7 +44,7 @@ class _Pick extends VueBase {
     }
     methods = {
         onLoadConf() {
-            $.get('/db/pick.json?'+new Date, data => {
+            $.get('/db/pick.json?' + new Date, data => {
                 console.log('load conf..', data)
                 srvData = JSON.parse(data)
                 if (Number(this.playerId)) {
@@ -64,7 +64,7 @@ class _Pick extends VueBase {
             else {
                 j = { '1': true, '2': true, '3': true, '4': true }
             }
-            opReq(CommandId.cs_joinState, { joinState: j })
+            opReq(CommandId.cs_joinState, { joinState: j, isReset: zhubo == 0 })
         },
 
         onPick(zhubo) {
@@ -80,7 +80,7 @@ class _Pick extends VueBase {
             let pid = data.player_id
             if (Number(this.playerId) > 0)
                 pid = this.playerId
-            
+
             getPlayerInfoFromLiangle(pid, res1 => {
                 // console.log(res1);
                 if (res1.data && res1.data.name) {

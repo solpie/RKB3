@@ -112,6 +112,7 @@ class HomeView extends VueBase {
             { title: "直播间面板", url: `/panel/#/studio/ob/` },
             { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
             { title: "八强面板", url: `/panel/#/ol/ob/${gameId}?panel=bracket` },
+            { title: "战队选择面板", url: `/html/pick/pick.html` },
             // { title: "小组面板", url: `/panel/#/ol/ob/${gameId}?panel=group` },
 
             // { title: "比分面板（蓝色）", url: getScorePanelUrl(gameId, true) + '&m=1' },
