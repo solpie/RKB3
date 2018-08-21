@@ -45,8 +45,11 @@ class Section2 extends PIXI.Container {
             g.playerArr.push(p1)
             g.playerArr.push(p2)
             g['group'] = [p1, p2]
-            this.addChild(p1)
-            this.addChild(p2)
+            if(i!=2)
+            {
+                this.addChild(p1)
+                this.addChild(p2)
+            }
             //test
             if (isTest)
                 this.test(p1, p2)
@@ -55,7 +58,7 @@ class Section2 extends PIXI.Container {
         let pWin7 = new BracketPlayerV3(true, [lNameX, lScoreX])
         pWin7.x = 935
         pWin7.y = 878
-        this.addChild(pWin7)
+        // this.addChild(pWin7)
         pWin7.hideScore()
         this.pWin7 = pWin7
         // pWin7.setFont({fontSize:'50px'})

@@ -51,8 +51,8 @@
 	__webpack_require__(5);
 	__webpack_require__(16);
 	__webpack_require__(18);
-	var home_1 = __webpack_require__(37);
-	var Navbar_1 = __webpack_require__(39);
+	var home_1 = __webpack_require__(39);
+	var Navbar_1 = __webpack_require__(41);
 	var routes = [
 	    {
 	        path: '/', name: 'home',
@@ -87,8 +87,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!../../../node_modules/._css-loader@0.25.0@css-loader/index.js?root=.!./bulma.min.css", function() {
-				var newContent = require("!!../../../node_modules/._css-loader@0.25.0@css-loader/index.js?root=.!./bulma.min.css");
+			module.hot.accept("!!../../../node_modules/_css-loader@0.25.0@css-loader/index.js?root=.!./bulma.min.css", function() {
+				var newContent = require("!!../../../node_modules/_css-loader@0.25.0@css-loader/index.js?root=.!./bulma.min.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -434,10 +434,27 @@
 		Author Tobias Koppers @sokra
 	*/
 	module.exports = function(src) {
-		if (typeof execScript !== "undefined")
-			execScript(src);
-		else
-			eval.call(null, src);
+		function log(error) {
+			(typeof console !== "undefined")
+			&& (console.error || console.log)("[Script Loader]", error);
+		}
+	
+		// Check for IE =< 8
+		function isIE() {
+			return typeof attachEvent !== "undefined" && typeof addEventListener === "undefined";
+		}
+	
+		try {
+			if (typeof execScript !== "undefined" && isIE()) {
+				execScript(src);
+			} else if (typeof eval !== "undefined") {
+				eval.call(null, src);
+			} else {
+				log("EvalError: No eval function available");
+			}
+		} catch (error) {
+			log(error);
+		}
 	}
 
 
@@ -531,12 +548,12 @@
 	    };
 	    VueBase.prototype.mounted = function () {
 	    };
+	    VueBase.PROP = { v: null, _: null };
+	    VueBase.Dict = { v: {}, _: null };
+	    VueBase.Number = { v: 0, _: null };
+	    VueBase.String = { v: "", _: null };
 	    return VueBase;
 	}());
-	VueBase.PROP = { v: null, _: null };
-	VueBase.Dict = { v: {}, _: null };
-	VueBase.Number = { v: 0, _: null };
-	VueBase.String = { v: "", _: null };
 	exports.VueBase = VueBase;
 
 
@@ -553,7 +570,9 @@
 /* 34 */,
 /* 35 */,
 /* 36 */,
-/* 37 */
+/* 37 */,
+/* 38 */,
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -583,7 +602,7 @@
 	    __extends(HomeView, _super);
 	    function HomeView() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(38);
+	        _this.template = __webpack_require__(40);
 	        _this.dmkArrMap = VueBase_1.VueBase.PROP;
 	        _this.serverUrl = VueBase_1.VueBase.PROP;
 	        _this.methods = {
@@ -619,13 +638,13 @@
 
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class=\"container\">\r\n    dmk leecher\r\n    <br>{{serverUrl}}\r\n    <br>\r\n    <button class=\"button\" @click=\"onTest\">test dmk</button>\r\n    <div class=\"box\" v-for=\"item in dmkArrMap\">\r\n        <strong>{{item.host}}</strong>\r\n        <li v-for=\"dmk in item.dmkArr\">\r\n            <strong>{{dmk.user}}</strong>\r\n            <p class=\"subtitle\">\r\n                {{dmk.content}}\r\n            </p>\r\n        </li>\r\n    </div>\r\n</div>";
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -634,12 +653,12 @@
 	    props: {
 	        active: {},
 	    },
-	    template: __webpack_require__(40)
+	    template: __webpack_require__(42)
 	};
 
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ (function(module, exports) {
 
 	module.exports = "<nav class=\"nav has-shadow\">\r\n    <div class=\"container\">\r\n        <div class=\"nav-left\">\r\n            <a class=\"nav-item\" :class=\"{active: active === ''}\">\r\n                <i class=\"home icon\"></i>\r\n                <router-link :to=\"{ name: 'home'}\">Home</router-link>\r\n            </a>\r\n            <!--<a class=\"nav-item\" :class=\"{active: active === 'player'}\">\r\n                <i class=\"grid layout icon\"></i>\r\n                <router-link :to=\"{ name: 'player'}\">玩家管理</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'rank'}\">\r\n                <router-link :to=\"{ name: 'rank'}\">天梯排名</router-link>\r\n            </a>-->\r\n        </div>\r\n\r\n        <!--<div class=\"nav-right\">\r\n            <a class=\"nav-item\" :class=\"{active: active === 'setting'}\">\r\n                <router-link :to=\"{ name: 'setting'}\">setting</router-link>\r\n            </a>\r\n        </div>-->\r\n    </div>\r\n\r\n\r\n</nav>";
