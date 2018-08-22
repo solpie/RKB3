@@ -52,10 +52,9 @@
 	__webpack_require__(8);
 	__webpack_require__(16);
 	__webpack_require__(18);
-	var stage3point_1 = __webpack_require__(47);
-	var KOA_1 = __webpack_require__(52);
-	var Stage5v5_1 = __webpack_require__(66);
-	var StageOnlineView_1 = __webpack_require__(77);
+	var KOA_1 = __webpack_require__(47);
+	var Stage5v5_1 = __webpack_require__(64);
+	var StageOnlineView_1 = __webpack_require__(75);
 	var routes = [
 	    {
 	        path: '/koa/:op',
@@ -64,10 +63,6 @@
 	    {
 	        path: '/studio/:op',
 	        components: { default: Stage5v5_1.studio }
-	    },
-	    {
-	        path: '/3/:op',
-	        components: { default: stage3point_1.stage3point }
 	    },
 	    {
 	        path: '/ol/:op/:game_id',
@@ -1798,547 +1793,16 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var const_1 = __webpack_require__(29);
+	var Ready_1 = __webpack_require__(48);
 	var JsFunc_1 = __webpack_require__(23);
+	var HP_1 = __webpack_require__(51);
 	var HupuAPI_1 = __webpack_require__(26);
-	var BasePanelView_1 = __webpack_require__(48);
-	var WebJsFunc_1 = __webpack_require__(27);
-	var VueBase_1 = __webpack_require__(24);
-	var PixiEx_1 = __webpack_require__(50);
-	var Game3 = (function (_super) {
-	    __extends(Game3, _super);
-	    function Game3(parent, playerDocArr) {
-	        var _this = _super.call(this) || this;
-	        _this.opReq = function (cmdId, param, callback) {
-	            $.ajax({
-	                url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
-	                type: 'post',
-	                data: JSON.stringify(param),
-	                headers: { "Content-Type": "application/json" },
-	                dataType: 'json',
-	                success: callback
-	            });
-	        };
-	        parent.addChild(_this);
-	        var bg = PixiEx_1.newBitmap({ x: 220, y: 0, url: "/img/panel/3/title.png" });
-	        _this.addChild(bg);
-	        var gidx = {};
-	        gidx['0'] = gidx['4'] = 68;
-	        gidx['1'] = gidx['5'] = gidx['0'] + 275;
-	        gidx['2'] = gidx['6'] = 883;
-	        gidx['3'] = gidx['7'] = gidx['6'] + 275;
-	        var flipIdx = {};
-	        flipIdx['2'] = -1;
-	        flipIdx['3'] = -1;
-	        flipIdx['6'] = -1;
-	        flipIdx['7'] = -1;
-	        var y;
-	        var avtArr = [];
-	        for (var i = 0; i < 8; i++) {
-	            for (var j = 0; j < 4; j++) {
-	                i < 4 ? y = 2 : y = 65;
-	                var avtBg = PixiEx_1.newBitmap({ x: gidx[i] + j * 65, y: y, url: '/img/panel/koa/pickup/avatar.png' });
-	                avtBg.width = 60;
-	                avtBg.height = 60;
-	                var msk = _this.makeMsk(avtBg.x, avtBg.y);
-	                bg.addChild(msk);
-	                var avt = PixiEx_1.newBitmap({ x: avtBg.x, y: avtBg.y, url: HupuAPI_1._avatar(playerDocArr[i * 4 + j].avatar) });
-	                avt['id'] = playerDocArr[i * 4 + j].id;
-	                avt['mx'] = avtBg.x;
-	                avtArr.push(avt);
-	                avt.width = 56;
-	                avt.height = 56;
-	                if (flipIdx[i]) {
-	                    avt.x += 56;
-	                    avt.scale.x = -1;
-	                }
-	                bg.addChild(avt);
-	                avt.mask = msk;
-	                bg.addChild(avtBg);
-	            }
-	        }
-	        _this.avtArr = avtArr;
-	        document.onclick = function (e) {
-	            console.log('click ', e);
-	            var mx = e.clientX - bg.x;
-	            var my = e.clientY - bg.y;
-	            for (var _i = 0, avtArr_1 = avtArr; _i < avtArr_1.length; _i++) {
-	                var a = avtArr_1[_i];
-	                if (a.mx < mx && a.mx + a.width > mx && a.y < my && a.y + a.height > my) {
-	                    _this.opReq('cs_3pointTogglePlayer', { _: null, id: a.id }, function () {
-	                    });
-	                }
-	            }
-	        };
-	        return _this;
-	    }
-	    Game3.prototype.makeMsk = function (ax, ay) {
-	        var r = 13, ax, ay;
-	        var msk = new PIXI.Graphics();
-	        msk.beginFill(0xff0000, 0.5);
-	        msk.moveTo(17, 4);
-	        msk.lineTo(72, 4);
-	        msk.lineTo(72 + r, 4 + r);
-	        msk.lineTo(72 + r, 72);
-	        msk.lineTo(72, 72 + r);
-	        msk.lineTo(17, 72 + r);
-	        msk.lineTo(17 - r, 72);
-	        msk.lineTo(17 - r, 4 + r);
-	        msk.x = ax;
-	        msk.y = ay;
-	        msk.width = 56;
-	        msk.height = 56;
-	        return msk;
-	    };
-	    Game3.prototype.togglePlayer = function (playerId) {
-	        for (var _i = 0, _a = this.avtArr; _i < _a.length; _i++) {
-	            var p = _a[_i];
-	            if (p.id == playerId) {
-	                p.visible = !p.visible;
-	            }
-	        }
-	    };
-	    return Game3;
-	}(PIXI.Container));
-	var Stage3point = (function (_super) {
-	    __extends(Stage3point, _super);
-	    function Stage3point() {
-	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(51);
-	        _this.isOp = VueBase_1.VueBase.PROP;
-	        VueBase_1.VueBase.initProps(_this);
-	        return _this;
-	    }
-	    Stage3point.prototype.created = function () {
-	        var _this = this;
-	        this.isOp = this.$route.params['op'] == 'op';
-	        if (this.isOp) {
-	            WebJsFunc_1.dynamicLoading.css('/css/bulma.min.css');
-	        }
-	        HupuAPI_1.getPlayerDoc(function (playerDocArr) {
-	            var playerMap = {};
-	            playerDocArr = playerDocArr.sort(JsFunc_1.ascendingProp('id'));
-	            _this.game3 = new Game3(BasePanelView_1.BasePanelView.initPixi(), playerDocArr);
-	        });
-	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
-	        localWs.on('connect', function (msg) {
-	            console.log('connect', window.location.host);
-	        })
-	            .on("sc_3pointTogglePlayer", function (data) {
-	            console.log("sc_3pointTogglePlayer", data);
-	            _this.game3.togglePlayer(data.id);
-	        });
-	    };
-	    Stage3point.prototype.setPlayerState = function (playerId, state) {
-	    };
-	    return Stage3point;
-	}(VueBase_1.VueBase));
-	exports.stage3point = new Stage3point();
-
-
-/***/ }),
-/* 48 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var EventDispatcher_1 = __webpack_require__(49);
-	var const_1 = __webpack_require__(29);
-	var BasePanelView = (function (_super) {
-	    __extends(BasePanelView, _super);
-	    function BasePanelView(pid) {
-	        var _this = _super.call(this) || this;
-	        _this.opReq = function (cmdId, param, callback) {
-	            $.post("/panel/" + pid + "/" + cmdId, param, callback);
-	        };
-	        return _this;
-	    }
-	    BasePanelView.initPixi = function () {
-	        var renderer = new PIXI.autoDetectRenderer(const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT, { antialias: false, transparent: true, resolution: 1 }, false);
-	        document.body.insertBefore(renderer.view, document.getElementById("panel"));
-	        renderer.stage = new PIXI.Container();
-	        renderer.backgroundColor = 0x00000000;
-	        renderer.renderStage = function (time) {
-	            requestAnimationFrame(renderer.renderStage);
-	            TWEEN.update(time);
-	            renderer.render(renderer.stage);
-	        };
-	        renderer.renderStage();
-	        return renderer.stage;
-	    };
-	    BasePanelView.prototype.show = function () {
-	    };
-	    BasePanelView.prototype.hide = function () {
-	    };
-	    return BasePanelView;
-	}(EventDispatcher_1.EventDispatcher));
-	exports.BasePanelView = BasePanelView;
-
-
-/***/ }),
-/* 49 */
-/***/ (function(module, exports) {
-
-	"use strict";
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var EventDispatcher = (function () {
-	    function EventDispatcher() {
-	        this.isSort = false;
-	        this._func = {};
-	        this._funcId = 0;
-	    }
-	    EventDispatcher.prototype.on = function (type, func) {
-	        if (!this._func[type])
-	            this._func[type] = [];
-	        this._funcId++;
-	        this._func[type].push({ func: func, id: this._funcId });
-	        return this._funcId;
-	    };
-	    EventDispatcher.prototype.emit = function (type, param) {
-	        if (this._func[type])
-	            for (var i = 0; i < this._func[type].length; ++i) {
-	                var f = this._func[type][i];
-	                if (f)
-	                    if (f.func(param))
-	                        break;
-	            }
-	    };
-	    EventDispatcher.prototype.del = function (type, funcId) {
-	        if (funcId === void 0) { funcId = -1; }
-	        if (this._func[type])
-	            if (funcId < 0) {
-	                this._func[type] = [];
-	            }
-	            else {
-	                for (var i = 0; i < this._func[type].length; ++i) {
-	                    var f = this._func[type][i];
-	                    if (f) {
-	                        if (f.id == funcId) {
-	                            delete this._func[type][i];
-	                            break;
-	                        }
-	                    }
-	                }
-	            }
-	    };
-	    EventDispatcher.prototype.removeAll = function () {
-	        this._func = {};
-	    };
-	    return EventDispatcher;
-	}());
-	exports.EventDispatcher = EventDispatcher;
-
-
-/***/ }),
-/* 50 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var JsFunc_1 = __webpack_require__(23);
-	var WebJsFunc_1 = __webpack_require__(27);
-	var const_1 = __webpack_require__(29);
-	function imgToTex(img) {
-	    return new PIXI.Texture(new PIXI.BaseTexture(img));
-	}
-	exports.imgToTex = imgToTex;
-	function makeSprite(parameters) {
-	    var url = parameters.url;
-	    var isCrossOrigin = parameters.isCrossOrigin;
-	    var callback = parameters.callback;
-	    var s = new PIXI.Sprite();
-	    loadRes(url, function (img) {
-	        s.texture = imgToTex(img);
-	        if (callback)
-	            callback(s);
-	    }, isCrossOrigin);
-	    return s;
-	}
-	function loadRes(url, callback, isCrossOrigin) {
-	    if (isCrossOrigin) {
-	        var req_1 = new XMLHttpRequest();
-	        req_1.open('GET', WebJsFunc_1.proxy(url), true);
-	        req_1.onload = function (res) {
-	            JsFunc_1.loadImg(req_1.responseText, callback);
-	        };
-	        req_1.send();
-	    }
-	    else {
-	        JsFunc_1.loadImg(url, callback);
-	    }
-	}
-	exports.loadRes = loadRes;
-	var _nullTex = imgToTex(null);
-	function makeTilingSprite(options) {
-	    var width = options.width;
-	    var height = options.height;
-	    var url = options.url;
-	    var callback = options.callback;
-	    var isCrossOrigin = options.isCrossOrigin;
-	    loadRes(url, function (img) {
-	        t.texture = imgToTex(img);
-	        if (callback)
-	            callback(t);
-	    }, isCrossOrigin);
-	    var t = new PIXI.extras.TilingSprite(_nullTex, width, height);
-	    return t;
-	}
-	function newBitmap(options) {
-	    var isTiling = options.isTiling;
-	    var s;
-	    if (isTiling) {
-	        s = makeTilingSprite(options);
-	    }
-	    else {
-	        s = makeSprite(options);
-	    }
-	    s.x = options.x ? options.x : 0;
-	    s.y = options.y ? options.y : 0;
-	    return s;
-	}
-	exports.newBitmap = newBitmap;
-	var BitmapText = (function (_super) {
-	    __extends(BitmapText, _super);
-	    function BitmapText(options) {
-	        var _this = _super.call(this) || this;
-	        _this.mapSprite = {};
-	        var text = options.text;
-	        _this.animations = options.animations;
-	        _this.frames = options.frames;
-	        _this.digis = {};
-	        _this._digiCtn = new PIXI.Container;
-	        _this.addChild(_this._digiCtn);
-	        _this.text = text;
-	        if (options.texture) {
-	            _this._tex = options.texture;
-	            _this.updateTex();
-	        }
-	        else if (options.img) {
-	            loadRes(options.img, function (img) {
-	                _this._tex = imgToTex(img);
-	                _this.updateTex();
-	            });
-	        }
-	        return _this;
-	    }
-	    BitmapText.prototype.updateTex = function () {
-	        for (var k in this.digis) {
-	            var digi = this.digis[k];
-	            digi['sp'].texture = this._tex;
-	        }
-	    };
-	    Object.defineProperty(BitmapText.prototype, "text", {
-	        set: function (v) {
-	            var digiIdx = 0;
-	            var num = v.charAt(digiIdx);
-	            for (var i in this.digis) {
-	                var df = this.digis[i];
-	                df.visible = false;
-	            }
-	            while (num != '') {
-	                var idx = this.animations[num];
-	                if (idx > -1) {
-	                    var frame = this.frames[idx];
-	                    var ofsX = frame[0];
-	                    var ofsY = frame[1];
-	                    if (!this._frameWidth)
-	                        this._frameWidth = frame[2];
-	                    if (!this._frameHeight)
-	                        this._frameHeight = frame[3];
-	                    if (!this.digis[digiIdx]) {
-	                        this.digis[digiIdx] = this._makeFrame(this._frameWidth, this._frameHeight);
-	                    }
-	                    var digiFrame = this.digis[digiIdx];
-	                    digiFrame.visible = true;
-	                    digiFrame.x = digiIdx * this._frameWidth;
-	                    digiFrame['idx'] = digiIdx;
-	                    digiFrame['sp'].x = -ofsX;
-	                    digiFrame['sp'].y = -ofsY;
-	                    digiIdx += 1;
-	                    num = v.charAt(digiIdx);
-	                }
-	            }
-	            this._digiWidth = (digiIdx - 1) * this._frameWidth;
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    Object.defineProperty(BitmapText.prototype, "align", {
-	        set: function (align) {
-	            console.log('align right', this._digiWidth);
-	            if (align == 'left') {
-	                this._digiCtn.x = 0;
-	            }
-	            else if (align == 'center') {
-	                this._digiCtn.x = -this._digiWidth * .5;
-	            }
-	            else if (align == 'right') {
-	                this._digiCtn.x = -this._digiWidth;
-	            }
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    BitmapText.prototype._makeFrame = function (width, height) {
-	        var ctn = new PIXI.Container;
-	        this._digiCtn.addChild(ctn);
-	        var msk = new PIXI.Graphics;
-	        msk.beginFill(0xff0000)
-	            .drawRect(0, 0, width, height)
-	            .endFill();
-	        ctn.addChild(msk);
-	        var s = new PIXI.Sprite(this._tex);
-	        ctn.addChild(s);
-	        s.mask = msk;
-	        ctn['sp'] = s;
-	        return ctn;
-	    };
-	    return BitmapText;
-	}(PIXI.Container));
-	exports.BitmapText = BitmapText;
-	exports.newWhiteMask = function (url) {
-	    var sp = newBitmap({
-	        url: url, callback: function () {
-	            var filter = new PIXI.filters.ColorMatrixFilter();
-	            filter.brightness(100);
-	            sp.filters = [filter];
-	            sp.cacheAsBitmap = true;
-	        }
-	    });
-	    return sp;
-	};
-	exports.makeColorRatio = function (colorArr, ratioArr) {
-	    var a = [];
-	    for (var i = 0; i < colorArr.length; i++) {
-	        var col = colorArr[i];
-	        for (var j = 0; j < ratioArr[i]; j++) {
-	            a.push(col);
-	        }
-	    }
-	    return a;
-	};
-	var TextEx = (function (_super) {
-	    __extends(TextEx, _super);
-	    function TextEx() {
-	        return _super !== null && _super.apply(this, arguments) || this;
-	    }
-	    Object.defineProperty(TextEx.prototype, "text", {
-	        set: function (t) {
-	            this._text = t;
-	            if (this.align == 'center') {
-	            }
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    return TextEx;
-	}(PIXI.Text));
-	exports.setPivot = function (obj, x, y) {
-	    obj.pivot = new PIXI.Point(x, y);
-	    obj.x += x;
-	    obj.y += y;
-	};
-	exports.PIXI_MOUSE_EVENT = {
-	    mousedown: 'mousedown',
-	    click: 'click',
-	};
-	function setScale(obj, s) {
-	    obj.scale.x = obj.scale.y = s;
-	}
-	exports.setScale = setScale;
-	exports.newModal = function (alpha, width, height, color) {
-	    if (alpha === void 0) { alpha = 0.8; }
-	    if (!width)
-	        width = const_1.ViewConst.STAGE_WIDTH;
-	    if (!height)
-	        height = const_1.ViewConst.STAGE_HEIGHT;
-	    var m = new PIXI.Graphics();
-	    var c = 0x000000;
-	    if (color)
-	        c = color;
-	    m.beginFill(c)
-	        .drawRect(0, 0, width, height)
-	        .alpha = alpha;
-	    return m;
-	};
-	function polygon(g, radius, sides) {
-	    if (sides < 3)
-	        return;
-	    var a = (Math.PI * 2) / sides;
-	    g.moveTo(radius, 0);
-	    for (var i = 1; i < sides; i++) {
-	        g.lineTo(radius * Math.cos(a * i), radius * Math.sin(a * i));
-	    }
-	}
-	exports.polygon = polygon;
-	function gradientG(g, x, y, w, h, col1, col2) {
-	    var c1 = [col1 >> 16, (col1 & 0x00ff00) >> 8, col1 & 0x0000ff];
-	    var c2 = [col2 >> 16, (col2 & 0x00ff00) >> 8, col2 & 0x0000ff];
-	    var colorR, colorG, colorB;
-	    for (var i = 0; i < h; i++) {
-	        colorR = c1[0] - Math.floor((c1[0] - c2[0]) * i / h);
-	        colorG = c1[1] - Math.floor((c1[1] - c2[1]) * i / h);
-	        colorB = c1[2] - Math.floor((c1[2] - c2[2]) * i / h);
-	        g.beginFill((colorR << 16) + (colorG << 8) + colorB);
-	        g.drawRect(x, y + i, w, 1);
-	    }
-	    g.endFill();
-	}
-	exports.gradientG = gradientG;
-
-
-/***/ }),
-/* 51 */
-/***/ (function(module, exports) {
-
-	module.exports = "<div v-if=\"isOp\">\r\n    stage 3 point\r\n</div>";
-
-/***/ }),
-/* 52 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var Ready_1 = __webpack_require__(53);
-	var JsFunc_1 = __webpack_require__(23);
-	var HP_1 = __webpack_require__(55);
-	var HupuAPI_1 = __webpack_require__(26);
-	var PickupAnimation_1 = __webpack_require__(62);
+	var PickupAnimation_1 = __webpack_require__(58);
 	var Command_1 = __webpack_require__(30);
 	var const_1 = __webpack_require__(29);
 	var WebJsFunc_1 = __webpack_require__(27);
-	var Pickup_1 = __webpack_require__(64);
-	var BasePanelView_1 = __webpack_require__(48);
+	var Pickup_1 = __webpack_require__(60);
+	var BasePanelView_1 = __webpack_require__(61);
 	var VueBase_1 = __webpack_require__(24);
 	var pickupScene;
 	var canvasStage;
@@ -2346,7 +1810,7 @@
 	    __extends(KOA, _super);
 	    function KOA() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(65);
+	        _this.template = __webpack_require__(63);
 	        _this.isOp = VueBase_1.VueBase.PROP;
 	        _this.playerDocArr = VueBase_1.VueBase.PROP;
 	        _this.isPickup1p = VueBase_1.VueBase.PROP;
@@ -2661,7 +2125,7 @@
 
 
 /***/ }),
-/* 53 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2676,8 +2140,8 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(50);
-	var TweenEx_1 = __webpack_require__(54);
+	var PixiEx_1 = __webpack_require__(49);
+	var TweenEx_1 = __webpack_require__(50);
 	var const_1 = __webpack_require__(29);
 	var Ready = (function (_super) {
 	    __extends(Ready, _super);
@@ -2880,7 +2344,275 @@
 
 
 /***/ }),
-/* 54 */
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var JsFunc_1 = __webpack_require__(23);
+	var WebJsFunc_1 = __webpack_require__(27);
+	var const_1 = __webpack_require__(29);
+	function imgToTex(img) {
+	    return new PIXI.Texture(new PIXI.BaseTexture(img));
+	}
+	exports.imgToTex = imgToTex;
+	function makeSprite(parameters) {
+	    var url = parameters.url;
+	    var isCrossOrigin = parameters.isCrossOrigin;
+	    var callback = parameters.callback;
+	    var s = new PIXI.Sprite();
+	    loadRes(url, function (img) {
+	        s.texture = imgToTex(img);
+	        if (callback)
+	            callback(s);
+	    }, isCrossOrigin);
+	    return s;
+	}
+	function loadRes(url, callback, isCrossOrigin) {
+	    if (isCrossOrigin) {
+	        var req_1 = new XMLHttpRequest();
+	        req_1.open('GET', WebJsFunc_1.proxy(url), true);
+	        req_1.onload = function (res) {
+	            JsFunc_1.loadImg(req_1.responseText, callback);
+	        };
+	        req_1.send();
+	    }
+	    else {
+	        JsFunc_1.loadImg(url, callback);
+	    }
+	}
+	exports.loadRes = loadRes;
+	var _nullTex = imgToTex(null);
+	function makeTilingSprite(options) {
+	    var width = options.width;
+	    var height = options.height;
+	    var url = options.url;
+	    var callback = options.callback;
+	    var isCrossOrigin = options.isCrossOrigin;
+	    loadRes(url, function (img) {
+	        t.texture = imgToTex(img);
+	        if (callback)
+	            callback(t);
+	    }, isCrossOrigin);
+	    var t = new PIXI.extras.TilingSprite(_nullTex, width, height);
+	    return t;
+	}
+	function newBitmap(options) {
+	    var isTiling = options.isTiling;
+	    var s;
+	    if (isTiling) {
+	        s = makeTilingSprite(options);
+	    }
+	    else {
+	        s = makeSprite(options);
+	    }
+	    s.x = options.x ? options.x : 0;
+	    s.y = options.y ? options.y : 0;
+	    return s;
+	}
+	exports.newBitmap = newBitmap;
+	var BitmapText = (function (_super) {
+	    __extends(BitmapText, _super);
+	    function BitmapText(options) {
+	        var _this = _super.call(this) || this;
+	        _this.mapSprite = {};
+	        var text = options.text;
+	        _this.animations = options.animations;
+	        _this.frames = options.frames;
+	        _this.digis = {};
+	        _this._digiCtn = new PIXI.Container;
+	        _this.addChild(_this._digiCtn);
+	        _this.text = text;
+	        if (options.texture) {
+	            _this._tex = options.texture;
+	            _this.updateTex();
+	        }
+	        else if (options.img) {
+	            loadRes(options.img, function (img) {
+	                _this._tex = imgToTex(img);
+	                _this.updateTex();
+	            });
+	        }
+	        return _this;
+	    }
+	    BitmapText.prototype.updateTex = function () {
+	        for (var k in this.digis) {
+	            var digi = this.digis[k];
+	            digi['sp'].texture = this._tex;
+	        }
+	    };
+	    Object.defineProperty(BitmapText.prototype, "text", {
+	        set: function (v) {
+	            var digiIdx = 0;
+	            var num = v.charAt(digiIdx);
+	            for (var i in this.digis) {
+	                var df = this.digis[i];
+	                df.visible = false;
+	            }
+	            while (num != '') {
+	                var idx = this.animations[num];
+	                if (idx > -1) {
+	                    var frame = this.frames[idx];
+	                    var ofsX = frame[0];
+	                    var ofsY = frame[1];
+	                    if (!this._frameWidth)
+	                        this._frameWidth = frame[2];
+	                    if (!this._frameHeight)
+	                        this._frameHeight = frame[3];
+	                    if (!this.digis[digiIdx]) {
+	                        this.digis[digiIdx] = this._makeFrame(this._frameWidth, this._frameHeight);
+	                    }
+	                    var digiFrame = this.digis[digiIdx];
+	                    digiFrame.visible = true;
+	                    digiFrame.x = digiIdx * this._frameWidth;
+	                    digiFrame['idx'] = digiIdx;
+	                    digiFrame['sp'].x = -ofsX;
+	                    digiFrame['sp'].y = -ofsY;
+	                    digiIdx += 1;
+	                    num = v.charAt(digiIdx);
+	                }
+	            }
+	            this._digiWidth = (digiIdx - 1) * this._frameWidth;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(BitmapText.prototype, "align", {
+	        set: function (align) {
+	            console.log('align right', this._digiWidth);
+	            if (align == 'left') {
+	                this._digiCtn.x = 0;
+	            }
+	            else if (align == 'center') {
+	                this._digiCtn.x = -this._digiWidth * .5;
+	            }
+	            else if (align == 'right') {
+	                this._digiCtn.x = -this._digiWidth;
+	            }
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    BitmapText.prototype._makeFrame = function (width, height) {
+	        var ctn = new PIXI.Container;
+	        this._digiCtn.addChild(ctn);
+	        var msk = new PIXI.Graphics;
+	        msk.beginFill(0xff0000)
+	            .drawRect(0, 0, width, height)
+	            .endFill();
+	        ctn.addChild(msk);
+	        var s = new PIXI.Sprite(this._tex);
+	        ctn.addChild(s);
+	        s.mask = msk;
+	        ctn['sp'] = s;
+	        return ctn;
+	    };
+	    return BitmapText;
+	}(PIXI.Container));
+	exports.BitmapText = BitmapText;
+	exports.newWhiteMask = function (url) {
+	    var sp = newBitmap({
+	        url: url, callback: function () {
+	            var filter = new PIXI.filters.ColorMatrixFilter();
+	            filter.brightness(100);
+	            sp.filters = [filter];
+	            sp.cacheAsBitmap = true;
+	        }
+	    });
+	    return sp;
+	};
+	exports.makeColorRatio = function (colorArr, ratioArr) {
+	    var a = [];
+	    for (var i = 0; i < colorArr.length; i++) {
+	        var col = colorArr[i];
+	        for (var j = 0; j < ratioArr[i]; j++) {
+	            a.push(col);
+	        }
+	    }
+	    return a;
+	};
+	var TextEx = (function (_super) {
+	    __extends(TextEx, _super);
+	    function TextEx() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    Object.defineProperty(TextEx.prototype, "text", {
+	        set: function (t) {
+	            this._text = t;
+	            if (this.align == 'center') {
+	            }
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    return TextEx;
+	}(PIXI.Text));
+	exports.setPivot = function (obj, x, y) {
+	    obj.pivot = new PIXI.Point(x, y);
+	    obj.x += x;
+	    obj.y += y;
+	};
+	exports.PIXI_MOUSE_EVENT = {
+	    mousedown: 'mousedown',
+	    click: 'click',
+	};
+	function setScale(obj, s) {
+	    obj.scale.x = obj.scale.y = s;
+	}
+	exports.setScale = setScale;
+	exports.newModal = function (alpha, width, height, color) {
+	    if (alpha === void 0) { alpha = 0.8; }
+	    if (!width)
+	        width = const_1.ViewConst.STAGE_WIDTH;
+	    if (!height)
+	        height = const_1.ViewConst.STAGE_HEIGHT;
+	    var m = new PIXI.Graphics();
+	    var c = 0x000000;
+	    if (color)
+	        c = color;
+	    m.beginFill(c)
+	        .drawRect(0, 0, width, height)
+	        .alpha = alpha;
+	    return m;
+	};
+	function polygon(g, radius, sides) {
+	    if (sides < 3)
+	        return;
+	    var a = (Math.PI * 2) / sides;
+	    g.moveTo(radius, 0);
+	    for (var i = 1; i < sides; i++) {
+	        g.lineTo(radius * Math.cos(a * i), radius * Math.sin(a * i));
+	    }
+	}
+	exports.polygon = polygon;
+	function gradientG(g, x, y, w, h, col1, col2) {
+	    var c1 = [col1 >> 16, (col1 & 0x00ff00) >> 8, col1 & 0x0000ff];
+	    var c2 = [col2 >> 16, (col2 & 0x00ff00) >> 8, col2 & 0x0000ff];
+	    var colorR, colorG, colorB;
+	    for (var i = 0; i < h; i++) {
+	        colorR = c1[0] - Math.floor((c1[0] - c2[0]) * i / h);
+	        colorG = c1[1] - Math.floor((c1[1] - c2[1]) * i / h);
+	        colorB = c1[2] - Math.floor((c1[2] - c2[2]) * i / h);
+	        g.beginFill((colorR << 16) + (colorG << 8) + colorB);
+	        g.drawRect(x, y + i, w, 1);
+	    }
+	    g.endFill();
+	}
+	exports.gradientG = gradientG;
+
+
+/***/ }),
+/* 50 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -2971,7 +2703,7 @@
 
 
 /***/ }),
-/* 55 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2987,16 +2719,16 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var HupuAPI_1 = __webpack_require__(26);
-	var TextTimer_1 = __webpack_require__(56);
-	var Winner_1 = __webpack_require__(57);
-	var Win_1 = __webpack_require__(58);
-	var St_1 = __webpack_require__(61);
-	var SpriteGroup_1 = __webpack_require__(59);
+	var TextTimer_1 = __webpack_require__(52);
+	var Winner_1 = __webpack_require__(53);
+	var Win_1 = __webpack_require__(54);
+	var St_1 = __webpack_require__(57);
+	var SpriteGroup_1 = __webpack_require__(55);
 	var JsFunc_1 = __webpack_require__(23);
 	var const_1 = __webpack_require__(29);
-	var TweenEx_1 = __webpack_require__(54);
-	var Fx_1 = __webpack_require__(60);
-	var PixiEx_1 = __webpack_require__(50);
+	var TweenEx_1 = __webpack_require__(50);
+	var Fx_1 = __webpack_require__(56);
+	var PixiEx_1 = __webpack_require__(49);
 	var HP = (function (_super) {
 	    __extends(HP, _super);
 	    function HP(stage) {
@@ -3333,7 +3065,7 @@
 
 
 /***/ }),
-/* 56 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3418,7 +3150,7 @@
 
 
 /***/ }),
-/* 57 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3434,8 +3166,8 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var const_1 = __webpack_require__(29);
-	var TweenEx_1 = __webpack_require__(54);
-	var PixiEx_1 = __webpack_require__(50);
+	var TweenEx_1 = __webpack_require__(50);
+	var PixiEx_1 = __webpack_require__(49);
 	var Winner = (function (_super) {
 	    __extends(Winner, _super);
 	    function Winner(parent) {
@@ -3511,7 +3243,7 @@
 
 
 /***/ }),
-/* 58 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3526,12 +3258,12 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var TextTimer_1 = __webpack_require__(56);
+	var TextTimer_1 = __webpack_require__(52);
 	var HupuAPI_1 = __webpack_require__(26);
 	var JsFunc_1 = __webpack_require__(23);
-	var SpriteGroup_1 = __webpack_require__(59);
-	var PixiEx_1 = __webpack_require__(50);
-	var TweenEx_1 = __webpack_require__(54);
+	var SpriteGroup_1 = __webpack_require__(55);
+	var PixiEx_1 = __webpack_require__(49);
+	var TweenEx_1 = __webpack_require__(50);
 	var const_1 = __webpack_require__(29);
 	var WinTeam = (function (_super) {
 	    __extends(WinTeam, _super);
@@ -3776,7 +3508,7 @@
 
 
 /***/ }),
-/* 59 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3791,8 +3523,8 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var Fx_1 = __webpack_require__(60);
-	var PixiEx_1 = __webpack_require__(50);
+	var Fx_1 = __webpack_require__(56);
+	var PixiEx_1 = __webpack_require__(49);
 	var Direction;
 	(function (Direction) {
 	    Direction[Direction["e"] = 0] = "e";
@@ -3857,12 +3589,12 @@
 
 
 /***/ }),
-/* 60 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var TweenEx_1 = __webpack_require__(54);
+	var TweenEx_1 = __webpack_require__(50);
 	function delayCall(delay, callback) {
 	}
 	exports.delayCall = delayCall;
@@ -3909,7 +3641,7 @@
 
 
 /***/ }),
-/* 61 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3926,8 +3658,8 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var HupuAPI_1 = __webpack_require__(26);
 	var const_1 = __webpack_require__(29);
-	var SpriteGroup_1 = __webpack_require__(59);
-	var PixiEx_1 = __webpack_require__(50);
+	var SpriteGroup_1 = __webpack_require__(55);
+	var PixiEx_1 = __webpack_require__(49);
 	var St = (function (_super) {
 	    __extends(St, _super);
 	    function St(parent, is1p) {
@@ -4031,16 +3763,16 @@
 
 
 /***/ }),
-/* 62 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var TweenEx_1 = __webpack_require__(54);
-	var Order_1 = __webpack_require__(63);
+	var TweenEx_1 = __webpack_require__(50);
+	var Order_1 = __webpack_require__(59);
 	var const_1 = __webpack_require__(29);
-	var Fx_1 = __webpack_require__(60);
-	var PixiEx_1 = __webpack_require__(50);
+	var Fx_1 = __webpack_require__(56);
+	var PixiEx_1 = __webpack_require__(49);
 	var PickupAnimation = (function () {
 	    function PickupAnimation(pickupScene) {
 	        this.curIdx1p = 0;
@@ -4330,7 +4062,7 @@
 
 
 /***/ }),
-/* 63 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4345,9 +4077,9 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var Pickup_1 = __webpack_require__(64);
+	var Pickup_1 = __webpack_require__(60);
 	var const_1 = __webpack_require__(29);
-	var PixiEx_1 = __webpack_require__(50);
+	var PixiEx_1 = __webpack_require__(49);
 	var OrderScene = (function (_super) {
 	    __extends(OrderScene, _super);
 	    function OrderScene(stage, playerPortraitArr) {
@@ -4462,7 +4194,7 @@
 
 
 /***/ }),
-/* 64 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4477,11 +4209,11 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var TweenEx_1 = __webpack_require__(54);
+	var TweenEx_1 = __webpack_require__(50);
 	var HupuAPI_1 = __webpack_require__(26);
 	var const_1 = __webpack_require__(29);
-	var Fx_1 = __webpack_require__(60);
-	var PixiEx_1 = __webpack_require__(50);
+	var Fx_1 = __webpack_require__(56);
+	var PixiEx_1 = __webpack_require__(49);
 	var PickupPlayerInfo = (function () {
 	    function PickupPlayerInfo(options) {
 	        this.x = options.x;
@@ -4648,13 +4380,116 @@
 
 
 /***/ }),
-/* 65 */
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var EventDispatcher_1 = __webpack_require__(62);
+	var const_1 = __webpack_require__(29);
+	var BasePanelView = (function (_super) {
+	    __extends(BasePanelView, _super);
+	    function BasePanelView(pid) {
+	        var _this = _super.call(this) || this;
+	        _this.opReq = function (cmdId, param, callback) {
+	            $.post("/panel/" + pid + "/" + cmdId, param, callback);
+	        };
+	        return _this;
+	    }
+	    BasePanelView.initPixi = function () {
+	        var renderer = new PIXI.autoDetectRenderer(const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT, { antialias: false, transparent: true, resolution: 1 }, false);
+	        document.body.insertBefore(renderer.view, document.getElementById("panel"));
+	        renderer.stage = new PIXI.Container();
+	        renderer.backgroundColor = 0x00000000;
+	        renderer.renderStage = function (time) {
+	            requestAnimationFrame(renderer.renderStage);
+	            TWEEN.update(time);
+	            renderer.render(renderer.stage);
+	        };
+	        renderer.renderStage();
+	        return renderer.stage;
+	    };
+	    BasePanelView.prototype.show = function () {
+	    };
+	    BasePanelView.prototype.hide = function () {
+	    };
+	    return BasePanelView;
+	}(EventDispatcher_1.EventDispatcher));
+	exports.BasePanelView = BasePanelView;
+
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var EventDispatcher = (function () {
+	    function EventDispatcher() {
+	        this.isSort = false;
+	        this._func = {};
+	        this._funcId = 0;
+	    }
+	    EventDispatcher.prototype.on = function (type, func) {
+	        if (!this._func[type])
+	            this._func[type] = [];
+	        this._funcId++;
+	        this._func[type].push({ func: func, id: this._funcId });
+	        return this._funcId;
+	    };
+	    EventDispatcher.prototype.emit = function (type, param) {
+	        if (this._func[type])
+	            for (var i = 0; i < this._func[type].length; ++i) {
+	                var f = this._func[type][i];
+	                if (f)
+	                    if (f.func(param))
+	                        break;
+	            }
+	    };
+	    EventDispatcher.prototype.del = function (type, funcId) {
+	        if (funcId === void 0) { funcId = -1; }
+	        if (this._func[type])
+	            if (funcId < 0) {
+	                this._func[type] = [];
+	            }
+	            else {
+	                for (var i = 0; i < this._func[type].length; ++i) {
+	                    var f = this._func[type][i];
+	                    if (f) {
+	                        if (f.id == funcId) {
+	                            delete this._func[type][i];
+	                            break;
+	                        }
+	                    }
+	                }
+	            }
+	    };
+	    EventDispatcher.prototype.removeAll = function () {
+	        this._func = {};
+	    };
+	    return EventDispatcher;
+	}());
+	exports.EventDispatcher = EventDispatcher;
+
+
+/***/ }),
+/* 63 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <label class=\"label\">出场顺序</label>\r\n            <div class=\"columns\">\r\n                <div class=\"column\">\r\n                    <button class=\"button is-medium\" @click=\"onPickup(true)\">1P</button>\r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer1p.name}}]</label>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(true,-1)\"> -1</button>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(true,1)\">+1</button> {{orderArr1p|json}}\r\n                    <br>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(true,-1)\">犯规 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(true,1)\">犯规 +1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(true,-1)\">援助 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(true,1)\">援助 +1</button>\r\n                    <br>\r\n                    <p v-for=\"player in orderPlayerDocArr1p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(0,player)\"> {{player.id +' ' +player.name}} {{player.isDead?\"败\":\"\"}}</a>\r\n                    </p>\r\n                </div>\r\n                <div class=\"column\">\r\n                    <button class=\"button is-medium\" @click=\"onPickup(false)\">2P</button>\r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer2p.name}}]</label>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(false,-1)\"> -1</button>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(false,1)\"> +1</button>{{orderArr2p|json}}\r\n                    <br>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(false,-1)\">犯规 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(false,1)\">犯规 +1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(false,-1)\">援助 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(false,1)\">援助 +1</button>\r\n                    <br>\r\n                    <p v-for=\"player in orderPlayerDocArr2p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(1,player)\"> {{player.id +' ' +player.name}} {{player.isDead?\"败\":\"\"}} </a>\r\n                    </p>\r\n                </div>\r\n            </div>\r\n\r\n            <p>\r\n                <div class=\"tabs is-boxed\">\r\n                    <ul>\r\n                        <li v-for=\"teamIdx in 8\"><a @click=\"onTabTeam($event,teamIdx)\">{{teamNameArr[teamIdx-1]}}</a></li>\r\n                    </ul>\r\n                </div>\r\n                <div v-for=\"player in playerDocArr\">\r\n                    <a class=\"box\" style=\"font-size:15px\" @click='onPickupPlayer(player)'> <img :src=\"player.portrait\" style=\"width:60px\"> {{player.id +' ' +player.name}}</a>\r\n                    <p>\r\n                </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            <button class=\"button is-large\" @click=\"onShowPickup\">出阵</button>\r\n            <button class=\"button is-large\" @click=\"onStartGame(false)\">开始</button>\r\n            <button class=\"button is-large\" @click=\"onStartGame(true)\">开始 No fx</button>\r\n            <button class=\"button is-medium\" @click=\"onHideSt()\">援助 隐藏</button>\r\n            <p>\r\n                <button class=\"button is-large\" @click=\"onToggleTimer()\">Toggle</button>\r\n                <button class=\"button is-large\" @click=\"onResetTimer()\">Reset</button>\r\n                <p>\r\n                    <hr>\r\n                    <div class=\"control\">\r\n                        <label class=\"label\">Bracket场次</label>\r\n                        <input class=\"input\" id=\"bracketIdx\" type=\"text\" v-model='bracketIdx' style=\"width:50px\" />\r\n                        <button class=\"button \" @click=\"onCommitGame()\">单场结算</button>\r\n                    </div>\r\n                    <p class=\"control\">\r\n                        <label class=\"label\">蓝队比分-红队比分</label>\r\n                        <input class=\"input\" type=\"text\" v-model='bracketInfo' style=\"width:150px\" />\r\n                    </p>\r\n                    <button class=\"button is-large\" @click=\"onCommitTeam()\">战团结算</button>\r\n                    <hr>\r\n                    <button class=\"button is-large\" @click=\"onReloadDB()\">reload db</button>\r\n\r\n\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ }),
-/* 66 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4670,15 +4505,15 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var Command_1 = __webpack_require__(30);
-	var BasePanelView_1 = __webpack_require__(48);
+	var BasePanelView_1 = __webpack_require__(61);
 	var const_1 = __webpack_require__(29);
 	var VueBase_1 = __webpack_require__(24);
-	var StudioPanel_1 = __webpack_require__(67);
+	var StudioPanel_1 = __webpack_require__(65);
 	var StageStudio = (function (_super) {
 	    __extends(StageStudio, _super);
 	    function StageStudio() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(76);
+	        _this.template = __webpack_require__(74);
 	        _this.isOp = VueBase_1.VueBase.PROP;
 	        _this.isLeftPlayer = VueBase_1.VueBase.PROP;
 	        _this.isMobile = VueBase_1.VueBase.PROP;
@@ -4807,7 +4642,7 @@
 
 
 /***/ }),
-/* 67 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4822,14 +4657,14 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var FrameFx_1 = __webpack_require__(68);
-	var ImgLoader_1 = __webpack_require__(69);
+	var FrameFx_1 = __webpack_require__(66);
+	var ImgLoader_1 = __webpack_require__(67);
 	var JsFunc_1 = __webpack_require__(23);
-	var PopupView_1 = __webpack_require__(70);
-	var WebDBCmd_1 = __webpack_require__(71);
-	var Commentator_1 = __webpack_require__(72);
+	var PopupView_1 = __webpack_require__(68);
+	var WebDBCmd_1 = __webpack_require__(69);
+	var Commentator_1 = __webpack_require__(70);
 	var HupuAPI_1 = __webpack_require__(26);
-	var LiveComing_1 = __webpack_require__(75);
+	var LiveComing_1 = __webpack_require__(73);
 	var StudioPanel = (function (_super) {
 	    __extends(StudioPanel, _super);
 	    function StudioPanel(parent, $route) {
@@ -4951,7 +4786,7 @@
 
 
 /***/ }),
-/* 68 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5013,12 +4848,12 @@
 
 
 /***/ }),
-/* 69 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(50);
+	var PixiEx_1 = __webpack_require__(49);
 	var ImgLoader = (function () {
 	    function ImgLoader() {
 	        this._texMap = {};
@@ -5070,7 +4905,7 @@
 
 
 /***/ }),
-/* 70 */
+/* 68 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -5101,7 +4936,7 @@
 
 
 /***/ }),
-/* 71 */
+/* 69 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -5143,7 +4978,7 @@
 
 
 /***/ }),
-/* 72 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5158,9 +4993,9 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(50);
+	var PixiEx_1 = __webpack_require__(49);
 	var const_1 = __webpack_require__(29);
-	var TextFac_1 = __webpack_require__(73);
+	var TextFac_1 = __webpack_require__(71);
 	var Commentator = (function (_super) {
 	    __extends(Commentator, _super);
 	    function Commentator() {
@@ -5243,7 +5078,7 @@
 
 
 /***/ }),
-/* 73 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5258,7 +5093,7 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var BracketGroup_1 = __webpack_require__(74);
+	var BracketGroup_1 = __webpack_require__(72);
 	var Text2 = (function (_super) {
 	    __extends(Text2, _super);
 	    function Text2() {
@@ -5324,7 +5159,7 @@
 
 
 /***/ }),
-/* 74 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5377,7 +5212,7 @@
 
 
 /***/ }),
-/* 75 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5392,13 +5227,13 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(50);
+	var PixiEx_1 = __webpack_require__(49);
 	var HupuAPI_1 = __webpack_require__(26);
-	var ImgLoader_1 = __webpack_require__(69);
-	var TextFac_1 = __webpack_require__(73);
+	var ImgLoader_1 = __webpack_require__(67);
+	var TextFac_1 = __webpack_require__(71);
 	var const_1 = __webpack_require__(29);
 	var JsFunc_1 = __webpack_require__(23);
-	var TextTimer_1 = __webpack_require__(56);
+	var TextTimer_1 = __webpack_require__(52);
 	var LiveComing = (function (_super) {
 	    __extends(LiveComing, _super);
 	    function LiveComing(conf) {
@@ -5542,13 +5377,13 @@
 
 
 /***/ }),
-/* 76 */
+/* 74 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class=\"box\" v-if='isOp' style=\"width:1000px;left:10px;top:10px\">\r\n    <div style=\" margin: auto;width: 80%;height: 80%; padding: 10px;\">\r\n        <button class=\"button\" @click=\"onTogglePlayerState(true,isLeftPlayer)\" style=\"width:100%;height:800px\">切换攻守</button>\r\n    </div>\r\n</div>";
 
 /***/ }),
-/* 77 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5563,20 +5398,20 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var ImgLoader_1 = __webpack_require__(69);
-	var timers_1 = __webpack_require__(78);
+	var ImgLoader_1 = __webpack_require__(67);
+	var timers_1 = __webpack_require__(76);
 	var Command_1 = __webpack_require__(30);
 	var const_1 = __webpack_require__(29);
 	var HupuAPI_1 = __webpack_require__(26);
 	var JsFunc_1 = __webpack_require__(23);
 	var VueBase_1 = __webpack_require__(24);
 	var WebJsFunc_1 = __webpack_require__(27);
-	var BasePanelView_1 = __webpack_require__(48);
-	var BracketView_1 = __webpack_require__(81);
-	var RankView_1 = __webpack_require__(84);
-	var ScoreView_1 = __webpack_require__(88);
-	var GroupSp2_1 = __webpack_require__(105);
-	var WebDBCmd_1 = __webpack_require__(71);
+	var BasePanelView_1 = __webpack_require__(61);
+	var BracketView_1 = __webpack_require__(79);
+	var RankView_1 = __webpack_require__(82);
+	var ScoreView_1 = __webpack_require__(86);
+	var GroupSp2_1 = __webpack_require__(103);
+	var WebDBCmd_1 = __webpack_require__(69);
 	var rankView;
 	var bracketView;
 	var scoreView;
@@ -5588,7 +5423,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(107);
+	        _this.template = __webpack_require__(105);
 	        _this.actTab = VueBase_1.VueBase.PROP;
 	        _this.gameId = VueBase_1.VueBase.String;
 	        _this.isOp = VueBase_1.VueBase.PROP;
@@ -6085,7 +5920,7 @@
 
 
 /***/ }),
-/* 78 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
@@ -6141,7 +5976,7 @@
 	};
 	
 	// setimmediate attaches itself to the global object
-	__webpack_require__(79);
+	__webpack_require__(77);
 	// On some exotic environments, it's not clear which object `setimmediate` was
 	// able to install onto.  Search each possibility in the same order as the
 	// `setimmediate` library.
@@ -6155,7 +5990,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 79 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -6345,10 +6180,10 @@
 	    attachTo.clearImmediate = clearImmediate;
 	}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(80)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(78)))
 
 /***/ }),
-/* 80 */
+/* 78 */
 /***/ (function(module, exports) {
 
 	// shim for using process in browser
@@ -6538,7 +6373,7 @@
 
 
 /***/ }),
-/* 81 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6555,10 +6390,10 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var Command_1 = __webpack_require__(30);
 	var HupuAPI_1 = __webpack_require__(26);
-	var BasePanelView_1 = __webpack_require__(48);
+	var BasePanelView_1 = __webpack_require__(61);
 	var const_1 = __webpack_require__(29);
-	var BracketGroup_1 = __webpack_require__(74);
-	var Bracket2018_1 = __webpack_require__(82);
+	var BracketGroup_1 = __webpack_require__(72);
+	var Bracket2018_1 = __webpack_require__(80);
 	var BracketView = (function (_super) {
 	    __extends(BracketView, _super);
 	    function BracketView(stage, gameId, $route) {
@@ -6717,7 +6552,7 @@
 
 
 /***/ }),
-/* 82 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6732,10 +6567,10 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var BracketGroup_1 = __webpack_require__(74);
+	var BracketGroup_1 = __webpack_require__(72);
 	var const_1 = __webpack_require__(29);
-	var PixiEx_1 = __webpack_require__(50);
-	var BracketPlayerV3_1 = __webpack_require__(83);
+	var PixiEx_1 = __webpack_require__(49);
+	var BracketPlayerV3_1 = __webpack_require__(81);
 	var isTest = false;
 	var Section2 = (function (_super) {
 	    __extends(Section2, _super);
@@ -6962,7 +6797,7 @@
 
 
 /***/ }),
-/* 83 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6977,7 +6812,7 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var TextFac_1 = __webpack_require__(73);
+	var TextFac_1 = __webpack_require__(71);
 	var const_1 = __webpack_require__(29);
 	var BracketPlayerV3 = (function (_super) {
 	    __extends(BracketPlayerV3, _super);
@@ -7025,7 +6860,7 @@
 
 
 /***/ }),
-/* 84 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7040,11 +6875,11 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var PlayerInfo_1 = __webpack_require__(85);
-	var BasePanelView_1 = __webpack_require__(48);
+	var PlayerInfo_1 = __webpack_require__(83);
+	var BasePanelView_1 = __webpack_require__(61);
 	var const_1 = __webpack_require__(29);
-	var FTInfo_1 = __webpack_require__(87);
-	var PixiEx_1 = __webpack_require__(50);
+	var FTInfo_1 = __webpack_require__(85);
+	var PixiEx_1 = __webpack_require__(49);
 	var JsFunc_1 = __webpack_require__(23);
 	var RankView = (function (_super) {
 	    __extends(RankView, _super);
@@ -7248,7 +7083,7 @@
 
 
 /***/ }),
-/* 85 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7263,7 +7098,7 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var BaseInfo_1 = __webpack_require__(86);
+	var BaseInfo_1 = __webpack_require__(84);
 	var PlayerDoc = (function () {
 	    function PlayerDoc() {
 	        this.id = 0;
@@ -7452,7 +7287,7 @@
 
 
 /***/ }),
-/* 86 */
+/* 84 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -7498,7 +7333,7 @@
 
 
 /***/ }),
-/* 87 */
+/* 85 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -7528,7 +7363,7 @@
 
 
 /***/ }),
-/* 88 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7543,15 +7378,15 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var Event2017_1 = __webpack_require__(89);
+	var Event2017_1 = __webpack_require__(87);
 	var home_1 = __webpack_require__(22);
 	var Command_1 = __webpack_require__(30);
 	var const_1 = __webpack_require__(29);
 	var HupuAPI_1 = __webpack_require__(26);
-	var TweenEx_1 = __webpack_require__(54);
-	var BasePanelView_1 = __webpack_require__(48);
-	var PlayerNow_1 = __webpack_require__(103);
-	var Score2018v3_1 = __webpack_require__(104);
+	var TweenEx_1 = __webpack_require__(50);
+	var BasePanelView_1 = __webpack_require__(61);
+	var PlayerNow_1 = __webpack_require__(101);
+	var Score2018v3_1 = __webpack_require__(102);
 	function logEvent() {
 	    var a = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
@@ -7933,7 +7768,7 @@
 
 
 /***/ }),
-/* 89 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7948,24 +7783,24 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var ScoreRank_1 = __webpack_require__(90);
+	var ScoreRank_1 = __webpack_require__(88);
 	var const_1 = __webpack_require__(29);
 	var JsFunc_1 = __webpack_require__(23);
-	var PixiEx_1 = __webpack_require__(50);
-	var TweenEx_1 = __webpack_require__(54);
-	var BracketGroup_1 = __webpack_require__(74);
-	var Champion_1 = __webpack_require__(91);
-	var Com2017_1 = __webpack_require__(92);
-	var Group_1 = __webpack_require__(93);
-	var LogoFx_1 = __webpack_require__(94);
-	var NoticeSprite_1 = __webpack_require__(95);
-	var ScoreFx_1 = __webpack_require__(96);
-	var TopInfo_1 = __webpack_require__(97);
-	var Winner_1 = __webpack_require__(98);
-	var Top5_1 = __webpack_require__(99);
-	var RollText_1 = __webpack_require__(100);
-	var RankSection_1 = __webpack_require__(101);
-	var TagFx_1 = __webpack_require__(102);
+	var PixiEx_1 = __webpack_require__(49);
+	var TweenEx_1 = __webpack_require__(50);
+	var BracketGroup_1 = __webpack_require__(72);
+	var Champion_1 = __webpack_require__(89);
+	var Com2017_1 = __webpack_require__(90);
+	var Group_1 = __webpack_require__(91);
+	var LogoFx_1 = __webpack_require__(92);
+	var NoticeSprite_1 = __webpack_require__(93);
+	var ScoreFx_1 = __webpack_require__(94);
+	var TopInfo_1 = __webpack_require__(95);
+	var Winner_1 = __webpack_require__(96);
+	var Top5_1 = __webpack_require__(97);
+	var RollText_1 = __webpack_require__(98);
+	var RankSection_1 = __webpack_require__(99);
+	var TagFx_1 = __webpack_require__(100);
 	var Event2017 = (function (_super) {
 	    __extends(Event2017, _super);
 	    function Event2017(stage, isDark) {
@@ -8250,7 +8085,7 @@
 
 
 /***/ }),
-/* 90 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8265,11 +8100,11 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var TweenEx_1 = __webpack_require__(54);
-	var ImgLoader_1 = __webpack_require__(69);
-	var TextFac_1 = __webpack_require__(73);
+	var TweenEx_1 = __webpack_require__(50);
+	var ImgLoader_1 = __webpack_require__(67);
+	var TextFac_1 = __webpack_require__(71);
 	var const_1 = __webpack_require__(29);
-	var PixiEx_1 = __webpack_require__(50);
+	var PixiEx_1 = __webpack_require__(49);
 	var PlayerItem = (function (_super) {
 	    __extends(PlayerItem, _super);
 	    function PlayerItem() {
@@ -8419,7 +8254,7 @@
 
 
 /***/ }),
-/* 91 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8436,8 +8271,8 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var JsFunc_1 = __webpack_require__(23);
 	var const_1 = __webpack_require__(29);
-	var PixiEx_1 = __webpack_require__(50);
-	var TweenEx_1 = __webpack_require__(54);
+	var PixiEx_1 = __webpack_require__(49);
+	var TweenEx_1 = __webpack_require__(50);
 	var Champion = (function (_super) {
 	    __extends(Champion, _super);
 	    function Champion() {
@@ -8535,7 +8370,7 @@
 
 
 /***/ }),
-/* 92 */
+/* 90 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -8577,7 +8412,7 @@
 
 
 /***/ }),
-/* 93 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8592,9 +8427,9 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var Com2017_1 = __webpack_require__(92);
+	var Com2017_1 = __webpack_require__(90);
 	var const_1 = __webpack_require__(29);
-	var PixiEx_1 = __webpack_require__(50);
+	var PixiEx_1 = __webpack_require__(49);
 	var Group = (function (_super) {
 	    __extends(Group, _super);
 	    function Group(parent) {
@@ -8677,7 +8512,7 @@
 
 
 /***/ }),
-/* 94 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8724,7 +8559,7 @@
 
 
 /***/ }),
-/* 95 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8739,7 +8574,7 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(50);
+	var PixiEx_1 = __webpack_require__(49);
 	var const_1 = __webpack_require__(29);
 	var NoticeSprite = (function (_super) {
 	    __extends(NoticeSprite, _super);
@@ -8805,7 +8640,7 @@
 
 
 /***/ }),
-/* 96 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8856,7 +8691,7 @@
 
 
 /***/ }),
-/* 97 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8871,7 +8706,7 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(50);
+	var PixiEx_1 = __webpack_require__(49);
 	var HupuAPI_1 = __webpack_require__(26);
 	var TopInfo = (function (_super) {
 	    __extends(TopInfo, _super);
@@ -8911,7 +8746,7 @@
 
 
 /***/ }),
-/* 98 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8928,10 +8763,10 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var const_1 = __webpack_require__(29);
 	var JsFunc_1 = __webpack_require__(23);
-	var PixiEx_1 = __webpack_require__(50);
-	var TweenEx_1 = __webpack_require__(54);
-	var FrameFx_1 = __webpack_require__(68);
-	var ImgLoader_1 = __webpack_require__(69);
+	var PixiEx_1 = __webpack_require__(49);
+	var TweenEx_1 = __webpack_require__(50);
+	var FrameFx_1 = __webpack_require__(66);
+	var ImgLoader_1 = __webpack_require__(67);
 	var Winner = (function (_super) {
 	    __extends(Winner, _super);
 	    function Winner() {
@@ -9071,7 +8906,7 @@
 
 
 /***/ }),
-/* 99 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9086,13 +8921,13 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(50);
-	var ImgLoader_1 = __webpack_require__(69);
+	var PixiEx_1 = __webpack_require__(49);
+	var ImgLoader_1 = __webpack_require__(67);
 	var const_1 = __webpack_require__(29);
 	var JsFunc_1 = __webpack_require__(23);
 	var HupuAPI_1 = __webpack_require__(26);
-	var BracketGroup_1 = __webpack_require__(74);
-	var TextFac_1 = __webpack_require__(73);
+	var BracketGroup_1 = __webpack_require__(72);
+	var TextFac_1 = __webpack_require__(71);
 	var Tab2 = (function (_super) {
 	    __extends(Tab2, _super);
 	    function Tab2() {
@@ -9273,7 +9108,7 @@
 
 
 /***/ }),
-/* 100 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9289,8 +9124,8 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var const_1 = __webpack_require__(29);
-	var PixiEx_1 = __webpack_require__(50);
-	var TweenEx_1 = __webpack_require__(54);
+	var PixiEx_1 = __webpack_require__(49);
+	var TweenEx_1 = __webpack_require__(50);
 	var RollText = (function (_super) {
 	    __extends(RollText, _super);
 	    function RollText() {
@@ -9335,7 +9170,7 @@
 
 
 /***/ }),
-/* 101 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9350,12 +9185,12 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(50);
-	var ImgLoader_1 = __webpack_require__(69);
+	var PixiEx_1 = __webpack_require__(49);
+	var ImgLoader_1 = __webpack_require__(67);
 	var const_1 = __webpack_require__(29);
 	var JsFunc_1 = __webpack_require__(23);
 	var HupuAPI_1 = __webpack_require__(26);
-	var BracketGroup_1 = __webpack_require__(74);
+	var BracketGroup_1 = __webpack_require__(72);
 	var Tab2 = (function (_super) {
 	    __extends(Tab2, _super);
 	    function Tab2() {
@@ -9562,7 +9397,7 @@
 
 
 /***/ }),
-/* 102 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9577,11 +9412,11 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(50);
-	var ImgLoader_1 = __webpack_require__(69);
-	var TextFac_1 = __webpack_require__(73);
+	var PixiEx_1 = __webpack_require__(49);
+	var ImgLoader_1 = __webpack_require__(67);
+	var TextFac_1 = __webpack_require__(71);
 	var const_1 = __webpack_require__(29);
-	var TweenEx_1 = __webpack_require__(54);
+	var TweenEx_1 = __webpack_require__(50);
 	var TagFx = (function (_super) {
 	    __extends(TagFx, _super);
 	    function TagFx(parent, data) {
@@ -9688,7 +9523,7 @@
 
 
 /***/ }),
-/* 103 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9703,9 +9538,9 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(50);
+	var PixiEx_1 = __webpack_require__(49);
 	var const_1 = __webpack_require__(29);
-	var ImgLoader_1 = __webpack_require__(69);
+	var ImgLoader_1 = __webpack_require__(67);
 	var PlayerNow = (function (_super) {
 	    __extends(PlayerNow, _super);
 	    function PlayerNow() {
@@ -9763,7 +9598,7 @@
 
 
 /***/ }),
-/* 104 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9778,12 +9613,12 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(50);
-	var TextFac_1 = __webpack_require__(73);
+	var PixiEx_1 = __webpack_require__(49);
+	var TextFac_1 = __webpack_require__(71);
 	var const_1 = __webpack_require__(29);
 	var JsFunc_1 = __webpack_require__(23);
-	var TextTimer_1 = __webpack_require__(56);
-	var ImgLoader_1 = __webpack_require__(69);
+	var TextTimer_1 = __webpack_require__(52);
+	var ImgLoader_1 = __webpack_require__(67);
 	var loadAvt = function (avtSp, url, left) {
 	    console.log('loadAvt', url);
 	    ImgLoader_1.imgLoader.loadTex(url, function (tex) {
@@ -10066,7 +9901,7 @@
 
 
 /***/ }),
-/* 105 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -10081,13 +9916,13 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(50);
+	var PixiEx_1 = __webpack_require__(49);
 	var const_1 = __webpack_require__(29);
 	var HupuAPI_1 = __webpack_require__(26);
-	var thenBy_1 = __webpack_require__(106);
-	var ImgLoader_1 = __webpack_require__(69);
-	var BracketGroup_1 = __webpack_require__(74);
-	var TextFac_1 = __webpack_require__(73);
+	var thenBy_1 = __webpack_require__(104);
+	var ImgLoader_1 = __webpack_require__(67);
+	var BracketGroup_1 = __webpack_require__(72);
+	var TextFac_1 = __webpack_require__(71);
 	var Row1 = (function (_super) {
 	    __extends(Row1, _super);
 	    function Row1(avtCtn) {
@@ -10380,7 +10215,7 @@
 
 
 /***/ }),
-/* 106 */
+/* 104 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -10418,7 +10253,7 @@
 
 
 /***/ }),
-/* 107 */
+/* 105 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告 MISC</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒 timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 30px;font-family: 'NotoSansHans-Regular'\">\r\n               {{lLiveName}}  vs {{rLiveName}} \r\n                <br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(false)\">隐藏所有</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(true)\">显示所有</button>\r\n            <br>时间控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">设定时间(秒)</button>\r\n\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            </p>\r\n            比分控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onUpdateScore(true ,panelTime2Set)\">蓝方比分</button>\r\n            <button class=\"button\" @click=\"onUpdateScore(false,panelTime2Set)\">红方比分</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(true)\">切换攻守</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(false)\">隐藏</button>\r\n            <br>\r\n\r\n            <button class=\"button\" @click=\"onUpdateFoul(true ,panelTime2Set)\">蓝方犯规</button>\r\n            <button class=\"button\" @click=\"onUpdateFoul(false,panelTime2Set)\">红方犯规</button>\r\n\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">修改并显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,'')\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <!-- <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button> -->\r\n\r\n            <label class=\"label\">  赛区实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,1)\">东南 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,2)\">东北 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,3)\">西方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,4)\">南方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,0)\">首页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,2,0)\">上一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,3,0)\">下一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <label class=\"label\">  八强面板:</label><br>\r\n            <button class=\"button\" @click=\"onBracketShow(1)\">第一页 八进四</button>\r\n            <button class=\"button\" @click=\"onBracketShow(2)\">第二页</button>\r\n\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <div v-if=1 class='column is-one-quarter' style=\"position: fixed;top: 260px;right: 10px;\">\r\n                <input class=\"input\" type=\"text\" style=\"width: 30px;\" v-model=\"gameTitleType\">1 '8进4' 2 '4进2' 3 '2进1'\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"蓝方名字-红方名字\" style=\"width: 300px;\" v-model=\"vsPlayer\">\r\n                <button class=\"button\" @click=\"onSetPlayer(vsPlayer,gameTitleType)\">设置球员</button>\r\n                <br> <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button>蓝方: <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button> 比分\r\n                <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>:红方<button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n                <br><br> <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button>-----\r\n                <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button> 犯规\r\n                <button class=\"button\" @click=\"onAddFoul(false,+1)\">+1</button>-----<button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"'>\r\n        <div v-if='isRmOp||isOp' style=\"position: absolute;left: 100px;top:260px;width: 800px\">\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                        正常\r\n                    </label>\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                        加粗\r\n                    </label>\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onNoticePresets('network')\">网络故障 模版</button>\r\n            <br>\r\n            <div v-for=\"(n,idx) in noticeHistory\">\r\n                <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n            </div>\r\n\r\n            滚动文字：\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"inputRollText\">\r\n            <br>\r\n\r\n            <!-- <el-input v-model=\"inputRollText\" style=\"width:250px\"></el-input> -->\r\n            <button class=\"button\" @click='showRollText(inputRollText,true)'>发送</button>\r\n            <button class=\"button\" @click='showRollText(inputRollText,false)'>隐藏</button>\r\n            <br> 主播面板:\r\n            <br>\r\n            <button class=\"button\" @click='showCommentator(true,1)'>显示主播</button>\r\n            <button class=\"button\" @click='showCommentator(true,2)'>显示主播 合并</button>\r\n            <button class=\"button\" @click='showCommentator(false)'>隐藏</button>\r\n            <br>图片:\r\n            <br>\r\n            <button class=\"button\" @click='showStaticImage(true,1)'>微信小程序</button>\r\n            <button class=\"button\" @click='showStaticImage(false,1)'>隐藏</button>\r\n\r\n            <label class=\"label\">  脉动广告:</label><br>\r\n            <button class=\"button\" @click=\"onShowFx(true,1)\">转瓶</button>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n        </div>\r\n    </div>\r\n\r\n</div>";

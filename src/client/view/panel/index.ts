@@ -7,7 +7,6 @@ require(`script!./../../libs/socket.io-1.4.5.min.js`);
 require(`script!./../../libs/vue/vue.min.js`);
 require(`script!./../../libs/vue/vue-router.min.js`);
 
-import { stage3point } from './3point/stage3point';
 import { koa } from './koa/KOA';
 import { studio } from './stage5v5/Stage5v5';
 import { stageOnlineView } from './stageOnline/StageOnlineView';
@@ -29,10 +28,6 @@ let routes = [
     {
         path: '/studio/:op',
         components: { default: studio }
-    },
-    {
-        path: '/3/:op',
-        components: { default: stage3point }
     },
     {
         path: '/ol/:op/:game_id',
