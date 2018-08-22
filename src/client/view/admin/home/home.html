@@ -21,6 +21,11 @@
                     <span>战队选择</span>
                 </a>
             </li>
+            <li v-bind:class="{ 'is-active': actTab== 'tab5'}" @click='tab("tab5")'>
+                <a>
+                    <span>国战</span>
+                </a>
+            </li>
         </ul>
     </div>
     <div v-if='actTab=="tab1"'>
@@ -35,7 +40,7 @@
                             </select>
                         </span>
             </p>
-            <vue v-for="link in links">
+            <div v-for="link in links">
                 <a class="panel-block" :href="link.url" target="_blank">
                     <span class="panel-icon">
                         <i class="fa fa-book"></i>
@@ -43,7 +48,7 @@
                     <br> {{link.title}}
                 </a>
                 <!--<button class="button">复制地址</button>-->
-            </vue>
+            </div>
             <div>
                 抽奖id（编号）:<input type="text" v-model="lotteryId" style="width: 60px"> 次序k:
                 <input type="text" v-model="lotteryIdx" style="width: 60px">
@@ -114,5 +119,8 @@
     </div>
     <div v-if='actTab=="tab4"' class="ctn2" style="display: inline-flex;">
         <Pick/>
+    </div>
+    <div v-if='actTab=="tab5"' class="ctn2" style="display: inline-flex;">
+        <WorldWar/>
     </div>
 </div>

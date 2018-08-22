@@ -189,3 +189,17 @@ export function getEventConf(event_id, callback) {
     let url = 'http://rtmp.icassi.us:8090/event?event_id=' + event_id
     _get(proxy(url), callback)
 }
+
+//国战
+
+export function updateWorldWarDoc(docData, callback) {
+    let strJson = JSON.stringify(docData)
+    console.log('strJson', strJson);
+    $.ajax('http://rtmp.icassi.us:8090/event/' + docData._id, {
+        method: 'PUT',
+        processData: false,
+        contentType: 'application/json',
+        data: strJson,
+        success: callback,
+    })
+}

@@ -5,6 +5,7 @@ import { $post } from '../../utils/WebJsFunc';
 import { getPlayerInfoFromLiangle, createPlayer, getPlayer, uploadImage, updatePlayer } from '../../utils/HupuAPI';
 import { GameAdmin } from '../gameAdmin/GameAdmin';
 import { Pick } from '../pick/Pick';
+import { WorldWar } from '../worldWar/WorldWar';
 /**
  * Created by toramisu on 2016/10/24.
  */
@@ -23,7 +24,7 @@ export function getScorePanelUrl(gameId, isDark, isOb = true) {
 class HomeView extends VueBase {
     template = require('./home.html');
     links = VueBase.PROP;
-    components = {"GameAdmin":GameAdmin,"Pick":Pick}
+    components = {"GameAdmin":GameAdmin,"Pick":Pick,"WorldWar":WorldWar}
     opUrlArr = VueBase.PROP;
     selected = VueBase.PROP;
     options = VueBase.PROP;

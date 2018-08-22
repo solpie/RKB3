@@ -1,52 +1,80 @@
 import { VueBase } from "../../utils/VueBase";
 import { BackendConf } from "../../BackendConf";
+import { $post } from "../../utils/WebJsFunc";
+import { updateWorldWarDoc } from "../../utils/HupuAPI";
+declare let $;
 
-class _worldWar extends VueBase {
-    template = require('./worldWar.html');
-    conf:BackendConf
-    created() {
-        console.log('_worldWar');
-        this.conf = new BackendConf('file','reload',data=>{
-            this.onInit(data)
-        })
-        this.methods['onFile'] = this.conf.onFile
-        this.methods['onReload'] = this.conf.onReloadFile
-    }
-    onInit(data){
-
-    }
-    methods = {
-    //     onFile() {
-    //         if (!confFile) {
-    //             if (!filesInput) filesInput = document.getElementById("files");
-    //             filesInput.addEventListener(
-    //                 "change",
-    //                 evt => {
-    //                     confFile = evt.target.files[0]; // FileList object
-    //                     document.getElementById("reloadFile").click();
-    //                 },
-    //                 false
-    //             );
-    //         }
-    //         document.getElementById("files").click();
-    //     },
-
-    //     reloadFile(e) {
-    //         if (!srvData) {
-    //             if (!reader) {
-    //                 reader = new FileReader();
-    //                 reader.addEventListener("load", (event) => {
-    //                     let data = JSON.parse(event.target['result'])
-    //                     data._ = null
-    //                     console.log("EVENT_ON_FILE", data);
-    //                     this.onInit(data)
-    //                 });
-    //             }
-    //             reader.readAsText(confFile, "utf-8");
-    //         }
-    //         else {
-    //             this.onInit(srvData)
-    //         }
-    //     }
-    }
+const getDoc = (callback) => {
+  $.get('http://rtmp.icassi.us:8090/event?idx=916', (res) => {
+      if (res.length)
+          callback(res[0])
+      else
+          callback(null)
+  })
 }
+const saveDoc = (doc, cb?) => {
+  $post('/db/update/519', doc, () => {
+      if (cb)
+          cb()
+  })
+}
+class _worldWar extends VueBase {
+  template = require("./worldWar.html");
+  conf: BackendConf;
+  vsPlayer = VueBase.PROP;
+  vsPlayerArr = VueBase.PROP;
+  redArr = VueBase.PROP;
+  blueArr = VueBase.PROP;
+  constructor() {
+    super();
+    VueBase.initProps(this);
+    this.vsPlayerArr = []
+   
+}
+  created() {
+    console.log("_worldWar");
+    this.conf = new BackendConf("file", "reload", data => {
+      this.onInit(data);
+    });
+    this.blueArr = [
+      {name:'1111'},
+      {name:'22'},
+      {name:'11311'},
+      {name:'11141'},
+      {name:'11151'},
+    ]
+    this.redArr =[
+      {name:'1111'},
+      {name:'22'},
+      {name:'11311'},
+      {name:'11141'},
+      {name:'11151'},
+    ]
+    getDoc(data=>{
+      console.log('get doc',data)
+      // let doc = data.doc
+      data.doc = {'name':2}
+      updateWorldWarDoc(data,res=>{
+        console.log(res)
+      })
+    })
+
+  }
+  onInit(data) {
+      console.log("on load conf",data)
+  }
+  methods = {
+  onFile(e){
+    console.log('load file')
+   this.conf.onFile(e)
+  },
+  onReload(e){
+    
+  },
+  onReloadXlsx(e){
+    console.log('load xlsx')
+    this.conf.onReloadXlsx(e)
+  }
+  };
+}
+export let WorldWar = new _worldWar()

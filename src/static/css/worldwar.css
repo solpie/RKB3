@@ -1,0 +1,5 @@
+#data-table,
+#data-table th,
+#data-table td {
+    border: 1px solid black
+}
