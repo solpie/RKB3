@@ -20,35 +20,49 @@ export const syncDoc = (cb, isSave = false) => {
 export class WWGame extends EventDispatcher {
   static InitDocView: "init doc view";
   playerMap: any;
-  team: any;
+  teamArr: any;
   gameIdx: number;
+  teamVsRec:any
   data: any; //json data
   loadConf(data) {
     this.playerMap = data.playerMap;
-    this.team = data.team;
+    this.teamArr = data.team;
+    this.teamVsRec = data.teamVsRec
+    // for (const tRec of this.teamVsRec) {
+    //     let bloodArr = []
+    //     let teamBlue = this.getTeamByIdx(tRec.team[0])
+    //     for (const p of teamBlue.playerArr) {
+    //         bloodArr.push()
+            
+    //     }
+    //     let teamRed = this.getTeamByIdx(tRec.team[1])
+        
+    // }
     this.data = data;
   }
-  getTeamByIdx(idx) {
+  getTeamByIdx(idx):any {
     let a = [];
-    for (const t of this.team) {
+    for (const t of this.teamArr) {
       if (t.idx == idx) {
         for (const pid of t.playerArr) {
           a.push(this.playerMap[pid]);
-          console.log(a[a.length - 1].name);
         }
       }
     }
     return a;
   }
   clearGameRec(doc?) {
+    let _ = (_doc)=>{
+        doc.rec = {};
+        doc.teamVsRec = {}
+        doc.gameIdx = 0;
+        doc.teamVsIdx = 0;
+    }
     if (doc) {
-      doc.rec = {};
-      doc.gameIdx = 0;
+      _(doc)
     } else {
       syncDoc(data => {
-        let doc = data.doc;
-        doc["rec"] = {};
-        doc["gameIdx"] = 0;
+        _(data.doc)
         console.log(doc);
       }, true);
     }
@@ -61,6 +75,22 @@ export class WWGame extends EventDispatcher {
       this.emit(WWGame.InitDocView, doc);
     }, true);
   }
+  setVs(gameIdx,playerArr){
+    syncDoc(data => {
+        let doc = data.doc;
+        let game = doc.rec[gameIdx];
+        if (game) game.player = playerArr;
+        this.emit(WWGame.InitDocView, doc);
+      }, true); 
+  }
+  setTeamBlood(teamVsIdx,playerMapBlood){
+    syncDoc(data => {
+        // let doc = data.doc;
+        // let game = doc.rec[gameIdx];
+        // if (game) game.player = playerArr;
+        // this.emit(WWGame.InitDocView, doc);
+      }, true); 
+  }
   addGame(playerArr) {
     syncDoc(data => {
       let doc = data.doc;
@@ -70,6 +100,7 @@ export class WWGame extends EventDispatcher {
       doc.gameIdx++;
       doc.rec[doc.gameIdx] = {
         gameIdx: doc.gameIdx,
+        teamVsIdx: doc.teamVsIdx,
         player: playerArr,
         score: [0, 0],
         foul: [0, 0]

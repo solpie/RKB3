@@ -22,7 +22,11 @@
             <div class="columns">
                 <div class="column" v-for="(item,index) in blueArr" :key="item">
                     <a class="button is-info" @click="pickPlayer(true,item.playerId)">{{item.name}}</a>
+                    <br>
+                    <input class="input blood" :id="'blood'+item.playerId" type="text" style="width: 50px;">
                 </div>
+                <input class="input" v-model="teamVsIdx" type="text" style="width: 60px;">
+                <a class="button is-warnning" @click="onSetBlood(teamVsIdx)">初始血量</a>
             </div>
         </div>
 
@@ -31,6 +35,8 @@
             <div class="columns">
                 <div class="column" v-for="(item,index) in redArr" :key="item">
                     <a class="button is-danger" @click="pickPlayer(false,item.playerId)">{{item.name}}</a>
+                    <br>
+                    <input class="input blood" :id="'blood'+item.playerId" type="text" style="width: 50px;">
                 </div>
             </div>
         </div>
@@ -46,22 +52,6 @@
                 <th>R player</th>
             </tr>
         </thead>
-        <!-- <tfoot>
-            <tr>
-                <th><abbr title="Position">Pos</abbr></th>
-                <th>Team</th>
-                <th><abbr title="Played">Pld</abbr></th>
-                <th><abbr title="Won">W</abbr></th>
-                <th><abbr title="Drawn">D</abbr></th>
-                <th><abbr title="Lost">L</abbr></th>
-                <th><abbr title="Goals for">GF</abbr></th>
-                <th><abbr title="Goals against">GA</abbr></th>
-                <th><abbr title="Goal difference">GD</abbr></th>
-                <th><abbr title="Points">Pts</abbr></th>
-                <th>Qualification or relegation</th>
-            </tr>
-            class="is-selected"
-        </tfoot> -->
         <tbody>
             <tr v-for="(rec,index) in recArr" :key="index" v-bind:class="[rec.gameIdx==gameView.gameIdx?'is-selected':'']">
                 <th><a @click="setGameIdx(rec.gameIdx)">#####{{rec.gameIdx}}</a></th>
@@ -71,7 +61,8 @@
                 <td>
                     <div class="control" v-if="rec.gameIdx==gameView.gameIdx">
                         <input class="input" :id="'scoreInput'+rec.gameIdx" type="text" style="width: 80px;">
-                        <button class="button is-primary" @click="onSetScore(rec.gameIdx)">修改</button>
+                        <button class="button is-primary" @click="onSetScore(rec.gameIdx)">修改比分</button>
+                        <button class="button is-primary" @click="onSetVS(rec.gameIdx,vsPlayer)">修改对阵</button>
                     </div>
                 </td>
             </tr>

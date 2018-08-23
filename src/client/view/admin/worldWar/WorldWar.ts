@@ -27,6 +27,7 @@ class _worldWar extends VueBase {
   recArr = VueBase.PROP;
   gameView: any;
   gameIdx: number;
+  teamVsIdx = VueBase.PROP;
   updateTime = VueBase.PROP;
   constructor() {
     super();
@@ -106,12 +107,29 @@ class _worldWar extends VueBase {
     // this.onShowScoreRank(true)
   }
   methods = {
+    onSetBlood(teamVsIdx)
+    {
+      let bloodArr = $(".blood")
+      let playerMapBlood = {}
+      for (const $elm of bloodArr) {
+        let playerId = $elm.id.split('blood')[1]
+        let blood = $elm.value
+        playerMapBlood[playerId] = Number(blood)
+        console.log('player',playerId,'blood',blood)
+      }
+    },
     onSetScore(gameIdx) {
       let scoreStr = $("#scoreInput" + gameIdx).val();
       console.log(scoreStr);
       let a = scoreStr.split(" ");
       if (a.length == 2) {
         gameView.setScore(gameIdx, [Number(a[0]), Number(a[1])]);
+      }
+    },
+    onSetVS(gameIdx,vsStr){
+      let a = vsStr.split(" ");
+      if (a.length == 2) {
+        gameView.setVs(gameIdx, [a[0], a[1]]);
       }
     },
     pickPlayer(isLeft, playerId) {
