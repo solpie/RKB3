@@ -6,11 +6,13 @@ export class BackendConf {
   $reloadElmId: string;
   _reader: any;
   _onInit: any;
+
   constructor($fileElmId, $reloadElmId, onInit) {
     this.$fileElmId = $fileElmId;
     this.$reloadElmId = $reloadElmId;
     this._onInit = onInit;
   }
+  
   onFile() {
     if (!this.confFile) {
       if (!this.filesInput)

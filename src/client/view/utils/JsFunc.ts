@@ -27,6 +27,10 @@ export function mapToSortArray(map, prop, sortFunc) {
     arr.sort(sortFunc(prop));
     return arr;
 }
+//object clone
+export function clone(obj){
+    return JSON.parse(JSON.stringify(obj));
+}
 //转换唯一数组
 
 export function mapToArr(map, clone?) {
