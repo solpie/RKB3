@@ -69,6 +69,13 @@ export class WWGame extends EventDispatcher {
     }
     return a;
   }
+  deleteGameRec(gameIdx) {
+    syncDoc(data => {
+      let doc = data.doc;
+      delete doc.rec[gameIdx];
+      this.emit(WWGame.InitDocView, doc);
+    }, true);
+  }
   clearGameRec(doc?) {
     let _ = _doc => {
       _doc.rec = {};

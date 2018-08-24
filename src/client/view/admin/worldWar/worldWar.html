@@ -7,7 +7,7 @@
     <br>
 
     <div class="control">
-        <input class="input" v-model="vsPlayer" type="text" style="width: 100px;">
+        vs player <input class="input" v-model="vsPlayer" type="text" style="width: 100px;">
         <button class="button is-primary" @click="onEmitGameInfo">emit game info</button>
         <button class="button is-primary" @click="onAddGame">创建比赛</button>
         <button class="button is-primary" @click="onCommitGame">提交比赛</button> teamVsIdx:
@@ -70,9 +70,10 @@
                 <td>
                     <div class="control" v-if="rec.gameIdx==gameView.gameIdx">
                         <input class="input" :id="'scoreInput'+rec.gameIdx" type="text" style="width: 80px;">
-                        <button class="button is-primary" @click="onSetScore(rec.gameIdx)">修改比分</button>
-                        <button class="button is-primary" @click="onSetVS(rec.gameIdx,vsPlayer)">修改对阵↑</button>
-                        <button class="button is-primary" @click="onSetTeamVsIdx(rec.gameIdx)">修改TeamVsIdx</button>
+                        <button class="button" @click="onSetScore(rec.gameIdx)">修改比分</button>
+                        <button class="button" @click="onSetVS(rec.gameIdx,vsPlayer)">修改对阵↑</button>
+                        <button class="button" @click="onSetTeamVsIdx(rec.gameIdx)">修改TeamVsIdx</button>
+                        <button class="button is-danger" @click="onDeleteGameRec(rec.gameIdx)">删除</button>
                     </div>
                 </td>
             </tr>
