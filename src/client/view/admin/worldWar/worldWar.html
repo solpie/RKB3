@@ -10,9 +10,16 @@
         <input class="input" v-model="vsPlayer" type="text" style="width: 100px;">
         <button class="button is-primary" @click="onEmitGameInfo">emit game info</button>
         <button class="button is-primary" @click="onAddGame">创建比赛</button>
-        <button class="button is-primary" @click="onCommitGame">提交比赛</button>
-        <br>
+        <button class="button is-primary" @click="onCommitGame">提交比赛</button> teamVsIdx:
+        <input class="input" v-model="teamVsIdx" type="text" style="width: 60px;">
+        <a class="button is-warnning" @click="onSetBlood(teamVsIdx)">设置初始血量</a>
+        <label class="checkbox">
+            <input type="checkbox" v-model="isShowCurTeamVsOnly">
+            只显示当前
+          </label>
+        <hr>
         <button class="button is-primary" @click="onDeleteDoc">delete doc</button>
+
     </div>
 
     <!-- Main container -->
@@ -21,12 +28,11 @@
         <div class="level-left">
             <div class="columns">
                 <div class="column" v-for="(item,index) in blueArr" :key="item">
-                    <a class="button is-info" @click="pickPlayer(true,item.playerId)">{{item.name}}</a>
+                    <a class="button is-info" @click="pickPlayer(true,item.playerId)">{{item.name}} [{{item.blood}}]</a>
                     <br>
                     <input class="input blood" :id="'blood'+item.playerId" type="text" style="width: 50px;">
                 </div>
-                <input class="input" v-model="teamVsIdx" type="text" style="width: 60px;">
-                <a class="button is-warnning" @click="onSetBlood(teamVsIdx)">初始血量</a>
+
             </div>
         </div>
 
@@ -34,7 +40,7 @@
         <div class="level-right">
             <div class="columns">
                 <div class="column" v-for="(item,index) in redArr" :key="item">
-                    <a class="button is-danger" @click="pickPlayer(false,item.playerId)">{{item.name}}</a>
+                    <a class="button is-danger" @click="pickPlayer(false,item.playerId)">{{item.name}} [{{item.blood}}]</a>
                     <br>
                     <input class="input blood" :id="'blood'+item.playerId" type="text" style="width: 50px;">
                 </div>
@@ -46,15 +52,18 @@
     <table class="table is-striped is-bordered">
         <thead>
             <tr>
-                <th><abbr title="Position">#</abbr></th>
+                <th><abbr title="Position">#gameIdx</abbr></th>
+                <th><abbr>#teamVsIdx</abbr></th>
                 <th>L player</th>
                 <th>score</th>
                 <th>R player</th>
+                <th>action</th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="(rec,index) in recArr" :key="index" v-bind:class="[rec.gameIdx==gameView.gameIdx?'is-selected':'']">
                 <th><a @click="setGameIdx(rec.gameIdx)">#####{{rec.gameIdx}}</a></th>
+                <td> {{rec.teamVsIdx}} </td>
                 <td> {{rec.name[0]}} </td>
                 <td> {{rec.score[0]}} - {{rec.score[1]}} </td>
                 <td> {{rec.name[1]}} </td>
@@ -62,7 +71,8 @@
                     <div class="control" v-if="rec.gameIdx==gameView.gameIdx">
                         <input class="input" :id="'scoreInput'+rec.gameIdx" type="text" style="width: 80px;">
                         <button class="button is-primary" @click="onSetScore(rec.gameIdx)">修改比分</button>
-                        <button class="button is-primary" @click="onSetVS(rec.gameIdx,vsPlayer)">修改对阵</button>
+                        <button class="button is-primary" @click="onSetVS(rec.gameIdx,vsPlayer)">修改对阵↑</button>
+                        <button class="button is-primary" @click="onSetTeamVsIdx(rec.gameIdx)">修改TeamVsIdx</button>
                     </div>
                 </td>
             </tr>

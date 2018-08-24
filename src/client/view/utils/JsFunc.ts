@@ -31,6 +31,14 @@ export function mapToSortArray(map, prop, sortFunc) {
 export function clone(obj){
     return JSON.parse(JSON.stringify(obj));
 }
+export function cloneMap(map)
+{
+    let a = {}
+    for (let k in map) {
+        a[k]  = map[k]
+    }
+    return a
+}
 //转换唯一数组
 
 export function mapToArr(map, clone?) {

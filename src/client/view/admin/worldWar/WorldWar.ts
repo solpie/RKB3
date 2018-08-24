@@ -28,6 +28,7 @@ class _worldWar extends VueBase {
   gameView: any;
   gameIdx: number;
   teamVsIdx = VueBase.PROP;
+  isShowCurTeamVsOnly = VueBase.PROP;
   updateTime = VueBase.PROP;
   constructor() {
     super();
@@ -48,7 +49,8 @@ class _worldWar extends VueBase {
   }
 
   initDocView(doc) {
-    this.recArr = []; //clone(doc.rec);
+    console.log("init doc view ", doc);
+    this.recArr = [];
     for (let k in doc.rec) {
       let rec = clone(doc.rec[k]);
       rec["name"] = [];
@@ -58,6 +60,9 @@ class _worldWar extends VueBase {
       }
       this.recArr.push(rec);
       gameView.gameIdx = doc.gameIdx;
+      this.teamVsIdx = doc.teamVsIdx;
+      //init blood
+      this.updateBlood(this.teamVsIdx);
     }
   }
   getPlayerDoc(playerId) {
@@ -106,17 +111,39 @@ class _worldWar extends VueBase {
     ///89 russ
     // this.onShowScoreRank(true)
   }
-  methods = {
-    onSetBlood(teamVsIdx)
-    {
-      let bloodArr = $(".blood")
-      let playerMapBlood = {}
+  updateBlood(teamVsIdx) {
+    console.log("on updateBlood teamVsIdx", teamVsIdx);
+    gameView.getBloodMap(teamVsIdx, bloodMap => {
+      let bloodArr = $(".blood");
       for (const $elm of bloodArr) {
-        let playerId = $elm.id.split('blood')[1]
-        let blood = $elm.value
-        playerMapBlood[playerId] = Number(blood)
-        console.log('player',playerId,'blood',blood)
+        let playerId = $elm.id.split("blood")[1];
+        let blood = bloodMap[playerId];
+        $elm.value = blood;
+        // console.log("player", playerId, "blood", blood);
       }
+      this.vueUpdate();
+    });
+  }
+  watch = {
+    teamVsIdx(val) {
+      this.updateBlood(val);
+    }
+  };
+  methods = {
+    isShowRec(isTeamVsIdxRec) {
+      if (this.isShowCurTeamVsOnly) return isTeamVsIdxRec;
+      return true;
+    },
+    onSetBlood(teamVsIdx) {
+      let bloodArr = $(".blood");
+      let playerMapBlood = {};
+      for (const $elm of bloodArr) {
+        let playerId = $elm.id.split("blood")[1];
+        let blood = $elm.value;
+        playerMapBlood[playerId] = Number(blood);
+        console.log("player", playerId, "blood", blood);
+      }
+      gameView.setTeamBlood(teamVsIdx, playerMapBlood);
     },
     onSetScore(gameIdx) {
       let scoreStr = $("#scoreInput" + gameIdx).val();
@@ -126,7 +153,14 @@ class _worldWar extends VueBase {
         gameView.setScore(gameIdx, [Number(a[0]), Number(a[1])]);
       }
     },
-    onSetVS(gameIdx,vsStr){
+    onSetTeamVsIdx(gameIdx) {
+      let scoreStr = $("#scoreInput" + gameIdx).val();
+      console.log(scoreStr);
+      if (Number(scoreStr) > 0) {
+        gameView.setTeamVsIdx(gameIdx, Number(scoreStr));
+      }
+    },
+    onSetVS(gameIdx, vsStr) {
       let a = vsStr.split(" ");
       if (a.length == 2) {
         gameView.setVs(gameIdx, [a[0], a[1]]);
@@ -146,7 +180,7 @@ class _worldWar extends VueBase {
       this.emitGameInfo();
     },
     onAddGame(e) {
-      gameView.addGame(this.vsPlayerArr);
+      gameView.addGame(this.vsPlayerArr, this.teamVsIdx);
     },
     onCommitGame(e) {},
     onReload(e) {
