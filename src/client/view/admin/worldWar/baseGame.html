@@ -1,0 +1,60 @@
+<table class="table is-striped is-bordered">
+    <thead>
+        <tr>
+            <th>
+                <div hidden>{{updateTime}}</div>
+            </th>
+            <th>
+                <a id="vudp" @click="onVueUpdate"></a>
+            </th>
+            <th>L player</th>
+            <th>score</th>
+            <th>R player</th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>score</th>
+            <th>
+                <button class="button" @click="onSetScore(true,1)">+1</button>
+                <button class="button" @click="onSetScore(true,-1)">-1</button>
+            </th>
+            <th>
+                {{baseGame.lName}}
+            </th>
+            <th>
+                {{baseGame.lScore}} - {{baseGame.rScore}}
+            </th>
+            <th>
+                {{baseGame.rName}}
+
+            </th>
+            <th>
+                <button class="button" @click="onSetScore(false,1)">+1</button>
+                <button class="button" @click="onSetScore(false,-1)">-1</button>
+            </th>
+        </tr>
+        <tr>
+            <th>foul</th>
+            <th>
+                <button class="button" @click="onSetFoul(true,1)">+1</button>
+                <button class="button" @click="onSetFoul(true,-1)">-1</button>
+            </th>
+            <th>
+                -
+            </th>
+            <th>
+                {{baseGame.lFoul}} - {{baseGame.rFoul}}
+            </th>
+            <th>
+                -
+            </th>
+            <th>
+                <button class="button" @click="onSetFoul(false,1)">+1</button>
+                <button class="button" @click="onSetFoul(false,-1)">-1</button>
+            </th>
+        </tr>
+    </tbody>
+</table>

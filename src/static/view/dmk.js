@@ -51,8 +51,8 @@
 	__webpack_require__(7);
 	__webpack_require__(18);
 	__webpack_require__(20);
-	var home_1 = __webpack_require__(46);
-	var Navbar_1 = __webpack_require__(48);
+	var home_1 = __webpack_require__(47);
+	var Navbar_1 = __webpack_require__(49);
 	var routes = [
 	    {
 	        path: '/', name: 'home',
@@ -579,7 +579,8 @@
 /* 43 */,
 /* 44 */,
 /* 45 */,
-/* 46 */
+/* 46 */,
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -609,7 +610,7 @@
 	    __extends(HomeView, _super);
 	    function HomeView() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(47);
+	        _this.template = __webpack_require__(48);
 	        _this.dmkArrMap = VueBase_1.VueBase.PROP;
 	        _this.serverUrl = VueBase_1.VueBase.PROP;
 	        _this.methods = {
@@ -645,13 +646,13 @@
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class=\"container\">\r\n    dmk leecher\r\n    <br>{{serverUrl}}\r\n    <br>\r\n    <button class=\"button\" @click=\"onTest\">test dmk</button>\r\n    <div class=\"box\" v-for=\"item in dmkArrMap\">\r\n        <strong>{{item.host}}</strong>\r\n        <li v-for=\"dmk in item.dmkArr\">\r\n            <strong>{{dmk.user}}</strong>\r\n            <p class=\"subtitle\">\r\n                {{dmk.content}}\r\n            </p>\r\n        </li>\r\n    </div>\r\n</div>";
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -660,12 +661,12 @@
 	    props: {
 	        active: {},
 	    },
-	    template: __webpack_require__(49)
+	    template: __webpack_require__(50)
 	};
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports) {
 
 	module.exports = "<nav class=\"nav has-shadow\">\r\n    <div class=\"container\">\r\n        <div class=\"nav-left\">\r\n            <a class=\"nav-item\" :class=\"{active: active === ''}\">\r\n                <i class=\"home icon\"></i>\r\n                <router-link :to=\"{ name: 'home'}\">Home</router-link>\r\n            </a>\r\n            <!--<a class=\"nav-item\" :class=\"{active: active === 'player'}\">\r\n                <i class=\"grid layout icon\"></i>\r\n                <router-link :to=\"{ name: 'player'}\">玩家管理</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'rank'}\">\r\n                <router-link :to=\"{ name: 'rank'}\">天梯排名</router-link>\r\n            </a>-->\r\n        </div>\r\n\r\n        <!--<div class=\"nav-right\">\r\n            <a class=\"nav-item\" :class=\"{active: active === 'setting'}\">\r\n                <router-link :to=\"{ name: 'setting'}\">setting</router-link>\r\n            </a>\r\n        </div>-->\r\n    </div>\r\n\r\n\r\n</nav>";

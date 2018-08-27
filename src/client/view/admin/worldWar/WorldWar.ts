@@ -6,6 +6,7 @@ import { WWGame, syncDoc } from "./WWGame";
 import { clone } from "../../utils/JsFunc";
 import { PanelId } from "../../const";
 import { CommandId } from "../../Command";
+import { BaseGame, BaseGameView, _baseGameView } from "./BaseGame";
 declare let $;
 declare let io;
 let opReq = (cmdId: string, param: any) => {
@@ -19,8 +20,11 @@ let opReq = (cmdId: string, param: any) => {
   });
 };
 const gameView = new WWGame();
+let baseGameView:_baseGameView
 class _worldWar extends VueBase {
   template = require("./worldWar.html");
+  components = {"BaseGame":BaseGameView}
+
   conf: BackendConf;
   vsPlayer = VueBase.PROP;
   vsPlayerArr = VueBase.PROP;
@@ -48,6 +52,8 @@ class _worldWar extends VueBase {
       this.initDocView(doc);
     });
     this.gameView = gameView;
+    baseGameView = window['BaseGameView']
+    // console.log('baseGameView',window['BaseGameView'])
   }
 
   initDocView(doc) {
@@ -105,12 +111,15 @@ class _worldWar extends VueBase {
     let gameTitle = "";
     // if (this.gameTitle)
     //     gameTitle = this.gameConf.gameTitle[this.gameTitle]
-    opReq("cs_setPlayer", {
+
+    let data = {
       leftPlayer: p1,
       rightPlayer: p2,
       gameTitle: gameTitle
-    });
+    }
+    opReq("cs_setPlayer", data);
     ///89 russ
+    baseGameView.initView(data)
     // this.onShowScoreRank(true)
   }
   updateBlood(teamVsIdx) {
@@ -170,9 +179,8 @@ class _worldWar extends VueBase {
       }
       gameView.setTeamBlood(teamVsIdx, playerMapBlood);
     },
-    onDeleteGameRec(gameIdx)
-    {
-      gameView.deleteGameRec(gameIdx)
+    onDeleteGameRec(gameIdx) {
+      gameView.deleteGameRec(gameIdx);
     },
     onSetScore(gameIdx) {
       let scoreStr = $("#scoreInput" + gameIdx).val();
