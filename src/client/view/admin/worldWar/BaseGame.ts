@@ -13,34 +13,20 @@ const baseGame = new BaseGame();
 declare let $;
 export class _baseGameView extends VueBase {
   template = require("./baseGame.html");
-  //   lScore: number = VueBase.PROP;
-  //   rScore: number = VueBase.PROP;
-  //   lFoul: number = VueBase.PROP;
-  //   rFoul: number = VueBase.PROP;
-  //   lName: string = VueBase.PROP;
-  //   rName: string = VueBase.PROP;
   updateTime = VueBase.PROP;
   constructor() {
     super();
     VueBase.initProps(this);
   }
   baseGame: any;
-  //   constructor() {
-  //     super();
-  //   }
   created() {
     this.baseGame = baseGame;
-    // this.lScore = this.rScore = 0;
   }
   initView(data) {
     baseGame.lName = data.leftPlayer.name;
     baseGame.rName = data.rightPlayer.name;
+    baseGame.lScore = baseGame.rScore = baseGame.lFoul = baseGame.rFoul = 0;
     console.log("init base game view", data, baseGame.lName);
-    // this.baseGame.lFoul = data.lFoul;
-    // this.baseGame.lScore = data.lScore;
-    // this.baseGame.rScore = data.rScore;
-    // this.baseGame.lFoul = data.lFoul;
-    // this.baseGame.rFoul = data.rFoul;
     this.vueUpdate();
     document.getElementById("vudp").click();
   }
@@ -62,7 +48,6 @@ export class _baseGameView extends VueBase {
       this.vueUpdate();
     },
     onVueUpdate() {
-      console.log("vudp");
       this.vueUpdate();
     }
   };

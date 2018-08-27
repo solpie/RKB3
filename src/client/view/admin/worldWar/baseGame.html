@@ -1,4 +1,4 @@
-<table class="table is-striped is-bordered">
+<table class="table is-striped is-bordered" style="font-size:30px;">
     <thead>
         <tr>
             <th>
@@ -24,8 +24,8 @@
             <th>
                 {{baseGame.lName}}
             </th>
-            <th>
-                {{baseGame.lScore}} - {{baseGame.rScore}}
+            <th style="font-size:40px;">
+                <span id="lScore">{{baseGame.lScore}}</span> - <span id="rScore">{{baseGame.rScore}}</span>
             </th>
             <th>
                 {{baseGame.rName}}
@@ -46,7 +46,7 @@
                 -
             </th>
             <th>
-                {{baseGame.lFoul}} - {{baseGame.rFoul}}
+                <span id="lFoul">{{baseGame.lFoul}}</span> - <span id="rFoul">{{baseGame.rFoul}}</span>
             </th>
             <th>
                 -

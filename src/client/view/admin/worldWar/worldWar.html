@@ -10,7 +10,7 @@
         vs player <input class="input" v-model="vsPlayer" type="text" style="width: 100px;">
         <button class="button is-primary" @click="onEmitGameInfo">emit game info</button>
         <button class="button is-primary" @click="onAddGame">创建比赛</button>
-        <button class="button is-primary" @click="onCommitGame">提交比赛</button> teamVsIdx:
+        <button class="button is-primary" @click="onCommitGame(gameIdx)">提交比赛</button> teamVsIdx:
         <input class="input" v-model="teamVsIdx" type="text" style="width: 60px;">
         <a class="button is-warnning" @click="onSetBlood(teamVsIdx)">设置初始血量</a>
         <label class="checkbox">
@@ -70,7 +70,7 @@
                 <td>
                     <div class="control" v-if="rec.gameIdx==gameView.gameIdx">
                         <input class="input" :id="'scoreInput'+rec.gameIdx" type="text" style="width: 80px;">
-                        <button class="button" @click="onSetScore(rec.gameIdx)">修改比分</button>
+                        <button class="button" @click="onSetScore(rec.gameIdx)">修改(提交)比分</button>
                         <button class="button" @click="onSetVS(rec.gameIdx,vsPlayer)">修改对阵↑</button>
                         <button class="button" @click="onSetTeamVsIdx(rec.gameIdx)">修改TeamVsIdx</button>
                         <button class="button is-danger" @click="onDeleteGameRec(rec.gameIdx)">删除</button>

@@ -20,10 +20,10 @@ let opReq = (cmdId: string, param: any) => {
   });
 };
 const gameView = new WWGame();
-let baseGameView:_baseGameView
+let baseGameView: _baseGameView;
 class _worldWar extends VueBase {
   template = require("./worldWar.html");
-  components = {"BaseGame":BaseGameView}
+  components = { BaseGame: BaseGameView };
 
   conf: BackendConf;
   vsPlayer = VueBase.PROP;
@@ -52,7 +52,7 @@ class _worldWar extends VueBase {
       this.initDocView(doc);
     });
     this.gameView = gameView;
-    baseGameView = window['BaseGameView']
+    baseGameView = window["BaseGameView"];
     // console.log('baseGameView',window['BaseGameView'])
   }
 
@@ -116,10 +116,10 @@ class _worldWar extends VueBase {
       leftPlayer: p1,
       rightPlayer: p2,
       gameTitle: gameTitle
-    }
+    };
     opReq("cs_setPlayer", data);
     ///89 russ
-    baseGameView.initView(data)
+    baseGameView.initView(data);
     // this.onShowScoreRank(true)
   }
   updateBlood(teamVsIdx) {
@@ -188,6 +188,13 @@ class _worldWar extends VueBase {
       let a = scoreStr.split(" ");
       if (a.length == 2) {
         gameView.setScore(gameIdx, [Number(a[0]), Number(a[1])]);
+      } else if (scoreStr == "") {
+        let lScore = Number($("#lScore").html());
+        let rScore = Number($("#rScore").html());
+        let lFoul = Number($("#lFoul").html());
+        let rFoul = Number($("#rFoul").html());
+        console.log("commit game", lScore, rScore, "foul", lFoul, rFoul);
+        gameView.setScore(gameIdx, [lScore, rScore]);
       }
     },
     onSetTeamVsIdx(gameIdx) {
@@ -219,7 +226,14 @@ class _worldWar extends VueBase {
     onAddGame(e) {
       gameView.addGame(this.vsPlayerArr, this.teamVsIdx);
     },
-    onCommitGame(e) {},
+    onCommitGame(gameIdx) {
+      // let lScore = Number($("#lScore").html());
+      // let rScore = Number($("#rScore").html());
+      // let lFoul = Number($("#lFoul").html());
+      // let rFoul = Number($("#rFoul").html());
+      // console.log("commit game", lScore, rScore, "foul", lFoul, rFoul);
+      // gameView.setScore(gameIdx, [lScore, rScore]);
+    },
     onReload(e) {
       this.conf.onReloadFile(e); //
     },
