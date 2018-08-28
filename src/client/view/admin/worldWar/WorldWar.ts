@@ -128,8 +128,9 @@ class _worldWar extends VueBase {
       let bloodArr = $(".blood");
       for (const $elm of bloodArr) {
         let playerId = $elm.id.split("blood")[1];
-        let blood = bloodMap[playerId];
+        let blood = bloodMap[playerId].blood;
         $elm.value = blood;
+
         // console.log("player", playerId, "blood", blood);
       }
       this.vueUpdate();

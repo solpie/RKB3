@@ -33,9 +33,29 @@ export class WWGame extends EventDispatcher {
   }
   bloodBuilder(doc, teamVsIdx) {
     const bloodMap = doc.bloodMap[teamVsIdx];
-    let curBloodMap = cloneMap(bloodMap);
+    let curBloodMap = {};
+    let bloodMapForShow = {}
+    for (const player in bloodMap) {
+      curBloodMap[player] = {
+        blood: bloodMap[player],
+        k: 0,
+        d: 0,
+        a: 0,
+        hurtMap: {}
+      };
+      bloodMapForShow[player] = {blood: bloodMap[player]}
+    }
     if (bloodMap) {
       let gameRecArr = [];
+      let _ = (lPlayer, rPlayer) => {
+        if (curBloodMap[lPlayer].blood == 0) {
+          curBloodMap[lPlayer].d++;
+          curBloodMap[rPlayer].k++;
+          for (const assistPlayer in curBloodMap[lPlayer].hurtMap) {
+            curBloodMap[assistPlayer].a++;
+          }
+        }
+      };
       for (const gameIdx in doc.rec) {
         if (doc.rec.hasOwnProperty(gameIdx)) {
           const gameRec = doc.rec[gameIdx];
@@ -45,18 +65,28 @@ export class WWGame extends EventDispatcher {
             let rPlayer = gameRec.player[1];
             let lScore = gameRec.score[0];
             let rScore = gameRec.score[1];
-            // if (!curBloodMap[lPlayer]) curBloodMap[lPlayer] = bloodMap[lPlayer];
-            // if (!curBloodMap[rPlayer]) curBloodMap[rPlayer] = bloodMap[rPlayer];
-            curBloodMap[lPlayer] -= rScore;
-            curBloodMap[rPlayer] -= lScore;
+
+            let lBkda = curBloodMap[lPlayer];
+            let rBkda = curBloodMap[rPlayer];
+
+            curBloodMap[lPlayer].blood -= rScore;
+            curBloodMap[rPlayer].blood -= lScore;
+
+            lBkda.hurtMap[rPlayer] = rScore; //assist calc
+            rBkda.hurtMap[lPlayer] = lScore; //assist calc
+
+            ///kda calc
+            _(lPlayer, rPlayer);
+            _(rPlayer, lPlayer);
           }
         }
       }
       for (let player in curBloodMap) {
-        this.playerMap[player].blood = curBloodMap[player];
+        this.playerMap[player].blood = curBloodMap[player].blood;
       }
       console.log("teamVsIdx ", teamVsIdx, "bloodMap", curBloodMap);
     }
+    return bloodMapForShow;
   }
   getTeamByIdx(idx): any {
     let a = [];
@@ -130,8 +160,8 @@ export class WWGame extends EventDispatcher {
   getBloodMap(teamVsIdx, cb) {
     syncDoc(data => {
       let doc = data.doc;
-      this.bloodBuilder(doc, teamVsIdx);
-      cb(doc.bloodMap[teamVsIdx]);
+      let bloodMap = this.bloodBuilder(doc, teamVsIdx);
+      cb(bloodMap);
     });
   }
   addGame(playerArr, teamVsIdx) {

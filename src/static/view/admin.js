@@ -2444,7 +2444,7 @@
 	            for (var _i = 0, bloodArr_2 = bloodArr; _i < bloodArr_2.length; _i++) {
 	                var $elm = bloodArr_2[_i];
 	                var playerId = $elm.id.split("blood")[1];
-	                var blood = bloodMap[playerId];
+	                var blood = bloodMap[playerId].blood;
 	                $elm.value = blood;
 	            }
 	            _this.vueUpdate();
@@ -2542,7 +2542,6 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var HupuAPI_1 = __webpack_require__(28);
 	var EventDispatcher_1 = __webpack_require__(39);
-	var JsFunc_1 = __webpack_require__(25);
 	var getDoc = function (callback) {
 	    $.get("http://rtmp.icassi.us:8090/event?idx=916", function (res) {
 	        if (res.length)
@@ -2574,9 +2573,29 @@
 	    };
 	    WWGame.prototype.bloodBuilder = function (doc, teamVsIdx) {
 	        var bloodMap = doc.bloodMap[teamVsIdx];
-	        var curBloodMap = JsFunc_1.cloneMap(bloodMap);
+	        var curBloodMap = {};
+	        var bloodMapForShow = {};
+	        for (var player in bloodMap) {
+	            curBloodMap[player] = {
+	                blood: bloodMap[player],
+	                k: 0,
+	                d: 0,
+	                a: 0,
+	                hurtMap: {}
+	            };
+	            bloodMapForShow[player] = { blood: bloodMap[player] };
+	        }
 	        if (bloodMap) {
 	            var gameRecArr = [];
+	            var _ = function (lPlayer, rPlayer) {
+	                if (curBloodMap[lPlayer].blood == 0) {
+	                    curBloodMap[lPlayer].d++;
+	                    curBloodMap[rPlayer].k++;
+	                    for (var assistPlayer in curBloodMap[lPlayer].hurtMap) {
+	                        curBloodMap[assistPlayer].a++;
+	                    }
+	                }
+	            };
 	            for (var gameIdx in doc.rec) {
 	                if (doc.rec.hasOwnProperty(gameIdx)) {
 	                    var gameRec = doc.rec[gameIdx];
@@ -2586,16 +2605,23 @@
 	                        var rPlayer = gameRec.player[1];
 	                        var lScore = gameRec.score[0];
 	                        var rScore = gameRec.score[1];
-	                        curBloodMap[lPlayer] -= rScore;
-	                        curBloodMap[rPlayer] -= lScore;
+	                        var lBkda = curBloodMap[lPlayer];
+	                        var rBkda = curBloodMap[rPlayer];
+	                        curBloodMap[lPlayer].blood -= rScore;
+	                        curBloodMap[rPlayer].blood -= lScore;
+	                        lBkda.hurtMap[rPlayer] = rScore;
+	                        rBkda.hurtMap[lPlayer] = lScore;
+	                        _(lPlayer, rPlayer);
+	                        _(rPlayer, lPlayer);
 	                    }
 	                }
 	            }
 	            for (var player in curBloodMap) {
-	                this.playerMap[player].blood = curBloodMap[player];
+	                this.playerMap[player].blood = curBloodMap[player].blood;
 	            }
 	            console.log("teamVsIdx ", teamVsIdx, "bloodMap", curBloodMap);
 	        }
+	        return bloodMapForShow;
 	    };
 	    WWGame.prototype.getTeamByIdx = function (idx) {
 	        var a = [];
@@ -2682,8 +2708,8 @@
 	        var _this = this;
 	        exports.syncDoc(function (data) {
 	            var doc = data.doc;
-	            _this.bloodBuilder(doc, teamVsIdx);
-	            cb(doc.bloodMap[teamVsIdx]);
+	            var bloodMap = _this.bloodBuilder(doc, teamVsIdx);
+	            cb(bloodMap);
 	        });
 	    };
 	    WWGame.prototype.addGame = function (playerArr, teamVsIdx) {
