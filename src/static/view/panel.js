@@ -7635,7 +7635,9 @@
 	        }
 	        console.log('new ScoreView');
 	        if (this.isTest) {
-	            this.stage.addChild(new WorldWar_1.WorldWar());
+	            TweenEx_1.TweenEx.delayedCall(1200, function (_) {
+	                _this.stage.addChild(new WorldWar_1.WorldWar());
+	            });
 	        }
 	        this.initLocal();
 	    }
@@ -10291,13 +10293,47 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var PixiEx_1 = __webpack_require__(56);
+	var TextFac_1 = __webpack_require__(77);
+	var const_1 = __webpack_require__(29);
+	var isTest = true;
 	var WorldWar = (function (_super) {
 	    __extends(WorldWar, _super);
 	    function WorldWar() {
 	        _super.call(this);
 	        var bg = PixiEx_1.newBitmap({ url: "/img/panel/worldWar/bg.png" });
 	        this.addChild(bg);
+	        var ns = {
+	            fontFamily: const_1.FontName.NotoSansHans,
+	            fontSize: '30px', fill: "#aaa",
+	        };
+	        this.lName = TextFac_1.TextFac.new_(ns, this)
+	            .setY(958);
+	        this.rName = TextFac_1.TextFac.new_(ns, this)
+	            .setPos(1215, this.lName.y);
+	        ns.fontSize = '28px';
+	        ns.fill = '#fff';
+	        this.lTitle = TextFac_1.TextFac.new_(ns, this)
+	            .setY(914 + 8);
+	        this.rTitle = TextFac_1.TextFac.new_(ns, this)
+	            .setPos(1123, this.lTitle.y);
+	        if (isTest) {
+	            this.setLeftPlayer({ name: '好哦天气', title: "呼噗噗哈哈哈" });
+	            this.setRightPlayer({ name: '好哦天气', title: "呼噗噗哈哈哈" });
+	        }
 	    }
+	    WorldWar.prototype.setRightPlayer = function (rPlayer) {
+	        this.rTitle.setText(rPlayer.title)
+	            .setAlignCenter(1320);
+	        this.rName.setText(rPlayer.name)
+	            .setLimitWidth(298, 40);
+	    };
+	    WorldWar.prototype.setLeftPlayer = function (lPlayer) {
+	        this.lTitle.setText(lPlayer.title)
+	            .setAlignCenter(600);
+	        this.lName.setText(lPlayer.name)
+	            .setLimitWidth(298, 40)
+	            .setAlignRight(702);
+	    };
 	    return WorldWar;
 	}(PIXI.Container));
 	exports.WorldWar = WorldWar;

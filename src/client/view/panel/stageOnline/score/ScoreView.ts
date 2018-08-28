@@ -97,15 +97,9 @@ export class ScoreView extends BasePanelView {
             //     weight: '79',
             //     winAmount: "3"
             // }
-            // this.eventPanel.showWin(player)
-            // TweenEx.delayedCall(7000, () => {
-            //     player.group = 'Gambia'
-            //     this.eventPanel.showWin(player)
-            // })
-            // this.eventPanel.showWin2(player)
-            // this.eventPanel.showTopInfo()
-            // this.eventPanel.showLogoFx()
-            this.stage.addChild(new WorldWar())
+            TweenEx.delayedCall(1200, _ => {
+                this.stage.addChild(new WorldWar())
+            })
         }
         // if (isManmual) {
         //     this.initManmual()
