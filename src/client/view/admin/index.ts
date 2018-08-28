@@ -8,7 +8,6 @@ require('../../../static/css/worldwar.css');
 require(`script!./../../libs/jquery.min.js`);
 require(`script!./../../libs/socket.io-1.4.5.min.js`);
 require(`script!./../../libs/qrcode.min.js`);
-require(`script!./../../libs/xlsx.full.min.js`);
 require(`../../libs/cropper.min.css`);
 require(`script!./../../libs/vue/vue.min.js`);
 require(`script!./../../libs/vue/vue-router.min.js`);

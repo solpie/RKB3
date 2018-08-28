@@ -16,6 +16,7 @@ import { ScorePanel2 } from './ScorePanel2';
 import { Score2018 } from './Score2018';
 import { PlayerNow } from '../playerNow/PlayerNow';
 import { Score2018v3 } from './Score2018v3';
+import { WorldWar } from './worldWar/WorldWar';
 declare let io;
 declare let $;
 function logEvent(...a) {
@@ -104,22 +105,7 @@ export class ScoreView extends BasePanelView {
             // this.eventPanel.showWin2(player)
             // this.eventPanel.showTopInfo()
             // this.eventPanel.showLogoFx()
-            let p = new PlayerNow()
-            p.show({
-                avatar: '/img/player/now/p1.png',
-                title: '蓝方球员',
-                y: 285, x: 20
-            })
-            this.stage.addChild(p)
-
-            let p2 = new PlayerNow()
-            p2.show({
-                avatar: '/img/player/now/p1.png',
-                title: '红方球员',
-                x: 1920 - 270, y: 285
-            })
-            this.stage.addChild(p2)
-
+            this.stage.addChild(new WorldWar())
         }
         // if (isManmual) {
         //     this.initManmual()
