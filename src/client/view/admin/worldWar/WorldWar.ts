@@ -67,11 +67,12 @@ class _worldWar extends VueBase {
         rec.name.push(this.getPlayerDoc(p).name);
       }
       this.recArr.push(rec);
-      gameView.gameIdx = doc.gameIdx;
-      this.teamVsIdx = doc.teamVsIdx;
-      //init blood
-      this.updateBlood(this.teamVsIdx);
     }
+    gameView.gameIdx = doc.gameIdx;
+    this.teamVsIdx = doc.teamVsIdx;
+    //init blood
+    this.updateBlood(this.teamVsIdx);
+    // this.vueUpdate()
   }
   getPlayerDoc(playerId) {
     if (this.gameView.playerMap) {
@@ -130,7 +131,6 @@ class _worldWar extends VueBase {
         let playerId = $elm.id.split("blood")[1];
         let blood = bloodMap[playerId].blood;
         $elm.value = blood;
-
         // console.log("player", playerId, "blood", blood);
       }
       this.vueUpdate();

@@ -31,7 +31,6 @@
                     <br>
                     <input class="input blood" :id="'blood'+item.playerId" type="text" style="width: 50px;">
                 </div>
-
             </div>
         </div>
 
@@ -79,6 +78,57 @@
             </tr>
         </tbody>
     </table>
+
+
+    <div class="level">
+        <div class="level-left">
+            <table class="table is-striped is-bordered">
+                <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>score</th>
+                        <th>kill</th>
+                        <th>death</th>
+                        <th>assist</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,index) in blueArr" :key="item">
+                        <th>{{item.name}}</th>
+                        <th>{{item.score}}</th>
+                        <th>{{item.k}}</th>
+                        <th>{{item.d}}</th>
+                        <th>{{item.a}}</th>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+        <div class="level-right">
+            <table class="table is-striped is-bordered">
+                <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>score</th>
+                        <th>kill</th>
+                        <th>death</th>
+                        <th>assist</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,index) in redArr" :key="item">
+                        <th>{{item.name}}</th>
+                        <th>{{item.score}}</th>
+                        <th>{{item.k}}</th>
+                        <th>{{item.d}}</th>
+                        <th>{{item.a}}</th>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
     <hr>
     <button class="button is-primary" @click="onDeleteDoc">delete doc</button> {{updateTime}}
 </div>

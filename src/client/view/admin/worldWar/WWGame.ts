@@ -34,16 +34,17 @@ export class WWGame extends EventDispatcher {
   bloodBuilder(doc, teamVsIdx) {
     const bloodMap = doc.bloodMap[teamVsIdx];
     let curBloodMap = {};
-    let bloodMapForShow = {}
+    let bloodMapForShow = {};
     for (const player in bloodMap) {
       curBloodMap[player] = {
         blood: bloodMap[player],
+        score: 0,
         k: 0,
         d: 0,
         a: 0,
         hurtMap: {}
       };
-      bloodMapForShow[player] = {blood: bloodMap[player]}
+      bloodMapForShow[player] = { blood: bloodMap[player] };
     }
     if (bloodMap) {
       let gameRecArr = [];
@@ -52,7 +53,7 @@ export class WWGame extends EventDispatcher {
           curBloodMap[lPlayer].d++;
           curBloodMap[rPlayer].k++;
           for (const assistPlayer in curBloodMap[lPlayer].hurtMap) {
-            curBloodMap[assistPlayer].a++;
+            if (rPlayer != assistPlayer) curBloodMap[assistPlayer].a++;
           }
         }
       };
@@ -72,6 +73,9 @@ export class WWGame extends EventDispatcher {
             curBloodMap[lPlayer].blood -= rScore;
             curBloodMap[rPlayer].blood -= lScore;
 
+            curBloodMap[lPlayer].score += lScore;
+            curBloodMap[rPlayer].score += rScore;
+
             lBkda.hurtMap[rPlayer] = rScore; //assist calc
             rBkda.hurtMap[lPlayer] = lScore; //assist calc
 
@@ -83,6 +87,10 @@ export class WWGame extends EventDispatcher {
       }
       for (let player in curBloodMap) {
         this.playerMap[player].blood = curBloodMap[player].blood;
+        this.playerMap[player].score = curBloodMap[player].score;
+        this.playerMap[player].k = curBloodMap[player].k;
+        this.playerMap[player].d = curBloodMap[player].d;
+        this.playerMap[player].a = curBloodMap[player].a;
       }
       console.log("teamVsIdx ", teamVsIdx, "bloodMap", curBloodMap);
     }
@@ -179,7 +187,6 @@ export class WWGame extends EventDispatcher {
         score: [0, 0],
         foul: [0, 0]
       };
-
       this.emit(WWGame.InitDocView, doc);
     }, true);
   }
