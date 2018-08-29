@@ -19,7 +19,8 @@ export class WorldWar extends PIXI.Container {
   lFoul: Text2;
   rFoul: Text2;
   timer: TextTimer;
-
+  lFoulHint: PIXI.Sprite
+  rFoulHint: PIXI.Sprite
   constructor() {
     super();
     let bg = newBitmap({ url: "/img/panel/worldWar/bg.png" });
@@ -30,7 +31,7 @@ export class WorldWar extends PIXI.Container {
       fontSize: "28px",
       fill: "#aaa"
     };
-    this.lName = TextFac.new_(ns, this).setY(958);
+    this.lName = TextFac.new_(ns, this).setY(960);
     this.rName = TextFac.new_(ns, this).setPos(1215, this.lName.y);
 
     ns.fontSize = "25px";
@@ -40,33 +41,44 @@ export class WorldWar extends PIXI.Container {
     this.rHW = TextFac.new_(ns, this).setPos(this.rName.x, this.lHW.y);
 
     ns.fontSize = "24px";
-    this.lFoul = TextFac.new_(ns, this).setY(1036);
+    this.lFoul = TextFac.new_(ns, this).setY(1024);
     this.rFoul = TextFac.new_(ns, this).setY(this.lFoul.y);
 
-
+    ns.fontSize = "38px";
+    ns.fill = "#eee";
     let t = new TextTimer('', ns)
     this.addChild(t)
-    t.x = 918
-    t.y =1036
+    t.x = 914
+    t.y = 1006
     t.textInSec = 0
     this.timer = t
 
-    ns.fontSize = "25px";
+    ns.fontSize = "26px";
     ns.fill = "#fff";
-    this.lTitle = TextFac.new_(ns, this).setY(914 + 8);
+    this.lTitle = TextFac.new_(ns, this).setY(925);
 
     this.rTitle = TextFac.new_(ns, this).setPos(1123, this.lTitle.y);
 
+
+    //foul hint
+    let lFoulHint = newBitmap({ url: '/img/panel/worldWar/foulHintL.png' })
+    let rFoulHint = newBitmap({ url: '/img/panel/worldWar/foulHintL.png' })
+    lFoulHint.visible = false
+    rFoulHint.visible = false
+    this.addChild(lFoulHint)
+    this.addChild(rFoulHint)
+    this.lFoulHint = lFoulHint
+    this.rFoulHint = rFoulHint
     if (isTest) this.test();
   }
   test() {
     this.setLeftPlayer({
-      name: "好哦天气",
+      name: "申屠土匪",
       title: "呼噗噗哈哈哈",
       hwa: [180, 72, 22]
     });
     this.setRightPlayer({
-      name: "好哦天气",
+      name: "黄宇军",
       title: "呼噗噗哈哈哈",
       hwa: [180, 72, 22]
     });
@@ -112,16 +124,20 @@ export class WorldWar extends PIXI.Container {
     if (lPlayer.age) age = lPlayer.age + "岁";
     this.lHW
       .setText(lPlayer.height + "CM  " + lPlayer.weight + "KG  " + age)
-      .setAlignCenter(_c(-300));
+      .setAlignCenter(_c(-330));
     // this.lAvtUrl = lPlayer.avatar
     // loadAvt(this.lAvt, lPlayer.avatar, 725)
   }
 
   setLeftFoul(val) {
-    this.lFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(-150));
+    if (val > 4)
+      this.lFoulHint.visible = true;
+    this.lFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(-135));
   }
   setRightFoul(val) {
-    this.rFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(150));
+    if (val > 4)
+      this.rFoulHint.visible = true;
+    this.rFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(135));
   }
 
   resetTimer() {
