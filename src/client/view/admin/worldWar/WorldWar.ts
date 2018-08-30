@@ -112,7 +112,7 @@ class _worldWar extends VueBase {
     let gameTitle = "";
     // if (this.gameTitle)
     //     gameTitle = this.gameConf.gameTitle[this.gameTitle]
-
+    
     let data = {
       leftPlayer: p1,
       rightPlayer: p2,
@@ -136,35 +136,13 @@ class _worldWar extends VueBase {
       this.vueUpdate();
     });
   }
-  // initLocalWs() {
-  //   let localWs = io.connect(`/${PanelId.rkbPanel}`);
-  //   localWs
-  //     .on("connect", msg => {
-  //       console.log("connect", window.location.host);
-  //       // localWs.emit("opUrl", { opUrl: window.location.host })
-  //     })
-  //     .on(`${CommandId.sc_updateScore}`, data => {
-  //       if (data.dtScore != null) {
-  //         // this.scorePanelV3.setDtScore(data)
-  //         console.log()
-  //       } else {
-  //         if (data.isLeft) {
-  //           data.leftScore = data.score;
-  //           // this.scorePanelV3.setLeftScore(data.score)
-  //         } else {
-  //           data.rightScore = data.score;
-  //           // this.scorePanelV3.setRightScore(data.score)
-  //         }
-  //       }
-  //     });
-  //   // sc_updateScore
-  // }
   watch = {
     teamVsIdx(val) {
       this.updateBlood(val);
     }
   };
   methods = {
+ 
     isShowRec(isTeamVsIdxRec) {
       if (this.isShowCurTeamVsOnly) return isTeamVsIdxRec;
       return true;

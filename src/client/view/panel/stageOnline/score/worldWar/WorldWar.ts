@@ -1,6 +1,6 @@
 import { newBitmap } from "../../../../utils/PixiEx";
 import { Text2, TextFac } from "../../../../utils/TextFac";
-import { FontName } from "../../../../const";
+import { FontName, TimerState, TimerEvent } from "../../../../const";
 import { TextTimer } from "../../../../utils/TextTimer";
 import { BloodBar } from "./BloodBar";
 const isTest = true;
@@ -20,25 +20,23 @@ export class WorldWar extends PIXI.Container {
   lFoul: Text2;
   rFoul: Text2;
   timer: TextTimer;
-  lFoulHint: PIXI.Sprite
-  rFoulHint: PIXI.Sprite
+  lFoulHint: PIXI.Sprite;
+  rFoulHint: PIXI.Sprite;
 
-  lBlood:BloodBar
-  rBlood:BloodBar
+  lBlood: BloodBar;
+  rBlood: BloodBar;
   constructor() {
     super();
     let bg = newBitmap({ url: "/img/panel/worldWar/bg.png" });
     this.addChild(bg);
 
+    let lBlood = new BloodBar(true);
+    this.lBlood = lBlood;
+    this.addChild(lBlood);
 
-
-    let lBlood = new BloodBar(true)
-    this.lBlood = lBlood
-    this.addChild(lBlood)
-
-    let rBlood = new BloodBar(false)
-    this.rBlood = rBlood
-    this.addChild(rBlood)
+    let rBlood = new BloodBar(false);
+    this.rBlood = rBlood;
+    this.addChild(rBlood);
 
     let ns = {
       fontFamily: FontName.NotoSansHans,
@@ -60,29 +58,28 @@ export class WorldWar extends PIXI.Container {
     this.rFoul = TextFac.new_(ns, this).setY(this.lFoul.y);
 
     ns.fontSize = "38px";
-    ns.fill = "#eee";
-    let t = new TextTimer('', ns)
-    this.addChild(t)
-    t.x = 914
-    t.y = 1006
-    t.textInSec = 0
-    this.timer = t
+    ns.fill = "#ddd";
+    let t = new TextTimer("", ns);
+    this.addChild(t);
+    t.x = 914;
+    t.y = 1006;
+    t.textInSec = 0;
+    this.timer = t;
 
     // ns.fontSize = "26px";
     // ns.fill = "#fff";
     // this.lTitle = TextFac.new_(ns, this).setY(925);
     // this.rTitle = TextFac.new_(ns, this).setPos(1123, this.lTitle.y);
 
-
     //foul hint
-    let lFoulHint = newBitmap({ url: '/img/panel/worldWar/foulHintL.png' })
-    let rFoulHint = newBitmap({ url: '/img/panel/worldWar/foulHintL.png' })
-    lFoulHint.visible = false
-    rFoulHint.visible = false
-    this.addChild(lFoulHint)
-    this.addChild(rFoulHint)
-    this.lFoulHint = lFoulHint
-    this.rFoulHint = rFoulHint
+    let lFoulHint = newBitmap({ url: "/img/panel/worldWar/foulHintL.png" });
+    let rFoulHint = newBitmap({ url: "/img/panel/worldWar/foulHintL.png" });
+    lFoulHint.visible = false;
+    rFoulHint.visible = false;
+    this.addChild(lFoulHint);
+    this.addChild(rFoulHint);
+    this.lFoulHint = lFoulHint;
+    this.rFoulHint = rFoulHint;
     if (isTest) this.test();
   }
   test() {
@@ -107,7 +104,8 @@ export class WorldWar extends PIXI.Container {
       playerData.age = playerData.hwa[2];
     }
 
-    this.lBlood.setBlood(4)
+    // this.lBlood.setBlood(4);
+    this.rBlood.setBlood(2);
   }
   setRightPlayer(rPlayer) {
     // this.rTitle.setText(rPlayer.title).setAlignCenter(_c(330));
@@ -125,6 +123,7 @@ export class WorldWar extends PIXI.Container {
       .setAlignCenter(_c(330));
     // this.rAvtUrl = rPlayer.avatar
     // loadAvt(this.rAvt, rPlayer.avatar, 1109)
+    this.rBlood.setBlood(rPlayer.blood);
   }
 
   setLeftPlayer(lPlayer) {
@@ -143,17 +142,26 @@ export class WorldWar extends PIXI.Container {
       .setAlignCenter(_c(-330));
     // this.lAvtUrl = lPlayer.avatar
     // loadAvt(this.lAvt, lPlayer.avatar, 725)
+    this.lBlood.setBlood(lPlayer.blood);
   }
-
+  setBloodByDtScore(data) {
+    if (data.isLeft) {
+      this.rBlood.setBloodByDtScore(data.score);
+    } else {
+      this.lBlood.setBloodByDtScore(data.score);
+    }
+  }
   setLeftFoul(val) {
-    if (val > 4)
-      this.lFoulHint.visible = true;
+    if (val > 4) this.lFoulHint.visible = true;
     this.lFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(-135));
   }
   setRightFoul(val) {
-    if (val > 4)
-      this.rFoulHint.visible = true;
+    if (val > 4) this.rFoulHint.visible = true;
     this.rFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(135));
+  }
+
+  setTimerEvent(data) {
+    this.timer.setTimerEvent(data);
   }
 
   resetTimer() {

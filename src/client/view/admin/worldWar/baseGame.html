@@ -1,8 +1,25 @@
 <table class="table is-striped is-bordered" style="font-size:30px;">
     <thead>
+        <!-- <tr>
+            <th>
+                <div hidden>{{updateTime}}</div>
+
+            </th>
+            <th>
+                <a id="vudp" @click="onVueUpdate"></a>
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>
+            </th>
+        </tr> -->
+    </thead>
+    <tbody>
         <tr>
             <th>
                 <div hidden>{{updateTime}}</div>
+                time in sec:<input class="input" v-model="timeInSec" type="text" style="width: 100px;">
             </th>
             <th>
                 <a id="vudp" @click="onVueUpdate"></a>
@@ -13,10 +30,13 @@
             <th>
             </th>
         </tr>
-    </thead>
-    <tbody>
         <tr>
-            <th>score</th>
+            <th>
+
+                <a @click="onSetTimerEvent('start')">开始  </a><a @click="onSetTimerEvent('pause')">暂停  </a>
+                <a @click="onSetTimerEvent('setting',timeInSec)">设置</a>
+
+            </th>
             <th>
                 <button class="button" @click="onSetScore(true,1)">+1</button>
                 <button class="button" @click="onSetScore(true,-1)">-1</button>

@@ -1414,6 +1414,12 @@
 	    PAUSE: 0,
 	    RUNNING: 1
 	};
+	exports.TimerEvent = {
+	    START: 'start',
+	    PAUSE: 'pause',
+	    RESET: 'reset',
+	    SETTING: 'setting'
+	};
 	exports.ViewEvent = {
 	    PLAYER_EDIT: 'edit player',
 	    PLAYER_ADD: 'add player',
@@ -1523,6 +1529,8 @@
 	    sc_startTimer: '',
 	    cs_pauseTimer: '',
 	    sc_pauseTimer: '',
+	    cs_timerEvent: '',
+	    sc_timerEvent: '',
 	    cs_showPickup: '',
 	    sc_showPickup: '',
 	    cs_startGame: '',
@@ -2353,6 +2361,18 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var VueBase_1 = __webpack_require__(24);
+	var const_1 = __webpack_require__(29);
+	var Command_1 = __webpack_require__(30);
+	var opReq = function (cmdId, param) {
+	    param._ = null;
+	    $.ajax({
+	        url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
+	        type: "post",
+	        data: JSON.stringify(param),
+	        headers: { "Content-Type": "application/json" },
+	        dataType: "json"
+	    });
+	};
 	var BaseGame = (function () {
 	    function BaseGame() {
 	        this.lScore = 0;
@@ -2371,6 +2391,7 @@
 	    function _baseGameView() {
 	        var _this = _super.call(this) || this;
 	        _this.template = __webpack_require__(39);
+	        _this.timeInSec = VueBase_1.VueBase.PROP;
 	        _this.updateTime = VueBase_1.VueBase.PROP;
 	        _this.watch = {
 	            "baseGame.lName": function (val) {
@@ -2378,8 +2399,20 @@
 	            }
 	        };
 	        _this.methods = {
+	            onSetTimerEvent: function (event, param) {
+	                opReq(Command_1.CommandId.cs_timerEvent, { event: event, param: param });
+	            },
 	            onSetScore: function (isLeft, dtScore) {
-	                isLeft ? (baseGame.lScore += dtScore) : (baseGame.rScore += dtScore);
+	                var score;
+	                if (isLeft) {
+	                    baseGame.lScore += dtScore;
+	                    score = baseGame.lScore;
+	                }
+	                else {
+	                    baseGame.rScore += dtScore;
+	                    score = baseGame.rScore;
+	                }
+	                opReq(Command_1.CommandId.cs_setBlood, { isLeft: isLeft, score: score });
 	                this.vueUpdate();
 	            },
 	            onSetFoul: function (isLeft, dtFoul) {
@@ -2395,6 +2428,7 @@
 	    }
 	    _baseGameView.prototype.created = function () {
 	        this.baseGame = baseGame;
+	        this.timeInSec = 0;
 	    };
 	    _baseGameView.prototype.initView = function (data) {
 	        baseGame.lName = data.leftPlayer.name;
@@ -2418,7 +2452,7 @@
 /* 39 */
 /***/ (function(module, exports) {
 
-	module.exports = "<table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n    <thead>\r\n        <tr>\r\n            <th>\r\n                <div hidden>{{updateTime}}</div>\r\n            </th>\r\n            <th>\r\n                <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n            </th>\r\n            <th>L player</th>\r\n            <th>score</th>\r\n            <th>R player</th>\r\n            <th>\r\n            </th>\r\n        </tr>\r\n    </thead>\r\n    <tbody>\r\n        <tr>\r\n            <th>score</th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                {{baseGame.lName}}\r\n            </th>\r\n            <th style=\"font-size:40px;\">\r\n                <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n            </th>\r\n            <th>\r\n                {{baseGame.rName}}\r\n\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th>foul</th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n    </tbody>\r\n</table>";
+	module.exports = "<table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n    <thead>\r\n        <!-- <tr>\r\n            <th>\r\n                <div hidden>{{updateTime}}</div>\r\n\r\n            </th>\r\n            <th>\r\n                <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n            </th>\r\n            <th></th>\r\n            <th></th>\r\n            <th></th>\r\n            <th>\r\n            </th>\r\n        </tr> -->\r\n    </thead>\r\n    <tbody>\r\n        <tr>\r\n            <th>\r\n                <div hidden>{{updateTime}}</div>\r\n                time in sec:<input class=\"input\" v-model=\"timeInSec\" type=\"text\" style=\"width: 100px;\">\r\n            </th>\r\n            <th>\r\n                <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n            </th>\r\n            <th>L player</th>\r\n            <th>score</th>\r\n            <th>R player</th>\r\n            <th>\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th>\r\n\r\n                <a @click=\"onSetTimerEvent('start')\">开始  </a><a @click=\"onSetTimerEvent('pause')\">暂停  </a>\r\n                <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                {{baseGame.lName}}\r\n            </th>\r\n            <th style=\"font-size:40px;\">\r\n                <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n            </th>\r\n            <th>\r\n                {{baseGame.rName}}\r\n\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th>foul</th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n    </tbody>\r\n</table>";
 
 /***/ }),
 /* 40 */
@@ -3768,6 +3802,7 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var JsFunc_1 = __webpack_require__(23);
+	var const_1 = __webpack_require__(29);
 	var TimerState = {
 	    PAUSE: 0,
 	    RUNNING: 1
@@ -3781,6 +3816,23 @@
 	        _this.isMin = false;
 	        return _this;
 	    }
+	    TextTimer.prototype.setTimerEvent = function (data) {
+	        if (data.event == const_1.TimerEvent.PAUSE) {
+	            this.toggleTimer(TimerState.PAUSE);
+	        }
+	        else if (data.event == const_1.TimerEvent.START) {
+	            this.toggleTimer(TimerState.RUNNING);
+	        }
+	        else if (data.event == const_1.TimerEvent.PAUSE) {
+	            this.toggleTimer(TimerState.PAUSE);
+	        }
+	        else if (data.event == const_1.TimerEvent.RESET) {
+	            this.resetTimer();
+	        }
+	        else if (data.event == const_1.TimerEvent.SETTING) {
+	            this.setTimeBySec(data.param);
+	        }
+	    };
 	    Object.defineProperty(TextTimer.prototype, "textInSec", {
 	        set: function (v) {
 	            this.setTimeBySec(v);
@@ -8019,7 +8071,7 @@
 	var TweenEx_1 = __webpack_require__(57);
 	var BasePanelView_1 = __webpack_require__(68);
 	var Score2018v3_1 = __webpack_require__(107);
-	var WorldWar_1 = __webpack_require__(108);
+	var WorldWarView_1 = __webpack_require__(124);
 	function logEvent() {
 	    var a = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
@@ -8063,9 +8115,6 @@
 	        }
 	        console.log('new ScoreView');
 	        if (_this.isTest) {
-	            TweenEx_1.TweenEx.delayedCall(1200, function (_) {
-	                _this.stage.addChild(new WorldWar_1.WorldWar());
-	            });
 	        }
 	        _this.initLocal();
 	        return _this;
@@ -8112,6 +8161,9 @@
 	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
 	        localWs.on('connect', function (msg) {
 	            console.log('connect', window.location.host);
+	            if (_this.isTest) {
+	                new WorldWarView_1.WorldWarView(_this.stage, localWs);
+	            }
 	        })
 	            .on("" + Command_1.CommandId.sc_startTimer, function (data) {
 	            _this.scorePanelV3.toggleTimer(const_1.TimerState.RUNNING);
@@ -10499,15 +10551,15 @@
 	        _this.lFoul = TextFac_1.TextFac.new_(ns, _this).setY(1024);
 	        _this.rFoul = TextFac_1.TextFac.new_(ns, _this).setY(_this.lFoul.y);
 	        ns.fontSize = "38px";
-	        ns.fill = "#eee";
-	        var t = new TextTimer_1.TextTimer('', ns);
+	        ns.fill = "#ddd";
+	        var t = new TextTimer_1.TextTimer("", ns);
 	        _this.addChild(t);
 	        t.x = 914;
 	        t.y = 1006;
 	        t.textInSec = 0;
 	        _this.timer = t;
-	        var lFoulHint = PixiEx_1.newBitmap({ url: '/img/panel/worldWar/foulHintL.png' });
-	        var rFoulHint = PixiEx_1.newBitmap({ url: '/img/panel/worldWar/foulHintL.png' });
+	        var lFoulHint = PixiEx_1.newBitmap({ url: "/img/panel/worldWar/foulHintL.png" });
+	        var rFoulHint = PixiEx_1.newBitmap({ url: "/img/panel/worldWar/foulHintL.png" });
 	        lFoulHint.visible = false;
 	        rFoulHint.visible = false;
 	        _this.addChild(lFoulHint);
@@ -10538,7 +10590,7 @@
 	            playerData.weight = playerData.hwa[1];
 	            playerData.age = playerData.hwa[2];
 	        }
-	        this.lBlood.setBlood(4);
+	        this.rBlood.setBlood(2);
 	    };
 	    WorldWar.prototype.setRightPlayer = function (rPlayer) {
 	        this.rName
@@ -10550,6 +10602,7 @@
 	        this.rHW
 	            .setText(rPlayer.height + "CM  " + rPlayer.weight + "KG  " + age)
 	            .setAlignCenter(_c(330));
+	        this.rBlood.setBlood(rPlayer.blood);
 	    };
 	    WorldWar.prototype.setLeftPlayer = function (lPlayer) {
 	        this.lName
@@ -10561,6 +10614,15 @@
 	        this.lHW
 	            .setText(lPlayer.height + "CM  " + lPlayer.weight + "KG  " + age)
 	            .setAlignCenter(_c(-330));
+	        this.lBlood.setBlood(lPlayer.blood);
+	    };
+	    WorldWar.prototype.setBloodByDtScore = function (data) {
+	        if (data.isLeft) {
+	            this.rBlood.setBloodByDtScore(data.score);
+	        }
+	        else {
+	            this.lBlood.setBloodByDtScore(data.score);
+	        }
 	    };
 	    WorldWar.prototype.setLeftFoul = function (val) {
 	        if (val > 4)
@@ -10571,6 +10633,9 @@
 	        if (val > 4)
 	            this.rFoulHint.visible = true;
 	        this.rFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(135));
+	    };
+	    WorldWar.prototype.setTimerEvent = function (data) {
+	        this.timer.setTimerEvent(data);
 	    };
 	    WorldWar.prototype.resetTimer = function () {
 	        this.timer.resetTimer();
@@ -10976,13 +11041,14 @@
 	    __extends(BloodBar, _super);
 	    function BloodBar(isLeft) {
 	        var _this = _super.call(this) || this;
+	        _this.initBlood = 0;
 	        _this.isLeft = isLeft;
 	        _this.bloodArr = [];
 	        for (var i = 0; i < 6; i++) {
 	            var b = PixiEx_1.newBitmap({ url: "/img/panel/worldWar/b" + (i + 0) + ".png" });
 	            _this.addChild(b);
 	            _this.bloodArr.push(b);
-	            if (!isLeft) {
+	            if (isLeft) {
 	                b.x = 1920;
 	                b.scale.x = -1;
 	            }
@@ -10990,14 +11056,70 @@
 	        return _this;
 	    }
 	    BloodBar.prototype.setBlood = function (val) {
+	        this.initBlood = val;
+	        this._setBlood(val);
+	    };
+	    BloodBar.prototype._setBlood = function (val) {
 	        for (var i = 0; i < this.bloodArr.length; i++) {
 	            var b = this.bloodArr[i];
 	            b.visible = i < val;
 	        }
 	    };
+	    BloodBar.prototype.setBloodByDtScore = function (score) {
+	        this._setBlood(this.initBlood - score);
+	    };
 	    return BloodBar;
 	}(PIXI.Container));
 	exports.BloodBar = BloodBar;
+
+
+/***/ }),
+/* 124 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var Command_1 = __webpack_require__(30);
+	var TweenEx_1 = __webpack_require__(57);
+	var WorldWar_1 = __webpack_require__(108);
+	var WorldWarView = (function (_super) {
+	    __extends(WorldWarView, _super);
+	    function WorldWarView(stage, io) {
+	        var _this = _super.call(this) || this;
+	        _this.stage = stage;
+	        TweenEx_1.TweenEx.delayedCall(1200, function (_) {
+	            _this.worldWar = new WorldWar_1.WorldWar();
+	            _this.stage.addChild(_this.worldWar);
+	        });
+	        io.on(Command_1.CommandId.sc_timerEvent, function (data) {
+	            console.log("sc_timerEvent", data);
+	            _this.worldWar.setTimerEvent(data);
+	        })
+	            .on(Command_1.CommandId.sc_setPlayer, function (data) {
+	            console.log("sc_setBlood", data);
+	            _this.worldWar.setLeftPlayer(data.leftPlayer);
+	            _this.worldWar.setRightPlayer(data.rightPlayer);
+	            _this.worldWar.setTimerEvent({ event: "setting", param: 0 });
+	        })
+	            .on(Command_1.CommandId.sc_setBlood, function (data) {
+	            console.log("sc_setBlood", data);
+	            _this.worldWar.setBloodByDtScore(data);
+	        });
+	        return _this;
+	    }
+	    return WorldWarView;
+	}(PIXI.Container));
+	exports.WorldWarView = WorldWarView;
 
 
 /***/ })

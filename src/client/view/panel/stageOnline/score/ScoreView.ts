@@ -17,6 +17,7 @@ import { Score2018 } from './Score2018';
 import { PlayerNow } from '../playerNow/PlayerNow';
 import { Score2018v3 } from './Score2018v3';
 import { WorldWar } from './worldWar/WorldWar';
+import { WorldWarView } from './worldWar/WorldWarView';
 declare let io;
 declare let $;
 function logEvent(...a) {
@@ -97,9 +98,7 @@ export class ScoreView extends BasePanelView {
             //     weight: '79',
             //     winAmount: "3"
             // }
-            TweenEx.delayedCall(1200, _ => {
-                this.stage.addChild(new WorldWar())
-            })
+       
         }
         // if (isManmual) {
         //     this.initManmual()
@@ -159,6 +158,10 @@ export class ScoreView extends BasePanelView {
         localWs.on('connect', (msg) => {
             console.log('connect', window.location.host)
             // localWs.emit("opUrl", { opUrl: window.location.host })
+            if(this.isTest)
+            {
+                new WorldWarView(this.stage,localWs)
+            }
         })
             .on(`${CommandId.sc_startTimer}`, (data) => {
                 this.scorePanelV3.toggleTimer(TimerState.RUNNING)
@@ -290,7 +293,8 @@ export class ScoreView extends BasePanelView {
             .on(CommandId.sc_showScoreRank, (data) => {
                 this.eventPanel.showScoreRank(data)
             })
-
+            //
+           
             // this.opReq(`${CommandId.cs_updateScore}`, { _: null, dtScore: v, isLeft: isLeft })
             .on(CommandId.sc_updateScore, (data) => {
                 if (data.scoreFx) {

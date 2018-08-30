@@ -6,6 +6,9 @@ export const CommandId = {
     sc_updateFoul: '',
     cs_updateScore: '',
     sc_updateScore: '',
+    
+    // cs_updateScore: '',
+    // sc_updateScore: '',
 
     cs_updateRightScore: '',
     sc_updateRightScore: '',
@@ -108,6 +111,8 @@ export const CommandId = {
     sc_startTimer: '',
     cs_pauseTimer: '',
     sc_pauseTimer: '',
+    cs_timerEvent:'',
+    sc_timerEvent:'',
     cs_showPickup: '',//
     sc_showPickup: '',//
     //hp

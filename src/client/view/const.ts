@@ -34,6 +34,13 @@ export const TimerState = {
     PAUSE: 0,
     RUNNING: 1
 };
+export const TimerEvent = {
+    START: 'start',
+    PAUSE: 'pause',
+    RESET: 'reset',
+    SETTING: 'setting'
+};
+
 
 export const ViewEvent = {
     PLAYER_EDIT: 'edit player',
