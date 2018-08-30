@@ -2,6 +2,7 @@ import { newBitmap } from "../../../../utils/PixiEx";
 import { Text2, TextFac } from "../../../../utils/TextFac";
 import { FontName } from "../../../../const";
 import { TextTimer } from "../../../../utils/TextTimer";
+import { BloodBar } from "./BloodBar";
 const isTest = true;
 const _c = v => {
   return 960 + v;
@@ -21,16 +22,30 @@ export class WorldWar extends PIXI.Container {
   timer: TextTimer;
   lFoulHint: PIXI.Sprite
   rFoulHint: PIXI.Sprite
+
+  lBlood:BloodBar
+  rBlood:BloodBar
   constructor() {
     super();
     let bg = newBitmap({ url: "/img/panel/worldWar/bg.png" });
     this.addChild(bg);
+
+
+
+    let lBlood = new BloodBar(true)
+    this.lBlood = lBlood
+    this.addChild(lBlood)
+
+    let rBlood = new BloodBar(false)
+    this.rBlood = rBlood
+    this.addChild(rBlood)
 
     let ns = {
       fontFamily: FontName.NotoSansHans,
       fontSize: "28px",
       fill: "#aaa"
     };
+
     this.lName = TextFac.new_(ns, this).setY(960);
     this.rName = TextFac.new_(ns, this).setPos(1215, this.lName.y);
 
@@ -53,11 +68,10 @@ export class WorldWar extends PIXI.Container {
     t.textInSec = 0
     this.timer = t
 
-    ns.fontSize = "26px";
-    ns.fill = "#fff";
-    this.lTitle = TextFac.new_(ns, this).setY(925);
-
-    this.rTitle = TextFac.new_(ns, this).setPos(1123, this.lTitle.y);
+    // ns.fontSize = "26px";
+    // ns.fill = "#fff";
+    // this.lTitle = TextFac.new_(ns, this).setY(925);
+    // this.rTitle = TextFac.new_(ns, this).setPos(1123, this.lTitle.y);
 
 
     //foul hint
@@ -92,9 +106,11 @@ export class WorldWar extends PIXI.Container {
       playerData.weight = playerData.hwa[1];
       playerData.age = playerData.hwa[2];
     }
+
+    this.lBlood.setBlood(4)
   }
   setRightPlayer(rPlayer) {
-    this.rTitle.setText(rPlayer.title).setAlignCenter(_c(330));
+    // this.rTitle.setText(rPlayer.title).setAlignCenter(_c(330));
 
     this.rName
       .setText(rPlayer.name)
@@ -103,7 +119,7 @@ export class WorldWar extends PIXI.Container {
 
     this._setHWA(rPlayer);
     let age = "";
-    if (rPlayer.age) age = rPlayer.age + "岁";
+    // if (rPlayer.age) age = rPlayer.age + "岁";
     this.rHW
       .setText(rPlayer.height + "CM  " + rPlayer.weight + "KG  " + age)
       .setAlignCenter(_c(330));
@@ -112,7 +128,7 @@ export class WorldWar extends PIXI.Container {
   }
 
   setLeftPlayer(lPlayer) {
-    this.lTitle.setText(lPlayer.title).setAlignCenter(_c(-330));
+    // this.lTitle.setText(lPlayer.title).setAlignCenter(_c(-330));
 
     this.lName
       .setText(lPlayer.name)
@@ -121,7 +137,7 @@ export class WorldWar extends PIXI.Container {
 
     this._setHWA(lPlayer);
     let age = "";
-    if (lPlayer.age) age = lPlayer.age + "岁";
+    // if (lPlayer.age) age = lPlayer.age + "岁";
     this.lHW
       .setText(lPlayer.height + "CM  " + lPlayer.weight + "KG  " + age)
       .setAlignCenter(_c(-330));
