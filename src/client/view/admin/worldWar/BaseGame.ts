@@ -70,7 +70,15 @@ export class _baseGameView extends VueBase {
     },
     onSetFoul(isLeft, dtFoul) {
       isLeft ? (baseGame.lFoul += dtFoul) : (baseGame.rFoul += dtFoul);
+      opReq(CommandId.cs_setFoul, {
+        lFoul: baseGame.lFoul,
+        rFoul: baseGame.rFoul
+      });
       this.vueUpdate();
+    },
+    onResetFoul(){
+      this.onSetFoul(true,-baseGame.lFoul)
+      this.onSetFoul(false,-baseGame.rFoul)
     },
     onVueUpdate() {
       this.vueUpdate();

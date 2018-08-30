@@ -22,6 +22,10 @@ export class WorldWarView extends PIXI.Container {
         this.worldWar.setRightPlayer(data.rightPlayer);
         this.worldWar.setTimerEvent({event:"setting",param:0});
       })
+      .on(CommandId.sc_setFoul, data => {
+        this.worldWar.setLeftFoul(data.lFoul);
+        this.worldWar.setRightFoul(data.rFoul);
+      })
       .on(CommandId.sc_setBlood, data => {
         console.log("sc_setBlood", data);
         this.worldWar.setBloodByDtScore(data)

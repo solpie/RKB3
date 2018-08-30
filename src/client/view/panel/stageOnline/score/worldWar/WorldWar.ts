@@ -152,11 +152,11 @@ export class WorldWar extends PIXI.Container {
     }
   }
   setLeftFoul(val) {
-    if (val > 4) this.lFoulHint.visible = true;
+    this.lFoulHint.visible = val > 4;
     this.lFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(-135));
   }
   setRightFoul(val) {
-    if (val > 4) this.rFoulHint.visible = true;
+    this.rFoulHint.visible = val > 4;
     this.rFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(135));
   }
 

@@ -17,6 +17,7 @@ export class TextTimer extends PIXI.Text {
     } else if (data.event == TimerEvent.PAUSE) {
       this.toggleTimer(TimerState.PAUSE)
     } else if (data.event == TimerEvent.RESET) {
+      this.toggleTimer(TimerState.PAUSE)
       this.resetTimer();
     } else if (data.event == TimerEvent.SETTING) {
       this.setTimeBySec(data.param);

@@ -2417,7 +2417,15 @@
 	            },
 	            onSetFoul: function (isLeft, dtFoul) {
 	                isLeft ? (baseGame.lFoul += dtFoul) : (baseGame.rFoul += dtFoul);
+	                opReq(Command_1.CommandId.cs_setFoul, {
+	                    lFoul: baseGame.lFoul,
+	                    rFoul: baseGame.rFoul
+	                });
 	                this.vueUpdate();
+	            },
+	            onResetFoul: function () {
+	                this.onSetFoul(true, -baseGame.lFoul);
+	                this.onSetFoul(false, -baseGame.rFoul);
 	            },
 	            onVueUpdate: function () {
 	                this.vueUpdate();
@@ -2452,7 +2460,7 @@
 /* 39 */
 /***/ (function(module, exports) {
 
-	module.exports = "<table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n    <thead>\r\n        <!-- <tr>\r\n            <th>\r\n                <div hidden>{{updateTime}}</div>\r\n\r\n            </th>\r\n            <th>\r\n                <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n            </th>\r\n            <th></th>\r\n            <th></th>\r\n            <th></th>\r\n            <th>\r\n            </th>\r\n        </tr> -->\r\n    </thead>\r\n    <tbody>\r\n        <tr>\r\n            <th>\r\n                <div hidden>{{updateTime}}</div>\r\n                time in sec:<input class=\"input\" v-model=\"timeInSec\" type=\"text\" style=\"width: 100px;\">\r\n            </th>\r\n            <th>\r\n                <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n            </th>\r\n            <th>L player</th>\r\n            <th>score</th>\r\n            <th>R player</th>\r\n            <th>\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th>\r\n\r\n                <a @click=\"onSetTimerEvent('start')\">开始  </a><a @click=\"onSetTimerEvent('pause')\">暂停  </a>\r\n                <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                {{baseGame.lName}}\r\n            </th>\r\n            <th style=\"font-size:40px;\">\r\n                <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n            </th>\r\n            <th>\r\n                {{baseGame.rName}}\r\n\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th>foul</th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n    </tbody>\r\n</table>";
+	module.exports = "<table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n    <thead>\r\n    </thead>\r\n    <tbody>\r\n        <tr>\r\n            <th>\r\n                <div hidden>{{updateTime}}</div>\r\n                time in sec:<input class=\"input\" v-model=\"timeInSec\" type=\"text\" style=\"width: 100px;\">\r\n            </th>\r\n            <th>\r\n                <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n            </th>\r\n            <th>L player</th>\r\n            <th>score</th>\r\n            <th>R player</th>\r\n            <th>\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th style=\"font-size:25px;\">\r\n\r\n                <a @click=\"onSetTimerEvent('start')\">开始  </a><a @click=\"onSetTimerEvent('pause')\">暂停  </a>\r\n                <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n                <a @click=\"onSetTimerEvent('reset')\">reset</a>\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                {{baseGame.lName}}\r\n            </th>\r\n            <th style=\"font-size:40px;\">\r\n                <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n            </th>\r\n            <th>\r\n                {{baseGame.rName}}\r\n\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th style=\"font-size:25px;\">foul\r\n                <a @click=\"onResetFoul\"> 重置</a>\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n    </tbody>\r\n</table>";
 
 /***/ }),
 /* 40 */
@@ -3827,6 +3835,7 @@
 	            this.toggleTimer(TimerState.PAUSE);
 	        }
 	        else if (data.event == const_1.TimerEvent.RESET) {
+	            this.toggleTimer(TimerState.PAUSE);
 	            this.resetTimer();
 	        }
 	        else if (data.event == const_1.TimerEvent.SETTING) {
@@ -10625,13 +10634,11 @@
 	        }
 	    };
 	    WorldWar.prototype.setLeftFoul = function (val) {
-	        if (val > 4)
-	            this.lFoulHint.visible = true;
+	        this.lFoulHint.visible = val > 4;
 	        this.lFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(-135));
 	    };
 	    WorldWar.prototype.setRightFoul = function (val) {
-	        if (val > 4)
-	            this.rFoulHint.visible = true;
+	        this.rFoulHint.visible = val > 4;
 	        this.rFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(135));
 	    };
 	    WorldWar.prototype.setTimerEvent = function (data) {
@@ -11110,6 +11117,10 @@
 	            _this.worldWar.setLeftPlayer(data.leftPlayer);
 	            _this.worldWar.setRightPlayer(data.rightPlayer);
 	            _this.worldWar.setTimerEvent({ event: "setting", param: 0 });
+	        })
+	            .on(Command_1.CommandId.sc_setFoul, function (data) {
+	            _this.worldWar.setLeftFoul(data.lFoul);
+	            _this.worldWar.setRightFoul(data.rFoul);
 	        })
 	            .on(Command_1.CommandId.sc_setBlood, function (data) {
 	            console.log("sc_setBlood", data);
