@@ -11,13 +11,11 @@ export class TextTimer extends PIXI.Text {
   isMin = false;
   setTimerEvent(data) {
     if (data.event == TimerEvent.PAUSE) {
-      this.toggleTimer(TimerState.PAUSE)
+      this.toggleTimer(TimerState.PAUSE);
     } else if (data.event == TimerEvent.START) {
-      this.toggleTimer(TimerState.RUNNING)
-    } else if (data.event == TimerEvent.PAUSE) {
-      this.toggleTimer(TimerState.PAUSE)
+      this.toggleTimer(TimerState.RUNNING);
     } else if (data.event == TimerEvent.RESET) {
-      this.toggleTimer(TimerState.PAUSE)
+      this.toggleTimer(TimerState.PAUSE);
       this.resetTimer();
     } else if (data.event == TimerEvent.SETTING) {
       this.setTimeBySec(data.param);

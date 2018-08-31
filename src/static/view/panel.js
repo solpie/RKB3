@@ -3831,9 +3831,6 @@
 	        else if (data.event == const_1.TimerEvent.START) {
 	            this.toggleTimer(TimerState.RUNNING);
 	        }
-	        else if (data.event == const_1.TimerEvent.PAUSE) {
-	            this.toggleTimer(TimerState.PAUSE);
-	        }
 	        else if (data.event == const_1.TimerEvent.RESET) {
 	            this.toggleTimer(TimerState.PAUSE);
 	            this.resetTimer();
