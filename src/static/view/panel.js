@@ -1231,7 +1231,7 @@
 	                        name: player.name,
 	                        isSmall: true,
 	                        scoreFx: 0,
-	                        avatar: '/img/player/89/' + player.playerId + '.png'
+	                        avatar: this.gameConf.avatarUrlBase + player.playerId + '.png'
 	                    };
 	                    if (isInitScoreArr)
 	                        this.lastScoreArr[i] = scoreFxItem.score;
@@ -6101,7 +6101,7 @@
 	var BracketView_1 = __webpack_require__(85);
 	var RankView_1 = __webpack_require__(88);
 	var ScoreView_1 = __webpack_require__(92);
-	var GroupSp2_1 = __webpack_require__(109);
+	var GroupSp2_1 = __webpack_require__(111);
 	var WebDBCmd_1 = __webpack_require__(75);
 	var rankView;
 	var bracketView;
@@ -6114,7 +6114,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(111);
+	        _this.template = __webpack_require__(113);
 	        _this.actTab = VueBase_1.VueBase.PROP;
 	        _this.gameId = VueBase_1.VueBase.String;
 	        _this.isOp = VueBase_1.VueBase.PROP;
@@ -8077,7 +8077,7 @@
 	var TweenEx_1 = __webpack_require__(57);
 	var BasePanelView_1 = __webpack_require__(68);
 	var Score2018v3_1 = __webpack_require__(107);
-	var WorldWarView_1 = __webpack_require__(124);
+	var WorldWarView_1 = __webpack_require__(108);
 	function logEvent() {
 	    var a = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
@@ -8790,38 +8790,48 @@
 	    function PlayerItem() {
 	        return _super !== null && _super.apply(this, arguments) || this;
 	    }
-	    PlayerItem.prototype.create = function (isSmall, data) {
+	    PlayerItem.prototype.create = function (isOff, data) {
 	        var textY = 277;
 	        var ns = {
 	            fontFamily: const_1.FontName.NotoSansHans,
-	            fontSize: '50px', fill: "#fff",
+	            fontSize: '50px', fill: "#ccc",
 	            fontWeight: 'bold'
 	        };
 	        this.bg = new PIXI.Sprite();
 	        this.addChild(this.bg);
 	        this.avt = new PIXI.Sprite;
 	        this.addChild(this.avt);
-	        if (isSmall) {
-	            textY = 282;
+	        this.fg = new PIXI.Sprite();
+	        this.addChild(this.fg);
+	        if (isOff) {
 	            ns.fontSize = '35px';
-	            this.bg.texture = ImgLoader_1.imgLoader.getTex('/img/panel/scoreRank/itemBg_small1.png');
 	        }
 	        else {
-	            this.bg.texture = ImgLoader_1.imgLoader.getTex('/img/panel/scoreRank/itemBg_big1.png');
 	        }
+	        this._loadItemTex(isOff);
 	        this.pName = TextFac_1.TextFac.new_(ns, this)
 	            .setText(data.name)
-	            .setPos(150, textY + 8);
+	            .setPos(185, textY + 8);
 	        ns.fontFamily = 'dinCondensedC';
 	        ns.fontSize = '60px';
 	        this.pScore = TextFac_1.TextFac.new_(ns, this)
 	            .setText(data.score)
-	            .setPos(90, textY);
+	            .setY(220 - 24);
 	        ns.fill = '#ff0000';
 	        ns.fontSize = '70px';
 	        this.scoreFx = TextFac_1.TextFac.new_(ns, this)
 	            .setPos(380, textY - 80);
 	        return this;
+	    };
+	    PlayerItem.prototype._loadItemTex = function (isOff) {
+	        if (isOff) {
+	            this.bg.texture = ImgLoader_1.imgLoader.getTex('/img/panel/scoreRank/itemBg_off.png');
+	            this.fg.texture = ImgLoader_1.imgLoader.getTex('/img/panel/scoreRank/itemFg_off.png');
+	        }
+	        else {
+	            this.bg.texture = ImgLoader_1.imgLoader.getTex('/img/panel/scoreRank/itemBg_on.png');
+	            this.fg.texture = ImgLoader_1.imgLoader.getTex('/img/panel/scoreRank/itemFg_on.png');
+	        }
 	    };
 	    PlayerItem.prototype.showScoreFx = function (dtScore) {
 	        var _this = this;
@@ -8834,31 +8844,26 @@
 	    };
 	    PlayerItem.prototype.setScore = function (data) {
 	        var _this = this;
-	        this.pScore.setText(data.score)
-	            .setAlignCenter(90);
+	        var alignX = 185;
+	        var avtX = 41, avtY = 208;
 	        if (data.isSmall) {
-	            this.pName.setText(data.name)
-	                .setAlignCenter(288);
-	            this.bg.texture = ImgLoader_1.imgLoader.getTex('/img/panel/scoreRank/itemBg_small1.png');
-	            ImgLoader_1.imgLoader.loadTexArr([data.avatar], function (_) {
-	                _this.avt.texture = ImgLoader_1.imgLoader.getTex(data.avatar);
-	                var s = 0.7625;
-	                PixiEx_1.setScale(_this.avt, s);
-	                _this.avt.x = 14;
-	                _this.avt.y = 73;
-	            });
 	        }
 	        else {
-	            this.bg.texture = ImgLoader_1.imgLoader.getTex('/img/panel/scoreRank/itemBg_big1.png');
-	            ImgLoader_1.imgLoader.loadTexArr([data.avatar], function (_) {
-	                _this.avt.texture = ImgLoader_1.imgLoader.getTex(data.avatar);
-	                PixiEx_1.setScale(_this.avt, 1);
-	                _this.avt.x = 0;
-	                _this.avt.y = 0;
-	            });
-	            this.pName.setText(data.name)
-	                .setAlignCenter(360);
+	            alignX += 23;
+	            avtX += 23;
 	        }
+	        this._loadItemTex(data.isSmall);
+	        ImgLoader_1.imgLoader.loadTex2(data.avatar, function (_) {
+	            _this.avt.texture = ImgLoader_1.imgLoader.getTex(data.avatar);
+	            PixiEx_1.setScale(_this.avt, 1);
+	            _this.avt.x = avtX;
+	            _this.avt.y = avtY;
+	            _this.avt.width = _this.avt.height = 122;
+	        });
+	        this.pName.setText(data.name)
+	            .setX(alignX);
+	        this.pScore.setText(data.score)
+	            .setAlignCenter(alignX);
 	    };
 	    return PlayerItem;
 	}(PIXI.Container));
@@ -8877,20 +8882,11 @@
 	        for (var i = 0; i < 5; i++) {
 	            var pi = this.itemArr[i];
 	            var scoreData = data.scoreArr[i];
-	            pi.y = i * 130 + lastY;
-	            if (!scoreData.isSmall) {
-	                lastY += 10;
-	            }
+	            pi.y = i * 160;
 	            if (scoreData.scoreFx) {
 	                pi.showScoreFx(scoreData.scoreFx);
 	            }
 	            pi.setScore(scoreData);
-	        }
-	    };
-	    ScoreRank.prototype._showScoreFx = function (data) {
-	        if (data.scoreFx == 2) {
-	        }
-	        else if (data.scoreFx == 3) {
 	        }
 	    };
 	    ScoreRank.prototype.showScoreFx = function (data) {
@@ -8908,7 +8904,12 @@
 	            this.p.addChild(this);
 	        }
 	        else {
-	            ImgLoader_1.imgLoader.loadTexArr(['/img/panel/scoreRank/itemBg_big1.png', '/img/panel/scoreRank/itemBg_small1.png'], function (_) {
+	            ImgLoader_1.imgLoader.loadTexArr([
+	                '/img/panel/scoreRank/itemBg_on.png',
+	                '/img/panel/scoreRank/itemFg_on.png',
+	                '/img/panel/scoreRank/itemFg_off.png',
+	                '/img/panel/scoreRank/itemBg_off.png'
+	            ], function (_) {
 	                for (var i = 0; i < 5; i++) {
 	                    var isSmall = i > 1;
 	                    var pi = (new PlayerItem()).create(true, { score: 8, name: '' });
@@ -10521,11 +10522,64 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
+	var Command_1 = __webpack_require__(30);
+	var TweenEx_1 = __webpack_require__(57);
+	var WorldWar_1 = __webpack_require__(109);
+	var WorldWarView = (function (_super) {
+	    __extends(WorldWarView, _super);
+	    function WorldWarView(stage, io) {
+	        var _this = _super.call(this) || this;
+	        _this.stage = stage;
+	        TweenEx_1.TweenEx.delayedCall(1200, function (_) {
+	            _this.worldWar = new WorldWar_1.WorldWar();
+	            _this.stage.addChild(_this.worldWar);
+	        });
+	        io.on(Command_1.CommandId.sc_timerEvent, function (data) {
+	            console.log("sc_timerEvent", data);
+	            _this.worldWar.setTimerEvent(data);
+	        })
+	            .on(Command_1.CommandId.sc_setPlayer, function (data) {
+	            console.log("sc_setBlood", data);
+	            _this.worldWar.setLeftPlayer(data.leftPlayer);
+	            _this.worldWar.setRightPlayer(data.rightPlayer);
+	            _this.worldWar.setTimerEvent({ event: "setting", param: 0 });
+	        })
+	            .on(Command_1.CommandId.sc_setFoul, function (data) {
+	            _this.worldWar.setLeftFoul(data.lFoul);
+	            _this.worldWar.setRightFoul(data.rFoul);
+	        })
+	            .on(Command_1.CommandId.sc_setBlood, function (data) {
+	            console.log("sc_setBlood", data);
+	            _this.worldWar.setBloodByDtScore(data);
+	        });
+	        return _this;
+	    }
+	    return WorldWarView;
+	}(PIXI.Container));
+	exports.WorldWarView = WorldWarView;
+
+
+/***/ }),
+/* 109 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var PixiEx_1 = __webpack_require__(56);
 	var TextFac_1 = __webpack_require__(77);
 	var const_1 = __webpack_require__(29);
 	var TextTimer_1 = __webpack_require__(59);
-	var BloodBar_1 = __webpack_require__(123);
+	var BloodBar_1 = __webpack_require__(110);
 	var isTest = true;
 	var _c = function (v) {
 	    return 960 + v;
@@ -10656,7 +10710,60 @@
 
 
 /***/ }),
-/* 109 */
+/* 110 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var PixiEx_1 = __webpack_require__(56);
+	var BloodBar = (function (_super) {
+	    __extends(BloodBar, _super);
+	    function BloodBar(isLeft) {
+	        var _this = _super.call(this) || this;
+	        _this.initBlood = 0;
+	        _this.isLeft = isLeft;
+	        _this.bloodArr = [];
+	        for (var i = 0; i < 6; i++) {
+	            var b = PixiEx_1.newBitmap({ url: "/img/panel/worldWar/b" + (i + 0) + ".png" });
+	            _this.addChild(b);
+	            _this.bloodArr.push(b);
+	            if (isLeft) {
+	                b.x = 1920;
+	                b.scale.x = -1;
+	            }
+	        }
+	        return _this;
+	    }
+	    BloodBar.prototype.setBlood = function (val) {
+	        this.initBlood = val;
+	        this._setBlood(val);
+	    };
+	    BloodBar.prototype._setBlood = function (val) {
+	        for (var i = 0; i < this.bloodArr.length; i++) {
+	            var b = this.bloodArr[i];
+	            b.visible = i < val;
+	        }
+	    };
+	    BloodBar.prototype.setBloodByDtScore = function (score) {
+	        this._setBlood(this.initBlood - score);
+	    };
+	    return BloodBar;
+	}(PIXI.Container));
+	exports.BloodBar = BloodBar;
+
+
+/***/ }),
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -10674,7 +10781,7 @@
 	var PixiEx_1 = __webpack_require__(56);
 	var const_1 = __webpack_require__(29);
 	var HupuAPI_1 = __webpack_require__(26);
-	var thenBy_1 = __webpack_require__(110);
+	var thenBy_1 = __webpack_require__(112);
 	var ImgLoader_1 = __webpack_require__(73);
 	var BracketGroup_1 = __webpack_require__(78);
 	var TextFac_1 = __webpack_require__(77);
@@ -10970,7 +11077,7 @@
 
 
 /***/ }),
-/* 110 */
+/* 112 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -11008,127 +11115,10 @@
 
 
 /***/ }),
-/* 111 */
+/* 113 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告 MISC</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒 timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 30px;font-family: 'NotoSansHans-Regular'\">\r\n               {{lLiveName}}  vs {{rLiveName}} \r\n                <br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(false)\">隐藏所有</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(true)\">显示所有</button>\r\n            <br>时间控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">设定时间(秒)</button>\r\n\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            </p>\r\n            比分控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onUpdateScore(true ,panelTime2Set)\">蓝方比分</button>\r\n            <button class=\"button\" @click=\"onUpdateScore(false,panelTime2Set)\">红方比分</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(true)\">切换攻守</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(false)\">隐藏</button>\r\n            <br>\r\n\r\n            <button class=\"button\" @click=\"onUpdateFoul(true ,panelTime2Set)\">蓝方犯规</button>\r\n            <button class=\"button\" @click=\"onUpdateFoul(false,panelTime2Set)\">红方犯规</button>\r\n\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">修改并显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,'')\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <!-- <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button> -->\r\n\r\n            <label class=\"label\">  赛区实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,1)\">东南 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,2)\">东北 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,3)\">西方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,4)\">南方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,0)\">首页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,2,0)\">上一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,3,0)\">下一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <label class=\"label\">  八强面板:</label><br>\r\n            <button class=\"button\" @click=\"onBracketShow(1)\">第一页 八进四</button>\r\n            <button class=\"button\" @click=\"onBracketShow(2)\">第二页</button>\r\n\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <div v-if=1 class='column is-one-quarter' style=\"position: fixed;top: 260px;right: 10px;\">\r\n                <input class=\"input\" type=\"text\" style=\"width: 30px;\" v-model=\"gameTitleType\">1 '8进4' 2 '4进2' 3 '2进1'\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"蓝方名字-红方名字\" style=\"width: 300px;\" v-model=\"vsPlayer\">\r\n                <button class=\"button\" @click=\"onSetPlayer(vsPlayer,gameTitleType)\">设置球员</button>\r\n                <br> <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button>蓝方: <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button> 比分\r\n                <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>:红方<button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n                <br><br> <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button>-----\r\n                <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button> 犯规\r\n                <button class=\"button\" @click=\"onAddFoul(false,+1)\">+1</button>-----<button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"'>\r\n        <div v-if='isRmOp||isOp' style=\"position: absolute;left: 100px;top:260px;width: 800px\">\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                        正常\r\n                    </label>\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                        加粗\r\n                    </label>\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onNoticePresets('network')\">网络故障 模版</button>\r\n            <br>\r\n            <div v-for=\"(n,idx) in noticeHistory\">\r\n                <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n            </div>\r\n\r\n            滚动文字：\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"inputRollText\">\r\n            <br>\r\n\r\n            <!-- <el-input v-model=\"inputRollText\" style=\"width:250px\"></el-input> -->\r\n            <button class=\"button\" @click='showRollText(inputRollText,true)'>发送</button>\r\n            <button class=\"button\" @click='showRollText(inputRollText,false)'>隐藏</button>\r\n            <br> 主播面板:\r\n            <br>\r\n            <button class=\"button\" @click='showCommentator(true,1)'>显示主播</button>\r\n            <button class=\"button\" @click='showCommentator(true,2)'>显示主播 合并</button>\r\n            <button class=\"button\" @click='showCommentator(false)'>隐藏</button>\r\n            <br>图片:\r\n            <br>\r\n            <button class=\"button\" @click='showStaticImage(true,1)'>微信小程序</button>\r\n            <button class=\"button\" @click='showStaticImage(false,1)'>隐藏</button>\r\n\r\n            <label class=\"label\">  脉动广告:</label><br>\r\n            <button class=\"button\" @click=\"onShowFx(true,1)\">转瓶</button>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n        </div>\r\n    </div>\r\n\r\n</div>";
-
-/***/ }),
-/* 112 */,
-/* 113 */,
-/* 114 */,
-/* 115 */,
-/* 116 */,
-/* 117 */,
-/* 118 */,
-/* 119 */,
-/* 120 */,
-/* 121 */,
-/* 122 */,
-/* 123 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(56);
-	var BloodBar = (function (_super) {
-	    __extends(BloodBar, _super);
-	    function BloodBar(isLeft) {
-	        var _this = _super.call(this) || this;
-	        _this.initBlood = 0;
-	        _this.isLeft = isLeft;
-	        _this.bloodArr = [];
-	        for (var i = 0; i < 6; i++) {
-	            var b = PixiEx_1.newBitmap({ url: "/img/panel/worldWar/b" + (i + 0) + ".png" });
-	            _this.addChild(b);
-	            _this.bloodArr.push(b);
-	            if (isLeft) {
-	                b.x = 1920;
-	                b.scale.x = -1;
-	            }
-	        }
-	        return _this;
-	    }
-	    BloodBar.prototype.setBlood = function (val) {
-	        this.initBlood = val;
-	        this._setBlood(val);
-	    };
-	    BloodBar.prototype._setBlood = function (val) {
-	        for (var i = 0; i < this.bloodArr.length; i++) {
-	            var b = this.bloodArr[i];
-	            b.visible = i < val;
-	        }
-	    };
-	    BloodBar.prototype.setBloodByDtScore = function (score) {
-	        this._setBlood(this.initBlood - score);
-	    };
-	    return BloodBar;
-	}(PIXI.Container));
-	exports.BloodBar = BloodBar;
-
-
-/***/ }),
-/* 124 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var Command_1 = __webpack_require__(30);
-	var TweenEx_1 = __webpack_require__(57);
-	var WorldWar_1 = __webpack_require__(108);
-	var WorldWarView = (function (_super) {
-	    __extends(WorldWarView, _super);
-	    function WorldWarView(stage, io) {
-	        var _this = _super.call(this) || this;
-	        _this.stage = stage;
-	        TweenEx_1.TweenEx.delayedCall(1200, function (_) {
-	            _this.worldWar = new WorldWar_1.WorldWar();
-	            _this.stage.addChild(_this.worldWar);
-	        });
-	        io.on(Command_1.CommandId.sc_timerEvent, function (data) {
-	            console.log("sc_timerEvent", data);
-	            _this.worldWar.setTimerEvent(data);
-	        })
-	            .on(Command_1.CommandId.sc_setPlayer, function (data) {
-	            console.log("sc_setBlood", data);
-	            _this.worldWar.setLeftPlayer(data.leftPlayer);
-	            _this.worldWar.setRightPlayer(data.rightPlayer);
-	            _this.worldWar.setTimerEvent({ event: "setting", param: 0 });
-	        })
-	            .on(Command_1.CommandId.sc_setFoul, function (data) {
-	            _this.worldWar.setLeftFoul(data.lFoul);
-	            _this.worldWar.setRightFoul(data.rFoul);
-	        })
-	            .on(Command_1.CommandId.sc_setBlood, function (data) {
-	            console.log("sc_setBlood", data);
-	            _this.worldWar.setBloodByDtScore(data);
-	        });
-	        return _this;
-	    }
-	    return WorldWarView;
-	}(PIXI.Container));
-	exports.WorldWarView = WorldWarView;
-
 
 /***/ })
 /******/ ]);

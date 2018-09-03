@@ -1680,7 +1680,7 @@
 	                        name: player.name,
 	                        isSmall: true,
 	                        scoreFx: 0,
-	                        avatar: '/img/player/89/' + player.playerId + '.png'
+	                        avatar: this.gameConf.avatarUrlBase + player.playerId + '.png'
 	                    };
 	                    if (isInitScoreArr)
 	                        this.lastScoreArr[i] = scoreFxItem.score;

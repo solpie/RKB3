@@ -192,7 +192,8 @@ class _GameAdmin extends VueBase {
                     , name: player.name
                     , isSmall: true
                     , scoreFx: 0
-                    , avatar: '/img/player/89/' + player.playerId + '.png'
+                    , avatar: this.gameConf.avatarUrlBase + player.playerId + '.png'
+                    // , avatar: '/img/player/89/' + player.playerId + '.png'
                     // , avatar: this.gameConf.avatarUrlBase +'circle/'+ player.playerId + '.png'
                 }
                 if (isInitScoreArr)
@@ -202,12 +203,12 @@ class _GameAdmin extends VueBase {
                 if (pn == this.vsPlayerArr[0]) {
                     scoreFxItem.scoreFx = scoreFx
                     scoreFxItem.isSmall = false
-                    opReq(`${CommandId.cs_updateScore}`, {score:scoreFxItem.score, isLeft: true })
+                    opReq(`${CommandId.cs_updateScore}`, { score: scoreFxItem.score, isLeft: true })
                 }
                 else if (pn == this.vsPlayerArr[1]) {
                     scoreFxItem.scoreFx = scoreFx
                     scoreFxItem.isSmall = false
-                    opReq(`${CommandId.cs_updateScore}`, {score:scoreFxItem.score, isLeft: false })
+                    opReq(`${CommandId.cs_updateScore}`, { score: scoreFxItem.score, isLeft: false })
 
                 }
                 scoreArr.push(scoreFxItem)
