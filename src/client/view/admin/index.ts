@@ -11,7 +11,6 @@ require(`script!./../../libs/qrcode.min.js`);
 require(`../../libs/cropper.min.css`);
 require(`script!./../../libs/vue/vue.min.js`);
 require(`script!./../../libs/vue/vue-router.min.js`);
-import { Navbar } from "./navbar/Navbar";
 import { homeView } from "./home/home";
 
 import { playerView } from './player/player';
@@ -20,11 +19,11 @@ import { GameAdmin } from './gameAdmin/GameAdmin';
 var routes = [
     {
         path: '/', name: 'home',
-        components: { content: homeView, Navbar: Navbar, GameAdmin: GameAdmin }
+        components: { content: homeView, GameAdmin: GameAdmin }
     },
     {
         path: '/player', name: 'player',
-        components: { content: playerView, Navbar: Navbar },
+        components: { content: playerView },
     },
     // {
     //     path: '/panel', name: 'panel',

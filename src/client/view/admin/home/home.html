@@ -26,6 +26,11 @@
                     <span>国战</span>
                 </a>
             </li>
+            <li v-bind:class="{ 'is-active': actTab== 'tab6'}" @click='tab("tab6")'>
+                <a>
+                    <span>抢五</span>
+                </a>
+            </li>
         </ul>
     </div>
     <div v-if='actTab=="tab1"'>
@@ -122,5 +127,8 @@
     </div>
     <div v-if='actTab=="tab5"' class="ctn2" style="display: inline-flex;">
         <WorldWar/>
+    </div>
+    <div v-if='actTab=="tab6"' class="ctn2" style="display: inline-flex;">
+        <ScoreRankAdmin/>
     </div>
 </div>

@@ -1,0 +1,47 @@
+<div class="container">
+
+    <span class="select">
+            <select v-model="selected" @change="onSelectGame">
+                <option v-for="option in options" v-bind:value="option.value">
+                    {{ option.text }}
+                </option>
+            </select>
+        </span>
+
+    <input type="file" id="files" accept="*.json" hidden>
+    <input type="text" v-model="vsPlayer" style="width: 100px;">
+    <button class="button is-primary" @click="onInitGame">初始比赛</button>
+    <br>
+    <br>
+    <button class="button is-primary" @click="onFile">打开配置</button>
+    <button class="button is-primary" id="reloadFile" @click="reloadFile">reload</button>
+    <br>
+
+    <div>
+        <br> score rank:
+        <br>
+        <button class="button is-primary" @click="onShowScoreRank(true)">show</button>
+        <button class="button is-primary" @click="onReloadShow()">reload show</button>
+        <button class="button is-primary" @click="onSetPlayerDeactive()">set player deactive</button>
+        <button class="button is-primary" @click="onShowScoreRank(false)">hide</button>
+        <br>
+        <button class="button is-primary" @click="onAddScore(true,-1)">L-1</button>
+        <button class="button is-primary" @click="onAddScore(true,1)">L+1</button> ----------
+        <button class="button is-primary" @click="onAddScore(false,1)">R+1</button>
+        <button class="button is-primary" @click="onAddScore(false,-1)">R-1</button>
+        <br>
+
+        <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
+            <li style="float:left;width:190px;padding:5px" v-for="player in blueArr">
+                <button class="button is-primary" @click="onChangePlayer(true,player.playerId)">{{player.name}}</button>
+            </li>
+        </ul>
+        <hr>
+        <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
+            <li style="float:left;width:190px;padding:5px" v-for="player in redArr">
+                <button class="button is-primary" @click="onChangePlayer(false,player.playerId)">{{player.name}}</button>
+            </li>
+        </ul>
+
+    </div>
+</div>

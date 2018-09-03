@@ -17,15 +17,14 @@ let opReq = (cmdId: string, param: any) => {
     });
 }
 let _exData
-const playerCount = 5;
-class _GameAdmin extends VueBase {
-    template = require('./game.html');
+const playerCount = 4;
+class _ScoreRankAdmin extends VueBase {
+    template = require('./scoreRank.html');
     selected = VueBase.PROP;
     options = VueBase.PROP;
     gameConf = VueBase.PROP;
     vsPlayer = VueBase.PROP;
     vsPlayerArr = VueBase.PROP
-    gameTitle = VueBase.PROP;
     redArr = VueBase.PROP;
     blueArr = VueBase.PROP;
     lPlayer = VueBase.PROP;
@@ -161,18 +160,13 @@ class _GameAdmin extends VueBase {
             p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png'
             this.lPlayer = p1
             this.rPlayer = p2
-            let gameTitle = '';
-            if (this.gameTitle)
-                gameTitle = this.gameConf.gameTitle[this.gameTitle]
-            opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2, gameTitle: gameTitle })
-            ///89 russ
-            // this.onShowScoreRank(true)
+            opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2 })
         },
-
+        onSetPlayerDeactive() {
+            this.vsPlayer = ''
+            this.onShowScoreRank(true)
+        },
         onShowScoreRank(visible) {
-            let p1 = this.lPlayer
-            let p2 = this.rPlayer
-
             let scoreArr = []
             let isInitScoreArr = false
             let scoreFx = 0
@@ -180,8 +174,10 @@ class _GameAdmin extends VueBase {
                 this.lastScoreArr = [0, 0, 0, 0, 0]
                 isInitScoreArr = true
             }
-
-            for (let i = 0; i < playerCount; i++) {
+            let a = this.vsPlayer.split(' ')
+            let p1 = a[0]
+            let p2 = a[1]
+            for (let i = 0; i < this.gameConf.scoreRank.length; i++) {
                 let a = this.gameConf.scoreRank[i][0].split('_')
                 let pn = a[0]
                 let player = this.gameConf.playerMap[pn]
@@ -199,12 +195,12 @@ class _GameAdmin extends VueBase {
                     this.lastScoreArr[i] = scoreFxItem.score
                 scoreFx = scoreFxItem.score - this.lastScoreArr[i]
                 this.lastScoreArr[i] = scoreFxItem.score
-                if (pn == this.vsPlayerArr[0]) {
+                if (pn == p1) {
                     scoreFxItem.scoreFx = scoreFx
                     scoreFxItem.isSmall = false
                     opReq(`${CommandId.cs_updateScore}`, { score: scoreFxItem.score, isLeft: true })
                 }
-                else if (pn == this.vsPlayerArr[1]) {
+                else if (pn == p2) {
                     scoreFxItem.scoreFx = scoreFx
                     scoreFxItem.isSmall = false
                     opReq(`${CommandId.cs_updateScore}`, { score: scoreFxItem.score, isLeft: false })
@@ -265,4 +261,4 @@ class _GameAdmin extends VueBase {
     }
 }
 
-export var GameAdmin = new _GameAdmin();
+export var ScoreRankAdmin = new _ScoreRankAdmin();

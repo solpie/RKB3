@@ -54,18 +54,17 @@
 	__webpack_require__(14);
 	__webpack_require__(16);
 	__webpack_require__(18);
-	var Navbar_1 = __webpack_require__(20);
 	var home_1 = __webpack_require__(22);
 	var player_1 = __webpack_require__(42);
 	var GameAdmin_1 = __webpack_require__(28);
 	var routes = [
 	    {
 	        path: '/', name: 'home',
-	        components: { content: home_1.homeView, Navbar: Navbar_1.Navbar, GameAdmin: GameAdmin_1.GameAdmin }
+	        components: { content: home_1.homeView, GameAdmin: GameAdmin_1.GameAdmin }
 	    },
 	    {
 	        path: '/player', name: 'player',
-	        components: { content: player_1.playerView, Navbar: Navbar_1.Navbar },
+	        components: { content: player_1.playerView },
 	    },
 	];
 	var router = new VueRouter({
@@ -602,26 +601,8 @@
 	module.exports = "/**\r\n  * vue-router v2.1.0\r\n  * (c) 2016 Evan You\r\n  * @license MIT\r\n  */\r\n!function(t,e){\"object\"==typeof exports&&\"undefined\"!=typeof module?module.exports=e():\"function\"==typeof define&&define.amd?define(e):t.VueRouter=e()}(this,function(){\"use strict\";function t(t,e){t||\"undefined\"!=typeof console&&console.warn(\"[vue-router] \"+e)}function e(t,e){if(void 0===e&&(e={}),t){var r;try{r=n(t)}catch(t){r={}}for(var o in e)r[o]=e[o];return r}return e}function n(t){var e={};return(t=t.trim().replace(/^(\\?|#|&)/,\"\"))?(t.split(\"&\").forEach(function(t){var n=t.replace(/\\+/g,\" \").split(\"=\"),r=vt(n.shift()),o=n.length>0?vt(n.join(\"=\")):null;void 0===e[r]?e[r]=o:Array.isArray(e[r])?e[r].push(o):e[r]=[e[r],o]}),e):e}function r(t){var e=t?Object.keys(t).map(function(e){var n=t[e];if(void 0===n)return\"\";if(null===n)return yt(e);if(Array.isArray(n)){var r=[];return n.slice().forEach(function(t){void 0!==t&&(null===t?r.push(yt(e)):r.push(yt(e)+\"=\"+yt(t)))}),r.join(\"&\")}return yt(e)+\"=\"+yt(n)}).filter(function(t){return t.length>0}).join(\"&\"):null;return e?\"?\"+e:\"\"}function o(t,e,n){var r={name:e.name||t&&t.name,meta:t&&t.meta||{},path:e.path||\"/\",hash:e.hash||\"\",query:e.query||{},params:e.params||{},fullPath:a(e),matched:t?i(t):[]};return n&&(r.redirectedFrom=a(n)),Object.freeze(r)}function i(t){for(var e=[];t;)e.unshift(t),t=t.parent;return e}function a(t){var e=t.path,n=t.query;void 0===n&&(n={});var o=t.hash;return void 0===o&&(o=\"\"),(e||\"/\")+r(n)+o}function u(t,e){return e===mt?t===e:!!e&&(t.path&&e.path?t.path.replace(gt,\"\")===e.path.replace(gt,\"\")&&t.hash===e.hash&&c(t.query,e.query):!(!t.name||!e.name)&&(t.name===e.name&&t.hash===e.hash&&c(t.query,e.query)&&c(t.params,e.params)))}function c(t,e){void 0===t&&(t={}),void 0===e&&(e={});var n=Object.keys(t),r=Object.keys(e);return n.length===r.length&&n.every(function(n){return String(t[n])===String(e[n])})}function s(t,e){return 0===t.path.indexOf(e.path.replace(/\\/$/,\"\"))&&(!e.hash||t.hash===e.hash)&&p(t.query,e.query)}function p(t,e){for(var n in e)if(!(n in t))return!1;return!0}function f(t){if(!(t.metaKey||t.ctrlKey||t.shiftKey||t.defaultPrevented||0!==t.button)){var e=t.target.getAttribute(\"target\");if(!/\\b_blank\\b/i.test(e))return t.preventDefault(),!0}}function h(t){if(t)for(var e,n=0;n<t.length;n++){if(e=t[n],\"a\"===e.tag)return e;if(e.children&&(e=h(e.children)))return e}}function l(t){if(!l.installed){l.installed=!0,lt=t,Object.defineProperty(t.prototype,\"$router\",{get:function(){return this.$root._router}}),Object.defineProperty(t.prototype,\"$route\",{get:function(){return this.$root._route}}),t.mixin({beforeCreate:function(){this.$options.router&&(this._router=this.$options.router,this._router.init(this),t.util.defineReactive(this,\"_route\",this._router.history.current))}}),t.component(\"router-view\",dt),t.component(\"router-link\",bt);var e=t.config.optionMergeStrategies;e.beforeRouteEnter=e.beforeRouteLeave=e.created}}function d(t,e,n){if(\"/\"===t.charAt(0))return t;if(\"?\"===t.charAt(0)||\"#\"===t.charAt(0))return e+t;var r=e.split(\"/\");n&&r[r.length-1]||r.pop();for(var o=t.replace(/^\\//,\"\").split(\"/\"),i=0;i<o.length;i++){var a=o[i];\".\"!==a&&(\"..\"===a?r.pop():r.push(a))}return\"\"!==r[0]&&r.unshift(\"\"),r.join(\"/\")}function y(t){var e=\"\",n=\"\",r=t.indexOf(\"#\");r>=0&&(e=t.slice(r),t=t.slice(0,r));var o=t.indexOf(\"?\");return o>=0&&(n=t.slice(o+1),t=t.slice(0,o)),{path:t,query:n,hash:e}}function v(t){return t.replace(/\\/\\//g,\"/\")}function m(t){var e=Object.create(null),n=Object.create(null);return t.forEach(function(t){g(e,n,t)}),{pathMap:e,nameMap:n}}function g(t,e,n,r,o){var i=n.path,a=n.name,u={path:w(i,r),components:n.components||{default:n.component},instances:{},name:a,parent:r,matchAs:o,redirect:n.redirect,beforeEnter:n.beforeEnter,meta:n.meta||{}};n.children&&n.children.forEach(function(n){g(t,e,n,u)}),void 0!==n.alias&&(Array.isArray(n.alias)?n.alias.forEach(function(n){g(t,e,{path:n},r,u.path)}):g(t,e,{path:n.alias},r,u.path)),t[u.path]||(t[u.path]=u),a&&(e[a]||(e[a]=u))}function w(t,e){return t=t.replace(/\\/$/,\"\"),\"/\"===t[0]?t:null==e?t:v(e.path+\"/\"+t)}function b(t,e){for(var n,r=[],o=0,i=0,a=\"\",u=e&&e.delimiter||\"/\";null!=(n=_t.exec(t));){var c=n[0],s=n[1],p=n.index;if(a+=t.slice(i,p),i=p+c.length,s)a+=s[1];else{var f=t[i],h=n[2],l=n[3],d=n[4],y=n[5],v=n[6],m=n[7];a&&(r.push(a),a=\"\");var g=null!=h&&null!=f&&f!==h,w=\"+\"===v||\"*\"===v,b=\"?\"===v||\"*\"===v,x=n[2]||u,k=d||y;r.push({name:l||o++,prefix:h||\"\",delimiter:x,optional:b,repeat:w,partial:g,asterisk:!!m,pattern:k?j(k):m?\".*\":\"[^\"+E(x)+\"]+?\"})}}return i<t.length&&(a+=t.substr(i)),a&&r.push(a),r}function x(t,e){return A(b(t,e))}function k(t){return encodeURI(t).replace(/[\\/?#]/g,function(t){return\"%\"+t.charCodeAt(0).toString(16).toUpperCase()})}function O(t){return encodeURI(t).replace(/[?#]/g,function(t){return\"%\"+t.charCodeAt(0).toString(16).toUpperCase()})}function A(t){for(var e=new Array(t.length),n=0;n<t.length;n++)\"object\"==typeof t[n]&&(e[n]=new RegExp(\"^(?:\"+t[n].pattern+\")$\"));return function(n,r){for(var o=\"\",i=n||{},a=r||{},u=a.pretty?k:encodeURIComponent,c=0;c<t.length;c++){var s=t[c];if(\"string\"!=typeof s){var p,f=i[s.name];if(null==f){if(s.optional){s.partial&&(o+=s.prefix);continue}throw new TypeError('Expected \"'+s.name+'\" to be defined')}if(kt(f)){if(!s.repeat)throw new TypeError('Expected \"'+s.name+'\" to not repeat, but received `'+JSON.stringify(f)+\"`\");if(0===f.length){if(s.optional)continue;throw new TypeError('Expected \"'+s.name+'\" to not be empty')}for(var h=0;h<f.length;h++){if(p=u(f[h]),!e[c].test(p))throw new TypeError('Expected all \"'+s.name+'\" to match \"'+s.pattern+'\", but received `'+JSON.stringify(p)+\"`\");o+=(0===h?s.prefix:s.delimiter)+p}}else{if(p=s.asterisk?O(f):u(f),!e[c].test(p))throw new TypeError('Expected \"'+s.name+'\" to match \"'+s.pattern+'\", but received \"'+p+'\"');o+=s.prefix+p}}else o+=s}return o}}function E(t){return t.replace(/([.+*?=^!:${}()[\\]|\\/\\\\])/g,\"\\\\$1\")}function j(t){return t.replace(/([=!:$\\/()])/g,\"\\\\$1\")}function R(t,e){return t.keys=e,t}function _(t){return t.sensitive?\"\":\"i\"}function $(t,e){var n=t.source.match(/\\((?!\\?)/g);if(n)for(var r=0;r<n.length;r++)e.push({name:r,prefix:null,delimiter:null,optional:!1,repeat:!1,partial:!1,asterisk:!1,pattern:null});return R(t,e)}function T(t,e,n){for(var r=[],o=0;o<t.length;o++)r.push(C(t[o],e,n).source);var i=new RegExp(\"(?:\"+r.join(\"|\")+\")\",_(n));return R(i,e)}function S(t,e,n){return q(b(t,n),e,n)}function q(t,e,n){kt(e)||(n=e||n,e=[]),n=n||{};for(var r=n.strict,o=n.end!==!1,i=\"\",a=0;a<t.length;a++){var u=t[a];if(\"string\"==typeof u)i+=E(u);else{var c=E(u.prefix),s=\"(?:\"+u.pattern+\")\";e.push(u),u.repeat&&(s+=\"(?:\"+c+s+\")*\"),s=u.optional?u.partial?c+\"(\"+s+\")?\":\"(?:\"+c+\"(\"+s+\"))?\":c+\"(\"+s+\")\",i+=s}}var p=E(n.delimiter||\"/\"),f=i.slice(-p.length)===p;return r||(i=(f?i.slice(0,-p.length):i)+\"(?:\"+p+\"(?=$))?\"),i+=o?\"$\":r&&f?\"\":\"(?=\"+p+\"|$)\",R(new RegExp(\"^\"+i,_(n)),e)}function C(t,e,n){return kt(e)||(n=e||n,e=[]),n=n||{},t instanceof RegExp?$(t,e):kt(t)?T(t,e,n):S(t,e,n)}function P(t){var e,n,r=$t[t];return r?(e=r.keys,n=r.regexp):(e=[],n=Ot(t,e),$t[t]={keys:e,regexp:n}),{keys:e,regexp:n}}function U(t,e,n){try{var r=Tt[t]||(Tt[t]=Ot.compile(t));return r(e||{},{pretty:!0})}catch(t){return\"\"}}function L(t,n,r){var o=\"string\"==typeof t?{path:t}:t;if(o.name||o._normalized)return o;if(!o.path&&o.params&&n){o=z({},o),o._normalized=!0;var i=z(z({},n.params),o.params);if(n.name)o.name=n.name,o.params=i;else if(n.matched){var a=n.matched[n.matched.length-1].path;o.path=U(a,i,\"path \"+n.path)}return o}var u=y(o.path||\"\"),c=n&&n.path||\"/\",s=u.path?d(u.path,c,r||o.append):n&&n.path||\"/\",p=e(u.query,o.query),f=o.hash||u.hash;return f&&\"#\"!==f.charAt(0)&&(f=\"#\"+f),{_normalized:!0,path:s,query:p,hash:f}}function z(t,e){for(var n in e)t[n]=e[n];return t}function H(e){function n(t,e,n){var r=L(t,e),o=r.name;if(o){var i=s[o],u=P(i.path).keys.filter(function(t){return!t.optional}).map(function(t){return t.name});if(\"object\"!=typeof r.params&&(r.params={}),e&&\"object\"==typeof e.params)for(var p in e.params)!(p in r.params)&&u.indexOf(p)>-1&&(r.params[p]=e.params[p]);if(i)return r.path=U(i.path,r.params,'named route \"'+o+'\"'),a(i,r,n)}else if(r.path){r.params={};for(var f in c)if(M(f,r.params,r.path))return a(c[f],r,n)}return a(null,r)}function r(e,r){var i=e.redirect,u=\"function\"==typeof i?i(o(e,r)):i;if(\"string\"==typeof u&&(u={path:u}),!u||\"object\"!=typeof u)return a(null,r);var c=u,p=c.name,f=c.path,h=r.query,l=r.hash,d=r.params;if(h=c.hasOwnProperty(\"query\")?c.query:h,l=c.hasOwnProperty(\"hash\")?c.hash:l,d=c.hasOwnProperty(\"params\")?c.params:d,p){s[p];return n({_normalized:!0,name:p,query:h,hash:l,params:d},void 0,r)}if(f){var y=V(f,e),v=U(y,d,'redirect route with path \"'+y+'\"');return n({_normalized:!0,path:v,query:h,hash:l},void 0,r)}return t(!1,\"invalid redirect option: \"+JSON.stringify(u)),a(null,r)}function i(t,e,r){var o=U(r,e.params,'aliased route with path \"'+r+'\"'),i=n({_normalized:!0,path:o});if(i){var u=i.matched,c=u[u.length-1];return e.params=i.params,a(c,e)}return a(null,e)}function a(t,e,n){return t&&t.redirect?r(t,n||e):t&&t.matchAs?i(t,e,t.matchAs):o(t,e,n)}var u=m(e),c=u.pathMap,s=u.nameMap;return n}function M(t,e,n){var r=P(t),o=r.regexp,i=r.keys,a=n.match(o);if(!a)return!1;if(!e)return!0;for(var u=1,c=a.length;u<c;++u){var s=i[u-1],p=\"string\"==typeof a[u]?decodeURIComponent(a[u]):a[u];s&&(e[s.name]=p)}return!0}function V(t,e){return d(t,e.parent?e.parent.path:\"/\",!0)}function B(t,e,n){var r=function(o){o>=t.length?n():t[o]?e(t[o],function(){r(o+1)}):r(o+1)};r(0)}function F(t){if(!t)if(St){var e=document.querySelector(\"base\");t=e?e.getAttribute(\"href\"):\"/\"}else t=\"/\";return\"/\"!==t.charAt(0)&&(t=\"/\"+t),t.replace(/\\/$/,\"\")}function I(t,e){var n,r=Math.max(t.length,e.length);for(n=0;n<r&&t[n]===e[n];n++);return{activated:e.slice(n),deactivated:t.slice(n)}}function D(t,e){return\"function\"!=typeof t&&(t=lt.extend(t)),t.options[e]}function J(t){return Q(G(t,function(t,e){var n=D(t,\"beforeRouteLeave\");if(n)return Array.isArray(n)?n.map(function(t){return K(t,e)}):K(n,e)}).reverse())}function K(t,e){return function(){return t.apply(e,arguments)}}function N(t,e,n){return Q(G(t,function(t,r,o,i){var a=D(t,\"beforeRouteEnter\");if(a)return Array.isArray(a)?a.map(function(t){return X(t,e,o,i,n)}):X(a,e,o,i,n)}))}function X(t,e,n,r,o){return function(i,a,u){return t(i,a,function(t){u(t),\"function\"==typeof t&&e.push(function(){Y(t,n.instances,r,o)})})}}function Y(t,e,n,r){e[n]?t(e[n]):r()&&setTimeout(function(){Y(t,e,n,r)},16)}function W(e){return G(e,function(e,n,r,o){if(\"function\"==typeof e&&!e.options)return function(n,i,a){var u=function(t){r.components[o]=t,a()},c=function(e){t(!1,\"Failed to resolve async component \"+o+\": \"+e),a(!1)},s=e(u,c);s&&\"function\"==typeof s.then&&s.then(u,c)}})}function G(t,e){return Q(t.map(function(t){return Object.keys(t.components).map(function(n){return e(t.components[n],t.instances[n],t,n)})}))}function Q(t){return Array.prototype.concat.apply([],t)}function Z(t){t&&(Pt[t]={x:window.pageXOffset,y:window.pageYOffset})}function tt(t){if(t)return Pt[t]}function et(t){var e=document.documentElement.getBoundingClientRect(),n=t.getBoundingClientRect();return{x:n.left-e.left,y:n.top-e.top}}function nt(t){return ot(t.x)||ot(t.y)}function rt(t){return{x:ot(t.x)?t.x:window.pageXOffset,y:ot(t.y)?t.y:window.pageYOffset}}function ot(t){return\"number\"==typeof t}function it(t){var e=window.location.pathname;return t&&0===e.indexOf(t)&&(e=e.slice(t.length)),(e||\"/\")+window.location.search+window.location.hash}function at(t,e){var n=window.history;try{e?n.replaceState({key:Lt},\"\",t):(Lt=Ut(),n.pushState({key:Lt},\"\",t)),Z(Lt)}catch(n){window.location[e?\"assign\":\"replace\"](t)}}function ut(t){at(t,!0)}function ct(){var t=st();return\"/\"===t.charAt(0)||(ft(\"/\"+t),!1)}function st(){var t=window.location.href,e=t.indexOf(\"#\");return e===-1?\"\":t.slice(e+1)}function pt(t){window.location.hash=t}function ft(t){var e=window.location.href.indexOf(\"#\");window.location.replace(window.location.href.slice(0,e>=0?e:0)+\"#\"+t)}function ht(t,e,n){var r=\"hash\"===n?\"/#\"+e:e;return t?v(t+r):r}var lt,dt={name:\"router-view\",functional:!0,props:{name:{type:String,default:\"default\"}},render:function(t,e){var n=e.props,r=e.children,o=e.parent,i=e.data;i.routerView=!0;for(var a=o.$route,u=o._routerViewCache||(o._routerViewCache={}),c=0,s=!1;o;)o.$vnode&&o.$vnode.data.routerView&&c++,o._inactive&&(s=!0),o=o.$parent;i.routerViewDepth=c;var p=a.matched[c];if(!p)return t();var f=n.name,h=s?u[f]:u[f]=p.components[f];if(!s){var l=i.hook||(i.hook={});l.init=function(t){p.instances[f]=t.child},l.prepatch=function(t,e){p.instances[f]=e.child},l.destroy=function(t){p.instances[f]===t.child&&(p.instances[f]=void 0)}}return t(h,i,r)}},yt=encodeURIComponent,vt=decodeURIComponent,mt=o(null,{path:\"/\"}),gt=/\\/$/,wt=[String,Object],bt={name:\"router-link\",props:{to:{type:wt,required:!0},tag:{type:String,default:\"a\"},exact:Boolean,append:Boolean,replace:Boolean,activeClass:String,event:{type:[String,Array],default:\"click\"}},render:function(t){var e=this,n=this.$router,r=this.$route,i=n.resolve(this.to,r,this.append),a=i.normalizedTo,c=i.resolved,p=i.href,l={},d=this.activeClass||n.options.linkActiveClass||\"router-link-active\",y=a.path?o(null,a):c;l[d]=this.exact?u(r,y):s(r,y);var v=function(t){f(t)&&(e.replace?n.replace(a):n.push(a))},m={click:f};Array.isArray(this.event)?this.event.forEach(function(t){m[t]=v}):m[this.event]=v;var g={class:l};if(\"a\"===this.tag)g.on=m,g.attrs={href:p};else{var w=h(this.$slots.default);if(w){w.isStatic=!1;var b=lt.util.extend,x=w.data=b({},w.data);x.on=m;var k=w.data.attrs=b({},w.data.attrs);k.href=p}else g.on=m}return t(this.tag,g,this.$slots.default)}},xt=Array.isArray||function(t){return\"[object Array]\"==Object.prototype.toString.call(t)},kt=xt,Ot=C,At=b,Et=x,jt=A,Rt=q,_t=new RegExp([\"(\\\\\\\\.)\",\"([\\\\/.])?(?:(?:\\\\:(\\\\w+)(?:\\\\(((?:\\\\\\\\.|[^\\\\\\\\()])+)\\\\))?|\\\\(((?:\\\\\\\\.|[^\\\\\\\\()])+)\\\\))([+*?])?|(\\\\*))\"].join(\"|\"),\"g\");Ot.parse=At,Ot.compile=Et,Ot.tokensToFunction=jt,Ot.tokensToRegExp=Rt;var $t=Object.create(null),Tt=Object.create(null),St=\"undefined\"!=typeof window,qt=St&&function(){var t=window.navigator.userAgent;return(t.indexOf(\"Android 2.\")===-1&&t.indexOf(\"Android 4.0\")===-1||t.indexOf(\"Mobile Safari\")===-1||t.indexOf(\"Chrome\")!==-1||t.indexOf(\"Windows Phone\")!==-1)&&(window.history&&\"pushState\"in window.history)}(),Ct=function(t,e){this.router=t,this.base=F(e),this.current=mt,this.pending=null};Ct.prototype.listen=function(t){this.cb=t},Ct.prototype.transitionTo=function(t,e){var n=this,r=this.router.match(t,this.current);this.confirmTransition(r,function(){n.updateRoute(r),e&&e(r),n.ensureURL()})},Ct.prototype.confirmTransition=function(t,e){var n=this,r=this.current;if(u(t,r))return void this.ensureURL();var o=I(this.current.matched,t.matched),i=o.deactivated,a=o.activated,c=[].concat(J(i),this.router.beforeHooks,a.map(function(t){return t.beforeEnter}),W(a));this.pending=t;var s=function(e,o){n.pending===t&&e(t,r,function(t){t===!1?n.ensureURL(!0):\"string\"==typeof t||\"object\"==typeof t?\"object\"==typeof t&&t.replace?n.replace(t):n.push(t):o(t)})};B(c,s,function(){var r=[],o=N(a,r,function(){return n.current===t});B(o,s,function(){n.pending===t&&(n.pending=null,e(t),n.router.app&&n.router.app.$nextTick(function(){r.forEach(function(t){return t()})}))})})},Ct.prototype.updateRoute=function(t){var e=this.current;this.current=t,this.cb&&this.cb(t),this.router.afterHooks.forEach(function(n){n&&n(t,e)})};var Pt=Object.create(null),Ut=function(){return String(Date.now())},Lt=Ut(),zt=function(t){function e(e,n){var r=this;t.call(this,e,n);var o=e.options.scrollBehavior;window.addEventListener(\"popstate\",function(t){Lt=t.state&&t.state.key;var e=r.current;r.transitionTo(it(r.base),function(t){o&&r.handleScroll(t,e,!0)})}),o&&window.addEventListener(\"scroll\",function(){Z(Lt)})}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.go=function(t){window.history.go(t)},e.prototype.push=function(t){var e=this,n=this.current;this.transitionTo(t,function(t){at(v(e.base+t.fullPath)),e.handleScroll(t,n,!1)})},e.prototype.replace=function(t){var e=this,n=this.current;this.transitionTo(t,function(t){ut(v(e.base+t.fullPath)),e.handleScroll(t,n,!1)})},e.prototype.ensureURL=function(t){if(it(this.base)!==this.current.fullPath){var e=v(this.base+this.current.fullPath);t?at(e):ut(e)}},e.prototype.handleScroll=function(t,e,n){var r=this.router;if(r.app){var o=r.options.scrollBehavior;o&&r.app.$nextTick(function(){var r=tt(Lt),i=o(t,e,n?r:null);if(i){var a=\"object\"==typeof i;if(a&&\"string\"==typeof i.selector){var u=document.querySelector(i.selector);u?r=et(u):nt(i)&&(r=rt(i))}else a&&nt(i)&&(r=rt(i));r&&window.scrollTo(r.x,r.y)}})}},e}(Ct),Ht=function(t){function e(e,n,r){var o=this;t.call(this,e,n),window.addEventListener(\"hashchange\",function(){o.onHashChange()}),r&&this.checkFallback()||ct()}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.checkFallback=function(){var t=it(this.base);if(!/^\\/#/.test(t))return window.location.replace(v(this.base+\"/#\"+t)),!0},e.prototype.onHashChange=function(){ct()&&this.transitionTo(st(),function(t){ft(t.fullPath)})},e.prototype.push=function(t){this.transitionTo(t,function(t){pt(t.fullPath)})},e.prototype.replace=function(t){this.transitionTo(t,function(t){ft(t.fullPath)})},e.prototype.go=function(t){window.history.go(t)},e.prototype.ensureURL=function(t){var e=this.current.fullPath;st()!==e&&(t?pt(e):ft(e))},e}(Ct),Mt=function(t){function e(e){t.call(this,e),this.stack=[],this.index=-1}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.push=function(t){var e=this;this.transitionTo(t,function(t){e.stack=e.stack.slice(0,e.index+1).concat(t),e.index++})},e.prototype.replace=function(t){var e=this;this.transitionTo(t,function(t){e.stack=e.stack.slice(0,e.index).concat(t)})},e.prototype.go=function(t){var e=this,n=this.index+t;if(!(n<0||n>=this.stack.length)){var r=this.stack[n];this.confirmTransition(r,function(){e.index=n,e.updateRoute(r)})}},e.prototype.ensureURL=function(){},e}(Ct),Vt=function(t){void 0===t&&(t={}),this.app=null,this.options=t,this.beforeHooks=[],this.afterHooks=[],this.match=H(t.routes||[]);var e=t.mode||\"hash\";switch(this.fallback=\"history\"===e&&!qt,this.fallback&&(e=\"hash\"),St||(e=\"abstract\"),this.mode=e,e){case\"history\":this.history=new zt(this,t.base);break;case\"hash\":this.history=new Ht(this,t.base,this.fallback);break;case\"abstract\":this.history=new Mt(this)}},Bt={currentRoute:{}};return Bt.currentRoute.get=function(){return this.history&&this.history.current},Vt.prototype.init=function(t){var e=this;this.app=t;var n=this.history;n instanceof zt?n.transitionTo(it(n.base)):n instanceof Ht&&n.transitionTo(st()),n.listen(function(t){e.app._route=t})},Vt.prototype.beforeEach=function(t){this.beforeHooks.push(t)},Vt.prototype.afterEach=function(t){this.afterHooks.push(t)},Vt.prototype.push=function(t){this.history.push(t)},Vt.prototype.replace=function(t){this.history.replace(t)},Vt.prototype.go=function(t){this.history.go(t)},Vt.prototype.back=function(){this.go(-1)},Vt.prototype.forward=function(){this.go(1)},Vt.prototype.getMatchedComponents=function(t){var e=t?this.resolve(t).resolved:this.currentRoute;return e?[].concat.apply([],e.matched.map(function(t){return Object.keys(t.components).map(function(e){return t.components[e]})})):[]},Vt.prototype.resolve=function(t,e,n){var r=L(t,e||this.history.current,n),o=this.match(r,e),i=o.redirectedFrom||o.fullPath,a=this.history.base,u=ht(a,i,this.mode);return{normalizedTo:r,resolved:o,href:u}},Object.defineProperties(Vt.prototype,Bt),Vt.install=l,St&&window.Vue&&window.Vue.use(Vt),Vt});"
 
 /***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.Navbar = {
-	    props: {
-	        active: {},
-	    },
-	    template: __webpack_require__(21)
-	};
-
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports) {
-
-	module.exports = "<nav class=\"nav has-shadow\">\r\n    <div class=\"container\">\r\n        <div class=\"nav-left\">\r\n            <a class=\"nav-item\" :class=\"{active: active === ''}\">\r\n                <i class=\"home icon\"></i>\r\n                <router-link :to=\"{ name: 'home'}\">Home</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'player'}\">\r\n                <i class=\"grid layout icon\"></i>\r\n                <router-link :to=\"{ name: 'player'}\">玩家管理</router-link>\r\n            </a>\r\n            <a class=\"nav-item\" :class=\"{active: active === 'rank'}\">\r\n                <router-link :to=\"{ name: 'rank'}\">天梯排名</router-link>\r\n            </a>\r\n            <a class=\"nav-item\">\r\n                <router-link :to=\"/dmk\">DmkLeecher</router-link>\r\n            </a>\r\n        </div>\r\n\r\n        <!--<div class=\"nav-right\">\r\n            <a class=\"nav-item\" :class=\"{active: active === 'setting'}\">\r\n                <router-link :to=\"{ name: 'setting'}\">setting</router-link>\r\n            </a>\r\n        </div>-->\r\n    </div>\r\n\r\n\r\n</nav>";
-
-/***/ }),
+/* 20 */,
+/* 21 */,
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -644,6 +625,7 @@
 	var GameAdmin_1 = __webpack_require__(28);
 	var Pick_1 = __webpack_require__(32);
 	var WorldWar_1 = __webpack_require__(34);
+	var ScoreRankAdmin_1 = __webpack_require__(127);
 	var cropper;
 	function getScorePanelUrl(gameId, isDark, isOb) {
 	    if (isOb === void 0) { isOb = true; }
@@ -661,7 +643,12 @@
 	        var _this = _super.call(this) || this;
 	        _this.template = __webpack_require__(41);
 	        _this.links = VueBase_1.VueBase.PROP;
-	        _this.components = { "GameAdmin": GameAdmin_1.GameAdmin, "Pick": Pick_1.Pick, "WorldWar": WorldWar_1.WorldWar };
+	        _this.components = {
+	            "GameAdmin": GameAdmin_1.GameAdmin,
+	            "Pick": Pick_1.Pick,
+	            "WorldWar": WorldWar_1.WorldWar,
+	            "ScoreRankAdmin": ScoreRankAdmin_1.ScoreRankAdmin
+	        };
 	        _this.opUrlArr = VueBase_1.VueBase.PROP;
 	        _this.selected = VueBase_1.VueBase.PROP;
 	        _this.options = VueBase_1.VueBase.PROP;
@@ -2921,7 +2908,7 @@
 /* 41 */
 /***/ (function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <div class=\"tabs  is-boxed\">\r\n        <ul>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                <a>\r\n                    <span>home</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                <a>\r\n                    <span>热门球员编辑</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab3'}\" @click='tab(\"tab3\")'>\r\n                <a>\r\n                    <span>自定义比赛</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab4'}\" @click='tab(\"tab4\")'>\r\n                <a>\r\n                    <span>战队选择</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab5'}\" @click='tab(\"tab5\")'>\r\n                <a>\r\n                    <span>国战</span>\r\n                </a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n    <div v-if='actTab==\"tab1\"'>\r\n        <nav class=\"panel\">\r\n            <p class=\"panel-heading\">\r\n                直播面板op入口 Game ID: {{ selected }}\r\n                <span class=\"select\">\r\n                            <select v-model=\"selected\">\r\n                                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                                    {{ option.text }}\r\n                                </option>\r\n                            </select>\r\n                        </span>\r\n            </p>\r\n            <div v-for=\"link in links\">\r\n                <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                    <span class=\"panel-icon\">\r\n                        <i class=\"fa fa-book\"></i>\r\n                        </span> {{link.url}}\r\n                    <br> {{link.title}}\r\n                </a>\r\n                <!--<button class=\"button\">复制地址</button>-->\r\n            </div>\r\n            <div>\r\n                抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n                <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n                <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n                           {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n                        </a>\r\n            </div>\r\n\r\n            <p>\r\n                command:\r\n                <br> /game/bracket/clear\r\n                <br>/game/clear/bracketIdx\r\n                <br>/git/pull\r\n        </nav>\r\n        播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n            <p>\r\n                播放地址2:<input type=\"text\" v-model=\"playUrl2\" style=\"width: 1000px\">\r\n                <p>\r\n                    推流地址2:<input type=\"text\" v-model=\"rmtpUrl2\" style=\"width: 1000px\">\r\n                    <p>\r\n                        <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n                        <div id=\"qrcode\"></div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <div class=\"panel\" style=\"width: 500px;\">\r\n            <p class=\"panel-heading\">\r\n                亮了网后台数据导入8090\r\n            </p>\r\n            球员编号player_id\r\n            <input type=\"text\" v-model=\"player_id\" style=\"width: 100px;\">\r\n            <button class=\"button is-primary\" @click=\"onViewPlayer(player_id)\">查看亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onSyncPlayerToStrapi(player_id)\">导入亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onPullPlayerData(player_id)\">编辑8090球员</button>\r\n            <!-- <input type=\"text\" v-model=\"playerArrStr\" style=\"width: 150px;\">\r\n            <button class=\"button is-primary\" @click=\"onSetStarPlayer(playerArrStr)\">设定热门球员</button> -->\r\n            <div v-if='playerInEdit'>\r\n                <div class=\"container\" style=\"height: 700px\">\r\n                    <h1>上传热门球员图片</h1>\r\n                    <button class=\"button is-primary\" @click=\"onUpload\">打开本地图片</button>\r\n                    <button class=\"button is-primary\" @click=\"onCrop(player_id)\">裁切上传</button>\r\n                    <input type=\"file\" class=\"sr-only\" id=\"input\" name=\"image\" @change='onImgLoaded' accept=\"image/*\" hidden>\r\n                    <div class='result'></div>\r\n                    <img id=\"imgToDownload\" style=\"max-width: 100%;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"panel\" style=\"width:250px;\">\r\n            <p class=\"panel-heading\">\r\n                预览\r\n            </p>\r\n            <div v-if='playerInEdit'>\r\n                <label style=\"font-size: 30px;\">{{ playerInEdit.player_id+playerInEdit.live_name}}</label>\r\n                <div class=\"preview\" style=\"width: 100px;\"></div>\r\n                <textarea v-model=\"playerInEdit.brief\" name=\"\" id=\"\" width=\"350\" height=\"150\"></textarea>\r\n                <input type=\"text\" v-model=\"playerInEdit.tag1\" style=\"width: 100px;\">\r\n                <input type=\"text\" v-model=\"playerInEdit.tag2\" style=\"width: 100px;\">\r\n                <br> level:\r\n                <input type=\"text\" v-model=\"playerInEdit.level\" style=\"width: 50px;\">1-6 S+ S A+ A B C\r\n                <br> <button class=\"button is-primary\" @click=\"onEditPlayer(player_id)\">更新</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div v-if='actTab==\"tab3\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <GameAdmin/>\r\n    </div>\r\n    <div v-if='actTab==\"tab4\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <Pick/>\r\n    </div>\r\n    <div v-if='actTab==\"tab5\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <WorldWar/>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <div class=\"tabs  is-boxed\">\r\n        <ul>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                <a>\r\n                    <span>home</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                <a>\r\n                    <span>热门球员编辑</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab3'}\" @click='tab(\"tab3\")'>\r\n                <a>\r\n                    <span>自定义比赛</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab4'}\" @click='tab(\"tab4\")'>\r\n                <a>\r\n                    <span>战队选择</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab5'}\" @click='tab(\"tab5\")'>\r\n                <a>\r\n                    <span>国战</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab6'}\" @click='tab(\"tab6\")'>\r\n                <a>\r\n                    <span>抢五</span>\r\n                </a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n    <div v-if='actTab==\"tab1\"'>\r\n        <nav class=\"panel\">\r\n            <p class=\"panel-heading\">\r\n                直播面板op入口 Game ID: {{ selected }}\r\n                <span class=\"select\">\r\n                            <select v-model=\"selected\">\r\n                                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                                    {{ option.text }}\r\n                                </option>\r\n                            </select>\r\n                        </span>\r\n            </p>\r\n            <div v-for=\"link in links\">\r\n                <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                    <span class=\"panel-icon\">\r\n                        <i class=\"fa fa-book\"></i>\r\n                        </span> {{link.url}}\r\n                    <br> {{link.title}}\r\n                </a>\r\n                <!--<button class=\"button\">复制地址</button>-->\r\n            </div>\r\n            <div>\r\n                抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n                <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n                <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n                           {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n                        </a>\r\n            </div>\r\n\r\n            <p>\r\n                command:\r\n                <br> /game/bracket/clear\r\n                <br>/game/clear/bracketIdx\r\n                <br>/git/pull\r\n        </nav>\r\n        播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n            <p>\r\n                播放地址2:<input type=\"text\" v-model=\"playUrl2\" style=\"width: 1000px\">\r\n                <p>\r\n                    推流地址2:<input type=\"text\" v-model=\"rmtpUrl2\" style=\"width: 1000px\">\r\n                    <p>\r\n                        <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n                        <div id=\"qrcode\"></div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <div class=\"panel\" style=\"width: 500px;\">\r\n            <p class=\"panel-heading\">\r\n                亮了网后台数据导入8090\r\n            </p>\r\n            球员编号player_id\r\n            <input type=\"text\" v-model=\"player_id\" style=\"width: 100px;\">\r\n            <button class=\"button is-primary\" @click=\"onViewPlayer(player_id)\">查看亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onSyncPlayerToStrapi(player_id)\">导入亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onPullPlayerData(player_id)\">编辑8090球员</button>\r\n            <!-- <input type=\"text\" v-model=\"playerArrStr\" style=\"width: 150px;\">\r\n            <button class=\"button is-primary\" @click=\"onSetStarPlayer(playerArrStr)\">设定热门球员</button> -->\r\n            <div v-if='playerInEdit'>\r\n                <div class=\"container\" style=\"height: 700px\">\r\n                    <h1>上传热门球员图片</h1>\r\n                    <button class=\"button is-primary\" @click=\"onUpload\">打开本地图片</button>\r\n                    <button class=\"button is-primary\" @click=\"onCrop(player_id)\">裁切上传</button>\r\n                    <input type=\"file\" class=\"sr-only\" id=\"input\" name=\"image\" @change='onImgLoaded' accept=\"image/*\" hidden>\r\n                    <div class='result'></div>\r\n                    <img id=\"imgToDownload\" style=\"max-width: 100%;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"panel\" style=\"width:250px;\">\r\n            <p class=\"panel-heading\">\r\n                预览\r\n            </p>\r\n            <div v-if='playerInEdit'>\r\n                <label style=\"font-size: 30px;\">{{ playerInEdit.player_id+playerInEdit.live_name}}</label>\r\n                <div class=\"preview\" style=\"width: 100px;\"></div>\r\n                <textarea v-model=\"playerInEdit.brief\" name=\"\" id=\"\" width=\"350\" height=\"150\"></textarea>\r\n                <input type=\"text\" v-model=\"playerInEdit.tag1\" style=\"width: 100px;\">\r\n                <input type=\"text\" v-model=\"playerInEdit.tag2\" style=\"width: 100px;\">\r\n                <br> level:\r\n                <input type=\"text\" v-model=\"playerInEdit.level\" style=\"width: 50px;\">1-6 S+ S A+ A B C\r\n                <br> <button class=\"button is-primary\" @click=\"onEditPlayer(player_id)\">更新</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div v-if='actTab==\"tab3\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <GameAdmin/>\r\n    </div>\r\n    <div v-if='actTab==\"tab4\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <Pick/>\r\n    </div>\r\n    <div v-if='actTab==\"tab5\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <WorldWar/>\r\n    </div>\r\n    <div v-if='actTab==\"tab6\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <ScoreRankAdmin/>\r\n    </div>\r\n</div>";
 
 /***/ }),
 /* 42 */
@@ -3058,6 +3045,353 @@
 /***/ (function(module, exports) {
 
 	module.exports = "<div>\r\n    <aside class=\"menu\" style=\"width:250px\">\r\n        <p class=\"menu-label\">\r\n            Player\r\n        </p>\r\n        <ul class=\"menu-list\">\r\n            <ul>\r\n                <li><a href=\"#\">添加Player</a></li>\r\n                <li><a href=\"#\">同步数据</a></li>\r\n            </ul>\r\n        </ul>\r\n    </aside>\r\n\r\n    <div id=\"player-grid\" style=\"position: relative;left: 290px;width: 800px\">\r\n        <div class=\"box\" v-for=\"player in playerArr\" style=\"display: inline-block;width:200px;\">\r\n            <img v-bind:src=\"player.portrait\" @click=\"onEdit(player)\">\r\n            <img v-bind:src=\"'/img/player/avatar/'+player.avatar\" style=\"width: 50px\">\r\n            <div class=\"content\">\r\n                {{player.name}} id:{{player.id}}\r\n                <br> 背号:{{player.number}}\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <editForm :playerInfo='editPlayerDoc' v-if='isEdit'>\r\n    </editform>\r\n</div>";
+
+/***/ }),
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */,
+/* 88 */,
+/* 89 */,
+/* 90 */,
+/* 91 */,
+/* 92 */,
+/* 93 */,
+/* 94 */,
+/* 95 */,
+/* 96 */,
+/* 97 */,
+/* 98 */,
+/* 99 */,
+/* 100 */,
+/* 101 */,
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */,
+/* 111 */,
+/* 112 */,
+/* 113 */,
+/* 114 */,
+/* 115 */,
+/* 116 */,
+/* 117 */,
+/* 118 */,
+/* 119 */,
+/* 120 */,
+/* 121 */,
+/* 122 */,
+/* 123 */,
+/* 124 */,
+/* 125 */,
+/* 126 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div class=\"container\">\r\n\r\n    <span class=\"select\">\r\n            <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                    {{ option.text }}\r\n                </option>\r\n            </select>\r\n        </span>\r\n\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n\r\n    <div>\r\n        <br> score rank:\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onReloadShow()\">reload show</button>\r\n        <button class=\"button is-primary\" @click=\"onSetPlayerDeactive()\">set player deactive</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,-1)\">L-1</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,1)\">L+1</button> ----------\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,1)\">R+1</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,-1)\">R-1</button>\r\n        <br>\r\n\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in blueArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <hr>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in redArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n\r\n    </div>\r\n</div>";
+
+/***/ }),
+/* 127 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var VueBase_1 = __webpack_require__(24);
+	var const_1 = __webpack_require__(29);
+	var Command_1 = __webpack_require__(30);
+	var JsFunc_1 = __webpack_require__(23);
+	var confFile = null;
+	var reader;
+	var filesInput;
+	var opReq = function (cmdId, param) {
+	    param._ = null;
+	    $.ajax({
+	        url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
+	        type: 'post',
+	        data: JSON.stringify(param),
+	        headers: { "Content-Type": "application/json" },
+	        dataType: 'json'
+	    });
+	};
+	var _exData;
+	var playerCount = 4;
+	var _ScoreRankAdmin = (function (_super) {
+	    __extends(_ScoreRankAdmin, _super);
+	    function _ScoreRankAdmin() {
+	        var _this = _super.call(this) || this;
+	        _this.template = __webpack_require__(126);
+	        _this.selected = VueBase_1.VueBase.PROP;
+	        _this.options = VueBase_1.VueBase.PROP;
+	        _this.gameConf = VueBase_1.VueBase.PROP;
+	        _this.vsPlayer = VueBase_1.VueBase.PROP;
+	        _this.vsPlayerArr = VueBase_1.VueBase.PROP;
+	        _this.redArr = VueBase_1.VueBase.PROP;
+	        _this.blueArr = VueBase_1.VueBase.PROP;
+	        _this.lPlayer = VueBase_1.VueBase.PROP;
+	        _this.rPlayer = VueBase_1.VueBase.PROP;
+	        _this.lastScoreArr = VueBase_1.VueBase.PROP;
+	        _this.methods = {
+	            onReloadShow: function () {
+	                var _this = this;
+	                this.reloadFile(null, {
+	                    callback: function (_) {
+	                        _this.onShowScoreRank(true);
+	                    }
+	                });
+	            },
+	            onSelectGame: function () {
+	                console.log('on init game', this.selected);
+	                var playerMap = this.gameConf.playerMap;
+	                var recArr = this.gameConf.rec;
+	                for (var i = 0; i < recArr.length; i++) {
+	                    var rec = recArr[i];
+	                    if (rec.idx == this.selected) {
+	                        var p1 = rec.player[0];
+	                        var p2 = rec.player[1];
+	                        this.vsPlayer = p1 + ' ' + p2;
+	                        return;
+	                    }
+	                }
+	            },
+	            onChangePlayer: function (isBlue, playerId) {
+	                isBlue ? this.vsPlayerArr[0] = playerId : this.vsPlayerArr[1] = playerId;
+	                this.vsPlayer = this.vsPlayerArr.join(" ");
+	            },
+	            onAddScore: function (isLeft, dtScore) {
+	                this.onShowScoreRank(true, dtScore, isLeft);
+	                opReq("" + Command_1.CommandId.cs_updateScore, { dtScore: dtScore, isLeft: isLeft });
+	            },
+	            onInitGame: function () {
+	                console.log('init game');
+	                var playerMap = this.gameConf.playerMap;
+	                var recArr = this.gameConf.rec;
+	                var a = this.vsPlayer.split(' ');
+	                var p1 = a[0];
+	                var p2 = a[1];
+	                p1 = playerMap[p1];
+	                p2 = playerMap[p2];
+	                p1.avatar = this.gameConf.avatarUrlBase + p1.playerId + '.png';
+	                p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png';
+	                this.lPlayer = p1;
+	                this.rPlayer = p2;
+	                opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2 });
+	            },
+	            onSetPlayerDeactive: function () {
+	                this.vsPlayer = '';
+	                this.onShowScoreRank(true);
+	            },
+	            onShowScoreRank: function (visible) {
+	                var scoreArr = [];
+	                var isInitScoreArr = false;
+	                var scoreFx = 0;
+	                if (!this.lastScoreArr) {
+	                    this.lastScoreArr = [0, 0, 0, 0, 0];
+	                    isInitScoreArr = true;
+	                }
+	                var a = this.vsPlayer.split(' ');
+	                var p1 = a[0];
+	                var p2 = a[1];
+	                for (var i = 0; i < this.gameConf.scoreRank.length; i++) {
+	                    var a_1 = this.gameConf.scoreRank[i][0].split('_');
+	                    var pn = a_1[0];
+	                    var player = this.gameConf.playerMap[pn];
+	                    var scoreFxItem = {
+	                        score: this.gameConf.scoreRank[i][1],
+	                        name: player.name,
+	                        isSmall: true,
+	                        scoreFx: 0,
+	                        avatar: this.gameConf.avatarUrlBase + player.playerId + '.png'
+	                    };
+	                    if (isInitScoreArr)
+	                        this.lastScoreArr[i] = scoreFxItem.score;
+	                    scoreFx = scoreFxItem.score - this.lastScoreArr[i];
+	                    this.lastScoreArr[i] = scoreFxItem.score;
+	                    if (pn == p1) {
+	                        scoreFxItem.scoreFx = scoreFx;
+	                        scoreFxItem.isSmall = false;
+	                        opReq("" + Command_1.CommandId.cs_updateScore, { score: scoreFxItem.score, isLeft: true });
+	                    }
+	                    else if (pn == p2) {
+	                        scoreFxItem.scoreFx = scoreFx;
+	                        scoreFxItem.isSmall = false;
+	                        opReq("" + Command_1.CommandId.cs_updateScore, { score: scoreFxItem.score, isLeft: false });
+	                    }
+	                    scoreArr.push(scoreFxItem);
+	                }
+	                scoreArr = scoreArr.sort(JsFunc_1.descendingProp('score'));
+	                opReq(Command_1.CommandId.cs_showScoreRank, {
+	                    visible: visible,
+	                    scoreArr: scoreArr
+	                });
+	            },
+	            onFile: function () {
+	                if (!confFile) {
+	                    if (!filesInput)
+	                        filesInput = document.getElementById("files");
+	                    filesInput.addEventListener("change", function (evt) {
+	                        confFile = evt.target.files[0];
+	                        document.getElementById("reloadFile").click();
+	                    }, false);
+	                }
+	                document.getElementById("files").click();
+	            },
+	            reloadFile: function (e, exData) {
+	                var _this = this;
+	                var _ = function (d) {
+	                    return d.getMinutes() + 'm' + d.getSeconds() + 's';
+	                };
+	                console.log("exData", exData);
+	                _exData = exData;
+	                if (!reader) {
+	                    reader = new FileReader();
+	                    reader.addEventListener("load", function (event) {
+	                        var data = JSON.parse(event.target['result']);
+	                        data._ = null;
+	                        if (_exData) {
+	                            for (var k in _exData) {
+	                                console.log('exData', k);
+	                                data[k] = _exData[k];
+	                            }
+	                            if (_exData.callback)
+	                                _exData.callback();
+	                        }
+	                        _this.createOption(data);
+	                        console.log("EVENT_ON_FILE", data, _exData);
+	                        opReq('cs_data', data);
+	                    });
+	                }
+	                reader.readAsText(confFile, "utf-8");
+	            },
+	        };
+	        VueBase_1.VueBase.initProps(_this);
+	        return _this;
+	    }
+	    _ScoreRankAdmin.prototype.created = function () {
+	        console.log('Game admin');
+	        this.blueArr = [];
+	        this.redArr = [];
+	        this.vsPlayerArr = [];
+	    };
+	    _ScoreRankAdmin.prototype.createOption = function (data) {
+	        var a = [];
+	        var playerMap = data.playerMap;
+	        for (var i = 0; i < data.rec.length; i++) {
+	            var rec = data.rec[i];
+	            console.log('player', rec.player);
+	            var p1 = playerMap[rec.player[0]];
+	            var p2 = playerMap[rec.player[1]];
+	            if (p1 || p2) {
+	                var p1name = p1 ? p1.name : '';
+	                var p2name = p2 ? p2.name : '';
+	                var option = { text: rec.idx + p1name + ' vs ' + p2name, value: rec.idx };
+	                a.push(option);
+	            }
+	        }
+	        this.options = a;
+	        this.gameConf = data;
+	        this.blueArr = [];
+	        this.redArr = [];
+	        for (var i = 0; i < this.gameConf.scoreRank.length; i++) {
+	            var a_2 = this.gameConf.scoreRank[i][0].split('_');
+	            var pn = a_2[0];
+	            var player = data.playerMap[pn];
+	            this.blueArr.push(player);
+	            this.redArr.push(player);
+	        }
+	        console.log('create gameConf ', this.gameConf);
+	    };
+	    _ScoreRankAdmin.prototype.route = function (recArr, playerMap) {
+	        var getWinner = function (rec) {
+	            if (rec.score[0] != 0 || rec.score[1] != 0) {
+	                if (rec.score[0] > rec.score[1])
+	                    return rec.player[0];
+	                else
+	                    return rec.player[1];
+	            }
+	            return '';
+	        };
+	        var fillWinner = function (fromGameId, playerId) {
+	            for (var i = 0; i < recArr.length; i++) {
+	                var rec = recArr[i];
+	                var a = rec.idx.split('#');
+	                var gameId = a[1];
+	                if (gameId != '_' && gameId.length > fromGameId.length) {
+	                    var pos = gameId.search(fromGameId);
+	                    if (pos > -1) {
+	                        var arrIdx = Math.floor(pos / Number(a[0]));
+	                        console.log('fillWinner from', fromGameId, 'to', gameId, arrIdx, playerMap[playerId].name);
+	                        rec.player[arrIdx] = playerId;
+	                    }
+	                }
+	            }
+	        };
+	        for (var i = 0; i < recArr.length; i++) {
+	            var rec = recArr[i];
+	            var a = rec.idx.split('#');
+	            var gameId = a[1];
+	            var winner = getWinner(rec);
+	            if (winner) {
+	                console.log(gameId, 'winner', playerMap[winner].name);
+	                fillWinner(gameId, winner);
+	            }
+	        }
+	    };
+	    return _ScoreRankAdmin;
+	}(VueBase_1.VueBase));
+	exports.ScoreRankAdmin = new _ScoreRankAdmin();
+
 
 /***/ })
 /******/ ]);

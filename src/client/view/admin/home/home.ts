@@ -6,6 +6,7 @@ import { getPlayerInfoFromLiangle, createPlayer, getPlayer, uploadImage, updateP
 import { GameAdmin } from '../gameAdmin/GameAdmin';
 import { Pick } from '../pick/Pick';
 import { WorldWar } from '../worldWar/WorldWar';
+import { ScoreRankAdmin } from '../scoreRank/ScoreRankAdmin';
 /**
  * Created by toramisu on 2016/10/24.
  */
@@ -24,7 +25,12 @@ export function getScorePanelUrl(gameId, isDark, isOb = true) {
 class HomeView extends VueBase {
     template = require('./home.html');
     links = VueBase.PROP;
-    components = {"GameAdmin":GameAdmin,"Pick":Pick,"WorldWar":WorldWar}
+    components = {
+        "GameAdmin": GameAdmin,
+        "Pick": Pick,
+        "WorldWar": WorldWar,
+        "ScoreRankAdmin": ScoreRankAdmin
+    }
     opUrlArr = VueBase.PROP;
     selected = VueBase.PROP;
     options = VueBase.PROP;
@@ -199,7 +205,7 @@ class HomeView extends VueBase {
                 // console.log(res1);
                 if (res1.data && res1.data.name) {
                     let player = res1.data
-                   alert(
+                    alert(
                         `${player.name} 身高${player.height} 体重${player.weight} level:${player.level}`
                     );
 

@@ -14,7 +14,7 @@ class PlayerItem extends PIXI.Container {
     create(isOff, data) {
         let textY = 277
         let ns = {
-            fontFamily: FontName.NotoSansHans,
+            fontFamily: FontName.MicrosoftYahei,
             fontSize: '50px', fill: "#ccc",
             fontWeight: 'bold'
         }
@@ -34,19 +34,19 @@ class PlayerItem extends PIXI.Container {
         this._loadItemTex(isOff)
         this.pName = TextFac.new_(ns, this)
             .setText(data.name)
-            .setPos(185, textY + 8)
+            .setPos(185, textY)
 
         ns.fontFamily = 'dinCondensedC'
         ns.fontSize = '60px'
 
         this.pScore = TextFac.new_(ns, this)
             .setText(data.score)
-            .setY(220 - 24)
+            .setY(196)
 
-        ns.fill = '#ff0000'
+        ns.fill = '#fff1b3'
         ns.fontSize = '70px'
         this.scoreFx = TextFac.new_(ns, this)
-            .setPos(380, textY - 80)
+            .setPos(380, 196)
 
         return this
     }
@@ -59,20 +59,16 @@ class PlayerItem extends PIXI.Container {
             this.bg.texture = imgLoader.getTex('/img/panel/scoreRank/itemBg_on.png')
             this.fg.texture = imgLoader.getTex('/img/panel/scoreRank/itemFg_on.png')
         }
-
     }
     showScoreFx(dtScore) {
-        if (dtScore > 0) {
-            this.scoreFx.setText("+" + dtScore)
-            TweenEx.delayedCall(3000, _ => {
-                this.scoreFx.setText("")
-            })
-        }
-
+        // if (dtScore > 0) {
+        //     this.scoreFx.setText("+" + dtScore)
+        //     TweenEx.delayedCall(3000, _ => {
+        //         this.scoreFx.setText("")
+        //     })
+        // }
     }
     setScore(data) {
-
-
         let alignX = 185;
         let avtX = 41, avtY = 208
         if (data.isSmall) {
@@ -89,7 +85,7 @@ class PlayerItem extends PIXI.Container {
 
             this.avt.x = avtX
             this.avt.y = avtY
-            this.avt.width = this.avt.height = 122
+            this.avt.width = this.avt.height = 118
         })
         this.pName.setText(data.name)
             .setX(alignX)
@@ -107,7 +103,7 @@ export class ScoreRank extends PIXI.Container {
     _arrangeY(data) {
         let lastY = 0
         let isLastSmall = true
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < data.scoreArr.length; i++) {
             let pi: PlayerItem = this.itemArr[i]
             let scoreData = data.scoreArr[i]
             pi.y = i * 160
@@ -141,8 +137,7 @@ export class ScoreRank extends PIXI.Container {
                 '/img/panel/scoreRank/itemFg_on.png',
                 '/img/panel/scoreRank/itemFg_off.png',
                 '/img/panel/scoreRank/itemBg_off.png'], _ => {
-                    for (let i = 0; i < 5; i++) {
-                        let isSmall = i > 1
+                    for (let i = 0; i < data.scoreArr.length; i++) {
                         let pi = (new PlayerItem()).create(true, { score: 8, name: '' })
                         this.itemArr.push(pi)
                         this.addChild(pi)
