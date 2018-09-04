@@ -54,6 +54,7 @@ class _worldWar extends VueBase {
     this.gameView = gameView;
     baseGameView = window["BaseGameView"];
     // console.log('baseGameView',window['BaseGameView'])
+    //332.3
   }
 
   initDocView(doc) {

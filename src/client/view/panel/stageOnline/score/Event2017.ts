@@ -20,6 +20,7 @@ import { VsTitle } from './VsTitle';
 import { RollText } from './RollText';
 import { RankSection } from '../rank/RankSection';
 import { TagFx } from './TagFx';
+import { Pick8Layer } from '../pick8/Pick8';
 
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
@@ -368,7 +369,7 @@ export class Event2017 extends PIXI.Container {
                 : this.tagFx.hide(data)
         }
     }
-    
+
     scoreRank: ScoreRank
     showScoreRank(data) {
         if (!this.scoreRank) {
@@ -378,10 +379,8 @@ export class Event2017 extends PIXI.Container {
         this.scoreRank.show(data)
     }
 
-    showScoreFx2(data)
-    {
-        if(this.scoreRank)
-        {
+    showScoreFx2(data) {
+        if (this.scoreRank) {
             this.scoreRank.showScoreFx(data)
         }
     }
@@ -395,5 +394,9 @@ export class Event2017 extends PIXI.Container {
         data.visible ?
             this.rollText.show(data)
             : this.rollText.hide()
+    }
+
+    showPick8(data) {
+        Pick8Layer.get(this).show(data)
     }
 }

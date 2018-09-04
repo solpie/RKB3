@@ -5794,7 +5794,9 @@
 	var Text2 = (function (_super) {
 	    __extends(Text2, _super);
 	    function Text2() {
-	        return _super !== null && _super.apply(this, arguments) || this;
+	        var _this = _super !== null && _super.apply(this, arguments) || this;
+	        _this.alignRight = 0;
+	        return _this;
 	    }
 	    Text2.prototype.setParent = function (p) {
 	        p.addChild(this);
@@ -5833,6 +5835,8 @@
 	        return this;
 	    };
 	    Text2.prototype.setAlignRight = function (v) {
+	        if (!v)
+	            return this.setX(this.alignRight - this.width);
 	        return this.setX(v - this.width);
 	    };
 	    Text2.prototype.setAlignCenter = function (v) {
@@ -8487,6 +8491,7 @@
 	var RollText_1 = __webpack_require__(104);
 	var RankSection_1 = __webpack_require__(105);
 	var TagFx_1 = __webpack_require__(106);
+	var Pick8_1 = __webpack_require__(128);
 	var Event2017 = (function (_super) {
 	    __extends(Event2017, _super);
 	    function Event2017(stage, isDark) {
@@ -8764,6 +8769,9 @@
 	        data.visible ?
 	            this.rollText.show(data)
 	            : this.rollText.hide();
+	    };
+	    Event2017.prototype.showPick8 = function (data) {
+	        Pick8_1.Pick8Layer.get(this).show(data);
 	    };
 	    return Event2017;
 	}(PIXI.Container));
@@ -10522,6 +10530,7 @@
 	var Command_1 = __webpack_require__(30);
 	var TweenEx_1 = __webpack_require__(57);
 	var WorldWar_1 = __webpack_require__(109);
+	var Pick8_1 = __webpack_require__(128);
 	var WorldWarView = (function (_super) {
 	    __extends(WorldWarView, _super);
 	    function WorldWarView(stage, io) {
@@ -10530,6 +10539,18 @@
 	        TweenEx_1.TweenEx.delayedCall(1200, function (_) {
 	            _this.worldWar = new WorldWar_1.WorldWar();
 	            _this.stage.addChild(_this.worldWar);
+	            Pick8_1.Pick8Layer.get(_this.stage).show({
+	                playerArr: [
+	                    [{ name: '郝天吉' }, { name: "???" }],
+	                    [{ name: '郝天吉' }, { name: "黄宇军" }],
+	                    [{ name: '郝天吉' }, { name: "黄宇军" }],
+	                    [{ name: '郝天吉' }, { name: "黄宇军" }],
+	                    [{ name: '郝天吉' }, { name: "???" }],
+	                    [{ name: '郝天吉' }, { name: "黄宇军" }],
+	                    [{ name: '郝天吉' }, { name: "黄宇军" }],
+	                    [{ name: '郝天吉' }, { name: "黄宇军" }],
+	                ]
+	            });
 	        });
 	        io.on(Command_1.CommandId.sc_timerEvent, function (data) {
 	            console.log("sc_timerEvent", data);
@@ -11394,6 +11415,149 @@
 	    return _ScoreRankAdmin;
 	}(VueBase_1.VueBase));
 	exports.ScoreRankAdmin = new _ScoreRankAdmin();
+
+
+/***/ }),
+/* 128 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var PixiEx_1 = __webpack_require__(56);
+	var ImgLoader_1 = __webpack_require__(73);
+	var BasePanel_1 = __webpack_require__(129);
+	var TextFac_1 = __webpack_require__(77);
+	var const_1 = __webpack_require__(29);
+	var isTest = true;
+	var Pick8 = (function (_super) {
+	    __extends(Pick8, _super);
+	    function Pick8(parent) {
+	        var _this = _super.call(this, parent) || this;
+	        _this.isLoaded = false;
+	        ImgLoader_1.imgLoader.loadTexArr(['/img/panel/worldwar/pick8/bg.png'], function (_) {
+	            var bg = PixiEx_1.newBitmap({ url: '/img/panel/worldwar/pick8/bg.png' });
+	            _this.addChild(bg);
+	            _this.vsPlayerArr = [];
+	            var ps = {
+	                fontFamily: const_1.FontName.MicrosoftYahei,
+	                fontSize: "28px",
+	                fill: "#aaa"
+	            };
+	            var x1 = 420, y1 = 853, x2 = 1185 - 47;
+	            for (var i = 0; i < 8; i++) {
+	                var lPlayerText = TextFac_1.TextFac.new_(ps, _this);
+	                var rPlayerText = TextFac_1.TextFac.new_(ps, _this);
+	                if (i < 4) {
+	                    lPlayerText.setPos(x1, y1 + i * 48).alignRight = 566;
+	                    rPlayerText.setPos(x1 + 160, y1 + i * 48);
+	                }
+	                else {
+	                    lPlayerText.setPos(x2, y1 + (i - 4) * 48).alignRight = 1280;
+	                    rPlayerText.setPos(x2 + 160, y1 + (i - 4) * 48);
+	                }
+	                _this.vsPlayerArr.push([lPlayerText, rPlayerText]);
+	            }
+	            _this.isLoaded = true;
+	            if (_this.tmpData) {
+	                _this.show(_this.tmpData);
+	                _this.tmpData = null;
+	            }
+	        });
+	        return _this;
+	    }
+	    Pick8.prototype.test = function () {
+	        this.show({
+	            playerArr: [
+	                [{ name: '郝天吉' }, { name: "???" }],
+	                [{ name: '郝天吉' }, { name: "黄宇军" }],
+	                [{ name: '郝天吉' }, { name: "黄宇军" }],
+	                [{ name: '郝天吉' }, { name: "黄宇军" }],
+	                [{ name: '郝天吉' }, { name: "???" }],
+	                [{ name: '郝天吉' }, { name: "黄宇军" }],
+	                [{ name: '郝天吉' }, { name: "黄宇军" }],
+	                [{ name: '郝天吉' }, { name: "黄宇军" }],
+	            ]
+	        });
+	    };
+	    Pick8.prototype.show = function (data) {
+	        if (this.isLoaded) {
+	            _super.prototype.show.call(this, data);
+	            for (var i = 0; i < this.vsPlayerArr.length; i++) {
+	                var playerTextArr = this.vsPlayerArr[i];
+	                playerTextArr[0].setText(data.playerArr[i][0].name)
+	                    .setAlignRight();
+	                playerTextArr[1].setText("vs " + data.playerArr[i][1].name);
+	            }
+	        }
+	        else {
+	            this.tmpData = data;
+	        }
+	    };
+	    return Pick8;
+	}(BasePanel_1.BasePanel));
+	exports.Pick8 = Pick8;
+	var Pick8Layer = (function () {
+	    function Pick8Layer() {
+	    }
+	    Pick8Layer.get = function (parent) {
+	        if (!window[Pick8Layer.cls])
+	            window[Pick8Layer.cls] = new Pick8(parent);
+	        return window[Pick8Layer.cls];
+	    };
+	    Pick8Layer.cls = 'Pick8';
+	    return Pick8Layer;
+	}());
+	exports.Pick8Layer = Pick8Layer;
+
+
+/***/ }),
+/* 129 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var ImgLoader_1 = __webpack_require__(73);
+	var BasePanel = (function (_super) {
+	    __extends(BasePanel, _super);
+	    function BasePanel(parent) {
+	        var _this = _super.call(this) || this;
+	        _this.p = parent;
+	        return _this;
+	    }
+	    BasePanel.prototype.load = function (imgArr, callback) {
+	        ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
+	        });
+	    };
+	    BasePanel.prototype.show = function (data) {
+	        this.p.addChild(this);
+	    };
+	    BasePanel.prototype.hide = function (data) {
+	        if (this.parent)
+	            this.parent.removeChild(this);
+	    };
+	    return BasePanel;
+	}(PIXI.Container));
+	exports.BasePanel = BasePanel;
 
 
 /***/ })

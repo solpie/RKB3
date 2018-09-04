@@ -1,5 +1,6 @@
 import { fitWidth } from '../panel/stageOnline/bracket/BracketGroup';
 export class Text2 extends PIXI.Text {
+
     setParent(p) {
         p.addChild(this)
         return this
@@ -36,7 +37,10 @@ export class Text2 extends PIXI.Text {
         fitWidth(this, width, sizeFrom)
         return this
     }
+    alignRight: number = 0
     setAlignRight(v) {
+        if (!v)
+            return this.setX(this.alignRight - this.width)
         return this.setX(v - this.width)
     }
     setAlignCenter(v) {

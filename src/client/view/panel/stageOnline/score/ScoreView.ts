@@ -79,7 +79,6 @@ export class ScoreView extends BasePanelView {
                 }
                 this.initDelay()
                 this.eventPanel = new Event2017(stage, darkTheme)
-
             })
         }
         // this.scorePanel = new Score2017(stage, darkTheme)
@@ -98,7 +97,7 @@ export class ScoreView extends BasePanelView {
             //     weight: '79',
             //     winAmount: "3"
             // }
-       
+
         }
         // if (isManmual) {
         //     this.initManmual()
@@ -158,9 +157,8 @@ export class ScoreView extends BasePanelView {
         localWs.on('connect', (msg) => {
             console.log('connect', window.location.host)
             // localWs.emit("opUrl", { opUrl: window.location.host })
-            if(this.isTest)
-            {
-                new WorldWarView(this.stage,localWs)
+            if (this.isTest) {
+                new WorldWarView(this.stage, localWs)
             }
         })
             .on(`${CommandId.sc_startTimer}`, (data) => {
@@ -294,7 +292,7 @@ export class ScoreView extends BasePanelView {
                 this.eventPanel.showScoreRank(data)
             })
             //
-           
+
             // this.opReq(`${CommandId.cs_updateScore}`, { _: null, dtScore: v, isLeft: isLeft })
             .on(CommandId.sc_updateScore, (data) => {
                 if (data.scoreFx) {

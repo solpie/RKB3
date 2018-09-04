@@ -1,6 +1,7 @@
 import { CommandId } from "../../../../Command";
 import { TweenEx } from "../../../../utils/TweenEx";
 import { WorldWar } from "./WorldWar";
+import { Pick8Layer } from '../../pick8/Pick8';
 
 export class WorldWarView extends PIXI.Container {
   stage: any;
@@ -11,6 +12,18 @@ export class WorldWarView extends PIXI.Container {
     TweenEx.delayedCall(1200, _ => {
       this.worldWar = new WorldWar();
       this.stage.addChild(this.worldWar);
+      Pick8Layer.get(this.stage).show({
+        playerArr: [
+            [{ name: '郝天吉' }, { name: "???" }],
+            [{ name: '郝天吉' }, { name: "黄宇军" }],
+            [{ name: '郝天吉' }, { name: "黄宇军" }],
+            [{ name: '郝天吉' }, { name: "黄宇军" }],
+            [{ name: '郝天吉' }, { name: "???" }],
+            [{ name: '郝天吉' }, { name: "黄宇军" }],
+            [{ name: '郝天吉' }, { name: "黄宇军" }],
+            [{ name: '郝天吉' }, { name: "黄宇军" }],
+        ]
+    })
     });
     io.on(CommandId.sc_timerEvent, data => {
       console.log("sc_timerEvent", data);
