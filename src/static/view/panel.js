@@ -9024,7 +9024,9 @@
 	var PlayerItem = (function (_super) {
 	    __extends(PlayerItem, _super);
 	    function PlayerItem() {
-	        return _super !== null && _super.apply(this, arguments) || this;
+	        var _this = _super !== null && _super.apply(this, arguments) || this;
+	        _this.isRight = true;
+	        return _this;
 	    }
 	    PlayerItem.prototype.create = function (isOff, data) {
 	        var textY = 277;
@@ -9057,6 +9059,12 @@
 	        ns.fontSize = '70px';
 	        this.scoreFx = TextFac_1.TextFac.new_(ns, this)
 	            .setPos(380, 196);
+	        if (this.isRight) {
+	            this.scale.x =
+	                this.pScore.scale.x =
+	                    -1;
+	            this.x = 1920;
+	        }
 	        return this;
 	    };
 	    PlayerItem.prototype._loadItemTex = function (isOff) {
@@ -9071,15 +9079,43 @@
 	    };
 	    PlayerItem.prototype.showScoreFx = function (dtScore) {
 	    };
-	    PlayerItem.prototype.setScore = function (data) {
-	        var _this = this;
+	    PlayerItem.prototype._setDataLeft = function (data) {
 	        var alignX = 185;
-	        var avtX = 41, avtY = 208;
 	        if (data.isSmall) {
 	        }
 	        else {
 	            alignX += 23;
+	        }
+	        this.pName.setText(data.name)
+	            .setX(alignX);
+	        this.pScore.setText(data.score)
+	            .setAlignCenter(alignX);
+	    };
+	    PlayerItem.prototype._setDataRight = function (data) {
+	        var alignX = 210;
+	        if (data.isSmall) {
+	        }
+	        else {
+	            alignX += 23;
+	        }
+	        this.pName.setText(data.name)
+	            .setX(alignX);
+	        this.pName.scale.x = -1;
+	        this.pName.x += this.pName.width - 23;
+	        this.pScore.setText(data.score)
+	            .setAlignCenter(alignX);
+	    };
+	    PlayerItem.prototype.setScore = function (data) {
+	        var _this = this;
+	        var avtX = 41, avtY = 208;
+	        if (!data.isSmall) {
 	            avtX += 23;
+	        }
+	        if (this.isRight) {
+	            this._setDataRight(data);
+	        }
+	        else {
+	            this._setDataLeft(data);
 	        }
 	        this._loadItemTex(data.isSmall);
 	        ImgLoader_1.imgLoader.loadTex2(data.avatar, function (_) {
@@ -9089,10 +9125,6 @@
 	            _this.avt.y = avtY;
 	            _this.avt.width = _this.avt.height = 118;
 	        });
-	        this.pName.setText(data.name)
-	            .setX(alignX);
-	        this.pScore.setText(data.score)
-	            .setAlignCenter(alignX);
 	    };
 	    return PlayerItem;
 	}(PIXI.Container));

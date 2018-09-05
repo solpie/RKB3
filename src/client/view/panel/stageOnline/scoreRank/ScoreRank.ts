@@ -11,6 +11,7 @@ class PlayerItem extends PIXI.Container {
     bg: PIXI.Sprite
     fg: PIXI.Sprite
     scoreFx: Text2
+    isRight = true
     create(isOff, data) {
         let textY = 277
         let ns = {
@@ -48,7 +49,15 @@ class PlayerItem extends PIXI.Container {
         this.scoreFx = TextFac.new_(ns, this)
             .setPos(380, 196)
 
+        if (this.isRight) {
+            this.scale.x =
+
+                this.pScore.scale.x =
+                -1
+            this.x = 1920
+        }
         return this
+
     }
     _loadItemTex(isOff) {
         if (isOff) {
@@ -68,17 +77,44 @@ class PlayerItem extends PIXI.Container {
         //     })
         // }
     }
-    setScore(data) {
+    _setDataLeft(data) {
         let alignX = 185;
-        let avtX = 41, avtY = 208
         if (data.isSmall) {
         }
         else {
             alignX += 23;
+        }
+        this.pName.setText(data.name)
+            .setX(alignX)
+        this.pScore.setText(data.score)
+            .setAlignCenter(alignX)
+    }
+    _setDataRight(data) {
+        let alignX = 210;
+        if (data.isSmall) {
+        }
+        else {
+            alignX += 23;
+        }
+        this.pName.setText(data.name)
+            .setX(alignX)
+        this.pName.scale.x = -1
+        this.pName.x += this.pName.width-23
+        this.pScore.setText(data.score)
+            .setAlignCenter(alignX)
+    }
+    setScore(data) {
+        let avtX = 41, avtY = 208
+        if (!data.isSmall) {
             avtX += 23
         }
+        if (this.isRight) {
+            this._setDataRight(data)
+        }
+        else {
+            this._setDataLeft(data)
+        }
         this._loadItemTex(data.isSmall)
-
         imgLoader.loadTex2(data.avatar, _ => {
             this.avt.texture = imgLoader.getTex(data.avatar)
             setScale(this.avt, 1)
@@ -87,10 +123,7 @@ class PlayerItem extends PIXI.Container {
             this.avt.y = avtY
             this.avt.width = this.avt.height = 118
         })
-        this.pName.setText(data.name)
-            .setX(alignX)
-        this.pScore.setText(data.score)
-            .setAlignCenter(alignX)
+
     }
 }
 export class ScoreRank extends PIXI.Container {
