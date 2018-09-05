@@ -10541,14 +10541,14 @@
 	            _this.stage.addChild(_this.worldWar);
 	            Pick8_1.Pick8Layer.get(_this.stage).show({
 	                playerArr: [
-	                    [{ name: '郝天吉' }, { name: "???" }],
-	                    [{ name: '郝天吉' }, { name: "黄宇军" }],
-	                    [{ name: '郝天吉' }, { name: "黄宇军" }],
-	                    [{ name: '郝天吉' }, { name: "黄宇军" }],
-	                    [{ name: '郝天吉' }, { name: "???" }],
-	                    [{ name: '郝天吉' }, { name: "黄宇军" }],
-	                    [{ name: '郝天吉' }, { name: "黄宇军" }],
-	                    [{ name: '郝天吉' }, { name: "黄宇军" }],
+	                    [{ name: '郝天吉' }, { name: "TBD" }],
+	                    [{ name: '郝天吉' }, { name: "TBD" }],
+	                    [{ name: '郝天吉' }, { name: "TBD" }],
+	                    [{ name: '郝天吉' }, { name: "TBD" }],
+	                    [{ name: '郝天吉' }, { name: "TBD" }],
+	                    [{ name: '郝天吉' }, { name: "TBD" }],
+	                    [{ name: '郝天吉' }, { name: "TBD" }],
+	                    [{ name: '郝天吉' }, { name: "TBD" }],
 	                ]
 	            });
 	        });
@@ -11438,14 +11438,14 @@
 	var BasePanel_1 = __webpack_require__(129);
 	var TextFac_1 = __webpack_require__(77);
 	var const_1 = __webpack_require__(29);
-	var isTest = true;
 	var Pick8 = (function (_super) {
 	    __extends(Pick8, _super);
 	    function Pick8(parent) {
 	        var _this = _super.call(this, parent) || this;
 	        _this.isLoaded = false;
-	        ImgLoader_1.imgLoader.loadTexArr(['/img/panel/worldwar/pick8/bg.png'], function (_) {
-	            var bg = PixiEx_1.newBitmap({ url: '/img/panel/worldwar/pick8/bg.png' });
+	        var url_bg = '/img/panel/worldwar/pick8/bg.png';
+	        ImgLoader_1.imgLoader.loadTexArr([url_bg], function (_) {
+	            var bg = PixiEx_1.newBitmap({ url: url_bg });
 	            _this.addChild(bg);
 	            _this.vsPlayerArr = [];
 	            var ps = {
@@ -11458,12 +11458,12 @@
 	                var lPlayerText = TextFac_1.TextFac.new_(ps, _this);
 	                var rPlayerText = TextFac_1.TextFac.new_(ps, _this);
 	                if (i < 4) {
-	                    lPlayerText.setPos(x1, y1 + i * 48).alignRight = 566;
-	                    rPlayerText.setPos(x1 + 160, y1 + i * 48);
+	                    lPlayerText.setPos(x1, y1 + i * 48).alignRight = 558;
+	                    rPlayerText.setPos(x1 + 170, y1 + i * 48);
 	                }
 	                else {
 	                    lPlayerText.setPos(x2, y1 + (i - 4) * 48).alignRight = 1280;
-	                    rPlayerText.setPos(x2 + 160, y1 + (i - 4) * 48);
+	                    rPlayerText.setPos(x2 + 170, y1 + (i - 4) * 48);
 	                }
 	                _this.vsPlayerArr.push([lPlayerText, rPlayerText]);
 	            }
@@ -11478,14 +11478,14 @@
 	    Pick8.prototype.test = function () {
 	        this.show({
 	            playerArr: [
-	                [{ name: '郝天吉' }, { name: "???" }],
-	                [{ name: '郝天吉' }, { name: "黄宇军" }],
-	                [{ name: '郝天吉' }, { name: "黄宇军" }],
-	                [{ name: '郝天吉' }, { name: "黄宇军" }],
-	                [{ name: '郝天吉' }, { name: "???" }],
-	                [{ name: '郝天吉' }, { name: "黄宇军" }],
-	                [{ name: '郝天吉' }, { name: "黄宇军" }],
-	                [{ name: '郝天吉' }, { name: "黄宇军" }],
+	                [{ name: '郝天吉' }, { name: "TBD" }],
+	                [{ name: '郝天吉' }, { name: "TBD" }],
+	                [{ name: '郝天吉' }, { name: "TBD" }],
+	                [{ name: '郝天吉' }, { name: "TBD" }],
+	                [{ name: '郝天吉' }, { name: "TBD" }],
+	                [{ name: '郝天吉' }, { name: "TBD" }],
+	                [{ name: '郝天吉' }, { name: "TBD" }],
+	                [{ name: '郝天吉' }, { name: "TBD" }],
 	            ]
 	        });
 	    };
@@ -11496,12 +11496,11 @@
 	                var playerTextArr = this.vsPlayerArr[i];
 	                playerTextArr[0].setText(data.playerArr[i][0].name)
 	                    .setAlignRight();
-	                playerTextArr[1].setText("vs " + data.playerArr[i][1].name);
+	                playerTextArr[1].setText("vs    " + data.playerArr[i][1].name);
 	            }
 	        }
-	        else {
+	        else
 	            this.tmpData = data;
-	        }
 	    };
 	    return Pick8;
 	}(BasePanel_1.BasePanel));

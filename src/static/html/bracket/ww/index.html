@@ -1,0 +1,151 @@
+<html>
+
+<head>
+    <style>
+        .bg {
+            position: static;
+        }
+        
+        .bracket {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .player {
+            position: absolute;
+            padding: 0px;
+            font-size: 38px;
+            color: #fff;
+            width: 300px;
+            font-family: "微软雅黑";
+        }
+        
+        .blue {
+            color: #d6d6d6;
+            text-align: center;
+        }
+        
+        .white {
+            color: #fff;
+            font-family: "微软雅黑";
+        }
+        
+        body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="/js/vue.js"></script>
+    <script src="/js/socket.io.slim.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <img src="bg.png" />
+        <div>
+            <div v-for="(item, index) in items" :key="item.idx">
+                <div class="player blue" :style="item.s">
+                    <span>{{item.name}} </span>
+                </div>
+                <span class="player white" :style="item.ss">{{item.score>-1?item.score:""}} </span>
+            </div>
+        </div>
+
+        <div v-for="(bracketArr,idx) in brackets" :key="idx" class="bracket">
+            <img :src="'b'+(idx+1)+'_0.png'" class="bracket" />
+            <img :src="'b'+(idx+1)+'_1.png'" class="bracket" />
+        </div>
+    </div>
+    <script>
+        var _p = function(x, y) {
+            return 'left:' + x + 'px;' + 'top:' + y + 'px;'
+        }
+        var app = new Vue({
+            el: '#app',
+            data: {
+                items: [],
+                brackets: []
+            },
+            // mounted: function() {
+            created: function() {
+                console.log(this);
+
+                let _r = (arr, xName, xScore) => { //make r group
+                    let a = []
+                    for (let i = 0; i < arr.length; i++) {
+                        let p = arr[i]
+                        a.push([xName, p[1], xScore])
+                    }
+                    return arr.concat(a)
+                }
+                let pos = []
+
+                let x1 = 131,
+                    x1r = 1485
+                let scoreOfs = 279
+                pos = pos.concat(_r([
+                        [x1, 255, x1 + scoreOfs],
+                        [x1, 255 + 186, x1 + scoreOfs],
+                    ], x1r, x1r - scoreOfs + 300 - 38)) //300 is css width
+                    .concat(_r([
+                        [x1, 603, x1 + scoreOfs],
+                        [x1, 603 + 186, x1 + scoreOfs]
+                    ], x1r, x1r - scoreOfs + 300 - 38))
+
+                let x2 = 571 - 4,
+                    x2r = 1219 - 172
+                pos = pos.concat(_r([
+                        [x2, 270 + 77, x2 + scoreOfs]
+                    ], x2r, x2r - scoreOfs + 300 - 38))
+                    .concat(_r([
+                        [x2, 694, x2 + scoreOfs]
+                    ], x2r, x2r - scoreOfs + 300 - 38))
+
+                for (let i = 0; i < pos.length; i++) {
+                    let p = pos[i]
+                    this.items.push({
+                        s: _p(p[0], p[1]),
+                        ss: _p(p[2], p[1]),
+                        score: 11,
+                        name: "申屠土匪"
+                    })
+                }
+
+                for (let j = 0; j < 4; j++) {
+                    this.brackets.push([true, true])
+                }
+                var localWs = io.connect('/rkb')
+                localWs.on('connect', () => {
+                        console.log('connect', window.location.host)
+                    })
+                    .on('sc_data', (data) => {
+                        console.log('sc_data', data)
+                        if (data.dbIdx == 'worldwarB8-4') {
+                            for (let i = 0; i < this.items.length; i++) {
+                                let item = this.items[i];
+                                item.name = ''
+                                item.score = ''
+                            }
+                            for (var i = 0; i < data.rec.length; i++) {
+                                let rec = data.rec[i];
+
+                                let item1 = this.items[i * 2]
+                                let item2 = this.items[i * 2 + 1]
+                                let p1 = data.playerMap[rec.player[0]]
+                                let p2 = data.playerMap[rec.player[1]]
+                                item1.name = p1.name
+                                item2.name = p2.name
+
+                                item1.score = rec.score[0]
+                                item2.score = rec.score[1]
+                            }
+                            let itemChampion = this.items[14]
+                            itemChampion.name = data.champion
+                        }
+                    })
+            }
+        })
+    </script>
+</body>

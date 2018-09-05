@@ -14,14 +14,14 @@ export class WorldWarView extends PIXI.Container {
       this.stage.addChild(this.worldWar);
       Pick8Layer.get(this.stage).show({
         playerArr: [
-            [{ name: '郝天吉' }, { name: "???" }],
-            [{ name: '郝天吉' }, { name: "黄宇军" }],
-            [{ name: '郝天吉' }, { name: "黄宇军" }],
-            [{ name: '郝天吉' }, { name: "黄宇军" }],
-            [{ name: '郝天吉' }, { name: "???" }],
-            [{ name: '郝天吉' }, { name: "黄宇军" }],
-            [{ name: '郝天吉' }, { name: "黄宇军" }],
-            [{ name: '郝天吉' }, { name: "黄宇军" }],
+          [{ name: '郝天吉' }, { name: "TBD" }],
+          [{ name: '郝天吉' }, { name: "TBD" }],
+          [{ name: '郝天吉' }, { name: "TBD" }],
+          [{ name: '郝天吉' }, { name: "TBD" }],
+          [{ name: '郝天吉' }, { name: "TBD" }],
+          [{ name: '郝天吉' }, { name: "TBD" }],
+          [{ name: '郝天吉' }, { name: "TBD" }],
+          [{ name: '郝天吉' }, { name: "TBD" }],
         ]
     })
     });
