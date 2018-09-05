@@ -12,18 +12,7 @@ export class WorldWarView extends PIXI.Container {
     TweenEx.delayedCall(1200, _ => {
       this.worldWar = new WorldWar();
       this.stage.addChild(this.worldWar);
-      Pick8Layer.get(this.stage).show({
-        playerArr: [
-          [{ name: '郝天吉' }, { name: "TBD" }],
-          [{ name: '郝天吉' }, { name: "TBD" }],
-          [{ name: '郝天吉' }, { name: "TBD" }],
-          [{ name: '郝天吉' }, { name: "TBD" }],
-          [{ name: '郝天吉' }, { name: "TBD" }],
-          [{ name: '郝天吉' }, { name: "TBD" }],
-          [{ name: '郝天吉' }, { name: "TBD" }],
-          [{ name: '郝天吉' }, { name: "TBD" }],
-        ]
-    })
+
     });
     io.on(CommandId.sc_timerEvent, data => {
       console.log("sc_timerEvent", data);
@@ -33,11 +22,41 @@ export class WorldWarView extends PIXI.Container {
         console.log("sc_setBlood", data);
         this.worldWar.setLeftPlayer(data.leftPlayer);
         this.worldWar.setRightPlayer(data.rightPlayer);
-        this.worldWar.setTimerEvent({event:"setting",param:0});
+        this.worldWar.setTimerEvent({ event: "setting", param: 0 });
       })
       .on(CommandId.sc_setFoul, data => {
         this.worldWar.setLeftFoul(data.lFoul);
         this.worldWar.setRightFoul(data.rFoul);
+      })
+      .on("sc_data", data => {
+        if (data.dbIdx == 'worldwar') {
+          let playerArr = []
+          let playerMap = data.playerMap
+          let recArr =
+            data.recMap['#1'].rec
+              .concat(data.recMap['#2'].rec)
+
+          for (let i = 0; i < recArr.length; i++) {
+            const rec = recArr[i];
+            let lPlayer = rec.player[0]
+            let rPlayer = rec.player[1]
+            let lp, rp;
+            if (!playerMap[lPlayer])
+              lp = { name: "TBD" }
+            else
+              lp = playerMap[lPlayer]
+
+            if (!playerMap[rPlayer])
+              rp = { name: "TBD" }
+            else
+              rp = playerMap[rPlayer]
+
+            playerArr.push([lp, rp])
+          }
+          Pick8Layer.get(this.stage).show({
+            playerArr: playerArr
+          })
+        }
       })
       .on(CommandId.sc_setBlood, data => {
         console.log("sc_setBlood", data);

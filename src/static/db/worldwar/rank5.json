@@ -1,7 +1,7 @@
 {
     "date": "2018-08-09",
     "dbIdx": "worldwar",
-    "gameTitle": "新人、魔王晋级赛",
+    "gameTitle": "新人魔王晋级赛",
     "gameTitleMap": {
         "1": "新人vs魔王晋级赛16进8",
         "2": "新人vs魔王晋级赛16进8",
@@ -13,7 +13,7 @@
     "recMap": {
         "#1": {
             "rec": [
-                { "title": "新老对决16强晋级", "idx": "1#A1", "score": [1, 0], "player": ["p1", "p2"] },
+                { "title": "新老对决16强晋级", "idx": "1#A1", "score": [1, 0], "player": ["p0", "p2"] },
                 { "title": "新老对决16强晋级", "idx": "1#A1", "score": [1, 0], "player": ["p1", "p2"] },
                 { "title": "新老对决16强晋级", "idx": "1#A1", "score": [1, 0], "player": ["p1", "p2"] },
                 { "title": "新老对决16强晋级", "idx": "1#A1", "score": [1, 0], "player": ["p1", "p2"] }

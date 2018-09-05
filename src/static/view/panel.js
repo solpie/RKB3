@@ -100,27 +100,10 @@
 		Author Tobias Koppers @sokra
 	*/
 	module.exports = function(src) {
-		function log(error) {
-			(typeof console !== "undefined")
-			&& (console.error || console.log)("[Script Loader]", error);
-		}
-	
-		// Check for IE =< 8
-		function isIE() {
-			return typeof attachEvent !== "undefined" && typeof addEventListener === "undefined";
-		}
-	
-		try {
-			if (typeof execScript !== "undefined" && isIE()) {
-				execScript(src);
-			} else if (typeof eval !== "undefined") {
-				eval.call(null, src);
-			} else {
-				log("EvalError: No eval function available");
-			}
-		} catch (error) {
-			log(error);
-		}
+		if (typeof execScript !== "undefined")
+			execScript(src);
+		else
+			eval.call(null, src);
 	}
 
 
@@ -171,9 +154,7 @@
 	module.exports = "/**\r\n  * vue-router v2.1.0\r\n  * (c) 2016 Evan You\r\n  * @license MIT\r\n  */\r\n!function(t,e){\"object\"==typeof exports&&\"undefined\"!=typeof module?module.exports=e():\"function\"==typeof define&&define.amd?define(e):t.VueRouter=e()}(this,function(){\"use strict\";function t(t,e){t||\"undefined\"!=typeof console&&console.warn(\"[vue-router] \"+e)}function e(t,e){if(void 0===e&&(e={}),t){var r;try{r=n(t)}catch(t){r={}}for(var o in e)r[o]=e[o];return r}return e}function n(t){var e={};return(t=t.trim().replace(/^(\\?|#|&)/,\"\"))?(t.split(\"&\").forEach(function(t){var n=t.replace(/\\+/g,\" \").split(\"=\"),r=vt(n.shift()),o=n.length>0?vt(n.join(\"=\")):null;void 0===e[r]?e[r]=o:Array.isArray(e[r])?e[r].push(o):e[r]=[e[r],o]}),e):e}function r(t){var e=t?Object.keys(t).map(function(e){var n=t[e];if(void 0===n)return\"\";if(null===n)return yt(e);if(Array.isArray(n)){var r=[];return n.slice().forEach(function(t){void 0!==t&&(null===t?r.push(yt(e)):r.push(yt(e)+\"=\"+yt(t)))}),r.join(\"&\")}return yt(e)+\"=\"+yt(n)}).filter(function(t){return t.length>0}).join(\"&\"):null;return e?\"?\"+e:\"\"}function o(t,e,n){var r={name:e.name||t&&t.name,meta:t&&t.meta||{},path:e.path||\"/\",hash:e.hash||\"\",query:e.query||{},params:e.params||{},fullPath:a(e),matched:t?i(t):[]};return n&&(r.redirectedFrom=a(n)),Object.freeze(r)}function i(t){for(var e=[];t;)e.unshift(t),t=t.parent;return e}function a(t){var e=t.path,n=t.query;void 0===n&&(n={});var o=t.hash;return void 0===o&&(o=\"\"),(e||\"/\")+r(n)+o}function u(t,e){return e===mt?t===e:!!e&&(t.path&&e.path?t.path.replace(gt,\"\")===e.path.replace(gt,\"\")&&t.hash===e.hash&&c(t.query,e.query):!(!t.name||!e.name)&&(t.name===e.name&&t.hash===e.hash&&c(t.query,e.query)&&c(t.params,e.params)))}function c(t,e){void 0===t&&(t={}),void 0===e&&(e={});var n=Object.keys(t),r=Object.keys(e);return n.length===r.length&&n.every(function(n){return String(t[n])===String(e[n])})}function s(t,e){return 0===t.path.indexOf(e.path.replace(/\\/$/,\"\"))&&(!e.hash||t.hash===e.hash)&&p(t.query,e.query)}function p(t,e){for(var n in e)if(!(n in t))return!1;return!0}function f(t){if(!(t.metaKey||t.ctrlKey||t.shiftKey||t.defaultPrevented||0!==t.button)){var e=t.target.getAttribute(\"target\");if(!/\\b_blank\\b/i.test(e))return t.preventDefault(),!0}}function h(t){if(t)for(var e,n=0;n<t.length;n++){if(e=t[n],\"a\"===e.tag)return e;if(e.children&&(e=h(e.children)))return e}}function l(t){if(!l.installed){l.installed=!0,lt=t,Object.defineProperty(t.prototype,\"$router\",{get:function(){return this.$root._router}}),Object.defineProperty(t.prototype,\"$route\",{get:function(){return this.$root._route}}),t.mixin({beforeCreate:function(){this.$options.router&&(this._router=this.$options.router,this._router.init(this),t.util.defineReactive(this,\"_route\",this._router.history.current))}}),t.component(\"router-view\",dt),t.component(\"router-link\",bt);var e=t.config.optionMergeStrategies;e.beforeRouteEnter=e.beforeRouteLeave=e.created}}function d(t,e,n){if(\"/\"===t.charAt(0))return t;if(\"?\"===t.charAt(0)||\"#\"===t.charAt(0))return e+t;var r=e.split(\"/\");n&&r[r.length-1]||r.pop();for(var o=t.replace(/^\\//,\"\").split(\"/\"),i=0;i<o.length;i++){var a=o[i];\".\"!==a&&(\"..\"===a?r.pop():r.push(a))}return\"\"!==r[0]&&r.unshift(\"\"),r.join(\"/\")}function y(t){var e=\"\",n=\"\",r=t.indexOf(\"#\");r>=0&&(e=t.slice(r),t=t.slice(0,r));var o=t.indexOf(\"?\");return o>=0&&(n=t.slice(o+1),t=t.slice(0,o)),{path:t,query:n,hash:e}}function v(t){return t.replace(/\\/\\//g,\"/\")}function m(t){var e=Object.create(null),n=Object.create(null);return t.forEach(function(t){g(e,n,t)}),{pathMap:e,nameMap:n}}function g(t,e,n,r,o){var i=n.path,a=n.name,u={path:w(i,r),components:n.components||{default:n.component},instances:{},name:a,parent:r,matchAs:o,redirect:n.redirect,beforeEnter:n.beforeEnter,meta:n.meta||{}};n.children&&n.children.forEach(function(n){g(t,e,n,u)}),void 0!==n.alias&&(Array.isArray(n.alias)?n.alias.forEach(function(n){g(t,e,{path:n},r,u.path)}):g(t,e,{path:n.alias},r,u.path)),t[u.path]||(t[u.path]=u),a&&(e[a]||(e[a]=u))}function w(t,e){return t=t.replace(/\\/$/,\"\"),\"/\"===t[0]?t:null==e?t:v(e.path+\"/\"+t)}function b(t,e){for(var n,r=[],o=0,i=0,a=\"\",u=e&&e.delimiter||\"/\";null!=(n=_t.exec(t));){var c=n[0],s=n[1],p=n.index;if(a+=t.slice(i,p),i=p+c.length,s)a+=s[1];else{var f=t[i],h=n[2],l=n[3],d=n[4],y=n[5],v=n[6],m=n[7];a&&(r.push(a),a=\"\");var g=null!=h&&null!=f&&f!==h,w=\"+\"===v||\"*\"===v,b=\"?\"===v||\"*\"===v,x=n[2]||u,k=d||y;r.push({name:l||o++,prefix:h||\"\",delimiter:x,optional:b,repeat:w,partial:g,asterisk:!!m,pattern:k?j(k):m?\".*\":\"[^\"+E(x)+\"]+?\"})}}return i<t.length&&(a+=t.substr(i)),a&&r.push(a),r}function x(t,e){return A(b(t,e))}function k(t){return encodeURI(t).replace(/[\\/?#]/g,function(t){return\"%\"+t.charCodeAt(0).toString(16).toUpperCase()})}function O(t){return encodeURI(t).replace(/[?#]/g,function(t){return\"%\"+t.charCodeAt(0).toString(16).toUpperCase()})}function A(t){for(var e=new Array(t.length),n=0;n<t.length;n++)\"object\"==typeof t[n]&&(e[n]=new RegExp(\"^(?:\"+t[n].pattern+\")$\"));return function(n,r){for(var o=\"\",i=n||{},a=r||{},u=a.pretty?k:encodeURIComponent,c=0;c<t.length;c++){var s=t[c];if(\"string\"!=typeof s){var p,f=i[s.name];if(null==f){if(s.optional){s.partial&&(o+=s.prefix);continue}throw new TypeError('Expected \"'+s.name+'\" to be defined')}if(kt(f)){if(!s.repeat)throw new TypeError('Expected \"'+s.name+'\" to not repeat, but received `'+JSON.stringify(f)+\"`\");if(0===f.length){if(s.optional)continue;throw new TypeError('Expected \"'+s.name+'\" to not be empty')}for(var h=0;h<f.length;h++){if(p=u(f[h]),!e[c].test(p))throw new TypeError('Expected all \"'+s.name+'\" to match \"'+s.pattern+'\", but received `'+JSON.stringify(p)+\"`\");o+=(0===h?s.prefix:s.delimiter)+p}}else{if(p=s.asterisk?O(f):u(f),!e[c].test(p))throw new TypeError('Expected \"'+s.name+'\" to match \"'+s.pattern+'\", but received \"'+p+'\"');o+=s.prefix+p}}else o+=s}return o}}function E(t){return t.replace(/([.+*?=^!:${}()[\\]|\\/\\\\])/g,\"\\\\$1\")}function j(t){return t.replace(/([=!:$\\/()])/g,\"\\\\$1\")}function R(t,e){return t.keys=e,t}function _(t){return t.sensitive?\"\":\"i\"}function $(t,e){var n=t.source.match(/\\((?!\\?)/g);if(n)for(var r=0;r<n.length;r++)e.push({name:r,prefix:null,delimiter:null,optional:!1,repeat:!1,partial:!1,asterisk:!1,pattern:null});return R(t,e)}function T(t,e,n){for(var r=[],o=0;o<t.length;o++)r.push(C(t[o],e,n).source);var i=new RegExp(\"(?:\"+r.join(\"|\")+\")\",_(n));return R(i,e)}function S(t,e,n){return q(b(t,n),e,n)}function q(t,e,n){kt(e)||(n=e||n,e=[]),n=n||{};for(var r=n.strict,o=n.end!==!1,i=\"\",a=0;a<t.length;a++){var u=t[a];if(\"string\"==typeof u)i+=E(u);else{var c=E(u.prefix),s=\"(?:\"+u.pattern+\")\";e.push(u),u.repeat&&(s+=\"(?:\"+c+s+\")*\"),s=u.optional?u.partial?c+\"(\"+s+\")?\":\"(?:\"+c+\"(\"+s+\"))?\":c+\"(\"+s+\")\",i+=s}}var p=E(n.delimiter||\"/\"),f=i.slice(-p.length)===p;return r||(i=(f?i.slice(0,-p.length):i)+\"(?:\"+p+\"(?=$))?\"),i+=o?\"$\":r&&f?\"\":\"(?=\"+p+\"|$)\",R(new RegExp(\"^\"+i,_(n)),e)}function C(t,e,n){return kt(e)||(n=e||n,e=[]),n=n||{},t instanceof RegExp?$(t,e):kt(t)?T(t,e,n):S(t,e,n)}function P(t){var e,n,r=$t[t];return r?(e=r.keys,n=r.regexp):(e=[],n=Ot(t,e),$t[t]={keys:e,regexp:n}),{keys:e,regexp:n}}function U(t,e,n){try{var r=Tt[t]||(Tt[t]=Ot.compile(t));return r(e||{},{pretty:!0})}catch(t){return\"\"}}function L(t,n,r){var o=\"string\"==typeof t?{path:t}:t;if(o.name||o._normalized)return o;if(!o.path&&o.params&&n){o=z({},o),o._normalized=!0;var i=z(z({},n.params),o.params);if(n.name)o.name=n.name,o.params=i;else if(n.matched){var a=n.matched[n.matched.length-1].path;o.path=U(a,i,\"path \"+n.path)}return o}var u=y(o.path||\"\"),c=n&&n.path||\"/\",s=u.path?d(u.path,c,r||o.append):n&&n.path||\"/\",p=e(u.query,o.query),f=o.hash||u.hash;return f&&\"#\"!==f.charAt(0)&&(f=\"#\"+f),{_normalized:!0,path:s,query:p,hash:f}}function z(t,e){for(var n in e)t[n]=e[n];return t}function H(e){function n(t,e,n){var r=L(t,e),o=r.name;if(o){var i=s[o],u=P(i.path).keys.filter(function(t){return!t.optional}).map(function(t){return t.name});if(\"object\"!=typeof r.params&&(r.params={}),e&&\"object\"==typeof e.params)for(var p in e.params)!(p in r.params)&&u.indexOf(p)>-1&&(r.params[p]=e.params[p]);if(i)return r.path=U(i.path,r.params,'named route \"'+o+'\"'),a(i,r,n)}else if(r.path){r.params={};for(var f in c)if(M(f,r.params,r.path))return a(c[f],r,n)}return a(null,r)}function r(e,r){var i=e.redirect,u=\"function\"==typeof i?i(o(e,r)):i;if(\"string\"==typeof u&&(u={path:u}),!u||\"object\"!=typeof u)return a(null,r);var c=u,p=c.name,f=c.path,h=r.query,l=r.hash,d=r.params;if(h=c.hasOwnProperty(\"query\")?c.query:h,l=c.hasOwnProperty(\"hash\")?c.hash:l,d=c.hasOwnProperty(\"params\")?c.params:d,p){s[p];return n({_normalized:!0,name:p,query:h,hash:l,params:d},void 0,r)}if(f){var y=V(f,e),v=U(y,d,'redirect route with path \"'+y+'\"');return n({_normalized:!0,path:v,query:h,hash:l},void 0,r)}return t(!1,\"invalid redirect option: \"+JSON.stringify(u)),a(null,r)}function i(t,e,r){var o=U(r,e.params,'aliased route with path \"'+r+'\"'),i=n({_normalized:!0,path:o});if(i){var u=i.matched,c=u[u.length-1];return e.params=i.params,a(c,e)}return a(null,e)}function a(t,e,n){return t&&t.redirect?r(t,n||e):t&&t.matchAs?i(t,e,t.matchAs):o(t,e,n)}var u=m(e),c=u.pathMap,s=u.nameMap;return n}function M(t,e,n){var r=P(t),o=r.regexp,i=r.keys,a=n.match(o);if(!a)return!1;if(!e)return!0;for(var u=1,c=a.length;u<c;++u){var s=i[u-1],p=\"string\"==typeof a[u]?decodeURIComponent(a[u]):a[u];s&&(e[s.name]=p)}return!0}function V(t,e){return d(t,e.parent?e.parent.path:\"/\",!0)}function B(t,e,n){var r=function(o){o>=t.length?n():t[o]?e(t[o],function(){r(o+1)}):r(o+1)};r(0)}function F(t){if(!t)if(St){var e=document.querySelector(\"base\");t=e?e.getAttribute(\"href\"):\"/\"}else t=\"/\";return\"/\"!==t.charAt(0)&&(t=\"/\"+t),t.replace(/\\/$/,\"\")}function I(t,e){var n,r=Math.max(t.length,e.length);for(n=0;n<r&&t[n]===e[n];n++);return{activated:e.slice(n),deactivated:t.slice(n)}}function D(t,e){return\"function\"!=typeof t&&(t=lt.extend(t)),t.options[e]}function J(t){return Q(G(t,function(t,e){var n=D(t,\"beforeRouteLeave\");if(n)return Array.isArray(n)?n.map(function(t){return K(t,e)}):K(n,e)}).reverse())}function K(t,e){return function(){return t.apply(e,arguments)}}function N(t,e,n){return Q(G(t,function(t,r,o,i){var a=D(t,\"beforeRouteEnter\");if(a)return Array.isArray(a)?a.map(function(t){return X(t,e,o,i,n)}):X(a,e,o,i,n)}))}function X(t,e,n,r,o){return function(i,a,u){return t(i,a,function(t){u(t),\"function\"==typeof t&&e.push(function(){Y(t,n.instances,r,o)})})}}function Y(t,e,n,r){e[n]?t(e[n]):r()&&setTimeout(function(){Y(t,e,n,r)},16)}function W(e){return G(e,function(e,n,r,o){if(\"function\"==typeof e&&!e.options)return function(n,i,a){var u=function(t){r.components[o]=t,a()},c=function(e){t(!1,\"Failed to resolve async component \"+o+\": \"+e),a(!1)},s=e(u,c);s&&\"function\"==typeof s.then&&s.then(u,c)}})}function G(t,e){return Q(t.map(function(t){return Object.keys(t.components).map(function(n){return e(t.components[n],t.instances[n],t,n)})}))}function Q(t){return Array.prototype.concat.apply([],t)}function Z(t){t&&(Pt[t]={x:window.pageXOffset,y:window.pageYOffset})}function tt(t){if(t)return Pt[t]}function et(t){var e=document.documentElement.getBoundingClientRect(),n=t.getBoundingClientRect();return{x:n.left-e.left,y:n.top-e.top}}function nt(t){return ot(t.x)||ot(t.y)}function rt(t){return{x:ot(t.x)?t.x:window.pageXOffset,y:ot(t.y)?t.y:window.pageYOffset}}function ot(t){return\"number\"==typeof t}function it(t){var e=window.location.pathname;return t&&0===e.indexOf(t)&&(e=e.slice(t.length)),(e||\"/\")+window.location.search+window.location.hash}function at(t,e){var n=window.history;try{e?n.replaceState({key:Lt},\"\",t):(Lt=Ut(),n.pushState({key:Lt},\"\",t)),Z(Lt)}catch(n){window.location[e?\"assign\":\"replace\"](t)}}function ut(t){at(t,!0)}function ct(){var t=st();return\"/\"===t.charAt(0)||(ft(\"/\"+t),!1)}function st(){var t=window.location.href,e=t.indexOf(\"#\");return e===-1?\"\":t.slice(e+1)}function pt(t){window.location.hash=t}function ft(t){var e=window.location.href.indexOf(\"#\");window.location.replace(window.location.href.slice(0,e>=0?e:0)+\"#\"+t)}function ht(t,e,n){var r=\"hash\"===n?\"/#\"+e:e;return t?v(t+r):r}var lt,dt={name:\"router-view\",functional:!0,props:{name:{type:String,default:\"default\"}},render:function(t,e){var n=e.props,r=e.children,o=e.parent,i=e.data;i.routerView=!0;for(var a=o.$route,u=o._routerViewCache||(o._routerViewCache={}),c=0,s=!1;o;)o.$vnode&&o.$vnode.data.routerView&&c++,o._inactive&&(s=!0),o=o.$parent;i.routerViewDepth=c;var p=a.matched[c];if(!p)return t();var f=n.name,h=s?u[f]:u[f]=p.components[f];if(!s){var l=i.hook||(i.hook={});l.init=function(t){p.instances[f]=t.child},l.prepatch=function(t,e){p.instances[f]=e.child},l.destroy=function(t){p.instances[f]===t.child&&(p.instances[f]=void 0)}}return t(h,i,r)}},yt=encodeURIComponent,vt=decodeURIComponent,mt=o(null,{path:\"/\"}),gt=/\\/$/,wt=[String,Object],bt={name:\"router-link\",props:{to:{type:wt,required:!0},tag:{type:String,default:\"a\"},exact:Boolean,append:Boolean,replace:Boolean,activeClass:String,event:{type:[String,Array],default:\"click\"}},render:function(t){var e=this,n=this.$router,r=this.$route,i=n.resolve(this.to,r,this.append),a=i.normalizedTo,c=i.resolved,p=i.href,l={},d=this.activeClass||n.options.linkActiveClass||\"router-link-active\",y=a.path?o(null,a):c;l[d]=this.exact?u(r,y):s(r,y);var v=function(t){f(t)&&(e.replace?n.replace(a):n.push(a))},m={click:f};Array.isArray(this.event)?this.event.forEach(function(t){m[t]=v}):m[this.event]=v;var g={class:l};if(\"a\"===this.tag)g.on=m,g.attrs={href:p};else{var w=h(this.$slots.default);if(w){w.isStatic=!1;var b=lt.util.extend,x=w.data=b({},w.data);x.on=m;var k=w.data.attrs=b({},w.data.attrs);k.href=p}else g.on=m}return t(this.tag,g,this.$slots.default)}},xt=Array.isArray||function(t){return\"[object Array]\"==Object.prototype.toString.call(t)},kt=xt,Ot=C,At=b,Et=x,jt=A,Rt=q,_t=new RegExp([\"(\\\\\\\\.)\",\"([\\\\/.])?(?:(?:\\\\:(\\\\w+)(?:\\\\(((?:\\\\\\\\.|[^\\\\\\\\()])+)\\\\))?|\\\\(((?:\\\\\\\\.|[^\\\\\\\\()])+)\\\\))([+*?])?|(\\\\*))\"].join(\"|\"),\"g\");Ot.parse=At,Ot.compile=Et,Ot.tokensToFunction=jt,Ot.tokensToRegExp=Rt;var $t=Object.create(null),Tt=Object.create(null),St=\"undefined\"!=typeof window,qt=St&&function(){var t=window.navigator.userAgent;return(t.indexOf(\"Android 2.\")===-1&&t.indexOf(\"Android 4.0\")===-1||t.indexOf(\"Mobile Safari\")===-1||t.indexOf(\"Chrome\")!==-1||t.indexOf(\"Windows Phone\")!==-1)&&(window.history&&\"pushState\"in window.history)}(),Ct=function(t,e){this.router=t,this.base=F(e),this.current=mt,this.pending=null};Ct.prototype.listen=function(t){this.cb=t},Ct.prototype.transitionTo=function(t,e){var n=this,r=this.router.match(t,this.current);this.confirmTransition(r,function(){n.updateRoute(r),e&&e(r),n.ensureURL()})},Ct.prototype.confirmTransition=function(t,e){var n=this,r=this.current;if(u(t,r))return void this.ensureURL();var o=I(this.current.matched,t.matched),i=o.deactivated,a=o.activated,c=[].concat(J(i),this.router.beforeHooks,a.map(function(t){return t.beforeEnter}),W(a));this.pending=t;var s=function(e,o){n.pending===t&&e(t,r,function(t){t===!1?n.ensureURL(!0):\"string\"==typeof t||\"object\"==typeof t?\"object\"==typeof t&&t.replace?n.replace(t):n.push(t):o(t)})};B(c,s,function(){var r=[],o=N(a,r,function(){return n.current===t});B(o,s,function(){n.pending===t&&(n.pending=null,e(t),n.router.app&&n.router.app.$nextTick(function(){r.forEach(function(t){return t()})}))})})},Ct.prototype.updateRoute=function(t){var e=this.current;this.current=t,this.cb&&this.cb(t),this.router.afterHooks.forEach(function(n){n&&n(t,e)})};var Pt=Object.create(null),Ut=function(){return String(Date.now())},Lt=Ut(),zt=function(t){function e(e,n){var r=this;t.call(this,e,n);var o=e.options.scrollBehavior;window.addEventListener(\"popstate\",function(t){Lt=t.state&&t.state.key;var e=r.current;r.transitionTo(it(r.base),function(t){o&&r.handleScroll(t,e,!0)})}),o&&window.addEventListener(\"scroll\",function(){Z(Lt)})}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.go=function(t){window.history.go(t)},e.prototype.push=function(t){var e=this,n=this.current;this.transitionTo(t,function(t){at(v(e.base+t.fullPath)),e.handleScroll(t,n,!1)})},e.prototype.replace=function(t){var e=this,n=this.current;this.transitionTo(t,function(t){ut(v(e.base+t.fullPath)),e.handleScroll(t,n,!1)})},e.prototype.ensureURL=function(t){if(it(this.base)!==this.current.fullPath){var e=v(this.base+this.current.fullPath);t?at(e):ut(e)}},e.prototype.handleScroll=function(t,e,n){var r=this.router;if(r.app){var o=r.options.scrollBehavior;o&&r.app.$nextTick(function(){var r=tt(Lt),i=o(t,e,n?r:null);if(i){var a=\"object\"==typeof i;if(a&&\"string\"==typeof i.selector){var u=document.querySelector(i.selector);u?r=et(u):nt(i)&&(r=rt(i))}else a&&nt(i)&&(r=rt(i));r&&window.scrollTo(r.x,r.y)}})}},e}(Ct),Ht=function(t){function e(e,n,r){var o=this;t.call(this,e,n),window.addEventListener(\"hashchange\",function(){o.onHashChange()}),r&&this.checkFallback()||ct()}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.checkFallback=function(){var t=it(this.base);if(!/^\\/#/.test(t))return window.location.replace(v(this.base+\"/#\"+t)),!0},e.prototype.onHashChange=function(){ct()&&this.transitionTo(st(),function(t){ft(t.fullPath)})},e.prototype.push=function(t){this.transitionTo(t,function(t){pt(t.fullPath)})},e.prototype.replace=function(t){this.transitionTo(t,function(t){ft(t.fullPath)})},e.prototype.go=function(t){window.history.go(t)},e.prototype.ensureURL=function(t){var e=this.current.fullPath;st()!==e&&(t?pt(e):ft(e))},e}(Ct),Mt=function(t){function e(e){t.call(this,e),this.stack=[],this.index=-1}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.push=function(t){var e=this;this.transitionTo(t,function(t){e.stack=e.stack.slice(0,e.index+1).concat(t),e.index++})},e.prototype.replace=function(t){var e=this;this.transitionTo(t,function(t){e.stack=e.stack.slice(0,e.index).concat(t)})},e.prototype.go=function(t){var e=this,n=this.index+t;if(!(n<0||n>=this.stack.length)){var r=this.stack[n];this.confirmTransition(r,function(){e.index=n,e.updateRoute(r)})}},e.prototype.ensureURL=function(){},e}(Ct),Vt=function(t){void 0===t&&(t={}),this.app=null,this.options=t,this.beforeHooks=[],this.afterHooks=[],this.match=H(t.routes||[]);var e=t.mode||\"hash\";switch(this.fallback=\"history\"===e&&!qt,this.fallback&&(e=\"hash\"),St||(e=\"abstract\"),this.mode=e,e){case\"history\":this.history=new zt(this,t.base);break;case\"hash\":this.history=new Ht(this,t.base,this.fallback);break;case\"abstract\":this.history=new Mt(this)}},Bt={currentRoute:{}};return Bt.currentRoute.get=function(){return this.history&&this.history.current},Vt.prototype.init=function(t){var e=this;this.app=t;var n=this.history;n instanceof zt?n.transitionTo(it(n.base)):n instanceof Ht&&n.transitionTo(st()),n.listen(function(t){e.app._route=t})},Vt.prototype.beforeEach=function(t){this.beforeHooks.push(t)},Vt.prototype.afterEach=function(t){this.afterHooks.push(t)},Vt.prototype.push=function(t){this.history.push(t)},Vt.prototype.replace=function(t){this.history.replace(t)},Vt.prototype.go=function(t){this.history.go(t)},Vt.prototype.back=function(){this.go(-1)},Vt.prototype.forward=function(){this.go(1)},Vt.prototype.getMatchedComponents=function(t){var e=t?this.resolve(t).resolved:this.currentRoute;return e?[].concat.apply([],e.matched.map(function(t){return Object.keys(t.components).map(function(e){return t.components[e]})})):[]},Vt.prototype.resolve=function(t,e,n){var r=L(t,e||this.history.current,n),o=this.match(r,e),i=o.redirectedFrom||o.fullPath,a=this.history.base,u=ht(a,i,this.mode);return{normalizedTo:r,resolved:o,href:u}},Object.defineProperties(Vt.prototype,Bt),Vt.install=l,St&&window.Vue&&window.Vue.use(Vt),Vt});"
 
 /***/ }),
-/* 20 */,
-/* 21 */,
-/* 22 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -188,14 +169,14 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var JsFunc_1 = __webpack_require__(23);
-	var VueBase_1 = __webpack_require__(24);
-	var PlayerS4_1 = __webpack_require__(25);
-	var HupuAPI_1 = __webpack_require__(26);
-	var GameAdmin_1 = __webpack_require__(28);
-	var Pick_1 = __webpack_require__(32);
-	var WorldWar_1 = __webpack_require__(34);
-	var ScoreRankAdmin_1 = __webpack_require__(127);
+	var JsFunc_1 = __webpack_require__(21);
+	var VueBase_1 = __webpack_require__(22);
+	var PlayerS4_1 = __webpack_require__(23);
+	var HupuAPI_1 = __webpack_require__(24);
+	var GameAdmin_1 = __webpack_require__(26);
+	var Pick_1 = __webpack_require__(30);
+	var WorldWar_1 = __webpack_require__(32);
+	var ScoreRankAdmin_1 = __webpack_require__(39);
 	var cropper;
 	function getScorePanelUrl(gameId, isDark, isOb) {
 	    if (isOb === void 0) { isOb = true; }
@@ -455,7 +436,7 @@
 
 
 /***/ }),
-/* 23 */
+/* 21 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -673,7 +654,7 @@
 
 
 /***/ }),
-/* 24 */
+/* 22 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -710,23 +691,23 @@
 	    };
 	    VueBase.prototype.mounted = function () {
 	    };
-	    VueBase.PROP = { v: null, _: null };
-	    VueBase.Dict = { v: {}, _: null };
-	    VueBase.Number = { v: 0, _: null };
-	    VueBase.String = { v: "", _: null };
 	    return VueBase;
 	}());
+	VueBase.PROP = { v: null, _: null };
+	VueBase.Dict = { v: {}, _: null };
+	VueBase.Number = { v: 0, _: null };
+	VueBase.String = { v: "", _: null };
 	exports.VueBase = VueBase;
 
 
 /***/ }),
-/* 25 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var HupuAPI_1 = __webpack_require__(26);
-	var JsFunc_1 = __webpack_require__(23);
+	var HupuAPI_1 = __webpack_require__(24);
+	var JsFunc_1 = __webpack_require__(21);
 	var Rec = (function () {
 	    function Rec() {
 	        this.score = 0;
@@ -852,12 +833,12 @@
 
 
 /***/ }),
-/* 26 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var WebJsFunc_1 = __webpack_require__(27);
+	var WebJsFunc_1 = __webpack_require__(25);
 	exports.getHupuWS = function (callback) {
 	    var ws = 'tcp.lb.liangle.com:3081';
 	    console.log('ws:', ws);
@@ -1050,7 +1031,7 @@
 
 
 /***/ }),
-/* 27 */
+/* 25 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -1119,7 +1100,7 @@
 
 
 /***/ }),
-/* 28 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1134,10 +1115,10 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var VueBase_1 = __webpack_require__(24);
-	var const_1 = __webpack_require__(29);
-	var Command_1 = __webpack_require__(30);
-	var JsFunc_1 = __webpack_require__(23);
+	var VueBase_1 = __webpack_require__(22);
+	var const_1 = __webpack_require__(27);
+	var Command_1 = __webpack_require__(28);
+	var JsFunc_1 = __webpack_require__(21);
 	var confFile = null;
 	var reader;
 	var filesInput;
@@ -1157,7 +1138,7 @@
 	    __extends(_GameAdmin, _super);
 	    function _GameAdmin() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(31);
+	        _this.template = __webpack_require__(29);
 	        _this.selected = VueBase_1.VueBase.PROP;
 	        _this.options = VueBase_1.VueBase.PROP;
 	        _this.gameConf = VueBase_1.VueBase.PROP;
@@ -1379,7 +1360,7 @@
 
 
 /***/ }),
-/* 29 */
+/* 27 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -1439,7 +1420,7 @@
 
 
 /***/ }),
-/* 30 */
+/* 28 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -1620,13 +1601,13 @@
 
 
 /***/ }),
-/* 31 */
+/* 29 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class=\"container\">\r\n\r\n        <span class=\"select\">\r\n                <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                    <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                        {{ option.text }}\r\n                    </option>\r\n                </select>\r\n            </span>\r\n            \r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\"> gameTitle idx\r\n    <input type=\"text\" v-model=\"gameTitle\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n\r\n    <div>\r\n        <br> score rank:\r\n        <br> \r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onReloadShow()\">reload show</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,-1)\">L-1</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,1)\">L+1</button>\r\n        ----------\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,1)\">R+1</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,-1)\">R-1</button>\r\n        <br>\r\n\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in blueArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <hr>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in redArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n\r\n    </div>\r\n</div>";
 
 /***/ }),
-/* 32 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1641,12 +1622,12 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var const_1 = __webpack_require__(29);
-	var VueBase_1 = __webpack_require__(24);
-	var Command_1 = __webpack_require__(30);
-	var HupuAPI_1 = __webpack_require__(26);
-	var JsFunc_1 = __webpack_require__(23);
-	var WebJsFunc_1 = __webpack_require__(27);
+	var const_1 = __webpack_require__(27);
+	var VueBase_1 = __webpack_require__(22);
+	var Command_1 = __webpack_require__(28);
+	var HupuAPI_1 = __webpack_require__(24);
+	var JsFunc_1 = __webpack_require__(21);
+	var WebJsFunc_1 = __webpack_require__(25);
 	var confFile = null;
 	var reader;
 	var filesInput;
@@ -1673,7 +1654,7 @@
 	    __extends(_Pick, _super);
 	    function _Pick() {
 	        var _this = _super !== null && _super.apply(this, arguments) || this;
-	        _this.template = __webpack_require__(33);
+	        _this.template = __webpack_require__(31);
 	        _this.pickState = VueBase_1.VueBase.PROP;
 	        _this.playerId = VueBase_1.VueBase.PROP;
 	        _this.playerTitle = VueBase_1.VueBase.PROP;
@@ -1773,13 +1754,13 @@
 
 
 /***/ }),
-/* 33 */
+/* 31 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class=\"container\">\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开本地配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <button class=\"button is-primary\" @click=\"onLoadConf\">加载配置</button>\r\n    <br>\r\n   \r\n    <br>\r\n\r\n    <br> 球员player id:\r\n    <input type=\"text\" v-model=\"playerId\" style=\"width: 100px;\"> 冠军title\r\n    <input type=\"text\" v-model=\"playerTitle\" style=\"width: 200px;\">\r\n    <br>\r\n    <br> pick:\r\n    <button class=\"button is-primary\" @click=\"onPick(1)\">盼盼</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(2)\">Gary</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(3)\">安妮</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(4)\">堂主</button>\r\n    <button class=\"button is-primary\" @click=\"onPick(0)\">重置</button>\r\n    <br>\r\n    <br>call:\r\n    <button class=\"button is-primary\" @click=\"onCall(1)\">盼盼</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(2)\">Gary</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(3)\">安妮</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(4)\">堂主</button>\r\n    <button class=\"button is-primary\" @click=\"onCall(0)\">隐藏</button>\r\n    <br>\r\n    <br>加入:\r\n    <button class=\"button is-primary\" @click=\"onJoin(1)\">盼盼</button>\r\n    <button class=\"button is-primary\" @click=\"onJoin(2)\">Gary</button>\r\n    <button class=\"button is-primary\" @click=\"onJoin(3)\">安妮</button>\r\n    <button class=\"button is-primary\" @click=\"onJoin(4)\">堂主</button>\r\n    <button class=\"button is-primary\" @click=\"onJoin(0)\">重置</button>\r\n</div>";
 
 /***/ }),
-/* 34 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1794,12 +1775,12 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var VueBase_1 = __webpack_require__(24);
-	var BackendConf_1 = __webpack_require__(35);
-	var WWGame_1 = __webpack_require__(36);
-	var JsFunc_1 = __webpack_require__(23);
-	var const_1 = __webpack_require__(29);
-	var BaseGame_1 = __webpack_require__(38);
+	var VueBase_1 = __webpack_require__(22);
+	var BackendConf_1 = __webpack_require__(33);
+	var WWGame_1 = __webpack_require__(34);
+	var JsFunc_1 = __webpack_require__(21);
+	var const_1 = __webpack_require__(27);
+	var BaseGame_1 = __webpack_require__(36);
 	var opReq = function (cmdId, param) {
 	    param._ = null;
 	    $.ajax({
@@ -1816,7 +1797,7 @@
 	    __extends(_worldWar, _super);
 	    function _worldWar() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(40);
+	        _this.template = __webpack_require__(38);
 	        _this.components = { BaseGame: BaseGame_1.BaseGameView };
 	        _this.vsPlayer = VueBase_1.VueBase.PROP;
 	        _this.vsPlayerArr = VueBase_1.VueBase.PROP;
@@ -2008,7 +1989,7 @@
 
 
 /***/ }),
-/* 35 */
+/* 33 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -2077,7 +2058,7 @@
 
 
 /***/ }),
-/* 36 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2092,8 +2073,8 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var HupuAPI_1 = __webpack_require__(26);
-	var EventDispatcher_1 = __webpack_require__(37);
+	var HupuAPI_1 = __webpack_require__(24);
+	var EventDispatcher_1 = __webpack_require__(35);
 	var getDoc = function (callback) {
 	    $.get("http://rtmp.icassi.us:8090/event?idx=916", function (res) {
 	        if (res.length)
@@ -2297,7 +2278,7 @@
 
 
 /***/ }),
-/* 37 */
+/* 35 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -2351,7 +2332,7 @@
 
 
 /***/ }),
-/* 38 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2366,9 +2347,9 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var VueBase_1 = __webpack_require__(24);
-	var const_1 = __webpack_require__(29);
-	var Command_1 = __webpack_require__(30);
+	var VueBase_1 = __webpack_require__(22);
+	var const_1 = __webpack_require__(27);
+	var Command_1 = __webpack_require__(28);
 	var opReq = function (cmdId, param) {
 	    param._ = null;
 	    $.ajax({
@@ -2396,7 +2377,7 @@
 	    __extends(_baseGameView, _super);
 	    function _baseGameView() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(39);
+	        _this.template = __webpack_require__(37);
 	        _this.timeInSec = VueBase_1.VueBase.PROP;
 	        _this.updateTime = VueBase_1.VueBase.PROP;
 	        _this.watch = {
@@ -2463,16 +2444,269 @@
 
 
 /***/ }),
-/* 39 */
+/* 37 */
 /***/ (function(module, exports) {
 
 	module.exports = "<table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n    <thead>\r\n    </thead>\r\n    <tbody>\r\n        <tr>\r\n            <th>\r\n                <div hidden>{{updateTime}}</div>\r\n                time in sec:<input class=\"input\" v-model=\"timeInSec\" type=\"text\" style=\"width: 100px;\">\r\n            </th>\r\n            <th>\r\n                <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n            </th>\r\n            <th>L player</th>\r\n            <th>score</th>\r\n            <th>R player</th>\r\n            <th>\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th style=\"font-size:25px;\">\r\n\r\n                <a @click=\"onSetTimerEvent('start')\">开始  </a><a @click=\"onSetTimerEvent('pause')\">暂停  </a>\r\n                <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n                <a @click=\"onSetTimerEvent('reset')\">reset</a>\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                {{baseGame.lName}}\r\n            </th>\r\n            <th style=\"font-size:40px;\">\r\n                <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n            </th>\r\n            <th>\r\n                {{baseGame.rName}}\r\n\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th style=\"font-size:25px;\">foul\r\n                <a @click=\"onResetFoul\"> 重置</a>\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n    </tbody>\r\n</table>";
 
 /***/ }),
-/* 40 */
+/* 38 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class=\"container\">\r\n\r\n    <input type=\"file\" id=\"file\" accept=\"*.xlsx\" hidden>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开本地配置</button>\r\n    <button class=\"button is-primary\" id=\"reload\" @click=\"onReload\">reload</button>\r\n    <br>\r\n\r\n    <div class=\"control\">\r\n        vs player <input class=\"input\" v-model=\"vsPlayer\" type=\"text\" style=\"width: 100px;\">\r\n        <button class=\"button is-primary\" @click=\"onEmitGameInfo\">emit game info</button>\r\n        <button class=\"button is-primary\" @click=\"onAddGame\">创建比赛</button>\r\n        <button class=\"button is-primary\" @click=\"onCommitGame(gameIdx)\">提交比赛</button> teamVsIdx:\r\n        <input class=\"input\" v-model=\"teamVsIdx\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetBlood(teamVsIdx)\">设置初始血量</a>\r\n        <label class=\"checkbox\">\r\n            <input type=\"checkbox\" v-model=\"isShowCurTeamVsOnly\">\r\n            只显示当前\r\n          </label>\r\n        <hr>\r\n\r\n    </div>\r\n\r\n    <!-- Main container -->\r\n    <div class=\"level\">\r\n        <!-- Left side -->\r\n        <div class=\"level-left\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                    <a class=\"button is-info\" @click=\"pickPlayer(true,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <!-- Right side -->\r\n        <div class=\"level-right\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                    <a class=\"button is-danger\" @click=\"pickPlayer(false,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div id='table' class=\"table\"></div>\r\n    <BaseGame/>\r\n    <table class=\"table is-striped is-bordered\">\r\n        <thead>\r\n            <tr>\r\n                <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                <th><abbr>#teamVsIdx</abbr></th>\r\n                <th>L player</th>\r\n                <th>score</th>\r\n                <th>R player</th>\r\n                <th>action</th>\r\n            </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==gameView.gameIdx?'is-selected':'']\">\r\n                <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}}</a></th>\r\n                <td> {{rec.teamVsIdx}} </td>\r\n                <td> {{rec.name[0]}} </td>\r\n                <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                <td> {{rec.name[1]}} </td>\r\n                <td>\r\n                    <div class=\"control\" v-if=\"rec.gameIdx==gameView.gameIdx\">\r\n                        <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                        <button class=\"button\" @click=\"onSetScore(rec.gameIdx)\">修改(提交)比分</button>\r\n                        <button class=\"button\" @click=\"onSetVS(rec.gameIdx,vsPlayer)\">修改对阵↑</button>\r\n                        <button class=\"button\" @click=\"onSetTeamVsIdx(rec.gameIdx)\">修改TeamVsIdx</button>\r\n                        <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                    </div>\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n\r\n\r\n    <div class=\"level\">\r\n        <div class=\"level-left\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n        <div class=\"level-right\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n    </div>\r\n\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onDeleteDoc\">delete doc</button> {{updateTime}}\r\n</div>";
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var VueBase_1 = __webpack_require__(22);
+	var const_1 = __webpack_require__(27);
+	var Command_1 = __webpack_require__(28);
+	var JsFunc_1 = __webpack_require__(21);
+	var confFile = null;
+	var reader;
+	var filesInput;
+	var opReq = function (cmdId, param) {
+	    param._ = null;
+	    $.ajax({
+	        url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
+	        type: 'post',
+	        data: JSON.stringify(param),
+	        headers: { "Content-Type": "application/json" },
+	        dataType: 'json'
+	    });
+	};
+	var _exData;
+	var playerCount = 4;
+	var _ScoreRankAdmin = (function (_super) {
+	    __extends(_ScoreRankAdmin, _super);
+	    function _ScoreRankAdmin() {
+	        var _this = _super.call(this) || this;
+	        _this.template = __webpack_require__(40);
+	        _this.selected = VueBase_1.VueBase.PROP;
+	        _this.options = VueBase_1.VueBase.PROP;
+	        _this.gameConf = VueBase_1.VueBase.PROP;
+	        _this.vsPlayer = VueBase_1.VueBase.PROP;
+	        _this.vsPlayerArr = VueBase_1.VueBase.PROP;
+	        _this.redArr = VueBase_1.VueBase.PROP;
+	        _this.blueArr = VueBase_1.VueBase.PROP;
+	        _this.lPlayer = VueBase_1.VueBase.PROP;
+	        _this.rPlayer = VueBase_1.VueBase.PROP;
+	        _this.lastScoreArr = VueBase_1.VueBase.PROP;
+	        _this.methods = {
+	            onReloadShow: function () {
+	                var _this = this;
+	                this.reloadFile(null, {
+	                    callback: function (_) {
+	                        _this.onShowScoreRank(true);
+	                    }
+	                });
+	            },
+	            onSelectGame: function () {
+	                console.log('on init game', this.selected);
+	                var playerMap = this.gameConf.playerMap;
+	                var recArr = this.gameConf.rec;
+	                for (var i = 0; i < recArr.length; i++) {
+	                    var rec = recArr[i];
+	                    if (rec.idx == this.selected) {
+	                        var p1 = rec.player[0];
+	                        var p2 = rec.player[1];
+	                        this.vsPlayer = p1 + ' ' + p2;
+	                        return;
+	                    }
+	                }
+	            },
+	            onChangePlayer: function (isBlue, playerId) {
+	                isBlue ? this.vsPlayerArr[0] = playerId : this.vsPlayerArr[1] = playerId;
+	                this.vsPlayer = this.vsPlayerArr.join(" ");
+	            },
+	            onAddScore: function (isLeft, dtScore) {
+	                this.onShowScoreRank(true, dtScore, isLeft);
+	                opReq("" + Command_1.CommandId.cs_updateScore, { dtScore: dtScore, isLeft: isLeft });
+	            },
+	            onInitGame: function () {
+	                console.log('init game');
+	                var playerMap = this.gameConf.playerMap;
+	                var a = this.vsPlayer.split(' ');
+	                var p1 = a[0];
+	                var p2 = a[1];
+	                p1 = playerMap[p1];
+	                p2 = playerMap[p2];
+	                p1.avatar = this.gameConf.avatarUrlBase + p1.playerId + '.png';
+	                p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png';
+	                this.lPlayer = p1;
+	                this.rPlayer = p2;
+	                opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2 });
+	            },
+	            onSetPlayerDeactive: function () {
+	                this.vsPlayer = '';
+	                this.onShowScoreRank(true);
+	            },
+	            onShowScoreRank: function (visible) {
+	                var scoreArr = [];
+	                var isInitScoreArr = false;
+	                var scoreFx = 0;
+	                if (!this.lastScoreArr) {
+	                    this.lastScoreArr = [0, 0, 0, 0, 0];
+	                    isInitScoreArr = true;
+	                }
+	                var a = this.vsPlayer.split(' ');
+	                var p1 = a[0];
+	                var p2 = a[1];
+	                for (var i = 0; i < this.gameConf.scoreRank.length; i++) {
+	                    var a_1 = this.gameConf.scoreRank[i][0].split('_');
+	                    var pn = a_1[0];
+	                    var player = this.gameConf.playerMap[pn];
+	                    var scoreFxItem = {
+	                        score: this.gameConf.scoreRank[i][1],
+	                        name: player.name,
+	                        isSmall: true,
+	                        scoreFx: 0,
+	                        avatar: this.gameConf.avatarUrlBase + player.playerId + '.png'
+	                    };
+	                    if (isInitScoreArr)
+	                        this.lastScoreArr[i] = scoreFxItem.score;
+	                    scoreFx = scoreFxItem.score - this.lastScoreArr[i];
+	                    this.lastScoreArr[i] = scoreFxItem.score;
+	                    if (pn == p1) {
+	                        scoreFxItem.scoreFx = scoreFx;
+	                        scoreFxItem.isSmall = false;
+	                        opReq("" + Command_1.CommandId.cs_updateScore, { score: scoreFxItem.score, isLeft: true });
+	                    }
+	                    else if (pn == p2) {
+	                        scoreFxItem.scoreFx = scoreFx;
+	                        scoreFxItem.isSmall = false;
+	                        opReq("" + Command_1.CommandId.cs_updateScore, { score: scoreFxItem.score, isLeft: false });
+	                    }
+	                    scoreArr.push(scoreFxItem);
+	                }
+	                scoreArr = scoreArr.sort(JsFunc_1.descendingProp('score'));
+	                opReq(Command_1.CommandId.cs_showScoreRank, {
+	                    visible: visible,
+	                    scoreArr: scoreArr
+	                });
+	            },
+	            onFile: function () {
+	                if (!confFile) {
+	                    if (!filesInput)
+	                        filesInput = document.getElementById("files");
+	                    filesInput.addEventListener("change", function (evt) {
+	                        confFile = evt.target.files[0];
+	                        document.getElementById("reloadFile").click();
+	                    }, false);
+	                }
+	                document.getElementById("files").click();
+	            },
+	            reloadFile: function (e, exData) {
+	                var _this = this;
+	                var _ = function (d) {
+	                    return d.getMinutes() + 'm' + d.getSeconds() + 's';
+	                };
+	                console.log("exData", exData);
+	                _exData = exData;
+	                if (!reader) {
+	                    reader = new FileReader();
+	                    reader.addEventListener("load", function (event) {
+	                        var data = JSON.parse(event.target['result']);
+	                        data._ = null;
+	                        if (_exData) {
+	                            for (var k in _exData) {
+	                                console.log('exData', k);
+	                                data[k] = _exData[k];
+	                            }
+	                            if (_exData.callback)
+	                                _exData.callback();
+	                        }
+	                        _this.createOption(data);
+	                        console.log("EVENT_ON_FILE", data, _exData);
+	                        opReq('cs_data', data);
+	                    });
+	                }
+	                reader.readAsText(confFile, "utf-8");
+	            },
+	        };
+	        VueBase_1.VueBase.initProps(_this);
+	        return _this;
+	    }
+	    _ScoreRankAdmin.prototype.created = function () {
+	        console.log('Game admin');
+	        this.blueArr = [];
+	        this.redArr = [];
+	        this.vsPlayerArr = [];
+	    };
+	    _ScoreRankAdmin.prototype.createOption = function (data) {
+	        var a = [];
+	        var playerMap = data.playerMap;
+	        this.gameConf = data;
+	        this.blueArr = [];
+	        this.redArr = [];
+	        for (var i = 0; i < this.gameConf.scoreRank.length; i++) {
+	            var a_2 = this.gameConf.scoreRank[i][0].split('_');
+	            var pn = a_2[0];
+	            var player = data.playerMap[pn];
+	            this.blueArr.push(player);
+	            this.redArr.push(player);
+	        }
+	        console.log('create gameConf ', this.gameConf);
+	    };
+	    _ScoreRankAdmin.prototype.route = function (recArr, playerMap) {
+	        var getWinner = function (rec) {
+	            if (rec.score[0] != 0 || rec.score[1] != 0) {
+	                if (rec.score[0] > rec.score[1])
+	                    return rec.player[0];
+	                else
+	                    return rec.player[1];
+	            }
+	            return '';
+	        };
+	        var fillWinner = function (fromGameId, playerId) {
+	            for (var i = 0; i < recArr.length; i++) {
+	                var rec = recArr[i];
+	                var a = rec.idx.split('#');
+	                var gameId = a[1];
+	                if (gameId != '_' && gameId.length > fromGameId.length) {
+	                    var pos = gameId.search(fromGameId);
+	                    if (pos > -1) {
+	                        var arrIdx = Math.floor(pos / Number(a[0]));
+	                        console.log('fillWinner from', fromGameId, 'to', gameId, arrIdx, playerMap[playerId].name);
+	                        rec.player[arrIdx] = playerId;
+	                    }
+	                }
+	            }
+	        };
+	        for (var i = 0; i < recArr.length; i++) {
+	            var rec = recArr[i];
+	            var a = rec.idx.split('#');
+	            var gameId = a[1];
+	            var winner = getWinner(rec);
+	            if (winner) {
+	                console.log(gameId, 'winner', playerMap[winner].name);
+	                fillWinner(gameId, winner);
+	            }
+	        }
+	    };
+	    return _ScoreRankAdmin;
+	}(VueBase_1.VueBase));
+	exports.ScoreRankAdmin = new _ScoreRankAdmin();
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div class=\"container\">\r\n\r\n    <span class=\"select\">\r\n            <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                    {{ option.text }}\r\n                </option>\r\n            </select>\r\n        </span>\r\n\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n\r\n    <div>\r\n        <br> score rank:\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onReloadShow()\">reload show</button>\r\n        <button class=\"button is-primary\" @click=\"onSetPlayerDeactive()\">set player deactive</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,-1)\">L-1</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,1)\">L+1</button> ----------\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,1)\">R+1</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,-1)\">R-1</button>\r\n        <br>\r\n\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in blueArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <hr>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in redArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n\r\n    </div>\r\n</div>";
 
 /***/ }),
 /* 41 */
@@ -2529,16 +2763,16 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var Ready_1 = __webpack_require__(55);
-	var JsFunc_1 = __webpack_require__(23);
+	var JsFunc_1 = __webpack_require__(21);
 	var HP_1 = __webpack_require__(58);
-	var HupuAPI_1 = __webpack_require__(26);
+	var HupuAPI_1 = __webpack_require__(24);
 	var PickupAnimation_1 = __webpack_require__(65);
-	var Command_1 = __webpack_require__(30);
-	var const_1 = __webpack_require__(29);
-	var WebJsFunc_1 = __webpack_require__(27);
+	var Command_1 = __webpack_require__(28);
+	var const_1 = __webpack_require__(27);
+	var WebJsFunc_1 = __webpack_require__(25);
 	var Pickup_1 = __webpack_require__(67);
 	var BasePanelView_1 = __webpack_require__(68);
-	var VueBase_1 = __webpack_require__(24);
+	var VueBase_1 = __webpack_require__(22);
 	var pickupScene;
 	var canvasStage;
 	var KOA = (function (_super) {
@@ -2877,7 +3111,7 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var PixiEx_1 = __webpack_require__(56);
 	var TweenEx_1 = __webpack_require__(57);
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var Ready = (function (_super) {
 	    __extends(Ready, _super);
 	    function Ready(parent, playerDocArr) {
@@ -3094,9 +3328,9 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var JsFunc_1 = __webpack_require__(23);
-	var WebJsFunc_1 = __webpack_require__(27);
-	var const_1 = __webpack_require__(29);
+	var JsFunc_1 = __webpack_require__(21);
+	var WebJsFunc_1 = __webpack_require__(25);
+	var const_1 = __webpack_require__(27);
 	function imgToTex(img) {
 	    return new PIXI.Texture(new PIXI.BaseTexture(img));
 	}
@@ -3453,14 +3687,14 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var HupuAPI_1 = __webpack_require__(26);
+	var HupuAPI_1 = __webpack_require__(24);
 	var TextTimer_1 = __webpack_require__(59);
 	var Winner_1 = __webpack_require__(60);
 	var Win_1 = __webpack_require__(61);
 	var St_1 = __webpack_require__(64);
 	var SpriteGroup_1 = __webpack_require__(62);
-	var JsFunc_1 = __webpack_require__(23);
-	var const_1 = __webpack_require__(29);
+	var JsFunc_1 = __webpack_require__(21);
+	var const_1 = __webpack_require__(27);
 	var TweenEx_1 = __webpack_require__(57);
 	var Fx_1 = __webpack_require__(63);
 	var PixiEx_1 = __webpack_require__(56);
@@ -3815,8 +4049,8 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var JsFunc_1 = __webpack_require__(23);
-	var const_1 = __webpack_require__(29);
+	var JsFunc_1 = __webpack_require__(21);
+	var const_1 = __webpack_require__(27);
 	var TimerState = {
 	    PAUSE: 0,
 	    RUNNING: 1
@@ -3916,7 +4150,7 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var TweenEx_1 = __webpack_require__(57);
 	var PixiEx_1 = __webpack_require__(56);
 	var Winner = (function (_super) {
@@ -4010,12 +4244,12 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var TextTimer_1 = __webpack_require__(59);
-	var HupuAPI_1 = __webpack_require__(26);
-	var JsFunc_1 = __webpack_require__(23);
+	var HupuAPI_1 = __webpack_require__(24);
+	var JsFunc_1 = __webpack_require__(21);
 	var SpriteGroup_1 = __webpack_require__(62);
 	var PixiEx_1 = __webpack_require__(56);
 	var TweenEx_1 = __webpack_require__(57);
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var WinTeam = (function (_super) {
 	    __extends(WinTeam, _super);
 	    function WinTeam(parent) {
@@ -4407,8 +4641,8 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var HupuAPI_1 = __webpack_require__(26);
-	var const_1 = __webpack_require__(29);
+	var HupuAPI_1 = __webpack_require__(24);
+	var const_1 = __webpack_require__(27);
 	var SpriteGroup_1 = __webpack_require__(62);
 	var PixiEx_1 = __webpack_require__(56);
 	var St = (function (_super) {
@@ -4521,7 +4755,7 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var TweenEx_1 = __webpack_require__(57);
 	var Order_1 = __webpack_require__(66);
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var Fx_1 = __webpack_require__(63);
 	var PixiEx_1 = __webpack_require__(56);
 	var PickupAnimation = (function () {
@@ -4829,7 +5063,7 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var Pickup_1 = __webpack_require__(67);
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var PixiEx_1 = __webpack_require__(56);
 	var OrderScene = (function (_super) {
 	    __extends(OrderScene, _super);
@@ -4961,8 +5195,8 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var TweenEx_1 = __webpack_require__(57);
-	var HupuAPI_1 = __webpack_require__(26);
-	var const_1 = __webpack_require__(29);
+	var HupuAPI_1 = __webpack_require__(24);
+	var const_1 = __webpack_require__(27);
 	var Fx_1 = __webpack_require__(63);
 	var PixiEx_1 = __webpack_require__(56);
 	var PickupPlayerInfo = (function () {
@@ -5146,8 +5380,8 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var EventDispatcher_1 = __webpack_require__(37);
-	var const_1 = __webpack_require__(29);
+	var EventDispatcher_1 = __webpack_require__(35);
+	var const_1 = __webpack_require__(27);
 	var BasePanelView = (function (_super) {
 	    __extends(BasePanelView, _super);
 	    function BasePanelView(pid) {
@@ -5201,10 +5435,10 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var Command_1 = __webpack_require__(30);
+	var Command_1 = __webpack_require__(28);
 	var BasePanelView_1 = __webpack_require__(68);
-	var const_1 = __webpack_require__(29);
-	var VueBase_1 = __webpack_require__(24);
+	var const_1 = __webpack_require__(27);
+	var VueBase_1 = __webpack_require__(22);
 	var StudioPanel_1 = __webpack_require__(71);
 	var StageStudio = (function (_super) {
 	    __extends(StageStudio, _super);
@@ -5356,11 +5590,11 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var FrameFx_1 = __webpack_require__(72);
 	var ImgLoader_1 = __webpack_require__(73);
-	var JsFunc_1 = __webpack_require__(23);
+	var JsFunc_1 = __webpack_require__(21);
 	var PopupView_1 = __webpack_require__(74);
 	var WebDBCmd_1 = __webpack_require__(75);
 	var Commentator_1 = __webpack_require__(76);
-	var HupuAPI_1 = __webpack_require__(26);
+	var HupuAPI_1 = __webpack_require__(24);
 	var LiveComing_1 = __webpack_require__(79);
 	var StudioPanel = (function (_super) {
 	    __extends(StudioPanel, _super);
@@ -5498,7 +5732,7 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var JsFunc_1 = __webpack_require__(23);
+	var JsFunc_1 = __webpack_require__(21);
 	var FramesFx = (function (_super) {
 	    __extends(FramesFx, _super);
 	    function FramesFx(imgUrlBase, from, to, numPad) {
@@ -5691,7 +5925,7 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var PixiEx_1 = __webpack_require__(56);
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var TextFac_1 = __webpack_require__(77);
 	var Commentator = (function (_super) {
 	    __extends(Commentator, _super);
@@ -5768,9 +6002,9 @@
 	        if (this.parent)
 	            this.parent.removeChild(this);
 	    };
-	    Commentator.class = 'Commentator';
 	    return Commentator;
 	}(PIXI.Container));
+	Commentator.class = 'Commentator';
 	exports.Commentator = Commentator;
 
 
@@ -5865,7 +6099,7 @@
 
 	"use strict";
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	function _mkGroup(parameters) {
 	    var x = parameters.x;
 	    var y = parameters.y;
@@ -5929,11 +6163,11 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var PixiEx_1 = __webpack_require__(56);
-	var HupuAPI_1 = __webpack_require__(26);
+	var HupuAPI_1 = __webpack_require__(24);
 	var ImgLoader_1 = __webpack_require__(73);
 	var TextFac_1 = __webpack_require__(77);
-	var const_1 = __webpack_require__(29);
-	var JsFunc_1 = __webpack_require__(23);
+	var const_1 = __webpack_require__(27);
+	var JsFunc_1 = __webpack_require__(21);
 	var TextTimer_1 = __webpack_require__(59);
 	var LiveComing = (function (_super) {
 	    __extends(LiveComing, _super);
@@ -6101,17 +6335,17 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var ImgLoader_1 = __webpack_require__(73);
 	var timers_1 = __webpack_require__(82);
-	var Command_1 = __webpack_require__(30);
-	var const_1 = __webpack_require__(29);
-	var HupuAPI_1 = __webpack_require__(26);
-	var JsFunc_1 = __webpack_require__(23);
-	var VueBase_1 = __webpack_require__(24);
-	var WebJsFunc_1 = __webpack_require__(27);
+	var Command_1 = __webpack_require__(28);
+	var const_1 = __webpack_require__(27);
+	var HupuAPI_1 = __webpack_require__(24);
+	var JsFunc_1 = __webpack_require__(21);
+	var VueBase_1 = __webpack_require__(22);
+	var WebJsFunc_1 = __webpack_require__(25);
 	var BasePanelView_1 = __webpack_require__(68);
 	var BracketView_1 = __webpack_require__(85);
 	var RankView_1 = __webpack_require__(88);
 	var ScoreView_1 = __webpack_require__(92);
-	var GroupSp2_1 = __webpack_require__(111);
+	var GroupSp2_1 = __webpack_require__(113);
 	var WebDBCmd_1 = __webpack_require__(75);
 	var rankView;
 	var bracketView;
@@ -6124,7 +6358,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(113);
+	        _this.template = __webpack_require__(115);
 	        _this.actTab = VueBase_1.VueBase.PROP;
 	        _this.gameId = VueBase_1.VueBase.String;
 	        _this.isOp = VueBase_1.VueBase.PROP;
@@ -6624,18 +6858,15 @@
 /* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
-	            (typeof self !== "undefined" && self) ||
-	            window;
 	var apply = Function.prototype.apply;
 	
 	// DOM APIs, for completeness
 	
 	exports.setTimeout = function() {
-	  return new Timeout(apply.call(setTimeout, scope, arguments), clearTimeout);
+	  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
 	};
 	exports.setInterval = function() {
-	  return new Timeout(apply.call(setInterval, scope, arguments), clearInterval);
+	  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
 	};
 	exports.clearTimeout =
 	exports.clearInterval = function(timeout) {
@@ -6650,7 +6881,7 @@
 	}
 	Timeout.prototype.unref = Timeout.prototype.ref = function() {};
 	Timeout.prototype.close = function() {
-	  this._clearFn.call(scope, this._id);
+	  this._clearFn.call(window, this._id);
 	};
 	
 	// Does not start the time, just sets up the members needed.
@@ -6678,17 +6909,9 @@
 	
 	// setimmediate attaches itself to the global object
 	__webpack_require__(83);
-	// On some exotic environments, it's not clear which object `setimmediate` was
-	// able to install onto.  Search each possibility in the same order as the
-	// `setimmediate` library.
-	exports.setImmediate = (typeof self !== "undefined" && self.setImmediate) ||
-	                       (typeof global !== "undefined" && global.setImmediate) ||
-	                       (this && this.setImmediate);
-	exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
-	                         (typeof global !== "undefined" && global.clearImmediate) ||
-	                         (this && this.clearImmediate);
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+	exports.setImmediate = setImmediate;
+	exports.clearImmediate = clearImmediate;
+
 
 /***/ }),
 /* 83 */
@@ -7089,10 +7312,10 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var Command_1 = __webpack_require__(30);
-	var HupuAPI_1 = __webpack_require__(26);
+	var Command_1 = __webpack_require__(28);
+	var HupuAPI_1 = __webpack_require__(24);
 	var BasePanelView_1 = __webpack_require__(68);
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var BracketGroup_1 = __webpack_require__(78);
 	var Bracket2018_1 = __webpack_require__(86);
 	var BracketView = (function (_super) {
@@ -7269,7 +7492,7 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var BracketGroup_1 = __webpack_require__(78);
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var PixiEx_1 = __webpack_require__(56);
 	var BracketPlayerV3_1 = __webpack_require__(87);
 	var isTest = false;
@@ -7514,7 +7737,7 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var TextFac_1 = __webpack_require__(77);
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var BracketPlayerV3 = (function (_super) {
 	    __extends(BracketPlayerV3, _super);
 	    function BracketPlayerV3(isLeft, alignArr) {
@@ -7578,10 +7801,10 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var PlayerInfo_1 = __webpack_require__(89);
 	var BasePanelView_1 = __webpack_require__(68);
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var FTInfo_1 = __webpack_require__(91);
 	var PixiEx_1 = __webpack_require__(56);
-	var JsFunc_1 = __webpack_require__(23);
+	var JsFunc_1 = __webpack_require__(21);
 	var RankView = (function (_super) {
 	    __extends(RankView, _super);
 	    function RankView($opView, stage) {
@@ -8080,14 +8303,14 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var Event2017_1 = __webpack_require__(93);
-	var home_1 = __webpack_require__(22);
-	var Command_1 = __webpack_require__(30);
-	var const_1 = __webpack_require__(29);
-	var HupuAPI_1 = __webpack_require__(26);
+	var home_1 = __webpack_require__(20);
+	var Command_1 = __webpack_require__(28);
+	var const_1 = __webpack_require__(27);
+	var HupuAPI_1 = __webpack_require__(24);
 	var TweenEx_1 = __webpack_require__(57);
 	var BasePanelView_1 = __webpack_require__(68);
-	var Score2018v3_1 = __webpack_require__(107);
-	var WorldWarView_1 = __webpack_require__(108);
+	var Score2018v3_1 = __webpack_require__(109);
+	var WorldWarView_1 = __webpack_require__(110);
 	function logEvent() {
 	    var a = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
@@ -8474,8 +8697,8 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var ScoreRank_1 = __webpack_require__(94);
-	var const_1 = __webpack_require__(29);
-	var JsFunc_1 = __webpack_require__(23);
+	var const_1 = __webpack_require__(27);
+	var JsFunc_1 = __webpack_require__(21);
 	var PixiEx_1 = __webpack_require__(56);
 	var TweenEx_1 = __webpack_require__(57);
 	var BracketGroup_1 = __webpack_require__(78);
@@ -8491,7 +8714,7 @@
 	var RollText_1 = __webpack_require__(104);
 	var RankSection_1 = __webpack_require__(105);
 	var TagFx_1 = __webpack_require__(106);
-	var Pick8_1 = __webpack_require__(128);
+	var Pick8_1 = __webpack_require__(107);
 	var Event2017 = (function (_super) {
 	    __extends(Event2017, _super);
 	    function Event2017(stage, isDark) {
@@ -8796,7 +9019,7 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var ImgLoader_1 = __webpack_require__(73);
 	var TextFac_1 = __webpack_require__(77);
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var PixiEx_1 = __webpack_require__(56);
 	var PlayerItem = (function (_super) {
 	    __extends(PlayerItem, _super);
@@ -8955,8 +9178,8 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var JsFunc_1 = __webpack_require__(23);
-	var const_1 = __webpack_require__(29);
+	var JsFunc_1 = __webpack_require__(21);
+	var const_1 = __webpack_require__(27);
 	var PixiEx_1 = __webpack_require__(56);
 	var TweenEx_1 = __webpack_require__(57);
 	var Champion = (function (_super) {
@@ -9114,7 +9337,7 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var Com2017_1 = __webpack_require__(96);
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var PixiEx_1 = __webpack_require__(56);
 	var Group = (function (_super) {
 	    __extends(Group, _super);
@@ -9213,7 +9436,7 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var JsFunc_1 = __webpack_require__(23);
+	var JsFunc_1 = __webpack_require__(21);
 	var LogoFx = (function (_super) {
 	    __extends(LogoFx, _super);
 	    function LogoFx() {
@@ -9261,7 +9484,7 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var PixiEx_1 = __webpack_require__(56);
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var NoticeSprite = (function (_super) {
 	    __extends(NoticeSprite, _super);
 	    function NoticeSprite() {
@@ -9341,7 +9564,7 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var JsFunc_1 = __webpack_require__(23);
+	var JsFunc_1 = __webpack_require__(21);
 	var ScoreFx = (function (_super) {
 	    __extends(ScoreFx, _super);
 	    function ScoreFx() {
@@ -9393,7 +9616,7 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var PixiEx_1 = __webpack_require__(56);
-	var HupuAPI_1 = __webpack_require__(26);
+	var HupuAPI_1 = __webpack_require__(24);
 	var TopInfo = (function (_super) {
 	    __extends(TopInfo, _super);
 	    function TopInfo(parent) {
@@ -9447,8 +9670,8 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var const_1 = __webpack_require__(29);
-	var JsFunc_1 = __webpack_require__(23);
+	var const_1 = __webpack_require__(27);
+	var JsFunc_1 = __webpack_require__(21);
 	var PixiEx_1 = __webpack_require__(56);
 	var TweenEx_1 = __webpack_require__(57);
 	var FrameFx_1 = __webpack_require__(72);
@@ -9585,9 +9808,9 @@
 	        if (this.parent)
 	            this.parent.removeChild(this);
 	    };
-	    Winner.class = 'Victory';
 	    return Winner;
 	}(PIXI.Container));
+	Winner.class = 'Victory';
 	exports.Winner = Winner;
 
 
@@ -9609,9 +9832,9 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var PixiEx_1 = __webpack_require__(56);
 	var ImgLoader_1 = __webpack_require__(73);
-	var const_1 = __webpack_require__(29);
-	var JsFunc_1 = __webpack_require__(23);
-	var HupuAPI_1 = __webpack_require__(26);
+	var const_1 = __webpack_require__(27);
+	var JsFunc_1 = __webpack_require__(21);
+	var HupuAPI_1 = __webpack_require__(24);
 	var BracketGroup_1 = __webpack_require__(78);
 	var TextFac_1 = __webpack_require__(77);
 	var Tab2 = (function (_super) {
@@ -9787,9 +10010,9 @@
 	        if (this.parent)
 	            this.parent.removeChild(this);
 	    };
-	    Top5.class = 'Top5';
 	    return Top5;
 	}(PIXI.Container));
+	Top5.class = 'Top5';
 	exports.Top5 = Top5;
 
 
@@ -9809,7 +10032,7 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var PixiEx_1 = __webpack_require__(56);
 	var TweenEx_1 = __webpack_require__(57);
 	var RollText = (function (_super) {
@@ -9849,9 +10072,9 @@
 	        console.log('hide roll text');
 	        TweenEx_1.TweenEx.to(this, 200, { alpha: 0 });
 	    };
-	    RollText.class = 'RollText';
 	    return RollText;
 	}(PIXI.Container));
+	RollText.class = 'RollText';
 	exports.RollText = RollText;
 
 
@@ -9873,9 +10096,9 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var PixiEx_1 = __webpack_require__(56);
 	var ImgLoader_1 = __webpack_require__(73);
-	var const_1 = __webpack_require__(29);
-	var JsFunc_1 = __webpack_require__(23);
-	var HupuAPI_1 = __webpack_require__(26);
+	var const_1 = __webpack_require__(27);
+	var JsFunc_1 = __webpack_require__(21);
+	var HupuAPI_1 = __webpack_require__(24);
 	var BracketGroup_1 = __webpack_require__(78);
 	var Tab2 = (function (_super) {
 	    __extends(Tab2, _super);
@@ -10076,9 +10299,9 @@
 	        if (this.parent)
 	            this.parent.removeChild(this);
 	    };
-	    RankSection.class = 'Top5';
 	    return RankSection;
 	}(PIXI.Container));
+	RankSection.class = 'Top5';
 	exports.RankSection = RankSection;
 
 
@@ -10101,7 +10324,7 @@
 	var PixiEx_1 = __webpack_require__(56);
 	var ImgLoader_1 = __webpack_require__(73);
 	var TextFac_1 = __webpack_require__(77);
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var TweenEx_1 = __webpack_require__(57);
 	var TagFx = (function (_super) {
 	    __extends(TagFx, _super);
@@ -10225,9 +10448,151 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var PixiEx_1 = __webpack_require__(56);
+	var ImgLoader_1 = __webpack_require__(73);
+	var BasePanel_1 = __webpack_require__(108);
 	var TextFac_1 = __webpack_require__(77);
-	var const_1 = __webpack_require__(29);
-	var JsFunc_1 = __webpack_require__(23);
+	var const_1 = __webpack_require__(27);
+	var Pick8 = (function (_super) {
+	    __extends(Pick8, _super);
+	    function Pick8(parent) {
+	        var _this = _super.call(this, parent) || this;
+	        _this.isLoaded = false;
+	        var url_bg = '/img/panel/worldwar/pick8/bg.png';
+	        ImgLoader_1.imgLoader.loadTexArr([url_bg], function (_) {
+	            var bg = PixiEx_1.newBitmap({ url: url_bg });
+	            _this.addChild(bg);
+	            _this.vsPlayerArr = [];
+	            var ps = {
+	                fontFamily: const_1.FontName.MicrosoftYahei,
+	                fontSize: "28px",
+	                fill: "#aaa"
+	            };
+	            var x1 = 420, y1 = 853, x2 = 1185 - 47;
+	            for (var i = 0; i < 8; i++) {
+	                var lPlayerText = TextFac_1.TextFac.new_(ps, _this);
+	                var rPlayerText = TextFac_1.TextFac.new_(ps, _this);
+	                if (i < 4) {
+	                    lPlayerText.setPos(x1, y1 + i * 48).alignRight = 558;
+	                    rPlayerText.setPos(x1 + 170, y1 + i * 48);
+	                }
+	                else {
+	                    lPlayerText.setPos(x2, y1 + (i - 4) * 48).alignRight = 1280;
+	                    rPlayerText.setPos(x2 + 170, y1 + (i - 4) * 48);
+	                }
+	                _this.vsPlayerArr.push([lPlayerText, rPlayerText]);
+	            }
+	            _this.isLoaded = true;
+	            if (_this.tmpData) {
+	                _this.show(_this.tmpData);
+	                _this.tmpData = null;
+	            }
+	        });
+	        return _this;
+	    }
+	    Pick8.prototype.test = function () {
+	        this.show({
+	            playerArr: [
+	                [{ name: '郝天吉' }, { name: "TBD" }],
+	                [{ name: '郝天吉' }, { name: "TBD" }],
+	                [{ name: '郝天吉' }, { name: "TBD" }],
+	                [{ name: '郝天吉' }, { name: "TBD" }],
+	                [{ name: '郝天吉' }, { name: "TBD" }],
+	                [{ name: '郝天吉' }, { name: "TBD" }],
+	                [{ name: '郝天吉' }, { name: "TBD" }],
+	                [{ name: '郝天吉' }, { name: "TBD" }],
+	            ]
+	        });
+	    };
+	    Pick8.prototype.show = function (data) {
+	        if (this.isLoaded) {
+	            _super.prototype.show.call(this, data);
+	            for (var i = 0; i < this.vsPlayerArr.length; i++) {
+	                var playerTextArr = this.vsPlayerArr[i];
+	                playerTextArr[0].setText(data.playerArr[i][0].name)
+	                    .setAlignRight();
+	                playerTextArr[1].setText("vs    " + data.playerArr[i][1].name);
+	            }
+	        }
+	        else
+	            this.tmpData = data;
+	    };
+	    return Pick8;
+	}(BasePanel_1.BasePanel));
+	exports.Pick8 = Pick8;
+	var Pick8Layer = (function () {
+	    function Pick8Layer() {
+	    }
+	    Pick8Layer.get = function (parent) {
+	        if (!window[Pick8Layer.cls])
+	            window[Pick8Layer.cls] = new Pick8(parent);
+	        return window[Pick8Layer.cls];
+	    };
+	    return Pick8Layer;
+	}());
+	Pick8Layer.cls = 'Pick8';
+	exports.Pick8Layer = Pick8Layer;
+
+
+/***/ }),
+/* 108 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var ImgLoader_1 = __webpack_require__(73);
+	var BasePanel = (function (_super) {
+	    __extends(BasePanel, _super);
+	    function BasePanel(parent) {
+	        var _this = _super.call(this) || this;
+	        _this.p = parent;
+	        return _this;
+	    }
+	    BasePanel.prototype.load = function (imgArr, callback) {
+	        ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
+	        });
+	    };
+	    BasePanel.prototype.show = function (data) {
+	        this.p.addChild(this);
+	    };
+	    BasePanel.prototype.hide = function (data) {
+	        if (this.parent)
+	            this.parent.removeChild(this);
+	    };
+	    return BasePanel;
+	}(PIXI.Container));
+	exports.BasePanel = BasePanel;
+
+
+/***/ }),
+/* 109 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var PixiEx_1 = __webpack_require__(56);
+	var TextFac_1 = __webpack_require__(77);
+	var const_1 = __webpack_require__(27);
+	var JsFunc_1 = __webpack_require__(21);
 	var TextTimer_1 = __webpack_require__(59);
 	var ImgLoader_1 = __webpack_require__(73);
 	var loadAvt = function (avtSp, url, left) {
@@ -10512,7 +10877,7 @@
 
 
 /***/ }),
-/* 108 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -10527,10 +10892,10 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var Command_1 = __webpack_require__(30);
+	var Command_1 = __webpack_require__(28);
 	var TweenEx_1 = __webpack_require__(57);
-	var WorldWar_1 = __webpack_require__(109);
-	var Pick8_1 = __webpack_require__(128);
+	var WorldWar_1 = __webpack_require__(111);
+	var Pick8_1 = __webpack_require__(107);
 	var WorldWarView = (function (_super) {
 	    __extends(WorldWarView, _super);
 	    function WorldWarView(stage, io) {
@@ -10539,18 +10904,6 @@
 	        TweenEx_1.TweenEx.delayedCall(1200, function (_) {
 	            _this.worldWar = new WorldWar_1.WorldWar();
 	            _this.stage.addChild(_this.worldWar);
-	            Pick8_1.Pick8Layer.get(_this.stage).show({
-	                playerArr: [
-	                    [{ name: '郝天吉' }, { name: "TBD" }],
-	                    [{ name: '郝天吉' }, { name: "TBD" }],
-	                    [{ name: '郝天吉' }, { name: "TBD" }],
-	                    [{ name: '郝天吉' }, { name: "TBD" }],
-	                    [{ name: '郝天吉' }, { name: "TBD" }],
-	                    [{ name: '郝天吉' }, { name: "TBD" }],
-	                    [{ name: '郝天吉' }, { name: "TBD" }],
-	                    [{ name: '郝天吉' }, { name: "TBD" }],
-	                ]
-	            });
 	        });
 	        io.on(Command_1.CommandId.sc_timerEvent, function (data) {
 	            console.log("sc_timerEvent", data);
@@ -10566,6 +10919,32 @@
 	            _this.worldWar.setLeftFoul(data.lFoul);
 	            _this.worldWar.setRightFoul(data.rFoul);
 	        })
+	            .on("sc_data", function (data) {
+	            if (data.dbIdx == 'worldwar') {
+	                var playerArr = [];
+	                var playerMap = data.playerMap;
+	                var recArr = data.recMap['#1'].rec
+	                    .concat(data.recMap['#2'].rec);
+	                for (var i = 0; i < recArr.length; i++) {
+	                    var rec = recArr[i];
+	                    var lPlayer = rec.player[0];
+	                    var rPlayer = rec.player[1];
+	                    var lp = void 0, rp = void 0;
+	                    if (!playerMap[lPlayer])
+	                        lp = { name: "TBD" };
+	                    else
+	                        lp = playerMap[lPlayer];
+	                    if (!playerMap[rPlayer])
+	                        rp = { name: "TBD" };
+	                    else
+	                        rp = playerMap[rPlayer];
+	                    playerArr.push([lp, rp]);
+	                }
+	                Pick8_1.Pick8Layer.get(_this.stage).show({
+	                    playerArr: playerArr
+	                });
+	            }
+	        })
 	            .on(Command_1.CommandId.sc_setBlood, function (data) {
 	            console.log("sc_setBlood", data);
 	            _this.worldWar.setBloodByDtScore(data);
@@ -10578,7 +10957,7 @@
 
 
 /***/ }),
-/* 109 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -10595,9 +10974,9 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var PixiEx_1 = __webpack_require__(56);
 	var TextFac_1 = __webpack_require__(77);
-	var const_1 = __webpack_require__(29);
+	var const_1 = __webpack_require__(27);
 	var TextTimer_1 = __webpack_require__(59);
-	var BloodBar_1 = __webpack_require__(110);
+	var BloodBar_1 = __webpack_require__(112);
 	var isTest = true;
 	var _c = function (v) {
 	    return 960 + v;
@@ -10728,7 +11107,7 @@
 
 
 /***/ }),
-/* 110 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -10781,7 +11160,7 @@
 
 
 /***/ }),
-/* 111 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -10797,9 +11176,9 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var PixiEx_1 = __webpack_require__(56);
-	var const_1 = __webpack_require__(29);
-	var HupuAPI_1 = __webpack_require__(26);
-	var thenBy_1 = __webpack_require__(112);
+	var const_1 = __webpack_require__(27);
+	var HupuAPI_1 = __webpack_require__(24);
+	var thenBy_1 = __webpack_require__(114);
 	var ImgLoader_1 = __webpack_require__(73);
 	var BracketGroup_1 = __webpack_require__(78);
 	var TextFac_1 = __webpack_require__(77);
@@ -11095,7 +11474,7 @@
 
 
 /***/ }),
-/* 112 */
+/* 114 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -11133,417 +11512,10 @@
 
 
 /***/ }),
-/* 113 */
+/* 115 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告 MISC</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒 timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 30px;font-family: 'NotoSansHans-Regular'\">\r\n               {{lLiveName}}  vs {{rLiveName}} \r\n                <br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(false)\">隐藏所有</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(true)\">显示所有</button>\r\n            <br>时间控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">设定时间(秒)</button>\r\n\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            </p>\r\n            比分控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onUpdateScore(true ,panelTime2Set)\">蓝方比分</button>\r\n            <button class=\"button\" @click=\"onUpdateScore(false,panelTime2Set)\">红方比分</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(true)\">切换攻守</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(false)\">隐藏</button>\r\n            <br>\r\n\r\n            <button class=\"button\" @click=\"onUpdateFoul(true ,panelTime2Set)\">蓝方犯规</button>\r\n            <button class=\"button\" @click=\"onUpdateFoul(false,panelTime2Set)\">红方犯规</button>\r\n\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">修改并显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,'')\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <!-- <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button> -->\r\n\r\n            <label class=\"label\">  赛区实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,1)\">东南 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,2)\">东北 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,3)\">西方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,4)\">南方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,0)\">首页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,2,0)\">上一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,3,0)\">下一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <label class=\"label\">  八强面板:</label><br>\r\n            <button class=\"button\" @click=\"onBracketShow(1)\">第一页 八进四</button>\r\n            <button class=\"button\" @click=\"onBracketShow(2)\">第二页</button>\r\n\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <div v-if=1 class='column is-one-quarter' style=\"position: fixed;top: 260px;right: 10px;\">\r\n                <input class=\"input\" type=\"text\" style=\"width: 30px;\" v-model=\"gameTitleType\">1 '8进4' 2 '4进2' 3 '2进1'\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"蓝方名字-红方名字\" style=\"width: 300px;\" v-model=\"vsPlayer\">\r\n                <button class=\"button\" @click=\"onSetPlayer(vsPlayer,gameTitleType)\">设置球员</button>\r\n                <br> <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button>蓝方: <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button> 比分\r\n                <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>:红方<button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n                <br><br> <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button>-----\r\n                <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button> 犯规\r\n                <button class=\"button\" @click=\"onAddFoul(false,+1)\">+1</button>-----<button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"'>\r\n        <div v-if='isRmOp||isOp' style=\"position: absolute;left: 100px;top:260px;width: 800px\">\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                        正常\r\n                    </label>\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                        加粗\r\n                    </label>\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onNoticePresets('network')\">网络故障 模版</button>\r\n            <br>\r\n            <div v-for=\"(n,idx) in noticeHistory\">\r\n                <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n            </div>\r\n\r\n            滚动文字：\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"inputRollText\">\r\n            <br>\r\n\r\n            <!-- <el-input v-model=\"inputRollText\" style=\"width:250px\"></el-input> -->\r\n            <button class=\"button\" @click='showRollText(inputRollText,true)'>发送</button>\r\n            <button class=\"button\" @click='showRollText(inputRollText,false)'>隐藏</button>\r\n            <br> 主播面板:\r\n            <br>\r\n            <button class=\"button\" @click='showCommentator(true,1)'>显示主播</button>\r\n            <button class=\"button\" @click='showCommentator(true,2)'>显示主播 合并</button>\r\n            <button class=\"button\" @click='showCommentator(false)'>隐藏</button>\r\n            <br>图片:\r\n            <br>\r\n            <button class=\"button\" @click='showStaticImage(true,1)'>微信小程序</button>\r\n            <button class=\"button\" @click='showStaticImage(false,1)'>隐藏</button>\r\n\r\n            <label class=\"label\">  脉动广告:</label><br>\r\n            <button class=\"button\" @click=\"onShowFx(true,1)\">转瓶</button>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n        </div>\r\n    </div>\r\n\r\n</div>";
-
-/***/ }),
-/* 114 */,
-/* 115 */,
-/* 116 */,
-/* 117 */,
-/* 118 */,
-/* 119 */,
-/* 120 */,
-/* 121 */,
-/* 122 */,
-/* 123 */,
-/* 124 */,
-/* 125 */,
-/* 126 */
-/***/ (function(module, exports) {
-
-	module.exports = "<div class=\"container\">\r\n\r\n    <span class=\"select\">\r\n            <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                    {{ option.text }}\r\n                </option>\r\n            </select>\r\n        </span>\r\n\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n\r\n    <div>\r\n        <br> score rank:\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onReloadShow()\">reload show</button>\r\n        <button class=\"button is-primary\" @click=\"onSetPlayerDeactive()\">set player deactive</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,-1)\">L-1</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,1)\">L+1</button> ----------\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,1)\">R+1</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,-1)\">R-1</button>\r\n        <br>\r\n\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in blueArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <hr>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in redArr\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n\r\n    </div>\r\n</div>";
-
-/***/ }),
-/* 127 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var VueBase_1 = __webpack_require__(24);
-	var const_1 = __webpack_require__(29);
-	var Command_1 = __webpack_require__(30);
-	var JsFunc_1 = __webpack_require__(23);
-	var confFile = null;
-	var reader;
-	var filesInput;
-	var opReq = function (cmdId, param) {
-	    param._ = null;
-	    $.ajax({
-	        url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
-	        type: 'post',
-	        data: JSON.stringify(param),
-	        headers: { "Content-Type": "application/json" },
-	        dataType: 'json'
-	    });
-	};
-	var _exData;
-	var playerCount = 4;
-	var _ScoreRankAdmin = (function (_super) {
-	    __extends(_ScoreRankAdmin, _super);
-	    function _ScoreRankAdmin() {
-	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(126);
-	        _this.selected = VueBase_1.VueBase.PROP;
-	        _this.options = VueBase_1.VueBase.PROP;
-	        _this.gameConf = VueBase_1.VueBase.PROP;
-	        _this.vsPlayer = VueBase_1.VueBase.PROP;
-	        _this.vsPlayerArr = VueBase_1.VueBase.PROP;
-	        _this.redArr = VueBase_1.VueBase.PROP;
-	        _this.blueArr = VueBase_1.VueBase.PROP;
-	        _this.lPlayer = VueBase_1.VueBase.PROP;
-	        _this.rPlayer = VueBase_1.VueBase.PROP;
-	        _this.lastScoreArr = VueBase_1.VueBase.PROP;
-	        _this.methods = {
-	            onReloadShow: function () {
-	                var _this = this;
-	                this.reloadFile(null, {
-	                    callback: function (_) {
-	                        _this.onShowScoreRank(true);
-	                    }
-	                });
-	            },
-	            onSelectGame: function () {
-	                console.log('on init game', this.selected);
-	                var playerMap = this.gameConf.playerMap;
-	                var recArr = this.gameConf.rec;
-	                for (var i = 0; i < recArr.length; i++) {
-	                    var rec = recArr[i];
-	                    if (rec.idx == this.selected) {
-	                        var p1 = rec.player[0];
-	                        var p2 = rec.player[1];
-	                        this.vsPlayer = p1 + ' ' + p2;
-	                        return;
-	                    }
-	                }
-	            },
-	            onChangePlayer: function (isBlue, playerId) {
-	                isBlue ? this.vsPlayerArr[0] = playerId : this.vsPlayerArr[1] = playerId;
-	                this.vsPlayer = this.vsPlayerArr.join(" ");
-	            },
-	            onAddScore: function (isLeft, dtScore) {
-	                this.onShowScoreRank(true, dtScore, isLeft);
-	                opReq("" + Command_1.CommandId.cs_updateScore, { dtScore: dtScore, isLeft: isLeft });
-	            },
-	            onInitGame: function () {
-	                console.log('init game');
-	                var playerMap = this.gameConf.playerMap;
-	                var a = this.vsPlayer.split(' ');
-	                var p1 = a[0];
-	                var p2 = a[1];
-	                p1 = playerMap[p1];
-	                p2 = playerMap[p2];
-	                p1.avatar = this.gameConf.avatarUrlBase + p1.playerId + '.png';
-	                p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png';
-	                this.lPlayer = p1;
-	                this.rPlayer = p2;
-	                opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2 });
-	            },
-	            onSetPlayerDeactive: function () {
-	                this.vsPlayer = '';
-	                this.onShowScoreRank(true);
-	            },
-	            onShowScoreRank: function (visible) {
-	                var scoreArr = [];
-	                var isInitScoreArr = false;
-	                var scoreFx = 0;
-	                if (!this.lastScoreArr) {
-	                    this.lastScoreArr = [0, 0, 0, 0, 0];
-	                    isInitScoreArr = true;
-	                }
-	                var a = this.vsPlayer.split(' ');
-	                var p1 = a[0];
-	                var p2 = a[1];
-	                for (var i = 0; i < this.gameConf.scoreRank.length; i++) {
-	                    var a_1 = this.gameConf.scoreRank[i][0].split('_');
-	                    var pn = a_1[0];
-	                    var player = this.gameConf.playerMap[pn];
-	                    var scoreFxItem = {
-	                        score: this.gameConf.scoreRank[i][1],
-	                        name: player.name,
-	                        isSmall: true,
-	                        scoreFx: 0,
-	                        avatar: this.gameConf.avatarUrlBase + player.playerId + '.png'
-	                    };
-	                    if (isInitScoreArr)
-	                        this.lastScoreArr[i] = scoreFxItem.score;
-	                    scoreFx = scoreFxItem.score - this.lastScoreArr[i];
-	                    this.lastScoreArr[i] = scoreFxItem.score;
-	                    if (pn == p1) {
-	                        scoreFxItem.scoreFx = scoreFx;
-	                        scoreFxItem.isSmall = false;
-	                        opReq("" + Command_1.CommandId.cs_updateScore, { score: scoreFxItem.score, isLeft: true });
-	                    }
-	                    else if (pn == p2) {
-	                        scoreFxItem.scoreFx = scoreFx;
-	                        scoreFxItem.isSmall = false;
-	                        opReq("" + Command_1.CommandId.cs_updateScore, { score: scoreFxItem.score, isLeft: false });
-	                    }
-	                    scoreArr.push(scoreFxItem);
-	                }
-	                scoreArr = scoreArr.sort(JsFunc_1.descendingProp('score'));
-	                opReq(Command_1.CommandId.cs_showScoreRank, {
-	                    visible: visible,
-	                    scoreArr: scoreArr
-	                });
-	            },
-	            onFile: function () {
-	                if (!confFile) {
-	                    if (!filesInput)
-	                        filesInput = document.getElementById("files");
-	                    filesInput.addEventListener("change", function (evt) {
-	                        confFile = evt.target.files[0];
-	                        document.getElementById("reloadFile").click();
-	                    }, false);
-	                }
-	                document.getElementById("files").click();
-	            },
-	            reloadFile: function (e, exData) {
-	                var _this = this;
-	                var _ = function (d) {
-	                    return d.getMinutes() + 'm' + d.getSeconds() + 's';
-	                };
-	                console.log("exData", exData);
-	                _exData = exData;
-	                if (!reader) {
-	                    reader = new FileReader();
-	                    reader.addEventListener("load", function (event) {
-	                        var data = JSON.parse(event.target['result']);
-	                        data._ = null;
-	                        if (_exData) {
-	                            for (var k in _exData) {
-	                                console.log('exData', k);
-	                                data[k] = _exData[k];
-	                            }
-	                            if (_exData.callback)
-	                                _exData.callback();
-	                        }
-	                        _this.createOption(data);
-	                        console.log("EVENT_ON_FILE", data, _exData);
-	                        opReq('cs_data', data);
-	                    });
-	                }
-	                reader.readAsText(confFile, "utf-8");
-	            },
-	        };
-	        VueBase_1.VueBase.initProps(_this);
-	        return _this;
-	    }
-	    _ScoreRankAdmin.prototype.created = function () {
-	        console.log('Game admin');
-	        this.blueArr = [];
-	        this.redArr = [];
-	        this.vsPlayerArr = [];
-	    };
-	    _ScoreRankAdmin.prototype.createOption = function (data) {
-	        var a = [];
-	        var playerMap = data.playerMap;
-	        this.gameConf = data;
-	        this.blueArr = [];
-	        this.redArr = [];
-	        for (var i = 0; i < this.gameConf.scoreRank.length; i++) {
-	            var a_2 = this.gameConf.scoreRank[i][0].split('_');
-	            var pn = a_2[0];
-	            var player = data.playerMap[pn];
-	            this.blueArr.push(player);
-	            this.redArr.push(player);
-	        }
-	        console.log('create gameConf ', this.gameConf);
-	    };
-	    _ScoreRankAdmin.prototype.route = function (recArr, playerMap) {
-	        var getWinner = function (rec) {
-	            if (rec.score[0] != 0 || rec.score[1] != 0) {
-	                if (rec.score[0] > rec.score[1])
-	                    return rec.player[0];
-	                else
-	                    return rec.player[1];
-	            }
-	            return '';
-	        };
-	        var fillWinner = function (fromGameId, playerId) {
-	            for (var i = 0; i < recArr.length; i++) {
-	                var rec = recArr[i];
-	                var a = rec.idx.split('#');
-	                var gameId = a[1];
-	                if (gameId != '_' && gameId.length > fromGameId.length) {
-	                    var pos = gameId.search(fromGameId);
-	                    if (pos > -1) {
-	                        var arrIdx = Math.floor(pos / Number(a[0]));
-	                        console.log('fillWinner from', fromGameId, 'to', gameId, arrIdx, playerMap[playerId].name);
-	                        rec.player[arrIdx] = playerId;
-	                    }
-	                }
-	            }
-	        };
-	        for (var i = 0; i < recArr.length; i++) {
-	            var rec = recArr[i];
-	            var a = rec.idx.split('#');
-	            var gameId = a[1];
-	            var winner = getWinner(rec);
-	            if (winner) {
-	                console.log(gameId, 'winner', playerMap[winner].name);
-	                fillWinner(gameId, winner);
-	            }
-	        }
-	    };
-	    return _ScoreRankAdmin;
-	}(VueBase_1.VueBase));
-	exports.ScoreRankAdmin = new _ScoreRankAdmin();
-
-
-/***/ }),
-/* 128 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(56);
-	var ImgLoader_1 = __webpack_require__(73);
-	var BasePanel_1 = __webpack_require__(129);
-	var TextFac_1 = __webpack_require__(77);
-	var const_1 = __webpack_require__(29);
-	var Pick8 = (function (_super) {
-	    __extends(Pick8, _super);
-	    function Pick8(parent) {
-	        var _this = _super.call(this, parent) || this;
-	        _this.isLoaded = false;
-	        var url_bg = '/img/panel/worldwar/pick8/bg.png';
-	        ImgLoader_1.imgLoader.loadTexArr([url_bg], function (_) {
-	            var bg = PixiEx_1.newBitmap({ url: url_bg });
-	            _this.addChild(bg);
-	            _this.vsPlayerArr = [];
-	            var ps = {
-	                fontFamily: const_1.FontName.MicrosoftYahei,
-	                fontSize: "28px",
-	                fill: "#aaa"
-	            };
-	            var x1 = 420, y1 = 853, x2 = 1185 - 47;
-	            for (var i = 0; i < 8; i++) {
-	                var lPlayerText = TextFac_1.TextFac.new_(ps, _this);
-	                var rPlayerText = TextFac_1.TextFac.new_(ps, _this);
-	                if (i < 4) {
-	                    lPlayerText.setPos(x1, y1 + i * 48).alignRight = 558;
-	                    rPlayerText.setPos(x1 + 170, y1 + i * 48);
-	                }
-	                else {
-	                    lPlayerText.setPos(x2, y1 + (i - 4) * 48).alignRight = 1280;
-	                    rPlayerText.setPos(x2 + 170, y1 + (i - 4) * 48);
-	                }
-	                _this.vsPlayerArr.push([lPlayerText, rPlayerText]);
-	            }
-	            _this.isLoaded = true;
-	            if (_this.tmpData) {
-	                _this.show(_this.tmpData);
-	                _this.tmpData = null;
-	            }
-	        });
-	        return _this;
-	    }
-	    Pick8.prototype.test = function () {
-	        this.show({
-	            playerArr: [
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	            ]
-	        });
-	    };
-	    Pick8.prototype.show = function (data) {
-	        if (this.isLoaded) {
-	            _super.prototype.show.call(this, data);
-	            for (var i = 0; i < this.vsPlayerArr.length; i++) {
-	                var playerTextArr = this.vsPlayerArr[i];
-	                playerTextArr[0].setText(data.playerArr[i][0].name)
-	                    .setAlignRight();
-	                playerTextArr[1].setText("vs    " + data.playerArr[i][1].name);
-	            }
-	        }
-	        else
-	            this.tmpData = data;
-	    };
-	    return Pick8;
-	}(BasePanel_1.BasePanel));
-	exports.Pick8 = Pick8;
-	var Pick8Layer = (function () {
-	    function Pick8Layer() {
-	    }
-	    Pick8Layer.get = function (parent) {
-	        if (!window[Pick8Layer.cls])
-	            window[Pick8Layer.cls] = new Pick8(parent);
-	        return window[Pick8Layer.cls];
-	    };
-	    Pick8Layer.cls = 'Pick8';
-	    return Pick8Layer;
-	}());
-	exports.Pick8Layer = Pick8Layer;
-
-
-/***/ }),
-/* 129 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var ImgLoader_1 = __webpack_require__(73);
-	var BasePanel = (function (_super) {
-	    __extends(BasePanel, _super);
-	    function BasePanel(parent) {
-	        var _this = _super.call(this) || this;
-	        _this.p = parent;
-	        return _this;
-	    }
-	    BasePanel.prototype.load = function (imgArr, callback) {
-	        ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
-	        });
-	    };
-	    BasePanel.prototype.show = function (data) {
-	        this.p.addChild(this);
-	    };
-	    BasePanel.prototype.hide = function (data) {
-	        if (this.parent)
-	            this.parent.removeChild(this);
-	    };
-	    return BasePanel;
-	}(PIXI.Container));
-	exports.BasePanel = BasePanel;
-
 
 /***/ })
 /******/ ]);
