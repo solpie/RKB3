@@ -3,13 +3,25 @@
 <head>
     <style>
         .bg {
-            position: static;
+            position: absolute;
+            left: 0;
+            top: 0;
         }
         
         .bracket {
             position: absolute;
             left: 0;
             top: 0;
+        }
+        
+        .gameTitle {
+            font-family: "微软雅黑";
+            color: #aaa;
+            width: 1920px;
+            font-size: 58px;
+            font-weight: bold;
+            top: 72px;
+            text-align: center;
         }
         
         .player {
@@ -43,20 +55,30 @@
 
 <body>
     <div id="app">
-        <img src="bg.png" />
-        <div>
-            <div v-for="(item, index) in items" :key="item.idx">
-                <div class="player blue" :style="item.s">
-                    <span>{{item.name}} </span>
+        <div v-if="isBg1">
+            <img src="bg.png" />
+            <div>
+                <div v-for="(item, index) in items" :key="item.idx">
+                    <div class="player blue" :style="item.s">
+                        <span>{{item.name}} </span>
+                    </div>
+                    <span class="player white" :style="item.ss">{{item.score>-1?item.score:""}} </span>
                 </div>
-                <span class="player white" :style="item.ss">{{item.score>-1?item.score:""}} </span>
+            </div>
+
+            <div v-for="(bracketArr,idx) in brackets" :key="idx" class="bracket">
+                <img v-if="bracketArr[0]" :src="'b'+(idx+1)+'_0.png'" class="bracket" />
+                <img v-if="bracketArr[1]" :src="'b'+(idx+1)+'_1.png'" class="bracket" />
             </div>
         </div>
-
-        <div v-for="(bracketArr,idx) in brackets" :key="idx" class="bracket">
-            <img :src="'b'+(idx+1)+'_0.png'" class="bracket" />
-            <img :src="'b'+(idx+1)+'_1.png'" class="bracket" />
+        <div v-if="!isBg1">
+            <img src="bg2.png" />
         </div>
+
+
+
+        <div class="bracket gameTitle">{{gameTitle}}</div>
+
     </div>
     <script>
         var _p = function(x, y) {
@@ -66,6 +88,8 @@
             el: '#app',
             data: {
                 items: [],
+                gameTitle: "",
+                isBg1: true,
                 brackets: []
             },
             // mounted: function() {
@@ -108,11 +132,16 @@
                     this.items.push({
                         s: _p(p[0], p[1]),
                         ss: _p(p[2], p[1]),
-                        score: 11,
-                        name: "申屠土匪"
+                        score: -1,
+                        name: ""
                     })
                 }
-
+                let winMap = {
+                        "0": 8,
+                        "1": 9,
+                        "2": 10,
+                        "3": 11
+                    } //rec idx to item idx
                 for (let j = 0; j < 4; j++) {
                     this.brackets.push([true, true])
                 }
@@ -122,27 +151,42 @@
                     })
                     .on('sc_data', (data) => {
                         console.log('sc_data', data)
-                        if (data.dbIdx == 'worldwarB8-4') {
+                        if (data.dbIdx == 'worldwar') {
                             for (let i = 0; i < this.items.length; i++) {
                                 let item = this.items[i];
                                 item.name = ''
                                 item.score = ''
                             }
-                            for (var i = 0; i < data.rec.length; i++) {
-                                let rec = data.rec[i];
-
+                            let recShow = data['rec-show']
+                            this.gameTitle = data.gameTitleMap[recShow]
+                            this.isBg1 = recShow < 4
+                            let recArr = data.recMap['#' + recShow].rec
+                            for (var i = 0; i < recArr.length; i++) {
+                                let rec = recArr[i];
                                 let item1 = this.items[i * 2]
                                 let item2 = this.items[i * 2 + 1]
                                 let p1 = data.playerMap[rec.player[0]]
                                 let p2 = data.playerMap[rec.player[1]]
                                 item1.name = p1.name
                                 item2.name = p2.name
+                                let lScore = rec.score[0]
+                                let rScore = rec.score[1]
+                                item1.score = lScore
+                                item2.score = rScore
+                                if (lScore == 0 && rScore == 0) {
+                                    this.brackets[i] = [false, false]
+                                } else {
+                                    let isLWin = lScore > rScore
 
-                                item1.score = rec.score[0]
-                                item2.score = rec.score[1]
+                                    this.brackets[i][0] = isLWin
+                                    this.brackets[i][1] = !isLWin
+                                    if (isLWin) {
+                                        this.items[winMap[i]].name = p1.name
+                                    } else {
+                                        this.items[winMap[i]].name = p2.name
+                                    }
+                                }
                             }
-                            let itemChampion = this.items[14]
-                            itemChampion.name = data.champion
                         }
                     })
             }

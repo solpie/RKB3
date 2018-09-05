@@ -47,19 +47,19 @@ class _ScoreRankAdmin extends VueBase {
     createOption(data) {
         let a = [];
         let playerMap = data.playerMap
-        for (var i = 0; i < data.rec.length; i++) {
-            let rec = data.rec[i]
-            console.log('player', rec.player);
-            let p1 = playerMap[rec.player[0]]
-            let p2 = playerMap[rec.player[1]]
-            if (p1 || p2) {
-                let p1name = p1 ? p1.name : '';
-                let p2name = p2 ? p2.name : '';
-                let option = { text: rec.idx + p1name + ' vs ' + p2name, value: rec.idx }
-                a.push(option);
-            }
-        }
-        this.options = a
+        // for (var i = 0; i < data.rec.length; i++) {
+        //     let rec = data.rec[i]
+        //     console.log('player', rec.player);
+        //     let p1 = playerMap[rec.player[0]]
+        //     let p2 = playerMap[rec.player[1]]
+        //     if (p1 || p2) {
+        //         let p1name = p1 ? p1.name : '';
+        //         let p2name = p2 ? p2.name : '';
+        //         let option = { text: rec.idx + p1name + ' vs ' + p2name, value: rec.idx }
+        //         a.push(option);
+        //     }
+        // }
+        // this.options = a
         this.gameConf = data
         // let a = [];
         // let playerMap = data.playerMap
@@ -149,7 +149,7 @@ class _ScoreRankAdmin extends VueBase {
             console.log('init game')
             // cs_initGame
             let playerMap = this.gameConf.playerMap
-            let recArr = this.gameConf.rec
+            // let recArr = this.gameConf.rec
 
             let a = this.vsPlayer.split(' ')
             let p1 = a[0]

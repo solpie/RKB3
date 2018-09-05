@@ -3216,7 +3216,6 @@
 	            onInitGame: function () {
 	                console.log('init game');
 	                var playerMap = this.gameConf.playerMap;
-	                var recArr = this.gameConf.rec;
 	                var a = this.vsPlayer.split(' ');
 	                var p1 = a[0];
 	                var p2 = a[1];
@@ -3327,19 +3326,6 @@
 	    _ScoreRankAdmin.prototype.createOption = function (data) {
 	        var a = [];
 	        var playerMap = data.playerMap;
-	        for (var i = 0; i < data.rec.length; i++) {
-	            var rec = data.rec[i];
-	            console.log('player', rec.player);
-	            var p1 = playerMap[rec.player[0]];
-	            var p2 = playerMap[rec.player[1]];
-	            if (p1 || p2) {
-	                var p1name = p1 ? p1.name : '';
-	                var p2name = p2 ? p2.name : '';
-	                var option = { text: rec.idx + p1name + ' vs ' + p2name, value: rec.idx };
-	                a.push(option);
-	            }
-	        }
-	        this.options = a;
 	        this.gameConf = data;
 	        this.blueArr = [];
 	        this.redArr = [];
