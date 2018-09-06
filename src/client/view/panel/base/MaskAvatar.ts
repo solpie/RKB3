@@ -15,10 +15,6 @@ export class MaskAvatar extends PIXI.Container {
         this.maskSp.visible = false
         if (callback)
             callback
-        // else {
-        //     this.avtSp.mask = this.maskSp
-        // }
-        // })
     }
     xyw = []
     setAvtPos(x, y, width) {

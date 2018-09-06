@@ -100,10 +100,27 @@
 		Author Tobias Koppers @sokra
 	*/
 	module.exports = function(src) {
-		if (typeof execScript !== "undefined")
-			execScript(src);
-		else
-			eval.call(null, src);
+		function log(error) {
+			(typeof console !== "undefined")
+			&& (console.error || console.log)("[Script Loader]", error);
+		}
+	
+		// Check for IE =< 8
+		function isIE() {
+			return typeof attachEvent !== "undefined" && typeof addEventListener === "undefined";
+		}
+	
+		try {
+			if (typeof execScript !== "undefined" && isIE()) {
+				execScript(src);
+			} else if (typeof eval !== "undefined") {
+				eval.call(null, src);
+			} else {
+				log("EvalError: No eval function available");
+			}
+		} catch (error) {
+			log(error);
+		}
 	}
 
 
@@ -691,12 +708,12 @@
 	    };
 	    VueBase.prototype.mounted = function () {
 	    };
+	    VueBase.PROP = { v: null, _: null };
+	    VueBase.Dict = { v: {}, _: null };
+	    VueBase.Number = { v: 0, _: null };
+	    VueBase.String = { v: "", _: null };
 	    return VueBase;
 	}());
-	VueBase.PROP = { v: null, _: null };
-	VueBase.Dict = { v: {}, _: null };
-	VueBase.Number = { v: 0, _: null };
-	VueBase.String = { v: "", _: null };
 	exports.VueBase = VueBase;
 
 
@@ -6025,9 +6042,9 @@
 	        if (this.parent)
 	            this.parent.removeChild(this);
 	    };
+	    Commentator.class = 'Commentator';
 	    return Commentator;
 	}(PIXI.Container));
-	Commentator.class = 'Commentator';
 	exports.Commentator = Commentator;
 
 
@@ -6368,7 +6385,7 @@
 	var BracketView_1 = __webpack_require__(85);
 	var RankView_1 = __webpack_require__(88);
 	var ScoreView_1 = __webpack_require__(92);
-	var GroupSp2_1 = __webpack_require__(114);
+	var GroupSp2_1 = __webpack_require__(113);
 	var WebDBCmd_1 = __webpack_require__(75);
 	var rankView;
 	var bracketView;
@@ -6381,7 +6398,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(116);
+	        _this.template = __webpack_require__(115);
 	        _this.actTab = VueBase_1.VueBase.PROP;
 	        _this.gameId = VueBase_1.VueBase.String;
 	        _this.isOp = VueBase_1.VueBase.PROP;
@@ -6881,15 +6898,18 @@
 /* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
+	            (typeof self !== "undefined" && self) ||
+	            window;
 	var apply = Function.prototype.apply;
 	
 	// DOM APIs, for completeness
 	
 	exports.setTimeout = function() {
-	  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
+	  return new Timeout(apply.call(setTimeout, scope, arguments), clearTimeout);
 	};
 	exports.setInterval = function() {
-	  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
+	  return new Timeout(apply.call(setInterval, scope, arguments), clearInterval);
 	};
 	exports.clearTimeout =
 	exports.clearInterval = function(timeout) {
@@ -6904,7 +6924,7 @@
 	}
 	Timeout.prototype.unref = Timeout.prototype.ref = function() {};
 	Timeout.prototype.close = function() {
-	  this._clearFn.call(window, this._id);
+	  this._clearFn.call(scope, this._id);
 	};
 	
 	// Does not start the time, just sets up the members needed.
@@ -6932,9 +6952,17 @@
 	
 	// setimmediate attaches itself to the global object
 	__webpack_require__(83);
-	exports.setImmediate = setImmediate;
-	exports.clearImmediate = clearImmediate;
-
+	// On some exotic environments, it's not clear which object `setimmediate` was
+	// able to install onto.  Search each possibility in the same order as the
+	// `setimmediate` library.
+	exports.setImmediate = (typeof self !== "undefined" && self.setImmediate) ||
+	                       (typeof global !== "undefined" && global.setImmediate) ||
+	                       (this && this.setImmediate);
+	exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
+	                         (typeof global !== "undefined" && global.clearImmediate) ||
+	                         (this && this.clearImmediate);
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
 /* 83 */
@@ -9893,9 +9921,9 @@
 	        if (this.parent)
 	            this.parent.removeChild(this);
 	    };
+	    Winner.class = 'Victory';
 	    return Winner;
 	}(PIXI.Container));
-	Winner.class = 'Victory';
 	exports.Winner = Winner;
 
 
@@ -10095,9 +10123,9 @@
 	        if (this.parent)
 	            this.parent.removeChild(this);
 	    };
+	    Top5.class = 'Top5';
 	    return Top5;
 	}(PIXI.Container));
-	Top5.class = 'Top5';
 	exports.Top5 = Top5;
 
 
@@ -10157,9 +10185,9 @@
 	        console.log('hide roll text');
 	        TweenEx_1.TweenEx.to(this, 200, { alpha: 0 });
 	    };
+	    RollText.class = 'RollText';
 	    return RollText;
 	}(PIXI.Container));
-	RollText.class = 'RollText';
 	exports.RollText = RollText;
 
 
@@ -10384,9 +10412,9 @@
 	        if (this.parent)
 	            this.parent.removeChild(this);
 	    };
+	    RankSection.class = 'Top5';
 	    return RankSection;
 	}(PIXI.Container));
-	RankSection.class = 'Top5';
 	exports.RankSection = RankSection;
 
 
@@ -10612,9 +10640,9 @@
 	            window[Pick8Layer.cls] = new Pick8(parent);
 	        return window[Pick8Layer.cls];
 	    };
+	    Pick8Layer.cls = 'Pick8';
 	    return Pick8Layer;
 	}());
-	Pick8Layer.cls = 'Pick8';
 	exports.Pick8Layer = Pick8Layer;
 
 
@@ -11076,7 +11104,7 @@
 	var const_1 = __webpack_require__(27);
 	var TextTimer_1 = __webpack_require__(59);
 	var BloodBar_1 = __webpack_require__(112);
-	var MaskAvatar_1 = __webpack_require__(113);
+	var MaskAvatar_1 = __webpack_require__(127);
 	var isTest = true;
 	var _c = function (v) {
 	    return 960 + v;
@@ -11336,70 +11364,10 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var ImgLoader_1 = __webpack_require__(73);
-	var PixiEx_1 = __webpack_require__(56);
-	var MaskAvatar = (function (_super) {
-	    __extends(MaskAvatar, _super);
-	    function MaskAvatar(maskUrl, callback) {
-	        var _this = _super.call(this) || this;
-	        _this.xyw = [];
-	        _this.maskSp = PixiEx_1.newBitmap({ url: maskUrl });
-	        _this.addChild(_this.maskSp);
-	        _this.avtSp = new PIXI.Sprite();
-	        _this.addChild(_this.avtSp);
-	        _this.maskSp.visible = false;
-	        if (callback)
-	            callback;
-	        return _this;
-	    }
-	    MaskAvatar.prototype.setAvtPos = function (x, y, width) {
-	        this.xyw = [x, y, width];
-	    };
-	    MaskAvatar.prototype.setTest = function (width, height, x, y) {
-	        this.maskSp.visible = true;
-	        this.testSp = new PIXI.Graphics();
-	        this.addChild(this.testSp);
-	        this.testSp.beginFill(0xffff00);
-	        this.testSp.drawRect(0, 0, width, height);
-	        this.testSp.x = x;
-	        this.testSp.y = y;
-	        this.testSp.alpha = 0.4;
-	    };
-	    MaskAvatar.prototype.load = function (avtUrl) {
-	        var _this = this;
-	        ImgLoader_1.imgLoader.loadTex(avtUrl, function (tex) {
-	            _this.avtSp.texture = tex;
-	            PixiEx_1.setScale(_this.avtSp, _this.xyw[2] / _this.avtSp.texture.width);
-	            _this.avtSp.x = _this.xyw[0];
-	            _this.avtSp.y = _this.xyw[1];
-	            _this.avtSp.mask = _this.maskSp;
-	        });
-	    };
-	    return MaskAvatar;
-	}(PIXI.Container));
-	exports.MaskAvatar = MaskAvatar;
-
-
-/***/ }),
-/* 114 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
 	var PixiEx_1 = __webpack_require__(56);
 	var const_1 = __webpack_require__(27);
 	var HupuAPI_1 = __webpack_require__(24);
-	var thenBy_1 = __webpack_require__(115);
+	var thenBy_1 = __webpack_require__(114);
 	var ImgLoader_1 = __webpack_require__(73);
 	var BracketGroup_1 = __webpack_require__(78);
 	var TextFac_1 = __webpack_require__(77);
@@ -11695,7 +11663,7 @@
 
 
 /***/ }),
-/* 115 */
+/* 114 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -11733,10 +11701,81 @@
 
 
 /***/ }),
-/* 116 */
+/* 115 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告 MISC</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒 timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 30px;font-family: 'NotoSansHans-Regular'\">\r\n               {{lLiveName}}  vs {{rLiveName}} \r\n                <br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(false)\">隐藏所有</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(true)\">显示所有</button>\r\n            <br>时间控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">设定时间(秒)</button>\r\n\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            </p>\r\n            比分控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onUpdateScore(true ,panelTime2Set)\">蓝方比分</button>\r\n            <button class=\"button\" @click=\"onUpdateScore(false,panelTime2Set)\">红方比分</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(true)\">切换攻守</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(false)\">隐藏</button>\r\n            <br>\r\n\r\n            <button class=\"button\" @click=\"onUpdateFoul(true ,panelTime2Set)\">蓝方犯规</button>\r\n            <button class=\"button\" @click=\"onUpdateFoul(false,panelTime2Set)\">红方犯规</button>\r\n\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">修改并显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,'')\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <!-- <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button> -->\r\n\r\n            <label class=\"label\">  赛区实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,1)\">东南 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,2)\">东北 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,3)\">西方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,4)\">南方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,0)\">首页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,2,0)\">上一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,3,0)\">下一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <label class=\"label\">  八强面板:</label><br>\r\n            <button class=\"button\" @click=\"onBracketShow(1)\">第一页 八进四</button>\r\n            <button class=\"button\" @click=\"onBracketShow(2)\">第二页</button>\r\n\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <div v-if=1 class='column is-one-quarter' style=\"position: fixed;top: 260px;right: 10px;\">\r\n                <input class=\"input\" type=\"text\" style=\"width: 30px;\" v-model=\"gameTitleType\">1 '8进4' 2 '4进2' 3 '2进1'\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"蓝方名字-红方名字\" style=\"width: 300px;\" v-model=\"vsPlayer\">\r\n                <button class=\"button\" @click=\"onSetPlayer(vsPlayer,gameTitleType)\">设置球员</button>\r\n                <br> <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button>蓝方: <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button> 比分\r\n                <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>:红方<button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n                <br><br> <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button>-----\r\n                <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button> 犯规\r\n                <button class=\"button\" @click=\"onAddFoul(false,+1)\">+1</button>-----<button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"'>\r\n        <div v-if='isRmOp||isOp' style=\"position: absolute;left: 100px;top:260px;width: 800px\">\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='normal' v-model='isBold' checked >\r\n                        正常\r\n                    </label>\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='bold' v-model='isBold'>\r\n                        加粗\r\n                    </label>\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onNoticePresets('network')\">网络故障 模版</button>\r\n            <br>\r\n            <div v-for=\"(n,idx) in noticeHistory\">\r\n                <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n            </div>\r\n\r\n            滚动文字：\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"inputRollText\">\r\n            <br>\r\n\r\n            <!-- <el-input v-model=\"inputRollText\" style=\"width:250px\"></el-input> -->\r\n            <button class=\"button\" @click='showRollText(inputRollText,true)'>发送</button>\r\n            <button class=\"button\" @click='showRollText(inputRollText,false)'>隐藏</button>\r\n            <br> 主播面板:\r\n            <br>\r\n            <button class=\"button\" @click='showCommentator(true,1)'>显示主播</button>\r\n            <button class=\"button\" @click='showCommentator(true,2)'>显示主播 合并</button>\r\n            <button class=\"button\" @click='showCommentator(false)'>隐藏</button>\r\n            <br>图片:\r\n            <br>\r\n            <button class=\"button\" @click='showStaticImage(true,1)'>微信小程序</button>\r\n            <button class=\"button\" @click='showStaticImage(false,1)'>隐藏</button>\r\n\r\n            <label class=\"label\">  脉动广告:</label><br>\r\n            <button class=\"button\" @click=\"onShowFx(true,1)\">转瓶</button>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n        </div>\r\n    </div>\r\n\r\n</div>";
+
+/***/ }),
+/* 116 */,
+/* 117 */,
+/* 118 */,
+/* 119 */,
+/* 120 */,
+/* 121 */,
+/* 122 */,
+/* 123 */,
+/* 124 */,
+/* 125 */,
+/* 126 */,
+/* 127 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var ImgLoader_1 = __webpack_require__(73);
+	var PixiEx_1 = __webpack_require__(56);
+	var MaskAvatar = (function (_super) {
+	    __extends(MaskAvatar, _super);
+	    function MaskAvatar(maskUrl, callback) {
+	        var _this = _super.call(this) || this;
+	        _this.xyw = [];
+	        _this.maskSp = PixiEx_1.newBitmap({ url: maskUrl });
+	        _this.addChild(_this.maskSp);
+	        _this.avtSp = new PIXI.Sprite();
+	        _this.addChild(_this.avtSp);
+	        _this.maskSp.visible = false;
+	        if (callback)
+	            callback;
+	        return _this;
+	    }
+	    MaskAvatar.prototype.setAvtPos = function (x, y, width) {
+	        this.xyw = [x, y, width];
+	    };
+	    MaskAvatar.prototype.setTest = function (width, height, x, y) {
+	        this.maskSp.visible = true;
+	        this.testSp = new PIXI.Graphics();
+	        this.addChild(this.testSp);
+	        this.testSp.beginFill(0xffff00);
+	        this.testSp.drawRect(0, 0, width, height);
+	        this.testSp.x = x;
+	        this.testSp.y = y;
+	        this.testSp.alpha = 0.4;
+	    };
+	    MaskAvatar.prototype.load = function (avtUrl) {
+	        var _this = this;
+	        ImgLoader_1.imgLoader.loadTex(avtUrl, function (tex) {
+	            _this.avtSp.texture = tex;
+	            PixiEx_1.setScale(_this.avtSp, _this.xyw[2] / _this.avtSp.texture.width);
+	            _this.avtSp.x = _this.xyw[0];
+	            _this.avtSp.y = _this.xyw[1];
+	            _this.avtSp.mask = _this.maskSp;
+	        });
+	    };
+	    return MaskAvatar;
+	}(PIXI.Container));
+	exports.MaskAvatar = MaskAvatar;
+
 
 /***/ })
 /******/ ]);

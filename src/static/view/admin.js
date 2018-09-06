@@ -95,8 +95,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!../../../node_modules/._css-loader@0.25.0@css-loader/index.js?root=.!./bulma.min.css", function() {
-				var newContent = require("!!../../../node_modules/._css-loader@0.25.0@css-loader/index.js?root=.!./bulma.min.css");
+			module.hot.accept("!!../../../node_modules/_css-loader@0.25.0@css-loader/index.js?root=.!./bulma.min.css", function() {
+				var newContent = require("!!../../../node_modules/_css-loader@0.25.0@css-loader/index.js?root=.!./bulma.min.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -443,8 +443,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!../../../node_modules/._css-loader@0.25.0@css-loader/index.js?root=.!./worldwar.css", function() {
-				var newContent = require("!!../../../node_modules/._css-loader@0.25.0@css-loader/index.js?root=.!./worldwar.css");
+			module.hot.accept("!!../../../node_modules/_css-loader@0.25.0@css-loader/index.js?root=.!./worldwar.css", function() {
+				var newContent = require("!!../../../node_modules/_css-loader@0.25.0@css-loader/index.js?root=.!./worldwar.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -482,10 +482,27 @@
 		Author Tobias Koppers @sokra
 	*/
 	module.exports = function(src) {
-		if (typeof execScript !== "undefined")
-			execScript(src);
-		else
-			eval.call(null, src);
+		function log(error) {
+			(typeof console !== "undefined")
+			&& (console.error || console.log)("[Script Loader]", error);
+		}
+	
+		// Check for IE =< 8
+		function isIE() {
+			return typeof attachEvent !== "undefined" && typeof addEventListener === "undefined";
+		}
+	
+		try {
+			if (typeof execScript !== "undefined" && isIE()) {
+				execScript(src);
+			} else if (typeof eval !== "undefined") {
+				eval.call(null, src);
+			} else {
+				log("EvalError: No eval function available");
+			}
+		} catch (error) {
+			log(error);
+		}
 	}
 
 
@@ -535,8 +552,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!../../../node_modules/._css-loader@0.25.0@css-loader/index.js?root=.!./cropper.min.css", function() {
-				var newContent = require("!!../../../node_modules/._css-loader@0.25.0@css-loader/index.js?root=.!./cropper.min.css");
+			module.hot.accept("!!../../../node_modules/_css-loader@0.25.0@css-loader/index.js?root=.!./cropper.min.css", function() {
+				var newContent = require("!!../../../node_modules/_css-loader@0.25.0@css-loader/index.js?root=.!./cropper.min.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -1121,12 +1138,12 @@
 	    };
 	    VueBase.prototype.mounted = function () {
 	    };
+	    VueBase.PROP = { v: null, _: null };
+	    VueBase.Dict = { v: {}, _: null };
+	    VueBase.Number = { v: 0, _: null };
+	    VueBase.String = { v: "", _: null };
 	    return VueBase;
 	}());
-	VueBase.PROP = { v: null, _: null };
-	VueBase.Dict = { v: {}, _: null };
-	VueBase.Number = { v: 0, _: null };
-	VueBase.String = { v: "", _: null };
 	exports.VueBase = VueBase;
 
 
