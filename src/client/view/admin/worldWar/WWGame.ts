@@ -165,6 +165,13 @@ export class WWGame extends EventDispatcher {
       this.emit(WWGame.InitDocView, doc);
     }, true);
   }
+  setTeamScore(lScore, rScore) {
+    syncDoc(data => {
+      let doc = data.doc;
+      doc.teamScoreArr = [lScore,rScore]
+      this.emit(WWGame.InitDocView, doc);
+    }, true);
+  }
   getBloodMap(teamVsIdx, cb) {
     syncDoc(data => {
       let doc = data.doc;

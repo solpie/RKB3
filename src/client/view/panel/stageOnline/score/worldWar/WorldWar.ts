@@ -1,4 +1,4 @@
-import { newBitmap } from "../../../../utils/PixiEx";
+import { newBitmap, BitmapText, loadRes, imgToTex, setScale } from "../../../../utils/PixiEx";
 import { Text2, TextFac } from "../../../../utils/TextFac";
 import { FontName, TimerState, TimerEvent } from "../../../../const";
 import { TextTimer } from "../../../../utils/TextTimer";
@@ -15,6 +15,7 @@ export class WorldWar extends PIXI.Container {
   lHW: Text2;
   rHW: Text2;
 
+  gameTitle: Text2;
   lTitle: Text2;
   rTitle: Text2;
 
@@ -26,6 +27,8 @@ export class WorldWar extends PIXI.Container {
 
   lBlood: BloodBar;
   rBlood: BloodBar;
+  lTeamScore: BitmapText
+  rTeamScore: BitmapText
   lAvt: MaskAvatar
   rAvt: MaskAvatar
   constructor() {
@@ -40,6 +43,51 @@ export class WorldWar extends PIXI.Container {
     let rBlood = new BloodBar(false);
     this.rBlood = rBlood;
     this.addChild(rBlood);
+
+
+
+    loadRes('/img/panel/score2018/score.png', (img) => {
+      // loadRes(skin.score, (img) => {
+      let tex = imgToTex(img)
+      let sheet = {
+        text: '0',
+        animations: {
+          "7": 0, "8": 1, "9": 2, "0": 3, "1": 4,
+          "2": 5, "3": 6, "4": 7, "5": 8, "6": 9
+        },
+        texture: tex,
+        frames: [
+          [0, 0, 54, 80],
+          [55, 0, 54, 80],
+          [0, 81, 54, 80],
+          [55, 81, 54, 80],
+          [110, 0, 54, 80],
+          [110, 81, 54, 80],
+          [165, 0, 54, 80],
+          [165, 81, 54, 80],
+          [0, 162, 54, 80],
+          [55, 162, 54, 80]]
+      }
+
+      let lScoreNum = new BitmapText(sheet)
+      // leftScoreNum.frameWidth = 56
+      this.lTeamScore = lScoreNum
+      lScoreNum.x = 890
+      lScoreNum.y = 940
+      lScoreNum.align = 'center'
+      this.addChild(lScoreNum as any)
+
+      let rScoreNum = new BitmapText(sheet)
+      this.rTeamScore = rScoreNum
+      rScoreNum.x = lScoreNum.x + 100
+      rScoreNum.y = lScoreNum.y
+      rScoreNum.align = 'center'
+
+      lScoreNum.alpha = rScoreNum.alpha = 0.7
+      setScale(lScoreNum, 0.8)
+      setScale(rScoreNum, 0.8)
+      this.addChild(rScoreNum as any)
+    })
 
     let ns = {
       fontFamily: FontName.NotoSansHans,
@@ -60,7 +108,7 @@ export class WorldWar extends PIXI.Container {
     this.lAvt.setAvtPos(325, 890, 175)
 
     this.rAvt = new MaskAvatar('/img/panel/worldwar/maskR.png', _ => {
- 
+
     })
     this.rAvt.setAvtPos(1420, 890, 175)
 
@@ -91,11 +139,12 @@ export class WorldWar extends PIXI.Container {
     t.textInSec = 0;
     this.timer = t;
 
-    // ns.fontSize = "26px";
-    // ns.fill = "#fff";
+    ns.fontSize = "28px";
+    ns.fill = "#eee";
     // this.lTitle = TextFac.new_(ns, this).setY(925);
     // this.rTitle = TextFac.new_(ns, this).setPos(1123, this.lTitle.y);
-
+    this.gameTitle = TextFac.new_(ns, this)
+      .setY(925)
 
     if (isTest) this.test();
   }
@@ -113,6 +162,8 @@ export class WorldWar extends PIXI.Container {
 
     this.setLeftFoul(5);
     this.setRightFoul(0);
+    
+    // this.setGameTitle('校友对抗')
   }
   _setHWA(playerData) {
     if (playerData.hwa) {
@@ -172,7 +223,14 @@ export class WorldWar extends PIXI.Container {
       this.lBlood.setBloodByDtScore(data.score);
     }
   }
-
+  setGameTitle(vl) {
+    this.gameTitle.setText(vl)
+      .setAlignCenter(960)
+  }
+  setTeamScore(data) {
+    this.lTeamScore.text = data.lScore
+    this.rTeamScore.text = data.rScore
+  }
   setLeftFoul(val) {
     this.lFoulHint.visible = val > 3;
     this.lFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(-120));

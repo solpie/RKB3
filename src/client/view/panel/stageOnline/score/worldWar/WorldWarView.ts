@@ -28,6 +28,9 @@ export class WorldWarView extends PIXI.Container {
         this.worldWar.setLeftFoul(data.lFoul);
         this.worldWar.setRightFoul(data.rFoul);
       })
+      .on(CommandId.sc_teamScore, data => {
+        this.worldWar.setTeamScore(data)
+      })
       .on("sc_data", data => {
         if (data.dbIdx == 'worldwar') {
           let playerArr = []

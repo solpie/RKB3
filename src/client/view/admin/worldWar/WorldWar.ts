@@ -34,6 +34,7 @@ class _worldWar extends VueBase {
   gameView: any;
   gameIdx: number;
   teamVsIdx = VueBase.PROP;
+  teamScore = VueBase.PROP;
   isShowCurTeamVsOnly = VueBase.PROP;
   updateTime = VueBase.PROP;
   constructor() {
@@ -113,7 +114,7 @@ class _worldWar extends VueBase {
     let gameTitle = "";
     // if (this.gameTitle)
     //     gameTitle = this.gameConf.gameTitle[this.gameTitle]
-    
+
     let data = {
       leftPlayer: p1,
       rightPlayer: p2,
@@ -123,6 +124,9 @@ class _worldWar extends VueBase {
     ///89 russ
     baseGameView.initView(data);
     // this.onShowScoreRank(true)
+  }
+  emitTeamScore(data) {
+    opReq(CommandId.cs_teamScore, data)
   }
   updateBlood(teamVsIdx) {
     console.log("on updateBlood teamVsIdx", teamVsIdx);
@@ -143,10 +147,18 @@ class _worldWar extends VueBase {
     }
   };
   methods = {
- 
+
     isShowRec(isTeamVsIdxRec) {
       if (this.isShowCurTeamVsOnly) return isTeamVsIdxRec;
       return true;
+    },
+    onSetTeamScore(v) {
+      let a = v.split(' ')
+      if (a.length == 2) {
+        this.emitTeamScore({
+          lScore: a[0], rScore: a[1]
+        })
+      }
     },
     onSetBlood(teamVsIdx) {
       let bloodArr = $(".blood");

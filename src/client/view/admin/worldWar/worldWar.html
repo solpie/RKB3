@@ -13,10 +13,10 @@
         <button class="button is-primary" @click="onCommitGame(gameIdx)">提交比赛</button> teamVsIdx:
         <input class="input" v-model="teamVsIdx" type="text" style="width: 60px;">
         <a class="button is-warnning" @click="onSetBlood(teamVsIdx)">设置初始血量</a>
-        <label class="checkbox">
-            <input type="checkbox" v-model="isShowCurTeamVsOnly">
-            只显示当前
-          </label>
+        <input class="input" v-model="teamScore" type="text" style="width: 60px;">
+        <a class="button is-warnning" @click="onSetTeamScore(teamScore)">设置团队比分</a>
+
+       
         <hr>
 
     </div>

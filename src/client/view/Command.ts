@@ -192,6 +192,9 @@ export const CommandId = {
     ///screen
     cs_inScreenScore: '',
     inScreenScore: '',
+    //world war
+    cs_teamScore:'',
+    sc_teamScore:'',
     //// RKB
     cs_attack: '',
     attack: '',
