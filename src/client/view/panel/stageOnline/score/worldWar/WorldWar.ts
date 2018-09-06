@@ -73,7 +73,7 @@ export class WorldWar extends PIXI.Container {
       // leftScoreNum.frameWidth = 56
       this.lTeamScore = lScoreNum
       lScoreNum.x = 890
-      lScoreNum.y = 940
+      lScoreNum.y = 932
       lScoreNum.align = 'center'
       this.addChild(lScoreNum as any)
 

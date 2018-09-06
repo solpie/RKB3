@@ -1,3 +1,4 @@
+import { ScoreRank } from './../../scoreRank/ScoreRank';
 import { CommandId } from "../../../../Command";
 import { TweenEx } from "../../../../utils/TweenEx";
 import { WorldWar } from "./WorldWar";
@@ -6,6 +7,8 @@ import { Pick8Layer } from '../../pick8/Pick8';
 export class WorldWarView extends PIXI.Container {
   stage: any;
   worldWar: WorldWar;
+  lBloodRank: ScoreRank
+  rBloodRank: ScoreRank
   constructor(stage, io) {
     super();
     this.stage = stage;
@@ -13,7 +16,13 @@ export class WorldWarView extends PIXI.Container {
       this.worldWar = new WorldWar();
       this.stage.addChild(this.worldWar);
 
+      this.lBloodRank = new ScoreRank()
+      this.lBloodRank.create(this.worldWar, false)
+
+      this.rBloodRank = new ScoreRank()
+      this.rBloodRank.create(this.worldWar, true)
     });
+
     io.on(CommandId.sc_timerEvent, data => {
       console.log("sc_timerEvent", data);
       this.worldWar.setTimerEvent(data);
@@ -30,6 +39,12 @@ export class WorldWarView extends PIXI.Container {
       })
       .on(CommandId.sc_teamScore, data => {
         this.worldWar.setTeamScore(data)
+      })
+      .on(CommandId.sc_showScoreRank, data => {
+        data.isRight = false
+        this.lBloodRank.show(data)
+        data.isRight = true
+        this.rBloodRank.show(data)
       })
       .on("sc_data", data => {
         if (data.dbIdx == 'worldwar') {

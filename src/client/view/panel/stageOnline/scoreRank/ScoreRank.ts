@@ -7,12 +7,14 @@ import { newBitmap, setScale } from '../../../utils/PixiEx';
 class PlayerItem extends PIXI.Container {
     pScore: Text2
     pName: Text2
+    pKDA: Text2
     avt: PIXI.Sprite
     bg: PIXI.Sprite
     fg: PIXI.Sprite
     scoreFx: Text2
     isRight = true
     create(isOff, data) {
+
         let textY = 277
         let ns = {
             fontFamily: FontName.MicrosoftYahei,
@@ -37,6 +39,10 @@ class PlayerItem extends PIXI.Container {
             .setText(data.name)
             .setPos(185, textY)
 
+        this.pKDA = TextFac.new_(ns, this)
+            .setText("0/0/0")
+            .setPos(185, 210)
+
         ns.fontFamily = 'dinCondensedC'
         ns.fontSize = '60px'
 
@@ -49,15 +55,8 @@ class PlayerItem extends PIXI.Container {
         this.scoreFx = TextFac.new_(ns, this)
             .setPos(380, 196)
 
-        if (this.isRight) {
-            this.scale.x =
-
-                this.pScore.scale.x =
-                -1
-            this.x = 1920
-        }
+        this.setSide(this.isRight)
         return this
-
     }
     _loadItemTex(isOff) {
         if (isOff) {
@@ -67,6 +66,22 @@ class PlayerItem extends PIXI.Container {
         else {
             this.bg.texture = imgLoader.getTex('/img/panel/scoreRank/itemBg_on.png')
             this.fg.texture = imgLoader.getTex('/img/panel/scoreRank/itemFg_on.png')
+        }
+    }
+    setSide(isRight) {
+        console.log('set side is right:', isRight)
+        this.isRight = isRight
+        if (this.isRight) {
+            this.x = 1920
+            this.scale.x =
+                this.pKDA.scale.x = -1
+            this.pScore.scale.x = -1
+        }
+        else {
+            this.x = 0
+            this.scale.x =
+                this.pKDA.scale.x = 1
+            this.pScore.scale.x = 1
         }
     }
     showScoreFx(dtScore) {
@@ -86,6 +101,10 @@ class PlayerItem extends PIXI.Container {
         }
         this.pName.setText(data.name)
             .setX(alignX)
+
+        this.pKDA.setText('0/0/0')
+            .setX(alignX + 50)
+
         this.pScore.setText(data.score)
             .setAlignCenter(alignX)
     }
@@ -99,9 +118,16 @@ class PlayerItem extends PIXI.Container {
         this.pName.setText(data.name)
             .setX(alignX)
         this.pName.scale.x = -1
-        this.pName.x += this.pName.width-23
+        this.pName.x += this.pName.width - 23
+
+        this.pKDA.setText('0/0/0')
+            .setX(alignX)
+        this.pKDA.scale.x = -1
+        this.pKDA.x += this.pKDA.width + 25
+
         this.pScore.setText(data.score)
             .setAlignCenter(alignX)
+
     }
     setScore(data) {
         let avtX = 41, avtY = 208
@@ -129,7 +155,9 @@ class PlayerItem extends PIXI.Container {
 export class ScoreRank extends PIXI.Container {
     p: any
     itemArr: any
-    create(p) {
+    isRight = true
+    create(p, isRight?) {
+        this.isRight = isRight
         this.p = p
         this.itemArr = []
     }
@@ -149,7 +177,12 @@ export class ScoreRank extends PIXI.Container {
         }
 
     }
-
+    setSide(isRight) {
+        for (let i = 0; i < this.itemArr[i].length; i++) {
+            const pi: PlayerItem = this.itemArr[i];
+            pi.isRight = isRight
+        }
+    }
     showScoreFx(data) {
 
     }
@@ -171,8 +204,9 @@ export class ScoreRank extends PIXI.Container {
                 '/img/panel/scoreRank/itemFg_off.png',
                 '/img/panel/scoreRank/itemBg_off.png'], _ => {
                     for (let i = 0; i < data.scoreArr.length; i++) {
-                        let pi = (new PlayerItem()).create(true, { score: 8, name: '' })
+                        let pi: PlayerItem = (new PlayerItem()).create(true, { score: 8, name: '' })
                         this.itemArr.push(pi)
+                        pi.setSide(this.isRight)
                         this.addChild(pi)
                     }
                     this._arrangeY(data)
