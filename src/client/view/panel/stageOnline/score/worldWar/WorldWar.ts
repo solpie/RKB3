@@ -3,6 +3,7 @@ import { Text2, TextFac } from "../../../../utils/TextFac";
 import { FontName, TimerState, TimerEvent } from "../../../../const";
 import { TextTimer } from "../../../../utils/TextTimer";
 import { BloodBar } from "./BloodBar";
+import { MaskAvatar } from "../../../base/MaskAvatar";
 const isTest = true;
 const _c = v => {
   return 960 + v;
@@ -25,6 +26,8 @@ export class WorldWar extends PIXI.Container {
 
   lBlood: BloodBar;
   rBlood: BloodBar;
+  lAvt: MaskAvatar
+  rAvt: MaskAvatar
   constructor() {
     super();
     let bg = newBitmap({ url: "/img/panel/worldWar/bg.png" });
@@ -51,6 +54,20 @@ export class WorldWar extends PIXI.Container {
     this.lHW = TextFac.new_(ns, this).setY(1004);
 
     this.rHW = TextFac.new_(ns, this).setPos(this.rName.x, this.lHW.y);
+
+    this.lAvt = new MaskAvatar('/img/panel/worldwar/maskL.png')
+    this.addChild(this.lAvt)
+    this.lAvt.setAvtPos(325, 890, 175)
+
+    this.rAvt = new MaskAvatar('/img/panel/worldwar/maskR.png', _ => {
+ 
+    })
+    this.rAvt.setAvtPos(1420, 890, 175)
+
+    // this.rAvt.setTest(175, 175, 1420, 890)
+    this.addChild(this.rAvt)
+    // this.lAvt.setTest(175,175,325,890)
+
     //foul hint
     let lFoulHint = newBitmap({ url: "/img/panel/worldWar/foulHintL.png" });
     let rFoulHint = newBitmap({ url: "/img/panel/worldWar/foulHintL.png" });
@@ -123,6 +140,8 @@ export class WorldWar extends PIXI.Container {
       .setAlignCenter(_c(300));
     // this.rAvtUrl = rPlayer.avatar
     // loadAvt(this.rAvt, rPlayer.avatar, 1109)
+    if (rPlayer.avatar)
+      this.rAvt.load(rPlayer.avatar)
     this.rBlood.setBlood(rPlayer.blood);
   }
 
@@ -142,6 +161,8 @@ export class WorldWar extends PIXI.Container {
       .setAlignCenter(_c(-300));
     // this.lAvtUrl = lPlayer.avatar
     // loadAvt(this.lAvt, lPlayer.avatar, 725)
+    if (lPlayer.avatar)
+      this.lAvt.load(lPlayer.avatar)
     this.lBlood.setBlood(lPlayer.blood);
   }
   setBloodByDtScore(data) {
@@ -151,7 +172,7 @@ export class WorldWar extends PIXI.Container {
       this.lBlood.setBloodByDtScore(data.score);
     }
   }
-  
+
   setLeftFoul(val) {
     this.lFoulHint.visible = val > 3;
     this.lFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(-120));
