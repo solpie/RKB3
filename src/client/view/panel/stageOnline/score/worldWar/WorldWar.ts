@@ -48,29 +48,9 @@ export class WorldWar extends PIXI.Container {
     this.rName = TextFac.new_(ns, this).setPos(1215, this.lName.y);
 
     ns.fontSize = "25px";
-    ns.fill = "#6b6b6b";
     this.lHW = TextFac.new_(ns, this).setY(1004);
 
     this.rHW = TextFac.new_(ns, this).setPos(this.rName.x, this.lHW.y);
-
-    ns.fontSize = "24px";
-    this.lFoul = TextFac.new_(ns, this).setY(1024);
-    this.rFoul = TextFac.new_(ns, this).setY(this.lFoul.y);
-
-    ns.fontSize = "38px";
-    ns.fill = "#ddd";
-    let t = new TextTimer("", ns);
-    this.addChild(t);
-    t.x = 914;
-    t.y = 1006;
-    t.textInSec = 0;
-    this.timer = t;
-
-    // ns.fontSize = "26px";
-    // ns.fill = "#fff";
-    // this.lTitle = TextFac.new_(ns, this).setY(925);
-    // this.rTitle = TextFac.new_(ns, this).setPos(1123, this.lTitle.y);
-
     //foul hint
     let lFoulHint = newBitmap({ url: "/img/panel/worldWar/foulHintL.png" });
     let rFoulHint = newBitmap({ url: "/img/panel/worldWar/foulHintL.png" });
@@ -80,6 +60,26 @@ export class WorldWar extends PIXI.Container {
     this.addChild(rFoulHint);
     this.lFoulHint = lFoulHint;
     this.rFoulHint = rFoulHint;
+    this.addChild(newBitmap({ url: "/img/panel/worldWar/fg.png" }));
+    ns.fontSize = "24px";
+    this.lFoul = TextFac.new_(ns, this).setY(1024);
+    this.rFoul = TextFac.new_(ns, this).setY(this.lFoul.y);
+
+    ns.fontSize = "38px";
+    ns.fill = "#ddd";
+    let t = new TextTimer("", ns);
+    this.addChild(t);
+    t.x = 914;
+    t.y = 1015;
+    t.textInSec = 0;
+    this.timer = t;
+
+    // ns.fontSize = "26px";
+    // ns.fill = "#fff";
+    // this.lTitle = TextFac.new_(ns, this).setY(925);
+    // this.rTitle = TextFac.new_(ns, this).setPos(1123, this.lTitle.y);
+
+
     if (isTest) this.test();
   }
   test() {
@@ -120,7 +120,7 @@ export class WorldWar extends PIXI.Container {
     // if (rPlayer.age) age = rPlayer.age + "岁";
     this.rHW
       .setText(rPlayer.height + "CM  " + rPlayer.weight + "KG  " + age)
-      .setAlignCenter(_c(330));
+      .setAlignCenter(_c(300));
     // this.rAvtUrl = rPlayer.avatar
     // loadAvt(this.rAvt, rPlayer.avatar, 1109)
     this.rBlood.setBlood(rPlayer.blood);
@@ -139,7 +139,7 @@ export class WorldWar extends PIXI.Container {
     // if (lPlayer.age) age = lPlayer.age + "岁";
     this.lHW
       .setText(lPlayer.height + "CM  " + lPlayer.weight + "KG  " + age)
-      .setAlignCenter(_c(-330));
+      .setAlignCenter(_c(-300));
     // this.lAvtUrl = lPlayer.avatar
     // loadAvt(this.lAvt, lPlayer.avatar, 725)
     this.lBlood.setBlood(lPlayer.blood);
@@ -151,13 +151,14 @@ export class WorldWar extends PIXI.Container {
       this.lBlood.setBloodByDtScore(data.score);
     }
   }
+  
   setLeftFoul(val) {
-    this.lFoulHint.visible = val > 4;
-    this.lFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(-135));
+    this.lFoulHint.visible = val > 3;
+    this.lFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(-120));
   }
   setRightFoul(val) {
-    this.rFoulHint.visible = val > 4;
-    this.rFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(135));
+    this.rFoulHint.visible = val > 3;
+    this.rFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(120));
   }
 
   setTimerEvent(data) {

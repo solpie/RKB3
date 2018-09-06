@@ -20,7 +20,7 @@
             width: 1920px;
             font-size: 58px;
             font-weight: bold;
-            top: 72px;
+            top: 62px;
             text-align: center;
         }
         
@@ -57,13 +57,11 @@
     <div id="app">
         <div v-if="isBg1">
             <img src="bg.png" />
-            <div>
-                <div v-for="(item, index) in items" :key="item.idx">
-                    <div class="player blue" :style="item.s">
-                        <span>{{item.name}} </span>
-                    </div>
-                    <span class="player white" :style="item.ss">{{item.score>-1?item.score:""}} </span>
+            <div v-for="(item, index) in items" :key="item.idx">
+                <div class="player blue" :style="item.s">
+                    <span>{{item.name}} </span>
                 </div>
+                <span class="player white" :style="item.ss">{{item.score>-1?item.score:""}} </span>
             </div>
 
             <div v-for="(bracketArr,idx) in brackets" :key="idx" class="bracket">
@@ -73,10 +71,14 @@
         </div>
         <div v-if="!isBg1">
             <img src="bg2.png" />
+
+            <div v-for="(item, index) in items2" :key="item.idx">
+                <div class="player blue" :style="item.s">
+                    <span>{{item.name}} </span>
+                </div>
+                <span class="player white" :style="item.ss">{{item.score>-1?item.score:""}} </span>
+            </div>
         </div>
-
-
-
         <div class="bracket gameTitle">{{gameTitle}}</div>
 
     </div>
@@ -88,6 +90,7 @@
             el: '#app',
             data: {
                 items: [],
+                items2: [],
                 gameTitle: "",
                 isBg1: true,
                 brackets: []
@@ -95,7 +98,6 @@
             // mounted: function() {
             created: function() {
                 console.log(this);
-
                 let _r = (arr, xName, xScore) => { //make r group
                     let a = []
                     for (let i = 0; i < arr.length; i++) {
@@ -105,7 +107,6 @@
                     return arr.concat(a)
                 }
                 let pos = []
-
                 let x1 = 131,
                     x1r = 1485
                 let scoreOfs = 279
@@ -126,16 +127,20 @@
                     .concat(_r([
                         [x2, 694, x2 + scoreOfs]
                     ], x2r, x2r - scoreOfs + 300 - 38))
-
-                for (let i = 0; i < pos.length; i++) {
-                    let p = pos[i]
-                    this.items.push({
-                        s: _p(p[0], p[1]),
-                        ss: _p(p[2], p[1]),
-                        score: -1,
-                        name: ""
-                    })
+                let _mkItems = (posArr) => {
+                    let a = []
+                    for (let i = 0; i < posArr.length; i++) {
+                        let p = posArr[i]
+                        a.push({
+                            s: _p(p[0], p[1]),
+                            ss: _p(p[2], p[1]),
+                            score: -1,
+                            name: ""
+                        })
+                    }
+                    return a
                 }
+                this.items = _mkItems(pos)
                 let winMap = {
                         "0": 8,
                         "1": 9,
@@ -145,6 +150,13 @@
                 for (let j = 0; j < 4; j++) {
                     this.brackets.push([true, true])
                 }
+                //final bracket
+                let pos2 = _r([
+                    [x1, 255, x1 + scoreOfs],
+                    [x1, 255 + 186, x1 + scoreOfs],
+                ], x1r, x1r - scoreOfs + 300 - 38)
+                this.items2 = _mkItems(pos2)
+
                 var localWs = io.connect('/rkb')
                 localWs.on('connect', () => {
                         console.log('connect', window.location.host)
@@ -160,11 +172,13 @@
                             let recShow = data['rec-show']
                             this.gameTitle = data.gameTitleMap[recShow]
                             this.isBg1 = recShow < 4
+                            let itemArr
+                            this.isBg1 ? itemArr = this.items : itemArr = this.items2;
                             let recArr = data.recMap['#' + recShow].rec
                             for (var i = 0; i < recArr.length; i++) {
                                 let rec = recArr[i];
-                                let item1 = this.items[i * 2]
-                                let item2 = this.items[i * 2 + 1]
+                                let item1 = itemArr[i * 2]
+                                let item2 = itemArr[i * 2 + 1]
                                 let p1 = data.playerMap[rec.player[0]]
                                 let p2 = data.playerMap[rec.player[1]]
                                 item1.name = p1.name
@@ -177,14 +191,12 @@
                                     this.brackets[i] = [false, false]
                                 } else {
                                     let isLWin = lScore > rScore
-
                                     this.brackets[i][0] = isLWin
                                     this.brackets[i][1] = !isLWin
-                                    if (isLWin) {
+                                    if (isLWin)
                                         this.items[winMap[i]].name = p1.name
-                                    } else {
+                                    else
                                         this.items[winMap[i]].name = p2.name
-                                    }
                                 }
                             }
                         }
