@@ -10,7 +10,7 @@
     },
     "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/kd/",
     "rec-show": 3,
-    "isShowPick": false,
+    "isShowPick": true,
     "isShowKDA": false,
     "recMap": {
         "#1": {

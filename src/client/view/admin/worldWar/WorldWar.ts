@@ -147,7 +147,9 @@ class _worldWar extends VueBase {
     }
   };
   methods = {
-
+    onShowPanel(v) {
+      opReq(CommandId.cs_showPanel, { panel: PanelId.worldwarPanel, visible: v })
+    },
     isShowRec(isTeamVsIdxRec) {
       if (this.isShowCurTeamVsOnly) return isTeamVsIdxRec;
       return true;

@@ -36,6 +36,7 @@ export class ScoreView extends BasePanelView {
     delayTd = 0
     gameId: any
     isTest = false
+    isWorld = false
     $route: any
     isM2: Boolean
     isOP: Boolean
@@ -54,6 +55,7 @@ export class ScoreView extends BasePanelView {
         this.gameId = $route.params.game_id
 
         this.isTest = $route.query.test == "1"
+        this.isWorld = $route.query.world == "1"
         let isManmual = $route.query.m == '1'
         let m2 = $route.query.m2 == '1'
         // let s4 = $route.query.s4 == '1'
@@ -76,33 +78,15 @@ export class ScoreView extends BasePanelView {
                 if (!this.isRmOP) {
                     // this.scorePanel = new Score2018(stage)
                     this.scorePanelV3 = new Score2018v3(stage)
+                    if (this.isWorld)
+                        this.scorePanelV3.visible = false
                 }
                 this.initDelay()
                 this.eventPanel = new Event2017(stage, darkTheme)
             })
         }
-        // this.scorePanel = new Score2017(stage, darkTheme)
 
         console.log('new ScoreView')
-        if (this.isTest) {
-            // let player = {
-            //     avatar: "http://w2.hoopchina.com.cn/43/6f/6a/436f6a5aa8a38e158b98830a3b5c4a4b001.jpg",
-            //     group: 'Fe3O4',
-            //     height: '177',
-            //     intro: "一二三四五六七八九十一二三四五六七八九十一二三22四五六七八九十一二三四五六七八九十一二三四五六七八九十",
-            //     loseAmount: 1,
-            //     name: "geoffrey0326",
-            //     roundScore: 28,
-            //     totalChampion: 0,
-            //     weight: '79',
-            //     winAmount: "3"
-            // }
-
-        }
-        // if (isManmual) {
-        //     this.initManmual()
-        // }
-        // else
         this.initLocal()
     }
 
@@ -157,7 +141,7 @@ export class ScoreView extends BasePanelView {
         localWs.on('connect', (msg) => {
             console.log('connect', window.location.host)
             // localWs.emit("opUrl", { opUrl: window.location.host })
-            if (this.isTest) {
+            if (this.isWorld) {
                 new WorldWarView(this.stage, localWs)
             }
         })

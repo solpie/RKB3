@@ -9,6 +9,7 @@ export const PanelId = {
     winPanel: 'win',
     actPanel: 'act',
     screenPanel: 'screen',
+    worldwarPanel: 'worldwarPanel',
     playerPanel: 'player'
 };
 export const FontName = {

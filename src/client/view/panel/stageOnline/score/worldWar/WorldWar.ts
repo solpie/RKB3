@@ -47,8 +47,6 @@ export class WorldWar extends PIXI.Container {
     this.rBlood = rBlood;
     this.addChild(rBlood);
 
-
-
     loadRes('/img/panel/score2018/score.png', (img) => {
       // loadRes(skin.score, (img) => {
       let tex = imgToTex(img)
@@ -299,5 +297,12 @@ export class WorldWar extends PIXI.Container {
 
   toggleTimer(v) {
     this.timer.toggleTimer(v);
+  }
+
+  hide() {
+    this.visible = false
+  }
+  show() {
+    this.visible = true
   }
 }

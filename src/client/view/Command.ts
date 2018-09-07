@@ -1,4 +1,7 @@
 export const CommandId = {
+    //common panel show hide
+    cs_showPanel: '',
+    sc_showPanel: '',
     resetTimer: '',
     // cs_resetTimer:'',
     disableTracker: '',
@@ -6,7 +9,7 @@ export const CommandId = {
     sc_updateFoul: '',
     cs_updateScore: '',
     sc_updateScore: '',
-    
+
     // cs_updateScore: '',
     // sc_updateScore: '',
 
@@ -113,8 +116,8 @@ export const CommandId = {
     sc_startTimer: '',
     cs_pauseTimer: '',
     sc_pauseTimer: '',
-    cs_timerEvent:'',
-    sc_timerEvent:'',
+    cs_timerEvent: '',
+    sc_timerEvent: '',
     cs_showPickup: '',//
     sc_showPickup: '',//
     //hp
@@ -182,12 +185,12 @@ export const CommandId = {
     sc_toggleChampionPanel: '',
     initPanel: '',
     //team pick
-    cs_pickState:'',
-    sc_pickState:'',
-    cs_callState:'',
-    sc_callState:'',
-    cs_joinState:'',
-    sc_joinState:'',
+    cs_pickState: '',
+    sc_pickState: '',
+    cs_callState: '',
+    sc_callState: '',
+    cs_joinState: '',
+    sc_joinState: '',
     //top 5
     cs_showTop5: '',
     sc_showTop5: '',
@@ -195,8 +198,8 @@ export const CommandId = {
     cs_inScreenScore: '',
     inScreenScore: '',
     //world war
-    cs_teamScore:'',
-    sc_teamScore:'',
+    cs_teamScore: '',
+    sc_teamScore: '',
     //// RKB
     cs_attack: '',
     attack: '',

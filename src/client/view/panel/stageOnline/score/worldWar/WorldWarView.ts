@@ -3,6 +3,7 @@ import { CommandId } from "../../../../Command";
 import { TweenEx } from "../../../../utils/TweenEx";
 import { WorldWar } from "./WorldWar";
 import { Pick8Layer } from '../../pick8/Pick8';
+import { PanelId } from '../../../../const';
 
 export class WorldWarView extends PIXI.Container {
   stage: any;
@@ -38,6 +39,14 @@ export class WorldWarView extends PIXI.Container {
         }
         if (data.isRestTeamScore) {
           this.worldWar.setTeamScore({ lScore: 0, rScore: 0 })
+        }
+      })
+      .on(CommandId.sc_showPanel, data => {
+        console.log('sc_showPanel',data)
+        if (data.panel == PanelId.worldwarPanel) {
+          data.visible ?
+            this.worldWar.show() :
+            this.worldWar.hide();
         }
       })
       .on(CommandId.sc_setFoul, data => {
@@ -82,6 +91,9 @@ export class WorldWarView extends PIXI.Container {
             playerArr: playerArr,
             visible: data.isShowPick
           })
+          if (data.isShowPick) {
+            this.worldWar.hide()
+          }
         }
       })
       .on(CommandId.sc_setBlood, data => {
