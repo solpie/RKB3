@@ -8,12 +8,14 @@ import { TextTimer } from '../../../utils/TextTimer';
 import { imgLoader } from '../../../utils/ImgLoader';
 const loadAvt = (avtSp, url, left) => {
     console.log('loadAvt', url);
-    imgLoader.loadTex(url, tex => {
+    imgLoader.loadTexArr([url], tex2 => {
+        let tex = imgLoader.getTex(url)
         let s = 86 / tex.height
         avtSp.texture = tex
+        // avtSp.texture = tex2
         avtSp.x = left
         setScale(avtSp, s)
-    })
+    },true)
 }
 
 export class Score2018v3 extends PIXI.Container {

@@ -1505,6 +1505,8 @@
 	    sc_showRank: '',
 	    cs_showScoreRank: '',
 	    sc_showScoreRank: '',
+	    cs_showKDARank: '',
+	    sc_showKDARank: '',
 	    cs_showBracket: '',
 	    sc_showBracket: '',
 	    cs_showGroup: '',
@@ -1862,6 +1864,7 @@
 	            onDeleteGameRec: function (gameIdx) {
 	                gameView.deleteGameRec(gameIdx);
 	            },
+	            onShowKDA: function () { },
 	            onSetScore: function (gameIdx) {
 	                var scoreStr = $("#scoreInput" + gameIdx).val();
 	                console.log(scoreStr);
@@ -2420,6 +2423,8 @@
 	        _this.template = __webpack_require__(37);
 	        _this.timeInSec = VueBase_1.VueBase.PROP;
 	        _this.updateTime = VueBase_1.VueBase.PROP;
+	        _this.lTeamScore = VueBase_1.VueBase.PROP;
+	        _this.rTeamScore = VueBase_1.VueBase.PROP;
 	        _this.watch = {
 	            "baseGame.lName": function (val) {
 	                console.log("lname", val);
@@ -2428,6 +2433,17 @@
 	        _this.methods = {
 	            onSetTimerEvent: function (event, param) {
 	                opReq(Command_1.CommandId.cs_timerEvent, { event: event, param: param });
+	            },
+	            onRestTeamScore: function () {
+	                this.lTeamScore = this.rTeamScore = 0;
+	                opReq(Command_1.CommandId.cs_teamScore, { lScore: this.lTeamScore, rScore: this.rTeamScore });
+	            },
+	            onSetTeamScore: function (isLeft, dtScore) {
+	                if (isLeft)
+	                    this.lTeamScore += dtScore;
+	                else
+	                    this.rTeamScore += dtScore;
+	                opReq(Command_1.CommandId.cs_teamScore, { lScore: this.lTeamScore, rScore: this.rTeamScore });
 	            },
 	            onSetScore: function (isLeft, dtScore) {
 	                var score;
@@ -2464,6 +2480,7 @@
 	    _baseGameView.prototype.created = function () {
 	        this.baseGame = baseGame;
 	        this.timeInSec = 0;
+	        this.lTeamScore = this.rTeamScore = 0;
 	    };
 	    _baseGameView.prototype.initView = function (data) {
 	        baseGame.lName = data.leftPlayer.name;
@@ -2487,13 +2504,13 @@
 /* 37 */
 /***/ (function(module, exports) {
 
-	module.exports = "<table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n    <thead>\r\n    </thead>\r\n    <tbody>\r\n        <tr>\r\n            <th>\r\n                <div hidden>{{updateTime}}</div>\r\n                time in sec:<input class=\"input\" v-model=\"timeInSec\" type=\"text\" style=\"width: 100px;\">\r\n            </th>\r\n            <th>\r\n                <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n            </th>\r\n            <th>L player</th>\r\n            <th>score</th>\r\n            <th>R player</th>\r\n            <th>\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th style=\"font-size:25px;\">\r\n\r\n                <a @click=\"onSetTimerEvent('start')\">开始  </a><a @click=\"onSetTimerEvent('pause')\">暂停  </a>\r\n                <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n                <a @click=\"onSetTimerEvent('reset')\">reset</a>\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                {{baseGame.lName}}\r\n            </th>\r\n            <th style=\"font-size:40px;\">\r\n                <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n            </th>\r\n            <th>\r\n                {{baseGame.rName}}\r\n\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th style=\"font-size:25px;\">foul\r\n                <a @click=\"onResetFoul\"> 重置</a>\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n    </tbody>\r\n</table>";
+	module.exports = "<table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n    <thead>\r\n    </thead>\r\n    <tbody>\r\n        <tr>\r\n            <th>\r\n                <div hidden>{{updateTime}}</div>\r\n                time in sec:<input class=\"input\" v-model=\"timeInSec\" type=\"text\" style=\"width: 100px;\">\r\n            </th>\r\n            <th>\r\n                <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n                <button class=\"button\" @click=\"onSetTeamScore(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetTeamScore(true,-1)\">-1</button>\r\n            </th>\r\n            <th>L player</th>\r\n            <th>score</th>\r\n            <th>R player</th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetTeamScore(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetTeamScore(false,-1)\">-1</button>\r\n                <button class=\"button\" @click=\"onRestTeamScore()\">resetScore</button>\r\n\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th style=\"font-size:25px;\">\r\n                <a @click=\"onSetTimerEvent('start')\">开始  </a><a @click=\"onSetTimerEvent('pause')\">暂停  </a>\r\n                <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n                <a @click=\"onSetTimerEvent('reset')\">reset</a>\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                {{baseGame.lName}}\r\n            </th>\r\n            <th style=\"font-size:40px;\">\r\n                <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n            </th>\r\n            <th>\r\n                {{baseGame.rName}}\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th style=\"font-size:25px;\">foul\r\n                <a @click=\"onResetFoul\"> 重置</a>\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n    </tbody>\r\n</table>";
 
 /***/ }),
 /* 38 */
 /***/ (function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n\r\n    <input type=\"file\" id=\"file\" accept=\"*.xlsx\" hidden>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开本地配置</button>\r\n    <button class=\"button is-primary\" id=\"reload\" @click=\"onReload\">reload</button>\r\n    <br>\r\n\r\n    <div class=\"control\">\r\n        vs player <input class=\"input\" v-model=\"vsPlayer\" type=\"text\" style=\"width: 100px;\">\r\n        <button class=\"button is-primary\" @click=\"onEmitGameInfo\">emit game info</button>\r\n        <button class=\"button is-primary\" @click=\"onAddGame\">创建比赛</button>\r\n        <button class=\"button is-primary\" @click=\"onCommitGame(gameIdx)\">提交比赛</button> teamVsIdx:\r\n        <input class=\"input\" v-model=\"teamVsIdx\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetBlood(teamVsIdx)\">设置初始血量</a>\r\n        <input class=\"input\" v-model=\"teamScore\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetTeamScore(teamScore)\">设置团队比分</a>\r\n\r\n       \r\n        <hr>\r\n\r\n    </div>\r\n\r\n    <!-- Main container -->\r\n    <div class=\"level\">\r\n        <!-- Left side -->\r\n        <div class=\"level-left\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                    <a class=\"button is-info\" @click=\"pickPlayer(true,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <!-- Right side -->\r\n        <div class=\"level-right\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                    <a class=\"button is-danger\" @click=\"pickPlayer(false,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div id='table' class=\"table\"></div>\r\n    <BaseGame/>\r\n    <table class=\"table is-striped is-bordered\">\r\n        <thead>\r\n            <tr>\r\n                <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                <th><abbr>#teamVsIdx</abbr></th>\r\n                <th>L player</th>\r\n                <th>score</th>\r\n                <th>R player</th>\r\n                <th>action</th>\r\n            </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==gameView.gameIdx?'is-selected':'']\">\r\n                <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}}</a></th>\r\n                <td> {{rec.teamVsIdx}} </td>\r\n                <td> {{rec.name[0]}} </td>\r\n                <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                <td> {{rec.name[1]}} </td>\r\n                <td>\r\n                    <div class=\"control\" v-if=\"rec.gameIdx==gameView.gameIdx\">\r\n                        <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                        <button class=\"button\" @click=\"onSetScore(rec.gameIdx)\">修改(提交)比分</button>\r\n                        <button class=\"button\" @click=\"onSetVS(rec.gameIdx,vsPlayer)\">修改对阵↑</button>\r\n                        <button class=\"button\" @click=\"onSetTeamVsIdx(rec.gameIdx)\">修改TeamVsIdx</button>\r\n                        <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                    </div>\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n\r\n\r\n    <div class=\"level\">\r\n        <div class=\"level-left\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n        <div class=\"level-right\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n    </div>\r\n\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onDeleteDoc\">delete doc</button> {{updateTime}}\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n\r\n    <input type=\"file\" id=\"file\" accept=\"*.xlsx\" hidden>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开本地配置</button>\r\n    <button class=\"button is-primary\" id=\"reload\" @click=\"onReload\">reload</button>\r\n    <br>\r\n\r\n    <div class=\"control\">\r\n        vs player <input class=\"input\" v-model=\"vsPlayer\" type=\"text\" style=\"width: 100px;\">\r\n        <button class=\"button is-primary\" @click=\"onEmitGameInfo\">emit game info</button>\r\n        <button class=\"button is-primary\" @click=\"onAddGame\">创建比赛</button>\r\n        <button class=\"button is-primary\" @click=\"onCommitGame(gameIdx)\">提交比赛</button> teamVsIdx:\r\n        <input class=\"input\" v-model=\"teamVsIdx\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetBlood(teamVsIdx)\">设置初始血量</a>\r\n        <input class=\"input\" v-model=\"teamScore\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetTeamScore(teamScore)\">设置团队比分</a>\r\n        <a class=\"button\" @click=\"onShowKDA()\">显示kda</a>\r\n        <hr>\r\n\r\n    </div>\r\n\r\n    <!-- Main container -->\r\n    <div class=\"level\">\r\n        <!-- Left side -->\r\n        <div class=\"level-left\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                    <a class=\"button is-info\" @click=\"pickPlayer(true,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <!-- Right side -->\r\n        <div class=\"level-right\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                    <a class=\"button is-danger\" @click=\"pickPlayer(false,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div id='table' class=\"table\"></div>\r\n    <BaseGame/>\r\n    <table class=\"table is-striped is-bordered\">\r\n        <thead>\r\n            <tr>\r\n                <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                <th><abbr>#teamVsIdx</abbr></th>\r\n                <th>L player</th>\r\n                <th>score</th>\r\n                <th>R player</th>\r\n                <th>action</th>\r\n            </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==gameView.gameIdx?'is-selected':'']\">\r\n                <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}}</a></th>\r\n                <td> {{rec.teamVsIdx}} </td>\r\n                <td> {{rec.name[0]}} </td>\r\n                <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                <td> {{rec.name[1]}} </td>\r\n                <td>\r\n                    <div class=\"control\" v-if=\"rec.gameIdx==gameView.gameIdx\">\r\n                        <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                        <button class=\"button\" @click=\"onSetScore(rec.gameIdx)\">修改(提交)比分</button>\r\n                        <button class=\"button\" @click=\"onSetVS(rec.gameIdx,vsPlayer)\">修改对阵↑</button>\r\n                        <button class=\"button\" @click=\"onSetTeamVsIdx(rec.gameIdx)\">修改TeamVsIdx</button>\r\n                        <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                    </div>\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n\r\n\r\n    <div class=\"level\">\r\n        <div class=\"level-left\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n        <div class=\"level-right\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n    </div>\r\n\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onDeleteDoc\">delete doc</button> {{updateTime}}\r\n</div>";
 
 /***/ }),
 /* 39 */
@@ -2588,7 +2605,11 @@
 	                p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png';
 	                this.lPlayer = p1;
 	                this.rPlayer = p2;
-	                opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2 });
+	                opReq(Command_1.CommandId.cs_setPlayer, {
+	                    leftPlayer: p1, rightPlayer: p2,
+	                    isRestFoul: true,
+	                    isRestTeamScore: true
+	                });
 	            },
 	            onSetPlayerDeactive: function () {
 	                this.vsPlayer = '';
@@ -5840,7 +5861,7 @@
 	        else
 	            callback(this._texMap[url]);
 	    };
-	    ImgLoader.prototype.loadTex2 = function (url, callback, isCrossOrigin) {
+	    ImgLoader.prototype.loadTexRemote = function (url, callback, isCrossOrigin) {
 	        var _this = this;
 	        if (isCrossOrigin === void 0) { isCrossOrigin = true; }
 	        if (url.charAt(0) == '/')
@@ -5859,7 +5880,7 @@
 	        if (isCrossOrigin === void 0) { isCrossOrigin = false; }
 	        var recur = function () {
 	            if (urlArr.length)
-	                _this.loadTex2(urlArr.pop(), function (_) {
+	                _this.loadTexRemote(urlArr.pop(), function (_) {
 	                    recur();
 	                }, isCrossOrigin);
 	            else
@@ -6329,7 +6350,7 @@
 	            this.playerInfo.setText(JsFunc_1.cnWrap(info, 20, 79));
 	            if (player.level && Number(player.level) != 0) {
 	                var url_1 = "/img/panel/top5/" + player.level + ".png";
-	                ImgLoader_1.imgLoader.loadTex2(url_1, function (tex) {
+	                ImgLoader_1.imgLoader.loadTexRemote(url_1, function (tex) {
 	                    console.log('set tex');
 	                    _this.levelSP.texture = ImgLoader_1.imgLoader.getTex(url_1);
 	                    _this.levelSP.visible = true;
@@ -9026,7 +9047,7 @@
 	    Event2017.prototype.showScoreRank = function (data) {
 	        if (!this.scoreRank) {
 	            this.scoreRank = new ScoreRank_1.ScoreRank();
-	            this.scoreRank.create(this);
+	            this.scoreRank.create(this, true);
 	        }
 	        this.scoreRank.show(data);
 	    };
@@ -9101,10 +9122,11 @@
 	        this.pName = TextFac_1.TextFac.new_(ns, this)
 	            .setText(data.name)
 	            .setPos(185, textY);
+	        ns.fontFamily = 'dinCondensedC';
+	        ns.fontSize = '50px';
 	        this.pKDA = TextFac_1.TextFac.new_(ns, this)
 	            .setText("0/0/0")
 	            .setPos(185, 210);
-	        ns.fontFamily = 'dinCondensedC';
 	        ns.fontSize = '60px';
 	        this.pScore = TextFac_1.TextFac.new_(ns, this)
 	            .setText(data.score)
@@ -9189,7 +9211,7 @@
 	            this._setDataLeft(data);
 	        }
 	        this._loadItemTex(data.isSmall);
-	        ImgLoader_1.imgLoader.loadTex2(data.avatar, function (_) {
+	        ImgLoader_1.imgLoader.loadTexRemote(data.avatar, function (_) {
 	            _this.avt.texture = ImgLoader_1.imgLoader.getTex(data.avatar);
 	            PixiEx_1.setScale(_this.avt, 1);
 	            _this.avt.x = avtX;
@@ -9204,6 +9226,7 @@
 	    function ScoreRank() {
 	        var _this = _super !== null && _super.apply(this, arguments) || this;
 	        _this.isRight = true;
+	        _this.isShowKDA = false;
 	        return _this;
 	    }
 	    ScoreRank.prototype.create = function (p, isRight) {
@@ -9218,6 +9241,7 @@
 	            var pi = this.itemArr[i];
 	            var scoreData = data.scoreArr[i];
 	            pi.y = i * 160;
+	            pi.pKDA.visible = this.isShowKDA;
 	            if (scoreData.scoreFx) {
 	                pi.showScoreFx(scoreData.scoreFx);
 	            }
@@ -9245,21 +9269,28 @@
 	            this.p.addChild(this);
 	        }
 	        else {
-	            ImgLoader_1.imgLoader.loadTexArr([
-	                '/img/panel/scoreRank/itemBg_on.png',
-	                '/img/panel/scoreRank/itemFg_on.png',
-	                '/img/panel/scoreRank/itemFg_off.png',
-	                '/img/panel/scoreRank/itemBg_off.png'
-	            ], function (_) {
-	                for (var i = 0; i < data.scoreArr.length; i++) {
-	                    var pi = (new PlayerItem()).create(true, { score: 8, name: '' });
-	                    _this.itemArr.push(pi);
-	                    pi.setSide(_this.isRight);
-	                    _this.addChild(pi);
-	                }
-	                _this._arrangeY(data);
-	                _this.p.addChild(_this);
-	            });
+	            var imgArr = [];
+	            for (var i = 0; i < data.scoreArr.length; i++) {
+	                var player = data.scoreArr[i];
+	                imgArr.push(player.avatar);
+	            }
+	            ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
+	                ImgLoader_1.imgLoader.loadTexArr([
+	                    '/img/panel/scoreRank/itemBg_on.png',
+	                    '/img/panel/scoreRank/itemFg_on.png',
+	                    '/img/panel/scoreRank/itemFg_off.png',
+	                    '/img/panel/scoreRank/itemBg_off.png'
+	                ], function (_) {
+	                    for (var i = 0; i < data.scoreArr.length; i++) {
+	                        var pi = (new PlayerItem()).create(true, { score: 8, name: '' });
+	                        _this.itemArr.push(pi);
+	                        pi.setSide(_this.isRight);
+	                        _this.addChild(pi);
+	                    }
+	                    _this._arrangeY(data);
+	                    _this.p.addChild(_this);
+	                });
+	            }, true);
 	        }
 	    };
 	    ScoreRank.prototype.show = function (data) {
@@ -10053,7 +10084,7 @@
 	        this.curPlayer.texture = this.texMap[idx];
 	        if (data.level && Number(data.level) != 0) {
 	            var url_1 = "/img/panel/top5/" + data.level + ".png";
-	            ImgLoader_1.imgLoader.loadTex2(url_1, function (tex) {
+	            ImgLoader_1.imgLoader.loadTexRemote(url_1, function (tex) {
 	                console.log('set tex');
 	                _this.levelSP.texture = ImgLoader_1.imgLoader.getTex(url_1);
 	                _this.levelSP.visible = true;
@@ -10586,11 +10617,11 @@
 	                var rPlayerText = TextFac_1.TextFac.new_(ps, _this);
 	                if (i < 4) {
 	                    lPlayerText.setPos(x1, y1 + i * 48).alignRight = 558;
-	                    rPlayerText.setPos(x1 + 170, y1 + i * 48);
+	                    rPlayerText.setPos(x1 + 165, y1 + i * 48);
 	                }
 	                else {
 	                    lPlayerText.setPos(x2, y1 + (i - 4) * 48).alignRight = 1280;
-	                    rPlayerText.setPos(x2 + 170, y1 + (i - 4) * 48);
+	                    rPlayerText.setPos(x2 + 165, y1 + (i - 4) * 48);
 	                }
 	                _this.vsPlayerArr.push([lPlayerText, rPlayerText]);
 	            }
@@ -10618,12 +10649,17 @@
 	    };
 	    Pick8.prototype.show = function (data) {
 	        if (this.isLoaded) {
-	            _super.prototype.show.call(this, data);
-	            for (var i = 0; i < this.vsPlayerArr.length; i++) {
-	                var playerTextArr = this.vsPlayerArr[i];
-	                playerTextArr[0].setText(data.playerArr[i][0].name)
-	                    .setAlignRight();
-	                playerTextArr[1].setText("vs    " + data.playerArr[i][1].name);
+	            if (data.visible) {
+	                _super.prototype.show.call(this, data);
+	                for (var i = 0; i < this.vsPlayerArr.length; i++) {
+	                    var playerTextArr = this.vsPlayerArr[i];
+	                    playerTextArr[0].setText(data.playerArr[i][0].name)
+	                        .setAlignRight();
+	                    playerTextArr[1].setText("vs   " + data.playerArr[i][1].name);
+	                }
+	            }
+	            else {
+	                this.hide(data);
 	            }
 	        }
 	        else
@@ -10710,12 +10746,13 @@
 	var ImgLoader_1 = __webpack_require__(73);
 	var loadAvt = function (avtSp, url, left) {
 	    console.log('loadAvt', url);
-	    ImgLoader_1.imgLoader.loadTex(url, function (tex) {
+	    ImgLoader_1.imgLoader.loadTexArr([url], function (tex2) {
+	        var tex = ImgLoader_1.imgLoader.getTex(url);
 	        var s = 86 / tex.height;
 	        avtSp.texture = tex;
 	        avtSp.x = left;
 	        PixiEx_1.setScale(avtSp, s);
-	    });
+	    }, true);
 	};
 	var Score2018v3 = (function (_super) {
 	    __extends(Score2018v3, _super);
@@ -11028,10 +11065,17 @@
 	            _this.worldWar.setTimerEvent(data);
 	        })
 	            .on(Command_1.CommandId.sc_setPlayer, function (data) {
-	            console.log("sc_setBlood", data);
+	            console.log("sc_setPlayer", data);
 	            _this.worldWar.setLeftPlayer(data.leftPlayer);
 	            _this.worldWar.setRightPlayer(data.rightPlayer);
 	            _this.worldWar.setTimerEvent({ event: "setting", param: 0 });
+	            if (data.isRestFoul) {
+	                _this.worldWar.setLeftFoul(0);
+	                _this.worldWar.setRightFoul(0);
+	            }
+	            if (data.isRestTeamScore) {
+	                _this.worldWar.setTeamScore({ lScore: 0, rScore: 0 });
+	            }
 	        })
 	            .on(Command_1.CommandId.sc_setFoul, function (data) {
 	            _this.worldWar.setLeftFoul(data.lFoul);
@@ -11040,7 +11084,7 @@
 	            .on(Command_1.CommandId.sc_teamScore, function (data) {
 	            _this.worldWar.setTeamScore(data);
 	        })
-	            .on(Command_1.CommandId.sc_showScoreRank, function (data) {
+	            .on(Command_1.CommandId.sc_showKDARank, function (data) {
 	            data.isRight = false;
 	            _this.lBloodRank.show(data);
 	            data.isRight = true;
@@ -11068,7 +11112,8 @@
 	                    playerArr.push([lp, rp]);
 	                }
 	                Pick8_1.Pick8Layer.get(_this.stage).show({
-	                    playerArr: playerArr
+	                    playerArr: playerArr,
+	                    visible: data.isShowPick
 	                });
 	            }
 	        })
@@ -11146,7 +11191,7 @@
 	            var lScoreNum = new PixiEx_1.BitmapText(sheet);
 	            _this.lTeamScore = lScoreNum;
 	            lScoreNum.x = 890;
-	            lScoreNum.y = 932;
+	            lScoreNum.y = 939;
 	            lScoreNum.align = 'center';
 	            _this.addChild(lScoreNum);
 	            var rScoreNum = new PixiEx_1.BitmapText(sheet);
@@ -11155,18 +11200,25 @@
 	            rScoreNum.y = lScoreNum.y;
 	            rScoreNum.align = 'center';
 	            lScoreNum.alpha = rScoreNum.alpha = 0.7;
-	            PixiEx_1.setScale(lScoreNum, 0.8);
-	            PixiEx_1.setScale(rScoreNum, 0.8);
+	            PixiEx_1.setScale(lScoreNum, 0.75);
+	            PixiEx_1.setScale(rScoreNum, 0.75);
 	            _this.addChild(rScoreNum);
 	        });
 	        var ns = {
-	            fontFamily: const_1.FontName.NotoSansHans,
+	            fontFamily: const_1.FontName.MicrosoftYahei,
 	            fontSize: "28px",
+	            fontWeight: "",
 	            fill: "#aaa"
 	        };
 	        _this.lName = TextFac_1.TextFac.new_(ns, _this).setY(960);
 	        _this.rName = TextFac_1.TextFac.new_(ns, _this).setPos(1215, _this.lName.y);
 	        ns.fontSize = "25px";
+	        ns.fill = '#fff';
+	        ns.fontWeight = 'bold';
+	        _this.lTitle = TextFac_1.TextFac.new_(ns, _this).setY(925);
+	        _this.rTitle = TextFac_1.TextFac.new_(ns, _this).setPos(1123, _this.lTitle.y);
+	        ns.fill = '#aaa';
+	        ns.fontWeight = '';
 	        _this.lHW = TextFac_1.TextFac.new_(ns, _this).setY(1004);
 	        _this.rHW = TextFac_1.TextFac.new_(ns, _this).setPos(_this.rName.x, _this.lHW.y);
 	        _this.lAvt = new MaskAvatar_1.MaskAvatar('/img/panel/worldwar/maskL.png');
@@ -11185,21 +11237,38 @@
 	        _this.lFoulHint = lFoulHint;
 	        _this.rFoulHint = rFoulHint;
 	        _this.addChild(PixiEx_1.newBitmap({ url: "/img/panel/worldWar/fg.png" }));
-	        ns.fontSize = "24px";
-	        _this.lFoul = TextFac_1.TextFac.new_(ns, _this).setY(1024);
-	        _this.rFoul = TextFac_1.TextFac.new_(ns, _this).setY(_this.lFoul.y);
-	        ns.fontSize = "38px";
+	        ns.fontSize = "35px";
 	        ns.fill = "#ddd";
-	        var t = new TextTimer_1.TextTimer("", ns);
-	        _this.addChild(t);
-	        t.x = 914;
-	        t.y = 1015;
-	        t.textInSec = 0;
-	        _this.timer = t;
+	        ns.fontFamily = 'dinCondensedC';
+	        _this.lFoul = TextFac_1.TextFac.new_(ns, _this).setY(1022);
+	        _this.rFoul = TextFac_1.TextFac.new_(ns, _this).setY(_this.lFoul.y);
 	        ns.fontSize = "28px";
 	        ns.fill = "#eee";
 	        _this.gameTitle = TextFac_1.TextFac.new_(ns, _this)
 	            .setY(925);
+	        ns.fontSize = "40px";
+	        ns.fill = "#ddd";
+	        ns.fontFamily = 'dinCondensedC';
+	        var t = new TextTimer_1.TextTimer("", ns);
+	        _this.addChild(t);
+	        t.x = 926;
+	        t.y = 1019;
+	        t.textInSec = 0;
+	        _this.timer = t;
+	        _this.lTitleTex = PixiEx_1.newBitmap({ url: '/img/panel/worldwar/titleTex.png' });
+	        _this.lTitleTex.width = 370;
+	        _this.lTitleTex.height = 35;
+	        _this.lTitleTex.x = 474;
+	        _this.lTitleTex.y = 925;
+	        _this.rTitleTex = PixiEx_1.newBitmap({ url: '/img/panel/worldwar/titleTex.png' });
+	        _this.rTitleTex.width = _this.lTitleTex.width;
+	        _this.rTitleTex.height = _this.lTitleTex.height;
+	        _this.rTitleTex.x = 1093;
+	        _this.rTitleTex.y = _this.lTitleTex.y;
+	        _this.lTitleTex.mask = _this.lTitle;
+	        _this.rTitleTex.mask = _this.rTitle;
+	        _this.addChild(_this.lTitleTex);
+	        _this.addChild(_this.rTitleTex);
 	        if (isTest)
 	            _this.test();
 	        return _this;
@@ -11227,6 +11296,7 @@
 	        this.rBlood.setBlood(2);
 	    };
 	    WorldWar.prototype.setRightPlayer = function (rPlayer) {
+	        this.rTitle.setText(rPlayer.title).setAlignCenter(_c(300));
 	        this.rName
 	            .setText(rPlayer.name)
 	            .setLimitWidth(298, 40)
@@ -11238,9 +11308,16 @@
 	            .setAlignCenter(_c(300));
 	        if (rPlayer.avatar)
 	            this.rAvt.load(rPlayer.avatar);
-	        this.rBlood.setBlood(rPlayer.blood);
+	        if (rPlayer.blood != null) {
+	            this.rTitle.visible = false;
+	            this.rBlood.setBlood(rPlayer.blood);
+	        }
+	        else {
+	            this.rBlood.visible = false;
+	        }
 	    };
 	    WorldWar.prototype.setLeftPlayer = function (lPlayer) {
+	        this.lTitle.setText(lPlayer.title).setAlignCenter(_c(-300));
 	        this.lName
 	            .setText(lPlayer.name)
 	            .setLimitWidth(298, 40)
@@ -11252,7 +11329,13 @@
 	            .setAlignCenter(_c(-300));
 	        if (lPlayer.avatar)
 	            this.lAvt.load(lPlayer.avatar);
-	        this.lBlood.setBlood(lPlayer.blood);
+	        if (lPlayer.blood != null) {
+	            this.lTitle.visible = false;
+	            this.lBlood.setBlood(lPlayer.blood);
+	        }
+	        else {
+	            this.lBlood.visible = false;
+	        }
 	    };
 	    WorldWar.prototype.setBloodByDtScore = function (data) {
 	        if (data.isLeft) {
@@ -11267,16 +11350,19 @@
 	            .setAlignCenter(960);
 	    };
 	    WorldWar.prototype.setTeamScore = function (data) {
-	        this.lTeamScore.text = data.lScore;
-	        this.rTeamScore.text = data.rScore;
+	        this.lTeamScore.text = data.lScore + "";
+	        this.lTeamScore.x = 910 - this.lTeamScore.width * 0.5;
+	        this.rTeamScore.text = data.rScore + '';
+	        this.rTeamScore.x = 1010 - this.rTeamScore.width * 0.5;
 	    };
 	    WorldWar.prototype.setLeftFoul = function (val) {
 	        this.lFoulHint.visible = val > 3;
-	        this.lFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(-120));
+	        this.lFoul.setText("" + (val || 0)).setAlignCenter(_c(-100));
 	    };
 	    WorldWar.prototype.setRightFoul = function (val) {
+	        console.log('set right foul', val);
 	        this.rFoulHint.visible = val > 3;
-	        this.rFoul.setText("犯规:" + (val || 0)).setAlignCenter(_c(120));
+	        this.rFoul.setText("" + (val || 0)).setAlignCenter(_c(142));
 	    };
 	    WorldWar.prototype.setTimerEvent = function (data) {
 	        this.timer.setTimerEvent(data);
@@ -11765,7 +11851,7 @@
 	    MaskAvatar.prototype.load = function (avtUrl) {
 	        var _this = this;
 	        ImgLoader_1.imgLoader.loadTex(avtUrl, function (tex) {
-	            _this.avtSp.texture = tex;
+	            _this.avtSp.texture = ImgLoader_1.imgLoader.getTex(avtUrl);
 	            PixiEx_1.setScale(_this.avtSp, _this.xyw[2] / _this.avtSp.texture.width);
 	            _this.avtSp.x = _this.xyw[0];
 	            _this.avtSp.y = _this.xyw[1];

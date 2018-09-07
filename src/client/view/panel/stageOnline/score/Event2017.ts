@@ -374,7 +374,7 @@ export class Event2017 extends PIXI.Container {
     showScoreRank(data) {
         if (!this.scoreRank) {
             this.scoreRank = new ScoreRank()
-            this.scoreRank.create(this)
+            this.scoreRank.create(this,true)
         }
         this.scoreRank.show(data)
     }

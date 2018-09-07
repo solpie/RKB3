@@ -133,7 +133,7 @@ export class Top5 extends PIXI.Container {
 
         if (data.level&& Number(data.level) != 0) {
             let url = `/img/panel/top5/${data.level}.png`
-            imgLoader.loadTex2(url, tex => {
+            imgLoader.loadTexRemote(url, tex => {
                 console.log('set tex');
                 this.levelSP.texture = imgLoader.getTex(url)
                 this.levelSP.visible = true

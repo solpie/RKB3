@@ -38,7 +38,7 @@ export class PlayerNow extends PIXI.Container {
     }
 
     show(data) {
-        imgLoader.loadTex2(data.avatar, _ => {
+        imgLoader.loadTexRemote(data.avatar, _ => {
             // this.y = 285
             // this.x = 20
             this.y = data.y

@@ -174,6 +174,7 @@ class _worldWar extends VueBase {
     onDeleteGameRec(gameIdx) {
       gameView.deleteGameRec(gameIdx);
     },
+    onShowKDA() { },
     onSetScore(gameIdx) {
       let scoreStr = $("#scoreInput" + gameIdx).val();
       console.log(scoreStr);

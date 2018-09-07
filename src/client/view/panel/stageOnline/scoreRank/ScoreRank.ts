@@ -39,11 +39,14 @@ class PlayerItem extends PIXI.Container {
             .setText(data.name)
             .setPos(185, textY)
 
+
+
+        ns.fontFamily = 'dinCondensedC'
+        ns.fontSize = '50px'
         this.pKDA = TextFac.new_(ns, this)
             .setText("0/0/0")
             .setPos(185, 210)
 
-        ns.fontFamily = 'dinCondensedC'
         ns.fontSize = '60px'
 
         this.pScore = TextFac.new_(ns, this)
@@ -141,7 +144,7 @@ class PlayerItem extends PIXI.Container {
             this._setDataLeft(data)
         }
         this._loadItemTex(data.isSmall)
-        imgLoader.loadTex2(data.avatar, _ => {
+        imgLoader.loadTexRemote(data.avatar, _ => {
             this.avt.texture = imgLoader.getTex(data.avatar)
             setScale(this.avt, 1)
 
@@ -156,6 +159,7 @@ export class ScoreRank extends PIXI.Container {
     p: any
     itemArr: any
     isRight = true
+    isShowKDA = false
     create(p, isRight?) {
         this.isRight = isRight
         this.p = p
@@ -168,12 +172,11 @@ export class ScoreRank extends PIXI.Container {
             let pi: PlayerItem = this.itemArr[i]
             let scoreData = data.scoreArr[i]
             pi.y = i * 160
+            pi.pKDA.visible = this.isShowKDA
             if (scoreData.scoreFx) {
                 pi.showScoreFx(scoreData.scoreFx)
             }
-
             pi.setScore(scoreData)
-
         }
 
     }
@@ -198,20 +201,28 @@ export class ScoreRank extends PIXI.Container {
             this.p.addChild(this)
         }
         else {
-            imgLoader.loadTexArr([
-                '/img/panel/scoreRank/itemBg_on.png',
-                '/img/panel/scoreRank/itemFg_on.png',
-                '/img/panel/scoreRank/itemFg_off.png',
-                '/img/panel/scoreRank/itemBg_off.png'], _ => {
-                    for (let i = 0; i < data.scoreArr.length; i++) {
-                        let pi: PlayerItem = (new PlayerItem()).create(true, { score: 8, name: '' })
-                        this.itemArr.push(pi)
-                        pi.setSide(this.isRight)
-                        this.addChild(pi)
-                    }
-                    this._arrangeY(data)
-                    this.p.addChild(this)
-                })
+            let imgArr = []
+            for (let i = 0; i < data.scoreArr.length; i++) {
+                let player = data.scoreArr[i]
+                imgArr.push(player.avatar)
+            }
+            imgLoader.loadTexArr(imgArr, _ => {
+                imgLoader.loadTexArr([
+                    '/img/panel/scoreRank/itemBg_on.png',
+                    '/img/panel/scoreRank/itemFg_on.png',
+                    '/img/panel/scoreRank/itemFg_off.png',
+                    '/img/panel/scoreRank/itemBg_off.png'], _ => {
+                        for (let i = 0; i < data.scoreArr.length; i++) {
+                            let pi: PlayerItem = (new PlayerItem()).create(true, { score: 8, name: '' })
+                            this.itemArr.push(pi)
+                            pi.setSide(this.isRight)
+                            this.addChild(pi)
+                        }
+                        this._arrangeY(data)
+                        this.p.addChild(this)
+                    })
+            }, true)
+
         }
     }
     show(data) {

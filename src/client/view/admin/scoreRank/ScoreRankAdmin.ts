@@ -160,7 +160,11 @@ class _ScoreRankAdmin extends VueBase {
             p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png'
             this.lPlayer = p1
             this.rPlayer = p2
-            opReq('cs_setPlayer', { leftPlayer: p1, rightPlayer: p2 })
+            opReq(CommandId.cs_setPlayer, {
+                leftPlayer: p1, rightPlayer: p2,
+                isRestFoul: true,
+                isRestTeamScore: true
+            })
         },
         onSetPlayerDeactive() {
             this.vsPlayer = ''

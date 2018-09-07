@@ -28,11 +28,11 @@ export class Pick8 extends BasePanel {
 
                 if (i < 4) {
                     lPlayerText.setPos(x1, y1 + i * 48).alignRight = 558
-                    rPlayerText.setPos(x1 + 170, y1 + i * 48)
+                    rPlayerText.setPos(x1 + 165, y1 + i * 48)
                 }
                 else {
                     lPlayerText.setPos(x2, y1 + (i - 4) * 48).alignRight = 1280
-                    rPlayerText.setPos(x2 + 170, y1 + (i - 4) * 48)
+                    rPlayerText.setPos(x2 + 165, y1 + (i - 4) * 48)
                 }
 
                 this.vsPlayerArr.push([lPlayerText, rPlayerText])
@@ -62,12 +62,17 @@ export class Pick8 extends BasePanel {
 
     show(data) {
         if (this.isLoaded) {
-            super.show(data)
-            for (let i = 0; i < this.vsPlayerArr.length; i++) {
-                const playerTextArr = this.vsPlayerArr[i];
-                playerTextArr[0].setText(data.playerArr[i][0].name)
-                    .setAlignRight()
-                playerTextArr[1].setText("vs    " + data.playerArr[i][1].name)
+            if (data.visible) {
+                super.show(data)
+                for (let i = 0; i < this.vsPlayerArr.length; i++) {
+                    const playerTextArr = this.vsPlayerArr[i];
+                    playerTextArr[0].setText(data.playerArr[i][0].name)
+                        .setAlignRight()
+                    playerTextArr[1].setText("vs   " + data.playerArr[i][1].name)
+                }
+            }
+            else {
+                this.hide(data)
             }
         }
         else

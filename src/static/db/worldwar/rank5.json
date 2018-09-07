@@ -10,6 +10,8 @@
     },
     "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/kd/",
     "rec-show": 3,
+    "isShowPick": false,
+    "isShowKDA": false,
     "recMap": {
         "#1": {
             "rec": [
@@ -47,7 +49,7 @@
     "scoreRank": [
         [
             "p1_安云鹏",
-            1
+            3
         ],
         [
             "p2_安云鹏",
@@ -59,10 +61,6 @@
         ],
         [
             "p4_安云鹏",
-            1
-        ],
-        [
-            "p5_安云鹏",
             1
         ]
     ],

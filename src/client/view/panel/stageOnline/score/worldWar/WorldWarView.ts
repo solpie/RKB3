@@ -28,10 +28,17 @@ export class WorldWarView extends PIXI.Container {
       this.worldWar.setTimerEvent(data);
     }) //
       .on(CommandId.sc_setPlayer, data => {
-        console.log("sc_setBlood", data);
+        console.log("sc_setPlayer", data);
         this.worldWar.setLeftPlayer(data.leftPlayer);
         this.worldWar.setRightPlayer(data.rightPlayer);
         this.worldWar.setTimerEvent({ event: "setting", param: 0 });
+        if (data.isRestFoul) {
+          this.worldWar.setLeftFoul(0)
+          this.worldWar.setRightFoul(0)
+        }
+        if (data.isRestTeamScore) {
+          this.worldWar.setTeamScore({ lScore: 0, rScore: 0 })
+        }
       })
       .on(CommandId.sc_setFoul, data => {
         this.worldWar.setLeftFoul(data.lFoul);
@@ -40,7 +47,7 @@ export class WorldWarView extends PIXI.Container {
       .on(CommandId.sc_teamScore, data => {
         this.worldWar.setTeamScore(data)
       })
-      .on(CommandId.sc_showScoreRank, data => {
+      .on(CommandId.sc_showKDARank, data => {
         data.isRight = false
         this.lBloodRank.show(data)
         data.isRight = true
@@ -72,7 +79,8 @@ export class WorldWarView extends PIXI.Container {
             playerArr.push([lp, rp])
           }
           Pick8Layer.get(this.stage).show({
-            playerArr: playerArr
+            playerArr: playerArr,
+            visible: data.isShowPick
           })
         }
       })

@@ -78,6 +78,8 @@ export const CommandId = {
     sc_showRank: '',//
     cs_showScoreRank: '',//
     sc_showScoreRank: '',//
+    cs_showKDARank: '',//
+    sc_showKDARank: '',//
     cs_showBracket: '',//
     sc_showBracket: '',//
     cs_showGroup: '',//

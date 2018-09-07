@@ -9,16 +9,21 @@
             </th>
             <th>
                 <a id="vudp" @click="onVueUpdate"></a>
+                <button class="button" @click="onSetTeamScore(true,1)">+1</button>
+                <button class="button" @click="onSetTeamScore(true,-1)">-1</button>
             </th>
             <th>L player</th>
             <th>score</th>
             <th>R player</th>
             <th>
+                <button class="button" @click="onSetTeamScore(false,1)">+1</button>
+                <button class="button" @click="onSetTeamScore(false,-1)">-1</button>
+                <button class="button" @click="onRestTeamScore()">resetScore</button>
+
             </th>
         </tr>
         <tr>
             <th style="font-size:25px;">
-
                 <a @click="onSetTimerEvent('start')">开始  </a><a @click="onSetTimerEvent('pause')">暂停  </a>
                 <a @click="onSetTimerEvent('setting',timeInSec)">设置</a>
                 <a @click="onSetTimerEvent('reset')">reset</a>
@@ -35,7 +40,6 @@
             </th>
             <th>
                 {{baseGame.rName}}
-
             </th>
             <th>
                 <button class="button" @click="onSetScore(false,1)">+1</button>

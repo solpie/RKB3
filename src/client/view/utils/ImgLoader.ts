@@ -14,7 +14,7 @@ class ImgLoader {
     }
 
 
-    loadTex2(url, callback, isCrossOrigin = true) {
+    loadTexRemote(url, callback, isCrossOrigin = true) {
         if (url.charAt(0) == '/')
             isCrossOrigin = false
         if (!this._texMap[url]) {
@@ -30,7 +30,7 @@ class ImgLoader {
     loadTexArr(urlArr, callback, isCrossOrigin = false) {
         let recur = () => {
             if (urlArr.length)
-                this.loadTex2(urlArr.pop(), _ => {
+                this.loadTexRemote(urlArr.pop(), _ => {
                     recur()
                 }, isCrossOrigin)
             else

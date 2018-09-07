@@ -165,7 +165,7 @@ export class LiveComing extends PIXI.Container {
 
             if (player.level && Number(player.level) != 0) {
                 let url = `/img/panel/top5/${player.level}.png`
-                imgLoader.loadTex2(url, tex => {
+                imgLoader.loadTexRemote(url, tex => {
                     console.log('set tex');
                     this.levelSP.texture = imgLoader.getTex(url)
                     this.levelSP.visible = true

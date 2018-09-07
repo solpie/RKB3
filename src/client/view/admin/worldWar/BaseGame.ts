@@ -18,7 +18,7 @@ export class BaseGame {
   rFoul: number = 0;
   lName: string = "";
   rName: string = "";
-  constructor() {}
+  constructor() { }
 }
 const baseGame = new BaseGame();
 declare let $;
@@ -26,6 +26,8 @@ export class _baseGameView extends VueBase {
   template = require("./baseGame.html");
   timeInSec = VueBase.PROP;
   updateTime = VueBase.PROP;
+  lTeamScore = VueBase.PROP
+  rTeamScore = VueBase.PROP
   constructor() {
     super();
     VueBase.initProps(this);
@@ -34,6 +36,7 @@ export class _baseGameView extends VueBase {
   created() {
     this.baseGame = baseGame;
     this.timeInSec = 0;
+    this.lTeamScore = this.rTeamScore = 0
   }
   initView(data) {
     baseGame.lName = data.leftPlayer.name;
@@ -47,13 +50,26 @@ export class _baseGameView extends VueBase {
     this.updateTime = new Date().getTime();
   }
   watch = {
-    "baseGame.lName": function(val) {
+    "baseGame.lName": function (val) {
       console.log("lname", val);
     }
   };
   methods = {
     onSetTimerEvent(event, param?) {
       opReq(CommandId.cs_timerEvent, { event: event, param: param });
+    },
+    onRestTeamScore() {
+      this.lTeamScore = this.rTeamScore = 0
+      opReq(CommandId.cs_teamScore, { lScore: this.lTeamScore, rScore: this.rTeamScore });
+    },
+    onSetTeamScore(isLeft, dtScore) {
+      // isLeft ? (baseGame.lScore += dtScore) : (baseGame.rScore += dtScore);
+      if (isLeft)
+        this.lTeamScore += dtScore;
+      else
+        this.rTeamScore += dtScore;
+
+      opReq(CommandId.cs_teamScore, { lScore: this.lTeamScore, rScore: this.rTeamScore });
     },
     onSetScore(isLeft, dtScore) {
       // isLeft ? (baseGame.lScore += dtScore) : (baseGame.rScore += dtScore);
@@ -76,9 +92,9 @@ export class _baseGameView extends VueBase {
       });
       this.vueUpdate();
     },
-    onResetFoul(){
-      this.onSetFoul(true,-baseGame.lFoul)
-      this.onSetFoul(false,-baseGame.rFoul)
+    onResetFoul() {
+      this.onSetFoul(true, -baseGame.lFoul)
+      this.onSetFoul(false, -baseGame.rFoul)
     },
     onVueUpdate() {
       this.vueUpdate();
