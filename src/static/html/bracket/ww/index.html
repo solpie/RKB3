@@ -78,6 +78,11 @@
                 </div>
                 <span class="player white" :style="item.ss">{{item.score>-1?item.score:""}} </span>
             </div>
+
+            <div v-for="(bracketArr,idx) in brackets2" :key="idx" class="bracket">
+                <img v-if="bracketArr[0]" :src="'f'+(idx+1)+'_0.png'" class="bracket" />
+                <img v-if="bracketArr[1]" :src="'f'+(idx+1)+'_1.png'" class="bracket" />
+            </div>
         </div>
         <!-- <div class="bracket gameTitle">{{gameTitle}}</div> -->
 
@@ -93,7 +98,8 @@
                 items2: [],
                 gameTitle: "",
                 isBg1: true,
-                brackets: []
+                brackets: [],
+                brackets2: []
             },
             // mounted: function() {
             created: function() {
@@ -164,7 +170,9 @@
                     // [819, 263, 605 + scoreOfs],
                 ])
                 this.items2 = _mkItems(pos2)
-
+                for (let j = 0; j < 3; j++) {
+                    this.brackets2.push([true, true])
+                }
                 var localWs = io.connect('/rkb')
                 localWs.on('connect', () => {
                         console.log('connect', window.location.host)
@@ -197,9 +205,10 @@
                                 item1.score = lScore
                                 if (item2)
                                     item2.score = rScore
-                                    //
+                                    //bracket
                                 if (lScore == 0 && rScore == 0) {
                                     this.brackets[i] = [false, false]
+                                    this.brackets2[i] = [false, false]
                                 } else {
                                     let isLWin = lScore > rScore
                                     this.brackets[i][0] = isLWin
@@ -208,7 +217,14 @@
                                         this.items[winMap[i]].name = p1.name
                                     else
                                         this.items[winMap[i]].name = p2.name
+
+                                    if (!this.isBg1) {
+                                        this.brackets2[i][0] = isLWin
+                                        this.brackets2[i][1] = !isLWin
+                                    }
                                 }
+
+
                             }
                         }
                     })
