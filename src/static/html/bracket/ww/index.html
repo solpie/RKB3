@@ -79,7 +79,7 @@
                 <span class="player white" :style="item.ss">{{item.score>-1?item.score:""}} </span>
             </div>
         </div>
-        <div class="bracket gameTitle">{{gameTitle}}</div>
+        <!-- <div class="bracket gameTitle">{{gameTitle}}</div> -->
 
     </div>
     <script>
@@ -150,11 +150,19 @@
                 for (let j = 0; j < 4; j++) {
                     this.brackets.push([true, true])
                 }
-                //final bracket
+                //final bracket#####################################
+                let x4 = 167,
+                    x4r = 1459;
                 let pos2 = _r([
-                    [x1, 255, x1 + scoreOfs],
-                    [x1, 255 + 186, x1 + scoreOfs],
-                ], x1r, x1r - scoreOfs + 300 - 38)
+                    [x4, 255 + 126, x4 + scoreOfs],
+                    [x4, 255 + 126 + 186, x4 + scoreOfs],
+                ], x4r, x4r - scoreOfs + 300 - 38)
+                pos2 = pos2.concat([
+                    [605, 474, 605 + scoreOfs],
+                    [1021, 474, 1021 - scoreOfs + 300 - 38],
+                    [819, 263, 605 + scoreOfs]
+                    // [819, 263, 605 + scoreOfs],
+                ])
                 this.items2 = _mkItems(pos2)
 
                 var localWs = io.connect('/rkb')
@@ -182,11 +190,13 @@
                                 let p1 = data.playerMap[rec.player[0]]
                                 let p2 = data.playerMap[rec.player[1]]
                                 item1.name = p1.name
-                                item2.name = p2.name
+                                if (item2)
+                                    item2.name = p2.name
                                 let lScore = rec.score[0]
                                 let rScore = rec.score[1]
                                 item1.score = lScore
-                                item2.score = rScore
+                                if (item2)
+                                    item2.score = rScore
                                 if (lScore == 0 && rScore == 0) {
                                     this.brackets[i] = [false, false]
                                 } else {
