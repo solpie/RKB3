@@ -4,6 +4,7 @@ import { TweenEx } from "../../../../utils/TweenEx";
 import { WorldWar } from "./WorldWar";
 import { Pick8Layer } from '../../pick8/Pick8';
 import { PanelId } from '../../../../const';
+import { Countdown } from '../Countdown';
 
 export class WorldWarView extends PIXI.Container {
   stage: any;
@@ -22,6 +23,9 @@ export class WorldWarView extends PIXI.Container {
 
       this.rBloodRank = new ScoreRank()
       this.rBloodRank.create(this.worldWar, true)
+
+
+      this.stage.addChild(new Countdown())
     });
 
     io.on(CommandId.sc_timerEvent, data => {

@@ -49,6 +49,7 @@ export class TextTimer extends PIXI.Text {
           if (this.timeInSec < 0) this.timeInSec = 0;
         } else this.timeInSec++;
         this.text = formatSecond(this.timeInSec);
+        this.emit('sec',this.text)
       }, 1000);
       this.timerState = TimerState.RUNNING;
     };

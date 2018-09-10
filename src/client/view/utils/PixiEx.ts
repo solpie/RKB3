@@ -82,7 +82,7 @@ export class BitmapText extends PIXI.Container {
     private _frameHeight: number
     private _digiWidth: number
     private _digiCtn: PIXI.Container
-
+    public ofs:number = 0
     constructor(options: { img?: string, texture?: PIXI.Texture, text: string, frames: Array<Array<number>>, animations: any }) {
         super()
         let text = options.text
@@ -132,7 +132,7 @@ export class BitmapText extends PIXI.Container {
                 let digiFrame = this.digis[digiIdx]
                 digiFrame.visible = true
 
-                digiFrame.x = digiIdx * this._frameWidth
+                digiFrame.x = digiIdx * (this._frameWidth+this.ofs)
                 digiFrame['idx'] = digiIdx
                 digiFrame['sp'].x = - ofsX
                 digiFrame['sp'].y = - ofsY
