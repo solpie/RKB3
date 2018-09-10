@@ -4,7 +4,7 @@ import { FontName, TimerState, TimerEvent } from "../../../../const";
 import { TextTimer } from "../../../../utils/TextTimer";
 import { BloodBar } from "./BloodBar";
 import { MaskAvatar } from "../../../base/MaskAvatar";
-const isTest = true;
+const isTest = false;
 const _c = v => {
   return 960 + v;
 };
@@ -174,7 +174,13 @@ export class WorldWar extends PIXI.Container {
     this.rTitleTex.mask = this.rTitle
     this.addChild(this.lTitleTex)
     this.addChild(this.rTitleTex)
+
+    this.initData()
     if (isTest) this.test();
+  }
+  initData() {
+    this.setLeftFoul(0)
+    this.setRightFoul(0)
   }
   test() {
     this.setLeftPlayer({
@@ -222,7 +228,8 @@ export class WorldWar extends PIXI.Container {
     if (rPlayer.avatar)
       this.rAvt.load(rPlayer.avatar)
     if (rPlayer.blood != null) {
-      this.rTitle.visible = false
+      this.rTitle.text = ''
+      this.rBlood.visible = true
       this.rBlood.setBlood(rPlayer.blood);
     }
     else {
@@ -231,6 +238,7 @@ export class WorldWar extends PIXI.Container {
   }
 
   setLeftPlayer(lPlayer) {
+    console.log('set left player', lPlayer);
     this.lTitle.setText(lPlayer.title).setAlignCenter(_c(-300));
 
     this.lName
@@ -248,8 +256,10 @@ export class WorldWar extends PIXI.Container {
     // loadAvt(this.lAvt, lPlayer.avatar, 725)
     if (lPlayer.avatar)
       this.lAvt.load(lPlayer.avatar)
+
     if (lPlayer.blood != null) {
-      this.lTitle.visible = false
+      this.lTitle.text = ''
+      this.lBlood.visible = true
       this.lBlood.setBlood(lPlayer.blood);
     }
     else {

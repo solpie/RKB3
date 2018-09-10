@@ -32,7 +32,7 @@ export class MaskAvatar extends PIXI.Container {
         this.testSp.alpha = 0.4
     }
     load(avtUrl) {
-        imgLoader.loadTex(avtUrl, tex => {
+        imgLoader.loadTexRemote(avtUrl, tex => {
             this.avtSp.texture = imgLoader.getTex(avtUrl)
             setScale(this.avtSp, this.xyw[2] / this.avtSp.texture.width)
             this.avtSp.x = this.xyw[0]
