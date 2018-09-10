@@ -66,5 +66,46 @@
             1
         ]
     ],
+    "rank8": [{
+            "playerId": "p1",
+            "score": 3000,
+            "beatPlayer": ["p2", "p2", "p2", "p2"]
+        },
+        {
+            "playerId": "p2",
+            "score": 2000,
+            "beatPlayer": ["p2", "p3"]
+        },
+        {
+            "playerId": "p3",
+            "score": 2000,
+            "beatPlayer": ["p2", "p3"]
+        },
+        {
+            "playerId": "p4",
+            "score": 2000,
+            "beatPlayer": ["p2", "p3", "p3"]
+        },
+        {
+            "playerId": "p1",
+            "score": 2000,
+            "beatPlayer": ["p2"]
+        },
+        {
+            "playerId": "p1",
+            "score": 2000,
+            "beatPlayer": ["p2"]
+        },
+        {
+            "playerId": "p1",
+            "score": 2000,
+            "beatPlayer": ["p2"]
+        },
+        {
+            "playerId": "p1",
+            "score": 2000,
+            "beatPlayer": ["p2"]
+        }
+    ],
     "playerMap": { "p1": { "name": "黄宇军", "hwa": [172, 68, 24], "title": "路人王人气第一人", "playerId": "p1" }, "p2": { "name": "李秀波", "hwa": [180, 68, 24], "title": "路人王绵阳站亚军", "playerId": "p2" }, "p3": { "name": "肖博", "hwa": [195, 95, 22], "title": "CUBA上海交通大学球员", "playerId": "p3" }, "p4": { "name": "特日格勒", "hwa": [180, 76, 22], "title": "路人王呼和浩特站冠军", "playerId": "p4" }, "p5": { "name": "古展腾", "hwa": [176, 65, 19], "title": "第六区街球队成员", "playerId": "p5" } }
 }

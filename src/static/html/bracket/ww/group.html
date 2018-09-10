@@ -50,13 +50,12 @@
         }
     </style>
     <script src="/js/vue.js"></script>
-    <script src="/js/jquery3.min.js"></script>
     <script src="/js/socket.io.slim.min.js"></script>
 </head>
 
 <body>
     <div id="app">
-        <img src="rank8Bg.png" />
+        <img src="groupBg.png" />
         <div v-for="(item, index) in items" :key="item.idx">
             <div class="player blue" :style="item.s">
                 <span>{{item.name}} </span>
@@ -70,9 +69,6 @@
                 <span style="left: 439px;top:10px; position: relative;font-size: 28px;">
                     {{item.beatPlayer}}
                 </span>
-            </div>
-            <div class="player blue" :style="item.s">
-                <img :id="'avatar'+index" style="height:80px;left: -180px;top:-15px; position: relative;" />
             </div>
         </div>
     </div>
@@ -117,11 +113,6 @@
                     return a
                 }
                 this.items = _mkItems(pos)
-                let getAvatar = (url, idx) => {
-                    $.get(url, data => {
-                        $("#avatar" + idx).attr('src', data);
-                    });
-                }
                 var localWs = io.connect('/rkb')
                 localWs.on('connect', () => {
                         console.log('connect', window.location.host)
@@ -136,13 +127,6 @@
                                 let player = playerMap[dataItem.playerId]
                                 item.name = player.name
                                 item.score = dataItem.score
-                                let b = []
-                                for (const pid of dataItem.beatPlayer) {
-                                    b.push(playerMap[pid].name)
-                                }
-                                item.beatPlayer = b.join('、')
-                                let url = '/proxy?url=' + data.avatarUrlBase + '/' + player.playerId + '.png'
-                                getAvatar(url, i)
                             }
                         }
                     })
