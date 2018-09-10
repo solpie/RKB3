@@ -176,7 +176,9 @@ class _worldWar extends VueBase {
     onDeleteGameRec(gameIdx) {
       gameView.deleteGameRec(gameIdx);
     },
-    onShowKDA() { },
+    onShowKDA(v) {
+      opReq(CommandId.cs_showPanel, { panel: PanelId.worldwarKDA, visible: v })
+    },
     onSetScore(gameIdx) {
       let scoreStr = $("#scoreInput" + gameIdx).val();
       console.log(scoreStr);

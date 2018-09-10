@@ -10,6 +10,7 @@ export const PanelId = {
     actPanel: 'act',
     screenPanel: 'screen',
     worldwarPanel: 'worldwarPanel',
+    worldwarKDA: 'worldwarKDAPanel',
     playerPanel: 'player'
 };
 export const FontName = {
@@ -49,6 +50,3 @@ export const ViewEvent = {
     STRAIGHT3_LEFT: 'STRAIGHT3_LEFT',
     STRAIGHT3_RIGHT: 'STRAIGHT3_RIGHT'
 };
-export function ScParam(param) {
-    return param
-}

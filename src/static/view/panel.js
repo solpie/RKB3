@@ -1356,6 +1356,7 @@
 	    actPanel: 'act',
 	    screenPanel: 'screen',
 	    worldwarPanel: 'worldwarPanel',
+	    worldwarKDA: 'worldwarKDAPanel',
 	    playerPanel: 'player'
 	};
 	exports.FontName = {
@@ -1393,10 +1394,6 @@
 	    STRAIGHT3_LEFT: 'STRAIGHT3_LEFT',
 	    STRAIGHT3_RIGHT: 'STRAIGHT3_RIGHT'
 	};
-	function ScParam(param) {
-	    return param;
-	}
-	exports.ScParam = ScParam;
 
 
 /***/ },
@@ -1818,7 +1815,9 @@
 	            onDeleteGameRec: function (gameIdx) {
 	                gameView.deleteGameRec(gameIdx);
 	            },
-	            onShowKDA: function () { },
+	            onShowKDA: function (v) {
+	                opReq(Command_1.CommandId.cs_showPanel, { panel: const_1.PanelId.worldwarKDA, visible: v });
+	            },
 	            onSetScore: function (gameIdx) {
 	                var scoreStr = $("#scoreInput" + gameIdx).val();
 	                console.log(scoreStr);
@@ -10539,6 +10538,11 @@
 	                    _this.worldWar.show() :
 	                    _this.worldWar.hide();
 	            }
+	            if (data.panel == const_1.PanelId.worldwarKDA) {
+	                data.visible ?
+	                    _this.worldWar.show() :
+	                    _this.worldWar.hide();
+	            }
 	        })
 	            .on(Command_1.CommandId.sc_setFoul, function (data) {
 	            _this.worldWar.setLeftFoul(data.lFoul);
@@ -10871,7 +10875,7 @@
 	        this.initBlood = 0;
 	        this.isLeft = isLeft;
 	        this.bloodArr = [];
-	        for (var i = 0; i < 12; i++) {
+	        for (var i = 0; i < 13; i++) {
 	            var b = PixiEx_1.newBitmap({ url: "/img/panel/worldWar/b" + (i + 0) + ".png" });
 	            this.addChild(b);
 	            this.bloodArr.push(b);

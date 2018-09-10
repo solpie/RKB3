@@ -42,8 +42,13 @@ export class WorldWarView extends PIXI.Container {
         }
       })
       .on(CommandId.sc_showPanel, data => {
-        console.log('sc_showPanel',data)
+        console.log('sc_showPanel', data)
         if (data.panel == PanelId.worldwarPanel) {
+          data.visible ?
+            this.worldWar.show() :
+            this.worldWar.hide();
+        }
+        if (data.panel == PanelId.worldwarKDA) {
           data.visible ?
             this.worldWar.show() :
             this.worldWar.hide();

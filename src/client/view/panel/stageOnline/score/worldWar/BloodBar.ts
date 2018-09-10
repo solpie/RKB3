@@ -11,7 +11,7 @@ export class BloodBar extends PIXI.Container {
     this.isLeft = isLeft;
 
     this.bloodArr = [];
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 13; i++) {
       let b = newBitmap({ url: "/img/panel/worldWar/b" + (i + 0) + ".png" });
       this.addChild(b);
       this.bloodArr.push(b);

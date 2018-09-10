@@ -1786,6 +1786,7 @@
 	    actPanel: 'act',
 	    screenPanel: 'screen',
 	    worldwarPanel: 'worldwarPanel',
+	    worldwarKDA: 'worldwarKDAPanel',
 	    playerPanel: 'player'
 	};
 	exports.FontName = {
@@ -1823,10 +1824,6 @@
 	    STRAIGHT3_LEFT: 'STRAIGHT3_LEFT',
 	    STRAIGHT3_RIGHT: 'STRAIGHT3_RIGHT'
 	};
-	function ScParam(param) {
-	    return param;
-	}
-	exports.ScParam = ScParam;
 
 
 /***/ },
@@ -2248,7 +2245,9 @@
 	            onDeleteGameRec: function (gameIdx) {
 	                gameView.deleteGameRec(gameIdx);
 	            },
-	            onShowKDA: function () { },
+	            onShowKDA: function (v) {
+	                opReq(Command_1.CommandId.cs_showPanel, { panel: const_1.PanelId.worldwarKDA, visible: v });
+	            },
 	            onSetScore: function (gameIdx) {
 	                var scoreStr = $("#scoreInput" + gameIdx).val();
 	                console.log(scoreStr);
