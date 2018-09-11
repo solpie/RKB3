@@ -12,7 +12,7 @@ export class Countdown extends PIXI.Container {
                 text: '0',
                 animations: {
                     "1":5, "2": 0, "3": 7, "4":6, "5": 3,
-                    "6":9 , "7":3, "8": 10, "9":1 , "0": 2, ":":4
+                    "6":9 , "7":8, "8": 10, "9":1 , "0": 2, ":":4
                 },
                 texture: tex,
                 frames: [
@@ -37,6 +37,7 @@ export class Countdown extends PIXI.Container {
             sec.text = "00:00"
             let cd = new TextTimer()
             cd.setTimeBySec(3600)
+            // sec.text = "1234567890:"
             cd.isMin = true
             cd.on('sec', text => {
                 sec.text = text
