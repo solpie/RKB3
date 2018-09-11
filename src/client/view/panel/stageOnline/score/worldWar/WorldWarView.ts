@@ -11,6 +11,7 @@ export class WorldWarView extends PIXI.Container {
   worldWar: WorldWar;
   lBloodRank: ScoreRank
   rBloodRank: ScoreRank
+  cd:Countdown
   constructor(stage, io) {
     super();
     this.stage = stage;
@@ -25,7 +26,8 @@ export class WorldWarView extends PIXI.Container {
       this.rBloodRank.create(this.worldWar, true)
 
 
-      this.stage.addChild(new Countdown())
+      this.cd = new Countdown()
+      this.stage.addChild(this.cd)
     });
 
     io.on(CommandId.sc_timerEvent, data => {
@@ -44,6 +46,9 @@ export class WorldWarView extends PIXI.Container {
         if (data.isRestTeamScore) {
           this.worldWar.setTeamScore({ lScore: 0, rScore: 0 })
         }
+      })
+      .on(CommandId.sc_setTimer, data => {
+        this.cd.timer.setTimeBySec(data.time)
       })
       .on(CommandId.sc_showPanel, data => {
         console.log('sc_showPanel', data)

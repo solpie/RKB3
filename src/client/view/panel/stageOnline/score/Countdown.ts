@@ -3,6 +3,7 @@ import { imgToTex, BitmapText, newBitmap } from '../../../utils/PixiEx';
 import { loadImg } from '../../../utils/JsFunc';
 import { TextTimer } from '../../../utils/TextTimer';
 export class Countdown extends PIXI.Container {
+    timer:TextTimer
     constructor() {
         super()
         loadImg('/img/num/num1.png', (img) => {
@@ -43,7 +44,7 @@ export class Countdown extends PIXI.Container {
                 sec.text = text
             })
             cd.toggleTimer()
-            
+            this.timer = cd
         })
 
 
