@@ -1864,6 +1864,7 @@
 	                gameView.addGame(this.vsPlayerArr, this.teamVsIdx);
 	            },
 	            onCommitGame: function (gameIdx) {
+	                $('.btn-setScore')[0].click();
 	            },
 	            onReload: function (e) {
 	                this.conf.onReloadFile(e);
@@ -2468,7 +2469,7 @@
 /* 38 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n\r\n    <input type=\"file\" id=\"file\" accept=\"*.xlsx\" hidden>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开本地配置</button>\r\n    <button class=\"button is-primary\" id=\"reload\" @click=\"onReload\">reload</button>\r\n    <br>\r\n\r\n    <div class=\"control\">\r\n        vs player <input class=\"input\" v-model=\"vsPlayer\" type=\"text\" style=\"width: 100px;\">\r\n        <button class=\"button is-primary\" @click=\"onEmitGameInfo\">emit game info</button>\r\n        <button class=\"button is-primary\" @click=\"onAddGame\">创建比赛</button>\r\n        <button class=\"button is-primary\" @click=\"onCommitGame(gameIdx)\">提交比赛</button> teamVsIdx:\r\n        <input class=\"input\" v-model=\"teamVsIdx\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetBlood(teamVsIdx)\">设置初始血量</a>\r\n        <input class=\"input\" v-model=\"teamScore\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetTeamScore(teamScore)\">设置团队比分</a>\r\n        <a class=\"button\" @click=\"onShowKDA(true)\">显示kda</a>\r\n        <a class=\"button\" @click=\"onShowKDA(false)\">隐藏kda</a>\r\n        <hr> 比分面板\r\n        <a class=\"button\" @click=\"onShowPanel(true)\">显示</a>\r\n        <a class=\"button\" @click=\"onShowPanel(false)\">隐藏</a>\r\n\r\n    </div>\r\n\r\n    <!-- Main container -->\r\n    <div class=\"level\">\r\n        <!-- Left side -->\r\n        <div class=\"level-left\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                    <a class=\"button is-info\" @click=\"pickPlayer(true,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <!-- Right side -->\r\n        <div class=\"level-right\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                    <a class=\"button is-danger\" @click=\"pickPlayer(false,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div id='table' class=\"table\"></div>\r\n    <BaseGame/>\r\n    <table class=\"table is-striped is-bordered\">\r\n        <thead>\r\n            <tr>\r\n                <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                <th><abbr>#teamVsIdx</abbr></th>\r\n                <th>L player</th>\r\n                <th>score</th>\r\n                <th>R player</th>\r\n                <th>action</th>\r\n            </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==gameView.gameIdx?'is-selected':'']\">\r\n                <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}}</a></th>\r\n                <td> {{rec.teamVsIdx}} </td>\r\n                <td> {{rec.name[0]}} </td>\r\n                <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                <td> {{rec.name[1]}} </td>\r\n                <td>\r\n                    <div class=\"control\" v-if=\"rec.gameIdx==gameView.gameIdx\">\r\n                        <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                        <button class=\"button\" @click=\"onSetScore(rec.gameIdx)\">修改(提交)比分</button>\r\n                        <button class=\"button\" @click=\"onSetVS(rec.gameIdx,vsPlayer)\">修改对阵↑</button>\r\n                        <button class=\"button\" @click=\"onSetTeamVsIdx(rec.gameIdx)\">修改TeamVsIdx</button>\r\n                        <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                    </div>\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n\r\n\r\n    <div class=\"level\">\r\n        <div class=\"level-left\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n        <div class=\"level-right\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n    </div>\r\n\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onDeleteDoc\">delete doc</button> {{updateTime}}\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n\r\n    <input type=\"file\" id=\"file\" accept=\"*.xlsx\" hidden>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开本地配置</button>\r\n    <button class=\"button is-primary\" id=\"reload\" @click=\"onReload\">reload</button>\r\n    <br>\r\n\r\n    <div class=\"control\">\r\n        vs player <input class=\"input\" v-model=\"vsPlayer\" type=\"text\" style=\"width: 100px;\">\r\n        <button class=\"button is-primary\" @click=\"onEmitGameInfo\">emit game info</button>\r\n        <button class=\"button is-primary\" @click=\"onAddGame\">创建比赛</button>\r\n        <button class=\"button is-primary\" @click=\"onCommitGame(gameIdx)\">提交比赛</button> teamVsIdx:\r\n        <input class=\"input\" v-model=\"teamVsIdx\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetBlood(teamVsIdx)\">设置初始血量</a>\r\n        <input class=\"input\" v-model=\"teamScore\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetTeamScore(teamScore)\">设置团队比分</a>\r\n        <a class=\"button\" @click=\"onShowKDA(true)\">显示kda</a>\r\n        <a class=\"button\" @click=\"onShowKDA(false)\">隐藏kda</a>\r\n        <hr> 比分面板\r\n        <a class=\"button\" @click=\"onShowPanel(true)\">显示</a>\r\n        <a class=\"button\" @click=\"onShowPanel(false)\">隐藏</a>\r\n\r\n    </div>\r\n\r\n    <!-- Main container -->\r\n    <div class=\"level\">\r\n        <!-- Left side -->\r\n        <div class=\"level-left\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                    <a class=\"button is-info\" @click=\"pickPlayer(true,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <!-- Right side -->\r\n        <div class=\"level-right\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                    <a class=\"button is-danger\" @click=\"pickPlayer(false,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div id='table' class=\"table\"></div>\r\n    <BaseGame/>\r\n    <table class=\"table is-striped is-bordered\">\r\n        <thead>\r\n            <tr>\r\n                <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                <th><abbr>#teamVsIdx</abbr></th>\r\n                <th>L player</th>\r\n                <th>score</th>\r\n                <th>R player</th>\r\n                <th>action</th>\r\n            </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==gameView.gameIdx?'is-selected':'']\">\r\n                <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}}</a></th>\r\n                <td> {{rec.teamVsIdx}} </td>\r\n                <td> {{rec.name[0]}} </td>\r\n                <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                <td> {{rec.name[1]}} </td>\r\n                <td>\r\n                    <div class=\"control\" v-if=\"rec.gameIdx==gameView.gameIdx\">\r\n                        <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                        <button class=\"button btn-setScore\" @click=\"onSetScore(rec.gameIdx)\">修改(提交)比分</button>\r\n                        <button class=\"button\" @click=\"onSetVS(rec.gameIdx,vsPlayer)\">修改对阵↑</button>\r\n                        <button class=\"button\" @click=\"onSetTeamVsIdx(rec.gameIdx)\">修改TeamVsIdx</button>\r\n                        <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                    </div>\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n\r\n\r\n    <div class=\"level\">\r\n        <div class=\"level-left\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n        <div class=\"level-right\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n    </div>\r\n\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onDeleteDoc\">delete doc</button> {{updateTime}}\r\n</div>";
 
 /***/ },
 /* 39 */
@@ -8651,9 +8652,6 @@
 	        this.scoreRank.show(data);
 	    };
 	    Event2017.prototype.showScoreFx2 = function (data) {
-	        if (this.scoreRank) {
-	            this.scoreRank.showScoreFx(data);
-	        }
 	    };
 	    Event2017.prototype.showRollText = function (data) {
 	        if (!this.rollText) {
@@ -8767,10 +8765,17 @@
 	        }
 	        this.pName.setText(data.name)
 	            .setX(alignX);
-	        this.pKDA.setText('0/0/0')
+	        this.pKDA.setText(this.getKDA(data))
 	            .setX(alignX + 50);
 	        this.pScore.setText(data.score)
 	            .setAlignCenter(alignX);
+	    };
+	    PlayerItem.prototype.getKDA = function (data) {
+	        var kda = '0/0/0';
+	        if (data.k != null) {
+	            kda = data.k + "/" + data.d + "/" + data.a;
+	        }
+	        return kda;
 	    };
 	    PlayerItem.prototype._setDataRight = function (data) {
 	        var alignX = 210;
@@ -8783,7 +8788,7 @@
 	            .setX(alignX);
 	        this.pName.scale.x = -1;
 	        this.pName.x += this.pName.width - 23;
-	        this.pKDA.setText('0/0/0')
+	        this.pKDA.setText(this.getKDA(data))
 	            .setX(alignX);
 	        this.pKDA.scale.x = -1;
 	        this.pKDA.x += this.pKDA.width + 25;
@@ -8826,16 +8831,11 @@
 	        this.itemArr = [];
 	    };
 	    ScoreRank.prototype._arrangeY = function (data) {
-	        var lastY = 0;
-	        var isLastSmall = true;
 	        for (var i = 0; i < data.scoreArr.length; i++) {
 	            var pi = this.itemArr[i];
 	            var scoreData = data.scoreArr[i];
 	            pi.y = i * 160;
 	            pi.pKDA.visible = this.isShowKDA;
-	            if (scoreData.scoreFx) {
-	                pi.showScoreFx(scoreData.scoreFx);
-	            }
 	            pi.setScore(scoreData);
 	        }
 	    };
@@ -8844,8 +8844,6 @@
 	            var pi = this.itemArr[i];
 	            pi.isRight = isRight;
 	        }
-	    };
-	    ScoreRank.prototype.showScoreFx = function (data) {
 	    };
 	    ScoreRank.prototype.hide = function () {
 	        if (this.parent) {
@@ -10549,6 +10547,8 @@
 	            _this.lBloodRank.create(_this.worldWar, false);
 	            _this.rBloodRank = new ScoreRank_1.ScoreRank();
 	            _this.rBloodRank.create(_this.worldWar, true);
+	            _this.lBloodRank.isShowKDA =
+	                _this.rBloodRank.isShowKDA = true;
 	            _this.lBloodRank.y = -60;
 	            _this.rBloodRank.y = -60;
 	        });

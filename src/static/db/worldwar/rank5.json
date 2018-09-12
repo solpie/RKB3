@@ -9,14 +9,13 @@
         "4": "新人vs魔王晋级赛决赛"
     },
     "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/kd/",
-    "rec-show": 4,
+    "rec-show": 1,
     "isShowPick": false,
-    "isShowKDA": true,
     "group": {
         "A": [
-            { "playerId": "p1", "w": 2, "l": 1 },
+            { "playerId": "p1", "w": 1.1, "l": 2 },
             { "playerId": "p2", "w": 1, "l": 1 },
-            { "playerId": "p3", "w": 0, "l": 2 }
+            { "playerId": "p3", "w": 3, "l": 2 }
         ],
         "B": [
             { "playerId": "p4", "w": 2, "l": 1 },

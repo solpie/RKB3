@@ -243,12 +243,7 @@ class _worldWar extends VueBase {
       gameView.addGame(this.vsPlayerArr, this.teamVsIdx);
     },
     onCommitGame(gameIdx) {
-      // let lScore = Number($("#lScore").html());
-      // let rScore = Number($("#rScore").html());
-      // let lFoul = Number($("#lFoul").html());
-      // let rFoul = Number($("#rFoul").html());
-      // console.log("commit game", lScore, rScore, "foul", lFoul, rFoul);
-      // gameView.setScore(gameIdx, [lScore, rScore]);
+      $('.btn-setScore')[0].click()
     },
     onReload(e) {
       this.conf.onReloadFile(e); //

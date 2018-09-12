@@ -105,12 +105,21 @@ class PlayerItem extends PIXI.Container {
         this.pName.setText(data.name)
             .setX(alignX)
 
-        this.pKDA.setText('0/0/0')
+        this.pKDA.setText(this.getKDA(data))
             .setX(alignX + 50)
 
         this.pScore.setText(data.score)
             .setAlignCenter(alignX)
     }
+
+    getKDA(data) {
+        let kda = '0/0/0'
+        if (data.k != null) {
+            kda = `${data.k}/${data.d}/${data.a}`
+        }
+        return kda
+    }
+
     _setDataRight(data) {
         let alignX = 210;
         if (data.isSmall) {
@@ -123,7 +132,7 @@ class PlayerItem extends PIXI.Container {
         this.pName.scale.x = -1
         this.pName.x += this.pName.width - 23
 
-        this.pKDA.setText('0/0/0')
+        this.pKDA.setText(this.getKDA(data))
             .setX(alignX)
         this.pKDA.scale.x = -1
         this.pKDA.x += this.pKDA.width + 25
@@ -166,16 +175,11 @@ export class ScoreRank extends PIXI.Container {
         this.itemArr = []
     }
     _arrangeY(data) {
-        let lastY = 0
-        let isLastSmall = true
         for (let i = 0; i < data.scoreArr.length; i++) {
             let pi: PlayerItem = this.itemArr[i]
             let scoreData = data.scoreArr[i]
             pi.y = i * 160
             pi.pKDA.visible = this.isShowKDA
-            if (scoreData.scoreFx) {
-                pi.showScoreFx(scoreData.scoreFx)
-            }
             pi.setScore(scoreData)
         }
 
@@ -185,9 +189,6 @@ export class ScoreRank extends PIXI.Container {
             const pi: PlayerItem = this.itemArr[i];
             pi.isRight = isRight
         }
-    }
-    showScoreFx(data) {
-
     }
     hide() {
         if (this.parent) {

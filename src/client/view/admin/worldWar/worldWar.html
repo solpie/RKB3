@@ -71,7 +71,7 @@
                 <td>
                     <div class="control" v-if="rec.gameIdx==gameView.gameIdx">
                         <input class="input" :id="'scoreInput'+rec.gameIdx" type="text" style="width: 80px;">
-                        <button class="button" @click="onSetScore(rec.gameIdx)">修改(提交)比分</button>
+                        <button class="button btn-setScore" @click="onSetScore(rec.gameIdx)">修改(提交)比分</button>
                         <button class="button" @click="onSetVS(rec.gameIdx,vsPlayer)">修改对阵↑</button>
                         <button class="button" @click="onSetTeamVsIdx(rec.gameIdx)">修改TeamVsIdx</button>
                         <button class="button is-danger" @click="onDeleteGameRec(rec.gameIdx)">删除</button>

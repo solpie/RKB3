@@ -23,9 +23,12 @@ export class WorldWarView extends PIXI.Container {
 
       this.rBloodRank = new ScoreRank()
       this.rBloodRank.create(this.worldWar, true)
-      this.lBloodRank.y = -60
-      this.rBloodRank.y = -60
 
+      this.lBloodRank.isShowKDA =
+        this.rBloodRank.isShowKDA = true
+
+      this.lBloodRank.y = -60;
+      this.rBloodRank.y = -60;
     });
 
     io.on(CommandId.sc_timerEvent, data => {
@@ -54,9 +57,9 @@ export class WorldWarView extends PIXI.Container {
         }
         if (data.panel == PanelId.worldwarKDA) {
           if (data.visible) {
-            this.lBloodRank.show({scoreArr:data.lScoreArr,visible:true})   
-            this.rBloodRank.show({scoreArr:data.rScoreArr,visible:true})
-          } 
+            this.lBloodRank.show({ scoreArr: data.lScoreArr, visible: true })
+            this.rBloodRank.show({ scoreArr: data.rScoreArr, visible: true })
+          }
           else {
             this.lBloodRank.hide()
             this.rBloodRank.hide()

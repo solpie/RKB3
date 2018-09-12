@@ -34,6 +34,7 @@ export class WorldWar extends PIXI.Container {
 
   lTitleTex: PIXI.Sprite
   rTitleTex: PIXI.Sprite
+  
   constructor() {
     super();
     let bg = newBitmap({ url: "/img/panel/worldWar/bg.png" });
@@ -124,9 +125,7 @@ export class WorldWar extends PIXI.Container {
     })
     this.rAvt.setAvtPos(1420, 890, 175)
 
-    // this.rAvt.setTest(175, 175, 1420, 890)
     this.addChild(this.rAvt)
-    // this.lAvt.setTest(175,175,325,890)
 
     //foul hint
     let lFoulHint = newBitmap({ url: "/img/panel/worldWar/foulHintL.png" });

@@ -25,7 +25,7 @@
         
         .blue {
             color: #d6d6d6;
-            text-align: center;
+            /* text-align: center; */
         }
         
         .white {
@@ -51,7 +51,7 @@
                 <span>{{item.name}} </span>
             </div>
             <div class="player blue" :style="item.s">
-                <span style="left: 130px;top:0px; position: relative;">
+                <span style="left: 150px;top:0px; position: relative;">
                     {{item.winLose}}
                 </span>
             </div>
@@ -61,6 +61,7 @@
         var _p = function(x, y) {
             return 'left:' + x + 'px;' + 'top:' + y + 'px;'
         }
+
         var app = new Vue({
             el: '#app',
             data: {
@@ -81,16 +82,16 @@
                 let pos = []
                 let scoreOfs = 279 - 98
                 for (let i = 0; i < 3; i++) {
-                    pos.push([190 - 20, 434 + i * 86, 0])
+                    pos.push([271 - 8, 434 + i * 86, 0])
                 }
                 for (let i = 0; i < 3; i++) {
-                    pos.push([615 - 20, 434 + i * 86, 0])
+                    pos.push([696 - 8, 434 + i * 86, 0])
                 }
                 for (let i = 0; i < 3; i++) {
-                    pos.push([1030 - 20, 434 + i * 86, 0])
+                    pos.push([1111 - 8, 434 + i * 86, 0])
                 }
                 for (let i = 0; i < 3; i++) {
-                    pos.push([1451 - 20, 434 + i * 86, 0])
+                    pos.push([1532 - 8, 434 + i * 86, 0])
                 }
                 let _mkItems = (posArr) => {
                     let a = []
@@ -116,16 +117,20 @@
                         if (data.dbIdx == 'worldwar') {
                             let itemArr = []
                             let playerMap = data.playerMap
-                            itemArr = itemArr.concat(data.group['A'])
-                                .concat(data.group['B'])
-                                .concat(data.group['C'])
-                                .concat(data.group['D'])
+
+                            function sortWin(v1, v2) {
+                                return v2.w - v1.w;
+                            }
+                            itemArr = itemArr.concat(data.group['A'].sort(sortWin))
+                                .concat(data.group['B'].sort(sortWin))
+                                .concat(data.group['C'].sort(sortWin))
+                                .concat(data.group['D'].sort(sortWin))
                             for (let i = 0; i < this.items.length; i++) {
                                 let item = this.items[i];
                                 let dataItem = itemArr[i]
                                 let player = playerMap[dataItem.playerId]
                                 item.name = player.name
-                                item.winLose = dataItem.w + "/" + dataItem.l
+                                item.winLose = Math.floor(dataItem.w) + "/" + dataItem.l
                                     // item.score = dataItem.score
                             }
                         }
