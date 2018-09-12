@@ -17,8 +17,8 @@
         .player {
             position: absolute;
             padding: 0px;
-            font-size: 38px;
-            color: #fff;
+            font-size: 32px;
+            color: #ddd;
             width: 300px;
             font-family: "微软雅黑";
         }
@@ -51,13 +51,8 @@
                 <span>{{item.name}} </span>
             </div>
             <div class="player blue" :style="item.s">
-                <span style="left: 200px;top:5px; position: relative;">
-                    {{item.score>-1?item.score:""}}
-                </span>
-            </div>
-            <div class="player blue" :style="item.s+'width:500px;'">
-                <span style="left: 439px;top:10px; position: relative;font-size: 28px;">
-                    {{item.beatPlayer}}
+                <span style="left: 130px;top:0px; position: relative;">
+                    {{item.winLose}}
                 </span>
             </div>
         </div>
@@ -84,9 +79,18 @@
                     return arr.concat(a)
                 }
                 let pos = []
-                let scoreOfs = 279
-                for (let i = 0; i < 8; i++) {
-                    pos.push([591, 200 + i * 95, 0])
+                let scoreOfs = 279 - 98
+                for (let i = 0; i < 3; i++) {
+                    pos.push([190 - 20, 434 + i * 86, 0])
+                }
+                for (let i = 0; i < 3; i++) {
+                    pos.push([615 - 20, 434 + i * 86, 0])
+                }
+                for (let i = 0; i < 3; i++) {
+                    pos.push([1030 - 20, 434 + i * 86, 0])
+                }
+                for (let i = 0; i < 3; i++) {
+                    pos.push([1451 - 20, 434 + i * 86, 0])
                 }
                 let _mkItems = (posArr) => {
                     let a = []
@@ -96,7 +100,7 @@
                             s: _p(p[0], p[1]),
                             ss: _p(p[2], p[1]),
                             score: -1,
-                            beatPlayer: "",
+                            winLose: "",
                             name: ""
                         })
                     }
@@ -110,13 +114,19 @@
                     .on('sc_data', (data) => {
                         console.log('sc_data', data)
                         if (data.dbIdx == 'worldwar') {
+                            let itemArr = []
                             let playerMap = data.playerMap
+                            itemArr = itemArr.concat(data.group['A'])
+                                .concat(data.group['B'])
+                                .concat(data.group['C'])
+                                .concat(data.group['D'])
                             for (let i = 0; i < this.items.length; i++) {
                                 let item = this.items[i];
-                                let dataItem = data.rank8[i]
+                                let dataItem = itemArr[i]
                                 let player = playerMap[dataItem.playerId]
                                 item.name = player.name
-                                item.score = dataItem.score
+                                item.winLose = dataItem.w + "/" + dataItem.l
+                                    // item.score = dataItem.score
                             }
                         }
                     })

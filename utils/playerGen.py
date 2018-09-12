@@ -33,7 +33,7 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
     v = table.cell(2, 0)
     print(v)
     row = 1
-    playerNum =8
+    playerNum = 12
     playerMap = {}
     for i in range(0, playerNum):
         n = table.cell(row + i, 0).value
