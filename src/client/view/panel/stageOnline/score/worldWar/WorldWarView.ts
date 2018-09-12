@@ -23,6 +23,8 @@ export class WorldWarView extends PIXI.Container {
 
       this.rBloodRank = new ScoreRank()
       this.rBloodRank.create(this.worldWar, true)
+      this.lBloodRank.y = -60
+      this.rBloodRank.y = -60
 
     });
 
@@ -51,9 +53,14 @@ export class WorldWarView extends PIXI.Container {
             this.worldWar.hide();
         }
         if (data.panel == PanelId.worldwarKDA) {
-          data.visible ?
-            this.worldWar.show() :
-            this.worldWar.hide();
+          if (data.visible) {
+            this.lBloodRank.show({scoreArr:data.lScoreArr,visible:true})   
+            this.rBloodRank.show({scoreArr:data.rScoreArr,visible:true})
+          } 
+          else {
+            this.lBloodRank.hide()
+            this.rBloodRank.hide()
+          }
         }
       })
       .on(CommandId.sc_setFoul, data => {

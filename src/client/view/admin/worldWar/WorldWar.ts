@@ -66,6 +66,7 @@ class _worldWar extends VueBase {
       rec["name"] = [];
       for (let i = 0; i < rec.player.length; i++) {
         const p = rec.player[i];
+
         rec.name.push(this.getPlayerDoc(p).name);
       }
       this.recArr.push(rec);
@@ -127,6 +128,25 @@ class _worldWar extends VueBase {
   emitTeamScore(data) {
     opReq(CommandId.cs_teamScore, data)
   }
+  emitKDA(v) {
+    let lScoreArr = [], rScoreArr = []
+    let _ = (arr, scoreArr) => {
+      for (let player of arr) {
+        let p = clone(player)
+        p.avatar = this.gameView.data.avatarUrlBase + p.playerId + ".png";
+        p.isSmall = true
+        p.score = p.blood
+        scoreArr.push(p)
+      }
+    }
+    _(this.blueArr, lScoreArr)
+    _(this.redArr, rScoreArr)
+    opReq(CommandId.cs_showPanel, {
+      lScoreArr: lScoreArr,
+      rScoreArr: rScoreArr,
+      panel: PanelId.worldwarKDA, visible: v
+    })
+  }
   updateBlood(teamVsIdx) {
     console.log("on updateBlood teamVsIdx", teamVsIdx);
     gameView.getBloodMap(teamVsIdx, bloodMap => {
@@ -176,7 +196,7 @@ class _worldWar extends VueBase {
       gameView.deleteGameRec(gameIdx);
     },
     onShowKDA(v) {
-      opReq(CommandId.cs_showPanel, { panel: PanelId.worldwarKDA, visible: v })
+      this.emitKDA(v)
     },
     onSetScore(gameIdx) {
       let scoreStr = $("#scoreInput" + gameIdx).val();

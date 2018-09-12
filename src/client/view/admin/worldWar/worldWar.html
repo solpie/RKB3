@@ -15,8 +15,9 @@
         <a class="button is-warnning" @click="onSetBlood(teamVsIdx)">设置初始血量</a>
         <input class="input" v-model="teamScore" type="text" style="width: 60px;">
         <a class="button is-warnning" @click="onSetTeamScore(teamScore)">设置团队比分</a>
-        <a class="button" @click="onShowKDA()">显示kda</a>
-        <hr>
+        <a class="button" @click="onShowKDA(true)">显示kda</a>
+        <a class="button" @click="onShowKDA(false)">隐藏kda</a>
+        <hr> 比分面板
         <a class="button" @click="onShowPanel(true)">显示</a>
         <a class="button" @click="onShowPanel(false)">隐藏</a>
 

@@ -10,8 +10,8 @@
     },
     "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/kd/",
     "rec-show": 4,
-    "isShowPick": true,
-    "isShowKDA": false,
+    "isShowPick": false,
+    "isShowKDA": true,
     "group": {
         "A": [
             { "playerId": "p1", "w": 2, "l": 1 },
@@ -73,19 +73,19 @@
     "scoreRank": [
         [
             "p1_安云鹏",
-            3
+            0
         ],
         [
             "p2_安云鹏",
-            1
+            0
         ],
         [
             "p3_安云鹏",
-            1
+            0
         ],
         [
             "p4_安云鹏",
-            1
+            0
         ]
     ],
     "rank8": [{
@@ -128,6 +128,12 @@
             "score": "-",
             "beatPlayer": ["p2"]
         }
+    ],
+    "rec": [
+        { "title": "冠军排位赛A组", "idx": "1#A1", "score": [1, 0], "player": ["p1", "p2"] },
+        { "title": "冠军排位赛A组", "idx": "1#A1", "score": [1, 0], "player": ["p1", "p2"] },
+        { "title": "冠军排位赛A组", "idx": "1#A1", "score": [1, 0], "player": ["p1", "p2"] }
+
     ],
     "playerMap": { "p1": { "name": "叶凯帆", "hwa": [186, 86, 22], "title": "路人王最帅投篮手型", "playerId": "p1" }, "p2": { "name": "塔拉普", "hwa": [188, 92, 26], "title": "路人王上海站两冠王", "playerId": "p2" }, "p3": { "name": "马智飞", "hwa": [193, 90, 18], "title": "最年轻的路人王七冠王", "playerId": "p3" }, "p4": { "name": "陈国玺", "hwa": [187, 78, 22], "title": "CUBA全明星西安交大核心球员", "playerId": "p4" }, "p5": { "name": "喻张", "hwa": [190, 90, 23], "title": "24冠怼派代言人大N", "playerId": "p5" }, "p6": { "name": "韩飞", "hwa": [178, 70, 22], "title": "中投小王子“打铁哥”", "playerId": "p6" }, "p7": { "name": "张铭辰", "hwa": [183, 80, 17], "title": "路人王太原站季军", "playerId": "p7" }, "p8": { "name": "陈杰", "hwa": [190, 87, 30], "title": "路人王4冠王\n最强特警", "playerId": "p8" }, "p9": { "name": "毕博文", "hwa": [186, 73, 19], "title": "路人深圳站冠军", "playerId": "p9" }, "p10": { "name": "乔翔泽", "hwa": [183, 75, 21], "title": "5冠王\n变向狂魔", "playerId": "p10" }, "p11": { "name": "杜超", "hwa": [197, 100, 20], "title": "路人王西安站三冠王\n西安浓眉哥", "playerId": "p11" }, "p12": { "name": "古展腾", "hwa": [172, 68, 24], "title": "路人王人气第一人\n网红军哥", "playerId": "p12" } }
 
