@@ -2,6 +2,7 @@ import { VueBase } from '../../utils/VueBase';
 import { PanelId } from '../../const';
 import { CommandId } from '../../Command';
 import { descendingProp } from '../../utils/JsFunc';
+import { ScoreRank } from '../../panel/stageOnline/scoreRank/ScoreRank';
 let confFile = null;
 let reader;
 let filesInput;
@@ -47,31 +48,34 @@ class _ScoreRankAdmin extends VueBase {
     createOption(data) {
         let a = [];
         let playerMap = data.playerMap
-        for (var i = 0; i < data.rec.length; i++) {
-            let rec = data.rec[i]
-            console.log('player', rec.player);
-            let p1 = playerMap[rec.player[0]]
-            let p2 = playerMap[rec.player[1]]
-            if (p1 || p2) {
-                let p1name = p1 ? p1.name : '';
-                let p2name = p2 ? p2.name : '';
-                let option = { text: rec.idx + p1name + ' vs ' + p2name, value: rec.idx }
-                a.push(option);
+        if (data.rec)
+            for (var i = 0; i < data.rec.length; i++) {
+                let rec = data.rec[i]
+                console.log('player', rec.player);
+                let p1 = playerMap[rec.player[0]]
+                let p2 = playerMap[rec.player[1]]
+                if (p1 || p2) {
+                    let p1name = p1 ? p1.name : '';
+                    let p2name = p2 ? p2.name : '';
+                    let option = { text: rec.idx + p1name + ' vs ' + p2name, value: rec.idx }
+                    a.push(option);
+                }
             }
-        }
         this.options = a
         this.gameConf = data
         // let a = [];
         // let playerMap = data.playerMap
 
-        this.blueArr = []
-        this.redArr = []
-        for (var i = 0; i < this.gameConf.scoreRank.length; i++) {
-            let a = this.gameConf.scoreRank[i][0].split('_')
-            let pn = a[0]
-            let player = data.playerMap[pn]
-            this.blueArr.push(player)
-            this.redArr.push(player)
+        if (this.gameConf.scoreRank) {
+            this.blueArr = []
+            this.redArr = []
+            for (var i = 0; i < this.gameConf.scoreRank.length; i++) {
+                let a = this.gameConf.scoreRank[i][0].split('_')
+                let pn = a[0]
+                let player = data.playerMap[pn]
+                this.blueArr.push(player)
+                this.redArr.push(player)
+            }
         }
         console.log('create gameConf ', this.gameConf);
     }

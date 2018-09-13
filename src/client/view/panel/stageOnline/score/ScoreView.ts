@@ -76,10 +76,12 @@ export class ScoreView extends BasePanelView {
             stage.addChild(f3)
             TweenEx.delayedCall(1000, _ => {
                 if (!this.isRmOP) {
-                    // this.scorePanel = new Score2018(stage)
                     this.scorePanelV3 = new Score2018v3(stage)
                     if (this.isWorld)
                         this.scorePanelV3.visible = false
+                    else {
+                        this.scorePanelV3 = new Score2018v3(stage)
+                    }
                 }
                 this.initDelay()
                 this.eventPanel = new Event2017(stage, darkTheme)
