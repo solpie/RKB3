@@ -5,18 +5,25 @@ import { WorldWar } from "./WorldWar";
 import { Pick8Layer } from '../../pick8/Pick8';
 import { PanelId } from '../../../../const';
 import { Countdown } from '../Countdown';
+import { newBitmap } from '../../../../utils/PixiEx';
 
 export class WorldWarView extends PIXI.Container {
   stage: any;
   worldWar: WorldWar;
   lBloodRank: ScoreRank
   rBloodRank: ScoreRank
+  kdaTitle: PIXI.Sprite
   constructor(stage, io) {
     super();
     this.stage = stage;
     TweenEx.delayedCall(1200, _ => {
       this.worldWar = new WorldWar();
       this.stage.addChild(this.worldWar);
+
+
+      this.kdaTitle = newBitmap({ url: '/img/panel/worldwar/kdaTitle.png' })
+      this.kdaTitle.visible = false;
+      this.worldWar.addChild(this.kdaTitle)
 
       this.lBloodRank = new ScoreRank()
       this.lBloodRank.create(this.worldWar, false)
@@ -29,6 +36,8 @@ export class WorldWarView extends PIXI.Container {
 
       this.lBloodRank.y = -60;
       this.rBloodRank.y = -60;
+
+
     });
 
     io.on(CommandId.sc_timerEvent, data => {
@@ -64,6 +73,7 @@ export class WorldWarView extends PIXI.Container {
             this.lBloodRank.hide()
             this.rBloodRank.hide()
           }
+          this.kdaTitle.visible = data.visible
         }
       })
       .on(CommandId.sc_setFoul, data => {
