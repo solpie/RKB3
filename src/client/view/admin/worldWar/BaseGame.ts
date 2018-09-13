@@ -64,12 +64,12 @@ export class _baseGameView extends VueBase {
     },
     onSetTeamScore(isLeft, dtScore) {
       // isLeft ? (baseGame.lScore += dtScore) : (baseGame.rScore += dtScore);
-      if (isLeft)
-        this.lTeamScore += dtScore;
-      else
-        this.rTeamScore += dtScore;
+      // if (isLeft)
+      //   this.lTeamScore += dtScore;
+      // else
+      //   this.rTeamScore += dtScore;
 
-      opReq(CommandId.cs_teamScore, { lScore: this.lTeamScore, rScore: this.rTeamScore });
+      opReq(CommandId.cs_teamScore, { dtScore: dtScore, isLeft: isLeft });
     },
     onSetScore(isLeft, dtScore) {
       // isLeft ? (baseGame.lScore += dtScore) : (baseGame.rScore += dtScore);

@@ -34,7 +34,7 @@ export class WorldWar extends PIXI.Container {
 
   lTitleTex: PIXI.Sprite
   rTitleTex: PIXI.Sprite
-  
+
   constructor() {
     super();
     let bg = newBitmap({ url: "/img/panel/worldWar/bg.png" });
@@ -276,10 +276,22 @@ export class WorldWar extends PIXI.Container {
     this.gameTitle.setText(vl)
       .setAlignCenter(960)
   }
+  _lTeamScore: number;
+  _rTeamScore: number;
   setTeamScore(data) {
-    this.lTeamScore.text = data.lScore + ""
+    if (data.dtScore != null) {
+      if (data.isLeft)
+        this._lTeamScore += data.dtScore
+      else
+        this._rTeamScore += data.dtScore
+    }
+    else {
+      this._lTeamScore = Number(data.lScore)
+      this._rTeamScore = Number(data.rScore)
+    }
+    this.lTeamScore.text = this._lTeamScore + ""
     this.lTeamScore.x = 910 - this.lTeamScore.width * 0.5
-    this.rTeamScore.text = data.rScore + ''
+    this.rTeamScore.text = this._rTeamScore + ''
     this.rTeamScore.x = 1010 - this.rTeamScore.width * 0.5
   }
   setLeftFoul(val) {
