@@ -2651,30 +2651,32 @@
 	                var p2 = a[1];
 	                for (var i = 0; i < this.gameConf.scoreRank.length; i++) {
 	                    var a_1 = this.gameConf.scoreRank[i][0].split('_');
-	                    var pn = a_1[0];
-	                    var player = this.gameConf.playerMap[pn];
-	                    var scoreFxItem = {
-	                        score: this.gameConf.scoreRank[i][1],
-	                        name: player.name,
-	                        isSmall: true,
-	                        scoreFx: 0,
-	                        avatar: this.gameConf.avatarUrlBase + player.playerId + '.png'
-	                    };
-	                    if (isInitScoreArr)
+	                    if (this.gameConf.scoreRank[i][1] > -1) {
+	                        var pn = a_1[0];
+	                        var player = this.gameConf.playerMap[pn];
+	                        var scoreFxItem = {
+	                            score: this.gameConf.scoreRank[i][1],
+	                            name: player.name,
+	                            isSmall: true,
+	                            scoreFx: 0,
+	                            avatar: this.gameConf.avatarUrlBase + player.playerId + '.png'
+	                        };
+	                        if (isInitScoreArr)
+	                            this.lastScoreArr[i] = scoreFxItem.score;
+	                        scoreFx = scoreFxItem.score - this.lastScoreArr[i];
 	                        this.lastScoreArr[i] = scoreFxItem.score;
-	                    scoreFx = scoreFxItem.score - this.lastScoreArr[i];
-	                    this.lastScoreArr[i] = scoreFxItem.score;
-	                    if (pn == p1) {
-	                        scoreFxItem.scoreFx = scoreFx;
-	                        scoreFxItem.isSmall = false;
-	                        opReq("" + Command_1.CommandId.cs_updateScore, { score: scoreFxItem.score, isLeft: true });
+	                        if (pn == p1) {
+	                            scoreFxItem.scoreFx = scoreFx;
+	                            scoreFxItem.isSmall = false;
+	                            opReq("" + Command_1.CommandId.cs_updateScore, { score: scoreFxItem.score, isLeft: true });
+	                        }
+	                        else if (pn == p2) {
+	                            scoreFxItem.scoreFx = scoreFx;
+	                            scoreFxItem.isSmall = false;
+	                            opReq("" + Command_1.CommandId.cs_updateScore, { score: scoreFxItem.score, isLeft: false });
+	                        }
+	                        scoreArr.push(scoreFxItem);
 	                    }
-	                    else if (pn == p2) {
-	                        scoreFxItem.scoreFx = scoreFx;
-	                        scoreFxItem.isSmall = false;
-	                        opReq("" + Command_1.CommandId.cs_updateScore, { score: scoreFxItem.score, isLeft: false });
-	                    }
-	                    scoreArr.push(scoreFxItem);
 	                }
 	                scoreArr = scoreArr.sort(JsFunc_1.descendingProp('score'));
 	                opReq(Command_1.CommandId.cs_showScoreRank, {
@@ -11173,11 +11175,11 @@
 	                    var rPlayer = rec.player[1];
 	                    var lp = void 0, rp = void 0;
 	                    if (!playerMap[lPlayer])
-	                        lp = { name: "TBD" };
+	                        lp = { name: "---" };
 	                    else
 	                        lp = playerMap[lPlayer];
 	                    if (!playerMap[rPlayer])
-	                        rp = { name: "TBD" };
+	                        rp = { name: "---" };
 	                    else
 	                        rp = playerMap[rPlayer];
 	                    playerArr.push([lp, rp]);

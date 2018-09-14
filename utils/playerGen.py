@@ -33,7 +33,7 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
     v = table.cell(2, 0)
     print(v)
     row = 1
-    playerNum =20
+    playerNum =25
     playerMap = {}
     for i in range(0, playerNum):
         n = table.cell(row + i, 0).value
@@ -49,7 +49,7 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
 
         info = table.cell(row + i, 5).value
         plist.append({'name': n,                      'hwa': [
-                     h, w, a], 'title': title, 'playerId': 'p' + str(i + 1),'info':info})
+                     h, w, a], 'title': title, 'playerId': 'p' + str(i + 1)})
         playerMap['p' + str(i + 1)] = plist[-1:][0]
 
     jstr = json.dumps(playerMap, ensure_ascii=False)

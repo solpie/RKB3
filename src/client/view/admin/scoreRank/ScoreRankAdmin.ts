@@ -71,10 +71,12 @@ class _ScoreRankAdmin extends VueBase {
             this.redArr = []
             for (var i = 0; i < this.gameConf.scoreRank.length; i++) {
                 let a = this.gameConf.scoreRank[i][0].split('_')
+                // if (this.gameConf.scoreRank[i][1]) {
                 let pn = a[0]
                 let player = data.playerMap[pn]
                 this.blueArr.push(player)
                 this.redArr.push(player)
+                // }
             }
         }
         console.log('create gameConf ', this.gameConf);
@@ -187,34 +189,36 @@ class _ScoreRankAdmin extends VueBase {
             let p2 = a[1]
             for (let i = 0; i < this.gameConf.scoreRank.length; i++) {
                 let a = this.gameConf.scoreRank[i][0].split('_')
-                let pn = a[0]
-                let player = this.gameConf.playerMap[pn]
+                if (this.gameConf.scoreRank[i][1] > -1) {
+                    let pn = a[0]
+                    let player = this.gameConf.playerMap[pn]
 
-                let scoreFxItem = {
-                    score: this.gameConf.scoreRank[i][1]
-                    , name: player.name
-                    , isSmall: true
-                    , scoreFx: 0
-                    , avatar: this.gameConf.avatarUrlBase + player.playerId + '.png'
-                    // , avatar: '/img/player/89/' + player.playerId + '.png'
-                    // , avatar: this.gameConf.avatarUrlBase +'circle/'+ player.playerId + '.png'
-                }
-                if (isInitScoreArr)
+                    let scoreFxItem = {
+                        score: this.gameConf.scoreRank[i][1]
+                        , name: player.name
+                        , isSmall: true
+                        , scoreFx: 0
+                        , avatar: this.gameConf.avatarUrlBase + player.playerId + '.png'
+                        // , avatar: '/img/player/89/' + player.playerId + '.png'
+                        // , avatar: this.gameConf.avatarUrlBase +'circle/'+ player.playerId + '.png'
+                    }
+                    if (isInitScoreArr)
+                        this.lastScoreArr[i] = scoreFxItem.score
+                    scoreFx = scoreFxItem.score - this.lastScoreArr[i]
                     this.lastScoreArr[i] = scoreFxItem.score
-                scoreFx = scoreFxItem.score - this.lastScoreArr[i]
-                this.lastScoreArr[i] = scoreFxItem.score
-                if (pn == p1) {
-                    scoreFxItem.scoreFx = scoreFx
-                    scoreFxItem.isSmall = false
-                    opReq(`${CommandId.cs_updateScore}`, { score: scoreFxItem.score, isLeft: true })
-                }
-                else if (pn == p2) {
-                    scoreFxItem.scoreFx = scoreFx
-                    scoreFxItem.isSmall = false
-                    opReq(`${CommandId.cs_updateScore}`, { score: scoreFxItem.score, isLeft: false })
+                    if (pn == p1) {
+                        scoreFxItem.scoreFx = scoreFx
+                        scoreFxItem.isSmall = false
+                        opReq(`${CommandId.cs_updateScore}`, { score: scoreFxItem.score, isLeft: true })
+                    }
+                    else if (pn == p2) {
+                        scoreFxItem.scoreFx = scoreFx
+                        scoreFxItem.isSmall = false
+                        opReq(`${CommandId.cs_updateScore}`, { score: scoreFxItem.score, isLeft: false })
 
+                    }
+                    scoreArr.push(scoreFxItem)
                 }
-                scoreArr.push(scoreFxItem)
             }
             scoreArr = scoreArr.sort(descendingProp('score'))
 

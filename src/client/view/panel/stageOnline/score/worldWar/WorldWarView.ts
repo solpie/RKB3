@@ -103,12 +103,12 @@ export class WorldWarView extends PIXI.Container {
             let rPlayer = rec.player[1]
             let lp, rp;
             if (!playerMap[lPlayer])
-              lp = { name: "TBD" }
+              lp = { name: "---" }
             else
               lp = playerMap[lPlayer]
 
             if (!playerMap[rPlayer])
-              rp = { name: "TBD" }
+              rp = { name: "---" }
             else
               rp = playerMap[rPlayer]
 
