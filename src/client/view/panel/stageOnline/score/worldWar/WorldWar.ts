@@ -129,7 +129,7 @@ export class WorldWar extends PIXI.Container {
 
     //foul hint
     let lFoulHint = newBitmap({ url: "/img/panel/worldWar/foulHintL.png" });
-    let rFoulHint = newBitmap({ url: "/img/panel/worldWar/foulHintL.png" });
+    let rFoulHint = newBitmap({ url: "/img/panel/worldWar/foulHintR.png" });
     lFoulHint.visible = false;
     rFoulHint.visible = false;
     this.addChild(lFoulHint);

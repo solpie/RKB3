@@ -11305,7 +11305,7 @@
 	        _this.rAvt.setAvtPos(1420, 890, 175);
 	        _this.addChild(_this.rAvt);
 	        var lFoulHint = PixiEx_1.newBitmap({ url: "/img/panel/worldWar/foulHintL.png" });
-	        var rFoulHint = PixiEx_1.newBitmap({ url: "/img/panel/worldWar/foulHintL.png" });
+	        var rFoulHint = PixiEx_1.newBitmap({ url: "/img/panel/worldWar/foulHintR.png" });
 	        lFoulHint.visible = false;
 	        rFoulHint.visible = false;
 	        _this.addChild(lFoulHint);
