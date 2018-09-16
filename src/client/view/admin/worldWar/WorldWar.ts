@@ -166,6 +166,16 @@ class _worldWar extends VueBase {
     }
   };
   methods = {
+    onShowTitle(v) {
+      let playerMap = gameView.playerMap;
+      // let recArr = this.gameConf.rec
+      let a = this.vsPlayer.split(" ");
+      let p1 = a[0];
+      let p2 = a[1];
+      p1 = playerMap[p1];
+      p2 = playerMap[p2];
+      opReq(CommandId.cs_showPanel, {lTitle:p1.title,rTitle:p2.title, panel: PanelId.worldwarTitle, visible: v })
+    },
     onShowPanel(v) {
       opReq(CommandId.cs_showPanel, { panel: PanelId.worldwarPanel, visible: v })
     },

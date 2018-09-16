@@ -10,6 +10,7 @@ export const PanelId = {
     actPanel: 'act',
     screenPanel: 'screen',
     worldwarPanel: 'worldwarPanel',
+    worldwarTitle: 'worldwarTitle',
     worldwarKDA: 'worldwarKDAPanel',
     playerPanel: 'player'
 };

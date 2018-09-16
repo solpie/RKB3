@@ -6,6 +6,7 @@ import { Pick8Layer } from '../../pick8/Pick8';
 import { PanelId } from '../../../../const';
 import { Countdown } from '../Countdown';
 import { newBitmap } from '../../../../utils/PixiEx';
+import { WWTitle } from './WWTitle';
 
 export class WorldWarView extends PIXI.Container {
   stage: any;
@@ -13,6 +14,8 @@ export class WorldWarView extends PIXI.Container {
   lBloodRank: ScoreRank
   rBloodRank: ScoreRank
   kdaTitle: PIXI.Sprite
+
+  title:WWTitle
   constructor(stage, io) {
     super();
     this.stage = stage;
@@ -37,7 +40,8 @@ export class WorldWarView extends PIXI.Container {
       this.lBloodRank.y = -60;
       this.rBloodRank.y = -60;
 
-
+      this.title = new WWTitle()
+      this.worldWar.addChild(this.title)
     });
 
     io.on(CommandId.sc_timerEvent, data => {
@@ -63,6 +67,11 @@ export class WorldWarView extends PIXI.Container {
           data.visible ?
             this.worldWar.show() :
             this.worldWar.hide();
+        }
+        if (data.panel == PanelId.worldwarTitle) {
+          data.visible ?
+            this.title.show(data) :
+            this.title.hide();
         }
         if (data.panel == PanelId.worldwarKDA) {
           if (data.visible) {
