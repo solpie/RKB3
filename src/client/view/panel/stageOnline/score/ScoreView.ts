@@ -80,7 +80,7 @@ export class ScoreView extends BasePanelView {
                     if (this.isWorld)
                         this.scorePanelV3.visible = false
                     else {
-                        this.scorePanelV3 = new Score2018v3(stage)
+                        this.scorePanelV3.visible = true
                     }
                 }
                 this.initDelay()

@@ -8041,7 +8041,7 @@
 	                    if (_this.isWorld)
 	                        _this.scorePanelV3.visible = false;
 	                    else {
-	                        _this.scorePanelV3 = new Score2018v3_1.Score2018v3(stage);
+	                        _this.scorePanelV3.visible = true;
 	                    }
 	                }
 	                _this.initDelay();
