@@ -66,9 +66,11 @@ export class Row1 extends PIXI.Container {
         this.score.text = data.score + ''
         this.score.x = 832 - this.score.width * .5
 
-        imgLoader.loadTex(data.avatar, tex => {
+        imgLoader.loadTexRemote(data.avatar, _ => {
+            let tex = imgLoader.getTex(data.avatar)
             let avt = this.avt
             avt.texture = tex
+
             let s = 180 / tex.height
             // let s2 = 110 /tex.height
             // avt.x = avt.mask.x - avt.texture.width * .5 * s

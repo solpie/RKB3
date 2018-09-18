@@ -10,9 +10,6 @@ export class Group extends PIXI.Container {
     constructor(parent) {
         super()
         this.p = parent
-        // let modal = new PIXI.Graphics().drawRect(0, 0, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT)
-        // modal.alpha = 0.8
-        // this.addChild(modal)
         let gt = this.groupText = new PIXI.Text
         gt.style.fill = '#fff'
         gt.style.fontSize = '50px'
