@@ -42,6 +42,7 @@ export class WorldWarView extends PIXI.Container {
 
       this.title = new WWTitle()
       this.worldWar.addChild(this.title)
+      this.title.hide()
     });
 
     io.on(CommandId.sc_timerEvent, data => {

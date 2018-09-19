@@ -10572,6 +10572,7 @@
 	            _this.rBloodRank.y = -60;
 	            _this.title = new WWTitle_1.WWTitle();
 	            _this.worldWar.addChild(_this.title);
+	            _this.title.hide();
 	        });
 	        io.on(Command_1.CommandId.sc_timerEvent, function (data) {
 	            console.log("sc_timerEvent", data);
@@ -10830,7 +10831,6 @@
 	            playerData.weight = playerData.hwa[1];
 	            playerData.age = playerData.hwa[2];
 	        }
-	        this.rBlood.setBlood(2);
 	    };
 	    WorldWar.prototype.setRightPlayer = function (rPlayer) {
 	        this.rTitle.setText(rPlayer.title).setAlignCenter(_c(300));
@@ -10948,13 +10948,25 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var PixiEx_1 = __webpack_require__(56);
+	var TweenEx_1 = __webpack_require__(57);
 	var BloodBar = (function (_super) {
 	    __extends(BloodBar, _super);
 	    function BloodBar(isLeft) {
 	        _super.call(this);
 	        this.initBlood = 0;
+	        this._tmpBlood = -1;
 	        this.isLeft = isLeft;
 	        this.bloodArr = [];
+	        var bloodFxUrl = '/img/panel/worldWar/bloodFxR.png';
+	        if (isLeft) {
+	            bloodFxUrl = '/img/panel/worldWar/bloodFxL.png';
+	        }
+	        var bFx = PixiEx_1.newBitmap({ url: bloodFxUrl });
+	        this.addChild(bFx);
+	        bFx.alpha = 0.7;
+	        this.bloodFx = PixiEx_1.newBitmap({ url: bloodFxUrl });
+	        this.addChild(this.bloodFx);
+	        bFx.mask = this.bloodFx;
 	        for (var i = 0; i < 13; i++) {
 	            var b = PixiEx_1.newBitmap({ url: "/img/panel/worldWar/b" + (i + 0) + ".png" });
 	            this.addChild(b);
@@ -10968,6 +10980,7 @@
 	    BloodBar.prototype.setBlood = function (val) {
 	        this.initBlood = val;
 	        this._setBlood(val);
+	        this.bloodFx.x = this.bloodFxPos[val];
 	    };
 	    BloodBar.prototype._setBlood = function (val) {
 	        for (var i = 0; i < this.bloodArr.length; i++) {
@@ -10975,8 +10988,29 @@
 	            b.visible = i < val;
 	        }
 	    };
-	    BloodBar.prototype.setBloodByDtScore = function (score) {
-	        this._setBlood(this.initBlood - score);
+	    Object.defineProperty(BloodBar.prototype, "bloodFxPos", {
+	        get: function () {
+	            if (this.isLeft)
+	                return [396, 292, 235, 175, 120, 60, 0];
+	            return [-396, -292, -235, -175, -120, -60, 0];
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    BloodBar.prototype.setBloodByDtScore = function (dtScore) {
+	        var _this = this;
+	        var val = this.initBlood - dtScore;
+	        this._setBlood(val);
+	        if (dtScore > 0) {
+	            this._tmpBlood = val;
+	            TweenEx_1.TweenEx.delayedCall(1500, function (_) {
+	                if (_this._tmpBlood == val)
+	                    TweenEx_1.TweenEx.to(_this.bloodFx, 300, { x: _this.bloodFxPos[val] });
+	            });
+	        }
+	        else {
+	            this.bloodFx.x = this.bloodFxPos[val];
+	        }
 	    };
 	    return BloodBar;
 	}(PIXI.Container));
@@ -11425,7 +11459,6 @@
 	            .setY(842);
 	        this.rTitle = TextFac_1.TextFac.new_(ns, this)
 	            .setY(this.lTitle.y);
-	        this.test();
 	    }
 	    WWTitle.prototype.test = function () {
 	        this.show({ lTitle: '南区实力榜第一人', rTitle: "前NCAA球员" });

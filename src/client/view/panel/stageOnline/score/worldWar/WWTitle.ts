@@ -20,8 +20,6 @@ export class WWTitle extends PIXI.Container {
             .setY(842)
         this.rTitle = TextFac.new_(ns, this)
             .setY(this.lTitle.y)
-        this.test()
-
     }
     test() {
         this.show({ lTitle: '南区实力榜第一人', rTitle: "前NCAA球员" })

@@ -206,7 +206,7 @@ export class WorldWar extends PIXI.Container {
     }
 
     // this.lBlood.setBlood(4);
-    this.rBlood.setBlood(2);
+    // this.rBlood.setBlood(2);
   }
   setRightPlayer(rPlayer) {
     this.rTitle.setText(rPlayer.title).setAlignCenter(_c(300));
