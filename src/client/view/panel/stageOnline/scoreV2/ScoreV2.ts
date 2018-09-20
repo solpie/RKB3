@@ -48,6 +48,8 @@ export class ScoreV2 extends PIXI.Container {
     rAvtUrl: String
 
     avtCtn: PIXI.Container
+    titleCtn: PIXI.Container
+
     constructor(parent) {
         super()
         parent.addChild(this)
@@ -68,7 +70,10 @@ export class ScoreV2 extends PIXI.Container {
         let rFoulHint = newBitmap({ url: '/img/panel/score2018v2/foulHintR.png' })
         top.addChild(rFoulHint)
         this.rFoulHint = rFoulHint
-
+        lFoulHint.alpha =
+        rFoulHint.alpha =0.8
+        lFoulHint.visible =
+            rFoulHint.visible = true
 
 
 
@@ -81,14 +86,16 @@ export class ScoreV2 extends PIXI.Container {
         this.rName = TextFac.new_(ns, this)
             .setPos(1215, this.lName.y)
 
+        this.titleCtn = new PIXI.Container()
+        this.addChild(this.titleCtn)
+        this.titleCtn.addChild(newBitmap({ url: '/img/panel/score2018v2/titleBg.png' }))
         ns.fontSize = '28px'
-        ns.fill = '#fff'
-        this.lTitle = TextFac.new_(ns, this)
-            .setY(914)
+        ns.fill = '#28263e'
+        this.lTitle = TextFac.new_(ns, this.titleCtn)
+            .setY(870)
 
-        this.rTitle = TextFac.new_(ns, this)
+        this.rTitle = TextFac.new_(ns, this.titleCtn)
             .setPos(1123, this.lTitle.y)
-
 
         ns.fill = '#444'
         this.gameTitle = TextFac.new_(ns, this)
@@ -106,17 +113,17 @@ export class ScoreV2 extends PIXI.Container {
         ns.fontSize = '60px'
         ns.fill = '#fff'
         ns.fontFamily = 'dinCondensedC'
-        this.lScore = TextFac.new_(ns, this.avtCtn)
-            .setY(4)
-        this.rScore = TextFac.new_(ns, this.avtCtn)
+        this.lScore = TextFac.new_(ns, this)
+            .setY(2)
+        this.rScore = TextFac.new_(ns, this)
             .setY(this.lScore.y)
         this.lScore.alpha = this.rScore.alpha = 0.8
         //4foul to hint 决赛5foul
-        ns.fontSize = '30px'
+        ns.fontSize = '35px'
         ns.fill = '#eee'
         ns.fontFamily = FontName.NotoSansHans
         this.lFoul = TextFac.new_(ns, this)
-            .setPos(315 + 57, 16)
+            .setPos(315 + 57,4)
 
         this.rFoul = TextFac.new_(ns, this)
             .setPos(1536 + 57, this.lFoul.y)
@@ -137,7 +144,7 @@ export class ScoreV2 extends PIXI.Container {
         let t = new TextTimer('', tts)
         this.addChild(t)
         t.x = 918
-        t.y = 16
+        t.y = 10
         t.textInSec = 0
         this.timer = t
 
@@ -164,9 +171,6 @@ export class ScoreV2 extends PIXI.Container {
         this.todo()
     }
     todo() {
-        this.lTitle.visible = this.rTitle.visible = false
-        this.lFoulHint.visible = false
-        this.rFoulHint.visible = false
     }
     resetScore() {
         this.setLeftFoul(0)
@@ -196,11 +200,18 @@ export class ScoreV2 extends PIXI.Container {
             this.lState.text = this.rState.text = ''
     }
 
+    _isShowFoulHint(foulHintSp, foul) {
+        foulHintSp.visible = (foul >= this.foulHint)
+    }
     setDtFoul(data) {
-        if (data.isLeft)
+        if (data.isLeft) {
             this.lFoul.setAddNum(data.dtFoul)
-        else
+            this._isShowFoulHint(this.lFoulHint, Number(this.lFoul.text))
+        }
+        else {
             this.rFoul.setAddNum(data.dtFoul)
+            this._isShowFoulHint(this.rFoulHint, Number(this.rFoul.text))
+        }
     }
 
     setDtScore(data) {
@@ -223,13 +234,21 @@ export class ScoreV2 extends PIXI.Container {
             .setAlignCenter(_c(82))
     }
 
+    foulHint = 4
     setLeftFoul(data) {
+        let foul = Number(data || 0)
         this.lFoul.setText((data || 0))
-            .setAlignCenter(_c(-175))
+            .setAlignCenter(_c(-165))
+
+        this._isShowFoulHint(this.lFoulHint, Number(this.lFoul.text))
     }
+
     setRightFoul(data) {
+        let foul = Number(data || 0)
         this.rFoul.setText((data || 0))
-            .setAlignCenter(_c(175))
+            .setAlignCenter(_c(205))
+        this._isShowFoulHint(this.rFoulHint, Number(this.rFoul.text))
+
     }
 
     _setHWA(playerData) {
@@ -242,7 +261,7 @@ export class ScoreV2 extends PIXI.Container {
 
     setRightPlayer(rPlayer) {
         this.rTitle.setText(rPlayer.title)
-            .setAlignCenter(1320)
+            .setAlignCenter(_c(208))
 
         this.rName.setText(rPlayer.name)
             .setLimitWidth(298, 40)
@@ -259,7 +278,7 @@ export class ScoreV2 extends PIXI.Container {
 
     setLeftPlayer(lPlayer) {
         this.lTitle.setText(lPlayer.title)
-            .setAlignCenter(600)
+            .setAlignCenter(_c(-208))
 
         this.lName.setText(lPlayer.name)
             .setLimitWidth(298, 40)
@@ -305,6 +324,7 @@ export class ScoreV2 extends PIXI.Container {
         console.log('gameIdx22', gameIdx, 'type', type)
         let gameIdxNum = '' + paddy(gameIdx, 2)
         // this.gameIdxTxt.text = '四强'
+        this.foulHint = 4
         if (type == 2) {
             let gameIdxNum2
             gameIdxNum2 = '第' + gameIdxNum + '场'
@@ -326,7 +346,6 @@ export class ScoreV2 extends PIXI.Container {
             }
             else
                 this.gameTitle.text = '大师赛'
-
         }
         else if (type == 4) {
             this.gameTitle.text = '席位战'
@@ -338,6 +357,7 @@ export class ScoreV2 extends PIXI.Container {
         else if (type == 3) {
             this.gameTitle.text = '决赛'
             gameIdxNum = ''
+            this.foulHint = 5
         }
 
         this.gameTitle.text += gameIdxNum
@@ -372,12 +392,14 @@ export class ScoreV2 extends PIXI.Container {
                 let ln = a[0]
                 let rn = a[1]//data.right
                 this.lTitle.setText(ln)
-                    .setAlignCenter(600)
+                    .setAlignCenter(_c(-208))
                 this.rTitle.setText(rn)
-                    .setAlignCenter(1320)
+                    .setAlignCenter(_c(208))
             }
         }
-        if (!data.visible)
+        this.titleCtn.visible = data.visible
+        if (!data.visible) {
             this.lTitle.text = this.rTitle.text = ''
+        }
     }
 }

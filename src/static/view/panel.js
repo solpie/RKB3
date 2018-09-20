@@ -7046,7 +7046,7 @@
 	var BasePanelView_1 = __webpack_require__(68);
 	var const_1 = __webpack_require__(27);
 	var BracketGroup_1 = __webpack_require__(78);
-	var Bracket2018_1 = __webpack_require__(85);
+	var BracketV2_1 = __webpack_require__(132);
 	var BracketView = (function (_super) {
 	    __extends(BracketView, _super);
 	    function BracketView(stage, gameId, $route) {
@@ -7054,7 +7054,7 @@
 	        this.name = const_1.PanelId.bracketPanel;
 	        console.log("new bracket", $route.query);
 	        var isManmaul = $route.query.m == '1';
-	        this.bracket = new Bracket2018_1.Bracket2018(stage);
+	        this.bracket = new BracketV2_1.BracketV2(stage);
 	        if (isManmaul)
 	            this.initManmaul();
 	        else {
@@ -7204,243 +7204,7 @@
 
 
 /***/ },
-/* 85 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var BracketGroup_1 = __webpack_require__(78);
-	var const_1 = __webpack_require__(27);
-	var PixiEx_1 = __webpack_require__(56);
-	var BracketPlayerV3_1 = __webpack_require__(86);
-	var isTest = false;
-	var Section2 = (function (_super) {
-	    __extends(Section2, _super);
-	    function Section2() {
-	        _super.call(this);
-	        this.groupPlayerMap = {};
-	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/bracket/s4v31/bg2.png' }));
-	        var y1 = 247;
-	        var y2 = 208;
-	        var lNameX = 90;
-	        var lScoreX = 195;
-	        var rNameX = 135;
-	        var rScoreX = 18;
-	        var playerPos = {
-	            '5': { p: [188, 98], y: y2, align: [lNameX, lScoreX], isLeft: true },
-	            '6': { p: [188, 427], y: y2, align: [lNameX, lScoreX], isLeft: true },
-	            '7': { p: [546, 774], y: y2, align: [lNameX, lScoreX], isLeft: true },
-	            '8': { p: [917, 202], y: 329, align: [lNameX, lScoreX], isLeft: true }
-	        };
-	        var gm = this.groupPlayerMap;
-	        for (var i = 0; i < 4; i++) {
-	            var g = gm[i + 5] = { playerArr: [] };
-	            var p = playerPos[i + 5];
-	            var p1 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
-	            var p2 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
-	            p1.x = p.p[0];
-	            p1.y = p.p[1];
-	            p2.x = p.p[0];
-	            p2.y = p.p[1] + p.y;
-	            g.playerArr.push(p1);
-	            g.playerArr.push(p2);
-	            g['group'] = [p1, p2];
-	            if (i != 2) {
-	                this.addChild(p1);
-	                this.addChild(p2);
-	            }
-	            if (isTest)
-	                this.test(p1, p2);
-	        }
-	        var pWin7 = new BracketPlayerV3_1.BracketPlayerV3(true, [lNameX, lScoreX]);
-	        pWin7.x = 935;
-	        pWin7.y = 878;
-	        pWin7.hideScore();
-	        this.pWin7 = pWin7;
-	        var pWin8 = new BracketPlayerV3_1.BracketPlayerV3(true, [lNameX, lScoreX]);
-	        pWin8.x = 1498;
-	        pWin8.y = 358;
-	        this.addChild(pWin8);
-	        pWin8.setFont({ fontSize: '50px' });
-	        pWin8.hideScore();
-	        this.pWin8 = pWin8;
-	        if (isTest)
-	            this.test(pWin7, pWin8);
-	    }
-	    Section2.prototype.setData = function (data) {
-	        console.log('section2 set data', data, this.groupPlayerMap);
-	        for (var gameIdx in this.groupPlayerMap) {
-	            var dataObj = data[gameIdx];
-	            if (dataObj) {
-	                var group = this.groupPlayerMap[gameIdx].group;
-	                var p1 = group[0];
-	                var p2 = group[1];
-	                if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
-	                    p1.setScore(dataObj.left.score);
-	                    p2.setScore(dataObj.right.score);
-	                }
-	                var group2 = BracketGroup_1.groupPosMap[gameIdx];
-	                var hints = group2.hints;
-	                if (dataObj.left.name)
-	                    p1.setLeftName(dataObj.left.name);
-	                if (dataObj.right.name)
-	                    p2.setLeftName(dataObj.right.name);
-	            }
-	        }
-	        var fillWinner = function (player, gameIdx) {
-	            var dataObj7 = data[gameIdx];
-	            if (dataObj7) {
-	                if (Number(dataObj7.left.score) > Number(dataObj7.right.score)) {
-	                    player.setLeftName(dataObj7.left.name);
-	                }
-	                if (Number(dataObj7.left.score) < Number(dataObj7.right.score)) {
-	                    player.setLeftName(dataObj7.right.name);
-	                }
-	            }
-	        };
-	        fillWinner(this.pWin7, 7);
-	        fillWinner(this.pWin8, 8);
-	    };
-	    Section2.prototype.test = function (p1, p2) {
-	        p1.setInfo({ name: '好天氣', score: '12' });
-	        p2.setInfo({ name: '好天氣其', score: '0' });
-	    };
-	    return Section2;
-	}(PIXI.Container));
-	var Section1 = (function (_super) {
-	    __extends(Section1, _super);
-	    function Section1() {
-	        _super.call(this);
-	        this.groupPlayerMap = {};
-	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/bracket/s4v31/bg.png' }));
-	        var y1 = 247;
-	        var y2 = 490;
-	        var lNameX = 90;
-	        var lScoreX = 195;
-	        var rNameX = 135;
-	        var rScoreX = 18;
-	        var playerPos = {
-	            '1': { p: [96, 150], y: y1, align: [lNameX, lScoreX], isLeft: true },
-	            '2': { p: [96, 640], y: y1, align: [lNameX, lScoreX], isLeft: true },
-	            '3': { p: [1608, 150], y: y1, align: [rNameX, rScoreX], isLeft: false },
-	            '4': { p: [1608, 640], y: y1, align: [rNameX, rScoreX], isLeft: false },
-	            '5': { p: [469, 272], y: y2, align: [lNameX, lScoreX], isLeft: true },
-	            '6': { p: [1234, 272], y: y2, align: [rNameX, rScoreX], isLeft: false }
-	        };
-	        var gm = this.groupPlayerMap;
-	        for (var i = 0; i < 6; i++) {
-	            var g = gm[i + 1] = { playerArr: [] };
-	            var p = playerPos[i + 1];
-	            var p1 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
-	            var p2 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
-	            p1.x = p.p[0];
-	            p1.y = p.p[1];
-	            p2.x = p.p[0];
-	            p2.y = p.p[1] + p.y;
-	            g.playerArr.push(p1);
-	            g.playerArr.push(p2);
-	            g['group'] = [p1, p2];
-	            this.addChild(p1);
-	            this.addChild(p2);
-	            if (isTest)
-	                this.test(p1, p2);
-	        }
-	    }
-	    Section1.prototype.setData = function (data) {
-	        console.log('section1 set data', data, this.groupPlayerMap);
-	        for (var gameIdx in this.groupPlayerMap) {
-	            var dataObj = data[gameIdx];
-	            if (dataObj) {
-	                var group = this.groupPlayerMap[gameIdx].group;
-	                var p1 = group[0];
-	                var p2 = group[1];
-	                if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
-	                    p1.setScore(dataObj.left.score);
-	                    p2.setScore(dataObj.right.score);
-	                }
-	                var group2 = BracketGroup_1.groupPosMap[gameIdx];
-	                var hints = group2.hints;
-	                if (dataObj.left.name)
-	                    p1.setLeftName(dataObj.left.name);
-	                if (dataObj.right.name)
-	                    p2.setLeftName(dataObj.right.name);
-	            }
-	        }
-	    };
-	    Section1.prototype.test = function (p1, p2) {
-	        p1.setInfo({ name: '好天氣', score: '12' });
-	        p2.setInfo({ name: '好天氣其', score: '0' });
-	    };
-	    return Section1;
-	}(PIXI.Container));
-	var Bracket2018 = (function (_super) {
-	    __extends(Bracket2018, _super);
-	    function Bracket2018(parent) {
-	        var _this = this;
-	        _super.call(this);
-	        this.isLoaded = false;
-	        this._res = null;
-	        parent.addChild(this);
-	        var bg = PixiEx_1.newBitmap({
-	            url: "/img/panel/bracket/tile2.png",
-	            isTiling: true,
-	            width: const_1.ViewConst.STAGE_WIDTH,
-	            height: const_1.ViewConst.STAGE_HEIGHT
-	        });
-	        bg.alpha = 0.8;
-	        this.addChild(bg);
-	        var hintCtn = new PIXI.Container();
-	        this.addChild(hintCtn);
-	        var section2 = new Section2();
-	        this.addChild(section2);
-	        this.section2 = section2;
-	        section2.visible = false;
-	        var section1 = new Section1();
-	        this.addChild(section1);
-	        this.section1 = section1;
-	        window.onkeyup = function (e) {
-	            console.log('key up', e.key, e.keyCode);
-	            if (e.key == 'ArrowLeft' || e.keyCode == 37) {
-	                _this.showPage({ page: 1 });
-	            }
-	            else if (e.key == 'ArrowRight' || e.keyCode == 39) {
-	                _this.showPage({ page: 2 });
-	            }
-	        };
-	    }
-	    Bracket2018.prototype.setWinHint = function (sp, isFlip) {
-	        if (isFlip === void 0) { isFlip = false; }
-	        sp.texture = this.hint2Tex;
-	    };
-	    Bracket2018.prototype.hideComing = function () {
-	    };
-	    Bracket2018.prototype.showComingIdx = function (idx) {
-	        var g = BracketGroup_1.groupPosMap[idx];
-	    };
-	    Bracket2018.prototype.showPage = function (data) {
-	        if (data.page == 1) {
-	            this.section1.visible = true;
-	            this.section2.visible = false;
-	        }
-	        else if (data.page == 2) {
-	            this.section1.visible = false;
-	            this.section2.visible = true;
-	        }
-	    };
-	    Bracket2018.prototype.onBracketData = function (res) {
-	        this.section1.setData(res.data);
-	        this.section2.setData(res.data);
-	    };
-	    return Bracket2018;
-	}(PIXI.Container));
-	exports.Bracket2018 = Bracket2018;
-
-
-/***/ },
+/* 85 */,
 /* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -7461,7 +7225,7 @@
 	        this.alignArr = alignArr;
 	        var ns = {
 	            fontFamily: const_1.FontName.NotoSansHans,
-	            fontSize: '36px', fill: "#fff",
+	            fontSize: '36px', fill: "#323048",
 	        };
 	        this.pName = TextFac_1.TextFac.new_(ns, this)
 	            .setText('');
@@ -10715,6 +10479,7 @@
 	    function ScoreV2(parent) {
 	        _super.call(this);
 	        this.state = true;
+	        this.foulHint = 4;
 	        this.winSectionArr = [7, 8];
 	        this.loseSectionArr = [5, 6, 9, 10, 12];
 	        this.to8 = [1, 2, 3, 4];
@@ -10736,6 +10501,10 @@
 	        var rFoulHint = PixiEx_1.newBitmap({ url: '/img/panel/score2018v2/foulHintR.png' });
 	        top.addChild(rFoulHint);
 	        this.rFoulHint = rFoulHint;
+	        lFoulHint.alpha =
+	            rFoulHint.alpha = 0.8;
+	        lFoulHint.visible =
+	            rFoulHint.visible = true;
 	        var ns = {
 	            fontFamily: const_1.FontName.NotoSansHans,
 	            fontSize: '32px', fill: "#303030",
@@ -10744,11 +10513,14 @@
 	            .setY(941);
 	        this.rName = TextFac_1.TextFac.new_(ns, this)
 	            .setPos(1215, this.lName.y);
+	        this.titleCtn = new PIXI.Container();
+	        this.addChild(this.titleCtn);
+	        this.titleCtn.addChild(PixiEx_1.newBitmap({ url: '/img/panel/score2018v2/titleBg.png' }));
 	        ns.fontSize = '28px';
-	        ns.fill = '#fff';
-	        this.lTitle = TextFac_1.TextFac.new_(ns, this)
-	            .setY(914);
-	        this.rTitle = TextFac_1.TextFac.new_(ns, this)
+	        ns.fill = '#28263e';
+	        this.lTitle = TextFac_1.TextFac.new_(ns, this.titleCtn)
+	            .setY(870);
+	        this.rTitle = TextFac_1.TextFac.new_(ns, this.titleCtn)
 	            .setPos(1123, this.lTitle.y);
 	        ns.fill = '#444';
 	        this.gameTitle = TextFac_1.TextFac.new_(ns, this)
@@ -10762,16 +10534,16 @@
 	        ns.fontSize = '60px';
 	        ns.fill = '#fff';
 	        ns.fontFamily = 'dinCondensedC';
-	        this.lScore = TextFac_1.TextFac.new_(ns, this.avtCtn)
-	            .setY(4);
-	        this.rScore = TextFac_1.TextFac.new_(ns, this.avtCtn)
+	        this.lScore = TextFac_1.TextFac.new_(ns, this)
+	            .setY(2);
+	        this.rScore = TextFac_1.TextFac.new_(ns, this)
 	            .setY(this.lScore.y);
 	        this.lScore.alpha = this.rScore.alpha = 0.8;
-	        ns.fontSize = '30px';
+	        ns.fontSize = '35px';
 	        ns.fill = '#eee';
 	        ns.fontFamily = const_1.FontName.NotoSansHans;
 	        this.lFoul = TextFac_1.TextFac.new_(ns, this)
-	            .setPos(315 + 57, 16);
+	            .setPos(315 + 57, 4);
 	        this.rFoul = TextFac_1.TextFac.new_(ns, this)
 	            .setPos(1536 + 57, this.lFoul.y);
 	        ns.fontSize = '40px';
@@ -10788,7 +10560,7 @@
 	        var t = new TextTimer_1.TextTimer('', tts);
 	        this.addChild(t);
 	        t.x = 918;
-	        t.y = 16;
+	        t.y = 10;
 	        t.textInSec = 0;
 	        this.timer = t;
 	        var lMask = PixiEx_1.newBitmap({ url: '/img/panel/score2018v2/maskL.png' });
@@ -10809,9 +10581,6 @@
 	        this.todo();
 	    }
 	    ScoreV2.prototype.todo = function () {
-	        this.lTitle.visible = this.rTitle.visible = false;
-	        this.lFoulHint.visible = false;
-	        this.rFoulHint.visible = false;
 	    };
 	    ScoreV2.prototype.resetScore = function () {
 	        this.setLeftFoul(0);
@@ -10836,11 +10605,18 @@
 	        else
 	            this.lState.text = this.rState.text = '';
 	    };
+	    ScoreV2.prototype._isShowFoulHint = function (foulHintSp, foul) {
+	        foulHintSp.visible = (foul >= this.foulHint);
+	    };
 	    ScoreV2.prototype.setDtFoul = function (data) {
-	        if (data.isLeft)
+	        if (data.isLeft) {
 	            this.lFoul.setAddNum(data.dtFoul);
-	        else
+	            this._isShowFoulHint(this.lFoulHint, Number(this.lFoul.text));
+	        }
+	        else {
 	            this.rFoul.setAddNum(data.dtFoul);
+	            this._isShowFoulHint(this.rFoulHint, Number(this.rFoul.text));
+	        }
 	    };
 	    ScoreV2.prototype.setDtScore = function (data) {
 	        if (data.isLeft) {
@@ -10861,12 +10637,16 @@
 	            .setAlignCenter(PixiEx_1._c(82));
 	    };
 	    ScoreV2.prototype.setLeftFoul = function (data) {
+	        var foul = Number(data || 0);
 	        this.lFoul.setText((data || 0))
-	            .setAlignCenter(PixiEx_1._c(-175));
+	            .setAlignCenter(PixiEx_1._c(-165));
+	        this._isShowFoulHint(this.lFoulHint, Number(this.lFoul.text));
 	    };
 	    ScoreV2.prototype.setRightFoul = function (data) {
+	        var foul = Number(data || 0);
 	        this.rFoul.setText((data || 0))
-	            .setAlignCenter(PixiEx_1._c(175));
+	            .setAlignCenter(PixiEx_1._c(205));
+	        this._isShowFoulHint(this.rFoulHint, Number(this.rFoul.text));
 	    };
 	    ScoreV2.prototype._setHWA = function (playerData) {
 	        if (playerData.hwa) {
@@ -10877,7 +10657,7 @@
 	    };
 	    ScoreV2.prototype.setRightPlayer = function (rPlayer) {
 	        this.rTitle.setText(rPlayer.title)
-	            .setAlignCenter(1320);
+	            .setAlignCenter(PixiEx_1._c(208));
 	        this.rName.setText(rPlayer.name)
 	            .setLimitWidth(298, 40);
 	        this._setHWA(rPlayer);
@@ -10891,7 +10671,7 @@
 	    };
 	    ScoreV2.prototype.setLeftPlayer = function (lPlayer) {
 	        this.lTitle.setText(lPlayer.title)
-	            .setAlignCenter(600);
+	            .setAlignCenter(PixiEx_1._c(-208));
 	        this.lName.setText(lPlayer.name)
 	            .setLimitWidth(298, 40)
 	            .setAlignRight(702);
@@ -10922,6 +10702,7 @@
 	    ScoreV2.prototype.setGameIdx = function (gameIdx, type) {
 	        console.log('gameIdx22', gameIdx, 'type', type);
 	        var gameIdxNum = '' + JsFunc_1.paddy(gameIdx, 2);
+	        this.foulHint = 4;
 	        if (type == 2) {
 	            var gameIdxNum2 = void 0;
 	            gameIdxNum2 = '第' + gameIdxNum + '场';
@@ -10953,6 +10734,7 @@
 	        else if (type == 3) {
 	            this.gameTitle.text = '决赛';
 	            gameIdxNum = '';
+	            this.foulHint = 5;
 	        }
 	        this.gameTitle.text += gameIdxNum;
 	        this.gameTitle.setAlignCenter(960);
@@ -10983,13 +10765,15 @@
 	                var ln = a[0];
 	                var rn = a[1];
 	                this.lTitle.setText(ln)
-	                    .setAlignCenter(600);
+	                    .setAlignCenter(PixiEx_1._c(-208));
 	                this.rTitle.setText(rn)
-	                    .setAlignCenter(1320);
+	                    .setAlignCenter(PixiEx_1._c(208));
 	            }
 	        }
-	        if (!data.visible)
+	        this.titleCtn.visible = data.visible;
+	        if (!data.visible) {
 	            this.lTitle.text = this.rTitle.text = '';
+	        }
 	    };
 	    return ScoreV2;
 	}(PIXI.Container));
@@ -11491,6 +11275,260 @@
 	    return PlayerInfoV2;
 	}(PIXI.Container));
 	exports.PlayerInfoV2 = PlayerInfoV2;
+
+
+/***/ },
+/* 132 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var PixiEx_1 = __webpack_require__(56);
+	var BracketPlayerV3_1 = __webpack_require__(86);
+	var BracketGroup_1 = __webpack_require__(78);
+	var isTest = false;
+	var isTestS2 = false;
+	var Section2 = (function (_super) {
+	    __extends(Section2, _super);
+	    function Section2() {
+	        _super.call(this);
+	        this.groupPlayerMap = {};
+	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/bracket/v2/bg2.png' }));
+	        var y1 = 180;
+	        var y2 = 440;
+	        var lNameX = 90;
+	        var lScoreX = 238;
+	        var rNameX = 135;
+	        var rScoreX = -18;
+	        var playerPos = {
+	            '5': { p: [221, 394], y: y1, align: [lNameX, lScoreX], isLeft: true },
+	            '6': { p: [1483, 394], y: y1, align: [rNameX, rScoreX], isLeft: true },
+	            '7': { p: [546, 774], y: y2, align: [lNameX, lScoreX], isLeft: true },
+	            '8': { p: [628, 483], y: y2, align: [lNameX, lScoreX], align2: [rNameX, rScoreX], isLeft: false, isHorizontal: true }
+	        };
+	        var gm = this.groupPlayerMap;
+	        for (var i = 0; i < 4; i++) {
+	            var g = gm[i + 5] = { playerArr: [] };
+	            var p = playerPos[i + 5];
+	            var p1 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
+	            var p2 = void 0;
+	            if (p.isHorizontal) {
+	                p2 = new BracketPlayerV3_1.BracketPlayerV3(!p.isLeft, p.align2);
+	                p1.x = p.p[0];
+	                p1.y = p.p[1];
+	                p2.x = p.p[0] + p.y;
+	                p2.y = p.p[1];
+	            }
+	            else {
+	                p2 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
+	                p1.x = p.p[0];
+	                p1.y = p.p[1];
+	                p2.x = p.p[0];
+	                p2.y = p.p[1] + p.y;
+	            }
+	            g.playerArr.push(p1);
+	            g.playerArr.push(p2);
+	            g['group'] = [p1, p2];
+	            if (i != 2) {
+	                this.addChild(p1);
+	                this.addChild(p2);
+	            }
+	            if (isTest)
+	                this.test(p1, p2);
+	        }
+	        var pWin7 = new BracketPlayerV3_1.BracketPlayerV3(true, [lNameX, lScoreX]);
+	        pWin7.x = 935;
+	        pWin7.y = 878;
+	        pWin7.hideScore();
+	        this.pWin7 = pWin7;
+	        var pWin8 = new BracketPlayerV3_1.BracketPlayerV3(true, [lNameX, lScoreX]);
+	        pWin8.x = 868;
+	        pWin8.y = 238;
+	        this.addChild(pWin8);
+	        pWin8.setFont({ fontSize: '50px' });
+	        pWin8.hideScore();
+	        this.pWin8 = pWin8;
+	        if (isTest)
+	            this.test(pWin7, pWin8);
+	    }
+	    Section2.prototype.setData = function (data) {
+	        console.log('section2 set data', data, this.groupPlayerMap);
+	        for (var gameIdx in this.groupPlayerMap) {
+	            var dataObj = data[gameIdx];
+	            if (dataObj) {
+	                var group = this.groupPlayerMap[gameIdx].group;
+	                var p1 = group[0];
+	                var p2 = group[1];
+	                if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
+	                    p1.setScore(dataObj.left.score);
+	                    p2.setScore(dataObj.right.score);
+	                }
+	                var group2 = BracketGroup_1.groupPosMap[gameIdx];
+	                var hints = group2.hints;
+	                if (dataObj.left.name)
+	                    p1.setLeftName(dataObj.left.name);
+	                if (dataObj.right.name)
+	                    p2.setLeftName(dataObj.right.name);
+	            }
+	        }
+	        var fillWinner = function (player, gameIdx) {
+	            var dataObj7 = data[gameIdx];
+	            if (dataObj7) {
+	                if (Number(dataObj7.left.score) > Number(dataObj7.right.score)) {
+	                    player.setLeftName(dataObj7.left.name);
+	                }
+	                if (Number(dataObj7.left.score) < Number(dataObj7.right.score)) {
+	                    player.setLeftName(dataObj7.right.name);
+	                }
+	            }
+	        };
+	        fillWinner(this.pWin7, 7);
+	        fillWinner(this.pWin8, 8);
+	    };
+	    Section2.prototype.test = function (p1, p2) {
+	        p1.setInfo({ name: '好天氣', score: '12' });
+	        p2.setInfo({ name: '好天氣其', score: '0' });
+	    };
+	    return Section2;
+	}(PIXI.Container));
+	var Section1 = (function (_super) {
+	    __extends(Section1, _super);
+	    function Section1() {
+	        _super.call(this);
+	        this.groupPlayerMap = {};
+	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/bracket/v2/bg1.png' }));
+	        var y1 = 180;
+	        var y2 = 440;
+	        var lNameX = 90;
+	        var lScoreX = 238;
+	        var rNameX = 135;
+	        var rScoreX = -18;
+	        var playerPos = {
+	            '1': { p: [221, 238], y: y1, align: [lNameX, lScoreX], isLeft: true, isHorizontal: false },
+	            '2': { p: [1483, 238], y: y1, align: [rNameX, rScoreX], isLeft: false, isHorizontal: false },
+	            '3': { p: [221, 578], y: y1, align: [lNameX, lScoreX], isLeft: true, isHorizontal: false },
+	            '4': { p: [1483, 578], y: y1, align: [rNameX, rScoreX], isLeft: false, isHorizontal: false },
+	            '5': { p: [628, 328], y: y2, align: [lNameX, lScoreX], align2: [rNameX, rScoreX], isLeft: true, isHorizontal: true },
+	            '6': { p: [628, 672], y: y2, align: [lNameX, lScoreX], align2: [rNameX, rScoreX], isLeft: true, isHorizontal: true }
+	        };
+	        var gm = this.groupPlayerMap;
+	        for (var i = 0; i < 6; i++) {
+	            var g = gm[i + 1] = { playerArr: [] };
+	            var p = playerPos[i + 1];
+	            var p1 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
+	            var p2 = void 0;
+	            if (p.isHorizontal) {
+	                p2 = new BracketPlayerV3_1.BracketPlayerV3(!p.isLeft, p.align2);
+	                p1.x = p.p[0];
+	                p1.y = p.p[1];
+	                p2.x = p.p[0] + p.y;
+	                p2.y = p.p[1];
+	            }
+	            else {
+	                p2 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
+	                p1.x = p.p[0];
+	                p1.y = p.p[1];
+	                p2.x = p.p[0];
+	                p2.y = p.p[1] + p.y;
+	            }
+	            g.playerArr.push(p1);
+	            g.playerArr.push(p2);
+	            g['group'] = [p1, p2];
+	            this.addChild(p1);
+	            this.addChild(p2);
+	            if (isTest)
+	                this.test(p1, p2);
+	        }
+	    }
+	    Section1.prototype.setData = function (data) {
+	        console.log('section1 set data', data, this.groupPlayerMap);
+	        for (var gameIdx in this.groupPlayerMap) {
+	            var dataObj = data[gameIdx];
+	            if (dataObj) {
+	                var group = this.groupPlayerMap[gameIdx].group;
+	                var p1 = group[0];
+	                var p2 = group[1];
+	                if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
+	                    p1.setScore(dataObj.left.score);
+	                    p2.setScore(dataObj.right.score);
+	                }
+	                var group2 = BracketGroup_1.groupPosMap[gameIdx];
+	                var hints = group2.hints;
+	                if (dataObj.left.name)
+	                    p1.setLeftName(dataObj.left.name);
+	                if (dataObj.right.name)
+	                    p2.setLeftName(dataObj.right.name);
+	            }
+	        }
+	    };
+	    Section1.prototype.test = function (p1, p2) {
+	        p1.setInfo({ name: '好天氣', score: '12' });
+	        p2.setInfo({ name: '好天氣其', score: '0' });
+	    };
+	    return Section1;
+	}(PIXI.Container));
+	var BracketV2 = (function (_super) {
+	    __extends(BracketV2, _super);
+	    function BracketV2(parent) {
+	        var _this = this;
+	        _super.call(this);
+	        this.isLoaded = false;
+	        this._res = null;
+	        parent.addChild(this);
+	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/com/bg.jpg' }));
+	        var hintCtn = new PIXI.Container();
+	        this.addChild(hintCtn);
+	        var section2 = new Section2();
+	        this.addChild(section2);
+	        this.section2 = section2;
+	        section2.visible = false;
+	        var section1 = new Section1();
+	        this.addChild(section1);
+	        this.section1 = section1;
+	        if (isTestS2) {
+	            section1.visible = false;
+	            section2.visible = true;
+	        }
+	        window.onkeyup = function (e) {
+	            console.log('key up', e.key, e.keyCode);
+	            if (e.key == 'ArrowLeft' || e.keyCode == 37) {
+	                _this.showPage({ page: 1 });
+	            }
+	            else if (e.key == 'ArrowRight' || e.keyCode == 39) {
+	                _this.showPage({ page: 2 });
+	            }
+	        };
+	    }
+	    BracketV2.prototype.setWinHint = function (sp, isFlip) {
+	        if (isFlip === void 0) { isFlip = false; }
+	        sp.texture = this.hint2Tex;
+	    };
+	    BracketV2.prototype.hideComing = function () {
+	    };
+	    BracketV2.prototype.showComingIdx = function (idx) {
+	        var g = BracketGroup_1.groupPosMap[idx];
+	    };
+	    BracketV2.prototype.showPage = function (data) {
+	        if (data.page == 1) {
+	            this.section1.visible = true;
+	            this.section2.visible = false;
+	        }
+	        else if (data.page == 2) {
+	            this.section1.visible = false;
+	            this.section2.visible = true;
+	        }
+	    };
+	    BracketV2.prototype.onBracketData = function (res) {
+	        this.section1.setData(res.data);
+	        this.section2.setData(res.data);
+	    };
+	    return BracketV2;
+	}(PIXI.Container));
+	exports.BracketV2 = BracketV2;
 
 
 /***/ }

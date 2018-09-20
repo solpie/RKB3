@@ -24,7 +24,7 @@ let rankView: RankView
 let bracketView: BracketView
 let scoreView: ScoreView
 let lottery: Lottery
-let groupSp: GroupSp2
+let groupSp: GroupV2
 let canvasStage
 imgLoader
 class StageOnlineView extends VueBase {

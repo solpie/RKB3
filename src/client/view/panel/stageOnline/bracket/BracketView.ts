@@ -11,12 +11,13 @@ import { newBitmap } from "../../../utils/PixiEx";
 import { drawLine1, drawLine2, drawLine4 } from "./GroupLine";
 import { blink2 } from "../../../utils/Fx";
 import { Bracket2018 } from './Bracket2018';
+import { BracketV2 } from '../scoreV2/BracketV2';
 // import Container = createjs.Container;
 // import Bitmap = createjs.Bitmap;
 declare let $;
 declare let io;
 export class BracketView extends BasePanelView {
-    bracket: Bracket2018
+    bracket: BracketV2
     // preRound: PreRound
     constructor(stage, gameId, $route) {
         super(PanelId.onlinePanel);
@@ -24,7 +25,7 @@ export class BracketView extends BasePanelView {
         console.log("new bracket", $route.query);
         let isManmaul = $route.query.m == '1'
 
-        this.bracket = new Bracket2018(stage)
+        this.bracket = new BracketV2(stage)
 
         if (isManmaul)
             this.initManmaul()

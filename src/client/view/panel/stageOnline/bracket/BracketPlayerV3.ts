@@ -11,7 +11,7 @@ export class BracketPlayerV3 extends PIXI.Container {
         this.alignArr = alignArr
         let ns = {
             fontFamily: FontName.NotoSansHans,
-            fontSize: '36px', fill: "#fff",
+            fontSize: '36px', fill: "#323048",
         }
         this.pName = TextFac.new_(ns, this)
             .setText('')
