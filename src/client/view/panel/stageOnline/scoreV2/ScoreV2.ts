@@ -54,7 +54,7 @@ export class ScoreV2 extends PIXI.Container {
         let bg = newBitmap({ url: '/img/panel/score2018v2/scoreBottom.png' })
         bg.y = 8
         this.avtCtn = new PIXI.Container()
-        this.avtCtn.y =  bg.y
+        this.avtCtn.y = bg.y
         this.addChild(this.avtCtn)
         this.addChild(bg)
 
@@ -70,7 +70,7 @@ export class ScoreV2 extends PIXI.Container {
         this.rFoulHint = rFoulHint
 
 
-       
+
 
         let ns = {
             fontFamily: FontName.NotoSansHans,
@@ -88,6 +88,7 @@ export class ScoreV2 extends PIXI.Container {
 
         this.rTitle = TextFac.new_(ns, this)
             .setPos(1123, this.lTitle.y)
+
 
         ns.fill = '#444'
         this.gameTitle = TextFac.new_(ns, this)
@@ -156,11 +157,17 @@ export class ScoreV2 extends PIXI.Container {
         this.rAvt = rAvt
 
 
-        this.lAvt.y = this.rAvt.y = 937-8
+        this.lAvt.y = this.rAvt.y = 937 - 8
         this.resetScore()
         this.toggleState({ visible: true })
-    }
 
+        this.todo()
+    }
+    todo() {
+        this.lTitle.visible = this.rTitle.visible = false
+        this.lFoulHint.visible = false
+        this.rFoulHint.visible = false
+    }
     resetScore() {
         this.setLeftFoul(0)
         this.setRightFoul(0)
@@ -247,7 +254,7 @@ export class ScoreV2 extends PIXI.Container {
         this.rHW.setText(rPlayer.height + 'CM  ' + rPlayer.weight + 'KG  ' + age)
             .setAlignCenter(_c(319))
         this.rAvtUrl = rPlayer.avatar
-        loadAvt(this.rAvt, rPlayer.avatar,1045+15)
+        loadAvt(this.rAvt, rPlayer.avatar, 1045 + 15)
     }
 
     setLeftPlayer(lPlayer) {
@@ -265,7 +272,7 @@ export class ScoreV2 extends PIXI.Container {
         this.lHW.setText(lPlayer.height + 'CM  ' + lPlayer.weight + 'KG  ' + age)
             .setAlignCenter(_c(-319))
         this.lAvtUrl = lPlayer.avatar
-        loadAvt(this.lAvt, lPlayer.avatar, 788-14)
+        loadAvt(this.lAvt, lPlayer.avatar, 788 - 14)
     }
 
     resetTimer() {

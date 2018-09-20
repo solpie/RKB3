@@ -10806,7 +10806,13 @@
 	        this.lAvt.y = this.rAvt.y = 937 - 8;
 	        this.resetScore();
 	        this.toggleState({ visible: true });
+	        this.todo();
 	    }
+	    ScoreV2.prototype.todo = function () {
+	        this.lTitle.visible = this.rTitle.visible = false;
+	        this.lFoulHint.visible = false;
+	        this.rFoulHint.visible = false;
+	    };
 	    ScoreV2.prototype.resetScore = function () {
 	        this.setLeftFoul(0);
 	        this.setRightFoul(0);
