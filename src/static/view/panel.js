@@ -8400,11 +8400,11 @@
 	var ScoreFx_1 = __webpack_require__(99);
 	var TopInfo_1 = __webpack_require__(100);
 	var Winner_1 = __webpack_require__(101);
-	var Top5_1 = __webpack_require__(102);
 	var RollText_1 = __webpack_require__(103);
 	var RankSection_1 = __webpack_require__(104);
 	var TagFx_1 = __webpack_require__(105);
 	var Pick8_1 = __webpack_require__(106);
+	var PlayerInfoV2_1 = __webpack_require__(131);
 	var Event2017 = (function (_super) {
 	    __extends(Event2017, _super);
 	    function Event2017(stage, isDark) {
@@ -8643,7 +8643,7 @@
 	    };
 	    Event2017.prototype.showTop5 = function (data) {
 	        if (!this.top5) {
-	            this.top5 = new Top5_1.Top5();
+	            this.top5 = new PlayerInfoV2_1.PlayerInfoV2();
 	            this.top5.create(this, data);
 	        }
 	        else {
@@ -9516,200 +9516,7 @@
 
 
 /***/ },
-/* 102 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var PixiEx_1 = __webpack_require__(56);
-	var ImgLoader_1 = __webpack_require__(73);
-	var const_1 = __webpack_require__(27);
-	var JsFunc_1 = __webpack_require__(21);
-	var HupuAPI_1 = __webpack_require__(24);
-	var BracketGroup_1 = __webpack_require__(78);
-	var TextFac_1 = __webpack_require__(77);
-	var Tab2 = (function (_super) {
-	    __extends(Tab2, _super);
-	    function Tab2() {
-	        _super.call(this);
-	        var rs = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '48px', fill: "#4d5167",
-	            fontWeight: 'bold'
-	        };
-	        var pn = new PIXI.Text('', rs);
-	        this.playerName = pn;
-	        this.addChild(pn);
-	        pn.x = 168;
-	        pn.y = 20;
-	        var gameTitle = new PIXI.Text('小组赛', {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '30px', fill: "#fff",
-	            fontWeight: 'bold'
-	        });
-	        this.addChild(gameTitle);
-	        gameTitle.x = 16;
-	        gameTitle.y = 10;
-	        var gameIdx = new PIXI.Text('', {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '48px', fill: "#fff",
-	            fontWeight: 'bold'
-	        });
-	        gameIdx.y = 50;
-	        this.gameIdx = gameIdx;
-	        this.addChild(gameIdx);
-	        PixiEx_1.setScale(this, 0.9);
-	    }
-	    Tab2.prototype.setInfo = function (data) {
-	        this.playerName.text = data.name;
-	        BracketGroup_1.fitWidth(this.playerName, 275, 48);
-	        this.setGameIdx(0);
-	    };
-	    Tab2.prototype.setGameIdx = function (idx) {
-	        this.gameIdx.text = JsFunc_1.paddy(idx, 2);
-	        this.gameIdx.x = 60 - this.gameIdx.width * .5;
-	    };
-	    return Tab2;
-	}(PIXI.Container));
-	var Top5 = (function (_super) {
-	    __extends(Top5, _super);
-	    function Top5() {
-	        _super.apply(this, arguments);
-	        this.texMap = {};
-	    }
-	    Top5.prototype.create = function (parent, data) {
-	        var _this = this;
-	        this.p = parent;
-	        var imgArr = [];
-	        this.curPlayer = new PIXI.Sprite();
-	        this.curPlayer.x = 487;
-	        this.curPlayer.y = 157;
-	        this.addChild(this.curPlayer);
-	        this.levelSP = new PIXI.Sprite();
-	        this.addChild(this.levelSP);
-	        this.levelSP.x = 495;
-	        this.levelSP.y = 156;
-	        HupuAPI_1.getLive(function (conf) {
-	            HupuAPI_1.getPlayerArr(conf.star_players, function (playerArr) {
-	                for (var _i = 0, playerArr_1 = playerArr; _i < playerArr_1.length; _i++) {
-	                    var player = playerArr_1[_i];
-	                    player.hwa = [player.height, player.weight, player.age];
-	                    player.name = player.live_name;
-	                    player.info = player.brief;
-	                }
-	                _this.infoArr = playerArr;
-	                imgArr = [];
-	                imgArr.push('/img/panel/top5/hotPlayerBg.png');
-	                ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
-	                    var bg = PixiEx_1.newBitmap({ url: '/img/panel/top5/hotPlayerBg.png' });
-	                    _this.addChildAt(bg, 0);
-	                    _this.initDetail();
-	                    _this.show(data);
-	                });
-	            });
-	        });
-	    };
-	    Top5.prototype.show = function (data) {
-	        console.log('show player ', data);
-	        this.setTab(data.idx);
-	        if (data.gameIdxArr) {
-	            var a = data.gameIdxArr.split(' ');
-	            if (a.length > 1) {
-	                this.playerGameIdx.setText("\u5373\u5C06\u5728\u5E2D\u4F4D\u6218" + JsFunc_1.paddy(a[Number(data.idx - 1)], 2) + "\u767B\u573A");
-	            }
-	        }
-	        this.p.addChild(this);
-	    };
-	    Top5.prototype.setTab = function (idx) {
-	        var _this = this;
-	        idx = Number(idx);
-	        var data = this.infoArr[idx - 1];
-	        if (!this.texMap[idx])
-	            this.texMap[idx] = PIXI.Texture.fromImage(data.avatar);
-	        this.curPlayer.texture = this.texMap[idx];
-	        if (data.level && Number(data.level) != 0) {
-	            var url_1 = "/img/panel/top5/" + data.level + ".png";
-	            ImgLoader_1.imgLoader.loadTexRemote(url_1, function (tex) {
-	                console.log('set tex');
-	                _this.levelSP.texture = ImgLoader_1.imgLoader.getTex(url_1);
-	                _this.levelSP.visible = true;
-	            });
-	        }
-	        else {
-	            this.levelSP.visible = false;
-	        }
-	        this.setDetail(data);
-	    };
-	    Top5.prototype.setDetail = function (data) {
-	        console.log('show detail', data);
-	        this.playerName.text = data.name;
-	        this.hwa.text =
-	            data.hwa[0] + ' cm/ '
-	                + data.hwa[1] + ' kg/ '
-	                + data.hwa[2] + ' 岁';
-	        this.info.text = data.info;
-	        this.info.y = (470 - 46 + 124) - this.info.height * .5;
-	        this.tag2.text = '';
-	        var a = data.tag1.split(' ');
-	        if (data.tag2) {
-	            this.tag1.text = data.tag1 + " , " + data.tag2;
-	        }
-	        else
-	            this.tag1.text = data.tag1;
-	    };
-	    Top5.prototype.initDetail = function () {
-	        var rs = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '45px', fill: "#515151",
-	            fontWeight: 'bold'
-	        };
-	        var pn = new PIXI.Text('', rs);
-	        this.playerName = pn;
-	        this.addChild(pn);
-	        pn.x = 1018;
-	        pn.y = 228 - 70;
-	        rs.fontSize = '28px';
-	        var hwa = new PIXI.Text('', rs);
-	        this.hwa = hwa;
-	        this.addChild(hwa);
-	        hwa.x = pn.x;
-	        hwa.y = 304 - 47;
-	        rs.fontSize = '33px';
-	        var tag1 = new PIXI.Text('', rs);
-	        this.tag1 = tag1;
-	        this.addChild(tag1);
-	        tag1.x = pn.x;
-	        tag1.y = 380 - 36;
-	        var tag2 = new PIXI.Text('', rs);
-	        this.tag2 = tag2;
-	        this.addChild(tag2);
-	        tag2.x = tag1.x + 230;
-	        tag2.y = tag1.y;
-	        rs.fontSize = '28px';
-	        rs['lineHeight'] = 39;
-	        var info = new PIXI.Text('', rs);
-	        this.info = info;
-	        this.addChild(info);
-	        info.x = pn.x;
-	        info.y = 470 - 46;
-	        this.playerGameIdx = TextFac_1.TextFac.new_(rs, this)
-	            .setPos(pn.x, 701);
-	    };
-	    Top5.prototype.hide = function () {
-	        if (this.parent)
-	            this.parent.removeChild(this);
-	    };
-	    Top5.class = 'Top5';
-	    return Top5;
-	}(PIXI.Container));
-	exports.Top5 = Top5;
-
-
-/***/ },
+/* 102 */,
 /* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -11286,12 +11093,12 @@
 	        this.addChild(bg);
 	        var rs = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '215px', fill: "#536dfe",
+	            fontSize: '150px', fill: "#5c5b6f",
 	            fontWeight: 'bold'
 	        };
 	        var l = new PIXI.Text('A', rs);
-	        l.x = 65 + 970 / .8;
-	        l.y = 50;
+	        l.x = 1300;
+	        l.y = 190;
 	        this.groupTitle = l;
 	        this.addChild(l);
 	        for (var i = 0; i < 3; i++) {
@@ -11500,6 +11307,184 @@
 	    return AvtV2;
 	}(PIXI.Container));
 	exports.AvtV2 = AvtV2;
+
+
+/***/ },
+/* 131 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var PixiEx_1 = __webpack_require__(56);
+	var ImgLoader_1 = __webpack_require__(73);
+	var const_1 = __webpack_require__(27);
+	var JsFunc_1 = __webpack_require__(21);
+	var HupuAPI_1 = __webpack_require__(24);
+	var BracketGroup_1 = __webpack_require__(78);
+	var TextFac_1 = __webpack_require__(77);
+	var Tab2 = (function (_super) {
+	    __extends(Tab2, _super);
+	    function Tab2() {
+	        _super.call(this);
+	        var rs = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '48px', fill: "#4d5167",
+	            fontWeight: 'bold'
+	        };
+	        var pn = new PIXI.Text('', rs);
+	        this.playerName = pn;
+	        this.addChild(pn);
+	        pn.x = 168;
+	        pn.y = 20;
+	        var gameTitle = new PIXI.Text('小组赛', {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '30px', fill: "#fff",
+	            fontWeight: 'bold'
+	        });
+	        this.addChild(gameTitle);
+	        gameTitle.x = 16;
+	        gameTitle.y = 10;
+	        var gameIdx = new PIXI.Text('', {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '48px', fill: "#fff",
+	            fontWeight: 'bold'
+	        });
+	        gameIdx.y = 50;
+	        this.gameIdx = gameIdx;
+	        this.addChild(gameIdx);
+	        PixiEx_1.setScale(this, 0.9);
+	    }
+	    Tab2.prototype.setInfo = function (data) {
+	        this.playerName.text = data.name;
+	        BracketGroup_1.fitWidth(this.playerName, 275, 48);
+	        this.setGameIdx(0);
+	    };
+	    Tab2.prototype.setGameIdx = function (idx) {
+	        this.gameIdx.text = JsFunc_1.paddy(idx, 2);
+	        this.gameIdx.x = 60 - this.gameIdx.width * .5;
+	    };
+	    return Tab2;
+	}(PIXI.Container));
+	var PlayerInfoV2 = (function (_super) {
+	    __extends(PlayerInfoV2, _super);
+	    function PlayerInfoV2() {
+	        _super.apply(this, arguments);
+	        this.texMap = {};
+	    }
+	    PlayerInfoV2.prototype.create = function (parent, data) {
+	        var _this = this;
+	        this.p = parent;
+	        var imgArr = [];
+	        this.curPlayer = new PIXI.Sprite();
+	        this.curPlayer.x = 487;
+	        this.curPlayer.y = 157;
+	        this.addChild(this.curPlayer);
+	        this.levelSP = new PIXI.Sprite();
+	        this.addChild(this.levelSP);
+	        this.levelSP.x = 495;
+	        this.levelSP.y = 156;
+	        HupuAPI_1.getLive(function (conf) {
+	            HupuAPI_1.getPlayerArr(conf.star_players, function (playerArr) {
+	                for (var _i = 0, playerArr_1 = playerArr; _i < playerArr_1.length; _i++) {
+	                    var player = playerArr_1[_i];
+	                    player.hwa = [player.height, player.weight, player.age];
+	                    player.name = player.live_name;
+	                    player.info = player.brief;
+	                }
+	                _this.infoArr = playerArr;
+	                imgArr = [];
+	                imgArr.push('/img/panel/top5/v2/bg.png');
+	                ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
+	                    var bg = PixiEx_1.newBitmap({ url: '/img/panel/top5/v2/bg.png' });
+	                    _this.addChildAt(bg, 0);
+	                    _this.initDetail();
+	                    _this.show(data);
+	                });
+	            });
+	        });
+	    };
+	    PlayerInfoV2.prototype.show = function (data) {
+	        console.log('show player ', data);
+	        this.setTab(data.idx);
+	        if (data.gameIdxArr) {
+	            var a = data.gameIdxArr.split(' ');
+	            if (a.length > 1) {
+	                this.playerGameIdx.setText("\u5373\u5C06\u5728\u5E2D\u4F4D\u6218" + JsFunc_1.paddy(a[Number(data.idx - 1)], 2) + "\u767B\u573A");
+	            }
+	        }
+	        this.p.addChild(this);
+	    };
+	    PlayerInfoV2.prototype.setTab = function (idx) {
+	        var _this = this;
+	        idx = Number(idx);
+	        var data = this.infoArr[idx - 1];
+	        if (!this.texMap[idx])
+	            this.texMap[idx] = PIXI.Texture.fromImage(data.avatar);
+	        this.curPlayer.texture = this.texMap[idx];
+	        if (data.level && Number(data.level) != 0) {
+	            var url_1 = "/img/panel/top5/" + data.level + ".png";
+	            ImgLoader_1.imgLoader.loadTexRemote(url_1, function (tex) {
+	                console.log('set tex');
+	                _this.levelSP.texture = ImgLoader_1.imgLoader.getTex(url_1);
+	                _this.levelSP.visible = true;
+	            });
+	        }
+	        else {
+	            this.levelSP.visible = false;
+	        }
+	        this.setDetail(data);
+	    };
+	    PlayerInfoV2.prototype.setDetail = function (data) {
+	        console.log('show detail', data);
+	        this.playerName.text = data.name;
+	        this.hwa.text =
+	            data.hwa[0] + ' cm/ '
+	                + data.hwa[1] + ' kg/ '
+	                + data.hwa[2] + ' 岁';
+	        this.info.text = data.info;
+	        this.info.y = (528) - this.info.height * .5;
+	        this.tag2.text = '';
+	        var a = data.tag1.split(' ');
+	        if (data.tag2) {
+	            this.tag1.text = data.tag1 + " , " + data.tag2;
+	        }
+	        else
+	            this.tag1.text = data.tag1;
+	    };
+	    PlayerInfoV2.prototype.initDetail = function () {
+	        var rs = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '45px', fill: "#2b2941",
+	            fontWeight: 'bold'
+	        };
+	        rs.fontSize = '32px';
+	        this.playerName = TextFac_1.TextFac.new_(rs, this)
+	            .setPos(1018, 118);
+	        this.hwa = TextFac_1.TextFac.new_(rs, this)
+	            .setPos(this.playerName.x, 228);
+	        this.tag1 = TextFac_1.TextFac.new_(rs, this)
+	            .setPos(this.playerName.x, 380 - 36);
+	        this.tag2 = TextFac_1.TextFac.new_(rs, this)
+	            .setPos(this.tag1.x + 230, 380 - 36);
+	        rs.fontSize = '28px';
+	        rs['lineHeight'] = 39;
+	        this.info = TextFac_1.TextFac.new_(rs, this)
+	            .setPos(this.playerName.x, 404);
+	        this.playerGameIdx = TextFac_1.TextFac.new_(rs, this)
+	            .setPos(this.playerName.x, 676);
+	    };
+	    PlayerInfoV2.prototype.hide = function () {
+	        if (this.parent)
+	            this.parent.removeChild(this);
+	    };
+	    PlayerInfoV2.class = 'PlayerInfoV2';
+	    return PlayerInfoV2;
+	}(PIXI.Container));
+	exports.PlayerInfoV2 = PlayerInfoV2;
 
 
 /***/ }

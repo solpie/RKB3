@@ -21,6 +21,7 @@ import { RollText } from './RollText';
 import { RankSection } from '../rank/RankSection';
 import { TagFx } from './TagFx';
 import { Pick8Layer } from '../pick8/Pick8';
+import { PlayerInfoV2 } from '../scoreV2/PlayerInfoV2';
 
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
@@ -342,14 +343,11 @@ export class Event2017 extends PIXI.Container {
             this.winner.hide()
         }
     }
-    top5: Top5
+    top5: PlayerInfoV2
     showTop5(data) {
         if (!this.top5) {
-            this.top5 = new Top5()
+            this.top5 = new PlayerInfoV2()
             this.top5.create(this, data)
-            // data.visible ?
-            //     this.top5.show(data)
-            //     : this.top5.hide()
         }
         else {
             data.visible ?

@@ -12,7 +12,7 @@ export class Row1 extends PIXI.Container {
     winLose: Text2
     score: Text2
     // avt: PIXI.Sprite
-    avtV2:AvtV2
+    avtV2: AvtV2
     constructor(avtCtn) {
         super()
         this.avtV2 = new AvtV2(this)
@@ -22,15 +22,15 @@ export class Row1 extends PIXI.Container {
             fontWeight: 'bold'
         }
         let l = TextFac.new_(rs, this)
-        .setPos(105,12)
+            .setPos(105, 12)
         this.playerName = l
         rs.fontSize = "44px"
         l = TextFac.new_(rs, this)
-        .setY(this.playerName.y)
+            .setY(this.playerName.y)
         this.winLose = l
 
         l = TextFac.new_(rs, this)
-        .setY(this.playerName.y)
+            .setY(this.playerName.y)
         this.score = l
     }
     setData(data) {
@@ -108,21 +108,19 @@ export class GroupV2 extends PIXI.Container {
 
         let rs = {
             fontFamily: FontName.MicrosoftYahei,
-            fontSize: '215px', fill: "#536dfe",
+            fontSize: '150px', fill: "#5c5b6f",
             fontWeight: 'bold'
         }
         let l = new PIXI.Text('A', rs)
-        l.x = 65 + 970 / .8
-        l.y = 50
+        l.x = 1300
+        l.y = 190
         this.groupTitle = l
         this.addChild(l)
 
         for (let i = 0; i < 3; i++) {
             let r = new Row1(this)
-            r.y = 116 * i + 488-14
+            r.y = 116 * i + 488 - 14
             r.x = 1320
-            // r.avt.y += r.y
-            // r.avt.mask = mask
             this.addChild(r)
             this.rowArr.push(r)
         }
