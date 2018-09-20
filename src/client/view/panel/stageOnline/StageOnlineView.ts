@@ -16,6 +16,7 @@ import { ScoreView } from './score/ScoreView';
 import { GroupSp2 } from './groupSp/GroupSp2';
 import { VsTitle } from './score/VsTitle';
 import { WebDBCmd } from '../../WebDBCmd';
+import { GroupV2 } from './scoreV2/GroupV2';
 
 declare let $
 declare let io
@@ -162,7 +163,7 @@ class StageOnlineView extends VueBase {
     groupSp: any
     showGroup(data?) {
         if (!groupSp)
-            groupSp = new GroupSp2(canvasStage, this.gameId)
+            groupSp = new GroupV2(canvasStage, this.gameId)
         else {
             if (data.visible)
                 groupSp.showGroup(data.idx - 1, data.liveConf)
