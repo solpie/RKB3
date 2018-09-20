@@ -1,13 +1,11 @@
-import { newBitmap, BitmapText, loadRes, imgToTex, setScale } from "../../../../utils/PixiEx";
+import { newBitmap, BitmapText, loadRes, imgToTex, setScale, _c } from '../../../../utils/PixiEx';
 import { Text2, TextFac } from "../../../../utils/TextFac";
 import { FontName, TimerState, TimerEvent } from "../../../../const";
 import { TextTimer } from "../../../../utils/TextTimer";
 import { BloodBar } from "./BloodBar";
 import { MaskAvatar } from "../../../base/MaskAvatar";
 const isTest = false;
-const _c = v => {
-  return 960 + v;
-};
+
 export class WorldWar extends PIXI.Container {
   lName: Text2;
   rName: Text2;

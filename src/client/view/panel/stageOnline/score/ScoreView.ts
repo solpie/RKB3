@@ -18,6 +18,7 @@ import { PlayerNow } from '../playerNow/PlayerNow';
 import { Score2018v3 } from './Score2018v3';
 import { WorldWar } from './worldWar/WorldWar';
 import { WorldWarView } from './worldWar/WorldWarView';
+import { ScoreV2 } from '../scoreV2/ScoreV2';
 declare let io;
 declare let $;
 function logEvent(...a) {
@@ -26,7 +27,7 @@ function logEvent(...a) {
     console.info(t, a)
 }
 export class ScoreView extends BasePanelView {
-    scorePanelV3: Score2018v3
+    scorePanelV3: ScoreV2
     // scorePanel: Score2018
     eventPanel: Event2017
     // rankingData: RankingData
@@ -76,7 +77,7 @@ export class ScoreView extends BasePanelView {
             stage.addChild(f3)
             TweenEx.delayedCall(1000, _ => {
                 if (!this.isRmOP) {
-                    this.scorePanelV3 = new Score2018v3(stage)
+                    this.scorePanelV3 = new ScoreV2(stage)
                     if (this.isWorld)
                         this.scorePanelV3.visible = false
                     else {

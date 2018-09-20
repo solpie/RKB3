@@ -3365,6 +3365,9 @@
 	    }, isCrossOrigin);
 	    return s;
 	}
+	exports._c = function (v) {
+	    return 960 + v;
+	};
 	function loadRes(url, callback, isCrossOrigin) {
 	    if (isCrossOrigin) {
 	        var req_1 = new XMLHttpRequest();
@@ -7997,8 +8000,8 @@
 	var HupuAPI_1 = __webpack_require__(24);
 	var TweenEx_1 = __webpack_require__(57);
 	var BasePanelView_1 = __webpack_require__(68);
-	var Score2018v3_1 = __webpack_require__(108);
 	var WorldWarView_1 = __webpack_require__(109);
+	var ScoreV2_1 = __webpack_require__(128);
 	function logEvent() {
 	    var a = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
@@ -8037,7 +8040,7 @@
 	            stage.addChild(f3);
 	            TweenEx_1.TweenEx.delayedCall(1000, function (_) {
 	                if (!_this.isRmOP) {
-	                    _this.scorePanelV3 = new Score2018v3_1.Score2018v3(stage);
+	                    _this.scorePanelV3 = new ScoreV2_1.ScoreV2(stage);
 	                    if (_this.isWorld)
 	                        _this.scorePanelV3.visible = false;
 	                    else {
@@ -10236,303 +10239,7 @@
 
 
 /***/ },
-/* 108 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var PixiEx_1 = __webpack_require__(56);
-	var TextFac_1 = __webpack_require__(77);
-	var const_1 = __webpack_require__(27);
-	var JsFunc_1 = __webpack_require__(21);
-	var TextTimer_1 = __webpack_require__(59);
-	var ImgLoader_1 = __webpack_require__(73);
-	var loadAvt = function (avtSp, url, left) {
-	    console.log('loadAvt', url);
-	    ImgLoader_1.imgLoader.loadTexArr([url], function (tex2) {
-	        var tex = ImgLoader_1.imgLoader.getTex(url);
-	        var s = 86 / tex.height;
-	        avtSp.texture = tex;
-	        avtSp.x = left;
-	        PixiEx_1.setScale(avtSp, s);
-	    }, true);
-	};
-	var Score2018v3 = (function (_super) {
-	    __extends(Score2018v3, _super);
-	    function Score2018v3(parent) {
-	        _super.call(this);
-	        this.state = true;
-	        this.winSectionArr = [7, 8];
-	        this.loseSectionArr = [5, 6, 9, 10, 12];
-	        this.to8 = [1, 2, 3, 4];
-	        this.to6 = [5, 6];
-	        this.to4 = [7, 8, 9, 10];
-	        this.to2 = [11, 12];
-	        parent.addChild(this);
-	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/score2018v3/bg.png' });
-	        this.addChild(bg);
-	        this.avtCtn = new PIXI.Container();
-	        this.addChild(this.avtCtn);
-	        var ns = {
-	            fontFamily: const_1.FontName.NotoSansHans,
-	            fontSize: '32px', fill: "#303030",
-	        };
-	        this.lName = TextFac_1.TextFac.new_(ns, this)
-	            .setY(958);
-	        this.rName = TextFac_1.TextFac.new_(ns, this)
-	            .setPos(1215, this.lName.y);
-	        ns.fontSize = '28px';
-	        ns.fill = '#fff';
-	        this.lTitle = TextFac_1.TextFac.new_(ns, this)
-	            .setY(914);
-	        this.rTitle = TextFac_1.TextFac.new_(ns, this)
-	            .setPos(1123, this.lTitle.y);
-	        this.gameTitle = TextFac_1.TextFac.new_(ns, this)
-	            .setY(914);
-	        ns.fontSize = '25px';
-	        ns.fill = '#6b6b6b';
-	        this.lHW = TextFac_1.TextFac.new_(ns, this)
-	            .setY(1004);
-	        this.rHW = TextFac_1.TextFac.new_(ns, this)
-	            .setPos(this.rName.x, this.lHW.y);
-	        ns.fontSize = '78px';
-	        ns.fill = '#fff';
-	        ns.fontFamily = 'dinCondensedC';
-	        this.lScore = TextFac_1.TextFac.new_(ns, this.avtCtn)
-	            .setY(960);
-	        this.rScore = TextFac_1.TextFac.new_(ns, this.avtCtn)
-	            .setY(this.lScore.y);
-	        ns.fontSize = '24px';
-	        ns.fill = '#505050';
-	        ns.fontFamily = const_1.FontName.NotoSansHans;
-	        this.lFoul = TextFac_1.TextFac.new_(ns, this)
-	            .setPos(315 + 57, 915);
-	        this.rFoul = TextFac_1.TextFac.new_(ns, this)
-	            .setPos(1536 + 57, this.lFoul.y);
-	        TextFac_1.TextFac.new_(ns, this)
-	            .setText('犯规:')
-	            .setPos(315, this.lFoul.y);
-	        TextFac_1.TextFac.new_(ns, this)
-	            .setText('犯规:')
-	            .setPos(1536, this.lFoul.y);
-	        ns.fontSize = '40px';
-	        ns.fontFamily = const_1.FontName.MicrosoftYahei;
-	        this.lState = TextFac_1.TextFac.new_(ns, this)
-	            .setY(960);
-	        this.rState = TextFac_1.TextFac.new_(ns, this)
-	            .setY(this.lState.y);
-	        this.lState.visible = this.rState.visible = false;
-	        var tts = {
-	            fontFamily: 'dinCondensedC',
-	            fontSize: '45px', fill: "#fff",
-	        };
-	        var t = new TextTimer_1.TextTimer('', tts);
-	        this.addChild(t);
-	        t.x = 918;
-	        t.y = 973;
-	        t.textInSec = 0;
-	        this.timer = t;
-	        var lMask = PixiEx_1.newBitmap({ url: '/img/panel/score2018v3/maskL.png' });
-	        this.avtCtn.addChild(lMask);
-	        var rMask = PixiEx_1.newBitmap({ url: '/img/panel/score2018v3/maskR.png' });
-	        this.avtCtn.addChild(rMask);
-	        var lAvt = new PIXI.Sprite;
-	        this.avtCtn.addChild(lAvt);
-	        this.lAvt = lAvt;
-	        lAvt.mask = lMask;
-	        var rAvt = new PIXI.Sprite;
-	        this.avtCtn.addChild(rAvt);
-	        this.rAvt = rAvt;
-	        rAvt.mask = rMask;
-	        this.lAvt.y = this.rAvt.y = 954;
-	        this.resetScore();
-	        this.toggleState({ visible: true });
-	    }
-	    Score2018v3.prototype.resetScore = function () {
-	        this.setLeftFoul(0);
-	        this.setRightFoul(0);
-	        this.setLeftScore(0);
-	        this.setRightScore(0);
-	    };
-	    Score2018v3.prototype.toggleState = function (data) {
-	        if (data.visible) {
-	            var a = ['攻', '守'];
-	            this.state = !this.state;
-	            if (data.isLeftPlayer != null) {
-	                this.state = !data.isLeftPlayer;
-	            }
-	            var idx = Number(this.state);
-	            var idx2 = Number(!this.state);
-	            this.lState.setText(a[idx])
-	                .setAlignCenter(350);
-	            this.rState.setText(a[idx2])
-	                .setAlignCenter(1570);
-	        }
-	        else
-	            this.lState.text = this.rState.text = '';
-	    };
-	    Score2018v3.prototype.setDtFoul = function (data) {
-	        if (data.isLeft)
-	            this.lFoul.setAddNum(data.dtFoul);
-	        else
-	            this.rFoul.setAddNum(data.dtFoul);
-	    };
-	    Score2018v3.prototype.setDtScore = function (data) {
-	        if (data.isLeft) {
-	            this.lScore.setAddNum(data.dtScore)
-	                .setAlignCenter(855);
-	        }
-	        else {
-	            this.rScore.setAddNum(data.dtScore)
-	                .setAlignCenter(1068);
-	        }
-	    };
-	    Score2018v3.prototype.setLeftScore = function (score) {
-	        this.lScore.setText(score + '')
-	            .setAlignCenter(855);
-	    };
-	    Score2018v3.prototype.setRightScore = function (score) {
-	        this.rScore.setText(score + '')
-	            .setAlignCenter(1068);
-	    };
-	    Score2018v3.prototype.setLeftFoul = function (data) {
-	        this.lFoul.setText((data || 0));
-	    };
-	    Score2018v3.prototype.setRightFoul = function (data) {
-	        this.rFoul.setText((data || 0));
-	    };
-	    Score2018v3.prototype._setHWA = function (playerData) {
-	        if (playerData.hwa) {
-	            playerData.height = playerData.hwa[0];
-	            playerData.weight = playerData.hwa[1];
-	            playerData.age = playerData.hwa[2];
-	        }
-	    };
-	    Score2018v3.prototype.setRightPlayer = function (rPlayer) {
-	        this.rTitle.setText(rPlayer.title)
-	            .setAlignCenter(1320);
-	        this.rName.setText(rPlayer.name)
-	            .setLimitWidth(298, 40);
-	        this._setHWA(rPlayer);
-	        var age = '';
-	        if (rPlayer.age)
-	            age = rPlayer.age + '岁';
-	        this.rHW.setText(rPlayer.height + 'CM  ' + rPlayer.weight + 'KG  ' + age);
-	        this.rAvtUrl = rPlayer.avatar;
-	        loadAvt(this.rAvt, rPlayer.avatar, 1109);
-	    };
-	    Score2018v3.prototype.setLeftPlayer = function (lPlayer) {
-	        this.lTitle.setText(lPlayer.title)
-	            .setAlignCenter(600);
-	        this.lName.setText(lPlayer.name)
-	            .setLimitWidth(298, 40)
-	            .setAlignRight(702);
-	        this._setHWA(lPlayer);
-	        var age = '';
-	        if (lPlayer.age)
-	            age = lPlayer.age + '岁';
-	        this.lHW.setText(lPlayer.height + 'CM  ' + lPlayer.weight + 'KG  ' + age)
-	            .setAlignRight(702);
-	        this.lAvtUrl = lPlayer.avatar;
-	        loadAvt(this.lAvt, lPlayer.avatar, 725);
-	    };
-	    Score2018v3.prototype.resetTimer = function () {
-	        this.timer.resetTimer();
-	    };
-	    Score2018v3.prototype.setTimer = function (v) {
-	        this.timer.setTimeBySec(v);
-	    };
-	    Score2018v3.prototype.toggleTimer = function (v) {
-	        this.timer.toggleTimer(v);
-	    };
-	    Score2018v3.prototype.show = function () {
-	        this.visible = true;
-	    };
-	    Score2018v3.prototype.hide = function () {
-	        this.visible = false;
-	    };
-	    Score2018v3.prototype.setGameIdx = function (gameIdx, type) {
-	        console.log('gameIdx22', gameIdx, 'type', type);
-	        var gameIdxNum = '' + JsFunc_1.paddy(gameIdx, 2);
-	        if (type == 2) {
-	            var gameIdxNum2 = void 0;
-	            gameIdxNum2 = '第' + gameIdxNum + '场';
-	            if (this.to8.indexOf(gameIdx) > -1)
-	                this.gameTitle.text = '大师赛八强';
-	            gameIdx = Number(gameIdx);
-	            if (gameIdx == 5 || gameIdx == 6) {
-	                this.gameTitle.text = '四强赛';
-	                gameIdxNum = '第' + JsFunc_1.paddy(gameIdx - 4, 2) + '场';
-	            }
-	            else if (gameIdx == 7) {
-	                this.gameTitle.text = '季军赛';
-	                gameIdxNum = '';
-	            }
-	            else if (gameIdx == 8) {
-	                this.gameTitle.text = '决赛';
-	                gameIdxNum = '';
-	            }
-	            else
-	                this.gameTitle.text = '大师赛';
-	        }
-	        else if (type == 4) {
-	            this.gameTitle.text = '席位战';
-	            gameIdxNum = '第' + gameIdxNum + '场';
-	        }
-	        else if (type == 1) {
-	            this.gameTitle.text = '车轮赛';
-	        }
-	        else if (type == 3) {
-	            this.gameTitle.text = '决赛';
-	            gameIdxNum = '';
-	        }
-	        this.gameTitle.text += gameIdxNum;
-	        this.gameTitle.setAlignCenter(960);
-	    };
-	    Score2018v3.prototype.setGameTitle = function (str) {
-	        this.gameTitle.setText(str)
-	            .setAlignCenter(960);
-	    };
-	    Score2018v3.prototype.getPlayerInfo = function (isLeft) {
-	        var player = {};
-	        if (isLeft) {
-	            player.name = this.lName.text;
-	            player.info = this.lHW.text;
-	            player.avatar = this.lAvtUrl;
-	        }
-	        else {
-	            player.name = this.rName.text;
-	            player.info = this.rHW.text;
-	            player.avatar = this.rAvtUrl;
-	        }
-	        return player;
-	    };
-	    Score2018v3.prototype.showTitle = function (data) {
-	        if (data.vs) {
-	            var a = data.vs.split(' ');
-	            console.log('show', data, a);
-	            if (a.length == 2) {
-	                var ln = a[0];
-	                var rn = a[1];
-	                this.lTitle.setText(ln)
-	                    .setAlignCenter(600);
-	                this.rTitle.setText(rn)
-	                    .setAlignCenter(1320);
-	            }
-	        }
-	        if (!data.visible)
-	            this.lTitle.text = this.rTitle.text = '';
-	    };
-	    return Score2018v3;
-	}(PIXI.Container));
-	exports.Score2018v3 = Score2018v3;
-
-
-/***/ },
+/* 108 */,
 /* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -10685,9 +10392,6 @@
 	var BloodBar_1 = __webpack_require__(111);
 	var MaskAvatar_1 = __webpack_require__(112);
 	var isTest = false;
-	var _c = function (v) {
-	    return 960 + v;
-	};
 	var WorldWar = (function (_super) {
 	    __extends(WorldWar, _super);
 	    function WorldWar() {
@@ -10833,16 +10537,16 @@
 	        }
 	    };
 	    WorldWar.prototype.setRightPlayer = function (rPlayer) {
-	        this.rTitle.setText(rPlayer.title).setAlignCenter(_c(300));
+	        this.rTitle.setText(rPlayer.title).setAlignCenter(PixiEx_1._c(300));
 	        this.rName
 	            .setText(rPlayer.name)
 	            .setLimitWidth(298, 40)
-	            .setAlignCenter(_c(300));
+	            .setAlignCenter(PixiEx_1._c(300));
 	        this._setHWA(rPlayer);
 	        var age = "";
 	        this.rHW
 	            .setText(rPlayer.height + "CM  " + rPlayer.weight + "KG  " + age)
-	            .setAlignCenter(_c(300));
+	            .setAlignCenter(PixiEx_1._c(300));
 	        if (rPlayer.avatar)
 	            this.rAvt.load(rPlayer.avatar);
 	        if (rPlayer.blood != null) {
@@ -10856,16 +10560,16 @@
 	    };
 	    WorldWar.prototype.setLeftPlayer = function (lPlayer) {
 	        console.log('set left player', lPlayer);
-	        this.lTitle.setText(lPlayer.title).setAlignCenter(_c(-300));
+	        this.lTitle.setText(lPlayer.title).setAlignCenter(PixiEx_1._c(-300));
 	        this.lName
 	            .setText(lPlayer.name)
 	            .setLimitWidth(298, 40)
-	            .setAlignCenter(_c(-300));
+	            .setAlignCenter(PixiEx_1._c(-300));
 	        this._setHWA(lPlayer);
 	        var age = "";
 	        this.lHW
 	            .setText(lPlayer.height + "CM  " + lPlayer.weight + "KG  " + age)
-	            .setAlignCenter(_c(-300));
+	            .setAlignCenter(PixiEx_1._c(-300));
 	        if (lPlayer.avatar)
 	            this.lAvt.load(lPlayer.avatar);
 	        if (lPlayer.blood != null) {
@@ -10907,12 +10611,12 @@
 	    };
 	    WorldWar.prototype.setLeftFoul = function (val) {
 	        this.lFoulHint.visible = val > 3;
-	        this.lFoul.setText("" + (val || 0)).setAlignCenter(_c(-100));
+	        this.lFoul.setText("" + (val || 0)).setAlignCenter(PixiEx_1._c(-100));
 	    };
 	    WorldWar.prototype.setRightFoul = function (val) {
 	        console.log('set right foul', val);
 	        this.rFoulHint.visible = val > 3;
-	        this.rFoul.setText("" + (val || 0)).setAlignCenter(_c(142));
+	        this.rFoul.setText("" + (val || 0)).setAlignCenter(PixiEx_1._c(142));
 	    };
 	    WorldWar.prototype.setTimerEvent = function (data) {
 	        this.timer.setTimerEvent(data);
@@ -11476,6 +11180,312 @@
 	    return WWTitle;
 	}(PIXI.Container));
 	exports.WWTitle = WWTitle;
+
+
+/***/ },
+/* 128 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var PixiEx_1 = __webpack_require__(56);
+	var TextFac_1 = __webpack_require__(77);
+	var const_1 = __webpack_require__(27);
+	var JsFunc_1 = __webpack_require__(21);
+	var TextTimer_1 = __webpack_require__(59);
+	var ImgLoader_1 = __webpack_require__(73);
+	var loadAvt = function (avtSp, url, left) {
+	    console.log('loadAvt', url);
+	    ImgLoader_1.imgLoader.loadTexArr([url], function (tex2) {
+	        var tex = ImgLoader_1.imgLoader.getTex(url);
+	        var s = 86 / tex.height;
+	        avtSp.texture = tex;
+	        avtSp.x = left;
+	        PixiEx_1.setScale(avtSp, s);
+	    }, true);
+	};
+	var ScoreV2 = (function (_super) {
+	    __extends(ScoreV2, _super);
+	    function ScoreV2(parent) {
+	        _super.call(this);
+	        this.state = true;
+	        this.winSectionArr = [7, 8];
+	        this.loseSectionArr = [5, 6, 9, 10, 12];
+	        this.to8 = [1, 2, 3, 4];
+	        this.to6 = [5, 6];
+	        this.to4 = [7, 8, 9, 10];
+	        this.to2 = [11, 12];
+	        parent.addChild(this);
+	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/score2018v2/scoreBottom.png' });
+	        bg.y = 8;
+	        this.avtCtn = new PIXI.Container();
+	        this.avtCtn.y = bg.y;
+	        this.addChild(this.avtCtn);
+	        this.addChild(bg);
+	        var top = PixiEx_1.newBitmap({ url: '/img/panel/score2018v2/scoreTop.png' });
+	        this.addChild(top);
+	        var lFoulHint = PixiEx_1.newBitmap({ url: '/img/panel/score2018v2/foulHintL.png' });
+	        top.addChild(lFoulHint);
+	        this.lFoulHint = lFoulHint;
+	        var rFoulHint = PixiEx_1.newBitmap({ url: '/img/panel/score2018v2/foulHintR.png' });
+	        top.addChild(rFoulHint);
+	        this.rFoulHint = rFoulHint;
+	        var ns = {
+	            fontFamily: const_1.FontName.NotoSansHans,
+	            fontSize: '32px', fill: "#303030",
+	        };
+	        this.lName = TextFac_1.TextFac.new_(ns, this)
+	            .setY(941);
+	        this.rName = TextFac_1.TextFac.new_(ns, this)
+	            .setPos(1215, this.lName.y);
+	        ns.fontSize = '28px';
+	        ns.fill = '#fff';
+	        this.lTitle = TextFac_1.TextFac.new_(ns, this)
+	            .setY(914);
+	        this.rTitle = TextFac_1.TextFac.new_(ns, this)
+	            .setPos(1123, this.lTitle.y);
+	        ns.fill = '#444';
+	        this.gameTitle = TextFac_1.TextFac.new_(ns, this)
+	            .setY(967);
+	        ns.fontSize = '25px';
+	        ns.fill = '#6b6b6b';
+	        this.lHW = TextFac_1.TextFac.new_(ns, this)
+	            .setY(1002);
+	        this.rHW = TextFac_1.TextFac.new_(ns, this)
+	            .setPos(this.rName.x, this.lHW.y);
+	        ns.fontSize = '60px';
+	        ns.fill = '#fff';
+	        ns.fontFamily = 'dinCondensedC';
+	        this.lScore = TextFac_1.TextFac.new_(ns, this.avtCtn)
+	            .setY(4);
+	        this.rScore = TextFac_1.TextFac.new_(ns, this.avtCtn)
+	            .setY(this.lScore.y);
+	        this.lScore.alpha = this.rScore.alpha = 0.8;
+	        ns.fontSize = '30px';
+	        ns.fill = '#eee';
+	        ns.fontFamily = const_1.FontName.NotoSansHans;
+	        this.lFoul = TextFac_1.TextFac.new_(ns, this)
+	            .setPos(315 + 57, 16);
+	        this.rFoul = TextFac_1.TextFac.new_(ns, this)
+	            .setPos(1536 + 57, this.lFoul.y);
+	        ns.fontSize = '40px';
+	        ns.fontFamily = const_1.FontName.MicrosoftYahei;
+	        this.lState = TextFac_1.TextFac.new_(ns, this)
+	            .setY(960);
+	        this.rState = TextFac_1.TextFac.new_(ns, this)
+	            .setY(this.lState.y);
+	        this.lState.visible = this.rState.visible = false;
+	        var tts = {
+	            fontFamily: 'dinCondensedC',
+	            fontSize: '45px', fill: "#222",
+	        };
+	        var t = new TextTimer_1.TextTimer('', tts);
+	        this.addChild(t);
+	        t.x = 918;
+	        t.y = 16;
+	        t.textInSec = 0;
+	        this.timer = t;
+	        var lMask = PixiEx_1.newBitmap({ url: '/img/panel/score2018v2/maskL.png' });
+	        this.avtCtn.addChild(lMask);
+	        var rMask = PixiEx_1.newBitmap({ url: '/img/panel/score2018v2/maskR.png' });
+	        this.avtCtn.addChild(rMask);
+	        var lAvt = new PIXI.Sprite;
+	        this.avtCtn.addChild(lAvt);
+	        lAvt.mask = lMask;
+	        this.lAvt = lAvt;
+	        var rAvt = new PIXI.Sprite;
+	        rAvt.mask = rMask;
+	        this.avtCtn.addChild(rAvt);
+	        this.rAvt = rAvt;
+	        this.lAvt.y = this.rAvt.y = 937 - 8;
+	        this.resetScore();
+	        this.toggleState({ visible: true });
+	    }
+	    ScoreV2.prototype.resetScore = function () {
+	        this.setLeftFoul(0);
+	        this.setRightFoul(0);
+	        this.setLeftScore(0);
+	        this.setRightScore(0);
+	    };
+	    ScoreV2.prototype.toggleState = function (data) {
+	        if (data.visible) {
+	            var a = ['攻', '守'];
+	            this.state = !this.state;
+	            if (data.isLeftPlayer != null) {
+	                this.state = !data.isLeftPlayer;
+	            }
+	            var idx = Number(this.state);
+	            var idx2 = Number(!this.state);
+	            this.lState.setText(a[idx])
+	                .setAlignCenter(350);
+	            this.rState.setText(a[idx2])
+	                .setAlignCenter(1570);
+	        }
+	        else
+	            this.lState.text = this.rState.text = '';
+	    };
+	    ScoreV2.prototype.setDtFoul = function (data) {
+	        if (data.isLeft)
+	            this.lFoul.setAddNum(data.dtFoul);
+	        else
+	            this.rFoul.setAddNum(data.dtFoul);
+	    };
+	    ScoreV2.prototype.setDtScore = function (data) {
+	        if (data.isLeft) {
+	            this.lScore.setAddNum(data.dtScore)
+	                .setAlignCenter(855);
+	        }
+	        else {
+	            this.rScore.setAddNum(data.dtScore)
+	                .setAlignCenter(1068);
+	        }
+	    };
+	    ScoreV2.prototype.setLeftScore = function (score) {
+	        this.lScore.setText(score + '')
+	            .setAlignCenter(PixiEx_1._c(-82));
+	    };
+	    ScoreV2.prototype.setRightScore = function (score) {
+	        this.rScore.setText(score + '')
+	            .setAlignCenter(PixiEx_1._c(82));
+	    };
+	    ScoreV2.prototype.setLeftFoul = function (data) {
+	        this.lFoul.setText((data || 0))
+	            .setAlignCenter(PixiEx_1._c(-175));
+	    };
+	    ScoreV2.prototype.setRightFoul = function (data) {
+	        this.rFoul.setText((data || 0))
+	            .setAlignCenter(PixiEx_1._c(175));
+	    };
+	    ScoreV2.prototype._setHWA = function (playerData) {
+	        if (playerData.hwa) {
+	            playerData.height = playerData.hwa[0];
+	            playerData.weight = playerData.hwa[1];
+	            playerData.age = playerData.hwa[2];
+	        }
+	    };
+	    ScoreV2.prototype.setRightPlayer = function (rPlayer) {
+	        this.rTitle.setText(rPlayer.title)
+	            .setAlignCenter(1320);
+	        this.rName.setText(rPlayer.name)
+	            .setLimitWidth(298, 40);
+	        this._setHWA(rPlayer);
+	        var age = '';
+	        if (rPlayer.age)
+	            age = rPlayer.age + '岁';
+	        this.rHW.setText(rPlayer.height + 'CM  ' + rPlayer.weight + 'KG  ' + age)
+	            .setAlignCenter(PixiEx_1._c(319));
+	        this.rAvtUrl = rPlayer.avatar;
+	        loadAvt(this.rAvt, rPlayer.avatar, 1045 + 15);
+	    };
+	    ScoreV2.prototype.setLeftPlayer = function (lPlayer) {
+	        this.lTitle.setText(lPlayer.title)
+	            .setAlignCenter(600);
+	        this.lName.setText(lPlayer.name)
+	            .setLimitWidth(298, 40)
+	            .setAlignRight(702);
+	        this._setHWA(lPlayer);
+	        var age = '';
+	        if (lPlayer.age)
+	            age = lPlayer.age + '岁';
+	        this.lHW.setText(lPlayer.height + 'CM  ' + lPlayer.weight + 'KG  ' + age)
+	            .setAlignCenter(PixiEx_1._c(-319));
+	        this.lAvtUrl = lPlayer.avatar;
+	        loadAvt(this.lAvt, lPlayer.avatar, 788 - 14);
+	    };
+	    ScoreV2.prototype.resetTimer = function () {
+	        this.timer.resetTimer();
+	    };
+	    ScoreV2.prototype.setTimer = function (v) {
+	        this.timer.setTimeBySec(v);
+	    };
+	    ScoreV2.prototype.toggleTimer = function (v) {
+	        this.timer.toggleTimer(v);
+	    };
+	    ScoreV2.prototype.show = function () {
+	        this.visible = true;
+	    };
+	    ScoreV2.prototype.hide = function () {
+	        this.visible = false;
+	    };
+	    ScoreV2.prototype.setGameIdx = function (gameIdx, type) {
+	        console.log('gameIdx22', gameIdx, 'type', type);
+	        var gameIdxNum = '' + JsFunc_1.paddy(gameIdx, 2);
+	        if (type == 2) {
+	            var gameIdxNum2 = void 0;
+	            gameIdxNum2 = '第' + gameIdxNum + '场';
+	            if (this.to8.indexOf(gameIdx) > -1)
+	                this.gameTitle.text = '大师赛八强';
+	            gameIdx = Number(gameIdx);
+	            if (gameIdx == 5 || gameIdx == 6) {
+	                this.gameTitle.text = '四强赛';
+	                gameIdxNum = '第' + JsFunc_1.paddy(gameIdx - 4, 2) + '场';
+	            }
+	            else if (gameIdx == 7) {
+	                this.gameTitle.text = '季军赛';
+	                gameIdxNum = '';
+	            }
+	            else if (gameIdx == 8) {
+	                this.gameTitle.text = '决赛';
+	                gameIdxNum = '';
+	            }
+	            else
+	                this.gameTitle.text = '大师赛';
+	        }
+	        else if (type == 4) {
+	            this.gameTitle.text = '席位战';
+	            gameIdxNum = '第' + gameIdxNum + '场';
+	        }
+	        else if (type == 1) {
+	            this.gameTitle.text = '车轮赛';
+	        }
+	        else if (type == 3) {
+	            this.gameTitle.text = '决赛';
+	            gameIdxNum = '';
+	        }
+	        this.gameTitle.text += gameIdxNum;
+	        this.gameTitle.setAlignCenter(960);
+	    };
+	    ScoreV2.prototype.setGameTitle = function (str) {
+	        this.gameTitle.setText(str)
+	            .setAlignCenter(960);
+	    };
+	    ScoreV2.prototype.getPlayerInfo = function (isLeft) {
+	        var player = {};
+	        if (isLeft) {
+	            player.name = this.lName.text;
+	            player.info = this.lHW.text;
+	            player.avatar = this.lAvtUrl;
+	        }
+	        else {
+	            player.name = this.rName.text;
+	            player.info = this.rHW.text;
+	            player.avatar = this.rAvtUrl;
+	        }
+	        return player;
+	    };
+	    ScoreV2.prototype.showTitle = function (data) {
+	        if (data.vs) {
+	            var a = data.vs.split(' ');
+	            console.log('show', data, a);
+	            if (a.length == 2) {
+	                var ln = a[0];
+	                var rn = a[1];
+	                this.lTitle.setText(ln)
+	                    .setAlignCenter(600);
+	                this.rTitle.setText(rn)
+	                    .setAlignCenter(1320);
+	            }
+	        }
+	        if (!data.visible)
+	            this.lTitle.text = this.rTitle.text = '';
+	    };
+	    return ScoreV2;
+	}(PIXI.Container));
+	exports.ScoreV2 = ScoreV2;
 
 
 /***/ }

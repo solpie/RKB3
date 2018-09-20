@@ -18,7 +18,9 @@ function makeSprite(parameters): PIXI.Sprite {
     }, isCrossOrigin);
     return s;
 }
-
+export const _c = v => {
+    return 960 + v;
+  };
 export function loadRes(url: string, callback, isCrossOrigin?: boolean) {
     if (isCrossOrigin) {
         let req = new XMLHttpRequest();
