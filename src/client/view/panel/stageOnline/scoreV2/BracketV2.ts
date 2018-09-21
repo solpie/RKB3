@@ -5,14 +5,16 @@ import { ViewConst } from '../../../const';
 import { imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
 import { BracketPlayerV3 } from '../bracket/BracketPlayerV3';
 import { groupPosMap } from '../bracket/BracketGroup';
+import { testData2, testData1 } from './test/testBracket';
 
 
-const isTest = false
+const isTest = true
 const isTestS2 = false
 class Section2 extends PIXI.Container {
     groupPlayerMap = {}
     pWin7: BracketPlayerV3
     pWin8: BracketPlayerV3
+    lineMap = {}
     constructor() {
 
         super()
@@ -24,12 +26,12 @@ class Section2 extends PIXI.Container {
         let lNameX = 90
         let lScoreX = 238
         let rNameX = 135
-        let rScoreX =  -18
+        let rScoreX = -18
         const playerPos = {
             '5': { p: [221, 394], y: y1, align: [lNameX, lScoreX], isLeft: true },
             '6': { p: [1483, 394], y: y1, align: [rNameX, rScoreX], isLeft: true },
             '7': { p: [546, 774], y: y2, align: [lNameX, lScoreX], isLeft: true },
-            '8': { p: [628, 483], y: y2, align: [lNameX, lScoreX],align2:[rNameX, rScoreX], isLeft: false, isHorizontal: true }
+            '8': { p: [628, 483], y: y2, align: [lNameX, lScoreX], align2: [rNameX, rScoreX], isLeft: false, isHorizontal: true }
         }
         let gm = this.groupPlayerMap
         for (let i = 0; i < 4; i++) {
@@ -43,8 +45,8 @@ class Section2 extends PIXI.Container {
                 p1.x = p.p[0]
                 p1.y = p.p[1]
 
-                p2.x = p.p[0]+ p.y
-                p2.y = p.p[1] 
+                p2.x = p.p[0] + p.y
+                p2.y = p.p[1]
             }
             else {
                 p2 = new BracketPlayerV3(p.isLeft, p.align)
@@ -84,10 +86,28 @@ class Section2 extends PIXI.Container {
         this.pWin8 = pWin8
 
 
-        if (isTest)
-            this.test(pWin7, pWin8)
-    }
 
+
+
+        let lm = [
+            ['5_0', 's2b5_0'],
+            ['5_1', 's2b5_1'],
+            ['6_0', 's2b6_0'],
+            ['6_1', 's2b6_1'],
+            ['8_0', 's2b8_0'],
+            ['8_1', 's2b8_1'],
+        ]
+        for (const a of lm) {
+            let sp = this.lineMap[a[0]] = newBitmap({ url: '/img/panel/bracket/v2/' + a[1] + '.png' })
+            this.addChild(sp)
+            sp.visible = false
+        }
+
+        if (isTest) {
+            this.test(pWin7, pWin8)
+            testData2(this)
+        }
+    }
     setData(data) {
         console.log('section2 set data', data, this.groupPlayerMap)
         for (let gameIdx in this.groupPlayerMap) {
@@ -98,10 +118,23 @@ class Section2 extends PIXI.Container {
                 let p1: BracketPlayerV3 = group[0]
                 let p2: BracketPlayerV3 = group[1]
 
-                if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
-                    p1.setScore(dataObj.left.score)
-                    p2.setScore(dataObj.right.score)
+                let lScore = Number(dataObj.left.score)
+                let rScore = Number(dataObj.right.score)
+                if (lScore || rScore) {
+                    p1.setScore(lScore)
+                    p2.setScore(rScore)
+                    if (Number(gameIdx) > 4 && Number(gameIdx) != 7) {
+                        if (lScore > rScore) {
+                            this.lineMap[gameIdx + '_0'].visible = true
+                            this.lineMap[gameIdx + '_1'].visible = false
+                        }
+                        else {
+                            this.lineMap[gameIdx + '_0'].visible = false
+                            this.lineMap[gameIdx + '_1'].visible = true
+                        }
+                    }
                 }
+
                 let group2 = groupPosMap[gameIdx];
                 let hints = group2.hints;
                 if (dataObj.left.name)
@@ -110,6 +143,7 @@ class Section2 extends PIXI.Container {
                     p2.setLeftName(dataObj.right.name)
             }
         }
+
         let fillWinner = (player, gameIdx) => {
             let dataObj7 = data[gameIdx]
             if (dataObj7) {
@@ -121,21 +155,21 @@ class Section2 extends PIXI.Container {
                 }
             }
         }
+
         fillWinner(this.pWin7, 7)
         fillWinner(this.pWin8, 8)
     }
-
 
     test(p1, p2) {
         p1.setInfo({ name: '好天氣', score: '12' })
         p2.setInfo({ name: '好天氣其', score: '0' })
     }
 }
+
 class Section1 extends PIXI.Container {
     groupPlayerMap = {}
-
+    lineMap = {}
     constructor() {
-
         super()
         this.addChild(newBitmap({ url: '/img/panel/bracket/v2/bg1.png' }))
         let y1 = 180
@@ -150,8 +184,8 @@ class Section1 extends PIXI.Container {
             '3': { p: [221, 578], y: y1, align: [lNameX, lScoreX], isLeft: true, isHorizontal: false },
             '4': { p: [1483, 578], y: y1, align: [rNameX, rScoreX], isLeft: false, isHorizontal: false },
 
-            '5': { p: [628, 328], y: y2, align: [lNameX, lScoreX],align2:[rNameX, rScoreX], isLeft: true, isHorizontal: true },
-            '6': { p: [628, 672], y: y2, align:[lNameX, lScoreX],align2:[rNameX, rScoreX], isLeft: true, isHorizontal: true }
+            '5': { p: [628, 328], y: y2, align: [lNameX, lScoreX], align2: [rNameX, rScoreX], isLeft: true, isHorizontal: true },
+            '6': { p: [628, 672], y: y2, align: [lNameX, lScoreX], align2: [rNameX, rScoreX], isLeft: true, isHorizontal: true }
         }
         let gm = this.groupPlayerMap
         for (let i = 0; i < 6; i++) {
@@ -164,8 +198,8 @@ class Section1 extends PIXI.Container {
                 p1.x = p.p[0]
                 p1.y = p.p[1]
 
-                p2.x = p.p[0]+ p.y
-                p2.y = p.p[1] 
+                p2.x = p.p[0] + p.y
+                p2.y = p.p[1]
             }
             else {
                 p2 = new BracketPlayerV3(p.isLeft, p.align)
@@ -185,8 +219,25 @@ class Section1 extends PIXI.Container {
             if (isTest)
                 this.test(p1, p2)
         }
+        let lm = [
+            ['1_0', 's1b1_0'],
+            ['1_1', 's1b1_1'],
+            ['2_0', 's1b2_0'],
+            ['2_1', 's1b2_1'],
+            ['3_0', 's1b3_0'],
+            ['3_1', 's1b3_1'],
+            ['4_0', 's1b4_0'],
+            ['4_1', 's1b4_1'],
+        ]
+        for (const a of lm) {
+            let sp = this.lineMap[a[0]] = newBitmap({ url: '/img/panel/bracket/v2/' + a[1] + '.png' })
+            this.addChild(sp)
+            sp.visible = false
+        }
+        if (isTest)
+            testData1(this)
     }
-
+    
     setData(data) {
         console.log('section1 set data', data, this.groupPlayerMap)
         for (let gameIdx in this.groupPlayerMap) {
@@ -196,9 +247,21 @@ class Section1 extends PIXI.Container {
                 let p1: BracketPlayerV3 = group[0]
                 let p2: BracketPlayerV3 = group[1]
 
-                if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
-                    p1.setScore(dataObj.left.score)
-                    p2.setScore(dataObj.right.score)
+                let lScore = Number(dataObj.left.score)
+                let rScore = Number(dataObj.right.score)
+                if (lScore || rScore) {
+                    p1.setScore(lScore)
+                    p2.setScore(rScore)
+                    if (Number(gameIdx) < 5) {
+                        if (lScore > rScore) {
+                            this.lineMap[gameIdx + '_0'].visible = true
+                            this.lineMap[gameIdx + '_1'].visible = false
+                        }
+                        else {
+                            this.lineMap[gameIdx + '_0'].visible = false
+                            this.lineMap[gameIdx + '_1'].visible = true
+                        }
+                    }
                 }
                 let group2 = groupPosMap[gameIdx];
                 let hints = group2.hints;
@@ -242,8 +305,7 @@ export class BracketV2 extends PIXI.Container {
         this.addChild(section1)
         this.section1 = section1
 
-        if(isTestS2)
-        {
+        if (isTestS2) {
             section1.visible = false
             section2.visible = true
         }
@@ -260,8 +322,6 @@ export class BracketV2 extends PIXI.Container {
     }
     setWinHint(sp: PIXI.Sprite, isFlip = false) {
         sp.texture = this.hint2Tex
-        // if (isFlip)
-        //     sp.scale.y = -1
     }
     hideComing() {
         // this.comingTitle.visible = false;

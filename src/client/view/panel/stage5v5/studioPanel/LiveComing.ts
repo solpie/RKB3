@@ -40,7 +40,7 @@ export class LiveComing extends PIXI.Container {
         //todo gameid to get location
         //todo key press to check
         let ns = {
-            fontFamily: FontName.NotoSansHans,
+            fontFamily: FontName.MicrosoftYahei,
             fontSize: '38px', fill: "#303030",
             fontWeight: 'bold'
         }

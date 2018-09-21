@@ -6106,7 +6106,7 @@
 	        this.avt.y = 39;
 	        this.avt.mask = playerMask;
 	        var ns = {
-	            fontFamily: const_1.FontName.NotoSansHans,
+	            fontFamily: const_1.FontName.MicrosoftYahei,
 	            fontSize: '38px', fill: "#303030",
 	            fontWeight: 'bold'
 	        };
@@ -7224,7 +7224,7 @@
 	        this.isLeft = isLeft;
 	        this.alignArr = alignArr;
 	        var ns = {
-	            fontFamily: const_1.FontName.NotoSansHans,
+	            fontFamily: const_1.FontName.MicrosoftYahei,
 	            fontSize: '36px', fill: "#323048",
 	        };
 	        this.pName = TextFac_1.TextFac.new_(ns, this)
@@ -10506,7 +10506,7 @@
 	        lFoulHint.visible =
 	            rFoulHint.visible = true;
 	        var ns = {
-	            fontFamily: const_1.FontName.NotoSansHans,
+	            fontFamily: const_1.FontName.MicrosoftYahei,
 	            fontSize: '32px', fill: "#303030",
 	        };
 	        this.lName = TextFac_1.TextFac.new_(ns, this)
@@ -10541,7 +10541,7 @@
 	        this.lScore.alpha = this.rScore.alpha = 0.8;
 	        ns.fontSize = '35px';
 	        ns.fill = '#eee';
-	        ns.fontFamily = const_1.FontName.NotoSansHans;
+	        ns.fontFamily = const_1.FontName.MicrosoftYahei;
 	        this.lFoul = TextFac_1.TextFac.new_(ns, this)
 	            .setPos(315 + 57, 4);
 	        this.rFoul = TextFac_1.TextFac.new_(ns, this)
@@ -11290,13 +11290,15 @@
 	var PixiEx_1 = __webpack_require__(56);
 	var BracketPlayerV3_1 = __webpack_require__(86);
 	var BracketGroup_1 = __webpack_require__(78);
-	var isTest = false;
+	var testBracket_1 = __webpack_require__(133);
+	var isTest = true;
 	var isTestS2 = false;
 	var Section2 = (function (_super) {
 	    __extends(Section2, _super);
 	    function Section2() {
 	        _super.call(this);
 	        this.groupPlayerMap = {};
+	        this.lineMap = {};
 	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/bracket/v2/bg2.png' }));
 	        var y1 = 180;
 	        var y2 = 440;
@@ -11352,8 +11354,24 @@
 	        pWin8.setFont({ fontSize: '50px' });
 	        pWin8.hideScore();
 	        this.pWin8 = pWin8;
-	        if (isTest)
+	        var lm = [
+	            ['5_0', 's2b5_0'],
+	            ['5_1', 's2b5_1'],
+	            ['6_0', 's2b6_0'],
+	            ['6_1', 's2b6_1'],
+	            ['8_0', 's2b8_0'],
+	            ['8_1', 's2b8_1'],
+	        ];
+	        for (var _i = 0, lm_1 = lm; _i < lm_1.length; _i++) {
+	            var a = lm_1[_i];
+	            var sp = this.lineMap[a[0]] = PixiEx_1.newBitmap({ url: '/img/panel/bracket/v2/' + a[1] + '.png' });
+	            this.addChild(sp);
+	            sp.visible = false;
+	        }
+	        if (isTest) {
 	            this.test(pWin7, pWin8);
+	            testBracket_1.testData2(this);
+	        }
 	    }
 	    Section2.prototype.setData = function (data) {
 	        console.log('section2 set data', data, this.groupPlayerMap);
@@ -11363,9 +11381,21 @@
 	                var group = this.groupPlayerMap[gameIdx].group;
 	                var p1 = group[0];
 	                var p2 = group[1];
-	                if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
-	                    p1.setScore(dataObj.left.score);
-	                    p2.setScore(dataObj.right.score);
+	                var lScore = Number(dataObj.left.score);
+	                var rScore = Number(dataObj.right.score);
+	                if (lScore || rScore) {
+	                    p1.setScore(lScore);
+	                    p2.setScore(rScore);
+	                    if (Number(gameIdx) > 4 && Number(gameIdx) != 7) {
+	                        if (lScore > rScore) {
+	                            this.lineMap[gameIdx + '_0'].visible = true;
+	                            this.lineMap[gameIdx + '_1'].visible = false;
+	                        }
+	                        else {
+	                            this.lineMap[gameIdx + '_0'].visible = false;
+	                            this.lineMap[gameIdx + '_1'].visible = true;
+	                        }
+	                    }
 	                }
 	                var group2 = BracketGroup_1.groupPosMap[gameIdx];
 	                var hints = group2.hints;
@@ -11400,6 +11430,7 @@
 	    function Section1() {
 	        _super.call(this);
 	        this.groupPlayerMap = {};
+	        this.lineMap = {};
 	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/bracket/v2/bg1.png' }));
 	        var y1 = 180;
 	        var y2 = 440;
@@ -11443,6 +11474,24 @@
 	            if (isTest)
 	                this.test(p1, p2);
 	        }
+	        var lm = [
+	            ['1_0', 's1b1_0'],
+	            ['1_1', 's1b1_1'],
+	            ['2_0', 's1b2_0'],
+	            ['2_1', 's1b2_1'],
+	            ['3_0', 's1b3_0'],
+	            ['3_1', 's1b3_1'],
+	            ['4_0', 's1b4_0'],
+	            ['4_1', 's1b4_1'],
+	        ];
+	        for (var _i = 0, lm_2 = lm; _i < lm_2.length; _i++) {
+	            var a = lm_2[_i];
+	            var sp = this.lineMap[a[0]] = PixiEx_1.newBitmap({ url: '/img/panel/bracket/v2/' + a[1] + '.png' });
+	            this.addChild(sp);
+	            sp.visible = false;
+	        }
+	        if (isTest)
+	            testBracket_1.testData1(this);
 	    }
 	    Section1.prototype.setData = function (data) {
 	        console.log('section1 set data', data, this.groupPlayerMap);
@@ -11452,9 +11501,21 @@
 	                var group = this.groupPlayerMap[gameIdx].group;
 	                var p1 = group[0];
 	                var p2 = group[1];
-	                if (Number(dataObj.left.score) || Number(dataObj.right.score)) {
-	                    p1.setScore(dataObj.left.score);
-	                    p2.setScore(dataObj.right.score);
+	                var lScore = Number(dataObj.left.score);
+	                var rScore = Number(dataObj.right.score);
+	                if (lScore || rScore) {
+	                    p1.setScore(lScore);
+	                    p2.setScore(rScore);
+	                    if (Number(gameIdx) < 5) {
+	                        if (lScore > rScore) {
+	                            this.lineMap[gameIdx + '_0'].visible = true;
+	                            this.lineMap[gameIdx + '_1'].visible = false;
+	                        }
+	                        else {
+	                            this.lineMap[gameIdx + '_0'].visible = false;
+	                            this.lineMap[gameIdx + '_1'].visible = true;
+	                        }
+	                    }
 	                }
 	                var group2 = BracketGroup_1.groupPosMap[gameIdx];
 	                var hints = group2.hints;
@@ -11529,6 +11590,77 @@
 	    return BracketV2;
 	}(PIXI.Container));
 	exports.BracketV2 = BracketV2;
+
+
+/***/ },
+/* 133 */
+/***/ function(module, exports) {
+
+	"use strict";
+	function testData2(section2) {
+	    var data = {
+	        '1': {
+	            left: { score: 1, name: "1好天气" },
+	            right: { score: 3, name: "好天气" }
+	        },
+	        '2': {
+	            left: { score: 11, name: "street park2" },
+	            right: { score: 3, name: "drewnne" }
+	        },
+	        '3': {
+	            left: { score: 1, name: "黃宇軍" },
+	            right: { score: 3, name: "好天气" }
+	        },
+	        '4': {
+	            left: { score: 11, name: "street park4" },
+	            right: { score: 3, name: "drewnne" }
+	        },
+	        '5': {
+	            left: { score: 1, name: "5好天气" },
+	            right: { score: 3, name: "好天气" }
+	        },
+	        '6': {
+	            left: { score: 11, name: "s6treet park" },
+	            right: { score: 3, name: "drewnne" },
+	        },
+	        '8': {
+	            left: { score: 11, name: "s6treet park" },
+	            right: { score: 3, name: "drewnne" }
+	        },
+	    };
+	    section2.setData(data);
+	}
+	exports.testData2 = testData2;
+	function testData1(section1) {
+	    var data = {
+	        '1': {
+	            left: { score: 1, name: "1好天气" },
+	            right: { score: 3, name: "好天气" }
+	        },
+	        '2': {
+	            left: { score: 11, name: "street park2" },
+	            right: { score: 3, name: "drewnne" }
+	        },
+	        '3': {
+	            left: { score: 1, name: "黃宇軍" },
+	            right: { score: 3, name: "好天气" }
+	        },
+	        '4': {
+	            left: { score: 11, name: "street park4" },
+	            right: { score: 3, name: "drewnne" }
+	        },
+	        '5': {
+	            left: { score: 1, name: "5好天气" },
+	            right: { score: 3, name: "好天气" }
+	        },
+	        '6': {
+	            left: { score: 11, name: "s6treet park" },
+	            right: { score: 3, name: "drewnne" }
+	        },
+	    };
+	    section1.setData(data);
+	}
+	exports.testData1 = testData1;
 
 
 /***/ }

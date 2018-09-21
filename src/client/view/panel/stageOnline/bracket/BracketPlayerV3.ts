@@ -10,7 +10,7 @@ export class BracketPlayerV3 extends PIXI.Container {
         this.isLeft = isLeft
         this.alignArr = alignArr
         let ns = {
-            fontFamily: FontName.NotoSansHans,
+            fontFamily: FontName.MicrosoftYahei,
             fontSize: '36px', fill: "#323048",
         }
         this.pName = TextFac.new_(ns, this)

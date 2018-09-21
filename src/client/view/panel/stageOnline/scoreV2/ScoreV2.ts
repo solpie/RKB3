@@ -78,7 +78,7 @@ export class ScoreV2 extends PIXI.Container {
 
 
         let ns = {
-            fontFamily: FontName.NotoSansHans,
+            fontFamily: FontName.MicrosoftYahei,
             fontSize: '32px', fill: "#303030",
         }
         this.lName = TextFac.new_(ns, this)
@@ -121,7 +121,7 @@ export class ScoreV2 extends PIXI.Container {
         //4foul to hint 决赛5foul
         ns.fontSize = '35px'
         ns.fill = '#eee'
-        ns.fontFamily = FontName.NotoSansHans
+        ns.fontFamily = FontName.MicrosoftYahei
         this.lFoul = TextFac.new_(ns, this)
             .setPos(315 + 57,4)
 
