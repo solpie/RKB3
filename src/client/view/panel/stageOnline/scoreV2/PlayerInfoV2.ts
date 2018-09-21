@@ -81,7 +81,7 @@ export class PlayerInfoV2 extends PIXI.Container {
         let imgArr = []
         this.curPlayer = new PIXI.Sprite()
         this.curPlayer.x = 487
-        this.curPlayer.y = 157
+        this.curPlayer.y = 104
         this.addChild(this.curPlayer)
 
         this.levelSP = new PIXI.Sprite()
@@ -98,10 +98,12 @@ export class PlayerInfoV2 extends PIXI.Container {
                 }
                 this.infoArr = playerArr
                 imgArr = []
-                imgArr.push('/img/panel/top5/v2/bg.png')
+                let bgUrl = '/img/panel/playerInfo/bg.png'
+                imgArr.push(bgUrl)
 
                 imgLoader.loadTexArr(imgArr, _ => {
-                    let bg = newBitmap({ url: '/img/panel/top5/v2/bg.png' })
+                    let bg = newBitmap({ url: '/img/panel/com/bg.jpg' })
+                    bg.addChild(newBitmap({ url:bgUrl }))
                     this.addChildAt(bg, 0)
                     this.initDetail()
                     this.show(data)
@@ -177,7 +179,7 @@ export class PlayerInfoV2 extends PIXI.Container {
 
         rs.fontSize = '32px'
         this.playerName = TextFac.new_(rs, this)
-            .setPos(1018, 118)
+            .setPos(1018-45, 118)
 
         this.hwa = TextFac.new_(rs, this)
             .setPos(this.playerName.x, 228)
@@ -191,7 +193,7 @@ export class PlayerInfoV2 extends PIXI.Container {
         rs.fontSize = '28px'
         rs['lineHeight'] = 39
         this.info = TextFac.new_(rs, this)
-            .setPos(this.playerName.x,404)
+            .setPos(this.playerName.x, 404)
 
         this.playerGameIdx = TextFac.new_(rs, this)
             .setPos(this.playerName.x, 676)

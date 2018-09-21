@@ -57,7 +57,10 @@ class StageOnlineView extends VueBase {
     rLiveScore = VueBase.PROP
     rLiveFoul = VueBase.PROP
     rLiveName = VueBase.PROP
+    //小组
+    isShowGroupLeft = VueBase.PROP
     liveData: any
+
     //实力榜
     inputDate = VueBase.PROP
     //冠军 面板
@@ -150,7 +153,7 @@ class StageOnlineView extends VueBase {
             console.log('connect', window.location.host)
         })
             .on(`${CommandId.sc_showGroup}`, (data) => {
-                console.log('sc_showGroup');
+                console.log('sc_showGroup', data);
                 this.showGroup(data)
             })
 
@@ -162,11 +165,17 @@ class StageOnlineView extends VueBase {
     }
     groupSp: any
     showGroup(data?) {
-        if (!groupSp)
+        if (!groupSp) {
             groupSp = new GroupV2(canvasStage, this.gameId)
+            if (data) {
+                groupSp.showLeft(data.isLeft)
+            }
+        }
         else {
-            if (data.visible)
+            if (data.visible) {
                 groupSp.showGroup(data.idx - 1, data.liveConf)
+                groupSp.showLeft(data.isLeft)
+            }
             else
                 groupSp.hide()
         }
@@ -488,7 +497,7 @@ class StageOnlineView extends VueBase {
             this.opReq(`${CommandId.cs_showTop5}`, { _: null, visible: v, idx: idx, gameIdxArr: g })
         },
         onClkGroup(v, idx) {
-            this.opReq(`${CommandId.cs_showGroup}`, { _: null, visible: v, idx: idx, liveConf: this.liveConf })
+            this.opReq(`${CommandId.cs_showGroup}`, { _: null, visible: v, idx: idx, liveConf: this.liveConf, isLeft: this.isShowGroupLeft })
         },
         onClkVsTitle(v, vs) {
             this.opReq(`${CommandId.cs_showVsTitle}`, { _: null, visible: v, vs: vs })

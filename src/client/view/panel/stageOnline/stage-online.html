@@ -1,5 +1,5 @@
 <div>
-    <div v-if="isOp" id="opPanel" style="position: absolute;left: 100px;top:60px;width: 1000px">
+    <div v-if="isOp" id="opPanel" style="position: absolute;left: 100px;top:60px;width: 1000px;height:700px;overflow: scroll;">
         <div class="tabs  is-boxed">
             <ul>
                 <li v-if='!isRmOp' v-bind:class="{ 'is-active': actTab== 'tab1'}" @click='tab("tab1")'>
@@ -61,6 +61,10 @@
 
 
             <label class="label">  小组面板:</label><br>
+            <label class="checkbox">
+                    <input type="checkbox" v-model='isShowGroupLeft'>
+                    靠左边
+                  </label>
             <button class="button" @click="onClkGroup(true,-1)">显示</button>
             <button class="button" @click="onClkGroup(true,1)">A</button>
             <button class="button" @click="onClkGroup(true,2)">B</button>

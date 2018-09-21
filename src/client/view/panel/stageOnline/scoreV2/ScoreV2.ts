@@ -407,8 +407,8 @@ export class ScoreV2 extends PIXI.Container {
             }
         }
         this.titleCtn.visible = data.visible
-        if (!data.visible) {
-            this.lTitle.text = this.rTitle.text = ''
-        }
+        // if (!data.visible) {
+        //     this.lTitle.text = this.rTitle.text = ''
+        // }
     }
 }

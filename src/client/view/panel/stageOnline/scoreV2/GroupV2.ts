@@ -145,7 +145,9 @@ export class GroupV2 extends PIXI.Container {
         this.updateData()
         this.initWS()
     }
-
+    showLeft(v) {
+        v ? this.x = -1200 : this.x = 0;
+    }
     initWS() {
         getHupuWS((hupuWsUrl) => {
             let remoteIO = io.connect(hupuWsUrl);
