@@ -10519,12 +10519,14 @@
 	        ns.fontSize = '28px';
 	        ns.fill = '#28263e';
 	        this.lTitle = TextFac_1.TextFac.new_(ns, this.titleCtn)
-	            .setY(870);
+	            .setY(865);
 	        this.rTitle = TextFac_1.TextFac.new_(ns, this.titleCtn)
 	            .setPos(1123, this.lTitle.y);
 	        ns.fill = '#444';
 	        this.gameTitle = TextFac_1.TextFac.new_(ns, this)
-	            .setY(967);
+	            .setY(947);
+	        this.gameTitle2 = TextFac_1.TextFac.new_(ns, this)
+	            .setY(987);
 	        ns.fontSize = '25px';
 	        ns.fill = '#6b6b6b';
 	        this.lHW = TextFac_1.TextFac.new_(ns, this)
@@ -10710,7 +10712,7 @@
 	                this.gameTitle.text = '大师赛八强';
 	            gameIdx = Number(gameIdx);
 	            if (gameIdx == 5 || gameIdx == 6) {
-	                this.gameTitle.text = '四强赛';
+	                this.gameTitle.text = '四强晋级赛';
 	                gameIdxNum = '第' + JsFunc_1.paddy(gameIdx - 4, 2) + '场';
 	            }
 	            else if (gameIdx == 7) {
@@ -10721,8 +10723,10 @@
 	                this.gameTitle.text = '决赛';
 	                gameIdxNum = '';
 	            }
-	            else
-	                this.gameTitle.text = '大师赛';
+	            else {
+	                this.gameTitle.text = '八强晋级赛';
+	                gameIdxNum = '第' + JsFunc_1.paddy(gameIdx, 2) + '场';
+	            }
 	        }
 	        else if (type == 4) {
 	            this.gameTitle.text = '席位战';
@@ -10736,7 +10740,8 @@
 	            gameIdxNum = '';
 	            this.foulHint = 5;
 	        }
-	        this.gameTitle.text += gameIdxNum;
+	        this.gameTitle2.setText(gameIdxNum)
+	            .setAlignCenter(960);
 	        this.gameTitle.setAlignCenter(960);
 	    };
 	    ScoreV2.prototype.setGameTitle = function (str) {
@@ -11291,7 +11296,7 @@
 	var BracketPlayerV3_1 = __webpack_require__(86);
 	var BracketGroup_1 = __webpack_require__(78);
 	var testBracket_1 = __webpack_require__(133);
-	var isTest = true;
+	var isTest = false;
 	var isTestS2 = false;
 	var Section2 = (function (_super) {
 	    __extends(Section2, _super);

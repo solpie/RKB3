@@ -8,7 +8,7 @@ import { groupPosMap } from '../bracket/BracketGroup';
 import { testData2, testData1 } from './test/testBracket';
 
 
-const isTest = true
+const isTest = false
 const isTestS2 = false
 class Section2 extends PIXI.Container {
     groupPlayerMap = {}

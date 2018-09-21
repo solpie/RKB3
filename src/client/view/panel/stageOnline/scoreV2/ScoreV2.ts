@@ -39,6 +39,7 @@ export class ScoreV2 extends PIXI.Container {
     rState: Text2
 
     gameTitle: Text2
+    gameTitle2: Text2
     timer: TextTimer
 
     lAvt: PIXI.Sprite
@@ -92,14 +93,16 @@ export class ScoreV2 extends PIXI.Container {
         ns.fontSize = '28px'
         ns.fill = '#28263e'
         this.lTitle = TextFac.new_(ns, this.titleCtn)
-            .setY(870)
+            .setY(865)
 
         this.rTitle = TextFac.new_(ns, this.titleCtn)
             .setPos(1123, this.lTitle.y)
 
         ns.fill = '#444'
         this.gameTitle = TextFac.new_(ns, this)
-            .setY(967)
+            .setY(947)
+        this.gameTitle2 = TextFac.new_(ns, this)
+            .setY(987)
 
 
         ns.fontSize = '25px'
@@ -332,7 +335,7 @@ export class ScoreV2 extends PIXI.Container {
                 this.gameTitle.text = '大师赛八强'
             gameIdx = Number(gameIdx)
             if (gameIdx == 5 || gameIdx == 6) {
-                this.gameTitle.text = '四强赛'
+                this.gameTitle.text = '四强晋级赛'
                 // gameIdxNum2 = '第' + paddy(gameIdx - 6, 2) + '场'
                 gameIdxNum = '第' + paddy(gameIdx - 4, 2) + '场'
             }
@@ -345,7 +348,11 @@ export class ScoreV2 extends PIXI.Container {
                 gameIdxNum = ''
             }
             else
-                this.gameTitle.text = '大师赛'
+            {
+                this.gameTitle.text = '八强晋级赛'
+                gameIdxNum = '第' + paddy(gameIdx , 2) + '场'
+
+            }
         }
         else if (type == 4) {
             this.gameTitle.text = '席位战'
@@ -360,7 +367,9 @@ export class ScoreV2 extends PIXI.Container {
             this.foulHint = 5
         }
 
-        this.gameTitle.text += gameIdxNum
+        // this.gameTitle.text
+        this.gameTitle2.setText(gameIdxNum)
+        .setAlignCenter(960)
         this.gameTitle.setAlignCenter(960)
     }
 
