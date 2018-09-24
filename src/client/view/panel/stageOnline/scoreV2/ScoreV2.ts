@@ -72,7 +72,7 @@ export class ScoreV2 extends PIXI.Container {
         top.addChild(rFoulHint)
         this.rFoulHint = rFoulHint
         lFoulHint.alpha =
-        rFoulHint.alpha =0.8
+            rFoulHint.alpha = 0.8
         lFoulHint.visible =
             rFoulHint.visible = true
 
@@ -80,13 +80,14 @@ export class ScoreV2 extends PIXI.Container {
 
         let ns = {
             fontFamily: FontName.MicrosoftYahei,
-            fontSize: '32px', fill: "#303030",
+            fontSize: '32px', fill: "#eee",
         }
         this.lName = TextFac.new_(ns, this)
             .setY(941)
         this.rName = TextFac.new_(ns, this)
             .setPos(1215, this.lName.y)
 
+        ns.fill = '#303030'
         this.titleCtn = new PIXI.Container()
         this.addChild(this.titleCtn)
         this.titleCtn.addChild(newBitmap({ url: '/img/panel/score2018v2/titleBg.png' }))
@@ -126,7 +127,7 @@ export class ScoreV2 extends PIXI.Container {
         ns.fill = '#eee'
         ns.fontFamily = FontName.MicrosoftYahei
         this.lFoul = TextFac.new_(ns, this)
-            .setPos(315 + 57,4)
+            .setPos(315 + 57, 4)
 
         this.rFoul = TextFac.new_(ns, this)
             .setPos(1536 + 57, this.lFoul.y)
@@ -347,10 +348,9 @@ export class ScoreV2 extends PIXI.Container {
                 this.gameTitle.text = '决赛'
                 gameIdxNum = ''
             }
-            else
-            {
+            else {
                 this.gameTitle.text = '八强晋级赛'
-                gameIdxNum = '第' + paddy(gameIdx , 2) + '场'
+                gameIdxNum = '第' + paddy(gameIdx, 2) + '场'
 
             }
         }
@@ -369,7 +369,7 @@ export class ScoreV2 extends PIXI.Container {
 
         // this.gameTitle.text
         this.gameTitle2.setText(gameIdxNum)
-        .setAlignCenter(960)
+            .setAlignCenter(960)
         this.gameTitle.setAlignCenter(960)
     }
 
