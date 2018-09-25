@@ -72,7 +72,7 @@ class StageOnlineView extends VueBase {
     //公告
     noticeTitle = VueBase.PROP
     noticeContent = VueBase.PROP
-    isBold = VueBase.PROP
+    isWrap = VueBase.PROP
     noticeHistory = VueBase.PROP
     inputRollText = VueBase.PROP
     vsPlayer = VueBase.PROP
@@ -228,7 +228,7 @@ class StageOnlineView extends VueBase {
         if (!scoreView) {
             scoreView = new ScoreView(canvasStage, this.$route)
             if (this.isOp) {
-                this.isBold = 'normal'
+                this.isWrap = '1'
                 scoreView.initOP(this)
                 scoreView.on('init', (data) => {
                     this.setSrvTime(data.t)
@@ -399,7 +399,7 @@ class StageOnlineView extends VueBase {
                         _: null,
                         isPreview: isPreview,
                         title: this.noticeTitle,
-                        content: this.noticeContent, isLeft: isLeft, visible: visible, isBold: this.isBold
+                        content: this.noticeContent, isLeft: isLeft, visible: visible, isWrap: Boolean(Number(this.isWrap))
                     })
             }
 

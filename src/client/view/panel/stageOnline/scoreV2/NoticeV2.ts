@@ -3,6 +3,7 @@ import { imgToTex, newBitmap } from '../../../utils/PixiEx';
 import { Text2, TextFac } from '../../../utils/TextFac';
 import { FontName } from '../../../const';
 import { ScaleSprite } from '../../../utils/ScaleSprite';
+import { cnWrap } from '../../../utils/JsFunc';
 
 export class NoticeV2 extends PIXI.Container {
     topSP: PIXI.Sprite
@@ -59,13 +60,15 @@ export class NoticeV2 extends PIXI.Container {
         })
     }
     _show(data) {
-        this.content.setText(data.content)
-            .setAlignCenter(215)
+        let content = data.content
+        if (data.isWrap)
+            content = cnWrap(data.content, 22)
+        this.content.setText(content)
+            .setAlignCenter(227)
         let contentHeight = this.content.height
         if (contentHeight % 2 == 1)
             contentHeight += 1
         this.midSP.height = contentHeight
-        console.log('content height', contentHeight)
         this.midSP.x = 0
         this.midSP.y = 82
 
@@ -73,8 +76,8 @@ export class NoticeV2 extends PIXI.Container {
         // this.pad.height =contentHeight
         this.pad.resize(this.pad.width, contentHeight + 20)
         this.title.setText(data.title || "公告")
-            .setAlignCenter(215)
-        console.log('show notice')
+            .setAlignCenter(227)
+        console.log('show notice',data)
         this.y = 540 - 70 - contentHeight * 0.5
         if (data.isLeft) {
             this.x = 0

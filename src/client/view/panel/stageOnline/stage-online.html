@@ -131,12 +131,12 @@
     <div v-if='actTab=="tab2"'>
         <div v-if='isRmOp||isOp' style="position: absolute;left: 100px;top:260px;width: 800px">
             <label class="radio">
-                        <input type="radio" name="bold" value='normal' v-model='isBold' checked >
-                        正常
+                        <input type="radio" name="bold" value='1' v-model='isWrap' checked >
+                        自动换行
                     </label>
             <label class="radio">
-                        <input type="radio" name="bold" value='bold' v-model='isBold'>
-                        加粗
+                        <input type="radio" name="bold" value='0' v-model='isWrap'>
+                        手动换行
                     </label>
             <br>
             <input class="input" type="text" placeholder="公告" style="width: 280px;" v-model="noticeTitle">
