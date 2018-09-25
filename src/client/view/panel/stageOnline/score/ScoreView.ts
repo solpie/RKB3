@@ -230,17 +230,17 @@ export class ScoreView extends BasePanelView {
             .on(`${CommandId.sc_showNotice}`, (data) => {
                 if (data.isPreview) {
                     if (this.isOP || this.isRmOP) {
-                        this.eventPanel.showNotice(data.title, data.content, data.isLeft, data.isBold)
-                        data.visible ?
-                            this.eventPanel.noticeSprite.show()
-                            : this.eventPanel.noticeSprite.hide()
+                        this.eventPanel.showNotice(data)
+                        // data.visible ?
+                        //     this.eventPanel.noticeSprite.show()
+                        //     : this.eventPanel.noticeSprite.hide()
                     }
                 }
                 else {
-                    this.eventPanel.showNotice(data.title, data.content, data.isLeft, data.isBold)
-                    data.visible ?
-                        this.eventPanel.noticeSprite.show()
-                        : this.eventPanel.noticeSprite.hide()
+                    this.eventPanel.showNotice(data)
+                    // data.visible ?
+                    //     this.eventPanel.noticeSprite.show()
+                    //     : this.eventPanel.noticeSprite.hide()
                 }
 
             })

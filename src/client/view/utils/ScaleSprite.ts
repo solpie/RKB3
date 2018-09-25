@@ -8,12 +8,18 @@ export class ScaleSprite extends PIXI.Container {
     b: PIXI.Sprite
     lb: PIXI.Sprite
     l: PIXI.Sprite
+
+    c: PIXI.Sprite
+
     _w: number
     _h: number
-    
-    constructor(img: HTMLImageElement, scaleRect: { x: number, y: number, width: number, height: number }) {
+    scaleRect: any
+    constructor(tex, scaleRect: { x: number, y: number, width: number, height: number }) {
         super()
-        let bt = new PIXI.BaseTexture(img)
+        this.scaleRect = scaleRect
+        let bt = tex
+        this._w = tex.width
+        this._h = tex.height
         let _sp = (x, y, w, h) => {
             return new PIXI.Sprite(new PIXI.Texture(bt,
                 new PIXI.Rectangle(x, y, w, h)))
@@ -54,6 +60,12 @@ export class ScaleSprite extends PIXI.Container {
         this.l.y = scaleRect.y
         this.addChild(this.l)
 
+        this.c = _sp(scaleRect.x, scaleRect.y, scaleRect.width, scaleRect.height)
+        this.c.x = scaleRect.x
+        this.c.y = scaleRect.y
+        this.addChild(this.c)
+
+
     }
     get width() {
         return this._w
@@ -61,10 +73,19 @@ export class ScaleSprite extends PIXI.Container {
     get height() {
         return this._h
     }
+    setHeight(height) {
+        this._h = height
+        let sh = height - this.lt.height - this.lb.height
+        this.l.height = sh
+        this.r.height = sh
+        this.lb.y = this.lt.height + sh
+        this.b.y = this.lt.height + sh
+        this.rb.y = this.lt.height + sh
+    }
     resize(width, height) {
         this._w = width
         this._h = height
-        
+
         let sw = width - this.lt.width - this.rt.width
         this.t.width = sw
         this.b.width = sw
@@ -78,5 +99,9 @@ export class ScaleSprite extends PIXI.Container {
         this.lb.y = this.lt.height + sh
         this.b.y = this.lt.height + sh
         this.rb.y = this.lt.height + sh
+
+        this.c.width = sw
+        this.c.height = sh
+
     }
 } 

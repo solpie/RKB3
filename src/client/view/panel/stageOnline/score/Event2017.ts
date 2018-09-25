@@ -22,6 +22,7 @@ import { RankSection } from '../rank/RankSection';
 import { TagFx } from './TagFx';
 import { Pick8Layer } from '../pick8/Pick8';
 import { PlayerInfoV2 } from '../scoreV2/PlayerInfoV2';
+import { NoticeV2 } from '../scoreV2/NoticeV2';
 
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
@@ -209,13 +210,18 @@ export class Event2017 extends PIXI.Container {
     }
 
     noticeSprite: NoticeSprite
-    showNotice(title, content, isLeft, isBold) {
-        if (!this.noticeSprite) {
-            this.noticeSprite = new NoticeSprite()
-            this.addChild(this.noticeSprite)
-        }
-        this.noticeSprite.setText(content, title, isLeft, isBold)
-        this.noticeSprite.show()
+    noticeV2: NoticeV2
+    showNotice(data) {
+        // if (!this.noticeSprite) {
+        //     this.noticeSprite = new NoticeSprite()
+        //     this.addChild(this.noticeSprite)
+        // }
+        // this.noticeSprite.setText(content, title, isLeft, isBold)
+        // this.noticeSprite.show()
+        if (!this.noticeV2)
+            this.noticeV2 = new NoticeV2(this)
+        // content, title, isLeft, isBold
+        this.noticeV2.show(data)
     }
 
     champion: Champion
@@ -372,7 +378,7 @@ export class Event2017 extends PIXI.Container {
     showScoreRank(data) {
         if (!this.scoreRank) {
             this.scoreRank = new ScoreRank()
-            this.scoreRank.create(this,true)
+            this.scoreRank.create(this, true)
         }
         this.scoreRank.show(data)
     }
@@ -397,4 +403,9 @@ export class Event2017 extends PIXI.Container {
     showPick8(data) {
         Pick8Layer.get(this).show(data)
     }
+    // noticeV2:NoticeV2
+    // showNotice()
+    // {
+
+    // }
 }

@@ -1,7 +1,5 @@
-import { newBitmap, gradientG } from '../../../utils/PixiEx';
 import { FontName, ViewConst } from '../../../const';
-import { loadImg } from '../../../utils/JsFunc';
-import { ScaleSprite } from '../../../utils/ScaleSprite';
+import { newBitmap } from '../../../utils/PixiEx';
 export class NoticeSprite extends PIXI.Container {
     content: PIXI.Text
     title: PIXI.Text
