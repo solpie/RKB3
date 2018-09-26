@@ -4,6 +4,7 @@ import { Text2, TextFac } from '../../../utils/TextFac';
 import { FontName } from '../../../const';
 import { ScaleSprite } from '../../../utils/ScaleSprite';
 import { cnWrap } from '../../../utils/JsFunc';
+import { TweenEx } from '../../../utils/TweenEx';
 
 export class NoticeV2 extends PIXI.Container {
     topSP: PIXI.Sprite
@@ -77,13 +78,19 @@ export class NoticeV2 extends PIXI.Container {
         this.pad.resize(this.pad.width, contentHeight + 20)
         this.title.setText(data.title || "公告")
             .setAlignCenter(227)
-        console.log('show notice',data)
+        console.log('show notice', data)
         this.y = 540 - 70 - contentHeight * 0.5
         if (data.isLeft) {
-            this.x = 0
+            this.x = -300
+            TweenEx.to(this, 200, {
+                x: 0
+            })
         }
         else {
-            this.x = 1920 - 440
+            this.x = 1920
+            TweenEx.to(this, 200, {
+                x: 1920 - 440
+            })
         }
     }
     show(data) {
@@ -95,9 +102,17 @@ export class NoticeV2 extends PIXI.Container {
         if (data.visible) {
             this.p.addChild(this)
         }
-        else {
-            if (this.parent)
-                this.parent.removeChild(this)
+        else {//hide  
+            if (data.isLeft) {
+                TweenEx.to(this, 200, {
+                    x: -300
+                })
+            }
+            else {
+                TweenEx.to(this, 200, {
+                    x: 1920 
+                })
+            }
         }
     }
 }

@@ -209,18 +209,10 @@ export class Event2017 extends PIXI.Container {
         })
     }
 
-    noticeSprite: NoticeSprite
     noticeV2: NoticeV2
     showNotice(data) {
-        // if (!this.noticeSprite) {
-        //     this.noticeSprite = new NoticeSprite()
-        //     this.addChild(this.noticeSprite)
-        // }
-        // this.noticeSprite.setText(content, title, isLeft, isBold)
-        // this.noticeSprite.show()
         if (!this.noticeV2)
             this.noticeV2 = new NoticeV2(this)
-        // content, title, isLeft, isBold
         this.noticeV2.show(data)
     }
 

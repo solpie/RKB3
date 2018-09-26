@@ -11612,6 +11612,7 @@
 	var const_1 = __webpack_require__(27);
 	var ScaleSprite_1 = __webpack_require__(135);
 	var JsFunc_1 = __webpack_require__(21);
+	var TweenEx_1 = __webpack_require__(57);
 	var NoticeV2 = (function (_super) {
 	    __extends(NoticeV2, _super);
 	    function NoticeV2(p) {
@@ -11673,10 +11674,16 @@
 	        console.log('show notice', data);
 	        this.y = 540 - 70 - contentHeight * 0.5;
 	        if (data.isLeft) {
-	            this.x = 0;
+	            this.x = -300;
+	            TweenEx_1.TweenEx.to(this, 200, {
+	                x: 0
+	            });
 	        }
 	        else {
-	            this.x = 1920 - 440;
+	            this.x = 1920;
+	            TweenEx_1.TweenEx.to(this, 200, {
+	                x: 1920 - 440
+	            });
 	        }
 	    };
 	    NoticeV2.prototype.show = function (data) {
@@ -11688,8 +11695,16 @@
 	            this.p.addChild(this);
 	        }
 	        else {
-	            if (this.parent)
-	                this.parent.removeChild(this);
+	            if (data.isLeft) {
+	                TweenEx_1.TweenEx.to(this, 200, {
+	                    x: -300
+	                });
+	            }
+	            else {
+	                TweenEx_1.TweenEx.to(this, 200, {
+	                    x: 1920
+	                });
+	            }
 	        }
 	    };
 	    return NoticeV2;

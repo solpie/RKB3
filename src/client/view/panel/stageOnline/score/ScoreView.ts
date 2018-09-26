@@ -231,16 +231,10 @@ export class ScoreView extends BasePanelView {
                 if (data.isPreview) {
                     if (this.isOP || this.isRmOP) {
                         this.eventPanel.showNotice(data)
-                        // data.visible ?
-                        //     this.eventPanel.noticeSprite.show()
-                        //     : this.eventPanel.noticeSprite.hide()
                     }
                 }
                 else {
                     this.eventPanel.showNotice(data)
-                    // data.visible ?
-                    //     this.eventPanel.noticeSprite.show()
-                    //     : this.eventPanel.noticeSprite.hide()
                 }
 
             })
