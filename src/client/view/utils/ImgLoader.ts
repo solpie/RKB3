@@ -1,4 +1,4 @@
-import { loadRes, imgToTex } from "./PixiEx";
+import { loadRes, imgToTex, newBitmap } from './PixiEx';
 
 class ImgLoader {
     _texMap = {}
@@ -40,6 +40,10 @@ class ImgLoader {
     }
     getTex(url) {
         return imgToTex(this._texMap[url])
+    }
+    getTexBySp(url) {
+        let sp = newBitmap({ url: url })
+        return sp.texture
     }
 }
 export const imgLoader = window['imgLoader'] = new ImgLoader()

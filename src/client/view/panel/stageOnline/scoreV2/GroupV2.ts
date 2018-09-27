@@ -1,10 +1,10 @@
-import { newModal, newBitmap } from "../../../utils/PixiEx";
 import { FontName } from "../../../const";
 import { getGroupData, getHupuWS } from "../../../utils/HupuAPI";
-import { firstBy } from "../../../utils/thenBy";
 import { imgLoader } from "../../../utils/ImgLoader";
-import { fitWidth } from '../bracket/BracketGroup';
+import { BitmapText, newBitmap, loadRes, imgToTex } from '../../../utils/PixiEx';
 import { Text2, TextFac } from '../../../utils/TextFac';
+import { firstBy } from "../../../utils/thenBy";
+import { fitWidth } from '../bracket/BracketGroup';
 import { AvtV2 } from './AvtV2';
 declare let io;
 export class Row1 extends PIXI.Container {
@@ -89,8 +89,8 @@ export class GroupV2 extends PIXI.Container {
     rowArr: Array<Row1> = []
     tabArr: Array<Row1> = []
     groupTitle: PIXI.Text
-
-    tabFocus: PIXI.Sprite
+    groupName: BitmapText
+    // tabFocus: PIXI.Sprite
 
     // location: Text2
     // updateTime = 3000
@@ -111,6 +111,39 @@ export class GroupV2 extends PIXI.Container {
             fontSize: '150px', fill: "#5c5b6f",
             fontWeight: 'bold'
         }
+
+        let texUrl = '/img/panel/group/v2/ah.png'
+        loadRes(texUrl, img => {
+            let tex = imgToTex(img)
+            let sheet = {
+                text: 'A',
+                animations: {
+                    "A": 0, "B": 1, "C": 2, "D": 3, "E": 4,
+                    "F": 5, "G": 6, "H": 7
+                },
+                texture: tex,
+                frames: [
+                    [0, 0, 111, 88],
+                    [0, 89, 111, 88],
+                    [112, 0, 111, 88],
+                    [112, 89, 111, 88],
+                    [0, 178, 111, 88],
+                    [112, 178, 111, 88],
+                    [224, 0, 111, 88],
+                    [224, 89, 111, 88]]
+
+
+            }
+            let groupName = new BitmapText(sheet)
+            this.groupName = groupName
+            groupName.x = 1309
+            groupName.y = 235
+            // groupName.text = this.groupTitle.text
+            this.groupTitle.visible = false
+            this.addChild(groupName)
+        })
+
+
         let l = new PIXI.Text('A', rs)
         l.x = 1300
         l.y = 190
@@ -137,9 +170,9 @@ export class GroupV2 extends PIXI.Container {
         }
 
 
-        this.tabFocus = newBitmap({ url: '/img/panel/group/groupBg2tabFocus.png' })
-        this.tabFocus.x = -12
-        this.tabFocus.y = -13
+        // this.tabFocus = newBitmap({ url: '/img/panel/group/groupBg2tabFocus.png' })
+        // this.tabFocus.x = -12
+        // this.tabFocus.y = -13
         // this.addChild(this.tabFocus)
 
         this.updateData()
@@ -191,8 +224,8 @@ export class GroupV2 extends PIXI.Container {
     }
     _fillData(idx) {
         let groupTab = this.groupArr[idx]
-        this.tabFocus.x = groupTab.x - 12
-        this.tabFocus.y = groupTab.y - 13
+        // this.tabFocus.x = groupTab.x - 12
+        // this.tabFocus.y = groupTab.y - 13
         let data = this.dataArr[idx]
         this
         let round = 0;
@@ -244,6 +277,8 @@ export class GroupV2 extends PIXI.Container {
     setRoundIdx(idx) {
         let groupName = gArr[idx]
         this.groupTitle.text = String.fromCharCode(65 + idx)
+        if (this.groupName)
+            this.groupName.text = this.groupTitle.text
         // this.groupTitle.x = 960 - this.groupTitle.width * .5
     }
     calcRound(data) {

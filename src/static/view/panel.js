@@ -5768,6 +5768,10 @@
 	    ImgLoader.prototype.getTex = function (url) {
 	        return PixiEx_1.imgToTex(this._texMap[url]);
 	    };
+	    ImgLoader.prototype.getTexBySp = function (url) {
+	        var sp = PixiEx_1.newBitmap({ url: url });
+	        return sp.texture;
+	    };
 	    return ImgLoader;
 	}());
 	exports.imgLoader = window['imgLoader'] = new ImgLoader();
@@ -10718,12 +10722,12 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var PixiEx_1 = __webpack_require__(56);
 	var const_1 = __webpack_require__(27);
 	var HupuAPI_1 = __webpack_require__(24);
+	var PixiEx_1 = __webpack_require__(56);
+	var TextFac_1 = __webpack_require__(77);
 	var thenBy_1 = __webpack_require__(114);
 	var BracketGroup_1 = __webpack_require__(78);
-	var TextFac_1 = __webpack_require__(77);
 	var AvtV2_1 = __webpack_require__(130);
 	var Row1 = (function (_super) {
 	    __extends(Row1, _super);
@@ -10798,6 +10802,7 @@
 	var GroupV2 = (function (_super) {
 	    __extends(GroupV2, _super);
 	    function GroupV2(parent, gameId) {
+	        var _this = this;
 	        _super.call(this);
 	        this.groupArr = [];
 	        this.rowArr = [];
@@ -10814,6 +10819,33 @@
 	            fontSize: '150px', fill: "#5c5b6f",
 	            fontWeight: 'bold'
 	        };
+	        var texUrl = '/img/panel/group/v2/ah.png';
+	        PixiEx_1.loadRes(texUrl, function (img) {
+	            var tex = PixiEx_1.imgToTex(img);
+	            var sheet = {
+	                text: 'A',
+	                animations: {
+	                    "A": 0, "B": 1, "C": 2, "D": 3, "E": 4,
+	                    "F": 5, "G": 6, "H": 7
+	                },
+	                texture: tex,
+	                frames: [
+	                    [0, 0, 111, 88],
+	                    [0, 89, 111, 88],
+	                    [112, 0, 111, 88],
+	                    [112, 89, 111, 88],
+	                    [0, 178, 111, 88],
+	                    [112, 178, 111, 88],
+	                    [224, 0, 111, 88],
+	                    [224, 89, 111, 88]]
+	            };
+	            var groupName = new PixiEx_1.BitmapText(sheet);
+	            _this.groupName = groupName;
+	            groupName.x = 1309;
+	            groupName.y = 235;
+	            _this.groupTitle.visible = false;
+	            _this.addChild(groupName);
+	        });
 	        var l = new PIXI.Text('A', rs);
 	        l.x = 1300;
 	        l.y = 190;
@@ -10834,9 +10866,6 @@
 	            t.y = 280 + 57 * i;
 	            this.groupArr.push(t);
 	        }
-	        this.tabFocus = PixiEx_1.newBitmap({ url: '/img/panel/group/groupBg2tabFocus.png' });
-	        this.tabFocus.x = -12;
-	        this.tabFocus.y = -13;
 	        this.updateData();
 	        this.initWS();
 	    }
@@ -10883,8 +10912,6 @@
 	    };
 	    GroupV2.prototype._fillData = function (idx) {
 	        var groupTab = this.groupArr[idx];
-	        this.tabFocus.x = groupTab.x - 12;
-	        this.tabFocus.y = groupTab.y - 13;
 	        var data = this.dataArr[idx];
 	        this;
 	        var round = 0;
@@ -10934,6 +10961,8 @@
 	    GroupV2.prototype.setRoundIdx = function (idx) {
 	        var groupName = gArr[idx];
 	        this.groupTitle.text = String.fromCharCode(65 + idx);
+	        if (this.groupName)
+	            this.groupName.text = this.groupTitle.text;
 	    };
 	    GroupV2.prototype.calcRound = function (data) {
 	        var round = 0;

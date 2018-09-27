@@ -76,8 +76,6 @@ export class ScoreV2 extends PIXI.Container {
         lFoulHint.visible =
             rFoulHint.visible = true
 
-
-
         let ns = {
             fontFamily: FontName.MicrosoftYahei,
             fontSize: '32px', fill: "#eee",
