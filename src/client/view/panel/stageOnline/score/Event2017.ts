@@ -1,28 +1,24 @@
-import { ScoreRank } from './../scoreRank/ScoreRank';
 import { FontName, ViewConst } from '../../../const';
 import { cnWrap, loadImg } from '../../../utils/JsFunc';
 import { imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
 import { TweenEx } from '../../../utils/TweenEx';
+import { showPanel } from '../../base/BasePanel';
 import { fitWidth } from '../bracket/BracketGroup';
+import { Pick8Layer } from '../pick8/Pick8';
+import { RankSection } from '../rank/RankSection';
+import { NoticeV2 } from '../scoreV2/NoticeV2';
+import { PlayerInfoV2 } from '../scoreV2/PlayerInfoV2';
+import { VsListV2 } from '../scoreV2/VsListV2';
+import { ScoreRank } from './../scoreRank/ScoreRank';
 import { Champion } from './Champion';
 import { getFtLogoUrl2, getFtName } from './Com2017';
 import { Group } from './Group';
 import { LogoFx } from './LogoFx';
-import { NoticeSprite } from './NoticeSprite';
-import { Ranking } from './Ranking';
-import { ScoreFx } from './ScoreFx';
-import { TopInfo } from './TopInfo';
-import { VictoryM2 } from './VictoryM2';
-import { Victory2 } from "./Victory2";
-import { Winner } from './Winner';
-import { Top5 } from '../top5/Top5';
-import { VsTitle } from './VsTitle';
 import { RollText } from './RollText';
-import { RankSection } from '../rank/RankSection';
+import { ScoreFx } from './ScoreFx';
 import { TagFx } from './TagFx';
-import { Pick8Layer } from '../pick8/Pick8';
-import { PlayerInfoV2 } from '../scoreV2/PlayerInfoV2';
-import { NoticeV2 } from '../scoreV2/NoticeV2';
+import { TopInfo } from './TopInfo';
+import { Winner } from './Winner';
 
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
@@ -289,9 +285,6 @@ export class Event2017 extends PIXI.Container {
             this.groupPanel = new Group(this)
         }
         this.groupPanel.show(data.group, data.playerArr)
-        // TweenEx.delayedCall(12000, () => {
-        //     this.hideGroup()
-        // })
     }
 
     hideGroup() {
@@ -395,9 +388,8 @@ export class Event2017 extends PIXI.Container {
     showPick8(data) {
         Pick8Layer.get(this).show(data)
     }
-    // noticeV2:NoticeV2
-    // showNotice()
-    // {
 
-    // }
+    showVsList(data) {
+        showPanel(VsListV2, data, this)
+    }
 }

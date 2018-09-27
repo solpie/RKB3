@@ -441,8 +441,8 @@ class StageOnlineView extends VueBase {
         onShowFx(visible, fxIdx = 1) {
             this.opReq(`${CommandId.cs_showBottle}`, { _: null, visible: visible, fxIdx: fxIdx })
         },
-        onBracketShow(page) {
-            this.opReq(`${CommandId.cs_showBracketPage}`, { _: null, page: page })
+        onBracketShow(page, v) {
+            this.opReq(`${CommandId.cs_showBracketPage}`, { _: null, page: page, visible: v })
         },
         onShowPlayerRanking(playerId) {
             $post('/online/ranking/raw', { date: '2017-07-19' }, res => {

@@ -241,6 +241,10 @@ export class ScoreView extends BasePanelView {
             .on(`${CommandId.sc_showRanking}`, (data) => {
                 this.eventPanel.showRanking(data)
             })
+            .on(`${CommandId.sc_showBracketPage}`, (data) => {
+                console.log('sc_showBracket vs list',data)
+                this.eventPanel.showVsList(data)
+            })
             //score fx
             .on(`${CommandId.sc_setFxPoint}`, (data) => {
                 this.eventPanel.setFxPoint(data.mx, data.my)
