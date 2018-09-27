@@ -264,9 +264,9 @@ export class ScoreV2 extends PIXI.Container {
     setRightPlayer(rPlayer) {
         this.rTitle.setText(rPlayer.title)
             .setAlignCenter(_c(208))
-
         this.rName.setText(rPlayer.name)
-            .setLimitWidth(298, 40)
+            .setLimitWidth(260, 40)
+            .setAlignCenter(_c(315))
 
         this._setHWA(rPlayer)
         let age = ''
@@ -283,8 +283,8 @@ export class ScoreV2 extends PIXI.Container {
             .setAlignCenter(_c(-208))
 
         this.lName.setText(lPlayer.name)
-            .setLimitWidth(298, 40)
-            .setAlignRight(702)
+            .setLimitWidth(260, 40)
+            .setAlignCenter(_c(-315))
 
         this._setHWA(lPlayer)
         let age = ''

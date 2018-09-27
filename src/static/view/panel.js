@@ -6257,10 +6257,10 @@
 	var WebJsFunc_1 = __webpack_require__(25);
 	var BasePanelView_1 = __webpack_require__(68);
 	var BracketView_1 = __webpack_require__(84);
-	var RankView_1 = __webpack_require__(87);
-	var ScoreView_1 = __webpack_require__(91);
+	var RankView_1 = __webpack_require__(88);
+	var ScoreView_1 = __webpack_require__(92);
 	var WebDBCmd_1 = __webpack_require__(75);
-	var GroupV2_1 = __webpack_require__(129);
+	var GroupV2_1 = __webpack_require__(116);
 	var rankView;
 	var bracketView;
 	var scoreView;
@@ -6272,7 +6272,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(115);
+	        this.template = __webpack_require__(119);
 	        this.actTab = VueBase_1.VueBase.PROP;
 	        this.gameId = VueBase_1.VueBase.String;
 	        this.isOp = VueBase_1.VueBase.PROP;
@@ -7057,7 +7057,7 @@
 	var BasePanelView_1 = __webpack_require__(68);
 	var const_1 = __webpack_require__(27);
 	var BracketGroup_1 = __webpack_require__(78);
-	var BracketV2_1 = __webpack_require__(132);
+	var BracketV2_1 = __webpack_require__(85);
 	var BracketView = (function (_super) {
 	    __extends(BracketView, _super);
 	    function BracketView(stage, gameId, $route) {
@@ -7215,7 +7215,321 @@
 
 
 /***/ },
-/* 85 */,
+/* 85 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var PixiEx_1 = __webpack_require__(56);
+	var BracketPlayerV3_1 = __webpack_require__(86);
+	var BracketGroup_1 = __webpack_require__(78);
+	var testBracket_1 = __webpack_require__(87);
+	var isTest = false;
+	var isTestS2 = false;
+	var Section2 = (function (_super) {
+	    __extends(Section2, _super);
+	    function Section2() {
+	        _super.call(this);
+	        this.groupPlayerMap = {};
+	        this.lineMap = {};
+	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/bracket/v2/bg2.png' }));
+	        var y1 = 180;
+	        var y2 = 440;
+	        var lNameX = 90;
+	        var lScoreX = 238;
+	        var rNameX = 135;
+	        var rScoreX = -18;
+	        var playerPos = {
+	            '5': { p: [221, 394], y: y1, align: [lNameX, lScoreX], isLeft: true },
+	            '6': { p: [1483, 394], y: y1, align: [rNameX, rScoreX], isLeft: true },
+	            '7': { p: [546, 774], y: y2, align: [lNameX, lScoreX], isLeft: true },
+	            '8': { p: [628, 483], y: y2, align: [lNameX, lScoreX], align2: [rNameX, rScoreX], isLeft: false, isHorizontal: true }
+	        };
+	        var gm = this.groupPlayerMap;
+	        for (var i = 0; i < 4; i++) {
+	            var g = gm[i + 5] = { playerArr: [] };
+	            var p = playerPos[i + 5];
+	            var p1 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
+	            var p2 = void 0;
+	            if (p.isHorizontal) {
+	                p2 = new BracketPlayerV3_1.BracketPlayerV3(!p.isLeft, p.align2);
+	                p1.x = p.p[0];
+	                p1.y = p.p[1];
+	                p2.x = p.p[0] + p.y;
+	                p2.y = p.p[1];
+	            }
+	            else {
+	                p2 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
+	                p1.x = p.p[0];
+	                p1.y = p.p[1];
+	                p2.x = p.p[0];
+	                p2.y = p.p[1] + p.y;
+	            }
+	            g.playerArr.push(p1);
+	            g.playerArr.push(p2);
+	            g['group'] = [p1, p2];
+	            if (i != 2) {
+	                this.addChild(p1);
+	                this.addChild(p2);
+	            }
+	            if (isTest)
+	                this.test(p1, p2);
+	        }
+	        var pWin7 = new BracketPlayerV3_1.BracketPlayerV3(true, [lNameX, lScoreX]);
+	        pWin7.x = 935;
+	        pWin7.y = 878;
+	        pWin7.hideScore();
+	        this.pWin7 = pWin7;
+	        var pWin8 = new BracketPlayerV3_1.BracketPlayerV3(true, [lNameX, lScoreX]);
+	        pWin8.x = 868;
+	        pWin8.y = 238;
+	        this.addChild(pWin8);
+	        pWin8.setFont({ fontSize: '50px' });
+	        pWin8.hideScore();
+	        this.pWin8 = pWin8;
+	        var lm = [
+	            ['5_0', 's2b5_0'],
+	            ['5_1', 's2b5_1'],
+	            ['6_0', 's2b6_0'],
+	            ['6_1', 's2b6_1'],
+	            ['8_0', 's2b8_0'],
+	            ['8_1', 's2b8_1'],
+	        ];
+	        for (var _i = 0, lm_1 = lm; _i < lm_1.length; _i++) {
+	            var a = lm_1[_i];
+	            var sp = this.lineMap[a[0]] = PixiEx_1.newBitmap({ url: '/img/panel/bracket/v2/' + a[1] + '.png' });
+	            this.addChild(sp);
+	            sp.visible = false;
+	        }
+	        if (isTest) {
+	            this.test(pWin7, pWin8);
+	            testBracket_1.testData2(this);
+	        }
+	    }
+	    Section2.prototype.setData = function (data) {
+	        console.log('section2 set data', data, this.groupPlayerMap);
+	        for (var gameIdx in this.groupPlayerMap) {
+	            var dataObj = data[gameIdx];
+	            if (dataObj) {
+	                var group = this.groupPlayerMap[gameIdx].group;
+	                var p1 = group[0];
+	                var p2 = group[1];
+	                var lScore = Number(dataObj.left.score);
+	                var rScore = Number(dataObj.right.score);
+	                if (lScore || rScore) {
+	                    p1.setScore(lScore);
+	                    p2.setScore(rScore);
+	                    if (Number(gameIdx) > 4 && Number(gameIdx) != 7) {
+	                        if (lScore > rScore) {
+	                            this.lineMap[gameIdx + '_0'].visible = true;
+	                            this.lineMap[gameIdx + '_1'].visible = false;
+	                        }
+	                        else {
+	                            this.lineMap[gameIdx + '_0'].visible = false;
+	                            this.lineMap[gameIdx + '_1'].visible = true;
+	                        }
+	                    }
+	                }
+	                var group2 = BracketGroup_1.groupPosMap[gameIdx];
+	                var hints = group2.hints;
+	                if (dataObj.left.name)
+	                    p1.setLeftName(dataObj.left.name);
+	                if (dataObj.right.name)
+	                    p2.setLeftName(dataObj.right.name);
+	            }
+	        }
+	        var fillWinner = function (player, gameIdx) {
+	            var dataObj7 = data[gameIdx];
+	            if (dataObj7) {
+	                if (Number(dataObj7.left.score) > Number(dataObj7.right.score)) {
+	                    player.setLeftName(dataObj7.left.name);
+	                }
+	                if (Number(dataObj7.left.score) < Number(dataObj7.right.score)) {
+	                    player.setLeftName(dataObj7.right.name);
+	                }
+	            }
+	        };
+	        fillWinner(this.pWin7, 7);
+	        fillWinner(this.pWin8, 8);
+	    };
+	    Section2.prototype.test = function (p1, p2) {
+	        p1.setInfo({ name: '好天氣', score: '12' });
+	        p2.setInfo({ name: '好天氣其', score: '0' });
+	    };
+	    return Section2;
+	}(PIXI.Container));
+	var Section1 = (function (_super) {
+	    __extends(Section1, _super);
+	    function Section1() {
+	        _super.call(this);
+	        this.groupPlayerMap = {};
+	        this.lineMap = {};
+	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/bracket/v2/bg1.png' }));
+	        var y1 = 180;
+	        var y2 = 440;
+	        var lNameX = 90;
+	        var lScoreX = 238;
+	        var rNameX = 135;
+	        var rScoreX = -18;
+	        var playerPos = {
+	            '1': { p: [221, 238], y: y1, align: [lNameX, lScoreX], isLeft: true, isHorizontal: false },
+	            '2': { p: [1483, 238], y: y1, align: [rNameX, rScoreX], isLeft: false, isHorizontal: false },
+	            '3': { p: [221, 578], y: y1, align: [lNameX, lScoreX], isLeft: true, isHorizontal: false },
+	            '4': { p: [1483, 578], y: y1, align: [rNameX, rScoreX], isLeft: false, isHorizontal: false },
+	            '5': { p: [628, 328], y: y2, align: [lNameX, lScoreX], align2: [rNameX, rScoreX], isLeft: true, isHorizontal: true },
+	            '6': { p: [628, 672], y: y2, align: [lNameX, lScoreX], align2: [rNameX, rScoreX], isLeft: true, isHorizontal: true }
+	        };
+	        var gm = this.groupPlayerMap;
+	        for (var i = 0; i < 6; i++) {
+	            var g = gm[i + 1] = { playerArr: [] };
+	            var p = playerPos[i + 1];
+	            var p1 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
+	            var p2 = void 0;
+	            if (p.isHorizontal) {
+	                p2 = new BracketPlayerV3_1.BracketPlayerV3(!p.isLeft, p.align2);
+	                p1.x = p.p[0];
+	                p1.y = p.p[1];
+	                p2.x = p.p[0] + p.y;
+	                p2.y = p.p[1];
+	            }
+	            else {
+	                p2 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
+	                p1.x = p.p[0];
+	                p1.y = p.p[1];
+	                p2.x = p.p[0];
+	                p2.y = p.p[1] + p.y;
+	            }
+	            g.playerArr.push(p1);
+	            g.playerArr.push(p2);
+	            g['group'] = [p1, p2];
+	            this.addChild(p1);
+	            this.addChild(p2);
+	            if (isTest)
+	                this.test(p1, p2);
+	        }
+	        var lm = [
+	            ['1_0', 's1b1_0'],
+	            ['1_1', 's1b1_1'],
+	            ['2_0', 's1b2_0'],
+	            ['2_1', 's1b2_1'],
+	            ['3_0', 's1b3_0'],
+	            ['3_1', 's1b3_1'],
+	            ['4_0', 's1b4_0'],
+	            ['4_1', 's1b4_1'],
+	        ];
+	        for (var _i = 0, lm_2 = lm; _i < lm_2.length; _i++) {
+	            var a = lm_2[_i];
+	            var sp = this.lineMap[a[0]] = PixiEx_1.newBitmap({ url: '/img/panel/bracket/v2/' + a[1] + '.png' });
+	            this.addChild(sp);
+	            sp.visible = false;
+	        }
+	        if (isTest)
+	            testBracket_1.testData1(this);
+	    }
+	    Section1.prototype.setData = function (data) {
+	        console.log('section1 set data', data, this.groupPlayerMap);
+	        for (var gameIdx in this.groupPlayerMap) {
+	            var dataObj = data[gameIdx];
+	            if (dataObj) {
+	                var group = this.groupPlayerMap[gameIdx].group;
+	                var p1 = group[0];
+	                var p2 = group[1];
+	                var lScore = Number(dataObj.left.score);
+	                var rScore = Number(dataObj.right.score);
+	                if (lScore || rScore) {
+	                    p1.setScore(lScore);
+	                    p2.setScore(rScore);
+	                    if (Number(gameIdx) < 5) {
+	                        if (lScore > rScore) {
+	                            this.lineMap[gameIdx + '_0'].visible = true;
+	                            this.lineMap[gameIdx + '_1'].visible = false;
+	                        }
+	                        else {
+	                            this.lineMap[gameIdx + '_0'].visible = false;
+	                            this.lineMap[gameIdx + '_1'].visible = true;
+	                        }
+	                    }
+	                }
+	                var group2 = BracketGroup_1.groupPosMap[gameIdx];
+	                var hints = group2.hints;
+	                if (dataObj.left.name)
+	                    p1.setLeftName(dataObj.left.name);
+	                if (dataObj.right.name)
+	                    p2.setLeftName(dataObj.right.name);
+	            }
+	        }
+	    };
+	    Section1.prototype.test = function (p1, p2) {
+	        p1.setInfo({ name: '好天氣', score: '12' });
+	        p2.setInfo({ name: '好天氣其', score: '0' });
+	    };
+	    return Section1;
+	}(PIXI.Container));
+	var BracketV2 = (function (_super) {
+	    __extends(BracketV2, _super);
+	    function BracketV2(parent) {
+	        var _this = this;
+	        _super.call(this);
+	        this.isLoaded = false;
+	        this._res = null;
+	        parent.addChild(this);
+	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/com/bg.jpg' }));
+	        var hintCtn = new PIXI.Container();
+	        this.addChild(hintCtn);
+	        var section2 = new Section2();
+	        this.addChild(section2);
+	        this.section2 = section2;
+	        section2.visible = false;
+	        var section1 = new Section1();
+	        this.addChild(section1);
+	        this.section1 = section1;
+	        if (isTestS2) {
+	            section1.visible = false;
+	            section2.visible = true;
+	        }
+	        window.onkeyup = function (e) {
+	            console.log('key up', e.key, e.keyCode);
+	            if (e.key == 'ArrowLeft' || e.keyCode == 37) {
+	                _this.showPage({ page: 1 });
+	            }
+	            else if (e.key == 'ArrowRight' || e.keyCode == 39) {
+	                _this.showPage({ page: 2 });
+	            }
+	        };
+	    }
+	    BracketV2.prototype.setWinHint = function (sp, isFlip) {
+	        if (isFlip === void 0) { isFlip = false; }
+	        sp.texture = this.hint2Tex;
+	    };
+	    BracketV2.prototype.hideComing = function () {
+	    };
+	    BracketV2.prototype.showComingIdx = function (idx) {
+	        var g = BracketGroup_1.groupPosMap[idx];
+	    };
+	    BracketV2.prototype.showPage = function (data) {
+	        if (data.page == 1) {
+	            this.section1.visible = true;
+	            this.section2.visible = false;
+	        }
+	        else if (data.page == 2) {
+	            this.section1.visible = false;
+	            this.section2.visible = true;
+	        }
+	    };
+	    BracketV2.prototype.onBracketData = function (res) {
+	        this.section1.setData(res.data);
+	        this.section2.setData(res.data);
+	    };
+	    return BracketV2;
+	}(PIXI.Container));
+	exports.BracketV2 = BracketV2;
+
+
+/***/ },
 /* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -7273,6 +7587,77 @@
 
 /***/ },
 /* 87 */
+/***/ function(module, exports) {
+
+	"use strict";
+	function testData2(section2) {
+	    var data = {
+	        '1': {
+	            left: { score: 1, name: "1好天气" },
+	            right: { score: 3, name: "好天气" }
+	        },
+	        '2': {
+	            left: { score: 11, name: "street park2" },
+	            right: { score: 3, name: "drewnne" }
+	        },
+	        '3': {
+	            left: { score: 1, name: "黃宇軍" },
+	            right: { score: 3, name: "好天气" }
+	        },
+	        '4': {
+	            left: { score: 11, name: "street park4" },
+	            right: { score: 3, name: "drewnne" }
+	        },
+	        '5': {
+	            left: { score: 1, name: "5好天气" },
+	            right: { score: 3, name: "好天气" }
+	        },
+	        '6': {
+	            left: { score: 11, name: "s6treet park" },
+	            right: { score: 3, name: "drewnne" },
+	        },
+	        '8': {
+	            left: { score: 11, name: "s6treet park" },
+	            right: { score: 3, name: "drewnne" }
+	        },
+	    };
+	    section2.setData(data);
+	}
+	exports.testData2 = testData2;
+	function testData1(section1) {
+	    var data = {
+	        '1': {
+	            left: { score: 1, name: "1好天气" },
+	            right: { score: 3, name: "好天气" }
+	        },
+	        '2': {
+	            left: { score: 11, name: "street park2" },
+	            right: { score: 3, name: "drewnne" }
+	        },
+	        '3': {
+	            left: { score: 1, name: "黃宇軍" },
+	            right: { score: 3, name: "好天气" }
+	        },
+	        '4': {
+	            left: { score: 11, name: "street park4" },
+	            right: { score: 3, name: "drewnne" }
+	        },
+	        '5': {
+	            left: { score: 1, name: "5好天气" },
+	            right: { score: 3, name: "好天气" }
+	        },
+	        '6': {
+	            left: { score: 11, name: "s6treet park" },
+	            right: { score: 3, name: "drewnne" }
+	        },
+	    };
+	    section1.setData(data);
+	}
+	exports.testData1 = testData1;
+
+
+/***/ },
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7281,10 +7666,10 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var PlayerInfo_1 = __webpack_require__(88);
+	var PlayerInfo_1 = __webpack_require__(89);
 	var BasePanelView_1 = __webpack_require__(68);
 	var const_1 = __webpack_require__(27);
-	var FTInfo_1 = __webpack_require__(90);
+	var FTInfo_1 = __webpack_require__(91);
 	var PixiEx_1 = __webpack_require__(56);
 	var JsFunc_1 = __webpack_require__(21);
 	var RankView = (function (_super) {
@@ -7488,7 +7873,7 @@
 
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7497,7 +7882,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var BaseInfo_1 = __webpack_require__(89);
+	var BaseInfo_1 = __webpack_require__(90);
 	var PlayerDoc = (function () {
 	    function PlayerDoc() {
 	        this.id = 0;
@@ -7685,7 +8070,7 @@
 
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -7730,7 +8115,7 @@
 
 
 /***/ },
-/* 90 */
+/* 91 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -7759,7 +8144,7 @@
 
 
 /***/ },
-/* 91 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -7768,15 +8153,15 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Event2017_1 = __webpack_require__(92);
+	var Event2017_1 = __webpack_require__(93);
 	var home_1 = __webpack_require__(20);
 	var Command_1 = __webpack_require__(28);
 	var const_1 = __webpack_require__(27);
 	var HupuAPI_1 = __webpack_require__(24);
 	var TweenEx_1 = __webpack_require__(57);
 	var BasePanelView_1 = __webpack_require__(68);
-	var WorldWarView_1 = __webpack_require__(109);
-	var ScoreV2_1 = __webpack_require__(128);
+	var WorldWarView_1 = __webpack_require__(110);
+	var ScoreV2_1 = __webpack_require__(115);
 	function logEvent() {
 	    var a = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
@@ -8146,7 +8531,7 @@
 
 
 /***/ },
-/* 92 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8155,25 +8540,25 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var ScoreRank_1 = __webpack_require__(93);
+	var ScoreRank_1 = __webpack_require__(94);
 	var const_1 = __webpack_require__(27);
 	var JsFunc_1 = __webpack_require__(21);
 	var PixiEx_1 = __webpack_require__(56);
 	var TweenEx_1 = __webpack_require__(57);
 	var BracketGroup_1 = __webpack_require__(78);
-	var Champion_1 = __webpack_require__(94);
-	var Com2017_1 = __webpack_require__(95);
-	var Group_1 = __webpack_require__(96);
-	var LogoFx_1 = __webpack_require__(97);
+	var Champion_1 = __webpack_require__(95);
+	var Com2017_1 = __webpack_require__(96);
+	var Group_1 = __webpack_require__(97);
+	var LogoFx_1 = __webpack_require__(98);
 	var ScoreFx_1 = __webpack_require__(99);
 	var TopInfo_1 = __webpack_require__(100);
 	var Winner_1 = __webpack_require__(101);
-	var RollText_1 = __webpack_require__(103);
-	var RankSection_1 = __webpack_require__(104);
-	var TagFx_1 = __webpack_require__(105);
-	var Pick8_1 = __webpack_require__(106);
-	var PlayerInfoV2_1 = __webpack_require__(131);
-	var NoticeV2_1 = __webpack_require__(134);
+	var RollText_1 = __webpack_require__(102);
+	var RankSection_1 = __webpack_require__(103);
+	var TagFx_1 = __webpack_require__(104);
+	var Pick8_1 = __webpack_require__(105);
+	var PlayerInfoV2_1 = __webpack_require__(107);
+	var NoticeV2_1 = __webpack_require__(108);
 	var Event2017 = (function (_super) {
 	    __extends(Event2017, _super);
 	    function Event2017(stage, isDark) {
@@ -8454,7 +8839,7 @@
 
 
 /***/ },
-/* 93 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8678,7 +9063,7 @@
 
 
 /***/ },
-/* 94 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8788,7 +9173,7 @@
 
 
 /***/ },
-/* 95 */
+/* 96 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -8829,7 +9214,7 @@
 
 
 /***/ },
-/* 96 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8838,7 +9223,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Com2017_1 = __webpack_require__(95);
+	var Com2017_1 = __webpack_require__(96);
 	var const_1 = __webpack_require__(27);
 	var PixiEx_1 = __webpack_require__(56);
 	var Group = (function (_super) {
@@ -8922,7 +9307,7 @@
 
 
 /***/ },
-/* 97 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8962,7 +9347,6 @@
 
 
 /***/ },
-/* 98 */,
 /* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -9209,8 +9593,7 @@
 
 
 /***/ },
-/* 102 */,
-/* 103 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9266,7 +9649,7 @@
 
 
 /***/ },
-/* 104 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9485,7 +9868,7 @@
 
 
 /***/ },
-/* 105 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9605,7 +9988,7 @@
 
 
 /***/ },
-/* 106 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9616,7 +9999,7 @@
 	};
 	var PixiEx_1 = __webpack_require__(56);
 	var ImgLoader_1 = __webpack_require__(73);
-	var BasePanel_1 = __webpack_require__(107);
+	var BasePanel_1 = __webpack_require__(106);
 	var TextFac_1 = __webpack_require__(77);
 	var const_1 = __webpack_require__(27);
 	var Pick8 = (function (_super) {
@@ -9706,7 +10089,7 @@
 
 
 /***/ },
-/* 107 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9739,8 +10122,7 @@
 
 
 /***/ },
-/* 108 */,
-/* 109 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9749,14 +10131,410 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var ScoreRank_1 = __webpack_require__(93);
+	var PixiEx_1 = __webpack_require__(56);
+	var ImgLoader_1 = __webpack_require__(73);
+	var const_1 = __webpack_require__(27);
+	var JsFunc_1 = __webpack_require__(21);
+	var HupuAPI_1 = __webpack_require__(24);
+	var BracketGroup_1 = __webpack_require__(78);
+	var TextFac_1 = __webpack_require__(77);
+	var Tab2 = (function (_super) {
+	    __extends(Tab2, _super);
+	    function Tab2() {
+	        _super.call(this);
+	        var rs = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '48px', fill: "#4d5167",
+	            fontWeight: 'bold'
+	        };
+	        var pn = new PIXI.Text('', rs);
+	        this.playerName = pn;
+	        this.addChild(pn);
+	        pn.x = 168;
+	        pn.y = 20;
+	        var gameTitle = new PIXI.Text('小组赛', {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '30px', fill: "#fff",
+	            fontWeight: 'bold'
+	        });
+	        this.addChild(gameTitle);
+	        gameTitle.x = 16;
+	        gameTitle.y = 10;
+	        var gameIdx = new PIXI.Text('', {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '48px', fill: "#fff",
+	            fontWeight: 'bold'
+	        });
+	        gameIdx.y = 50;
+	        this.gameIdx = gameIdx;
+	        this.addChild(gameIdx);
+	        PixiEx_1.setScale(this, 0.9);
+	    }
+	    Tab2.prototype.setInfo = function (data) {
+	        this.playerName.text = data.name;
+	        BracketGroup_1.fitWidth(this.playerName, 275, 48);
+	        this.setGameIdx(0);
+	    };
+	    Tab2.prototype.setGameIdx = function (idx) {
+	        this.gameIdx.text = JsFunc_1.paddy(idx, 2);
+	        this.gameIdx.x = 60 - this.gameIdx.width * .5;
+	    };
+	    return Tab2;
+	}(PIXI.Container));
+	var PlayerInfoV2 = (function (_super) {
+	    __extends(PlayerInfoV2, _super);
+	    function PlayerInfoV2() {
+	        _super.apply(this, arguments);
+	        this.texMap = {};
+	    }
+	    PlayerInfoV2.prototype.create = function (parent, data) {
+	        var _this = this;
+	        this.p = parent;
+	        var imgArr = [];
+	        this.curPlayer = new PIXI.Sprite();
+	        this.curPlayer.x = 487;
+	        this.curPlayer.y = 104;
+	        this.addChild(this.curPlayer);
+	        this.levelSP = new PIXI.Sprite();
+	        this.addChild(this.levelSP);
+	        this.levelSP.x = 495;
+	        this.levelSP.y = 156;
+	        HupuAPI_1.getLive(function (conf) {
+	            HupuAPI_1.getPlayerArr(conf.star_players, function (playerArr) {
+	                for (var _i = 0, playerArr_1 = playerArr; _i < playerArr_1.length; _i++) {
+	                    var player = playerArr_1[_i];
+	                    player.hwa = [player.height, player.weight, player.age];
+	                    player.name = player.live_name;
+	                    player.info = player.brief;
+	                }
+	                _this.infoArr = playerArr;
+	                imgArr = [];
+	                var bgUrl = '/img/panel/playerInfo/bg.png';
+	                imgArr.push(bgUrl);
+	                ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
+	                    var bg = PixiEx_1.newBitmap({ url: '/img/panel/com/bg.jpg' });
+	                    bg.addChild(PixiEx_1.newBitmap({ url: bgUrl }));
+	                    _this.addChildAt(bg, 0);
+	                    _this.initDetail();
+	                    _this.show(data);
+	                });
+	            });
+	        });
+	    };
+	    PlayerInfoV2.prototype.show = function (data) {
+	        console.log('show player ', data);
+	        this.setTab(data.idx);
+	        if (data.gameIdxArr) {
+	            var a = data.gameIdxArr.split(' ');
+	            if (a.length > 1) {
+	                this.playerGameIdx.setText("\u5373\u5C06\u5728\u5E2D\u4F4D\u6218" + JsFunc_1.paddy(a[Number(data.idx - 1)], 2) + "\u767B\u573A");
+	            }
+	        }
+	        this.p.addChild(this);
+	    };
+	    PlayerInfoV2.prototype.setTab = function (idx) {
+	        var _this = this;
+	        idx = Number(idx);
+	        var data = this.infoArr[idx - 1];
+	        if (!this.texMap[idx])
+	            this.texMap[idx] = PIXI.Texture.fromImage(data.avatar);
+	        this.curPlayer.texture = this.texMap[idx];
+	        if (data.level && Number(data.level) != 0) {
+	            var url_1 = "/img/panel/top5/" + data.level + ".png";
+	            ImgLoader_1.imgLoader.loadTexRemote(url_1, function (tex) {
+	                console.log('set tex');
+	                _this.levelSP.texture = ImgLoader_1.imgLoader.getTex(url_1);
+	                _this.levelSP.visible = true;
+	            });
+	        }
+	        else {
+	            this.levelSP.visible = false;
+	        }
+	        this.setDetail(data);
+	    };
+	    PlayerInfoV2.prototype.setDetail = function (data) {
+	        console.log('show detail', data);
+	        this.playerName.text = data.name;
+	        this.hwa.text =
+	            data.hwa[0] + ' cm/ '
+	                + data.hwa[1] + ' kg/ '
+	                + data.hwa[2] + ' 岁';
+	        this.info.text = data.info;
+	        this.info.y = (528) - this.info.height * .5;
+	        this.tag2.text = '';
+	        var a = data.tag1.split(' ');
+	        if (data.tag2) {
+	            this.tag1.text = data.tag1 + " , " + data.tag2;
+	        }
+	        else
+	            this.tag1.text = data.tag1;
+	    };
+	    PlayerInfoV2.prototype.initDetail = function () {
+	        var rs = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '45px', fill: "#2b2941",
+	            fontWeight: 'bold'
+	        };
+	        rs.fontSize = '32px';
+	        this.playerName = TextFac_1.TextFac.new_(rs, this)
+	            .setPos(1018 - 45, 118);
+	        this.hwa = TextFac_1.TextFac.new_(rs, this)
+	            .setPos(this.playerName.x, 228);
+	        this.tag1 = TextFac_1.TextFac.new_(rs, this)
+	            .setPos(this.playerName.x, 380 - 36);
+	        this.tag2 = TextFac_1.TextFac.new_(rs, this)
+	            .setPos(this.tag1.x + 230, 380 - 36);
+	        rs.fontSize = '28px';
+	        rs['lineHeight'] = 39;
+	        this.info = TextFac_1.TextFac.new_(rs, this)
+	            .setPos(this.playerName.x, 404);
+	        this.playerGameIdx = TextFac_1.TextFac.new_(rs, this)
+	            .setPos(this.playerName.x, 676);
+	    };
+	    PlayerInfoV2.prototype.hide = function () {
+	        if (this.parent)
+	            this.parent.removeChild(this);
+	    };
+	    PlayerInfoV2.class = 'PlayerInfoV2';
+	    return PlayerInfoV2;
+	}(PIXI.Container));
+	exports.PlayerInfoV2 = PlayerInfoV2;
+
+
+/***/ },
+/* 108 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var ImgLoader_1 = __webpack_require__(73);
+	var PixiEx_1 = __webpack_require__(56);
+	var TextFac_1 = __webpack_require__(77);
+	var const_1 = __webpack_require__(27);
+	var ScaleSprite_1 = __webpack_require__(109);
+	var JsFunc_1 = __webpack_require__(21);
+	var TweenEx_1 = __webpack_require__(57);
+	var NoticeV2 = (function (_super) {
+	    __extends(NoticeV2, _super);
+	    function NoticeV2(p) {
+	        var _this = this;
+	        _super.call(this);
+	        this.isLoaded = false;
+	        this.p = p;
+	        var imgArr = [];
+	        var topUrl = '/img/panel/notice/bg.png';
+	        var bottomUrl = '/img/panel/notice/bgBottom.png';
+	        var midUrl = '/img/panel/notice/mid.png';
+	        var pad = '/img/panel/notice/pad.png';
+	        imgArr.push(topUrl);
+	        imgArr.push(bottomUrl);
+	        imgArr.push(midUrl);
+	        imgArr.push(pad);
+	        ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
+	            _this.topSP = PixiEx_1.newBitmap({ url: topUrl });
+	            _this.addChild(_this.topSP);
+	            _this.bottomSP = PixiEx_1.newBitmap({ url: bottomUrl });
+	            _this.addChild(_this.bottomSP);
+	            _this.midSP = PixiEx_1.newBitmap({ url: midUrl });
+	            _this.addChild(_this.midSP);
+	            var padTex = ImgLoader_1.imgLoader.getTex(pad);
+	            _this.pad = new ScaleSprite_1.ScaleSprite(padTex, { x: 30, y: 15, width: 330, height: 20 });
+	            _this.addChild(_this.pad);
+	            _this.pad.x = 29;
+	            _this.pad.y = 80;
+	            var ns = {
+	                fontFamily: const_1.FontName.MicrosoftYahei,
+	                fontSize: '32px', fill: "#28273f",
+	            };
+	            _this.content = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(87);
+	            ns.fill = '#eee';
+	            _this.title = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(18);
+	            _this.isLoaded = true;
+	            if (_this.tmpData != null)
+	                _this._show(_this.tmpData);
+	        });
+	    }
+	    NoticeV2.prototype._show = function (data) {
+	        var content = data.content;
+	        if (data.isWrap)
+	            content = JsFunc_1.cnWrap(data.content, 22);
+	        this.content.setText(content)
+	            .setAlignCenter(227);
+	        var contentHeight = this.content.height;
+	        if (contentHeight % 2 == 1)
+	            contentHeight += 1;
+	        this.midSP.height = contentHeight;
+	        this.midSP.x = 0;
+	        this.midSP.y = 82;
+	        this.bottomSP.y = contentHeight;
+	        this.pad.resize(this.pad.width, contentHeight + 20);
+	        this.title.setText(data.title || "公告")
+	            .setAlignCenter(227);
+	        console.log('show notice', data);
+	        this.y = 540 - 70 - contentHeight * 0.5;
+	        if (data.isLeft) {
+	            this.x = -300;
+	            TweenEx_1.TweenEx.to(this, 200, {
+	                x: 0
+	            });
+	        }
+	        else {
+	            this.x = 1920;
+	            TweenEx_1.TweenEx.to(this, 200, {
+	                x: 1920 - 440
+	            });
+	        }
+	    };
+	    NoticeV2.prototype.show = function (data) {
+	        if (this.isLoaded)
+	            this._show(data);
+	        else
+	            this.tmpData = data;
+	        if (data.visible) {
+	            this.p.addChild(this);
+	        }
+	        else {
+	            if (data.isLeft) {
+	                TweenEx_1.TweenEx.to(this, 200, {
+	                    x: -300
+	                });
+	            }
+	            else {
+	                TweenEx_1.TweenEx.to(this, 200, {
+	                    x: 1920
+	                });
+	            }
+	        }
+	    };
+	    return NoticeV2;
+	}(PIXI.Container));
+	exports.NoticeV2 = NoticeV2;
+
+
+/***/ },
+/* 109 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var ScaleSprite = (function (_super) {
+	    __extends(ScaleSprite, _super);
+	    function ScaleSprite(tex, scaleRect) {
+	        _super.call(this);
+	        this.scaleRect = scaleRect;
+	        var bt = tex;
+	        this._w = tex.width;
+	        this._h = tex.height;
+	        var _sp = function (x, y, w, h) {
+	            return new PIXI.Sprite(new PIXI.Texture(bt, new PIXI.Rectangle(x, y, w, h)));
+	        };
+	        var lt = _sp(0, 0, scaleRect.x, scaleRect.y);
+	        this.addChild(lt);
+	        this.lt = lt;
+	        this.t = _sp(scaleRect.x, 0, scaleRect.width, scaleRect.y);
+	        this.t.x = scaleRect.x;
+	        this.addChild(this.t);
+	        var rt = _sp(scaleRect.x + scaleRect.width, 0, bt.width - scaleRect.x - scaleRect.width, scaleRect.y);
+	        rt.x = scaleRect.x + scaleRect.width;
+	        this.addChild(rt);
+	        this.rt = rt;
+	        this.r = _sp(scaleRect.x + scaleRect.width, scaleRect.y, bt.width - scaleRect.x - scaleRect.width, scaleRect.height);
+	        this.r.x = scaleRect.x + scaleRect.width;
+	        this.r.y = scaleRect.y;
+	        this.addChild(this.r);
+	        this.rb = _sp(scaleRect.x + scaleRect.width, scaleRect.y + scaleRect.height, bt.width - scaleRect.x - scaleRect.width, bt.height - scaleRect.y - scaleRect.height);
+	        this.rb.x = scaleRect.x + scaleRect.width;
+	        this.rb.y = scaleRect.y + scaleRect.height;
+	        this.addChild(this.rb);
+	        this.b = _sp(scaleRect.x, scaleRect.y + scaleRect.height, scaleRect.width, bt.height - scaleRect.y - scaleRect.height);
+	        this.b.x = scaleRect.x;
+	        this.b.y = scaleRect.y + scaleRect.height;
+	        this.addChild(this.b);
+	        this.lb = _sp(0, scaleRect.y + scaleRect.height, scaleRect.x, bt.height - scaleRect.y - scaleRect.height);
+	        this.lb.y = scaleRect.y + scaleRect.height;
+	        this.addChild(this.lb);
+	        this.l = _sp(0, scaleRect.y, scaleRect.x, scaleRect.height);
+	        this.l.y = scaleRect.y;
+	        this.addChild(this.l);
+	        this.c = _sp(scaleRect.x, scaleRect.y, scaleRect.width, scaleRect.height);
+	        this.c.x = scaleRect.x;
+	        this.c.y = scaleRect.y;
+	        this.addChild(this.c);
+	    }
+	    Object.defineProperty(ScaleSprite.prototype, "width", {
+	        get: function () {
+	            return this._w;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(ScaleSprite.prototype, "height", {
+	        get: function () {
+	            return this._h;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    ScaleSprite.prototype.setHeight = function (height) {
+	        this._h = height;
+	        var sh = height - this.lt.height - this.lb.height;
+	        this.l.height = sh;
+	        this.r.height = sh;
+	        this.lb.y = this.lt.height + sh;
+	        this.b.y = this.lt.height + sh;
+	        this.rb.y = this.lt.height + sh;
+	    };
+	    ScaleSprite.prototype.resize = function (width, height) {
+	        this._w = width;
+	        this._h = height;
+	        var sw = width - this.lt.width - this.rt.width;
+	        this.t.width = sw;
+	        this.b.width = sw;
+	        this.rt.x = this.lt.width + sw;
+	        this.r.x = this.lt.width + sw;
+	        this.rb.x = this.lt.width + sw;
+	        var sh = height - this.lt.height - this.lb.height;
+	        this.l.height = sh;
+	        this.r.height = sh;
+	        this.lb.y = this.lt.height + sh;
+	        this.b.y = this.lt.height + sh;
+	        this.rb.y = this.lt.height + sh;
+	        this.c.width = sw;
+	        this.c.height = sh;
+	    };
+	    return ScaleSprite;
+	}(PIXI.Container));
+	exports.ScaleSprite = ScaleSprite;
+
+
+/***/ },
+/* 110 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var ScoreRank_1 = __webpack_require__(94);
 	var Command_1 = __webpack_require__(28);
 	var TweenEx_1 = __webpack_require__(57);
-	var WorldWar_1 = __webpack_require__(110);
-	var Pick8_1 = __webpack_require__(106);
+	var WorldWar_1 = __webpack_require__(111);
+	var Pick8_1 = __webpack_require__(105);
 	var const_1 = __webpack_require__(27);
 	var PixiEx_1 = __webpack_require__(56);
-	var WWTitle_1 = __webpack_require__(127);
+	var WWTitle_1 = __webpack_require__(114);
 	var WorldWarView = (function (_super) {
 	    __extends(WorldWarView, _super);
 	    function WorldWarView(stage, io) {
@@ -9876,7 +10654,7 @@
 
 
 /***/ },
-/* 110 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9889,8 +10667,8 @@
 	var TextFac_1 = __webpack_require__(77);
 	var const_1 = __webpack_require__(27);
 	var TextTimer_1 = __webpack_require__(59);
-	var BloodBar_1 = __webpack_require__(111);
-	var MaskAvatar_1 = __webpack_require__(112);
+	var BloodBar_1 = __webpack_require__(112);
+	var MaskAvatar_1 = __webpack_require__(113);
 	var isTest = false;
 	var WorldWar = (function (_super) {
 	    __extends(WorldWar, _super);
@@ -10142,7 +10920,7 @@
 
 
 /***/ },
-/* 111 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -10222,7 +11000,7 @@
 
 
 /***/ },
-/* 112 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -10275,62 +11053,7 @@
 
 
 /***/ },
-/* 113 */,
 /* 114 */
-/***/ function(module, exports) {
-
-	"use strict";
-	exports.firstBy = (function () {
-	    function identity(v) { return v; }
-	    function ignoreCase(v) { return typeof (v) === "string" ? v.toLowerCase() : v; }
-	    function makeCompareFunction(f, opt) {
-	        opt = typeof (opt) === "number" ? { direction: opt } : opt || {};
-	        if (typeof (f) != "function") {
-	            var prop = f;
-	            f = function (v1) { return !!v1[prop] ? v1[prop] : ""; };
-	        }
-	        if (f.length === 1) {
-	            var uf = f;
-	            var preprocess = opt.ignoreCase ? ignoreCase : identity;
-	            f = function (v1, v2) { return preprocess(uf(v1)) < preprocess(uf(v2)) ? -1 : preprocess(uf(v1)) > preprocess(uf(v2)) ? 1 : 0; };
-	        }
-	        if (opt.direction === -1)
-	            return function (v1, v2) { return -f(v1, v2); };
-	        return f;
-	    }
-	    function tb(func, opt) {
-	        var x = typeof (this) == "function" ? this : false;
-	        var y = makeCompareFunction(func, opt);
-	        var f = x ? function (a, b) {
-	            return x(a, b) || y(a, b);
-	        }
-	            : y;
-	        f.thenBy = tb;
-	        return f;
-	    }
-	    return tb;
-	})();
-
-
-/***/ },
-/* 115 */
-/***/ function(module, exports) {
-
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px;height:700px;overflow: scroll;\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告 MISC</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒 timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 30px;font-family: 'NotoSansHans-Regular'\">\r\n               {{lLiveName}}  vs {{rLiveName}} \r\n                <br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(false)\">隐藏所有</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(true)\">显示所有</button>\r\n            <br>时间控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">设定时间(秒)</button>\r\n\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            </p>\r\n            比分控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onUpdateScore(true ,panelTime2Set)\">蓝方比分</button>\r\n            <button class=\"button\" @click=\"onUpdateScore(false,panelTime2Set)\">红方比分</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(true)\">切换攻守</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(false)\">隐藏</button>\r\n            <br>\r\n\r\n            <button class=\"button\" @click=\"onUpdateFoul(true ,panelTime2Set)\">蓝方犯规</button>\r\n            <button class=\"button\" @click=\"onUpdateFoul(false,panelTime2Set)\">红方犯规</button>\r\n\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <label class=\"checkbox\">\r\n                    <input type=\"checkbox\" v-model='isShowGroupLeft'>\r\n                    靠左边\r\n                  </label>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">修改并显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,'')\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <!-- <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button> -->\r\n\r\n            <label class=\"label\">  赛区实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,1)\">东南 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,2)\">东北 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,3)\">西方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,4)\">南方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,0)\">首页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,2,0)\">上一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,3,0)\">下一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <label class=\"label\">  八强面板:</label><br>\r\n            <button class=\"button\" @click=\"onBracketShow(1)\">第一页 八进四</button>\r\n            <button class=\"button\" @click=\"onBracketShow(2)\">第二页</button>\r\n\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <div v-if=1 class='column is-one-quarter' style=\"position: fixed;top: 260px;right: 10px;\">\r\n                <input class=\"input\" type=\"text\" style=\"width: 30px;\" v-model=\"gameTitleType\">1 '8进4' 2 '4进2' 3 '2进1'\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"蓝方名字-红方名字\" style=\"width: 300px;\" v-model=\"vsPlayer\">\r\n                <button class=\"button\" @click=\"onSetPlayer(vsPlayer,gameTitleType)\">设置球员</button>\r\n                <br> <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button>蓝方: <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button> 比分\r\n                <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>:红方<button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n                <br><br> <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button>-----\r\n                <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button> 犯规\r\n                <button class=\"button\" @click=\"onAddFoul(false,+1)\">+1</button>-----<button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"'>\r\n        <div v-if='isRmOp||isOp' style=\"position: absolute;left: 100px;top:260px;width: 800px\">\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='1' v-model='isWrap' checked >\r\n                        自动换行\r\n                    </label>\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='0' v-model='isWrap'>\r\n                        手动换行\r\n                    </label>\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onNoticePresets('network')\">网络故障 模版</button>\r\n            <br>\r\n            <div v-for=\"(n,idx) in noticeHistory\">\r\n                <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n            </div>\r\n\r\n            滚动文字：\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"inputRollText\">\r\n            <br>\r\n\r\n            <!-- <el-input v-model=\"inputRollText\" style=\"width:250px\"></el-input> -->\r\n            <button class=\"button\" @click='showRollText(inputRollText,true)'>发送</button>\r\n            <button class=\"button\" @click='showRollText(inputRollText,false)'>隐藏</button>\r\n            <br> 主播面板:\r\n            <br>\r\n            <button class=\"button\" @click='showCommentator(true,1)'>显示主播</button>\r\n            <button class=\"button\" @click='showCommentator(true,2)'>显示主播 合并</button>\r\n            <button class=\"button\" @click='showCommentator(false)'>隐藏</button>\r\n            <br>图片:\r\n            <br>\r\n            <button class=\"button\" @click='showStaticImage(true,1)'>微信小程序</button>\r\n            <button class=\"button\" @click='showStaticImage(false,1)'>隐藏</button>\r\n\r\n            <label class=\"label\">  脉动广告:</label><br>\r\n            <button class=\"button\" @click=\"onShowFx(true,1)\">转瓶</button>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n        </div>\r\n    </div>\r\n\r\n</div>";
-
-/***/ },
-/* 116 */,
-/* 117 */,
-/* 118 */,
-/* 119 */,
-/* 120 */,
-/* 121 */,
-/* 122 */,
-/* 123 */,
-/* 124 */,
-/* 125 */,
-/* 126 */,
-/* 127 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -10378,7 +11101,7 @@
 
 
 /***/ },
-/* 128 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -10591,7 +11314,8 @@
 	        this.rTitle.setText(rPlayer.title)
 	            .setAlignCenter(PixiEx_1._c(208));
 	        this.rName.setText(rPlayer.name)
-	            .setLimitWidth(298, 40);
+	            .setLimitWidth(260, 40)
+	            .setAlignCenter(PixiEx_1._c(315));
 	        this._setHWA(rPlayer);
 	        var age = '';
 	        if (rPlayer.age)
@@ -10605,8 +11329,8 @@
 	        this.lTitle.setText(lPlayer.title)
 	            .setAlignCenter(PixiEx_1._c(-208));
 	        this.lName.setText(lPlayer.name)
-	            .setLimitWidth(298, 40)
-	            .setAlignRight(702);
+	            .setLimitWidth(260, 40)
+	            .setAlignCenter(PixiEx_1._c(-315));
 	        this._setHWA(lPlayer);
 	        var age = '';
 	        if (lPlayer.age)
@@ -10713,7 +11437,7 @@
 
 
 /***/ },
-/* 129 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -10726,9 +11450,9 @@
 	var HupuAPI_1 = __webpack_require__(24);
 	var PixiEx_1 = __webpack_require__(56);
 	var TextFac_1 = __webpack_require__(77);
-	var thenBy_1 = __webpack_require__(114);
+	var thenBy_1 = __webpack_require__(117);
 	var BracketGroup_1 = __webpack_require__(78);
-	var AvtV2_1 = __webpack_require__(130);
+	var AvtV2_1 = __webpack_require__(118);
 	var Row1 = (function (_super) {
 	    __extends(Row1, _super);
 	    function Row1(avtCtn) {
@@ -11020,7 +11744,44 @@
 
 
 /***/ },
-/* 130 */
+/* 117 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.firstBy = (function () {
+	    function identity(v) { return v; }
+	    function ignoreCase(v) { return typeof (v) === "string" ? v.toLowerCase() : v; }
+	    function makeCompareFunction(f, opt) {
+	        opt = typeof (opt) === "number" ? { direction: opt } : opt || {};
+	        if (typeof (f) != "function") {
+	            var prop = f;
+	            f = function (v1) { return !!v1[prop] ? v1[prop] : ""; };
+	        }
+	        if (f.length === 1) {
+	            var uf = f;
+	            var preprocess = opt.ignoreCase ? ignoreCase : identity;
+	            f = function (v1, v2) { return preprocess(uf(v1)) < preprocess(uf(v2)) ? -1 : preprocess(uf(v1)) > preprocess(uf(v2)) ? 1 : 0; };
+	        }
+	        if (opt.direction === -1)
+	            return function (v1, v2) { return -f(v1, v2); };
+	        return f;
+	    }
+	    function tb(func, opt) {
+	        var x = typeof (this) == "function" ? this : false;
+	        var y = makeCompareFunction(func, opt);
+	        var f = x ? function (a, b) {
+	            return x(a, b) || y(a, b);
+	        }
+	            : y;
+	        f.thenBy = tb;
+	        return f;
+	    }
+	    return tb;
+	})();
+
+
+/***/ },
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -11060,786 +11821,10 @@
 
 
 /***/ },
-/* 131 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var PixiEx_1 = __webpack_require__(56);
-	var ImgLoader_1 = __webpack_require__(73);
-	var const_1 = __webpack_require__(27);
-	var JsFunc_1 = __webpack_require__(21);
-	var HupuAPI_1 = __webpack_require__(24);
-	var BracketGroup_1 = __webpack_require__(78);
-	var TextFac_1 = __webpack_require__(77);
-	var Tab2 = (function (_super) {
-	    __extends(Tab2, _super);
-	    function Tab2() {
-	        _super.call(this);
-	        var rs = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '48px', fill: "#4d5167",
-	            fontWeight: 'bold'
-	        };
-	        var pn = new PIXI.Text('', rs);
-	        this.playerName = pn;
-	        this.addChild(pn);
-	        pn.x = 168;
-	        pn.y = 20;
-	        var gameTitle = new PIXI.Text('小组赛', {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '30px', fill: "#fff",
-	            fontWeight: 'bold'
-	        });
-	        this.addChild(gameTitle);
-	        gameTitle.x = 16;
-	        gameTitle.y = 10;
-	        var gameIdx = new PIXI.Text('', {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '48px', fill: "#fff",
-	            fontWeight: 'bold'
-	        });
-	        gameIdx.y = 50;
-	        this.gameIdx = gameIdx;
-	        this.addChild(gameIdx);
-	        PixiEx_1.setScale(this, 0.9);
-	    }
-	    Tab2.prototype.setInfo = function (data) {
-	        this.playerName.text = data.name;
-	        BracketGroup_1.fitWidth(this.playerName, 275, 48);
-	        this.setGameIdx(0);
-	    };
-	    Tab2.prototype.setGameIdx = function (idx) {
-	        this.gameIdx.text = JsFunc_1.paddy(idx, 2);
-	        this.gameIdx.x = 60 - this.gameIdx.width * .5;
-	    };
-	    return Tab2;
-	}(PIXI.Container));
-	var PlayerInfoV2 = (function (_super) {
-	    __extends(PlayerInfoV2, _super);
-	    function PlayerInfoV2() {
-	        _super.apply(this, arguments);
-	        this.texMap = {};
-	    }
-	    PlayerInfoV2.prototype.create = function (parent, data) {
-	        var _this = this;
-	        this.p = parent;
-	        var imgArr = [];
-	        this.curPlayer = new PIXI.Sprite();
-	        this.curPlayer.x = 487;
-	        this.curPlayer.y = 104;
-	        this.addChild(this.curPlayer);
-	        this.levelSP = new PIXI.Sprite();
-	        this.addChild(this.levelSP);
-	        this.levelSP.x = 495;
-	        this.levelSP.y = 156;
-	        HupuAPI_1.getLive(function (conf) {
-	            HupuAPI_1.getPlayerArr(conf.star_players, function (playerArr) {
-	                for (var _i = 0, playerArr_1 = playerArr; _i < playerArr_1.length; _i++) {
-	                    var player = playerArr_1[_i];
-	                    player.hwa = [player.height, player.weight, player.age];
-	                    player.name = player.live_name;
-	                    player.info = player.brief;
-	                }
-	                _this.infoArr = playerArr;
-	                imgArr = [];
-	                var bgUrl = '/img/panel/playerInfo/bg.png';
-	                imgArr.push(bgUrl);
-	                ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
-	                    var bg = PixiEx_1.newBitmap({ url: '/img/panel/com/bg.jpg' });
-	                    bg.addChild(PixiEx_1.newBitmap({ url: bgUrl }));
-	                    _this.addChildAt(bg, 0);
-	                    _this.initDetail();
-	                    _this.show(data);
-	                });
-	            });
-	        });
-	    };
-	    PlayerInfoV2.prototype.show = function (data) {
-	        console.log('show player ', data);
-	        this.setTab(data.idx);
-	        if (data.gameIdxArr) {
-	            var a = data.gameIdxArr.split(' ');
-	            if (a.length > 1) {
-	                this.playerGameIdx.setText("\u5373\u5C06\u5728\u5E2D\u4F4D\u6218" + JsFunc_1.paddy(a[Number(data.idx - 1)], 2) + "\u767B\u573A");
-	            }
-	        }
-	        this.p.addChild(this);
-	    };
-	    PlayerInfoV2.prototype.setTab = function (idx) {
-	        var _this = this;
-	        idx = Number(idx);
-	        var data = this.infoArr[idx - 1];
-	        if (!this.texMap[idx])
-	            this.texMap[idx] = PIXI.Texture.fromImage(data.avatar);
-	        this.curPlayer.texture = this.texMap[idx];
-	        if (data.level && Number(data.level) != 0) {
-	            var url_1 = "/img/panel/top5/" + data.level + ".png";
-	            ImgLoader_1.imgLoader.loadTexRemote(url_1, function (tex) {
-	                console.log('set tex');
-	                _this.levelSP.texture = ImgLoader_1.imgLoader.getTex(url_1);
-	                _this.levelSP.visible = true;
-	            });
-	        }
-	        else {
-	            this.levelSP.visible = false;
-	        }
-	        this.setDetail(data);
-	    };
-	    PlayerInfoV2.prototype.setDetail = function (data) {
-	        console.log('show detail', data);
-	        this.playerName.text = data.name;
-	        this.hwa.text =
-	            data.hwa[0] + ' cm/ '
-	                + data.hwa[1] + ' kg/ '
-	                + data.hwa[2] + ' 岁';
-	        this.info.text = data.info;
-	        this.info.y = (528) - this.info.height * .5;
-	        this.tag2.text = '';
-	        var a = data.tag1.split(' ');
-	        if (data.tag2) {
-	            this.tag1.text = data.tag1 + " , " + data.tag2;
-	        }
-	        else
-	            this.tag1.text = data.tag1;
-	    };
-	    PlayerInfoV2.prototype.initDetail = function () {
-	        var rs = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '45px', fill: "#2b2941",
-	            fontWeight: 'bold'
-	        };
-	        rs.fontSize = '32px';
-	        this.playerName = TextFac_1.TextFac.new_(rs, this)
-	            .setPos(1018 - 45, 118);
-	        this.hwa = TextFac_1.TextFac.new_(rs, this)
-	            .setPos(this.playerName.x, 228);
-	        this.tag1 = TextFac_1.TextFac.new_(rs, this)
-	            .setPos(this.playerName.x, 380 - 36);
-	        this.tag2 = TextFac_1.TextFac.new_(rs, this)
-	            .setPos(this.tag1.x + 230, 380 - 36);
-	        rs.fontSize = '28px';
-	        rs['lineHeight'] = 39;
-	        this.info = TextFac_1.TextFac.new_(rs, this)
-	            .setPos(this.playerName.x, 404);
-	        this.playerGameIdx = TextFac_1.TextFac.new_(rs, this)
-	            .setPos(this.playerName.x, 676);
-	    };
-	    PlayerInfoV2.prototype.hide = function () {
-	        if (this.parent)
-	            this.parent.removeChild(this);
-	    };
-	    PlayerInfoV2.class = 'PlayerInfoV2';
-	    return PlayerInfoV2;
-	}(PIXI.Container));
-	exports.PlayerInfoV2 = PlayerInfoV2;
-
-
-/***/ },
-/* 132 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var PixiEx_1 = __webpack_require__(56);
-	var BracketPlayerV3_1 = __webpack_require__(86);
-	var BracketGroup_1 = __webpack_require__(78);
-	var testBracket_1 = __webpack_require__(133);
-	var isTest = false;
-	var isTestS2 = false;
-	var Section2 = (function (_super) {
-	    __extends(Section2, _super);
-	    function Section2() {
-	        _super.call(this);
-	        this.groupPlayerMap = {};
-	        this.lineMap = {};
-	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/bracket/v2/bg2.png' }));
-	        var y1 = 180;
-	        var y2 = 440;
-	        var lNameX = 90;
-	        var lScoreX = 238;
-	        var rNameX = 135;
-	        var rScoreX = -18;
-	        var playerPos = {
-	            '5': { p: [221, 394], y: y1, align: [lNameX, lScoreX], isLeft: true },
-	            '6': { p: [1483, 394], y: y1, align: [rNameX, rScoreX], isLeft: true },
-	            '7': { p: [546, 774], y: y2, align: [lNameX, lScoreX], isLeft: true },
-	            '8': { p: [628, 483], y: y2, align: [lNameX, lScoreX], align2: [rNameX, rScoreX], isLeft: false, isHorizontal: true }
-	        };
-	        var gm = this.groupPlayerMap;
-	        for (var i = 0; i < 4; i++) {
-	            var g = gm[i + 5] = { playerArr: [] };
-	            var p = playerPos[i + 5];
-	            var p1 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
-	            var p2 = void 0;
-	            if (p.isHorizontal) {
-	                p2 = new BracketPlayerV3_1.BracketPlayerV3(!p.isLeft, p.align2);
-	                p1.x = p.p[0];
-	                p1.y = p.p[1];
-	                p2.x = p.p[0] + p.y;
-	                p2.y = p.p[1];
-	            }
-	            else {
-	                p2 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
-	                p1.x = p.p[0];
-	                p1.y = p.p[1];
-	                p2.x = p.p[0];
-	                p2.y = p.p[1] + p.y;
-	            }
-	            g.playerArr.push(p1);
-	            g.playerArr.push(p2);
-	            g['group'] = [p1, p2];
-	            if (i != 2) {
-	                this.addChild(p1);
-	                this.addChild(p2);
-	            }
-	            if (isTest)
-	                this.test(p1, p2);
-	        }
-	        var pWin7 = new BracketPlayerV3_1.BracketPlayerV3(true, [lNameX, lScoreX]);
-	        pWin7.x = 935;
-	        pWin7.y = 878;
-	        pWin7.hideScore();
-	        this.pWin7 = pWin7;
-	        var pWin8 = new BracketPlayerV3_1.BracketPlayerV3(true, [lNameX, lScoreX]);
-	        pWin8.x = 868;
-	        pWin8.y = 238;
-	        this.addChild(pWin8);
-	        pWin8.setFont({ fontSize: '50px' });
-	        pWin8.hideScore();
-	        this.pWin8 = pWin8;
-	        var lm = [
-	            ['5_0', 's2b5_0'],
-	            ['5_1', 's2b5_1'],
-	            ['6_0', 's2b6_0'],
-	            ['6_1', 's2b6_1'],
-	            ['8_0', 's2b8_0'],
-	            ['8_1', 's2b8_1'],
-	        ];
-	        for (var _i = 0, lm_1 = lm; _i < lm_1.length; _i++) {
-	            var a = lm_1[_i];
-	            var sp = this.lineMap[a[0]] = PixiEx_1.newBitmap({ url: '/img/panel/bracket/v2/' + a[1] + '.png' });
-	            this.addChild(sp);
-	            sp.visible = false;
-	        }
-	        if (isTest) {
-	            this.test(pWin7, pWin8);
-	            testBracket_1.testData2(this);
-	        }
-	    }
-	    Section2.prototype.setData = function (data) {
-	        console.log('section2 set data', data, this.groupPlayerMap);
-	        for (var gameIdx in this.groupPlayerMap) {
-	            var dataObj = data[gameIdx];
-	            if (dataObj) {
-	                var group = this.groupPlayerMap[gameIdx].group;
-	                var p1 = group[0];
-	                var p2 = group[1];
-	                var lScore = Number(dataObj.left.score);
-	                var rScore = Number(dataObj.right.score);
-	                if (lScore || rScore) {
-	                    p1.setScore(lScore);
-	                    p2.setScore(rScore);
-	                    if (Number(gameIdx) > 4 && Number(gameIdx) != 7) {
-	                        if (lScore > rScore) {
-	                            this.lineMap[gameIdx + '_0'].visible = true;
-	                            this.lineMap[gameIdx + '_1'].visible = false;
-	                        }
-	                        else {
-	                            this.lineMap[gameIdx + '_0'].visible = false;
-	                            this.lineMap[gameIdx + '_1'].visible = true;
-	                        }
-	                    }
-	                }
-	                var group2 = BracketGroup_1.groupPosMap[gameIdx];
-	                var hints = group2.hints;
-	                if (dataObj.left.name)
-	                    p1.setLeftName(dataObj.left.name);
-	                if (dataObj.right.name)
-	                    p2.setLeftName(dataObj.right.name);
-	            }
-	        }
-	        var fillWinner = function (player, gameIdx) {
-	            var dataObj7 = data[gameIdx];
-	            if (dataObj7) {
-	                if (Number(dataObj7.left.score) > Number(dataObj7.right.score)) {
-	                    player.setLeftName(dataObj7.left.name);
-	                }
-	                if (Number(dataObj7.left.score) < Number(dataObj7.right.score)) {
-	                    player.setLeftName(dataObj7.right.name);
-	                }
-	            }
-	        };
-	        fillWinner(this.pWin7, 7);
-	        fillWinner(this.pWin8, 8);
-	    };
-	    Section2.prototype.test = function (p1, p2) {
-	        p1.setInfo({ name: '好天氣', score: '12' });
-	        p2.setInfo({ name: '好天氣其', score: '0' });
-	    };
-	    return Section2;
-	}(PIXI.Container));
-	var Section1 = (function (_super) {
-	    __extends(Section1, _super);
-	    function Section1() {
-	        _super.call(this);
-	        this.groupPlayerMap = {};
-	        this.lineMap = {};
-	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/bracket/v2/bg1.png' }));
-	        var y1 = 180;
-	        var y2 = 440;
-	        var lNameX = 90;
-	        var lScoreX = 238;
-	        var rNameX = 135;
-	        var rScoreX = -18;
-	        var playerPos = {
-	            '1': { p: [221, 238], y: y1, align: [lNameX, lScoreX], isLeft: true, isHorizontal: false },
-	            '2': { p: [1483, 238], y: y1, align: [rNameX, rScoreX], isLeft: false, isHorizontal: false },
-	            '3': { p: [221, 578], y: y1, align: [lNameX, lScoreX], isLeft: true, isHorizontal: false },
-	            '4': { p: [1483, 578], y: y1, align: [rNameX, rScoreX], isLeft: false, isHorizontal: false },
-	            '5': { p: [628, 328], y: y2, align: [lNameX, lScoreX], align2: [rNameX, rScoreX], isLeft: true, isHorizontal: true },
-	            '6': { p: [628, 672], y: y2, align: [lNameX, lScoreX], align2: [rNameX, rScoreX], isLeft: true, isHorizontal: true }
-	        };
-	        var gm = this.groupPlayerMap;
-	        for (var i = 0; i < 6; i++) {
-	            var g = gm[i + 1] = { playerArr: [] };
-	            var p = playerPos[i + 1];
-	            var p1 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
-	            var p2 = void 0;
-	            if (p.isHorizontal) {
-	                p2 = new BracketPlayerV3_1.BracketPlayerV3(!p.isLeft, p.align2);
-	                p1.x = p.p[0];
-	                p1.y = p.p[1];
-	                p2.x = p.p[0] + p.y;
-	                p2.y = p.p[1];
-	            }
-	            else {
-	                p2 = new BracketPlayerV3_1.BracketPlayerV3(p.isLeft, p.align);
-	                p1.x = p.p[0];
-	                p1.y = p.p[1];
-	                p2.x = p.p[0];
-	                p2.y = p.p[1] + p.y;
-	            }
-	            g.playerArr.push(p1);
-	            g.playerArr.push(p2);
-	            g['group'] = [p1, p2];
-	            this.addChild(p1);
-	            this.addChild(p2);
-	            if (isTest)
-	                this.test(p1, p2);
-	        }
-	        var lm = [
-	            ['1_0', 's1b1_0'],
-	            ['1_1', 's1b1_1'],
-	            ['2_0', 's1b2_0'],
-	            ['2_1', 's1b2_1'],
-	            ['3_0', 's1b3_0'],
-	            ['3_1', 's1b3_1'],
-	            ['4_0', 's1b4_0'],
-	            ['4_1', 's1b4_1'],
-	        ];
-	        for (var _i = 0, lm_2 = lm; _i < lm_2.length; _i++) {
-	            var a = lm_2[_i];
-	            var sp = this.lineMap[a[0]] = PixiEx_1.newBitmap({ url: '/img/panel/bracket/v2/' + a[1] + '.png' });
-	            this.addChild(sp);
-	            sp.visible = false;
-	        }
-	        if (isTest)
-	            testBracket_1.testData1(this);
-	    }
-	    Section1.prototype.setData = function (data) {
-	        console.log('section1 set data', data, this.groupPlayerMap);
-	        for (var gameIdx in this.groupPlayerMap) {
-	            var dataObj = data[gameIdx];
-	            if (dataObj) {
-	                var group = this.groupPlayerMap[gameIdx].group;
-	                var p1 = group[0];
-	                var p2 = group[1];
-	                var lScore = Number(dataObj.left.score);
-	                var rScore = Number(dataObj.right.score);
-	                if (lScore || rScore) {
-	                    p1.setScore(lScore);
-	                    p2.setScore(rScore);
-	                    if (Number(gameIdx) < 5) {
-	                        if (lScore > rScore) {
-	                            this.lineMap[gameIdx + '_0'].visible = true;
-	                            this.lineMap[gameIdx + '_1'].visible = false;
-	                        }
-	                        else {
-	                            this.lineMap[gameIdx + '_0'].visible = false;
-	                            this.lineMap[gameIdx + '_1'].visible = true;
-	                        }
-	                    }
-	                }
-	                var group2 = BracketGroup_1.groupPosMap[gameIdx];
-	                var hints = group2.hints;
-	                if (dataObj.left.name)
-	                    p1.setLeftName(dataObj.left.name);
-	                if (dataObj.right.name)
-	                    p2.setLeftName(dataObj.right.name);
-	            }
-	        }
-	    };
-	    Section1.prototype.test = function (p1, p2) {
-	        p1.setInfo({ name: '好天氣', score: '12' });
-	        p2.setInfo({ name: '好天氣其', score: '0' });
-	    };
-	    return Section1;
-	}(PIXI.Container));
-	var BracketV2 = (function (_super) {
-	    __extends(BracketV2, _super);
-	    function BracketV2(parent) {
-	        var _this = this;
-	        _super.call(this);
-	        this.isLoaded = false;
-	        this._res = null;
-	        parent.addChild(this);
-	        this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/com/bg.jpg' }));
-	        var hintCtn = new PIXI.Container();
-	        this.addChild(hintCtn);
-	        var section2 = new Section2();
-	        this.addChild(section2);
-	        this.section2 = section2;
-	        section2.visible = false;
-	        var section1 = new Section1();
-	        this.addChild(section1);
-	        this.section1 = section1;
-	        if (isTestS2) {
-	            section1.visible = false;
-	            section2.visible = true;
-	        }
-	        window.onkeyup = function (e) {
-	            console.log('key up', e.key, e.keyCode);
-	            if (e.key == 'ArrowLeft' || e.keyCode == 37) {
-	                _this.showPage({ page: 1 });
-	            }
-	            else if (e.key == 'ArrowRight' || e.keyCode == 39) {
-	                _this.showPage({ page: 2 });
-	            }
-	        };
-	    }
-	    BracketV2.prototype.setWinHint = function (sp, isFlip) {
-	        if (isFlip === void 0) { isFlip = false; }
-	        sp.texture = this.hint2Tex;
-	    };
-	    BracketV2.prototype.hideComing = function () {
-	    };
-	    BracketV2.prototype.showComingIdx = function (idx) {
-	        var g = BracketGroup_1.groupPosMap[idx];
-	    };
-	    BracketV2.prototype.showPage = function (data) {
-	        if (data.page == 1) {
-	            this.section1.visible = true;
-	            this.section2.visible = false;
-	        }
-	        else if (data.page == 2) {
-	            this.section1.visible = false;
-	            this.section2.visible = true;
-	        }
-	    };
-	    BracketV2.prototype.onBracketData = function (res) {
-	        this.section1.setData(res.data);
-	        this.section2.setData(res.data);
-	    };
-	    return BracketV2;
-	}(PIXI.Container));
-	exports.BracketV2 = BracketV2;
-
-
-/***/ },
-/* 133 */
+/* 119 */
 /***/ function(module, exports) {
 
-	"use strict";
-	function testData2(section2) {
-	    var data = {
-	        '1': {
-	            left: { score: 1, name: "1好天气" },
-	            right: { score: 3, name: "好天气" }
-	        },
-	        '2': {
-	            left: { score: 11, name: "street park2" },
-	            right: { score: 3, name: "drewnne" }
-	        },
-	        '3': {
-	            left: { score: 1, name: "黃宇軍" },
-	            right: { score: 3, name: "好天气" }
-	        },
-	        '4': {
-	            left: { score: 11, name: "street park4" },
-	            right: { score: 3, name: "drewnne" }
-	        },
-	        '5': {
-	            left: { score: 1, name: "5好天气" },
-	            right: { score: 3, name: "好天气" }
-	        },
-	        '6': {
-	            left: { score: 11, name: "s6treet park" },
-	            right: { score: 3, name: "drewnne" },
-	        },
-	        '8': {
-	            left: { score: 11, name: "s6treet park" },
-	            right: { score: 3, name: "drewnne" }
-	        },
-	    };
-	    section2.setData(data);
-	}
-	exports.testData2 = testData2;
-	function testData1(section1) {
-	    var data = {
-	        '1': {
-	            left: { score: 1, name: "1好天气" },
-	            right: { score: 3, name: "好天气" }
-	        },
-	        '2': {
-	            left: { score: 11, name: "street park2" },
-	            right: { score: 3, name: "drewnne" }
-	        },
-	        '3': {
-	            left: { score: 1, name: "黃宇軍" },
-	            right: { score: 3, name: "好天气" }
-	        },
-	        '4': {
-	            left: { score: 11, name: "street park4" },
-	            right: { score: 3, name: "drewnne" }
-	        },
-	        '5': {
-	            left: { score: 1, name: "5好天气" },
-	            right: { score: 3, name: "好天气" }
-	        },
-	        '6': {
-	            left: { score: 11, name: "s6treet park" },
-	            right: { score: 3, name: "drewnne" }
-	        },
-	    };
-	    section1.setData(data);
-	}
-	exports.testData1 = testData1;
-
-
-/***/ },
-/* 134 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var ImgLoader_1 = __webpack_require__(73);
-	var PixiEx_1 = __webpack_require__(56);
-	var TextFac_1 = __webpack_require__(77);
-	var const_1 = __webpack_require__(27);
-	var ScaleSprite_1 = __webpack_require__(135);
-	var JsFunc_1 = __webpack_require__(21);
-	var TweenEx_1 = __webpack_require__(57);
-	var NoticeV2 = (function (_super) {
-	    __extends(NoticeV2, _super);
-	    function NoticeV2(p) {
-	        var _this = this;
-	        _super.call(this);
-	        this.isLoaded = false;
-	        this.p = p;
-	        var imgArr = [];
-	        var topUrl = '/img/panel/notice/bg.png';
-	        var bottomUrl = '/img/panel/notice/bgBottom.png';
-	        var midUrl = '/img/panel/notice/mid.png';
-	        var pad = '/img/panel/notice/pad.png';
-	        imgArr.push(topUrl);
-	        imgArr.push(bottomUrl);
-	        imgArr.push(midUrl);
-	        imgArr.push(pad);
-	        ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
-	            _this.topSP = PixiEx_1.newBitmap({ url: topUrl });
-	            _this.addChild(_this.topSP);
-	            _this.bottomSP = PixiEx_1.newBitmap({ url: bottomUrl });
-	            _this.addChild(_this.bottomSP);
-	            _this.midSP = PixiEx_1.newBitmap({ url: midUrl });
-	            _this.addChild(_this.midSP);
-	            var padTex = ImgLoader_1.imgLoader.getTex(pad);
-	            _this.pad = new ScaleSprite_1.ScaleSprite(padTex, { x: 30, y: 15, width: 330, height: 20 });
-	            _this.addChild(_this.pad);
-	            _this.pad.x = 29;
-	            _this.pad.y = 80;
-	            var ns = {
-	                fontFamily: const_1.FontName.MicrosoftYahei,
-	                fontSize: '32px', fill: "#28273f",
-	            };
-	            _this.content = TextFac_1.TextFac.new_(ns, _this)
-	                .setY(87);
-	            ns.fill = '#eee';
-	            _this.title = TextFac_1.TextFac.new_(ns, _this)
-	                .setY(18);
-	            _this.isLoaded = true;
-	            if (_this.tmpData != null)
-	                _this._show(_this.tmpData);
-	        });
-	    }
-	    NoticeV2.prototype._show = function (data) {
-	        var content = data.content;
-	        if (data.isWrap)
-	            content = JsFunc_1.cnWrap(data.content, 22);
-	        this.content.setText(content)
-	            .setAlignCenter(227);
-	        var contentHeight = this.content.height;
-	        if (contentHeight % 2 == 1)
-	            contentHeight += 1;
-	        this.midSP.height = contentHeight;
-	        this.midSP.x = 0;
-	        this.midSP.y = 82;
-	        this.bottomSP.y = contentHeight;
-	        this.pad.resize(this.pad.width, contentHeight + 20);
-	        this.title.setText(data.title || "公告")
-	            .setAlignCenter(227);
-	        console.log('show notice', data);
-	        this.y = 540 - 70 - contentHeight * 0.5;
-	        if (data.isLeft) {
-	            this.x = -300;
-	            TweenEx_1.TweenEx.to(this, 200, {
-	                x: 0
-	            });
-	        }
-	        else {
-	            this.x = 1920;
-	            TweenEx_1.TweenEx.to(this, 200, {
-	                x: 1920 - 440
-	            });
-	        }
-	    };
-	    NoticeV2.prototype.show = function (data) {
-	        if (this.isLoaded)
-	            this._show(data);
-	        else
-	            this.tmpData = data;
-	        if (data.visible) {
-	            this.p.addChild(this);
-	        }
-	        else {
-	            if (data.isLeft) {
-	                TweenEx_1.TweenEx.to(this, 200, {
-	                    x: -300
-	                });
-	            }
-	            else {
-	                TweenEx_1.TweenEx.to(this, 200, {
-	                    x: 1920
-	                });
-	            }
-	        }
-	    };
-	    return NoticeV2;
-	}(PIXI.Container));
-	exports.NoticeV2 = NoticeV2;
-
-
-/***/ },
-/* 135 */
-/***/ function(module, exports) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var ScaleSprite = (function (_super) {
-	    __extends(ScaleSprite, _super);
-	    function ScaleSprite(tex, scaleRect) {
-	        _super.call(this);
-	        this.scaleRect = scaleRect;
-	        var bt = tex;
-	        this._w = tex.width;
-	        this._h = tex.height;
-	        var _sp = function (x, y, w, h) {
-	            return new PIXI.Sprite(new PIXI.Texture(bt, new PIXI.Rectangle(x, y, w, h)));
-	        };
-	        var lt = _sp(0, 0, scaleRect.x, scaleRect.y);
-	        this.addChild(lt);
-	        this.lt = lt;
-	        this.t = _sp(scaleRect.x, 0, scaleRect.width, scaleRect.y);
-	        this.t.x = scaleRect.x;
-	        this.addChild(this.t);
-	        var rt = _sp(scaleRect.x + scaleRect.width, 0, bt.width - scaleRect.x - scaleRect.width, scaleRect.y);
-	        rt.x = scaleRect.x + scaleRect.width;
-	        this.addChild(rt);
-	        this.rt = rt;
-	        this.r = _sp(scaleRect.x + scaleRect.width, scaleRect.y, bt.width - scaleRect.x - scaleRect.width, scaleRect.height);
-	        this.r.x = scaleRect.x + scaleRect.width;
-	        this.r.y = scaleRect.y;
-	        this.addChild(this.r);
-	        this.rb = _sp(scaleRect.x + scaleRect.width, scaleRect.y + scaleRect.height, bt.width - scaleRect.x - scaleRect.width, bt.height - scaleRect.y - scaleRect.height);
-	        this.rb.x = scaleRect.x + scaleRect.width;
-	        this.rb.y = scaleRect.y + scaleRect.height;
-	        this.addChild(this.rb);
-	        this.b = _sp(scaleRect.x, scaleRect.y + scaleRect.height, scaleRect.width, bt.height - scaleRect.y - scaleRect.height);
-	        this.b.x = scaleRect.x;
-	        this.b.y = scaleRect.y + scaleRect.height;
-	        this.addChild(this.b);
-	        this.lb = _sp(0, scaleRect.y + scaleRect.height, scaleRect.x, bt.height - scaleRect.y - scaleRect.height);
-	        this.lb.y = scaleRect.y + scaleRect.height;
-	        this.addChild(this.lb);
-	        this.l = _sp(0, scaleRect.y, scaleRect.x, scaleRect.height);
-	        this.l.y = scaleRect.y;
-	        this.addChild(this.l);
-	        this.c = _sp(scaleRect.x, scaleRect.y, scaleRect.width, scaleRect.height);
-	        this.c.x = scaleRect.x;
-	        this.c.y = scaleRect.y;
-	        this.addChild(this.c);
-	    }
-	    Object.defineProperty(ScaleSprite.prototype, "width", {
-	        get: function () {
-	            return this._w;
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    Object.defineProperty(ScaleSprite.prototype, "height", {
-	        get: function () {
-	            return this._h;
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    ScaleSprite.prototype.setHeight = function (height) {
-	        this._h = height;
-	        var sh = height - this.lt.height - this.lb.height;
-	        this.l.height = sh;
-	        this.r.height = sh;
-	        this.lb.y = this.lt.height + sh;
-	        this.b.y = this.lt.height + sh;
-	        this.rb.y = this.lt.height + sh;
-	    };
-	    ScaleSprite.prototype.resize = function (width, height) {
-	        this._w = width;
-	        this._h = height;
-	        var sw = width - this.lt.width - this.rt.width;
-	        this.t.width = sw;
-	        this.b.width = sw;
-	        this.rt.x = this.lt.width + sw;
-	        this.r.x = this.lt.width + sw;
-	        this.rb.x = this.lt.width + sw;
-	        var sh = height - this.lt.height - this.lb.height;
-	        this.l.height = sh;
-	        this.r.height = sh;
-	        this.lb.y = this.lt.height + sh;
-	        this.b.y = this.lt.height + sh;
-	        this.rb.y = this.lt.height + sh;
-	        this.c.width = sw;
-	        this.c.height = sh;
-	    };
-	    return ScaleSprite;
-	}(PIXI.Container));
-	exports.ScaleSprite = ScaleSprite;
-
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px;height:700px;overflow: scroll;\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告 MISC</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒 timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <label class=\"label\">现场时间:{{liveTime}}</label>\r\n            <label class=\"label\">面板时间:{{panelTime}}</label>\r\n\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 30px;font-family: 'NotoSansHans-Regular'\">\r\n               {{lLiveName}}  vs {{rLiveName}} \r\n                <br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(false)\">隐藏所有</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(true)\">显示所有</button>\r\n            <br>时间控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">设定时间(秒)</button>\r\n\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            </p>\r\n            比分控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onUpdateScore(true ,panelTime2Set)\">蓝方比分</button>\r\n            <button class=\"button\" @click=\"onUpdateScore(false,panelTime2Set)\">红方比分</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(true)\">切换攻守</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(false)\">隐藏</button>\r\n            <br>\r\n\r\n            <button class=\"button\" @click=\"onUpdateFoul(true ,panelTime2Set)\">蓝方犯规</button>\r\n            <button class=\"button\" @click=\"onUpdateFoul(false,panelTime2Set)\">红方犯规</button>\r\n\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <label class=\"checkbox\">\r\n                    <input type=\"checkbox\" v-model='isShowGroupLeft'>\r\n                    靠左边\r\n                  </label>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">修改并显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,'')\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <!-- <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button> -->\r\n\r\n            <label class=\"label\">  赛区实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,1)\">东南 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,2)\">东北 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,3)\">西方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,4)\">南方 </button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,0)\">首页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,2,0)\">上一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,3,0)\">下一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <label class=\"label\">  八强面板:</label><br>\r\n            <button class=\"button\" @click=\"onBracketShow(1)\">第一页 八进四</button>\r\n            <button class=\"button\" @click=\"onBracketShow(2)\">第二页</button>\r\n\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <div v-if=1 class='column is-one-quarter' style=\"position: fixed;top: 260px;right: 10px;\">\r\n                <input class=\"input\" type=\"text\" style=\"width: 30px;\" v-model=\"gameTitleType\">1 '8进4' 2 '4进2' 3 '2进1'\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"蓝方名字-红方名字\" style=\"width: 300px;\" v-model=\"vsPlayer\">\r\n                <button class=\"button\" @click=\"onSetPlayer(vsPlayer,gameTitleType)\">设置球员</button>\r\n                <br> <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button>蓝方: <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button> 比分\r\n                <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>:红方<button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n                <br><br> <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button>-----\r\n                <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button> 犯规\r\n                <button class=\"button\" @click=\"onAddFoul(false,+1)\">+1</button>-----<button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"'>\r\n        <div v-if='isRmOp||isOp' style=\"position: absolute;left: 100px;top:260px;width: 800px\">\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='1' v-model='isWrap' checked >\r\n                        自动换行\r\n                    </label>\r\n            <label class=\"radio\">\r\n                        <input type=\"radio\" name=\"bold\" value='0' v-model='isWrap'>\r\n                        手动换行\r\n                    </label>\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n            <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n            <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onNoticePresets('network')\">网络故障 模版</button>\r\n            <br>\r\n            <div v-for=\"(n,idx) in noticeHistory\">\r\n                <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n            </div>\r\n\r\n            滚动文字：\r\n            <br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"inputRollText\">\r\n            <br>\r\n\r\n            <!-- <el-input v-model=\"inputRollText\" style=\"width:250px\"></el-input> -->\r\n            <button class=\"button\" @click='showRollText(inputRollText,true)'>发送</button>\r\n            <button class=\"button\" @click='showRollText(inputRollText,false)'>隐藏</button>\r\n            <br> 主播面板:\r\n            <br>\r\n            <button class=\"button\" @click='showCommentator(true,1)'>显示主播</button>\r\n            <button class=\"button\" @click='showCommentator(true,2)'>显示主播 合并</button>\r\n            <button class=\"button\" @click='showCommentator(false)'>隐藏</button>\r\n            <br>图片:\r\n            <br>\r\n            <button class=\"button\" @click='showStaticImage(true,1)'>微信小程序</button>\r\n            <button class=\"button\" @click='showStaticImage(false,1)'>隐藏</button>\r\n\r\n            <label class=\"label\">  脉动广告:</label><br>\r\n            <button class=\"button\" @click=\"onShowFx(true,1)\">转瓶</button>\r\n\r\n            <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n            </p>\r\n        </div>\r\n    </div>\r\n\r\n</div>";
 
 /***/ }
 /******/ ]);

@@ -131,14 +131,11 @@ export class GroupV2 extends PIXI.Container {
                     [112, 178, 111, 88],
                     [224, 0, 111, 88],
                     [224, 89, 111, 88]]
-
-
             }
             let groupName = new BitmapText(sheet)
             this.groupName = groupName
             groupName.x = 1309
             groupName.y = 235
-            // groupName.text = this.groupTitle.text
             this.groupTitle.visible = false
             this.addChild(groupName)
         })
