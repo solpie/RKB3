@@ -19,6 +19,7 @@ import { ScoreFx } from './ScoreFx';
 import { TagFx } from './TagFx';
 import { TopInfo } from './TopInfo';
 import { Winner } from './Winner';
+import { BottomNotice } from '../scoreV2/BottomNotice';
 
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
@@ -391,5 +392,9 @@ export class Event2017 extends PIXI.Container {
 
     showVsList(data) {
         showPanel(VsListV2, data, this)
+    }
+    
+    showBottomNoticeAccount(data) {
+        showPanel(BottomNotice, data, this)
     }
 }

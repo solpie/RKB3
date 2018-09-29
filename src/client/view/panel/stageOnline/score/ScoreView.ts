@@ -215,10 +215,10 @@ export class ScoreView extends BasePanelView {
             })
             .on(`${CommandId.sc_toggleScorePanel}`, (data) => {
                 if (data.visible) {
-                    this.scorePanelV3.show()
+                    this.scorePanelV3.show(data)
                 }
                 else {
-                    this.scorePanelV3.hide()
+                    this.scorePanelV3.hide(data)
                     this.eventPanel.hideVictory()
                 }
             })
@@ -242,8 +242,13 @@ export class ScoreView extends BasePanelView {
                 this.eventPanel.showRanking(data)
             })
             .on(`${CommandId.sc_showBracketPage}`, (data) => {
-                console.log('sc_showBracket vs list',data)
+                console.log('sc_showBracket vs list', data)
                 this.eventPanel.showVsList(data)
+            })
+            .on(`${CommandId.sc_showPanel}`, (data) => {
+                if (data.panelId == PanelId.bottomNoticeAccount) {
+                    this.eventPanel.showBottomNoticeAccount(data)
+                }
             })
             //score fx
             .on(`${CommandId.sc_setFxPoint}`, (data) => {

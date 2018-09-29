@@ -1788,6 +1788,7 @@
 	    worldwarPanel: 'worldwarPanel',
 	    worldwarTitle: 'worldwarTitle',
 	    worldwarKDA: 'worldwarKDAPanel',
+	    bottomNoticeAccount: 'bottomNoticeAccount',
 	    playerPanel: 'player'
 	};
 	exports.FontName = {

@@ -1,5 +1,5 @@
 <div>
-    <div v-if="isOp" id="opPanel" style="position: absolute;left: 100px;top:60px;width: 1000px;height:700px;overflow: scroll;">
+    <div v-if="isOp" id="opPanel" style="position: absolute;left: 100px;top:60px;width: 1000px;height:700px;overflow-y: scroll;overflow-x:hidden;">
         <div class="tabs  is-boxed">
             <ul>
                 <li v-if='!isRmOp' v-bind:class="{ 'is-active': actTab== 'tab1'}" @click='tab("tab1")'>
@@ -24,8 +24,8 @@
                 <button class="button" @click="onClkSetDelay">确定</button>
             </p>
 
-            <label class="label">现场时间:{{liveTime}}</label>
-            <label class="label">面板时间:{{panelTime}}</label>
+            <!-- <label class="label">现场时间:{{liveTime}}</label>
+                <label class="label">面板时间:{{panelTime}}</label> -->
 
 
             <!--<button class="button" @click="onClkRenderData">刷新现场数据到面板</button><br>-->
@@ -35,6 +35,8 @@
             <label class="label">比分面板:</label><br>
             <button class="button" @click="onClkShowScore(true)">显示</button>
             <button class="button" @click="onClkShowScore(false)">隐藏</button>
+            <button class="button" @click="onClkShowScore(false,1)">隐藏底部</button>
+
             <button class="button" @click="onClkShowStage(false)">隐藏所有</button>
             <button class="button" @click="onClkShowStage(true)">显示所有</button>
             <br>时间控制:
@@ -116,7 +118,7 @@
             <button class="button" @click="onClkToggleChampionPanel(true)">显示</button>
             <button class="button" @click="onClkToggleChampionPanel(false)">隐藏</button>
             <br>
-            <div v-if=1 class='column is-one-quarter' style="position: fixed;top: 260px;right: 10px;">
+            <div class='column is-one-quarter' style="position: fixed;top: 260px;right: 10px;">
                 <input class="input" type="text" style="width: 30px;" v-model="gameTitleType">1 '8进4' 2 '4进2' 3 '2进1'
                 <br>
                 <input class="input" type="text" placeholder="蓝方名字-红方名字" style="width: 300px;" v-model="vsPlayer">
@@ -128,64 +130,71 @@
                 <button class="button" @click="onAddFoul(false,+1)">+1</button>-----<button class="button" @click="onAddFoul(false,-1)">-1</button>
             </div>
         </div>
-    </div>
+        <div v-if='actTab=="tab2"'>
+            <div v-if='isRmOp||isOp' style="position: absolute;left: 0px;top:60px;">
+                <label class="radio">
+                                    <input type="radio" name="bold" value='1' v-model='isWrap' checked >
+                                    自动换行
+                                </label>
 
-    <div v-if='actTab=="tab2"'>
-        <div v-if='isRmOp||isOp' style="position: absolute;left: 100px;top:260px;width: 800px">
-            <label class="radio">
-                        <input type="radio" name="bold" value='1' v-model='isWrap' checked >
-                        自动换行
-                    </label>
-            <label class="radio">
-                        <input type="radio" name="bold" value='0' v-model='isWrap'>
-                        手动换行
-                    </label>
-            <br>
-            <input class="input" type="text" placeholder="公告" style="width: 280px;" v-model="noticeTitle">
-            <textarea style="width:580px;height:250px" v-model="noticeContent"></textarea>
-            <br>
-            <button class="button" @click="onClkNotice(true,true,true)">左边预览</button>
-            <button class="button" @click="onClkNotice(true,false,true)">右边预览</button>
-            <br>
-            <button class="button" @click="onClkNotice(true,true)">左边显示</button>
-            <button class="button" @click="onClkNotice(true,false)">右边显示</button>
-            <button class="button" @click="onClkNotice(false,false)">隐藏</button>
-            <br>
-            <button class="button" @click="onNoticePresets('network')">网络故障 模版</button>
-            <br>
-            <div v-for="(n,idx) in noticeHistory">
-                <a @click="onClkNoticePresets(n.title,n.content)" style="font-size:35px;">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>
-                <a @click="onDelNoticePresets(n.content)">del</a>
+                <label class="radio">
+                                    <input type="radio" name="bold" value='0' v-model='isWrap'>
+                                    手动换行
+                                </label>
+                <br>
+                <input class="input" type="text" placeholder="公告" style="width: 280px;" v-model="noticeTitle">
+                <br>
+                <textarea style="width:580px;height:250px" v-model="noticeContent"></textarea>
+                <br>
+                <button class="button" @click="onClkNotice(true,true,true)">左边预览</button>
+                <button class="button" @click="onClkNotice(true,false,true)">右边预览</button>
+                <br>
+                <button class="button" @click="onClkNotice(true,true)">左边显示</button>
+                <button class="button" @click="onClkNotice(true,false)">右边显示</button>
+                <button class="button" @click="onClkNotice(false,false)">隐藏</button>
+                <br>
+                <button class="button" @click="onNoticePresets('network')">网络故障 模版</button>
+                <br>
+                <div v-for="(n,idx) in noticeHistory" style="position: absolute;left: 200px;top: 60px;">
+                    <a @click="onClkNoticePresets(n.title,n.content)" style="font-size:35px;">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>
+                    <a @click="onDelNoticePresets(n.content)">del</a>
+                </div>
+
+                滚动文字：
+                <br>
+                <input class="input" type="text" placeholder="公告" style="width: 280px;" v-model="inputRollText">
+                <br>
+
+                <!-- <el-input v-model="inputRollText" style="width:250px"></el-input> -->
+                <button class="button" @click='showRollText(inputRollText,true)'>发送</button>
+                <button class="button" @click='showRollText(inputRollText,false)'>隐藏</button>
+                <br> 主播面板:
+                <br>
+                <button class="button" @click='showCommentator(true,1)'>显示主播</button>
+                <button class="button" @click='showCommentator(true,2)'>显示主播 合并</button>
+                <button class="button" @click='showCommentator(false)'>隐藏</button>
+                <br>图片:
+                <br>
+                <button class="button" @click='showStaticImage(true,1)'>微信小程序</button>
+                <button class="button" @click='showStaticImage(false,1)'>隐藏</button>
+
+                <label class="label"> 平台展示:</label><br>
+                <button class="button" @click="onShowAccount(1,true)">抖音 快手</button>
+                <button class="button" @click="onShowAccount(2,true)">今日头条 西瓜视频</button>
+                <button class="button" @click="onShowAccount(3,true)">微博 微信</button>
+                <button class="button" @click="onShowAccount(4,true)">优酷 uc</button>
+                <button class="button" @click="onShowAccount(5,true)">B站 微视</button>
+                <button class="button" @click="onShowAccount(6,true)">腾讯视频 YouTube</button>
+                <button class="button" @click="onShowAccount(7,true)">触电新闻 网易新闻</button>
+                <button class="button" @click="onShowAccount(1,false)">隐藏</button>
+
+                <label class="label">自动开题延时(秒){{clientDelayTimeSrv}}</label>
+                <p class="control">
+                    <input class="input" type="text" onkeypress='var c = event.charCode;
+                               return c >= 48 && c <= 57 ||c==46' placeholder="" style="width: 50px;" v-model="clientDelayTime">
+                    <button class="button" @click="onSetClientDelay(clientDelayTime)">确定</button>
+                </p>
             </div>
-
-            滚动文字：
-            <br>
-            <input class="input" type="text" placeholder="公告" style="width: 280px;" v-model="inputRollText">
-            <br>
-
-            <!-- <el-input v-model="inputRollText" style="width:250px"></el-input> -->
-            <button class="button" @click='showRollText(inputRollText,true)'>发送</button>
-            <button class="button" @click='showRollText(inputRollText,false)'>隐藏</button>
-            <br> 主播面板:
-            <br>
-            <button class="button" @click='showCommentator(true,1)'>显示主播</button>
-            <button class="button" @click='showCommentator(true,2)'>显示主播 合并</button>
-            <button class="button" @click='showCommentator(false)'>隐藏</button>
-            <br>图片:
-            <br>
-            <button class="button" @click='showStaticImage(true,1)'>微信小程序</button>
-            <button class="button" @click='showStaticImage(false,1)'>隐藏</button>
-
-            <label class="label">  脉动广告:</label><br>
-            <button class="button" @click="onShowFx(true,1)">转瓶</button>
-
-            <label class="label">自动开题延时(秒){{clientDelayTimeSrv}}</label>
-            <p class="control">
-                <input class="input" type="text" onkeypress='var c = event.charCode;
-                   return c >= 48 && c <= 57 ||c==46' placeholder="" style="width: 50px;" v-model="clientDelayTime">
-                <button class="button" @click="onSetClientDelay(clientDelayTime)">确定</button>
-            </p>
         </div>
     </div>
-
 </div>

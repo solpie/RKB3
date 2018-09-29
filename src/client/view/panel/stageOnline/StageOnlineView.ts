@@ -1,21 +1,17 @@
-import { removeRanking } from './score/RankingData';
-import { imgLoader } from '../../utils/ImgLoader';
 import { setInterval } from 'timers';
-import { type } from 'os';
 import { CommandId } from '../../Command';
 import { PanelId } from '../../const';
-import { getClientDelay, setClientDelay, getVsTitleData, getLive, getAllPlayer } from '../../utils/HupuAPI';
+import { getAllPlayer, getClientDelay, getLive, getVsTitleData, setClientDelay } from '../../utils/HupuAPI';
+import { imgLoader } from '../../utils/ImgLoader';
 import { DateFormat } from '../../utils/JsFunc';
 import { VueBase } from '../../utils/VueBase';
-import { dynamicLoading, $post } from '../../utils/WebJsFunc';
+import { $post, dynamicLoading } from '../../utils/WebJsFunc';
+import { WebDBCmd } from '../../WebDBCmd';
 import { BasePanelView } from '../BasePanelView';
 import { BracketView } from './bracket/BracketView';
 import { Lottery } from './lottery/Lottery';
 import { RankView } from './rank/RankView';
 import { ScoreView } from './score/ScoreView';
-import { GroupSp2 } from './groupSp/GroupSp2';
-import { VsTitle } from './score/VsTitle';
-import { WebDBCmd } from '../../WebDBCmd';
 import { GroupV2 } from './scoreV2/GroupV2';
 
 declare let $
@@ -80,6 +76,7 @@ class StageOnlineView extends VueBase {
     gamePlayerArr: any
     liveConf: any
     opReq = (cmdId: string, param: any, callback: any) => {
+        param._ = null
         $.ajax({
             url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
             type: 'post',
@@ -352,8 +349,8 @@ class StageOnlineView extends VueBase {
             this.opReq(`${CommandId.cs_showChampion}`, { _: null, isLeft: false, title: this.championTitle })
         },
 
-        onClkShowScore(v) {
-            this.opReq(`${CommandId.cs_toggleScorePanel}`, { _: null, visible: v })
+        onClkShowScore(v, isBottomOnly) {
+            this.opReq(`${CommandId.cs_toggleScorePanel}`, { _: null, visible: v, isBottom: isBottomOnly })
         },
         onClkToggleChampionPanel(v) {
             this.opReq(`${CommandId.cs_toggleChampionPanel}`, { _: null, visible: v })
@@ -404,14 +401,8 @@ class StageOnlineView extends VueBase {
             }
 
         },
-        onClkToggleTheme(isDark) {
-            this.opReq(`${CommandId.cs_toggleTheme}`, { _: null, isDark: isDark })
-        },
         onSetPreRoundPosition(isRight) {
             this.opReq(`${CommandId.cs_setPreRoundPosition}`, { _: null, isRight: isRight })
-        },
-        onTogglePreRoundTheme(isDark) {
-            this.opReq(`${CommandId.cs_togglePreRoundTheme}`, { _: null, isDark: isDark })
         },
         onSetFxPoint(mx, my) {
             console.log(mx, my)
@@ -510,6 +501,10 @@ class StageOnlineView extends VueBase {
             let imgMap = { 1: 'http://rtmp.icassi.us:8090/uploads/932b0a2eb5dc45399820871305ad2a1e.png' }
             let url = imgMap[imgId]
             this.opReq(`${WebDBCmd.cs_staticImg}`, { _: null, visible: v, url: url })
+        },
+        onShowAccount(idx, v) {
+            this.opReq(`${CommandId.cs_toggleScorePanel}`, { _: null, visible: !v, isBottom: true })
+            this.opReq(CommandId.cs_showPanel, { panelId: PanelId.bottomNoticeAccount, idx: idx, visible: v })
         },
         onClkLoadVsTitle() {
             if (this.vsTitleMap) {

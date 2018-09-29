@@ -12,6 +12,7 @@ export const PanelId = {
     worldwarPanel: 'worldwarPanel',
     worldwarTitle: 'worldwarTitle',
     worldwarKDA: 'worldwarKDAPanel',
+    bottomNoticeAccount: 'bottomNoticeAccount',
     playerPanel: 'player'
 };
 export const FontName = {

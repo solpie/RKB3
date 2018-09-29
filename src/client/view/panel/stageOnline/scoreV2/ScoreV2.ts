@@ -50,16 +50,18 @@ export class ScoreV2 extends PIXI.Container {
 
     avtCtn: PIXI.Container
     titleCtn: PIXI.Container
-
+    bottomCtn: PIXI.Container
     constructor(parent) {
         super()
         parent.addChild(this)
+        this.bottomCtn = new PIXI.Container()
+        this.addChild(this.bottomCtn)
         let bg = newBitmap({ url: '/img/panel/score2018v2/scoreBottom.png' })
         bg.y = 8
         this.avtCtn = new PIXI.Container()
         this.avtCtn.y = bg.y
-        this.addChild(this.avtCtn)
-        this.addChild(bg)
+        this.bottomCtn.addChild(this.avtCtn)
+        this.bottomCtn.addChild(bg)
 
         let top = newBitmap({ url: '/img/panel/score2018v2/scoreTop.png' })
         this.addChild(top)
@@ -80,14 +82,14 @@ export class ScoreV2 extends PIXI.Container {
             fontFamily: FontName.MicrosoftYahei,
             fontSize: '32px', fill: "#eee",
         }
-        this.lName = TextFac.new_(ns, this)
+        this.lName = TextFac.new_(ns, this.bottomCtn)
             .setY(941)
-        this.rName = TextFac.new_(ns, this)
+        this.rName = TextFac.new_(ns, this.bottomCtn)
             .setPos(1215, this.lName.y)
 
         ns.fill = '#303030'
         this.titleCtn = new PIXI.Container()
-        this.addChild(this.titleCtn)
+        this.bottomCtn.addChild(this.titleCtn)
         this.titleCtn.addChild(newBitmap({ url: '/img/panel/score2018v2/titleBg.png' }))
         ns.fontSize = '28px'
         ns.fill = '#28263e'
@@ -98,18 +100,17 @@ export class ScoreV2 extends PIXI.Container {
             .setPos(1123, this.lTitle.y)
 
         ns.fill = '#444'
-        this.gameTitle = TextFac.new_(ns, this)
+        this.gameTitle = TextFac.new_(ns, this.bottomCtn)
             .setY(947)
-        this.gameTitle2 = TextFac.new_(ns, this)
+        this.gameTitle2 = TextFac.new_(ns, this.bottomCtn)
             .setY(987)
-
 
         ns.fontSize = '25px'
         ns.fill = '#6b6b6b'
-        this.lHW = TextFac.new_(ns, this)
+        this.lHW = TextFac.new_(ns, this.bottomCtn)
             .setY(1002)
 
-        this.rHW = TextFac.new_(ns, this)
+        this.rHW = TextFac.new_(ns, this.bottomCtn)
             .setPos(this.rName.x, this.lHW.y)
 
         ns.fontSize = '60px'
@@ -183,23 +184,23 @@ export class ScoreV2 extends PIXI.Container {
 
     state = true
     toggleState(data) {
-        if (data.visible) {
+        // if (data.visible) {
 
-            let a = ['攻', '守']
-            this.state = !this.state
+        //     let a = ['攻', '守']
+        //     this.state = !this.state
 
-            if (data.isLeftPlayer != null) {
-                this.state = !data.isLeftPlayer
-            }
-            let idx = Number(this.state)
-            let idx2 = Number(!this.state)
-            this.lState.setText(a[idx])
-                .setAlignCenter(350)
-            this.rState.setText(a[idx2])
-                .setAlignCenter(1570)
-        }
-        else
-            this.lState.text = this.rState.text = ''
+        //     if (data.isLeftPlayer != null) {
+        //         this.state = !data.isLeftPlayer
+        //     }
+        //     let idx = Number(this.state)
+        //     let idx2 = Number(!this.state)
+        //     this.lState.setText(a[idx])
+        //         .setAlignCenter(350)
+        //     this.rState.setText(a[idx2])
+        //         .setAlignCenter(1570)
+        // }
+        // else
+        //     this.lState.text = this.rState.text = ''
     }
 
     _isShowFoulHint(foulHintSp, foul) {
@@ -308,11 +309,17 @@ export class ScoreV2 extends PIXI.Container {
         this.timer.toggleTimer(v)
     }
 
-    show() {
+    show(data) {
+        // if (data.isBottom)
+        this.bottomCtn.visible = true
+
         this.visible = true
     }
-    hide() {
-        this.visible = false
+    hide(data) {
+        if (data.isBottom)
+            this.bottomCtn.visible = false
+        else
+            this.visible = false
     }
     winSectionArr = [7, 8]
     loseSectionArr = [5, 6, 9, 10, 12]

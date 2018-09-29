@@ -5,7 +5,7 @@ import { BasePanel } from '../../base/BasePanel';
 import { Text2, TextFac } from '../../../utils/TextFac';
 import { FontName } from '../../../const';
 
-let isTest = false
+let isTest = true
 
 let urlBg = '/img/panel/vsList/bg.png'
 let urlItem = '/img/panel/vsList/itemBg.png'

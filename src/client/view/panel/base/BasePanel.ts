@@ -25,6 +25,10 @@ export class BasePanel extends PIXI.Container {
             this._show(data)
         else
             this.tmpData = data
+
+
+        if (!data.visible)
+            this.hide(data)
     }
 
     hide(data) {
@@ -45,8 +49,8 @@ class _example extends BasePanel {
 }
 export function showPanel(cls, data, parent) {
     let clsName = cls.cls
-    console.log('show panel ',cls,clsName)
-    if (parent[clsName]==null) {
+    console.log('show panel ', clsName)
+    if (parent[clsName] == null) {
         let clsIns = new cls(parent)
         parent[clsName] = clsIns
         clsIns.create()
