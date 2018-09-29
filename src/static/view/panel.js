@@ -11551,8 +11551,12 @@
 	        this.visible = true;
 	    };
 	    ScoreV2.prototype.hide = function (data) {
-	        if (data.isBottom)
-	            this.bottomCtn.visible = false;
+	        if (data) {
+	            if (data.isBottom)
+	                this.bottomCtn.visible = false;
+	            else
+	                this.visible = false;
+	        }
 	        else
 	            this.visible = false;
 	    };
@@ -12063,7 +12067,7 @@
 	            var lIcon = PixiEx_1.newBitmap({ url: lUrl });
 	            lIcon.x = 450;
 	            _this.iconCtn.addChild(lIcon);
-	            lIcon = PixiEx_1.newBitmap({ url: lUrl });
+	            lIcon = PixiEx_1.newBitmap({ url: rUrl });
 	            lIcon.x = 980;
 	            _this.iconCtn.addChild(lIcon);
 	            _this.rIcon.texture = ImgLoader_1.imgLoader.getTexBySp(rUrl);

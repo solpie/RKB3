@@ -56,7 +56,7 @@ export class BottomNotice extends BasePanel {
             let lIcon = newBitmap({ url: lUrl })
             lIcon.x = 450
             this.iconCtn.addChild(lIcon)
-            lIcon = newBitmap({ url: lUrl })
+            lIcon = newBitmap({ url: rUrl })
             lIcon.x = 980
             this.iconCtn.addChild(lIcon)
             // this.rIcon.texture = imgLoader.getTexBySp(rUrl)

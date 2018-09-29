@@ -315,9 +315,13 @@ export class ScoreV2 extends PIXI.Container {
 
         this.visible = true
     }
-    hide(data) {
-        if (data.isBottom)
-            this.bottomCtn.visible = false
+    hide(data?) {
+        if (data) {
+            if (data.isBottom)
+                this.bottomCtn.visible = false
+            else
+                this.visible = false
+        }
         else
             this.visible = false
     }
