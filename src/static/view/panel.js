@@ -11366,7 +11366,6 @@
 	                lIcon = PixiEx_1.newBitmap({ url: rUrl_1 });
 	                lIcon.x = 980;
 	                _this.iconCtn.addChild(lIcon);
-	                _this.rIcon.texture = ImgLoader_1.imgLoader.getTexBySp(rUrl_1);
 	            });
 	            this.p.addChild(this);
 	        }
