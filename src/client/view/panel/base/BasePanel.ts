@@ -56,4 +56,5 @@ export function showPanel(cls, data, parent) {
         clsIns.create()
     }
     (parent[clsName] as any).show(data)
+    return parent[clsName]
 }

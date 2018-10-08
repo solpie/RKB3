@@ -6,6 +6,8 @@ import { imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
 import { BracketPlayerV3 } from '../bracket/BracketPlayerV3';
 import { groupPosMap } from '../bracket/BracketGroup';
 import { testData2, testData1 } from './test/testBracket';
+import { showPanel } from '../../base/BasePanel';
+import { VsListV2 } from './VsListV2';
 
 
 const isTest = false
@@ -237,7 +239,7 @@ class Section1 extends PIXI.Container {
         if (isTest)
             testData1(this)
     }
-    
+
     setData(data) {
         console.log('section1 set data', data, this.groupPlayerMap)
         for (let gameIdx in this.groupPlayerMap) {
@@ -330,6 +332,7 @@ export class BracketV2 extends PIXI.Container {
         let g = groupPosMap[idx];
     }
     showPage(data) {
+        let page = data.page
         if (data.page == 1) {
             this.section1.visible = true
             this.section2.visible = false
@@ -338,10 +341,42 @@ export class BracketV2 extends PIXI.Container {
             this.section1.visible = false
             this.section2.visible = true
         }
+        else if (page == 0) {
+            this.section1.visible = false
+            this.section2.visible = false
+            for (let vsPlayer of this.vsPlayerArr) {
+                let p1 = vsPlayer[0]
+                let p2 = vsPlayer[1]
+                for (let p of data.playerArr) {
+                    if (p1.name == p.name) {
+                        p1.avatar = p.avatar
+                        p1.title = p.title
+                    }
+                    if (p2.name == p.name) {
+                        p2.avatar = p.avatar
+                        p2.title = p.title
+                    }
+                }
+            }
+            data.vsPlayerArr = this.vsPlayerArr
+            console.log('show vs', data);
+            showPanel(VsListV2, data, this)
+        }
     }
     _res = null
+    vsPlayerArr = null
     onBracketData(res) {
+        console.log('on bracket data', res.data);
         this.section1.setData(res.data)
         this.section2.setData(res.data)
+        let data = { vsPlayerArr: [], visible: true }
+        let gameIdxArr = ["1", "2", "3", "4"]
+        for (let gameIdx of gameIdxArr) {
+            let dataObj = res.data[gameIdx]
+            console.log('dataObj', dataObj);
+            data.vsPlayerArr.push([dataObj.left, dataObj.right])
+        }
+        this.vsPlayerArr = data.vsPlayerArr
+        // showPanel(VsListV2, data, this)
     }
 }

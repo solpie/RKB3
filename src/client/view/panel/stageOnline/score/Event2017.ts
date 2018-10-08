@@ -391,7 +391,7 @@ export class Event2017 extends PIXI.Container {
     }
 
     showVsList(data) {
-        showPanel(VsListV2, data, this)
+        // showPanel(VsListV2, data, this)
     }
     
     showBottomNoticeAccount(data) {
