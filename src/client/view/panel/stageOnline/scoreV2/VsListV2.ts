@@ -39,7 +39,7 @@ class VsItem extends PIXI.Container {
         this.rTitle = TextFac.new_(ns, this)
         this.lTitle.y = this.rTitle.y = 190
 
-        ns.fill = '#eee'
+        ns.fill = '#fff'
         ns.fontSize = '32px'
         this.lName = TextFac.new_(ns, this)
 
@@ -81,7 +81,7 @@ export class VsListV2 extends BasePanel {
 
             let ns = {
                 fontFamily: FontName.MicrosoftYahei,
-                fontSize: '50px', fill: "#eee",
+                fontSize: '50px', fill: "#fff",
             }
             this.title = TextFac.new_(ns, this)
                 .setY(82)

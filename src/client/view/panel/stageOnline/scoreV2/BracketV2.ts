@@ -336,10 +336,12 @@ export class BracketV2 extends PIXI.Container {
         if (data.page == 1) {
             this.section1.visible = true
             this.section2.visible = false
+            showPanel(VsListV2, {visible:false}, this)
         }
         else if (data.page == 2) {
             this.section1.visible = false
             this.section2.visible = true
+            showPanel(VsListV2, {visible:false}, this)
         }
         else if (page == 0) {
             this.section1.visible = false
