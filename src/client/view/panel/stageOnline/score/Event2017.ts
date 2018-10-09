@@ -20,6 +20,7 @@ import { TagFx } from './TagFx';
 import { TopInfo } from './TopInfo';
 import { Winner } from './Winner';
 import { BottomNotice } from '../scoreV2/BottomNotice';
+import { RankV2 } from '../scoreV2/RankV2';
 
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
@@ -306,13 +307,15 @@ export class Event2017 extends PIXI.Container {
 
     ranking: RankSection
     showRanking(data) {
-        if (!this.ranking) {
-            this.ranking = new RankSection()
-            this.ranking.create(this, data)
-        }
-        data.visible ?
-            this.ranking.show(data)
-            : this.ranking.hide()
+        // if (!this.ranking) {
+        //     this.ranking = new RankSection()
+        //     this.ranking.create(this, data)
+        // }
+        // data.visible ?
+        //     this.ranking.show(data)
+        //     : this.ranking.hide()
+
+        showPanel(RankV2, data, this)
     }
 
     winner: Winner
@@ -393,7 +396,7 @@ export class Event2017 extends PIXI.Container {
     showVsList(data) {
         // showPanel(VsListV2, data, this)
     }
-    
+
     showBottomNoticeAccount(data) {
         showPanel(BottomNotice, data, this)
     }
