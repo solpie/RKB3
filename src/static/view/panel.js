@@ -11890,7 +11890,7 @@
 /* 121 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px;height:700px;overflow-y: scroll;overflow-x:hidden;\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告 MISC</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒 timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <!-- <label class=\"label\">现场时间:{{liveTime}}</label>\r\n                <label class=\"label\">面板时间:{{panelTime}}</label> -->\r\n\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 30px;font-family: 'NotoSansHans-Regular'\">\r\n               {{lLiveName}}  vs {{rLiveName}} \r\n                <br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false,1)\">隐藏底部</button>\r\n\r\n            <button class=\"button\" @click=\"onClkShowStage(false)\">隐藏所有</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(true)\">显示所有</button>\r\n            <br>时间控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">设定时间(秒)</button>\r\n\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            </p>\r\n            比分控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onUpdateScore(true ,panelTime2Set)\">蓝方比分</button>\r\n            <button class=\"button\" @click=\"onUpdateScore(false,panelTime2Set)\">红方比分</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(true)\">切换攻守</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(false)\">隐藏</button>\r\n            <br>\r\n\r\n            <button class=\"button\" @click=\"onUpdateFoul(true ,panelTime2Set)\">蓝方犯规</button>\r\n            <button class=\"button\" @click=\"onUpdateFoul(false,panelTime2Set)\">红方犯规</button>\r\n\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <label class=\"checkbox\">\r\n                    <input type=\"checkbox\" v-model='isShowGroupLeft'>\r\n                    靠左边\r\n                  </label>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">修改并显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,'')\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <!-- <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button> -->\r\n\r\n            <label class=\"label\">  赛区实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,1)\">东南</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,2)\">东北</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,3)\">西方</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,4)\">南方</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,0)\">首页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,2,0)\">上一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,3,0)\">下一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <label class=\"label\">  八强面板:</label><br>\r\n            <button class=\"button\" @click=\"onBracketShow(0,true)\">八强对阵</button>\r\n            <button class=\"button\" @click=\"onBracketShow(1,true)\">第一页 八进四</button>\r\n            <button class=\"button\" @click=\"onBracketShow(2,true)\">第二页</button>\r\n\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <div class='column is-one-quarter' style=\"position: fixed;top: 260px;right: 10px;\">\r\n                <input class=\"input\" type=\"text\" style=\"width: 30px;\" v-model=\"gameTitleType\">1 '8进4' 2 '4进2' 3 '2进1'\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"蓝方名字-红方名字\" style=\"width: 300px;\" v-model=\"vsPlayer\">\r\n                <button class=\"button\" @click=\"onSetPlayer(vsPlayer,gameTitleType)\">设置球员</button>\r\n                <br> <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button>蓝方: <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button> 比分\r\n                <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>:红方<button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n                <br><br> <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button>-----\r\n                <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button> 犯规\r\n                <button class=\"button\" @click=\"onAddFoul(false,+1)\">+1</button>-----<button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <div v-if='isRmOp||isOp' style=\"position: absolute;left: 0px;top:60px;\">\r\n                <label class=\"radio\">\r\n                                    <input type=\"radio\" name=\"bold\" value='1' v-model='isWrap' checked >\r\n                                    自动换行\r\n                                </label>\r\n\r\n                <label class=\"radio\">\r\n                                    <input type=\"radio\" name=\"bold\" value='0' v-model='isWrap'>\r\n                                    手动换行\r\n                                </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <br>\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <br>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n                <br>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <button class=\"button\" @click=\"onNoticePresets('network')\">网络故障 模版</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\" style=\"position: absolute;left: 200px;top: 60px;\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n\r\n                滚动文字：\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"inputRollText\">\r\n                <br>\r\n\r\n                <!-- <el-input v-model=\"inputRollText\" style=\"width:250px\"></el-input> -->\r\n                <button class=\"button\" @click='showRollText(inputRollText,true)'>发送</button>\r\n                <button class=\"button\" @click='showRollText(inputRollText,false)'>隐藏</button>\r\n                <br> 主播面板:\r\n                <br>\r\n                <button class=\"button\" @click='showCommentator(true,1)'>显示主播</button>\r\n                <button class=\"button\" @click='showCommentator(true,2)'>显示主播 合并</button>\r\n                <button class=\"button\" @click='showCommentator(false)'>隐藏</button>\r\n                <br>图片:\r\n                <br>\r\n                <button class=\"button\" @click='showStaticImage(true,1)'>微信小程序</button>\r\n                <button class=\"button\" @click='showStaticImage(false,1)'>隐藏</button>\r\n\r\n                <label class=\"label\"> 平台展示:</label><br>\r\n                <button class=\"button\" @click=\"onShowAccount(1,true)\">抖音 快手</button>\r\n                <button class=\"button\" @click=\"onShowAccount(2,true)\">今日头条 西瓜视频</button>\r\n                <button class=\"button\" @click=\"onShowAccount(3,true)\">微博 微信</button>\r\n                <button class=\"button\" @click=\"onShowAccount(4,true)\">优酷 uc</button>\r\n                <button class=\"button\" @click=\"onShowAccount(5,true)\">B站 微视</button>\r\n                <button class=\"button\" @click=\"onShowAccount(6,true)\">腾讯视频 YouTube</button>\r\n                <button class=\"button\" @click=\"onShowAccount(7,true)\">触电新闻 网易新闻</button>\r\n                <button class=\"button\" @click=\"onShowAccount(1,false)\">隐藏</button>\r\n\r\n                <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n                <p class=\"control\">\r\n                    <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                               return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                    <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n                </p>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px;height:700px;overflow-y: scroll;overflow-x:hidden;\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告 MISC</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒 timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <!-- <label class=\"label\">现场时间:{{liveTime}}</label>\r\n                <label class=\"label\">面板时间:{{panelTime}}</label> -->\r\n\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 30px;font-family: 'NotoSansHans-Regular'\">\r\n               {{lLiveName}}  vs {{rLiveName}} \r\n                <br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false,1)\">隐藏底部</button>\r\n\r\n            <button class=\"button\" @click=\"onClkShowStage(false)\">隐藏所有</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(true)\">显示所有</button>\r\n            <br>时间控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">设定时间(秒)</button>\r\n\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            </p>\r\n            比分控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onUpdateScore(true ,panelTime2Set)\">蓝方比分</button>\r\n            <button class=\"button\" @click=\"onUpdateScore(false,panelTime2Set)\">红方比分</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(true)\">切换攻守</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(false)\">隐藏</button>\r\n            <br>\r\n\r\n            <button class=\"button\" @click=\"onUpdateFoul(true ,panelTime2Set)\">蓝方犯规</button>\r\n            <button class=\"button\" @click=\"onUpdateFoul(false,panelTime2Set)\">红方犯规</button>\r\n\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <label class=\"checkbox\">\r\n                    <input type=\"checkbox\" v-model='isShowGroupLeft'>\r\n                    靠左边\r\n                  </label>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">修改并显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,'')\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <!-- <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button> -->\r\n\r\n            <label class=\"label\">  赛区实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,1)\">东南</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,2)\">东北</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,3)\">西方</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,4)\">南方</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,0)\">总榜</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,-1)\">首页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,2,-1)\">上一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,3,-1)\">下一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <label class=\"label\">  八强面板:</label><br>\r\n            <button class=\"button\" @click=\"onBracketShow(0,true)\">八强对阵</button>\r\n            <button class=\"button\" @click=\"onBracketShow(1,true)\">第一页 八进四</button>\r\n            <button class=\"button\" @click=\"onBracketShow(2,true)\">第二页</button>\r\n\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <div class='column is-one-quarter' style=\"position: fixed;top: 260px;right: 10px;\">\r\n                <input class=\"input\" type=\"text\" style=\"width: 30px;\" v-model=\"gameTitleType\">1 '8进4' 2 '4进2' 3 '2进1'\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"蓝方名字-红方名字\" style=\"width: 300px;\" v-model=\"vsPlayer\">\r\n                <button class=\"button\" @click=\"onSetPlayer(vsPlayer,gameTitleType)\">设置球员</button>\r\n                <br> <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button>蓝方: <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button> 比分\r\n                <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>:红方<button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n                <br><br> <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button>-----\r\n                <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button> 犯规\r\n                <button class=\"button\" @click=\"onAddFoul(false,+1)\">+1</button>-----<button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <div v-if='isRmOp||isOp' style=\"position: absolute;left: 0px;top:60px;\">\r\n                <label class=\"radio\">\r\n                                    <input type=\"radio\" name=\"bold\" value='1' v-model='isWrap' checked >\r\n                                    自动换行\r\n                                </label>\r\n\r\n                <label class=\"radio\">\r\n                                    <input type=\"radio\" name=\"bold\" value='0' v-model='isWrap'>\r\n                                    手动换行\r\n                                </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <br>\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <br>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n                <br>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <button class=\"button\" @click=\"onNoticePresets('network')\">网络故障 模版</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\" style=\"position: absolute;left: 200px;top: 60px;\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n\r\n                滚动文字：\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"inputRollText\">\r\n                <br>\r\n\r\n                <!-- <el-input v-model=\"inputRollText\" style=\"width:250px\"></el-input> -->\r\n                <button class=\"button\" @click='showRollText(inputRollText,true)'>发送</button>\r\n                <button class=\"button\" @click='showRollText(inputRollText,false)'>隐藏</button>\r\n                <br> 主播面板:\r\n                <br>\r\n                <button class=\"button\" @click='showCommentator(true,1)'>显示主播</button>\r\n                <button class=\"button\" @click='showCommentator(true,2)'>显示主播 合并</button>\r\n                <button class=\"button\" @click='showCommentator(false)'>隐藏</button>\r\n                <br>图片:\r\n                <br>\r\n                <button class=\"button\" @click='showStaticImage(true,1)'>微信小程序</button>\r\n                <button class=\"button\" @click='showStaticImage(false,1)'>隐藏</button>\r\n\r\n                <label class=\"label\"> 平台展示:</label><br>\r\n                <button class=\"button\" @click=\"onShowAccount(1,true)\">抖音 快手</button>\r\n                <button class=\"button\" @click=\"onShowAccount(2,true)\">今日头条 西瓜视频</button>\r\n                <button class=\"button\" @click=\"onShowAccount(3,true)\">微博 微信</button>\r\n                <button class=\"button\" @click=\"onShowAccount(4,true)\">优酷 uc</button>\r\n                <button class=\"button\" @click=\"onShowAccount(5,true)\">B站 微视</button>\r\n                <button class=\"button\" @click=\"onShowAccount(6,true)\">腾讯视频 YouTube</button>\r\n                <button class=\"button\" @click=\"onShowAccount(7,true)\">触电新闻 网易新闻</button>\r\n                <button class=\"button\" @click=\"onShowAccount(1,false)\">隐藏</button>\r\n\r\n                <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n                <p class=\"control\">\r\n                    <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                               return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                    <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n                </p>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 122 */,
@@ -11919,8 +11919,18 @@
 	var const_1 = __webpack_require__(27);
 	var HupuAPI_1 = __webpack_require__(24);
 	var BracketGroup_1 = __webpack_require__(78);
+	var AvtV2_1 = __webpack_require__(101);
+	var MapSprite_1 = __webpack_require__(134);
 	var urlComBg = '/img/panel/com/bg.jpg';
 	var urlBg = '/img/panel/rank/v2/bg.png';
+	var iconArr = [
+	    '/img/panel/rank/v2/arrowUp.png',
+	    '/img/panel/rank/v2/arrowDown.png',
+	    '/img/panel/rank/v2/icon0.png',
+	    '/img/panel/rank/v2/icon1.png',
+	    '/img/panel/rank/v2/icon2.png',
+	    '/img/panel/rank/v2/icon3.png'
+	];
 	var isTest = true;
 	var RankItem = (function (_super) {
 	    __extends(RankItem, _super);
@@ -11928,21 +11938,69 @@
 	        _super.call(this);
 	        var ns = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '30px', fill: "#fff",
+	            fontSize: '40px', fill: "#333",
 	            fontWeight: 'bold'
 	        };
+	        this.rank = TextFac_1.TextFac.new_(ns, this);
 	        this.pName = TextFac_1.TextFac.new_(ns, this);
 	        this.champion = TextFac_1.TextFac.new_(ns, this);
 	        this.rankInTotal = TextFac_1.TextFac.new_(ns, this);
-	        this.tend = TextFac_1.TextFac.new_(ns, this);
-	        if (isTest) {
-	            this.setItem({ name: '好天气', champion: 4 });
-	        }
+	        this.changeIcon = new MapSprite_1.MapSprite();
+	        this.changeIcon.load({
+	            up: '/img/panel/rank/v2/arrowUp.png',
+	            down: '/img/panel/rank/v2/arrowDown.png'
+	        });
+	        this.addChild(this.changeIcon);
+	        this.rankChange = TextFac_1.TextFac.new_(ns, this);
+	        this.avt = new AvtV2_1.AvtV2(this);
+	        this.avt.y = -15;
+	        this.avt.x = 816;
 	    }
 	    RankItem.prototype.setItem = function (data) {
-	        this.pName.setText(data.name);
-	        this.champion.setText(data.champion || " ");
+	        this.rank.setText(data.rank)
+	            .setAlignCenter(490);
+	        this.pName.setText(data.name)
+	            .setAlignCenter(680);
+	        this.champion.setText(data.champion || "--")
+	            .setAlignCenter(1030);
+	        this.rankInTotal.setText(data.rankInTotal)
+	            .setAlignCenter(1228);
+	        var urlArrow = '/img/panel/rank/v2/arrowUp.png';
+	        var change = data.rankChange;
+	        if (change > 0) {
+	            this.changeIcon.setKey('up');
+	        }
+	        else if (change < 0) {
+	            data.rankChange *= -1;
+	            this.changeIcon.setKey('down');
+	        }
+	        else {
+	            data.rankChange = '--';
+	            this.changeIcon.setKey(null);
+	        }
+	        this.rankChange.setText(data.rankChange)
+	            .setAlignCenter(1428);
+	        this.changeIcon.x = this.rankChange.x - 50;
+	        this.avt.load(data.avatar);
 	        BracketGroup_1.fitWidth(this.pName, 270, 30);
+	        var urlRank = '/img/panel/rank/v2/icon0.png';
+	        if (Number(data.rank) < 4) {
+	            urlRank = '/img/panel/rank/v2/icon' + data.rank + '.png';
+	        }
+	        if (this.rankIcon) {
+	            this.removeChild(this.rankIcon);
+	        }
+	        var icon = PixiEx_1.newBitmap({ url: urlRank });
+	        icon.x = 430;
+	        if (Number(data.rank) < 4) {
+	            icon.y = -22;
+	            this.addChild(icon);
+	        }
+	        else {
+	            icon.y = -26;
+	            this.addChildAt(icon, 0);
+	        }
+	        this.rankIcon = icon;
 	    };
 	    return RankItem;
 	}(PIXI.Container));
@@ -11950,12 +12008,14 @@
 	    __extends(RankV2, _super);
 	    function RankV2() {
 	        _super.apply(this, arguments);
+	        this.start = 0;
 	    }
 	    RankV2.prototype.create = function () {
 	        var _this = this;
 	        var imgArr = [];
 	        imgArr.push(urlComBg);
 	        imgArr.push(urlBg);
+	        imgArr = imgArr.concat(iconArr);
 	        this.load(imgArr, function (_) {
 	            _this.addChild(PixiEx_1.newBitmap({ url: urlComBg }));
 	            _this.addChild(PixiEx_1.newBitmap({ url: urlBg }));
@@ -11964,40 +12024,77 @@
 	                fontSize: '50px', fill: "#fff",
 	            };
 	            _this.title = TextFac_1.TextFac.new_(ns, _this);
+	            _this.itemArr = [];
 	            for (var i = 0; i < 5; i++) {
 	                var item = new RankItem();
-	                item.x = 432;
-	                item.y = 270 + i * 128;
+	                item.y = 282 + i * 128;
 	                _this.addChild(item);
+	                _this.itemArr.push(item);
 	            }
 	        });
 	    };
+	    RankV2.prototype._showPage = function (data) {
+	        if (this.rankMap) {
+	            var s = this.start;
+	            if (data.page == 3)
+	                s += 1;
+	            else if (data.page == 2)
+	                s -= 1;
+	            else if (data.page == 1)
+	                s = 0;
+	            if (s < 0)
+	                s = 0;
+	            if (s > 9)
+	                s = 9;
+	            this.start = s;
+	            for (var i = 0; i < 5; i++) {
+	                var item = this.itemArr[i];
+	                var p = this.rankMap[s * 5 + 1 + i];
+	                if (p) {
+	                    item.setItem(p);
+	                    item.visible = true;
+	                }
+	                else {
+	                    item.visible = false;
+	                }
+	            }
+	        }
+	    };
 	    RankV2.prototype._show = function (data) {
 	        var _this = this;
-	        var sectionMap = {
-	            1: '东南赛区实力榜',
-	            2: '东北赛区实力榜',
-	            3: '西方赛区实力榜',
-	            4: '南方赛区实力榜'
-	        };
-	        var title = sectionMap[data.section];
-	        this.title.setText(title)
-	            .setAlignCenter(PixiEx_1._c(0))
-	            .setY(72);
-	        HupuAPI_1.getRankSection(data.section, function (res) {
-	            var d = res;
-	            _this.rankMap = {};
-	            for (var i = 0; i < d.data.length; i++) {
-	                var p = d.data[i];
-	                _this.rankMap[p.rank] = {
-	                    name: p.name,
-	                    champion: p.total_champion,
-	                    rank: p.rank,
-	                    hwaText: p.height + ' /cm' + p.weight + ' /kg ' + p.age,
-	                    avatar: p.head,
-	                };
-	            }
-	        });
+	        if (data.section < 0) {
+	            this._showPage(data);
+	        }
+	        else {
+	            var sectionMap = {
+	                0: '路人王全国实力榜',
+	                1: '路人王东南赛区实力榜',
+	                2: '路人王东北赛区实力榜',
+	                3: '路人王西方赛区实力榜',
+	                4: '路人王南方赛区实力榜'
+	            };
+	            var title = sectionMap[data.section];
+	            this.title.setText(title)
+	                .setAlignCenter(PixiEx_1._c(0))
+	                .setY(72);
+	            HupuAPI_1.getRankSection(data.section, function (res) {
+	                var d = res;
+	                _this.rankMap = {};
+	                for (var i = 0; i < d.data.length; i++) {
+	                    var p = d.data[i];
+	                    _this.rankMap[p.rank] = {
+	                        name: p.name,
+	                        champion: p.total_champion,
+	                        rank: p.rank,
+	                        rankInTotal: p.top_rank,
+	                        rankChange: p.rank_change,
+	                        hwaText: p.height + ' /cm' + p.weight + ' /kg ' + p.age,
+	                        avatar: p.header,
+	                    };
+	                }
+	                _this._showPage(data);
+	            });
+	        }
 	        if (data.visible)
 	            this.p.addChild(this);
 	        else
@@ -12007,6 +12104,41 @@
 	    return RankV2;
 	}(BasePanel_1.BasePanel));
 	exports.RankV2 = RankV2;
+
+
+/***/ },
+/* 134 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var PixiEx_1 = __webpack_require__(56);
+	var MapSprite = (function (_super) {
+	    __extends(MapSprite, _super);
+	    function MapSprite() {
+	        _super.apply(this, arguments);
+	        this.m = {};
+	    }
+	    MapSprite.prototype.load = function (mapUrl) {
+	        for (var k in mapUrl) {
+	            var sp = PixiEx_1.newBitmap({ url: mapUrl[k] });
+	            this.m[k] = sp;
+	        }
+	    };
+	    MapSprite.prototype.setKey = function (key) {
+	        this.removeChildren();
+	        var sp = this.m[key];
+	        if (sp) {
+	            this.addChild(sp);
+	        }
+	    };
+	    return MapSprite;
+	}(PIXI.Container));
+	exports.MapSprite = MapSprite;
 
 
 /***/ }

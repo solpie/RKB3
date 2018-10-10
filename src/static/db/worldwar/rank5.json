@@ -93,42 +93,42 @@
     ],
     "rank8": [{
             "playerId": "p1",
-            "score": "-",
+            "score": "40",
             "beatPlayer": ["p2", "p2", "p2", "p2"]
         },
         {
             "playerId": "p2",
-            "score": "-",
+            "score": "30",
             "beatPlayer": ["p2", "p3"]
         },
         {
             "playerId": "p3",
-            "score": "-",
+            "score": "25",
             "beatPlayer": ["p2", "p3"]
         },
         {
             "playerId": "p4",
-            "score": "-",
+            "score": "25",
             "beatPlayer": ["p2", "p3", "p3"]
         },
         {
             "playerId": "p1",
-            "score": "-",
+            "score": "20",
             "beatPlayer": ["p2"]
         },
         {
             "playerId": "p1",
-            "score": "-",
+            "score": "20",
             "beatPlayer": ["p2"]
         },
         {
             "playerId": "p1",
-            "score": "-",
+            "score": "20",
             "beatPlayer": ["p2"]
         },
         {
             "playerId": "p1",
-            "score": "-",
+            "score": "20",
             "beatPlayer": ["p2"]
         }
     ],
