@@ -42,6 +42,7 @@
         }
     </style>
     <script src="/js/vue.js"></script>
+    <script src="kda.js"></script>
     <script src="/js/jquery3.min.js"></script>
     <script src="/js/socket.io.slim.min.js"></script>
 </head>
@@ -93,6 +94,7 @@
                 let playerMap = eventData.playerMap
                 let leftArr = []
                 let rightArr = []
+                buildKDA(eventData.doc, teamVsIdx, playerMap)
                 for (let pid in bloodMap) {
                     let num = Number(pid.replace('p', ''))
                     let player = playerMap[pid]
@@ -103,6 +105,7 @@
                         leftArr.push(player)
                     }
                 }
+
                 for (let i = 0; i < 5; i++) {
                     let lPlayer = leftArr[i]
                     let rPlayer = rightArr[i]
@@ -112,6 +115,8 @@
                     rItem.blood = rPlayer.blood
                     lItem.name = lPlayer.name
                     rItem.name = rPlayer.name
+                    lItem.kda = lPlayer.k + '/' + lPlayer.d + '/' + lPlayer.a
+                    rItem.kda = rPlayer.k + '/' + rPlayer.d + '/' + rPlayer.a
                 }
                 console.log(eventData, leftArr, rightArr)
             });
