@@ -1,0 +1,123 @@
+<html>
+
+<head>
+    <style>
+        .bg {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .gameTitle {
+            font-family: "微软雅黑";
+            color: #aaa;
+            width: 1920px;
+            font-size: 58px;
+            font-weight: bold;
+            top: 62px;
+            text-align: center;
+        }
+        
+        .player {
+            position: absolute;
+            padding: 0px;
+            font-size: 38px;
+            color: #fff;
+            width: 300px;
+            font-family: "微软雅黑";
+        }
+        
+        body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="/js/vue.js"></script>
+    <script src="/js/jquery3.min.js"></script>
+    <script src="/js/socket.io.slim.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <img src="bottomBlood/bg.png" />
+        <div v-for="(item, index) in items" :key="item.idx">
+            <div class="player blue" :style="item.s">
+                <img :id="'avatar'+index" style="height:80px;left: -180px;top:-15px; position: relative;" />
+            </div>
+        </div>
+    </div>
+    <script>
+        var _p = function(x, y) {
+            return 'left:' + x + 'px;' + 'top:' + y + 'px;'
+        }
+        var app = new Vue({
+            el: '#app',
+            data: {
+                items: [],
+                gameTitle: ""
+            },
+            // mounted: function() {
+            created: function() {
+                console.log(this);
+                let _r = (arr, xName, xScore) => { //make r group
+                    let a = []
+                    for (let i = 0; i < arr.length; i++) {
+                        let p = arr[i]
+                        a.push([xName, p[1], xScore])
+                    }
+                    return arr.concat(a)
+                }
+                let pos = []
+                let scoreOfs = 279
+                for (let i = 0; i < 8; i++) {
+                    pos.push([591, 200 + i * 95, 0])
+                }
+                let _mkItems = (posArr) => {
+                    let a = []
+                    for (let i = 0; i < posArr.length; i++) {
+                        let p = posArr[i]
+                        a.push({
+                            s: _p(p[0], p[1]),
+                            ss: _p(p[2], p[1]),
+                            blood: -1,
+                            kda: "",
+                            name: ""
+                        })
+                    }
+                    return a
+                }
+                this.items = _mkItems(pos)
+                let getAvatar = (url, idx) => {
+                    $.get(url, data => {
+                        $("#avatar" + idx).attr('src', data);
+                    });
+                }
+                var localWs = io.connect('/rkb')
+                localWs.on('connect', () => {
+                        console.log('connect', window.location.host)
+                    })
+                    .on('sc_data', (data) => {
+                        console.log('sc_data', data)
+                        if (data.dbIdx == 'worldwar') {
+                            let playerMap = data.playerMap
+                            for (let i = 0; i < this.items.length; i++) {
+                                let item = this.items[i];
+                                let dataItem = data.rank8[i]
+                                let player = playerMap[dataItem.playerId]
+                                item.name = player.name
+                                item.score = dataItem.score
+                                let b = []
+                                for (const pid of dataItem.beatPlayer) {
+                                    b.push(playerMap[pid].name)
+                                }
+                                item.beatPlayer = b.join('、')
+                                let url = '/proxy?url=' + data.avatarUrlBase + '/' + player.playerId + '.png'
+                                getAvatar(url, i)
+                            }
+                        }
+                    })
+            }
+        })
+    </script>
+</body>
