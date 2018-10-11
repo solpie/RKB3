@@ -114,7 +114,7 @@ export class WWGame extends EventDispatcher {
       this.emit(WWGame.InitDocView, doc);
     }, true);
   }
-  clearGameRec(doc?) {
+  clearGameRec(doc?,playerMap?) {
     let _ = _doc => {
       _doc.rec = {};
       _doc.teamVsRec = {};
@@ -128,6 +128,7 @@ export class WWGame extends EventDispatcher {
       syncDoc(data => {
         if (!data.doc)
           data.doc = {}
+        data.playerMap = playerMap
         _(data.doc);
         console.log(doc);
       }, true);

@@ -2176,13 +2176,13 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var VueBase_1 = __webpack_require__(22);
 	var BackendConf_1 = __webpack_require__(33);
-	var WWGame_1 = __webpack_require__(34);
-	var JsFunc_1 = __webpack_require__(21);
-	var const_1 = __webpack_require__(27);
 	var Command_1 = __webpack_require__(28);
+	var const_1 = __webpack_require__(27);
+	var JsFunc_1 = __webpack_require__(21);
+	var VueBase_1 = __webpack_require__(22);
 	var BaseGame_1 = __webpack_require__(36);
+	var WWGame_1 = __webpack_require__(34);
 	var opReq = function (cmdId, param) {
 	    param._ = null;
 	    $.ajax({
@@ -2311,7 +2311,7 @@
 	                this.conf.onReloadFile(e);
 	            },
 	            onDeleteDoc: function () {
-	                gameView.clearGameRec();
+	                gameView.clearGameRec(null, gameView.playerMap);
 	            },
 	            setGameIdx: function (gameIdx) {
 	                gameView.gameIdx = gameIdx;
@@ -2628,7 +2628,7 @@
 	            _this.emit(WWGame.InitDocView, doc);
 	        }, true);
 	    };
-	    WWGame.prototype.clearGameRec = function (doc) {
+	    WWGame.prototype.clearGameRec = function (doc, playerMap) {
 	        var _this = this;
 	        var _ = function (_doc) {
 	            _doc.rec = {};
@@ -2644,6 +2644,7 @@
 	            exports.syncDoc(function (data) {
 	                if (!data.doc)
 	                    data.doc = {};
+	                data.playerMap = playerMap;
 	                _(data.doc);
 	                console.log(doc);
 	            }, true);

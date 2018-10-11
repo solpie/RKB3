@@ -1,12 +1,10 @@
-import { VueBase } from "../../utils/VueBase";
 import { BackendConf } from "../../BackendConf";
-import { $post } from "../../utils/WebJsFunc";
-import { updateWorldWarDoc } from "../../utils/HupuAPI";
-import { WWGame, syncDoc } from "./WWGame";
-import { clone } from "../../utils/JsFunc";
-import { PanelId } from "../../const";
 import { CommandId } from "../../Command";
-import { BaseGame, BaseGameView, _baseGameView } from "./BaseGame";
+import { PanelId } from "../../const";
+import { clone } from "../../utils/JsFunc";
+import { VueBase } from "../../utils/VueBase";
+import { BaseGameView, _baseGameView } from "./BaseGame";
+import { syncDoc, WWGame } from "./WWGame";
 declare let $;
 declare let io;
 let opReq = (cmdId: string, param: any) => {
@@ -259,7 +257,7 @@ class _worldWar extends VueBase {
       this.conf.onReloadFile(e); //
     },
     onDeleteDoc() {
-      gameView.clearGameRec();
+      gameView.clearGameRec(null, gameView.playerMap);
     },
     setGameIdx(gameIdx) {
       gameView.gameIdx = gameIdx;
