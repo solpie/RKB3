@@ -4,7 +4,7 @@ import { clone, cloneMap } from "../../utils/JsFunc";
 
 declare let $;
 const getDoc = callback => {
-  $.get("http://rtmp.icassi.us:8090/event?idx=916", res => {
+  $.get("http://rtmp.icassi.us:8090/event?idx=1021", res => {
     if (res.length) callback(res[0]);
     else callback(null);
   });
@@ -126,6 +126,8 @@ export class WWGame extends EventDispatcher {
       _(doc);
     } else {
       syncDoc(data => {
+        if (!data.doc)
+          data.doc = {}
         _(data.doc);
         console.log(doc);
       }, true);
@@ -168,7 +170,7 @@ export class WWGame extends EventDispatcher {
   setTeamScore(lScore, rScore) {
     syncDoc(data => {
       let doc = data.doc;
-      doc.teamScoreArr = [lScore,rScore]
+      doc.teamScoreArr = [lScore, rScore]
       this.emit(WWGame.InitDocView, doc);
     }, true);
   }

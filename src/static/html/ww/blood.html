@@ -99,19 +99,10 @@
                     })
                     .on('sc_data', (data) => {
                         console.log('sc_data', data)
-                        if (data.dbIdx == 'worldwar') {
+                        if (data.dbIdx == 'ww916') {
                             let playerMap = data.playerMap
                             for (let i = 0; i < this.items.length; i++) {
-                                let item = this.items[i];
-                                let dataItem = data.rank8[i]
-                                let player = playerMap[dataItem.playerId]
-                                item.name = player.name
-                                item.score = dataItem.score
-                                let b = []
-                                for (const pid of dataItem.beatPlayer) {
-                                    b.push(playerMap[pid].name)
-                                }
-                                item.beatPlayer = b.join('、')
+
                                 let url = '/proxy?url=' + data.avatarUrlBase + '/' + player.playerId + '.png'
                                 getAvatar(url, i)
                             }

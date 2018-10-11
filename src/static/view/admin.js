@@ -2519,7 +2519,7 @@
 	var HupuAPI_1 = __webpack_require__(24);
 	var EventDispatcher_1 = __webpack_require__(35);
 	var getDoc = function (callback) {
-	    $.get("http://rtmp.icassi.us:8090/event?idx=916", function (res) {
+	    $.get("http://rtmp.icassi.us:8090/event?idx=1021", function (res) {
 	        if (res.length)
 	            callback(res[0]);
 	        else
@@ -2642,6 +2642,8 @@
 	        }
 	        else {
 	            exports.syncDoc(function (data) {
+	                if (!data.doc)
+	                    data.doc = {};
 	                _(data.doc);
 	                console.log(doc);
 	            }, true);
