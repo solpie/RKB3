@@ -198,6 +198,8 @@ export class RankV2 extends BasePanel {
                         hwaText: p.height + ' /cm' + p.weight + ' /kg ' + p.age,
                         avatar: p.header,
                     }
+                    if (data.section == 0)
+                        this.rankMap[p.rank].rankInTotal = p.rank
                 }
                 //SHOW PAGE
                 this._showPage(data)

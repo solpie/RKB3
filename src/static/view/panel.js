@@ -12094,6 +12094,8 @@
 	                        hwaText: p.height + ' /cm' + p.weight + ' /kg ' + p.age,
 	                        avatar: p.header,
 	                    };
+	                    if (data.section == 0)
+	                        _this.rankMap[p.rank].rankInTotal = p.rank;
 	                }
 	                _this._showPage(data);
 	            });
