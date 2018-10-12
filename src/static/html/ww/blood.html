@@ -35,6 +35,13 @@
             padding: 13px;
         }
         
+        .modeOB {
+            position: absolute;
+            left: -150px;
+            top: -770px;
+            transform: scale(1.5, 1.5);
+        }
+        
         body {
             padding: 0;
             margin: 0;
@@ -48,7 +55,7 @@
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" v-bind:class="[  isOB?'modeOB':'']">
         <img src="bottomBlood/bg.png" />
         <div v-for="(item, i) in items" :key="item.idx">
             <div class="player leftTeam" :style="item.s">
@@ -61,8 +68,11 @@
                         </span>
                 <span class="line">
                             {{item.blood}}
-                        </span>
+                    </span>
                 </span>
+
+                <img :id="'avatar'+(i)" style="height:46px;left:893px;top:0px; position: absolute;" />
+
             </div>
             <div class="player" :style="item.s">
                 <span style="left: 1024px;top:0px; position: relative;">
@@ -76,15 +86,20 @@
                             {{items2[i].name}}
                         </span>
                 </span>
-            </div>
-            <div class="player blue" :style="item.s">
-                <img :id="'avatar'+i" style="height:80px;left: -180px;top:-15px; position: relative;" />
+                <img :id="'avatar'+(i+5)" style="height:46px;left:983px;top:0px; position: absolute;" />
             </div>
         </div>
     </div>
     <script>
         var _p = function(x, y) {
             return 'left:' + x + 'px;' + 'top:' + y + 'px;'
+        }
+        let avatarUrlBase = 'http://rtmp.icassi.us:8092/img/player/915'
+        let getAvatar = (playerId, idx) => {
+            let url = '/proxy?url=' + avatarUrlBase + '/' + playerId + '.png'
+            $.get(url, data => {
+                $("#avatar" + idx).attr('src', data);
+            });
         }
         getDoc = function(app) {
             $.get('/proxy?url=' + "http://rtmp.icassi.us:8090/event?idx=1021", res => {
@@ -117,6 +132,8 @@
                     rItem.name = rPlayer.name
                     lItem.kda = lPlayer.k + '/' + lPlayer.d + '/' + lPlayer.a
                     rItem.kda = rPlayer.k + '/' + rPlayer.d + '/' + rPlayer.a
+                    getAvatar(lPlayer.playerId, i)
+                    getAvatar(rPlayer.playerId, i + 5)
                 }
                 console.log(eventData, leftArr, rightArr)
             });
@@ -125,6 +142,7 @@
             el: '#app',
             data: {
                 items: [],
+                isOB: false,
                 items2: [],
                 gameTitle: ""
             },
@@ -133,7 +151,7 @@
                 console.log(this);
                 let pos = []
                 for (let i = 0; i < 5; i++) {
-                    pos.push([0, 818 + i * 49, 0])
+                    pos.push([0, 818 + i * 50, 0])
                 }
                 let _mkItems = (posArr) => {
                     let a = []
@@ -151,26 +169,29 @@
                 }
                 this.items = _mkItems(pos)
                 this.items2 = _mkItems(pos)
-                let getAvatar = (url, idx) => {
-                    $.get(url, data => {
-                        $("#avatar" + idx).attr('src', data);
-                    });
-                }
+
                 var localWs = io.connect('/rkb')
                 localWs.on('connect', () => {
                         console.log('connect', window.location.host)
                         getDoc(app)
+                        var url_string = window.location.href
+                        var url = new URL(url_string);
+                        var c = url.searchParams.get("m");
+                        if (c == 'ob') {
+                            this.isOB = true
+                        }
+                        console.log(c);
                     })
                     .on('sc_data', (data) => {
                         console.log('sc_data', data)
-                        if (data.dbIdx == 'ww916') {
-                            let playerMap = data.playerMap
-                            for (let i = 0; i < this.items.length; i++) {
+                            // if (data.dbIdx == 'ww916') {
+                            //     let playerMap = data.playerMap
+                            //     for (let i = 0; i < this.items.length; i++) {
 
-                                let url = '/proxy?url=' + data.avatarUrlBase + '/' + player.playerId + '.png'
-                                getAvatar(url, i)
-                            }
-                        }
+                        //         let url = '/proxy?url=' + data.avatarUrlBase + '/' + player.playerId + '.png'
+                        //         getAvatar(url, i)
+                        //     }
+                        // }
                     })
             }
         })
