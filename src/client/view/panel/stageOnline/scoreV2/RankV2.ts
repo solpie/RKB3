@@ -193,7 +193,7 @@ export class RankV2 extends BasePanel {
                         name: p.name,
                         champion: p.total_champion,
                         rank: p.rank,
-                        rankInTotal: p.top_rank,
+                        rankInTotal: p.major_rank,
                         rankChange: p.rank_change,
                         hwaText: p.height + ' /cm' + p.weight + ' /kg ' + p.age,
                         avatar: p.header,
