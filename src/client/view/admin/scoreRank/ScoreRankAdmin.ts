@@ -68,9 +68,8 @@ class _ScoreRankAdmin extends VueBase {
         this.redArr = []
         this.vsPlayerArr = []
     }
-    initGameRecTable(playerMap) {
-        syncDoc(data => {
-            console.log('init game rec table', data)
+    initGameRecTable(playerMap, data1?) {
+        let _ = (data) => {
             if (data.doc) {
                 let a = []
                 this.selGameIdx = data.doc.gameIdx
@@ -83,9 +82,15 @@ class _ScoreRankAdmin extends VueBase {
                     a.push(rec)
                 }
                 this.recArr = a
-                // this.recArr = mapToArr(data.doc.rec)
             }
-        })
+        }
+        if (data1)
+            _(data1)
+        else
+            syncDoc(data1 => {
+                console.log('init game rec table', data1)
+                _(data1)
+            })
     }
     createOption(data) {
         let a = [];
@@ -197,8 +202,26 @@ class _ScoreRankAdmin extends VueBase {
         },
         onSetScore(gameIdx) {
             syncDoc(data => {
-
+                let doc = data.doc
+                let scoreStr = $("#scoreInput" + gameIdx).val();
+                console.log(scoreStr);
+                let a = scoreStr.split(" ");
+                if (a.length == 2) {
+                    let rec = doc.rec[gameIdx]
+                    rec.score = [Number(a[0]), Number(a[1])]
+                    this.initGameRecTable(this.playerMap, data)
+                }
             }, true)
+        },
+        onDeleteGameRec(gameIdx) {
+            syncDoc(data => {
+                let doc = data.doc;
+                delete doc.rec[gameIdx];
+                this.initGameRecTable(this.playerMap, data)
+            }, true);
+        },
+        setGameIdx(gameIdx) {
+            this.selGameIdx = gameIdx
         },
         onCreateGame() {
             console.log('onCreateGame', this.lPlayer, this.rPlayer)
@@ -215,6 +238,7 @@ class _ScoreRankAdmin extends VueBase {
                         , score: [0, 0]
                     }
                     console.log('create game', data)
+                    this.initGameRecTable(this.playerMap, data)
                 }, true)
             }
         },
