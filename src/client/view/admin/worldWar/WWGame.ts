@@ -1,6 +1,5 @@
-import { updateWorldWarDoc } from "../../utils/HupuAPI";
 import { EventDispatcher } from "../../utils/EventDispatcher";
-import { clone, cloneMap } from "../../utils/JsFunc";
+import { updateWorldWarDoc } from "../../utils/HupuAPI";
 
 declare let $;
 const getDoc = callback => {

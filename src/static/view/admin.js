@@ -2516,8 +2516,8 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var HupuAPI_1 = __webpack_require__(24);
 	var EventDispatcher_1 = __webpack_require__(35);
+	var HupuAPI_1 = __webpack_require__(24);
 	var getDoc = function (callback) {
 	    $.get("http://rtmp.icassi.us:8090/event?idx=1021", function (res) {
 	        if (res.length)
@@ -2933,9 +2933,28 @@
 	var const_1 = __webpack_require__(27);
 	var Command_1 = __webpack_require__(28);
 	var JsFunc_1 = __webpack_require__(21);
+	var HupuAPI_1 = __webpack_require__(24);
 	var confFile = null;
 	var reader;
 	var filesInput;
+	var getDoc = function (callback) {
+	    $.get("http://rtmp.icassi.us:8090/event?idx=1020", function (res) {
+	        if (res.length)
+	            callback(res[0]);
+	        else
+	            callback(null);
+	    });
+	};
+	var syncDoc = function (cb, isSave) {
+	    if (isSave === void 0) { isSave = false; }
+	    getDoc(function (data) {
+	        cb(data);
+	        if (isSave)
+	            HupuAPI_1.updateWorldWarDoc(data, function (res) {
+	                console.log(res);
+	            });
+	    });
+	};
 	var opReq = function (cmdId, param) {
 	    param._ = null;
 	    $.ajax({
@@ -2963,6 +2982,9 @@
 	        this.lPlayer = VueBase_1.VueBase.PROP;
 	        this.rPlayer = VueBase_1.VueBase.PROP;
 	        this.lastScoreArr = VueBase_1.VueBase.PROP;
+	        this.selGameIdx = VueBase_1.VueBase.PROP;
+	        this.recArr = VueBase_1.VueBase.PROP;
+	        this.playerMap = VueBase_1.VueBase.PROP;
 	        this.methods = {
 	            onReloadShow: function () {
 	                var _this = this;
@@ -2993,6 +3015,34 @@
 	            onAddScore: function (isLeft, dtScore) {
 	                this.onShowScoreRank(true, dtScore, isLeft);
 	                opReq("" + Command_1.CommandId.cs_updateScore, { dtScore: dtScore, isLeft: isLeft });
+	            },
+	            onSetScore: function (gameIdx) {
+	                syncDoc(function (data) {
+	                }, true);
+	            },
+	            onCreateGame: function () {
+	                var _this = this;
+	                console.log('onCreateGame', this.lPlayer, this.rPlayer);
+	                if (this.lPlayer && this.rPlayer) {
+	                    syncDoc(function (data) {
+	                        if (!data.doc)
+	                            data.doc = { gameIdx: 0, rec: {} };
+	                        var doc = data.doc;
+	                        if (!doc.rec)
+	                            doc.rec = {};
+	                        doc.gameIdx++;
+	                        doc.rec[doc.gameIdx] = {
+	                            player: [_this.lPlayer.playerId, _this.rPlayer.playerId],
+	                            score: [0, 0]
+	                        };
+	                        console.log('create game', data);
+	                    }, true);
+	                }
+	            },
+	            onInitDoc: function () {
+	                syncDoc(function (data) {
+	                    data.doc = { gameIdx: 0, rec: {} };
+	                }, true);
 	            },
 	            onInitGame: function () {
 	                console.log('init game');
@@ -3109,9 +3159,29 @@
 	        this.redArr = [];
 	        this.vsPlayerArr = [];
 	    };
+	    _ScoreRankAdmin.prototype.initGameRecTable = function (playerMap) {
+	        var _this = this;
+	        syncDoc(function (data) {
+	            console.log('init game rec table', data);
+	            if (data.doc) {
+	                var a = [];
+	                _this.selGameIdx = data.doc.gameIdx;
+	                for (var idx in data.doc.rec) {
+	                    var rec = data.doc.rec[idx];
+	                    var p1 = rec.player[0];
+	                    var p2 = rec.player[1];
+	                    rec.name = [playerMap[p1].name, playerMap[p2].name];
+	                    rec.gameIdx = idx;
+	                    a.push(rec);
+	                }
+	                _this.recArr = a;
+	            }
+	        });
+	    };
 	    _ScoreRankAdmin.prototype.createOption = function (data) {
 	        var a = [];
 	        var playerMap = data.playerMap;
+	        this.playerMap = playerMap;
 	        if (data.rec)
 	            for (var i = 0; i < data.rec.length; i++) {
 	                var rec = data.rec[i];
@@ -3139,6 +3209,7 @@
 	            }
 	        }
 	        console.log('create gameConf ', this.gameConf);
+	        this.initGameRecTable(playerMap);
 	    };
 	    _ScoreRankAdmin.prototype.route = function (recArr, playerMap) {
 	        var getWinner = function (rec) {
@@ -3185,7 +3256,7 @@
 /* 40 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <a href=\"/html/ww/group.html\">小组赛</a>\r\n    <a href=\"/html/ww/index.html\">8进4 final晋级</a>\r\n    <a href=\"/html/ww/rank8.html\">rank8</a>\r\n    <a href=\"/html/intro/ww/intro.html?group=a\">小组介绍 group=a</a>\r\n    <hr>\r\n    <span class=\"select\">\r\n            <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                    {{ option.text }}\r\n                </option>\r\n            </select>\r\n        </span>\r\n\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n\r\n    <div style=\"width: 900px;\">\r\n        <br> score rank:\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onReloadShow()\">reload show</button>\r\n        <button class=\"button is-primary\" @click=\"onSetPlayerDeactive()\">set player deactive</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,-1)\">L-1</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,1)\">L+1</button> ----------\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,1)\">R+1</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,-1)\">R-1</button>\r\n        <br>\r\n        <div class=\"level\">\r\n            <div class=\"level-left\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in blueArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n            <div class=\"level-right\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in redArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <a href=\"/html/ww/group.html\">小组赛</a>\r\n    <a href=\"/html/ww/index.html\">8进4 final晋级</a>\r\n    <a href=\"/html/ww/rank8.html\">rank8</a>\r\n    <a href=\"/html/intro/ww/intro.html?group=a\">小组介绍 group=a</a>\r\n    <hr>\r\n    <span class=\"select\">\r\n            <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                    {{ option.text }}\r\n                </option>\r\n            </select>\r\n        </span>\r\n\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <button class=\"button is-primary\" @click=\"onCreateGame\">创建比赛</button>\r\n    <button class=\"button is-primary\" @click=\"onInitDoc\">init doc</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n\r\n    <div style=\"width: 900px;\">\r\n        <br> score rank:\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onReloadShow()\">reload show</button>\r\n        <button class=\"button is-primary\" @click=\"onSetPlayerDeactive()\">set player deactive</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,-1)\">L-1</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(true,1)\">L+1</button> ----------\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,1)\">R+1</button>\r\n        <button class=\"button is-primary\" @click=\"onAddScore(false,-1)\">R-1</button>\r\n        <br>\r\n        <div class=\"level\">\r\n            <div class=\"level-left\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in blueArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n            <div class=\"level-right\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in redArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n\r\n        <table class=\"table is-striped is-bordered\">\r\n            <thead>\r\n                <tr>\r\n                    <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                    <th>L player</th>\r\n                    <th>score</th>\r\n                    <th>R player</th>\r\n                    <th>action</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==selGameIdx?'is-selected':'']\">\r\n                    <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}}</a></th>\r\n                    <td> {{rec.name[0]}} </td>\r\n                    <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                    <td> {{rec.name[1]}} </td>\r\n                    <td>\r\n                        <div class=\"control\" v-if=\"rec.gameIdx==selGameIdx\">\r\n                            <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                            <button class=\"button btn-setScore\" @click=\"onSetScore(rec.gameIdx)\">修改比分</button>\r\n                            <button class=\"button\" @click=\"onSetVS(rec.gameIdx,vsPlayer)\">修改对阵↑</button>\r\n                            <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                        </div>\r\n                    </td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 41 */

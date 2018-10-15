@@ -1,12 +1,31 @@
 import { VueBase } from '../../utils/VueBase';
 import { PanelId } from '../../const';
 import { CommandId } from '../../Command';
-import { descendingProp } from '../../utils/JsFunc';
+import { descendingProp, mapToArr } from '../../utils/JsFunc';
 import { ScoreRank } from '../../panel/stageOnline/scoreRank/ScoreRank';
+import { BaseGameView } from '../worldWar/BaseGame';
+import { updateWorldWarDoc } from '../../utils/HupuAPI';
 let confFile = null;
 let reader;
 let filesInput;
 declare let $
+
+const getDoc = callback => {
+    $.get("http://rtmp.icassi.us:8090/event?idx=1020", res => {
+        if (res.length) callback(res[0]);
+        else callback(null);
+    });
+};
+const syncDoc = (cb, isSave = false) => {
+    getDoc(data => {
+        cb(data);
+        if (isSave)
+            updateWorldWarDoc(data, res => {
+                console.log(res);
+            });
+    });
+};
+
 let opReq = (cmdId: string, param: any) => {
     param._ = null
     $.ajax({
@@ -32,6 +51,11 @@ class _ScoreRankAdmin extends VueBase {
     rPlayer = VueBase.PROP;
 
     lastScoreArr = VueBase.PROP;
+
+    //rec table
+    selGameIdx = VueBase.PROP
+    recArr = VueBase.PROP;
+    playerMap = VueBase.PROP;
     constructor() {
         super();
         VueBase.initProps(this);
@@ -44,10 +68,29 @@ class _ScoreRankAdmin extends VueBase {
         this.redArr = []
         this.vsPlayerArr = []
     }
-
+    initGameRecTable(playerMap) {
+        syncDoc(data => {
+            console.log('init game rec table', data)
+            if (data.doc) {
+                let a = []
+                this.selGameIdx = data.doc.gameIdx
+                for (let idx in data.doc.rec) {
+                    let rec = data.doc.rec[idx]
+                    let p1 = rec.player[0]
+                    let p2 = rec.player[1]
+                    rec.name = [playerMap[p1].name, playerMap[p2].name]
+                    rec.gameIdx = idx
+                    a.push(rec)
+                }
+                this.recArr = a
+                // this.recArr = mapToArr(data.doc.rec)
+            }
+        })
+    }
     createOption(data) {
         let a = [];
         let playerMap = data.playerMap
+        this.playerMap = playerMap
         if (data.rec)
             for (var i = 0; i < data.rec.length; i++) {
                 let rec = data.rec[i]
@@ -80,6 +123,7 @@ class _ScoreRankAdmin extends VueBase {
             }
         }
         console.log('create gameConf ', this.gameConf);
+        this.initGameRecTable(playerMap)
     }
 
     route(recArr, playerMap) {
@@ -150,6 +194,34 @@ class _ScoreRankAdmin extends VueBase {
         onAddScore(isLeft, dtScore) {
             this.onShowScoreRank(true, dtScore, isLeft)
             opReq(`${CommandId.cs_updateScore}`, { dtScore: dtScore, isLeft: isLeft })
+        },
+        onSetScore(gameIdx) {
+            syncDoc(data => {
+
+            }, true)
+        },
+        onCreateGame() {
+            console.log('onCreateGame', this.lPlayer, this.rPlayer)
+            if (this.lPlayer && this.rPlayer) {
+                syncDoc(data => {
+                    if (!data.doc)
+                        data.doc = { gameIdx: 0, rec: {} }
+                    let doc = data.doc;
+                    if (!doc.rec)
+                        doc.rec = {}
+                    doc.gameIdx++
+                    doc.rec[doc.gameIdx] = {
+                        player: [this.lPlayer.playerId, this.rPlayer.playerId]
+                        , score: [0, 0]
+                    }
+                    console.log('create game', data)
+                }, true)
+            }
+        },
+        onInitDoc() {
+            syncDoc(data => {
+                data.doc = { gameIdx: 0, rec: {} }
+            }, true)
         },
         onInitGame() {
             console.log('init game')

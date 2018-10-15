@@ -15,6 +15,8 @@
     <input type="file" id="files" accept="*.json" hidden>
     <input type="text" v-model="vsPlayer" style="width: 100px;">
     <button class="button is-primary" @click="onInitGame">初始比赛</button>
+    <button class="button is-primary" @click="onCreateGame">创建比赛</button>
+    <button class="button is-primary" @click="onInitDoc">init doc</button>
     <br>
     <br>
     <button class="button is-primary" @click="onFile">打开配置</button>
@@ -50,5 +52,33 @@
                 </ul>
             </div>
         </div>
+
+        <table class="table is-striped is-bordered">
+            <thead>
+                <tr>
+                    <th><abbr title="Position">#gameIdx</abbr></th>
+                    <th>L player</th>
+                    <th>score</th>
+                    <th>R player</th>
+                    <th>action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(rec,index) in recArr" :key="index" v-bind:class="[rec.gameIdx==selGameIdx?'is-selected':'']">
+                    <th><a @click="setGameIdx(rec.gameIdx)">#####{{rec.gameIdx}}</a></th>
+                    <td> {{rec.name[0]}} </td>
+                    <td> {{rec.score[0]}} - {{rec.score[1]}} </td>
+                    <td> {{rec.name[1]}} </td>
+                    <td>
+                        <div class="control" v-if="rec.gameIdx==selGameIdx">
+                            <input class="input" :id="'scoreInput'+rec.gameIdx" type="text" style="width: 80px;">
+                            <button class="button btn-setScore" @click="onSetScore(rec.gameIdx)">修改比分</button>
+                            <button class="button" @click="onSetVS(rec.gameIdx,vsPlayer)">修改对阵↑</button>
+                            <button class="button is-danger" @click="onDeleteGameRec(rec.gameIdx)">删除</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

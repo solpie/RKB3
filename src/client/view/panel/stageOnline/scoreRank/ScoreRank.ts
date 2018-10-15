@@ -28,7 +28,6 @@ class PlayerItem extends PIXI.Container {
         this.fg = new PIXI.Sprite()
         this.addChild(this.fg)
 
-
         if (isOff) {
             ns.fontSize = '35px'
         }
@@ -38,8 +37,6 @@ class PlayerItem extends PIXI.Container {
         this.pName = TextFac.new_(ns, this)
             .setText(data.name)
             .setPos(185, textY)
-
-
 
         ns.fontFamily = 'dinCondensedC'
         ns.fontSize = '50px'

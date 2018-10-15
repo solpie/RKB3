@@ -3,10 +3,10 @@
     "dbIdx": "worldwar",
     "gameTitle": "新人魔王晋级赛",
     "gameTitleMap": {
-        "1": "新人vs魔王晋级赛16进8",
-        "2": "新人vs魔王晋级赛16进8",
-        "3": "新人vs魔王晋级赛8进4",
-        "4": "新人vs魔王晋级赛决赛"
+        "1": "",
+        "2": "",
+        "3": "",
+        "4": ""
     },
     "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/915/",
     "rec-show": 1,

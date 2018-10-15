@@ -192,7 +192,9 @@
                             this.isOB = true
                         }
                         console.log(c);
-                        // io.emit('create panel sync current blood')
+                        // io.emit("cs_createPanel", {
+                        //     panelId: 'teamBlood'
+                        // })
                     })
                     .on('sc_setBlood', (data) => {
                         console.log('sc_setBlood', data)
