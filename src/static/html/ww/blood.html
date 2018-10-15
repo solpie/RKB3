@@ -101,7 +101,7 @@
                 $("#avatar" + idx).attr('src', data);
             });
         }
-        getDoc = function(app) {
+        getDoc = function(app, isLoadAvatar = false, scoreData = null) {
             $.get('/proxy?url=' + "http://rtmp.icassi.us:8090/event?idx=1021", res => {
                 let eventData = res[0]
                 let teamVsIdx = eventData.doc.teamVsIdx
@@ -113,11 +113,10 @@
                 for (let pid in bloodMap) {
                     let num = Number(pid.replace('p', ''))
                     let player = playerMap[pid]
-                    player.blood = bloodMap[pid]
                     if (num > 20) {
-                        rightArr.push(player)
-                    } else {
                         leftArr.push(player)
+                    } else {
+                        rightArr.push(player)
                     }
                 }
 
@@ -126,14 +125,26 @@
                     let rPlayer = rightArr[i]
                     let lItem = app.items[i]
                     let rItem = app.items2[i]
+                    if (scoreData) {
+                        if (scoreData.lPlayer == lPlayer.playerId) {
+
+                            lPlayer.blood -= scoreData.rScore
+                        }
+                        if (scoreData.rPlayer == rPlayer.playerId) {
+                            rPlayer.blood -= scoreData.lScore
+                        }
+                    }
                     lItem.blood = lPlayer.blood
                     rItem.blood = rPlayer.blood
                     lItem.name = lPlayer.name
                     rItem.name = rPlayer.name
                     lItem.kda = lPlayer.k + '/' + lPlayer.d + '/' + lPlayer.a
                     rItem.kda = rPlayer.k + '/' + rPlayer.d + '/' + rPlayer.a
-                    getAvatar(lPlayer.playerId, i)
-                    getAvatar(rPlayer.playerId, i + 5)
+                    if (isLoadAvatar) {
+                        getAvatar(lPlayer.playerId, i)
+                        getAvatar(rPlayer.playerId, i + 5)
+                    }
+
                 }
                 console.log(eventData, leftArr, rightArr)
             });
@@ -173,7 +184,7 @@
                 var localWs = io.connect('/rkb')
                 localWs.on('connect', () => {
                         console.log('connect', window.location.host)
-                        getDoc(app)
+                        getDoc(app, true)
                         var url_string = window.location.href
                         var url = new URL(url_string);
                         var c = url.searchParams.get("m");
@@ -181,17 +192,11 @@
                             this.isOB = true
                         }
                         console.log(c);
+                        // io.emit('create panel sync current blood')
                     })
-                    .on('sc_data', (data) => {
-                        console.log('sc_data', data)
-                            // if (data.dbIdx == 'ww916') {
-                            //     let playerMap = data.playerMap
-                            //     for (let i = 0; i < this.items.length; i++) {
-
-                        //         let url = '/proxy?url=' + data.avatarUrlBase + '/' + player.playerId + '.png'
-                        //         getAvatar(url, i)
-                        //     }
-                        // }
+                    .on('sc_setBlood', (data) => {
+                        console.log('sc_setBlood', data)
+                        getDoc(app, false, data)
                     })
             }
         })

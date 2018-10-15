@@ -18,6 +18,8 @@ export class BaseGame {
   rFoul: number = 0;
   lName: string = "";
   rName: string = "";
+  lPlayerId: string = "";
+  rPlayerId: string = "";
   constructor() { }
 }
 const baseGame = new BaseGame();
@@ -41,6 +43,8 @@ export class _baseGameView extends VueBase {
   initView(data) {
     baseGame.lName = data.leftPlayer.name;
     baseGame.rName = data.rightPlayer.name;
+    baseGame.lPlayerId = data.leftPlayer.playerId
+    baseGame.rPlayerId = data.rightPlayer.playerId
     baseGame.lScore = baseGame.rScore = baseGame.lFoul = baseGame.rFoul = 0;
     console.log("init base game view", data, baseGame.lName);
     this.vueUpdate();
@@ -81,7 +85,11 @@ export class _baseGameView extends VueBase {
         baseGame.rScore += dtScore;
         score = baseGame.rScore;
       }
-      opReq(CommandId.cs_setBlood, { isLeft: isLeft, score: score });
+      opReq(CommandId.cs_setBlood, {
+        isLeft: isLeft, score: score,
+        lScore: baseGame.lScore, rScore: baseGame.rScore,
+        lPlayer:baseGame.lPlayerId,rPlayer:baseGame.rPlayerId
+      });
       this.vueUpdate();
     },
     onSetFoul(isLeft, dtFoul) {

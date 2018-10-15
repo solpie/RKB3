@@ -21,7 +21,7 @@
     <button class="button is-primary" id="reloadFile" @click="reloadFile">reload</button>
     <br>
 
-    <div>
+    <div style="width: 900px;">
         <br> score rank:
         <br>
         <button class="button is-primary" @click="onShowScoreRank(true)">show</button>
@@ -34,18 +34,21 @@
         <button class="button is-primary" @click="onAddScore(false,1)">R+1</button>
         <button class="button is-primary" @click="onAddScore(false,-1)">R-1</button>
         <br>
-
-        <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
-            <li style="float:left;width:190px;padding:5px" v-for="player in blueArr">
-                <button class="button is-primary" @click="onChangePlayer(true,player.playerId)">{{player.name}}</button>
-            </li>
-        </ul>
-        <hr>
-        <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
-            <li style="float:left;width:190px;padding:5px" v-for="player in redArr">
-                <button class="button is-primary" @click="onChangePlayer(false,player.playerId)">{{player.name}}</button>
-            </li>
-        </ul>
-
+        <div class="level">
+            <div class="level-left">
+                <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
+                    <li style="float:left;width:190px;padding:5px" v-for="player in blueArr">
+                        <button class="button is-primary" @click="onChangePlayer(true,player.playerId)">{{player.name}}</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="level-right">
+                <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
+                    <li style="float:left;width:190px;padding:5px" v-for="player in redArr">
+                        <button class="button is-primary" @click="onChangePlayer(false,player.playerId)">{{player.name}}</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>

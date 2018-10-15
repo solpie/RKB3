@@ -59,7 +59,6 @@ function buildKDA(doc, teamVsIdx, playerMap) {
             playerMap[player].d = curBloodMap[player].d;
             playerMap[player].a = curBloodMap[player].a;
         }
-        console.log("teamVsIdx ", teamVsIdx, "bloodMap", curBloodMap);
     }
     return bloodMapForShow;
 }
