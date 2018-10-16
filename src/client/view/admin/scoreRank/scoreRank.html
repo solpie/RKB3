@@ -16,7 +16,7 @@
     <input type="text" v-model="vsPlayer" style="width: 100px;">
     <button class="button is-primary" @click="onInitGame">初始比赛</button>
     <button class="button is-primary" @click="onCreateGame">创建比赛</button>
-    <button class="button is-primary" @click="onInitDoc">init doc</button>
+    <button class="button is-primary" @click="onShowWinMap">战胜对手</button>
     <br>
     <br>
     <button class="button is-primary" @click="onFile">打开配置</button>
@@ -52,7 +52,7 @@
                 </ul>
             </div>
         </div>
-
+        <button class="button is-danger" @click="onInitDoc">init doc</button>
         <table class="table is-striped is-bordered">
             <thead>
                 <tr>
@@ -60,7 +60,7 @@
                     <th>L player</th>
                     <th>score</th>
                     <th>R player</th>
-                    <th>action</th>
+                    <th>operation</th>
                 </tr>
             </thead>
             <tbody>
@@ -80,5 +80,6 @@
                 </tr>
             </tbody>
         </table>
+        {{p1WinMap}}
     </div>
 </div>

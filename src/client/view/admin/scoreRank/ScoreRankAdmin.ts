@@ -56,6 +56,8 @@ class _ScoreRankAdmin extends VueBase {
     selGameIdx = VueBase.PROP
     recArr = VueBase.PROP;
     playerMap = VueBase.PROP;
+    winMap = VueBase.PROP;
+    p1WinMap = VueBase.PROP;
     constructor() {
         super();
         VueBase.initProps(this);
@@ -73,14 +75,24 @@ class _ScoreRankAdmin extends VueBase {
             if (data.doc) {
                 let a = []
                 this.selGameIdx = data.doc.gameIdx
+                let winMap = {}
                 for (let idx in data.doc.rec) {
                     let rec = data.doc.rec[idx]
                     let p1 = rec.player[0]
                     let p2 = rec.player[1]
+                    if (!winMap[p1])
+                        winMap[p1] = []
+                    if (!winMap[p2])
+                        winMap[p2] = []
+                    if (rec.score[0] > rec.score[1])
+                        winMap[p1].push(p2)
+                    else
+                        winMap[p2].push(p1)
                     rec.name = [playerMap[p1].name, playerMap[p2].name]
                     rec.gameIdx = idx
                     a.push(rec)
                 }
+                this.winMap = winMap
                 this.recArr = a
             }
         }
@@ -223,9 +235,17 @@ class _ScoreRankAdmin extends VueBase {
         setGameIdx(gameIdx) {
             this.selGameIdx = gameIdx
         },
+        onShowWinMap() {
+            let p1 = this.vsPlayerArr[0]
+            this.p1WinMap = this.winMap[p1]
+        },
         onCreateGame() {
             console.log('onCreateGame', this.lPlayer, this.rPlayer)
-            if (this.lPlayer && this.rPlayer) {
+
+            let a = this.vsPlayer.split(' ')
+            let p1 = a[0]
+            let p2 = a[1]
+            if (p1 && p2) {
                 syncDoc(data => {
                     if (!data.doc)
                         data.doc = { gameIdx: 0, rec: {} }
@@ -234,7 +254,7 @@ class _ScoreRankAdmin extends VueBase {
                         doc.rec = {}
                     doc.gameIdx++
                     doc.rec[doc.gameIdx] = {
-                        player: [this.lPlayer.playerId, this.rPlayer.playerId]
+                        player: [p1, p2]
                         , score: [0, 0]
                     }
                     console.log('create game', data)
