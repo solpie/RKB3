@@ -57,6 +57,7 @@ class _ScoreRankAdmin extends VueBase {
     recArr = VueBase.PROP;
     playerMap = VueBase.PROP;
     winMap = VueBase.PROP;
+    totalScoreMap = VueBase.PROP;
     p1WinMap = VueBase.PROP;
     constructor() {
         super();
@@ -70,30 +71,42 @@ class _ScoreRankAdmin extends VueBase {
         this.redArr = []
         this.vsPlayerArr = []
     }
-    initGameRecTable(playerMap, data1?) {
+    initGameRecTable(playerMap, data1?, callback?) {
         let _ = (data) => {
             if (data.doc) {
                 let a = []
                 this.selGameIdx = data.doc.gameIdx
                 let winMap = {}
+                let totalScoreMap = {}
                 for (let idx in data.doc.rec) {
                     let rec = data.doc.rec[idx]
                     let p1 = rec.player[0]
                     let p2 = rec.player[1]
-                    if (!winMap[p1])
+                    if (!winMap[p1]) {
                         winMap[p1] = []
-                    if (!winMap[p2])
+                        totalScoreMap[p1] = 0
+                    }
+                    if (!winMap[p2]) {
+                        totalScoreMap[p2] = 0
                         winMap[p2] = []
+                    }
+                    totalScoreMap[p1] += rec.score[0] - rec.score[1]
+                    totalScoreMap[p2] -= rec.score[0] - rec.score[1]
                     if (rec.score[0] > rec.score[1])
                         winMap[p1].push(p2)
                     else
                         winMap[p2].push(p1)
+
                     rec.name = [playerMap[p1].name, playerMap[p2].name]
                     rec.gameIdx = idx
                     a.push(rec)
                 }
                 this.winMap = winMap
+                this.totalScoreMap = totalScoreMap
                 this.recArr = a
+                if (callback) {
+                    callback()
+                }
             }
         }
         if (data1)
@@ -104,7 +117,7 @@ class _ScoreRankAdmin extends VueBase {
                 _(data1)
             })
     }
-    createOption(data) {
+    createOption(data,callback?) {
         let a = [];
         let playerMap = data.playerMap
         this.playerMap = playerMap
@@ -140,7 +153,10 @@ class _ScoreRankAdmin extends VueBase {
             }
         }
         console.log('create gameConf ', this.gameConf);
-        this.initGameRecTable(playerMap)
+        this.initGameRecTable(playerMap, null, _ => {
+            data.totalScoreMap = this.totalScoreMap;
+            callback()
+        })
     }
 
     route(recArr, playerMap) {
@@ -379,9 +395,10 @@ class _ScoreRankAdmin extends VueBase {
                         if (_exData.callback)
                             _exData.callback()
                     }
-                    this.createOption(data)
-                    console.log("EVENT_ON_FILE", data, _exData);
-                    opReq('cs_data', data)
+                    this.createOption(data, _ => {
+                        console.log("EVENT_ON_FILE", data, _exData);
+                        opReq('cs_data', data)
+                    })
                 });
             }
             reader.readAsText(confFile, "utf-8");
