@@ -51,8 +51,11 @@
                 <span>{{item.name}} </span>
             </div>
             <div class="player blue" :style="item.s">
-                <span style="left: 150px;top:0px; position: relative;">
+                <span style="left: 140px;top:0px; position: relative;">
                     {{item.winLose}}
+                </span>
+                <span style="left: 176px;top:0px; position: relative;text-align: center;width: 90px;">
+                    {{item.score}}
                 </span>
             </div>
         </div>
@@ -80,18 +83,18 @@
                     return arr.concat(a)
                 }
                 let pos = []
-                let scoreOfs = 279 - 98
+                let scoreOfs = 181
                 for (let i = 0; i < 3; i++) {
-                    pos.push([263, 434 + i * 86, 0])
+                    pos.push([233, 434 + i * 86, 0])
                 }
                 for (let i = 0; i < 3; i++) {
-                    pos.push([688, 434 + i * 86, 0])
+                    pos.push([664, 434 + i * 86, 0])
                 }
                 for (let i = 0; i < 3; i++) {
-                    pos.push([1103, 434 + i * 86, 0])
+                    pos.push([1079, 434 + i * 86, 0])
                 }
                 for (let i = 0; i < 3; i++) {
-                    pos.push([1524, 434 + i * 86, 0])
+                    pos.push([1500, 434 + i * 86, 0])
                 }
                 let _mkItems = (posArr) => {
                     let a = []
@@ -100,7 +103,7 @@
                         a.push({
                             s: _p(p[0], p[1]),
                             ss: _p(p[2], p[1]),
-                            score: -1,
+                            score: "",
                             winLose: "",
                             name: ""
                         })
@@ -125,12 +128,14 @@
                                 .concat(data.group['B'].sort(sortWin))
                                 .concat(data.group['C'].sort(sortWin))
                                 .concat(data.group['D'].sort(sortWin))
+                            let totalScoreMap = data.totalScoreMap
                             for (let i = 0; i < this.items.length; i++) {
                                 let item = this.items[i];
                                 let dataItem = itemArr[i]
                                 let player = playerMap[dataItem.playerId]
                                 item.name = player.name
                                 item.winLose = Math.floor(dataItem.w) + "/" + dataItem.l
+                                item.score = totalScoreMap[dataItem.playerId] || 0
                                     // item.score = dataItem.score
                             }
                         }
