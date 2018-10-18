@@ -90,16 +90,22 @@ class _ScoreRankAdmin extends VueBase {
                         totalScoreMap[p2] = { score: 0, w: 0, l: 0 }
                         winMap[p2] = []
                     }
-                    totalScoreMap[p1].score += rec.score[0] - rec.score[1]
-                    totalScoreMap[p2].score -= rec.score[0] - rec.score[1]
+                    if (rec.isGroup) {
+                        totalScoreMap[p1].score += rec.score[0] - rec.score[1]
+                        totalScoreMap[p2].score -= rec.score[0] - rec.score[1]
+                    }
                     if (rec.score[0] > rec.score[1]) {
-                        totalScoreMap[p1].w += 1
-                        totalScoreMap[p2].l += 1
+                        if (rec.isGroup) {
+                            totalScoreMap[p1].w += 1
+                            totalScoreMap[p2].l += 1
+                        }
                         winMap[p1].push(p2)
                     }
                     else {
-                        totalScoreMap[p2].w += 1
-                        totalScoreMap[p1].l += 1
+                        if (rec.isGroup) {
+                            totalScoreMap[p2].w += 1
+                            totalScoreMap[p1].l += 1
+                        }
                         winMap[p2].push(p1)
                     }
 
@@ -233,6 +239,16 @@ class _ScoreRankAdmin extends VueBase {
         onAddScore(isLeft, dtScore) {
             this.onShowScoreRank(true, dtScore, isLeft)
             opReq(`${CommandId.cs_updateScore}`, { dtScore: dtScore, isLeft: isLeft })
+        },
+        onSetGroup(gameIdx) {
+            syncDoc(data => {
+                let doc = data.doc
+                if (!doc.rec[gameIdx]['isGroup'])
+                    doc.rec[gameIdx]['isGroup'] = true
+                else
+                    doc.rec[gameIdx]['isGroup'] = false
+                this.initGameRecTable(this.playerMap, data)
+            }, true)
         },
         onSetScore(gameIdx) {
             syncDoc(data => {
