@@ -122,20 +122,49 @@
                             let playerMap = data.playerMap
 
                             function sortWin(v1, v2) {
-                                return v2.w - v1.w;
+                                return v2.score - v1.score || v2.w - v1.w;
                             }
-                            itemArr = itemArr.concat(data.group['A'].sort(sortWin))
-                                .concat(data.group['B'].sort(sortWin))
-                                .concat(data.group['C'].sort(sortWin))
-                                .concat(data.group['D'].sort(sortWin))
+
                             let totalScoreMap = data.totalScoreMap
+
+                            function fillRec(arr) {
+                                for (let i = 0; i < arr.length; i++) {
+                                    let jsonPlayer = arr[i]
+                                    let playerRec = totalScoreMap[jsonPlayer.playerId]
+                                    if (!playerRec)
+                                        playerRec = {
+                                            score: 0,
+                                            w: 0,
+                                            l: 0
+                                        }
+                                    jsonPlayer.w = playerRec.w
+                                    jsonPlayer.l = playerRec.l
+                                    jsonPlayer.score = playerRec.score
+                                }
+                                return arr.sort(sortWin)
+                            }
+
+                            itemArr = itemArr
+                                .concat(fillRec(data.group['A']))
+                                .concat(fillRec(data.group['B']))
+                                .concat(fillRec(data.group['C']))
+                                .concat(fillRec(data.group['D']))
+
                             for (let i = 0; i < this.items.length; i++) {
                                 let item = this.items[i];
                                 let dataItem = itemArr[i]
                                 let player = playerMap[dataItem.playerId]
                                 item.name = player.name
+                                let playerRec = totalScoreMap[dataItem.playerId]
+                                if (!playerRec)
+                                    playerRec = {
+                                        score: 0,
+                                        w: 0,
+                                        l: 0
+                                    }
                                 item.winLose = Math.floor(dataItem.w) + "/" + dataItem.l
-                                item.score = totalScoreMap[dataItem.playerId] || 0
+                                item.winLose = Math.floor(playerRec.w) + "/" + playerRec.l
+                                item.score = playerRec.score || 0
                                     // item.score = dataItem.score
                             }
                         }
