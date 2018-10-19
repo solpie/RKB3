@@ -44,7 +44,7 @@ export class BottomNotice extends BasePanel {
                 '4': ['优酷:路人王篮球', 'UC:路人王篮球'],
                 '5': ['B站:路人王篮球', '微视:路人王篮球'],
                 '6': ['腾讯视频:路人王篮球', 'YouTube:路人王篮球'],
-                '7': ['触电新闻:路人王篮球', '网易新闻:路人王篮球'],
+                '7': ['知乎:路人王篮球', '网易新闻:路人王篮球'],
             }
             let t = nameMap[data.idx]
             this.lName.setText(t[0])
