@@ -49,7 +49,9 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
 
         info = table.cell(row + i, 5).value
         plist.append({'name': n,                      'hwa': [
-                     h, w, a], 'title': title, 'playerId': 'p' + str(i + 1)})
+                     h, w, a], 'title': title, 'playerId': 'p' + str(i + 1)
+                     ,'info':info
+                     })
         playerMap['p' + str(i + 1)] = plist[-1:][0]
 
     jstr = json.dumps(playerMap, ensure_ascii=False)
