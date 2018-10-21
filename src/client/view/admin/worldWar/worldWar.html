@@ -13,8 +13,8 @@
 
     <div class="control">
         vs player <input class="input" v-model="vsPlayer" type="text" style="width: 100px;">
-        <button class="button is-primary" @click="onEmitGameInfo">emit game info</button>
-        <button class="button is-primary" @click="onAddGame">创建比赛</button>
+        <button class="button is-primary" @click="onEmitGameInfo">初始比赛</button>
+        <button class="button is-primary" @click="onAddGame">创建REC</button>
         <button class="button is-primary" @click="onCommitGame(gameIdx)">提交比赛</button> teamVsIdx:
         <input class="input" v-model="teamVsIdx" type="text" style="width: 60px;">
         <a class="button is-warnning" @click="onSetBlood(teamVsIdx)">设置初始血量</a>

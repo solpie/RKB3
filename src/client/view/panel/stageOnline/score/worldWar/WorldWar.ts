@@ -5,7 +5,7 @@ import { TextTimer } from "../../../../utils/TextTimer";
 import { BloodBar } from "./BloodBar";
 import { MaskAvatar } from "../../../base/MaskAvatar";
 const isTest = false;
-
+const foulToBonus = 3;//
 export class WorldWar extends PIXI.Container {
   lName: Text2;
   rName: Text2;
@@ -292,13 +292,14 @@ export class WorldWar extends PIXI.Container {
     this.rTeamScore.text = this._rTeamScore + ''
     this.rTeamScore.x = 1010 - this.rTeamScore.width * 0.5
   }
+
   setLeftFoul(val) {
-    this.lFoulHint.visible = val > 3;
+    this.lFoulHint.visible = val >= foulToBonus;
     this.lFoul.setText("" + (val || 0)).setAlignCenter(_c(-100));
   }
   setRightFoul(val) {
     console.log('set right foul', val)
-    this.rFoulHint.visible = val > 3;
+    this.rFoulHint.visible = val >= foulToBonus;
     this.rFoul.setText("" + (val || 0)).setAlignCenter(_c(142));
   }
 

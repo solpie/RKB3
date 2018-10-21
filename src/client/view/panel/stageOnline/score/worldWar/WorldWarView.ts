@@ -53,7 +53,7 @@ export class WorldWarView extends PIXI.Container {
         console.log("sc_setPlayer", data);
         this.worldWar.setLeftPlayer(data.leftPlayer);
         this.worldWar.setRightPlayer(data.rightPlayer);
-        this.worldWar.setTimerEvent({ event: "setting", param: 0 });
+        // this.worldWar.setTimerEvent({ event: "setting", param: 0 });
         if (data.isRestFoul) {
           this.worldWar.setLeftFoul(0)
           this.worldWar.setRightFoul(0)
@@ -75,15 +75,15 @@ export class WorldWarView extends PIXI.Container {
             this.title.hide();
         }
         if (data.panel == PanelId.worldwarKDA) {
-          if (data.visible) {
-            this.lBloodRank.show({ scoreArr: data.lScoreArr, visible: true })
-            this.rBloodRank.show({ scoreArr: data.rScoreArr, visible: true })
-          }
-          else {
-            this.lBloodRank.hide()
-            this.rBloodRank.hide()
-          }
-          this.kdaTitle.visible = data.visible
+          // if (data.visible) {
+          //   this.lBloodRank.show({ scoreArr: data.lScoreArr, visible: true })
+          //   this.rBloodRank.show({ scoreArr: data.rScoreArr, visible: true })
+          // }
+          // else {
+          //   this.lBloodRank.hide()
+          //   this.rBloodRank.hide()
+          // }
+          // this.kdaTitle.visible = data.visible
         }
       })
       .on(CommandId.sc_setFoul, data => {

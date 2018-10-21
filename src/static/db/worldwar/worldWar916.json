@@ -4,7 +4,7 @@
     "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/915/",
     "team": [
         { "idx": 1, "name": "魔王隊", "playerArr": ["p21", "p22", "p23", "p24", "p25"] },
-        { "idx": 2, "name": "中遠隊", "playerArr": ["p18", "p13", "p16", "p17", "p15"] }
+        { "idx": 2, "name": "中遠隊", "playerArr": ["p5", "p12", "p16", "p17", "p19"] }
     ],
     "gameTitle": {
         "1": "小组赛",

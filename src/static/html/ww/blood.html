@@ -37,9 +37,9 @@
         
         .modeOB {
             position: absolute;
-            left: -120px;
-            top: -820px;
-            transform: scale(1.5, 1.5);
+            left: 120px;
+            top: -1220px;
+            transform: scale(3, 3);
         }
         
         body {
@@ -63,7 +63,7 @@
                     <span class="line">
                             {{item.name}}
                         </span>
-                <span class="line">
+                <span v-if="!isOB" class="line">
                             {{item.kda}}
                         </span>
                 <span class="line">
@@ -79,7 +79,7 @@
                     <span class="line">
                             {{items2[i].blood}}
                         </span>
-                <span class="line">
+                <span v-if="!isOB" class="line">
                             {{items2[i].kda}} 
                         </span>
                 <span class="line">
@@ -199,6 +199,12 @@
                     .on('sc_setBlood', (data) => {
                         console.log('sc_setBlood', data)
                         getDoc(app, false, data)
+                    })
+                    .on('sc_showPanel', data => {
+                        console.log('sc_showPanel', data)
+                        if (data.panel == PanelId.worldwarKDA) {
+                            getDoc(app, false)
+                        }
                     })
             }
         })
