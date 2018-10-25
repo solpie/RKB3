@@ -511,7 +511,8 @@ class StageOnlineView extends VueBase {
             this.opReq(`${WebDBCmd.cs_staticImg}`, { _: null, visible: v, url: url })
         },
         onShowAccount(idx, v) {
-            this.opReq(`${CommandId.cs_toggleScorePanel}`, { _: null, visible: !v, isBottom: true })
+            if (v)
+                this.opReq(`${CommandId.cs_toggleScorePanel}`, { _: null, visible: !v, isBottom: true })
             this.opReq(CommandId.cs_showPanel, { panelId: PanelId.bottomNoticeAccount, idx: idx, visible: v })
         },
         onClkLoadVsTitle() {

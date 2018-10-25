@@ -3,6 +3,7 @@ import { newBitmap } from '../../../utils/PixiEx';
 import { FontName } from '../../../const';
 import { Text2, TextFac } from '../../../utils/TextFac';
 import { imgLoader } from '../../../utils/ImgLoader';
+import { TweenEx } from '../../../utils/TweenEx';
 let urlBg = '/img/panel/notice/bottomNotice.png'
 
 export class BottomNotice extends BasePanel {
@@ -35,8 +36,10 @@ export class BottomNotice extends BasePanel {
         })
 
     }
+    prevVisible = false
     _show(data) {
         if (data.visible) {
+
             let nameMap = {
                 '1': ['抖音:路人王篮球', '快手:路人王篮球'],
                 '2': ['今日头条:路人王篮球', '西瓜视频:路人王篮球'],
@@ -52,6 +55,15 @@ export class BottomNotice extends BasePanel {
             let lUrl = '/img/panel/notice/appLogo/' + data.idx + '_0.png'
             let rUrl = '/img/panel/notice/appLogo/' + data.idx + '_1.png'
             imgLoader.loadTexArr([lUrl, rUrl], _ => {
+                if (!this.prevVisible) {
+                    this.y = 200
+                    let _t = this
+                    TweenEx.to(_t, 200, { y: 0 })
+                }
+                else {
+                    this.y = 0
+                }
+                this.prevVisible = data.visible
                 console.log('load app logo')
                 this.iconCtn.removeChildren()
                 let lIcon = newBitmap({ url: lUrl })
@@ -60,14 +72,19 @@ export class BottomNotice extends BasePanel {
                 lIcon = newBitmap({ url: rUrl })
                 lIcon.x = 980
                 this.iconCtn.addChild(lIcon)
+                this.p.addChild(this)
             })
-
-            this.p.addChild(this)
-
         }
         else {
             this.hide(data)
         }
 
+    }
+    hide(data) {
+        this.prevVisible = data.visible
+        let _t = this
+        TweenEx.to(_t, 200, { y: 200 }, _ => {
+            // this.hide(data)
+        })
     }
 }
