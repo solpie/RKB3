@@ -1,0 +1,268 @@
+<html>
+
+<head>
+    <style>
+        .bg {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .gameTitle {
+            font-family: "微软雅黑";
+            color: #aaa;
+            width: 1920px;
+            font-size: 58px;
+            font-weight: bold;
+            top: 62px;
+            text-align: center;
+        }
+        
+        .player {
+            position: absolute;
+            padding: 0px;
+            font-size: 38px;
+            color: #fff;
+            width: 578px;
+            font-family: "微软雅黑";
+        }
+        
+        .line {
+            padding: 13px;
+        }
+        
+        .modeOB {
+            position: absolute;
+            left: 120px;
+            top: -1220px;
+            transform: scale(3, 3);
+        }
+        
+        .text2 {
+            position: relative;
+        }
+        
+        .leftBlood {
+            left: 440px;
+            top: 0px;
+            font-size: 60px;
+        }
+        
+        .rightBlood {
+            left: 1440px;
+            top: 0px;
+            font-size: 60px;
+        }
+        
+        .leftTeam {
+            text-align: center;
+            left: 500px;
+            top: 30px;
+            font-size: 40px;
+            color: #c4b998;
+        }
+        
+        .rightTeam {
+            width: 200px;
+            text-align: right;
+            left: 1120px;
+            top: 30px;
+            font-size: 40px;
+            color: #c4b998;
+        }
+        
+        body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="/js/vue.js"></script>
+    <script src="kda.js"></script>
+    <script src="/js/jquery3.min.js"></script>
+    <script src="/js/socket.io.slim.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <img src="bottomBlood/bg2.png" />
+        <div class="player" style="left: 0;top: 0px;">
+            <span class="player" style="left: 430px;top:346px">
+                {{lPlayer.name}}
+            </span>
+            <span class="player" style="left: 1484px;top:346px">
+                {{rPlayer.name}}
+            </span>
+        </div>
+        <div v-for="(item, i) in items" :key="item.idx">
+            <div class="player" :style="item.s">
+                <span class="text2 leftBlood">
+                            {{item.blood}}
+                    </span>
+                <span class="text2 leftTeam">
+                            {{item.name}}
+                        </span>
+
+                <!-- <span style="left: 318px;top:0px;">
+                    <span class="line">
+                            {{item.name}}
+                        </span>
+
+                <span v-if="!isOB" class="line">
+                            {{item.kda}}
+                        </span>
+
+                </span> -->
+
+                <img :id="'avatar'+(i)" style="height:99px;left:324px;top:0px; position: absolute;" />
+
+            </div>
+            <div class="player" :style="item.s">
+                <span class="text2 rightBlood">
+                            {{items2[i].blood}}
+                        </span>
+                <span class="text2 rightTeam">
+                            {{items2[i].name}}
+                        </span>
+                <span style="left: 1024px;top:0px; position: relative;">
+                    
+                <span v-if="!isOB" class="line">
+                            {{items2[i].kda}} 
+                        </span>
+
+                </span>
+                <img :id="'avatar'+(i+5)" style="height:99px;left:1499px;top:0px; position: absolute;" />
+            </div>
+        </div>
+        <img style="position: fixed;left: 0px;top: 0px;" src="bottomBlood/fg2.png" />
+    </div>
+    <script>
+        var _p = function(x, y) {
+            return 'left:' + x + 'px;' + 'top:' + y + 'px;'
+        }
+        let avatarUrlBase = 'http://rtmp.icassi.us:8092/img/player/915'
+        let getAvatar = (playerId, idx) => {
+            let url = '/proxy?url=' + avatarUrlBase + '/' + playerId + '.png'
+            $.get(url, data => {
+                $("#avatar" + idx).attr('src', data);
+            });
+        }
+        getDoc = function(app, isLoadAvatar = false, scoreData = null) {
+            $.get('/proxy?url=' + "http://rtmp.icassi.us:8090/event?idx=1021", res => {
+                let eventData = res[0]
+                let teamVsIdx = eventData.doc.teamVsIdx
+                let bloodMap = eventData.doc.bloodMap[teamVsIdx]
+                let playerMap = eventData.playerMap
+                let leftArr = []
+                let rightArr = []
+                buildKDA(eventData.doc, teamVsIdx, playerMap)
+                for (let pid in bloodMap) {
+                    let num = Number(pid.replace('p', ''))
+                    let player = playerMap[pid]
+                    if (num > 20) {
+                        leftArr.push(player)
+                    } else {
+                        rightArr.push(player)
+                    }
+                }
+
+                for (let i = 0; i < 5; i++) {
+                    let lPlayer = leftArr[i]
+                    let rPlayer = rightArr[i]
+                    let lItem = app.items[i]
+                    let rItem = app.items2[i]
+                    if (scoreData) {
+                        if (scoreData.lPlayer == lPlayer.playerId) {
+
+                            lPlayer.blood -= scoreData.rScore
+                        }
+                        if (scoreData.rPlayer == rPlayer.playerId) {
+                            rPlayer.blood -= scoreData.lScore
+                        }
+                    }
+                    lItem.blood = lPlayer.blood
+                    rItem.blood = rPlayer.blood
+                    lItem.name = lPlayer.name
+                    rItem.name = rPlayer.name
+                    lItem.kda = lPlayer.k + '/' + lPlayer.d + '/' + lPlayer.a
+                    rItem.kda = rPlayer.k + '/' + rPlayer.d + '/' + rPlayer.a
+                    if (isLoadAvatar) {
+                        getAvatar(lPlayer.playerId, i)
+                        getAvatar(rPlayer.playerId, i + 5)
+                    }
+
+                }
+                console.log(eventData, leftArr, rightArr)
+            });
+        }
+        var app = new Vue({
+            el: '#app',
+            data: {
+                items: [],
+                lPlayer: {
+                    name: '马克',
+                    blood: 6,
+                    foul: 2
+                },
+                rPlayer: {
+                    name: 'franklin',
+                    blood: 6,
+                    foul: 2
+                },
+                isOB: false,
+                items2: [],
+                gameTitle: ""
+            },
+
+            created: function() {
+                console.log(this);
+                let pos = []
+                for (let i = 0; i < 5; i++) {
+                    pos.push([0, 420 + i * 115, 0])
+                }
+                let _mkItems = (posArr) => {
+                    let a = []
+                    for (let i = 0; i < posArr.length; i++) {
+                        let p = posArr[i]
+                        a.push({
+                            s: _p(p[0], p[1]),
+                            ss: _p(p[2], p[1]),
+                            blood: 6,
+                            kda: "0/0/0",
+                            name: ""
+                        })
+                    }
+                    return a
+                }
+                this.items = _mkItems(pos)
+                this.items2 = _mkItems(pos)
+
+                var localWs = io.connect('/rkb')
+                localWs.on('connect', () => {
+                        console.log('connect', window.location.host)
+                        getDoc(app, true)
+                        var url_string = window.location.href
+                        var url = new URL(url_string);
+                        var c = url.searchParams.get("m");
+                        if (c == 'ob') {
+                            this.isOB = true
+                        }
+                        console.log(c);
+                        // io.emit("cs_createPanel", {
+                        //     panelId: 'teamBlood'
+                        // })
+                    })
+                    .on('sc_setBlood', (data) => {
+                        console.log('sc_setBlood', data)
+                        getDoc(app, false, data)
+                    })
+                    .on('sc_showPanel', data => {
+                        console.log('sc_showPanel', data)
+                        if (data.panel == 'worldwarKDAPanel') {
+                            getDoc(app, false)
+                        }
+                    })
+            }
+        })
+    </script>
+</body>
