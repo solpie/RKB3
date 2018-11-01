@@ -31,11 +31,6 @@
         <button class="button is-primary" @click="onSetPlayerDeactive()">set player deactive</button>
         <button class="button is-primary" @click="onShowScoreRank(false)">hide</button>
         <br>
-        <button class="button is-primary" @click="onAddScore(true,-1)">L-1</button>
-        <button class="button is-primary" @click="onAddScore(true,1)">L+1</button> ----------
-        <button class="button is-primary" @click="onAddScore(false,1)">R+1</button>
-        <button class="button is-primary" @click="onAddScore(false,-1)">R-1</button>
-        <br>
         <div class="level">
             <div class="level-left">
                 <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
@@ -53,33 +48,35 @@
             </div>
         </div>
         <button class="button is-danger" @click="onInitDoc">init doc</button>
-        <table class="table is-striped is-bordered">
-            <thead>
-                <tr>
-                    <th><abbr title="Position">#gameIdx</abbr></th>
-                    <th>L player</th>
-                    <th>score</th>
-                    <th>R player</th>
-                    <th>operation</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(rec,index) in recArr" :key="index" v-bind:class="[rec.gameIdx==selGameIdx?'is-selected':'']">
-                    <th><a @click="setGameIdx(rec.gameIdx)">#####{{rec.gameIdx}} {{rec.isGroup}}</a></th>
-                    <td> {{rec.name[0]}} </td>
-                    <td> {{rec.score[0]}} - {{rec.score[1]}} </td>
-                    <td> {{rec.name[1]}} </td>
-                    <td>
-                        <div class="control" v-if="rec.gameIdx==selGameIdx">
-                            <input class="input" :id="'scoreInput'+rec.gameIdx" type="text" style="width: 80px;">
-                            <button class="button btn-setScore" @click="onSetScore(rec.gameIdx)">修改比分</button>
-                            <button class="button" @click="onSetGroup(rec.gameIdx)">小组赛记录</button>
-                            <button class="button is-danger" @click="onDeleteGameRec(rec.gameIdx)">删除</button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div style="overflow-y: scroll;height: 800px;">
+            <table class="table is-striped is-bordered">
+                <thead>
+                    <tr>
+                        <th><abbr title="Position">#gameIdx</abbr></th>
+                        <th>L player</th>
+                        <th>score</th>
+                        <th>R player</th>
+                        <th>operation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(rec,index) in recArr" :key="index" v-bind:class="[rec.gameIdx==selGameIdx?'is-selected':'']">
+                        <th><a @click="setGameIdx(rec.gameIdx)">#####{{rec.gameIdx}} {{rec.isGroup}}</a></th>
+                        <td> {{rec.name[0]}} </td>
+                        <td> {{rec.score[0]}} - {{rec.score[1]}} </td>
+                        <td> {{rec.name[1]}} </td>
+                        <td>
+                            <div class="control" v-if="rec.gameIdx==selGameIdx">
+                                <input class="input" :id="'scoreInput'+rec.gameIdx" type="text" style="width: 80px;">
+                                <button class="button btn-setScore" @click="onSetScore(rec.gameIdx)">修改比分</button>
+                                <button class="button" @click="onSetGroup(rec.gameIdx)">小组赛记录</button>
+                                <button class="button is-danger" @click="onDeleteGameRec(rec.gameIdx)">删除</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         {{p1WinMap}}
     </div>
 </div>

@@ -42,6 +42,14 @@
             position: relative;
         }
         
+        .bigBlood {
+            font-size: 100px;
+        }
+        
+        .bigFoul {
+            font-size: 70px;
+        }
+        
         .leftBlood {
             left: 440px;
             top: 0px;
@@ -86,33 +94,15 @@
 <body>
     <div id="app">
         <img src="bottomBlood/bg2.png" />
-        <div class="player" style="left: 0;top: 0px;">
-            <span class="player" style="left: 430px;top:346px">
-                {{lPlayer.name}}
-            </span>
-            <span class="player" style="left: 1484px;top:346px">
-                {{rPlayer.name}}
-            </span>
-        </div>
+
         <div v-for="(item, i) in items" :key="item.idx">
             <div class="player" :style="item.s">
                 <span class="text2 leftBlood">
                             {{item.blood}}
                     </span>
                 <span class="text2 leftTeam">
-                            {{item.name}}
+                            {{item.name}}  
                         </span>
-
-                <!-- <span style="left: 318px;top:0px;">
-                    <span class="line">
-                            {{item.name}}
-                        </span>
-
-                <span v-if="!isOB" class="line">
-                            {{item.kda}}
-                        </span>
-
-                </span> -->
 
                 <img :id="'avatar'+(i)" style="height:99px;left:324px;top:0px; position: absolute;" />
 
@@ -121,6 +111,7 @@
                 <span class="text2 rightBlood">
                             {{items2[i].blood}}
                         </span>
+
                 <span class="text2 rightTeam">
                             {{items2[i].name}}
                         </span>
@@ -134,7 +125,34 @@
                 <img :id="'avatar'+(i+5)" style="height:99px;left:1499px;top:0px; position: absolute;" />
             </div>
         </div>
+        <img id="avatarL" style="height:189px;left:351px;top:144px; position: absolute;" />
+        <img id="avatarR" style="height:189px;left:1380px;top:144px; position: absolute;" />
+
         <img style="position: fixed;left: 0px;top: 0px;" src="bottomBlood/fg2.png" />
+        <div class="player" style="left: 0;top: 0px;">
+            <div style="width: 350px; text-align: center;">
+                <span class="player" style="left:158px;top:315px">
+                            {{lPlayer.name}}
+                         </span>
+                <span class="player" style="left: 1185px;top:315px">
+                                {{rPlayer.name}}
+                            </span>
+            </div>
+            <span class="player bigBlood" style="left: 730px;top:146px">
+                    {{lPlayer.blood}}
+                </span>
+            <span class="player bigFoul" style="left: 730px;top:286px">
+                    {{lPlayer.foul}}
+                </span>
+
+            <span class="player bigBlood" style="left: 1130px;top:146px">
+                        {{rPlayer.blood}}
+                </span>
+            <span class="player bigFoul" style="left: 1130px;top:286px">
+                        {{rPlayer.foul}}
+                </span>
+        </div>
+
     </div>
     <script>
         var _p = function(x, y) {
@@ -147,6 +165,7 @@
                 $("#avatar" + idx).attr('src', data);
             });
         }
+
         getDoc = function(app, isLoadAvatar = false, scoreData = null) {
             $.get('/proxy?url=' + "http://rtmp.icassi.us:8090/event?idx=1021", res => {
                 let eventData = res[0]
@@ -200,14 +219,14 @@
             data: {
                 items: [],
                 lPlayer: {
-                    name: '马克',
-                    blood: 6,
-                    foul: 2
+                    name: '',
+                    blood: 0,
+                    foul: 0
                 },
                 rPlayer: {
-                    name: 'franklin',
-                    blood: 6,
-                    foul: 2
+                    name: '',
+                    blood: 0,
+                    foul: 0
                 },
                 isOB: false,
                 items2: [],
@@ -255,6 +274,24 @@
                     .on('sc_setBlood', (data) => {
                         console.log('sc_setBlood', data)
                         getDoc(app, false, data)
+                    })
+                    .on('sc_setFoul', (data) => {
+                        console.log('sc_setFoul', data)
+                        this.lPlayer.foul = data.lFoul
+                        this.rPlayer.foul = data.rFoul
+                    })
+                    .on('sc_setPlayer', (data) => {
+                        console.log('sc_setPlayer', data)
+                        this.lPlayer.name = data.leftPlayer.name
+                        this.rPlayer.name = data.rightPlayer.name
+                        this.lPlayer.blood = data.leftPlayer.blood
+                        this.rPlayer.blood = data.rightPlayer.blood
+                        this.lPlayer.foul = 0
+                        this.rPlayer.foul = 0
+
+                        getAvatar(data.leftPlayer.playerId, "L")
+                        getAvatar(data.rightPlayer.playerId, "R")
+                            // getDoc(app, false, data)
                     })
                     .on('sc_showPanel', data => {
                         console.log('sc_showPanel', data)

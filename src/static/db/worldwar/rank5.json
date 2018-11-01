@@ -13,24 +13,24 @@
     "isShowPick": 0,
     "group": {
         "A": [
-            { "playerId": "p1", "w": 0, "l": 0 },
-            { "playerId": "p2", "w": 0, "l": 0 },
-            { "playerId": "p3", "w": 0, "l": 0 }
+            { "playerId": "p1" },
+            { "playerId": "p2" },
+            { "playerId": "p3" }
         ],
         "B": [
-            { "playerId": "p4", "w": 0, "l": 0 },
-            { "playerId": "p5", "w": 0, "l": 0 },
-            { "playerId": "p6", "w": 0, "l": 0 }
+            { "playerId": "p4" },
+            { "playerId": "p5" },
+            { "playerId": "p6" }
         ],
         "C": [
-            { "playerId": "p7", "w": 0, "l": 0 },
-            { "playerId": "p8", "w": 0, "l": 0 },
-            { "playerId": "p9", "w": 0, "l": 0 }
+            { "playerId": "p7" },
+            { "playerId": "p8" },
+            { "playerId": "p9" }
         ],
         "D": [
-            { "playerId": "p10", "w": 0, "l": 0 },
-            { "playerId": "p11", "w": 0, "l": 0 },
-            { "playerId": "p12", "w": 0, "l": 0 }
+            { "playerId": "p10" },
+            { "playerId": "p11" },
+            { "playerId": "p12" }
         ]
     },
     "recMap": {
