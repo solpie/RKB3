@@ -27,6 +27,15 @@
             font-family: "微软雅黑";
         }
         
+        .playerBlood {
+            position: absolute;
+            padding: 0px;
+            font-size: 58px;
+            color: #fff;
+            width: 578px;
+            font-family: "微软雅黑";
+        }
+        
         .line {
             padding: 13px;
         }
@@ -44,39 +53,52 @@
         
         .bigBlood {
             font-size: 100px;
+            color: #f3e5bc;
         }
         
         .bigFoul {
             font-size: 70px;
+            color: #f3e5bc;
         }
         
         .leftBlood {
-            left: 440px;
+            left: 450px;
             top: 0px;
-            font-size: 60px;
+            font-size: 80px;
+            color: #f3e5bc;
         }
         
         .rightBlood {
-            left: 1440px;
+            left: 1420px;
             top: 0px;
-            font-size: 60px;
+            font-size: 80px;
+            color: #f3e5bc;
         }
         
         .leftTeam {
+            position: relative;
             text-align: center;
             left: 500px;
-            top: 30px;
+            top: 5px;
             font-size: 40px;
             color: #c4b998;
         }
         
         .rightTeam {
             width: 200px;
-            text-align: right;
+            text-align: center;
             left: 1120px;
-            top: 30px;
+            top: 5px;
             font-size: 40px;
             color: #c4b998;
+        }
+        
+        .timeOutMask {
+            position: absolute;
+            top: 145px;
+            width: 130px;
+            height: 50px;
+            background-color: #020206;
         }
         
         body {
@@ -129,6 +151,10 @@
         <img id="avatarR" style="height:189px;left:1380px;top:144px; position: absolute;" />
 
         <img style="position: fixed;left: 0px;top: 0px;" src="bottomBlood/fg2.png" />
+        <span v-if='lTimeOut<2' class="timeOutMask" style="left:600px;"></span>
+        <span v-if='lTimeOut<1' class="timeOutMask" style="left:730px;"></span>
+        <span v-if='rTimeOut<1' class="timeOutMask" style="left:1060px;"></span>
+        <span v-if='rTimeOut<2' class="timeOutMask" style="left:1190px;"></span>
         <div class="player" style="left: 0;top: 0px;">
             <div style="width: 350px; text-align: center;">
                 <span class="player" style="left:158px;top:315px">
@@ -138,17 +164,17 @@
                                 {{rPlayer.name}}
                             </span>
             </div>
-            <span class="player bigBlood" style="left: 730px;top:146px">
+            <span class="player bigBlood" style="left: 640px;top:186px">
                     {{lPlayer.blood}}
                 </span>
-            <span class="player bigFoul" style="left: 730px;top:286px">
+            <span class="player bigFoul" style="left: 820px;top:286px">
                     {{lPlayer.foul}}
                 </span>
 
-            <span class="player bigBlood" style="left: 1130px;top:146px">
+            <span class="player bigBlood" style="left: 1230px;top:186px">
                         {{rPlayer.blood}}
                 </span>
-            <span class="player bigFoul" style="left: 1130px;top:286px">
+            <span class="player bigFoul" style="left: 1060px;top:290px">
                         {{rPlayer.foul}}
                 </span>
         </div>
@@ -228,6 +254,8 @@
                     blood: 0,
                     foul: 0
                 },
+                lTimeOut: 0,
+                rTimeOut: 0,
                 isOB: false,
                 items2: [],
                 gameTitle: ""
@@ -298,6 +326,11 @@
                         if (data.panel == 'worldwarKDAPanel') {
                             getDoc(app, false)
                         }
+                    })
+                    .on('sc_timeOut', data => {
+                        console.log('sc_timeOut', data)
+                        this.lTimeOut = data.lTimeOut
+                        this.rTimeOut = data.rTimeOut
                     })
             }
         })

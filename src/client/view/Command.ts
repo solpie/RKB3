@@ -200,6 +200,8 @@ export const CommandId = {
     //world war
     cs_teamScore: '',
     sc_teamScore: '',
+    cs_timeOut: '',
+    sc_timeOut: '',
     //// RKB
     cs_attack: '',
     attack: '',

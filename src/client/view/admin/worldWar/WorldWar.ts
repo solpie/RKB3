@@ -95,6 +95,10 @@ class _worldWar extends VueBase {
   vueUpdate() {
     this.updateTime = new Date().getTime();
   }
+  setTimeOut(data) {
+    gameView.setTimeOut(data)
+    opReq(CommandId.cs_timeOut, data)
+  }
   emitGameInfo() {
     console.log("init game");
     // cs_initGame
@@ -172,7 +176,7 @@ class _worldWar extends VueBase {
       let p2 = a[1];
       p1 = playerMap[p1];
       p2 = playerMap[p2];
-      opReq(CommandId.cs_showPanel, {lTitle:p1.title,rTitle:p2.title, panel: PanelId.worldwarTitle, visible: v })
+      opReq(CommandId.cs_showPanel, { lTitle: p1.title, rTitle: p2.title, panel: PanelId.worldwarTitle, visible: v })
     },
     onShowPanel(v) {
       opReq(CommandId.cs_showPanel, { panel: PanelId.worldwarPanel, visible: v })
@@ -186,6 +190,14 @@ class _worldWar extends VueBase {
       if (a.length == 2) {
         this.emitTeamScore({
           lScore: a[0], rScore: a[1]
+        })
+      }
+    },
+    onSetTimeOut(v) {
+      let a = v.split(' ')
+      if (a.length == 2) {
+        this.setTimeOut({
+          lTimeOut: a[0], rTimeOut: a[1]
         })
       }
     },
