@@ -6085,6 +6085,10 @@
 	        this.p = parent;
 	    };
 	    Commentator.prototype._fillData = function (data) {
+	        this.lName.style.fill =
+	            this.rName.style.fill = '#2d2d2d';
+	        this.lInfo.style.fill =
+	            this.rInfo.style.fill = '#808080';
 	        this.showBg(0);
 	        this.lName
 	            .setText(data.lName)
@@ -6100,6 +6104,10 @@
 	            .setPos(this.rName.x, this.lInfo.y);
 	    };
 	    Commentator.prototype._fillData2 = function (data) {
+	        this.lName.style.fill =
+	            this.rName.style.fill = '#2d2d2d';
+	        this.lInfo.style.fill =
+	            this.rInfo.style.fill = '#808080';
 	        this.showBg(1);
 	        this.lName
 	            .setText(data.lName)
@@ -6128,8 +6136,12 @@
 	                _this.addChildAt(_this.bgV2, 0);
 	                _this.bgArr.push(_this.bgV2);
 	            }
+	            _this.lName.style.fill =
+	                _this.lInfo.style.fill =
+	                    _this.rName.style.fill =
+	                        _this.rInfo.style.fill = '#fff';
 	            _this.lName
-	                .setPos(734, 953);
+	                .setPos(783, 953);
 	            _this.lInfo
 	                .setPos(_this.lName.x, 1010);
 	            _this.rName

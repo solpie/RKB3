@@ -36,6 +36,10 @@ export class Commentator extends PIXI.Container implements IPopup {
         this.p = parent
     }
     _fillData(data) {
+        this.lName.style.fill=
+        this.rName.style.fill = '#2d2d2d'
+        this.lInfo.style.fill =
+        this.rInfo.style.fill = '#808080'
         this.showBg(0)
         this.lName
             .setText(data.lName)
@@ -52,8 +56,10 @@ export class Commentator extends PIXI.Container implements IPopup {
             .setPos(this.rName.x, this.lInfo.y)
     }
     _fillData2(data) {
-        // this.bg1.visible = false
-        // this.bg2.visible = true
+        this.lName.style.fill=
+        this.rName.style.fill = '#2d2d2d'
+        this.lInfo.style.fill =
+        this.rInfo.style.fill = '#808080'
         this.showBg(1)
         this.lName
             .setText(data.lName)
@@ -83,8 +89,12 @@ export class Commentator extends PIXI.Container implements IPopup {
                 this.addChildAt(this.bgV2, 0)
                 this.bgArr.push(this.bgV2)
             }
+            this.lName.style.fill=
+            this.lInfo.style.fill =
+            this.rName.style.fill =
+            this.rInfo.style.fill = '#fff'
             this.lName
-                .setPos(734, 953)
+                .setPos(783, 953)
             this.lInfo
                 .setPos(this.lName.x, 1010)
             this.rName
