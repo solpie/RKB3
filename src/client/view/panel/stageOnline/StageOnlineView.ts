@@ -503,7 +503,11 @@ class StageOnlineView extends VueBase {
         },
         showCommentator(v, style) {
             let commentatorArr = [this.liveConf.commentator1[0], this.liveConf.commentator2[0]]
-            this.opReq(`${WebDBCmd.cs_commentator}`, { _: null, visible: v, commentatorArr: commentatorArr, style: style })
+            this.opReq(`${WebDBCmd.cs_commentator}`, { _: null, visible: v, isInfo2:false,commentatorArr: commentatorArr, style: style })
+        },
+        showCommentatorInfoPage(v, idx) {
+            let commentatorArr = [this.liveConf.commentator1[0], this.liveConf.commentator2[0]]
+            this.opReq(`${WebDBCmd.cs_commentator}`, { _: null, visible: v,isInfo2:true,commentatorArr: commentatorArr})
         },
         showStaticImage(v, imgId) {
             let imgMap = { 1: 'http://rtmp.icassi.us:8090/uploads/932b0a2eb5dc45399820871305ad2a1e.png' }

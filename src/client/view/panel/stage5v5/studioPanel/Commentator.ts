@@ -95,27 +95,38 @@ export class Commentator extends PIXI.Container implements IPopup {
         })
     }
     show(param: any) {
-        param.lName = param.commentatorArr[0].name
-        param.lInfo = param.commentatorArr[0].info
-        param.rName = param.commentatorArr[1].name
-        param.rInfo = param.commentatorArr[1].info
+        let _fillInfo = (d) => {
+            this.lName
+                .setText(d.lName)
+            this.lInfo
+                .setText(d.lInfo)
+            this.rName
+                .setText(d.rName)
+            this.rInfo
+                .setText(d.rInfo)
+        }
+        if (param.isInfo2) {
+            param.lName = param.commentatorArr[0].name
+            param.lInfo = param.commentatorArr[0].info2
+            param.rName = param.commentatorArr[1].name
+            param.rInfo = param.commentatorArr[1].info2
+            _fillInfo(param)
+        }
+        else {
+            param.lName = param.commentatorArr[0].name
+            param.lInfo = param.commentatorArr[0].info
+            param.rName = param.commentatorArr[1].name
+            param.rInfo = param.commentatorArr[1].info
+            _fillInfo(param)
 
-        this.lName
-            .setText(param.lName)
-        this.lInfo
-            .setText(param.lInfo)
-        this.rName
-            .setText(param.rName)
-        this.rInfo
-            .setText(param.rInfo)
-
-        if (param.style == 1)
-            this._fillData(param)
-        else if (param.style == 2)
-            this._fillData2(param)
-        else if (param.style == 3)
-            this._fillData3(param)
-        console.log('sc_commentator', param);
+            if (param.style == 1)
+                this._fillData(param)
+            else if (param.style == 2)
+                this._fillData2(param)
+            else if (param.style == 3)
+                this._fillData3(param)
+            console.log('sc_commentator', param);
+        }
         this.p.addChild(this)
     }
     hide(param?: any) {
