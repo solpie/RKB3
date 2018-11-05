@@ -22,7 +22,7 @@ export class Commentator extends PIXI.Container implements IPopup {
         this.addChild(bg2)
         let ns = {
             fontFamily: FontName.NotoSansHans,
-            fontSize: '46px', fill: "#2d2d2d"
+            fontSize: '38px', fill: "#2d2d2d"
             , fontWeight: 'bold'
         }
 
@@ -30,49 +30,39 @@ export class Commentator extends PIXI.Container implements IPopup {
         this.rName = TextFac.new_(ns, this)
 
         ns.fill = '#808080'
-        ns.fontSize = '16px'
+        ns.fontSize = '24px'
         this.lInfo = TextFac.new_(ns, this)
         this.rInfo = TextFac.new_(ns, this)
         this.p = parent
     }
     _fillData(data) {
-        this.lName.style.fill=
-        this.rName.style.fill = '#2d2d2d'
+        this.lName.style.fill =
+            this.rName.style.fill = '#2d2d2d'
         this.lInfo.style.fill =
-        this.rInfo.style.fill = '#808080'
+            this.rInfo.style.fill = '#808080'
         this.showBg(0)
         this.lName
-            .setText(data.lName)
             .setPos(170, 628)
         this.lInfo
-            .setText(data.lInfo)
-            .setPos(this.lName.x, 685)
-
+            .setPos(this.lName.x, 673)
         this.rName
-            .setText(data.rName)
-            .setPos(1570, 628)
+            .setPos(1570, this.lName.y)
         this.rInfo
-            .setText(data.rInfo)
             .setPos(this.rName.x, this.lInfo.y)
     }
     _fillData2(data) {
-        this.lName.style.fill=
-        this.rName.style.fill = '#2d2d2d'
+        this.lName.style.fill =
+            this.rName.style.fill = '#2d2d2d'
         this.lInfo.style.fill =
-        this.rInfo.style.fill = '#808080'
+            this.rInfo.style.fill = '#808080'
         this.showBg(1)
         this.lName
-            .setText(data.lName)
             .setPos(170, 628)
         this.lInfo
-            .setText(data.lInfo)
-            .setPos(this.lName.x, 685)
-
+            .setPos(this.lName.x, 673)
         this.rName
-            .setText(data.rName)
-            .setPos(495, 628)
+            .setPos(495, this.lName.y)
         this.rInfo
-            .setText(data.rInfo)
             .setPos(this.rName.x, this.lInfo.y)
     }
     bgV2: PIXI.Sprite
@@ -89,10 +79,10 @@ export class Commentator extends PIXI.Container implements IPopup {
                 this.addChildAt(this.bgV2, 0)
                 this.bgArr.push(this.bgV2)
             }
-            this.lName.style.fill=
-            this.lInfo.style.fill =
-            this.rName.style.fill =
-            this.rInfo.style.fill = '#fff'
+            this.lName.style.fill =
+                this.lInfo.style.fill =
+                this.rName.style.fill =
+                this.rInfo.style.fill = '#fff'
             this.lName
                 .setPos(783, 953)
             this.lInfo

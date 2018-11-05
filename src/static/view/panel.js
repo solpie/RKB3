@@ -6073,13 +6073,13 @@
 	        this.addChild(bg2);
 	        var ns = {
 	            fontFamily: const_1.FontName.NotoSansHans,
-	            fontSize: '46px', fill: "#2d2d2d",
+	            fontSize: '38px', fill: "#2d2d2d",
 	            fontWeight: 'bold'
 	        };
 	        this.lName = TextFac_1.TextFac.new_(ns, this);
 	        this.rName = TextFac_1.TextFac.new_(ns, this);
 	        ns.fill = '#808080';
-	        ns.fontSize = '16px';
+	        ns.fontSize = '24px';
 	        this.lInfo = TextFac_1.TextFac.new_(ns, this);
 	        this.rInfo = TextFac_1.TextFac.new_(ns, this);
 	        this.p = parent;
@@ -6091,16 +6091,12 @@
 	            this.rInfo.style.fill = '#808080';
 	        this.showBg(0);
 	        this.lName
-	            .setText(data.lName)
 	            .setPos(170, 628);
 	        this.lInfo
-	            .setText(data.lInfo)
-	            .setPos(this.lName.x, 685);
+	            .setPos(this.lName.x, 673);
 	        this.rName
-	            .setText(data.rName)
-	            .setPos(1570, 628);
+	            .setPos(1570, this.lName.y);
 	        this.rInfo
-	            .setText(data.rInfo)
 	            .setPos(this.rName.x, this.lInfo.y);
 	    };
 	    Commentator.prototype._fillData2 = function (data) {
@@ -6110,16 +6106,12 @@
 	            this.rInfo.style.fill = '#808080';
 	        this.showBg(1);
 	        this.lName
-	            .setText(data.lName)
 	            .setPos(170, 628);
 	        this.lInfo
-	            .setText(data.lInfo)
-	            .setPos(this.lName.x, 685);
+	            .setPos(this.lName.x, 673);
 	        this.rName
-	            .setText(data.rName)
-	            .setPos(495, 628);
+	            .setPos(495, this.lName.y);
 	        this.rInfo
-	            .setText(data.rInfo)
 	            .setPos(this.rName.x, this.lInfo.y);
 	    };
 	    Commentator.prototype.showBg = function (idx) {
