@@ -1,6 +1,6 @@
-import { TweenEx } from './../../../utils/TweenEx';
-import { imgLoader } from './../../../utils/ImgLoader';
-import { Text2, TextFac } from './../../../utils/TextFac';
+import { TweenEx } from '../../../utils/TweenEx';
+import { imgLoader } from '../../../utils/ImgLoader';
+import { Text2, TextFac } from '../../../utils/TextFac';
 import { FontName } from '../../../const';
 import { newBitmap, setScale } from '../../../utils/PixiEx';
 //十分钟 五人 进球多排前面 输的下

@@ -1,4 +1,4 @@
-import { ScoreRank } from './../../scoreRank/ScoreRank';
+import { ScoreRank } from '../../scoreRank/ScoreRank';
 import { CommandId } from "../../../../Command";
 import { TweenEx } from "../../../../utils/TweenEx";
 import { WorldWar } from "./WorldWar";

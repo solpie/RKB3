@@ -1,4 +1,4 @@
-import { Text2, TextFac } from './../../../utils/TextFac';
+import { Text2, TextFac } from '../../../utils/TextFac';
 import { FontName } from '../../../const';
 export class BracketPlayerV3 extends PIXI.Container {
     pName: Text2

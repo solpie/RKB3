@@ -3,11 +3,13 @@ import { FontName } from "../../../const";
 import { TextFac, Text2 } from '../../../utils/TextFac';
 import { IPopup } from "../../../utils/PopupView";
 import { getCommentators } from "../../../utils/HupuAPI";
+import { imgLoader } from '../../../utils/ImgLoader';
 
 export class Commentator extends PIXI.Container implements IPopup {
     p: any
     bg1: PIXI.Sprite
     bg2: PIXI.Sprite
+    bgArr: any
     create(parent: any) {
         let bg = newBitmap({ url: '/img/panel/studio/commentator.png' })
         let bg2 = newBitmap({ url: '/img/panel/studio/commentator2.png' })
@@ -15,6 +17,7 @@ export class Commentator extends PIXI.Container implements IPopup {
         this.bg1 = bg
         this.bg1.visible = false
         this.bg2.visible = false
+        this.bgArr = [this.bg1, this.bg2]
         this.addChild(bg)
         this.addChild(bg2)
         let ns = {
@@ -33,8 +36,7 @@ export class Commentator extends PIXI.Container implements IPopup {
         this.p = parent
     }
     _fillData(data) {
-        this.bg2.visible = false
-        this.bg1.visible = true
+        this.showBg(0)
         this.lName
             .setText(data.lName)
             .setPos(170, 628)
@@ -50,8 +52,9 @@ export class Commentator extends PIXI.Container implements IPopup {
             .setPos(this.rName.x, this.lInfo.y)
     }
     _fillData2(data) {
-        this.bg1.visible = false
-        this.bg2.visible = true
+        // this.bg1.visible = false
+        // this.bg2.visible = true
+        this.showBg(1)
         this.lName
             .setText(data.lName)
             .setPos(170, 628)
@@ -66,15 +69,52 @@ export class Commentator extends PIXI.Container implements IPopup {
             .setText(data.rInfo)
             .setPos(this.rName.x, this.lInfo.y)
     }
+    bgV2: PIXI.Sprite
+    showBg(idx) {
+        for (let i = 0; i < this.bgArr.length; i++) {
+            const element = this.bgArr[i];
+            element.visible = i == idx
+        }
+    }
+    _fillData3(data) {
+        imgLoader.loadTexArr(['/img/panel/studio/commentatorV2.png'], _ => {
+            if (!this.bgV2) {
+                this.bgV2 = newBitmap({ url: '/img/panel/studio/commentatorV2.png' })
+                this.addChildAt(this.bgV2, 0)
+                this.bgArr.push(this.bgV2)
+            }
+            this.lName
+                .setPos(734, 953)
+            this.lInfo
+                .setPos(this.lName.x, 1010)
+            this.rName
+                .setPos(1163, this.lName.y)
+            this.rInfo
+                .setPos(this.rName.x, this.lInfo.y)
+            this.showBg(2)
+        })
+    }
     show(param: any) {
         param.lName = param.commentatorArr[0].name
         param.lInfo = param.commentatorArr[0].info
         param.rName = param.commentatorArr[1].name
         param.rInfo = param.commentatorArr[1].info
+
+        this.lName
+            .setText(param.lName)
+        this.lInfo
+            .setText(param.lInfo)
+        this.rName
+            .setText(param.rName)
+        this.rInfo
+            .setText(param.rInfo)
+
         if (param.style == 1)
             this._fillData(param)
-        else
+        else if (param.style == 2)
             this._fillData2(param)
+        else if (param.style == 3)
+            this._fillData3(param)
         console.log('sc_commentator', param);
         this.p.addChild(this)
     }

@@ -35,7 +35,7 @@ export class StudioPanel extends PIXI.Container {
                 this.addChild(liveComing)
                 this.liveConf = conf
             })
-         
+
         }
         else {
             this.popupView = new PopupView(this)
@@ -92,10 +92,12 @@ export class StudioPanel extends PIXI.Container {
         let pv = this.popupView
 
         io.on(WebDBCmd.sc_commentator, data => {
-            if (data.visible)
+            if (data.visible) {
                 pv.show(Commentator, data)
-            else
+            }
+            else {
                 pv.hide(Commentator)
+            }
         })
             .on(WebDBCmd.sc_staticImg, data => {
                 console.log('sc_staticImg', data);

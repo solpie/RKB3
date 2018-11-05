@@ -9,7 +9,7 @@ import { RankSection } from '../rank/RankSection';
 import { NoticeV2 } from '../scoreV2/NoticeV2';
 import { PlayerInfoV2 } from '../scoreV2/PlayerInfoV2';
 import { VsListV2 } from '../scoreV2/VsListV2';
-import { ScoreRank } from './../scoreRank/ScoreRank';
+import { ScoreRank } from '../scoreRank/ScoreRank';
 import { Champion } from './Champion';
 import { getFtLogoUrl2, getFtName } from './Com2017';
 import { Group } from './Group';

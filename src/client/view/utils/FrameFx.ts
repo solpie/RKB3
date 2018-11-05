@@ -1,4 +1,4 @@
-import { paddy } from '../utils/JsFunc';
+import { paddy } from './JsFunc';
 export class FramesFx extends PIXI.Container {
     mc: any
     constructor(imgUrlBase, from, to, numPad = 2) {
