@@ -4,6 +4,7 @@ import { FontName } from '../../../const';
 import { Text2, TextFac } from '../../../utils/TextFac';
 import { imgLoader } from '../../../utils/ImgLoader';
 import { TweenEx } from '../../../utils/TweenEx';
+import { bottomMoveIn } from '../../../utils/Fx';
 let urlBg = '/img/panel/notice/bottomNotice.png'
 
 export class BottomNotice extends BasePanel {
@@ -56,9 +57,7 @@ export class BottomNotice extends BasePanel {
             let rUrl = '/img/panel/notice/appLogo/' + data.idx + '_1.png'
             imgLoader.loadTexArr([lUrl, rUrl], _ => {
                 if (!this.prevVisible) {
-                    this.y = 200
-                    let _t = this
-                    TweenEx.to(_t, 200, { y: 0 })
+                    bottomMoveIn(this)
                 }
                 else {
                     this.y = 0
@@ -84,7 +83,6 @@ export class BottomNotice extends BasePanel {
         this.prevVisible = data.visible
         let _t = this
         TweenEx.to(_t, 200, { y: 200 }, _ => {
-            // this.hide(data)
         })
     }
 }

@@ -4802,6 +4802,22 @@
 	    console.log(this, "show fade Out WinPanel");
 	}
 	exports.fadeOutCtn = fadeOutCtn;
+	function bottomMoveIn(ctn, callback) {
+	    ctn.y = 200;
+	    TweenEx_1.TweenEx.to(ctn, 200, { y: 0 }, function (_) {
+	        if (callback) {
+	            callback();
+	        }
+	    });
+	}
+	exports.bottomMoveIn = bottomMoveIn;
+	function bottomMoveOut(ctn, callback) {
+	    TweenEx_1.TweenEx.to(ctn, 200, { y: 200 }, function (_) {
+	        if (callback)
+	            callback();
+	    });
+	}
+	exports.bottomMoveOut = bottomMoveOut;
 
 
 /***/ },
@@ -5803,7 +5819,7 @@
 	                pv.show(Commentator_1.Commentator, data);
 	            }
 	            else {
-	                pv.hide(Commentator_1.Commentator);
+	                pv.hide(Commentator_1.Commentator, data);
 	            }
 	        })
 	            .on(WebDBCmd_1.WebDBCmd.sc_staticImg, function (data) {
@@ -6056,10 +6072,12 @@
 	var const_1 = __webpack_require__(27);
 	var TextFac_1 = __webpack_require__(77);
 	var ImgLoader_1 = __webpack_require__(73);
+	var Fx_1 = __webpack_require__(63);
 	var Commentator = (function (_super) {
 	    __extends(Commentator, _super);
 	    function Commentator() {
 	        _super.apply(this, arguments);
+	        this.showingStyle = -1;
 	    }
 	    Commentator.prototype.create = function (parent) {
 	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/studio/commentator.png' });
@@ -6122,6 +6140,10 @@
 	    };
 	    Commentator.prototype._fillData3 = function (data) {
 	        var _this = this;
+	        this.lName.visible =
+	            this.rName.visible =
+	                this.lInfo.visible =
+	                    this.rInfo.visible = false;
 	        ImgLoader_1.imgLoader.loadTexArr(['/img/panel/studio/commentatorV2.png'], function (_) {
 	            if (!_this.bgV2) {
 	                _this.bgV2 = PixiEx_1.newBitmap({ url: '/img/panel/studio/commentatorV2.png' });
@@ -6135,12 +6157,17 @@
 	            _this.lName
 	                .setPos(783, 953);
 	            _this.lInfo
-	                .setPos(_this.lName.x, 1010);
+	                .setPos(_this.lName.x, 1006);
 	            _this.rName
 	                .setPos(1163, _this.lName.y);
 	            _this.rInfo
 	                .setPos(_this.rName.x, _this.lInfo.y);
 	            _this.showBg(2);
+	            _this.lName.visible =
+	                _this.rName.visible =
+	                    _this.lInfo.visible =
+	                        _this.rInfo.visible = true;
+	            Fx_1.bottomMoveIn(_this);
 	        });
 	    };
 	    Commentator.prototype.show = function (param) {
@@ -6168,6 +6195,7 @@
 	            param.rName = param.commentatorArr[1].name;
 	            param.rInfo = param.commentatorArr[1].info;
 	            _fillInfo(param);
+	            this.showingStyle = param.style;
 	            if (param.style == 1)
 	                this._fillData(param);
 	            else if (param.style == 2)
@@ -6179,8 +6207,13 @@
 	        this.p.addChild(this);
 	    };
 	    Commentator.prototype.hide = function (param) {
-	        if (this.parent)
-	            this.parent.removeChild(this);
+	        if (this.showingStyle == 3) {
+	            Fx_1.bottomMoveOut(this);
+	        }
+	        else {
+	            if (this.parent)
+	                this.parent.removeChild(this);
+	        }
 	    };
 	    Commentator.class = 'Commentator';
 	    return Commentator;
@@ -10811,6 +10844,7 @@
 	var TextFac_1 = __webpack_require__(77);
 	var ImgLoader_1 = __webpack_require__(73);
 	var TweenEx_1 = __webpack_require__(57);
+	var Fx_1 = __webpack_require__(63);
 	var urlBg = '/img/panel/notice/bottomNotice.png';
 	var BottomNotice = (function (_super) {
 	    __extends(BottomNotice, _super);
@@ -10859,9 +10893,7 @@
 	            var rUrl_1 = '/img/panel/notice/appLogo/' + data.idx + '_1.png';
 	            ImgLoader_1.imgLoader.loadTexArr([lUrl_1, rUrl_1], function (_) {
 	                if (!_this.prevVisible) {
-	                    _this.y = 200;
-	                    var _t = _this;
-	                    TweenEx_1.TweenEx.to(_t, 200, { y: 0 });
+	                    Fx_1.bottomMoveIn(_this);
 	                }
 	                else {
 	                    _this.y = 0;

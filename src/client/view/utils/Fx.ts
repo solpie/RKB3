@@ -59,3 +59,17 @@ export function fadeOutCtn(ctn) {
     //         ctn.removeAllChildren();
     //     });
 }
+export function bottomMoveIn(ctn, callback?) {
+    ctn.y = 200
+    TweenEx.to(ctn, 200, { y: 0 }, _ => {
+        if (callback) {
+            callback()
+        }
+    })
+}
+export function bottomMoveOut(ctn, callback?) {
+    TweenEx.to(ctn, 200, { y: 200 }, _ => {
+        if (callback) 
+            callback()
+    })
+}

@@ -4,6 +4,7 @@ import { TextFac, Text2 } from '../../../utils/TextFac';
 import { IPopup } from "../../../utils/PopupView";
 import { getCommentators } from "../../../utils/HupuAPI";
 import { imgLoader } from '../../../utils/ImgLoader';
+import { bottomMoveIn, bottomMoveOut } from '../../../utils/Fx';
 
 export class Commentator extends PIXI.Container implements IPopup {
     p: any
@@ -73,6 +74,11 @@ export class Commentator extends PIXI.Container implements IPopup {
         }
     }
     _fillData3(data) {
+        this.lName.visible =
+            this.rName.visible =
+            this.lInfo.visible =
+            this.rInfo.visible = false
+
         imgLoader.loadTexArr(['/img/panel/studio/commentatorV2.png'], _ => {
             if (!this.bgV2) {
                 this.bgV2 = newBitmap({ url: '/img/panel/studio/commentatorV2.png' })
@@ -86,12 +92,18 @@ export class Commentator extends PIXI.Container implements IPopup {
             this.lName
                 .setPos(783, 953)
             this.lInfo
-                .setPos(this.lName.x, 1010)
+                .setPos(this.lName.x, 1006)
             this.rName
                 .setPos(1163, this.lName.y)
             this.rInfo
                 .setPos(this.rName.x, this.lInfo.y)
+
             this.showBg(2)
+            this.lName.visible =
+                this.rName.visible =
+                this.lInfo.visible =
+                this.rInfo.visible = true
+            bottomMoveIn(this)
         })
     }
     show(param: any) {
@@ -118,7 +130,7 @@ export class Commentator extends PIXI.Container implements IPopup {
             param.rName = param.commentatorArr[1].name
             param.rInfo = param.commentatorArr[1].info
             _fillInfo(param)
-
+            this.showingStyle = param.style
             if (param.style == 1)
                 this._fillData(param)
             else if (param.style == 2)
@@ -129,9 +141,15 @@ export class Commentator extends PIXI.Container implements IPopup {
         }
         this.p.addChild(this)
     }
+    showingStyle = -1
     hide(param?: any) {
-        if (this.parent)
-            this.parent.removeChild(this)
+        if (this.showingStyle == 3) {
+            bottomMoveOut(this)
+        }
+        else {
+            if (this.parent)
+                this.parent.removeChild(this)
+        }
     }
     static class = 'Commentator'
     lName: Text2

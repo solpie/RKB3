@@ -96,7 +96,7 @@ export class StudioPanel extends PIXI.Container {
                 pv.show(Commentator, data)
             }
             else {
-                pv.hide(Commentator)
+                pv.hide(Commentator,data)
             }
         })
             .on(WebDBCmd.sc_staticImg, data => {
