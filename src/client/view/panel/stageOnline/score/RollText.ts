@@ -8,32 +8,32 @@ export class RollText extends PIXI.Container {
     public create(parent) {
         parent.addChild(this)
         let ts = {
-            fontFamily: FontName.NotoSansHans,
-            fontSize: '35px', fill: "#000",
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '45px', fill: "#eee",
             fontWeight: 'bold'
         }
 
         this.rollText = new PIXI.Text('', ts)
         // this.rollText.style.fontSize = '25px'
-        this.rollText.y = ViewConst.STAGE_HEIGHT - 55
+        this.rollText.y = ViewConst.STAGE_HEIGHT - 118
         let texBlack = new PIXI.Graphics()
-        texBlack.beginFill(0xffffff)
-            .drawRect(112, 1012, 1920, 100)
-        this.addChild(texBlack)
-        // texBlack.mask = this.rollText
-        let bg = newBitmap({ url: '/img/panel/score2018/scrollBg.png' })
+        texBlack.beginFill(0xeeeeee)
+            .drawRect(662, 944,857, 100)
+        texBlack.mask = this.rollText
+        let bg = newBitmap({ url: '/img/panel/score2018v2/bottomAD.png' })
         // bg.y = this.rollText.y - 10
-        this.addChild(this.rollText)
         this.addChild(bg)
+        this.addChild(texBlack)
+        this.addChild(this.rollText)
     }
 
     public show(param: any) {
         console.log('show roll text');
         TweenEx.to(this, 50, { alpha: 1 })
         this.rollText.text = param.text
-        this.rollText.x = ViewConst.STAGE_WIDTH - 100
+        this.rollText.x = 1510
         let sec = (this.rollText.width + this.rollText.x) / 80
-        TweenEx.to(this.rollText, sec * 1000, { x: -this.rollText.width }, _ => {
+        TweenEx.to(this.rollText, sec * 1000, { x: 600-this.rollText.width }, _ => {
             this.hide()
         })
     }
