@@ -3,6 +3,7 @@ import { newBitmap } from '../../../utils/PixiEx';
 import { Text2, TextFac } from '../../../utils/TextFac';
 import { TweenEx } from '../../../utils/TweenEx';
 import { BasePanel } from '../../base/BasePanel';
+import { bottomMoveIn } from '../../../utils/Fx';
 let urlBg1 = '/img/panel/score2018v2/bottomADV2.png'
 // urlBg1 = '/img/panel/notice/bottomAD.png'
 const textRectLeft = 580
@@ -38,14 +39,16 @@ export class ScrollTextV2 extends BasePanel {
     }
     _show(data) {
         if (data.visible) {
-            // TweenEx.to(this, 50, { alpha: 1 })
-            this.rollText.text = data.text
-            this.rollText.x = 1510
-            let sec = (this.rollText.width + this.rollText.x) / 80
-            TweenEx.to(this.rollText, sec * 1000, { x: textRectLeft-70 - this.rollText.width }, _ => {
-                this.hide(null)
-            })
             this.p.addChild(this)
+            bottomMoveIn(this, _ => {
+                // TweenEx.to(this, 50, { alpha: 1 })
+                this.rollText.text = data.text
+                this.rollText.x = 1510
+                let sec = (this.rollText.width + this.rollText.x) / 80
+                TweenEx.to(this.rollText, sec * 1000, { x: textRectLeft - 70 - this.rollText.width }, _ => {
+                    this.hide(null)
+                })
+            })
         }
         else {
             this.hide(data)

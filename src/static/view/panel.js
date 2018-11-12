@@ -12382,6 +12382,7 @@
 	var TextFac_1 = __webpack_require__(77);
 	var TweenEx_1 = __webpack_require__(57);
 	var BasePanel_1 = __webpack_require__(88);
+	var Fx_1 = __webpack_require__(63);
 	var urlBg1 = '/img/panel/score2018v2/bottomADV2.png';
 	var textRectLeft = 580;
 	var textRectWidth = 940;
@@ -12417,13 +12418,15 @@
 	    ScrollTextV2.prototype._show = function (data) {
 	        var _this = this;
 	        if (data.visible) {
-	            this.rollText.text = data.text;
-	            this.rollText.x = 1510;
-	            var sec = (this.rollText.width + this.rollText.x) / 80;
-	            TweenEx_1.TweenEx.to(this.rollText, sec * 1000, { x: textRectLeft - 70 - this.rollText.width }, function (_) {
-	                _this.hide(null);
-	            });
 	            this.p.addChild(this);
+	            Fx_1.bottomMoveIn(this, function (_) {
+	                _this.rollText.text = data.text;
+	                _this.rollText.x = 1510;
+	                var sec = (_this.rollText.width + _this.rollText.x) / 80;
+	                TweenEx_1.TweenEx.to(_this.rollText, sec * 1000, { x: textRectLeft - 70 - _this.rollText.width }, function (_) {
+	                    _this.hide(null);
+	                });
+	            });
 	        }
 	        else {
 	            this.hide(data);
