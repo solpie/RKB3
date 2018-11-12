@@ -15,6 +15,9 @@ export class BasePanel extends PIXI.Container {
                 this.show(this.tmpData)
                 this.tmpData = null
             }
+            else {
+                console.log('no tex loaded????');
+            }
         })
     }
     _show(data) {

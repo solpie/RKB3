@@ -21,6 +21,7 @@ import { TopInfo } from './TopInfo';
 import { Winner } from './Winner';
 import { BottomNotice } from '../scoreV2/BottomNotice';
 import { RankV2 } from '../scoreV2/RankV2';
+import { ScrollTextV2 } from '../scoreV2/ScrollTextV2';
 
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
@@ -51,14 +52,7 @@ export class Event2017 extends PIXI.Container {
             .beginFill(0x000000, .7)
             .drawRect(0, 0, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT)
         this.winPanel.addChild(this.modal)
-        let bgUrl = '/img/panel/score2017/winBg.png'
-        if (isDark)
-            bgUrl = '/img/panel/score2017/winBgDark.png'
 
-        let bg = newBitmap({
-            url: bgUrl,
-        })
-        this.winPanel.addChild(bg)
 
         let ts = {
             fontFamily: FontName.MicrosoftYahei,
@@ -380,13 +374,14 @@ export class Event2017 extends PIXI.Container {
 
     rollText: RollText
     showRollText(data) {
-        if (!this.rollText) {
-            this.rollText = new RollText()
-            this.rollText.create(this)
-        }
-        data.visible ?
-            this.rollText.show(data)
-            : this.rollText.hide()
+        // if (!this.rollText) {
+        //     this.rollText = new RollText()
+        //     this.rollText.create(this)
+        // }
+        // data.visible ?
+        //     this.rollText.show(data)
+        //     : this.rollText.hide()
+        showPanel(ScrollTextV2, data, this)
     }
 
     showPick8(data) {
