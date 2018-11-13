@@ -6,22 +6,20 @@ import { showPanel } from '../../base/BasePanel';
 import { fitWidth } from '../bracket/BracketGroup';
 import { Pick8Layer } from '../pick8/Pick8';
 import { RankSection } from '../rank/RankSection';
+import { ScoreRank } from '../scoreRank/ScoreRank';
+import { BottomNotice } from '../scoreV2/BottomNotice';
 import { NoticeV2 } from '../scoreV2/NoticeV2';
 import { PlayerInfoV2 } from '../scoreV2/PlayerInfoV2';
-import { VsListV2 } from '../scoreV2/VsListV2';
-import { ScoreRank } from '../scoreRank/ScoreRank';
+import { RankV2 } from '../scoreV2/RankV2';
+import { ScrollTextV2 } from '../scoreV2/ScrollTextV2';
 import { Champion } from './Champion';
 import { getFtLogoUrl2, getFtName } from './Com2017';
 import { Group } from './Group';
 import { LogoFx } from './LogoFx';
-import { RollText } from './RollText';
 import { ScoreFx } from './ScoreFx';
 import { TagFx } from './TagFx';
 import { TopInfo } from './TopInfo';
 import { Winner } from './Winner';
-import { BottomNotice } from '../scoreV2/BottomNotice';
-import { RankV2 } from '../scoreV2/RankV2';
-import { ScrollTextV2 } from '../scoreV2/ScrollTextV2';
 
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
@@ -372,15 +370,7 @@ export class Event2017 extends PIXI.Container {
         // }
     }
 
-    rollText: RollText
     showRollText(data) {
-        // if (!this.rollText) {
-        //     this.rollText = new RollText()
-        //     this.rollText.create(this)
-        // }
-        // data.visible ?
-        //     this.rollText.show(data)
-        //     : this.rollText.hide()
         showPanel(ScrollTextV2, data, this)
     }
 

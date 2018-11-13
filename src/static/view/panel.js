@@ -2564,6 +2564,7 @@
 	    function _ScoreRankAdmin() {
 	        _super.call(this);
 	        this.template = __webpack_require__(40);
+	        this.actTab = VueBase_1.VueBase.PROP;
 	        this.selected = VueBase_1.VueBase.PROP;
 	        this.options = VueBase_1.VueBase.PROP;
 	        this.gameConf = VueBase_1.VueBase.PROP;
@@ -2581,6 +2582,9 @@
 	        this.totalScoreMap = VueBase_1.VueBase.PROP;
 	        this.p1WinMap = VueBase_1.VueBase.PROP;
 	        this.methods = {
+	            tab: function (s) {
+	                this.actTab = s;
+	            },
 	            onReloadShow: function () {
 	                var _this = this;
 	                this.reloadFile(null, {
@@ -2794,6 +2798,7 @@
 	        this.blueArr = [];
 	        this.redArr = [];
 	        this.vsPlayerArr = [];
+	        this.actTab = 'tab1';
 	    };
 	    _ScoreRankAdmin.prototype.initGameRecTable = function (playerMap, data1, callback) {
 	        var _this = this;
@@ -2935,7 +2940,7 @@
 /* 40 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <a href=\"/html/ww/group.html\">小组赛</a>\r\n    <a href=\"/html/ww/index.html\">8进4 final晋级</a>\r\n    <a href=\"/html/ww/rank8.html\">rank8</a>\r\n    <a href=\"/html/intro/ww/intro.html?group=a\">小组介绍 group=a</a>\r\n    <hr>\r\n    <span class=\"select\">\r\n            <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                    {{ option.text }}\r\n                </option>\r\n            </select>\r\n        </span>\r\n\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <button class=\"button is-primary\" @click=\"onCreateGame\">创建比赛</button>\r\n    <button class=\"button is-primary\" @click=\"onShowWinMap\">战胜对手</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n\r\n    <div style=\"width: 900px;\">\r\n        <br> score rank:\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onReloadShow()\">reload show</button>\r\n        <button class=\"button is-primary\" @click=\"onSetPlayerDeactive()\">set player deactive</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <div class=\"level\">\r\n            <div class=\"level-left\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in blueArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n            <div class=\"level-right\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in redArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n        <button class=\"button is-danger\" @click=\"onInitDoc\">init doc</button>\r\n        <div style=\"overflow-y: scroll;height: 800px;\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                        <th>L player</th>\r\n                        <th>score</th>\r\n                        <th>R player</th>\r\n                        <th>operation</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==selGameIdx?'is-selected':'']\">\r\n                        <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}} {{rec.isGroup}}</a></th>\r\n                        <td> {{rec.name[0]}} </td>\r\n                        <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                        <td> {{rec.name[1]}} </td>\r\n                        <td>\r\n                            <div class=\"control\" v-if=\"rec.gameIdx==selGameIdx\">\r\n                                <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                                <button class=\"button btn-setScore\" @click=\"onSetScore(rec.gameIdx)\">修改比分</button>\r\n                                <button class=\"button\" @click=\"onSetGroup(rec.gameIdx)\">小组赛记录</button>\r\n                                <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                            </div>\r\n                        </td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n        {{p1WinMap}}\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <a href=\"/html/ww/group.html\">小组赛</a>\r\n    <a href=\"/html/ww/index.html\">8进4 final晋级</a>\r\n    <a href=\"/html/ww/rank8.html\">rank8</a>\r\n    <a href=\"/html/intro/ww/intro.html?group=a\">小组介绍 group=a</a>\r\n    <hr>\r\n    <span class=\"select\">\r\n            <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                    {{ option.text }}\r\n                </option>\r\n            </select>\r\n        </span>\r\n\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <button class=\"button is-primary\" @click=\"onCreateGame\">创建比赛</button>\r\n    <button class=\"button is-primary\" @click=\"onShowWinMap\">战胜对手</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n\r\n    <div style=\"width: 900px;\">\r\n        <br> score rank:\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onReloadShow()\">reload show</button>\r\n        <button class=\"button is-primary\" @click=\"onSetPlayerDeactive()\">set player deactive</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>picker</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>bracket</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"' class=\"level\">\r\n            <div class=\"level-left\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in blueArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n            <div class=\"level-right\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:190px;padding:5px\" v-for=\"player in redArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n        <button class=\"button is-danger\" @click=\"onInitDoc\">init doc</button>\r\n        <div style=\"overflow-y: scroll;height: 800px;\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                        <th>L player</th>\r\n                        <th>score</th>\r\n                        <th>R player</th>\r\n                        <th>operation</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==selGameIdx?'is-selected':'']\">\r\n                        <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}} {{rec.isGroup}}</a></th>\r\n                        <td> {{rec.name[0]}} </td>\r\n                        <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                        <td> {{rec.name[1]}} </td>\r\n                        <td>\r\n                            <div class=\"control\" v-if=\"rec.gameIdx==selGameIdx\">\r\n                                <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                                <button class=\"button btn-setScore\" @click=\"onSetScore(rec.gameIdx)\">修改比分</button>\r\n                                <button class=\"button\" @click=\"onSetGroup(rec.gameIdx)\">小组赛记录</button>\r\n                                <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                            </div>\r\n                        </td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n        {{p1WinMap}}\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 41 */
@@ -7345,11 +7350,11 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var Command_1 = __webpack_require__(28);
+	var const_1 = __webpack_require__(27);
 	var HupuAPI_1 = __webpack_require__(24);
 	var BasePanelView_1 = __webpack_require__(68);
-	var const_1 = __webpack_require__(27);
-	var BracketGroup_1 = __webpack_require__(78);
 	var BracketV2_1 = __webpack_require__(85);
+	var BracketGroup_1 = __webpack_require__(78);
 	var BracketView = (function (_super) {
 	    __extends(BracketView, _super);
 	    function BracketView(stage, gameId, $route) {
@@ -9112,9 +9117,12 @@
 	var BasePanel_1 = __webpack_require__(88);
 	var BracketGroup_1 = __webpack_require__(78);
 	var Pick8_1 = __webpack_require__(97);
+	var ScoreRank_1 = __webpack_require__(101);
+	var BottomNotice_1 = __webpack_require__(111);
 	var NoticeV2_1 = __webpack_require__(98);
 	var PlayerInfoV2_1 = __webpack_require__(100);
-	var ScoreRank_1 = __webpack_require__(101);
+	var RankV2_1 = __webpack_require__(112);
+	var ScrollTextV2_1 = __webpack_require__(134);
 	var Champion_1 = __webpack_require__(102);
 	var Com2017_1 = __webpack_require__(103);
 	var Group_1 = __webpack_require__(104);
@@ -9123,9 +9131,6 @@
 	var TagFx_1 = __webpack_require__(108);
 	var TopInfo_1 = __webpack_require__(109);
 	var Winner_1 = __webpack_require__(110);
-	var BottomNotice_1 = __webpack_require__(111);
-	var RankV2_1 = __webpack_require__(112);
-	var ScrollTextV2_1 = __webpack_require__(134);
 	var Event2017 = (function (_super) {
 	    __extends(Event2017, _super);
 	    function Event2017(stage, isDark) {

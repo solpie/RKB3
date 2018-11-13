@@ -40,6 +40,9 @@ let _exData
 const playerCount = 4;
 class _ScoreRankAdmin extends VueBase {
     template = require('./scoreRank.html');
+    actTab = VueBase.PROP;
+
+
     selected = VueBase.PROP;
     options = VueBase.PROP;
     gameConf = VueBase.PROP;
@@ -70,6 +73,7 @@ class _ScoreRankAdmin extends VueBase {
         this.blueArr = []
         this.redArr = []
         this.vsPlayerArr = []
+        this.actTab = 'tab1'
     }
     initGameRecTable(playerMap, data1?, callback?) {
         let _ = (data) => {
@@ -211,6 +215,9 @@ class _ScoreRankAdmin extends VueBase {
 
     }
     methods = {
+        tab(s) {
+            this.actTab = s
+        },
         onReloadShow() {
             this.reloadFile(null, {
                 callback: _ => {

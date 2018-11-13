@@ -31,7 +31,21 @@
         <button class="button is-primary" @click="onSetPlayerDeactive()">set player deactive</button>
         <button class="button is-primary" @click="onShowScoreRank(false)">hide</button>
         <br>
-        <div class="level">
+        <div class="tabs  is-boxed">
+            <ul>
+                <li v-bind:class="{ 'is-active': actTab== 'tab1'}" @click='tab("tab1")'>
+                    <a>
+                        <span>picker</span>
+                    </a>
+                </li>
+                <li v-bind:class="{ 'is-active': actTab== 'tab2'}" @click='tab("tab2")'>
+                    <a>
+                        <span>bracket</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div v-if='actTab=="tab1"' class="level">
             <div class="level-left">
                 <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
                     <li style="float:left;width:190px;padding:5px" v-for="player in blueArr">
