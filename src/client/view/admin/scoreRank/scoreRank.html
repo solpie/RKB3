@@ -43,7 +43,28 @@
                         <span>bracket</span>
                     </a>
                 </li>
+                <li v-bind:class="{ 'is-active': actTab== 'tab3'}" @click='tab("tab3")'>
+                    <a>
+                        <span>rec</span>
+                    </a>
+                </li>
             </ul>
+        </div>
+        <div v-if='actTab=="tab2"'>
+            <div v-if="1" class="control">
+                <input class="input" type="text" style="width: 80px;">
+                <button class="button btn-setScore" @click="onSetScore(rec.gameIdx)">修改比分</button>
+                <button class="button" @click="onSetGroup(rec.gameIdx)">小组赛记录</button>
+                <button class="button is-danger" @click="onDeleteGameRec(rec.gameIdx)">删除</button>
+            </div>
+            <div v-for="(item, index) in bracketRec1" :key="item.s">
+                <div :style='item.s+" position: absolute;"'>
+                    <a @click="setGameIdx(item.gameIdx)">#1 {{item.player[0]}} 0</a>
+                    <br>
+                    <br>
+                    <a @click="setGameIdx(item.gameIdx)">#2 {{item.player[1]}} 0</a>
+                </div>
+            </div>
         </div>
         <div v-if='actTab=="tab1"' class="level">
             <div class="level-left">
@@ -61,8 +82,8 @@
                 </ul>
             </div>
         </div>
-        <button class="button is-danger" @click="onInitDoc">init doc</button>
-        <div style="overflow-y: scroll;height: 800px;">
+        <div v-if='actTab=="tab3"' style="overflow-y: scroll;height: 800px;">
+            <button class="button is-danger" @click="onInitDoc">init doc</button>
             <table class="table is-striped is-bordered">
                 <thead>
                     <tr>

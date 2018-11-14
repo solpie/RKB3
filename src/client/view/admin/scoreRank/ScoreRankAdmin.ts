@@ -1,10 +1,9 @@
-import { VueBase } from '../../utils/VueBase';
-import { PanelId } from '../../const';
 import { CommandId } from '../../Command';
-import { descendingProp, mapToArr } from '../../utils/JsFunc';
-import { ScoreRank } from '../../panel/stageOnline/scoreRank/ScoreRank';
-import { BaseGameView } from '../worldWar/BaseGame';
+import { PanelId } from '../../const';
 import { updateWorldWarDoc } from '../../utils/HupuAPI';
+import { descendingProp } from '../../utils/JsFunc';
+import { VueBase } from '../../utils/VueBase';
+import { bracketRec1, buildRec, newBracketRec1 } from './bracketRec';
 let confFile = null;
 let reader;
 let filesInput;
@@ -62,6 +61,8 @@ class _ScoreRankAdmin extends VueBase {
     winMap = VueBase.PROP;
     totalScoreMap = VueBase.PROP;
     p1WinMap = VueBase.PROP;
+
+    bracketRec1 = VueBase.PROP
     constructor() {
         super();
         VueBase.initProps(this);
@@ -69,57 +70,20 @@ class _ScoreRankAdmin extends VueBase {
 
     created() {
         console.log('Game admin');
-
         this.blueArr = []
         this.redArr = []
         this.vsPlayerArr = []
         this.actTab = 'tab1'
+        this.bracketRec1 = newBracketRec1()
     }
     initGameRecTable(playerMap, data1?, callback?) {
         let _ = (data) => {
             if (data.doc) {
-                let a = []
                 this.selGameIdx = data.doc.gameIdx
-                let winMap = {}
-                let totalScoreMap = {}
-                for (let idx in data.doc.rec) {
-                    let rec = data.doc.rec[idx]
-                    let p1 = rec.player[0]
-                    let p2 = rec.player[1]
-                    if (!winMap[p1]) {
-                        winMap[p1] = []
-                        totalScoreMap[p1] = { score: 0, w: 0, l: 0 }
-                    }
-                    if (!winMap[p2]) {
-                        totalScoreMap[p2] = { score: 0, w: 0, l: 0 }
-                        winMap[p2] = []
-                    }
-                    if (rec.isGroup) {
-                        totalScoreMap[p1].score += rec.score[0] - rec.score[1]
-                        totalScoreMap[p2].score -= rec.score[0] - rec.score[1]
-                    }
-                    if (rec.score[0] > rec.score[1]) {
-                        if (rec.isGroup) {
-                            totalScoreMap[p1].w += 1
-                            totalScoreMap[p2].l += 1
-                        }
-                        winMap[p1].push(p2)
-                    }
-                    else {
-                        if (rec.isGroup) {
-                            totalScoreMap[p2].w += 1
-                            totalScoreMap[p1].l += 1
-                        }
-                        winMap[p2].push(p1)
-                    }
-
-                    rec.name = [playerMap[p1].name, playerMap[p2].name]
-                    rec.gameIdx = idx
-                    a.push(rec)
-                }
-                this.winMap = winMap
-                this.totalScoreMap = totalScoreMap
-                this.recArr = a
+                let ret = buildRec(data.doc,playerMap)
+                this.winMap = ret.winMap
+                this.totalScoreMap = ret.totalScoreMap
+                this.recArr = ret.recArr
                 if (callback) {
                     callback()
                 }
