@@ -3,7 +3,7 @@ import { PanelId } from '../../const';
 import { updateWorldWarDoc } from '../../utils/HupuAPI';
 import { descendingProp } from '../../utils/JsFunc';
 import { VueBase } from '../../utils/VueBase';
-import { bracketRec1, buildRec, newBracketRec1 } from './bracketRec';
+import { buildRec, newBracketRec1, newBracketRec2 } from './bracketRec';
 let confFile = null;
 let reader;
 let filesInput;
@@ -62,7 +62,9 @@ class _ScoreRankAdmin extends VueBase {
     totalScoreMap = VueBase.PROP;
     p1WinMap = VueBase.PROP;
 
+    bracketRec = VueBase.PROP
     bracketRec1 = VueBase.PROP
+    bracketRec2 = VueBase.PROP
     constructor() {
         super();
         VueBase.initProps(this);
@@ -74,7 +76,8 @@ class _ScoreRankAdmin extends VueBase {
         this.redArr = []
         this.vsPlayerArr = []
         this.actTab = 'tab1'
-        this.bracketRec1 = newBracketRec1()
+        this.bracketRec = this.bracketRec1 = newBracketRec1()
+        this.bracketRec2 = newBracketRec2()
     }
     initGameRecTable(playerMap, data1?, callback?) {
         let _ = (data) => {
@@ -82,6 +85,7 @@ class _ScoreRankAdmin extends VueBase {
                 this.selGameIdx = data.doc.gameIdx
                 let ret = buildRec(data.doc, playerMap)
                 this.bracketRec1 = ret.bracketRec1
+                this.bracketRec2 = ret.bracketRec2
                 this.winMap = ret.winMap
                 this.totalScoreMap = ret.totalScoreMap
                 this.recArr = ret.recArr
@@ -180,8 +184,12 @@ class _ScoreRankAdmin extends VueBase {
 
     }
     methods = {
-        tab(s) {
+        tab(s, bracketRecIdx?) {
             this.actTab = s
+            if (bracketRecIdx == 1)
+                this.bracketRec = this.bracketRec1
+            if (bracketRecIdx == 2)
+                this.bracketRec = this.bracketRec2
         },
         onReloadShow() {
             this.reloadFile(null, {
@@ -222,11 +230,15 @@ class _ScoreRankAdmin extends VueBase {
                 this.initGameRecTable(this.playerMap, data)
             }, true)
         },
-        onSetScore(gameIdx) {
+        onSetScore(gameIdx, inputId?) {
             syncDoc(data => {
                 let doc = data.doc
-                let scoreStr = $("#scoreInput" + gameIdx).val();
-                console.log(scoreStr);
+                let scoreStr;
+                if (!inputId)
+                    scoreStr = $("#scoreInput" + gameIdx).val();
+                else
+                    scoreStr = $(inputId).val();
+                console.log(inputId, scoreStr);
                 let a = scoreStr.split(" ");
                 if (a.length == 2) {
                     let rec = doc.rec[gameIdx]

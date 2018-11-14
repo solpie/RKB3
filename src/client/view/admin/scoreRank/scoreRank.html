@@ -38,9 +38,14 @@
                         <span>picker</span>
                     </a>
                 </li>
-                <li v-bind:class="{ 'is-active': actTab== 'tab2'}" @click='tab("tab2")'>
+                <li v-bind:class="{ 'is-active': actTab== 'tab2'}" @click='tab("tab2",1)'>
                     <a>
-                        <span>bracket</span>
+                        <span>bracket rec 1</span>
+                    </a>
+                </li>
+                <li v-bind:class="{ 'is-active': actTab== 'tab4'}" @click='tab("tab4",2)'>
+                    <a>
+                        <span>bracket rec 2</span>
                     </a>
                 </li>
                 <li v-bind:class="{ 'is-active': actTab== 'tab3'}" @click='tab("tab3")'>
@@ -50,14 +55,14 @@
                 </li>
             </ul>
         </div>
-        <div v-if='actTab=="tab2"'>
+        <div v-if='actTab=="tab2" ||actTab=="tab4"'>
             <div v-if="1" class="control">
-                <input class="input" type="text" style="width: 80px;">
-                <button class="button btn-setScore" @click="onSetScore(rec.gameIdx)">修改比分</button>
-                <button class="button" @click="onSetGroup(rec.gameIdx)">小组赛记录</button>
-                <button class="button is-danger" @click="onDeleteGameRec(rec.gameIdx)">删除</button>
+                selected gameIdx:{{selGameIdx}}
+                <input id="bracketScoreInput" class="input" type="text" style="width: 80px;">
+                <button class="button btn-setScore" @click="onSetScore(selGameIdx,'#bracketScoreInput')">修改比分</button>
+                <button class="button" @click="onSetGroup(selGameIdx,'#bracketScoreInput')">修改对阵</button>
             </div>
-            <div v-for="(item, index) in bracketRec1" :key="item.s">
+            <div v-for="(item, index) in bracketRec" :key="item.s">
                 <div :style='item.s+" position: absolute;"'>
                     <div v-if="item.isH">
                         <a @click="setGameIdx(item.gameIdx)">#{{item.gameIdx}} {{item.player[0]}} {{item.score[0]}}</a> ----

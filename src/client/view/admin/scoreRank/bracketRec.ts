@@ -8,12 +8,25 @@ export function newBracketRec1() {
         { score: [0, 0], player: ["p1", "p2"], s: _p(0, 373), gameIdx: 13 },
         { score: [0, 0], player: ["p1", "p2"], s: _p(0, 473), gameIdx: 15 },
 
-        { score: [0, 0], player: ["p1", "p2"], s: _p(500, 373), gameIdx: 14 },
-        { score: [0, 0], player: ["p1", "p2"], s: _p(500, 473), gameIdx: 16 },
+        { score: [0, 0], player: ["p1", "p2"], s: _p(450, 373), gameIdx: 14 },
+        { score: [0, 0], player: ["p1", "p2"], s: _p(450, 473), gameIdx: 16 },
 
-        { score: [0, 0], player: ["p1", "p2"], s: _p(130, 398), gameIdx: 21, isH: true },
+        { score: [0, 0], player: ["p1", "p2"], s: _p(160, 398), gameIdx: 21, isH: true },
 
-        { score: [0, 0], player: ["p1", "p2"], s: _p(130, 498), gameIdx: 22, isH: true },
+        { score: [0, 0], player: ["p1", "p2"], s: _p(160, 498), gameIdx: 22, isH: true },
+    ]
+}
+export function newBracketRec2() {
+    return [
+        { score: [0, 0], player: ["p1", "p2"], s: _p(0, 373), gameIdx: 17 },
+        { score: [0, 0], player: ["p1", "p2"], s: _p(0, 473), gameIdx: 18 },
+
+        { score: [0, 0], player: ["p1", "p2"], s: _p(450, 373), gameIdx: 19 },
+        { score: [0, 0], player: ["p1", "p2"], s: _p(450, 473), gameIdx: 20 },
+
+        { score: [0, 0], player: ["p1", "p2"], s: _p(160, 398), gameIdx: 23, isH: true },
+
+        { score: [0, 0], player: ["p1", "p2"], s: _p(160, 498), gameIdx: 24, isH: true },
     ]
 }
 
@@ -22,6 +35,7 @@ export function buildRec(doc, playerMap) {
     let winMap = {}
     let totalScoreMap = {}
     let bracketRec_1 = newBracketRec1()
+    let bracketRec_2 = newBracketRec2()
     for (let idx in doc.rec) {
         let rec = doc.rec[idx]
 
@@ -68,5 +82,6 @@ export function buildRec(doc, playerMap) {
         , totalScoreMap: totalScoreMap
         , recArr: a
         , bracketRec1: bracketRec_1
+        , bracketRec2: bracketRec_2
     }
 }
