@@ -3,28 +3,17 @@ import { cloneMap } from "../../utils/JsFunc";
 var _p = function (x, y) {
     return 'left:' + x + 'px;' + 'top:' + y + 'px;'
 }
-export let bracketRec1 = [
-    { s: _p(0, 373), gameIdx: 13 },
-    { s: _p(0, 473), gameIdx: 15 },
-
-    { s: _p(500, 373), gameIdx: 14 },
-    { s: _p(500, 473), gameIdx: 16 },
-
-    { s: _p(130, 398), gameIdx: 17 },
-
-    { s: _p(330, 398), gameIdx: 18 },
-]
 export function newBracketRec1() {
     return [
-        { player: ["p1", "p2"], s: _p(0, 373), gameIdx: 13 },
-        { player: ["p1", "p2"], s: _p(0, 473), gameIdx: 15 },
+        { score: [0, 0], player: ["p1", "p2"], s: _p(0, 373), gameIdx: 13 },
+        { score: [0, 0], player: ["p1", "p2"], s: _p(0, 473), gameIdx: 15 },
 
-        { player: ["p1", "p2"], s: _p(500, 373), gameIdx: 14 },
-        { player: ["p1", "p2"], s: _p(500, 473), gameIdx: 16 },
+        { score: [0, 0], player: ["p1", "p2"], s: _p(500, 373), gameIdx: 14 },
+        { score: [0, 0], player: ["p1", "p2"], s: _p(500, 473), gameIdx: 16 },
 
-        { player: ["p1", "p2"], s: _p(130, 398), gameIdx: 17 },
+        { score: [0, 0], player: ["p1", "p2"], s: _p(130, 398), gameIdx: 21, isH: true },
 
-        { player: ["p1", "p2"], s: _p(330, 398), gameIdx: 18 },
+        { score: [0, 0], player: ["p1", "p2"], s: _p(130, 498), gameIdx: 22, isH: true },
     ]
 }
 
@@ -35,11 +24,7 @@ export function buildRec(doc, playerMap) {
     let bracketRec_1 = newBracketRec1()
     for (let idx in doc.rec) {
         let rec = doc.rec[idx]
-        for (let b of bracketRec_1) {
-            if (b.gameIdx == Number(idx)) {
-                b.player = rec.player
-            }
-        }
+
         let p1 = rec.player[0]
         let p2 = rec.player[1]
         if (!winMap[p1]) {
@@ -69,6 +54,12 @@ export function buildRec(doc, playerMap) {
             winMap[p2].push(p1)
         }
         rec.name = [playerMap[p1].name, playerMap[p2].name]
+        for (let b of bracketRec_1) {
+            if (b.gameIdx == Number(idx)) {
+                b.player = rec.name
+                b.score = rec.score
+            }
+        }
         rec.gameIdx = idx
         a.push(rec)
     }

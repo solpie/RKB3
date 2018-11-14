@@ -59,10 +59,14 @@
             </div>
             <div v-for="(item, index) in bracketRec1" :key="item.s">
                 <div :style='item.s+" position: absolute;"'>
-                    <a @click="setGameIdx(item.gameIdx)">#1 {{item.player[0]}} 0</a>
-                    <br>
-                    <br>
-                    <a @click="setGameIdx(item.gameIdx)">#2 {{item.player[1]}} 0</a>
+                    <div v-if="item.isH">
+                        <a @click="setGameIdx(item.gameIdx)">#{{item.gameIdx}} {{item.player[0]}} {{item.score[0]}}</a> ----
+                        <a @click="setGameIdx(item.gameIdx)">{{item.score[1]}} {{item.player[1]}} </a>
+                    </div>
+                    <div v-if="!item.isH">
+                        <a @click="setGameIdx(item.gameIdx)">#{{item.gameIdx}} {{item.player[0]}} {{item.score[0]}}</a> <br>| <br>
+                        <a @click="setGameIdx(item.gameIdx)">### {{item.player[1]}} {{item.score[1]}}</a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -80,7 +80,8 @@ class _ScoreRankAdmin extends VueBase {
         let _ = (data) => {
             if (data.doc) {
                 this.selGameIdx = data.doc.gameIdx
-                let ret = buildRec(data.doc,playerMap)
+                let ret = buildRec(data.doc, playerMap)
+                this.bracketRec1 = ret.bracketRec1
                 this.winMap = ret.winMap
                 this.totalScoreMap = ret.totalScoreMap
                 this.recArr = ret.recArr
