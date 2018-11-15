@@ -191,6 +191,12 @@ class _ScoreRankAdmin extends VueBase {
             if (bracketRecIdx == 2)
                 this.bracketRec = this.bracketRec2
         },
+        onEmitBracket() {
+            opReq(`${CommandId.cs_bracket}`, {
+                playerMap:this.playerMap,
+                bracketRec1: this.bracketRec1, bracketRec2: this.bracketRec2
+            })
+        },
         onReloadShow() {
             this.reloadFile(null, {
                 callback: _ => {

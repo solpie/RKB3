@@ -61,6 +61,7 @@
                 <input id="bracketScoreInput" class="input" type="text" style="width: 80px;">
                 <button class="button btn-setScore" @click="onSetScore(selGameIdx,'#bracketScoreInput')">修改比分</button>
                 <button class="button" @click="onSetGroup(selGameIdx,'#bracketScoreInput')">修改对阵</button>
+                <button class="button" @click="onEmitBracket()">emit bracket rec</button>
             </div>
             <div v-for="(item, index) in bracketRec" :key="item.s">
                 <div :style='item.s+" position: absolute;"'>

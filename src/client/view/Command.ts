@@ -202,6 +202,8 @@ export const CommandId = {
     sc_teamScore: '',
     cs_timeOut: '',
     sc_timeOut: '',
+    sc_bracket:'',
+    cs_bracket:'',
     //// RKB
     cs_attack: '',
     attack: '',
