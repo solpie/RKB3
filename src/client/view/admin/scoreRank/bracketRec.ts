@@ -29,6 +29,19 @@ export function newBracketRec2() {
         { score: [0, 0], player: ["p1", "p2"], s: _p(160, 498), gameIdx: 24, isH: true },
     ]
 }
+export function newBracketRec3() {
+    return [
+        { score: [0, 0], player: ["p1", "p2"], s: _p(0, 373), gameIdx: 25 },
+        { score: [0, 0], player: ["p1", "p2"], s: _p(0, 473), gameIdx: -1 },
+
+        { score: [0, 0], player: ["p1", "p2"], s: _p(450, 373), gameIdx: 26 },
+        { score: [0, 0], player: ["p1", "p2"], s: _p(450, 473), gameIdx: -1 },
+
+        { score: [0, 0], player: ["p1", "p2"], s: _p(160, 398), gameIdx: 27, isH: true },
+
+        { score: [0, 0], player: ["p1", "p2"], s: _p(160, 498), gameIdx: -1, isH: true },
+    ]
+}
 
 export function buildRec(doc, playerMap) {
     let a = []
@@ -36,6 +49,8 @@ export function buildRec(doc, playerMap) {
     let totalScoreMap = {}
     let bracketRec_1 = newBracketRec1()
     let bracketRec_2 = newBracketRec2()
+    let bracketRec_3 = newBracketRec3()
+
     for (let idx in doc.rec) {
         let rec = doc.rec[idx]
 
@@ -80,6 +95,12 @@ export function buildRec(doc, playerMap) {
                 b.score = rec.score
             }
         }
+        for (let b of bracketRec_3) {
+            if (b.gameIdx == Number(idx)) {
+                b.player = rec.name
+                b.score = rec.score
+            }
+        }
         rec.gameIdx = idx
         a.push(rec)
     }
@@ -89,5 +110,38 @@ export function buildRec(doc, playerMap) {
         , recArr: a
         , bracketRec1: bracketRec_1
         , bracketRec2: bracketRec_2
+        , bracketRec3: bracketRec_3
+    }
+}
+
+export function rank16(doc, playerMap,rank5Player) {
+    let rank16Map = {}
+    for (let idx in doc.rec) {
+        let rec = doc.rec[idx]
+        let winner;
+        let loser;
+        if (rec.score[0] > rec.score[1]) {
+            winner = rec.player[0]
+            loser = rec.player[1]
+        }
+        else if (rec.score[0] < rec.score[1]) {
+            winner = rec.player[1]
+            loser = rec.player[0]
+        }
+
+        if (Number(idx) == 27) {
+            rank16Map['1'] = winner
+            rank16Map['2'] = loser
+        }
+        if (Number(idx) == 25) {
+            rank16Map['3'] = loser
+        }
+        if (Number(idx) == 26) {
+            rank16Map['4'] = loser
+        }
+        // 21 22 23 24
+        if (Number(idx) == 17) {
+            rank16Map[5] = loser
+        }
     }
 }

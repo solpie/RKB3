@@ -3,7 +3,7 @@ import { PanelId } from '../../const';
 import { updateWorldWarDoc } from '../../utils/HupuAPI';
 import { descendingProp } from '../../utils/JsFunc';
 import { VueBase } from '../../utils/VueBase';
-import { buildRec, newBracketRec1, newBracketRec2 } from './bracketRec';
+import { buildRec, newBracketRec1, newBracketRec2, newBracketRec3 } from './bracketRec';
 let confFile = null;
 let reader;
 let filesInput;
@@ -65,6 +65,7 @@ class _ScoreRankAdmin extends VueBase {
     bracketRec = VueBase.PROP
     bracketRec1 = VueBase.PROP
     bracketRec2 = VueBase.PROP
+    bracketRec3 = VueBase.PROP
     constructor() {
         super();
         VueBase.initProps(this);
@@ -78,6 +79,7 @@ class _ScoreRankAdmin extends VueBase {
         this.actTab = 'tab1'
         this.bracketRec = this.bracketRec1 = newBracketRec1()
         this.bracketRec2 = newBracketRec2()
+        this.bracketRec3 = newBracketRec3()
     }
     initGameRecTable(playerMap, data1?, callback?) {
         let _ = (data) => {
@@ -86,6 +88,7 @@ class _ScoreRankAdmin extends VueBase {
                 let ret = buildRec(data.doc, playerMap)
                 this.bracketRec1 = ret.bracketRec1
                 this.bracketRec2 = ret.bracketRec2
+                this.bracketRec3 = ret.bracketRec3
                 this.winMap = ret.winMap
                 this.totalScoreMap = ret.totalScoreMap
                 this.recArr = ret.recArr
@@ -190,11 +193,15 @@ class _ScoreRankAdmin extends VueBase {
                 this.bracketRec = this.bracketRec1
             if (bracketRecIdx == 2)
                 this.bracketRec = this.bracketRec2
+            if (bracketRecIdx == 3)
+                this.bracketRec = this.bracketRec3
         },
         onEmitBracket() {
             opReq(`${CommandId.cs_bracket}`, {
                 playerMap:this.playerMap,
-                bracketRec1: this.bracketRec1, bracketRec2: this.bracketRec2
+                bracketRec1: this.bracketRec1
+                , bracketRec2: this.bracketRec2
+                , bracketRec3: this.bracketRec3
             })
         },
         onReloadShow() {

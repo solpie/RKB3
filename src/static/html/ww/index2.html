@@ -180,6 +180,56 @@
 
                 .on('sc_bracket', (data) => {
                     console.log('sc_bracket', data)
+                    for (let i = 0; i < this.items.length; i++) {
+                        let item = this.items[i];
+                        item.name = ''
+                        item.score = ''
+                    }
+
+                    this.isBg1 = true
+                    let itemArr
+                    this.isBg1 ? itemArr = this.items : itemArr = this.items2;
+                    // let recArr = data.recMap['#' + recShow].rec
+                    let recArr;
+                    recArr = data.bracketRec1.sort(function(a, b) {
+                        return a.gameIdx - b.gameIdx
+                    })
+                    for (var i = 0; i < recArr.length; i++) {
+                        let rec = recArr[i];
+                        let item1 = itemArr[i * 2]
+                        let item2 = itemArr[i * 2 + 1]
+                        let p1 = rec.player[0]
+                        let p2 = rec.player[1]
+                        item1.name = rec.player[0]
+                        if (item2)
+                            item2.name = rec.player[1]
+                        let lScore = rec.score[0]
+                        let rScore = rec.score[1]
+                        item1.score = lScore
+                        if (item2)
+                            item2.score = rScore
+                            //bracket
+                        if (lScore == 0 && rScore == 0) {
+                            this.brackets[i] = [false, false]
+                            this.brackets2[i] = [false, false]
+                        } else {
+                            if (this.brackets[i]) {
+                                let isLWin = lScore > rScore
+                                this.brackets[i][0] = isLWin
+                                this.brackets[i][1] = !isLWin
+                                if (isLWin)
+                                    this.items[winMap[i]].name = p1.name
+                                else
+                                    this.items[winMap[i]].name = p2.name
+                            }
+                            if (this.brackets2[i]) {
+                                if (!this.isBg1) {
+                                    this.brackets2[i][0] = isLWin
+                                    this.brackets2[i][1] = !isLWin
+                                }
+                            }
+                        }
+                    }
                 })
             }
         })
