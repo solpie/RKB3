@@ -8,7 +8,10 @@
     <a href="/html/ww/blood.html?m=obs">team blood obs</a>
 
     <button class="button is-primary" @click="onFile">打开本地配置</button>
-    <button class="button is-primary" id="reload" @click="onReload">reload</button>
+    <button class="button is-primary" id="reload" @click="onReload">reload</button> 比分面板延时(秒)
+    <input class="input" v-model="delay" type="text" style="width: 100px;">
+    <button class="button is-primary" @click="onSetDelay(delay)">设置</button>
+    <br>
     <br>
 
     <div class="control">

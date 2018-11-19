@@ -10,7 +10,7 @@ let filesInput;
 declare let $
 
 const getDoc = callback => {
-    $.get("http://rtmp.icassi.us:8090/event?idx=1020", res => {
+    $.get("http://rtmp.icassi.us:8090/event?idx=1130_0", res => {
         if (res.length) callback(res[0]);
         else callback(null);
     });

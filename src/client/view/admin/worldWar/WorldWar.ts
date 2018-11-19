@@ -35,6 +35,7 @@ class _worldWar extends VueBase {
   teamScore = VueBase.PROP;
   isShowCurTeamVsOnly = VueBase.PROP;
   updateTime = VueBase.PROP;
+  delay = VueBase.PROP;
   constructor() {
     super();
     VueBase.initProps(this);
@@ -168,6 +169,9 @@ class _worldWar extends VueBase {
     }
   };
   methods = {
+    onSetDelay(sec) {
+      this.delay = sec
+    },
     onShowTitle(v) {
       let playerMap = gameView.playerMap;
       // let recArr = this.gameConf.rec

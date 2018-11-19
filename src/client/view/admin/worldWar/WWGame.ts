@@ -2,8 +2,11 @@ import { EventDispatcher } from "../../utils/EventDispatcher";
 import { updateWorldWarDoc } from "../../utils/HupuAPI";
 
 declare let $;
+let dbUrl;
 const getDoc = callback => {
-  $.get("http://rtmp.icassi.us:8090/event?idx=1021", res => {
+  if (!dbUrl)
+    dbUrl = "http://rtmp.icassi.us:8090/event?idx=1130_1"
+  $.get(dbUrl, res => {
     if (res.length) callback(res[0]);
     else callback(null);
   });
@@ -25,6 +28,7 @@ export class WWGame extends EventDispatcher {
   teamVsRec: any;
   data: any; //json data
   loadConf(data) {
+    dbUrl = data.dbUrl
     this.playerMap = data.playerMap;
     this.teamArr = data.team;
     this.teamVsRec = data.teamVsRec;
@@ -120,7 +124,7 @@ export class WWGame extends EventDispatcher {
       this.emit(WWGame.InitDocView, doc);
     }, true);
   }
-  clearGameRec(doc?,playerMap?) {
+  clearGameRec(doc?, playerMap?) {
     let _ = _doc => {
       _doc.rec = {};
       _doc.teamVsRec = {};

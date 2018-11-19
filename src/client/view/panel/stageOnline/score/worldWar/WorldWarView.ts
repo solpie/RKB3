@@ -7,7 +7,9 @@ import { PanelId } from '../../../../const';
 import { Countdown } from '../Countdown';
 import { newBitmap } from '../../../../utils/PixiEx';
 import { WWTitle } from './WWTitle';
-
+import { showPanel } from '../../../base/BasePanel';
+import { BigBlood } from './BigBlood';
+const isTest = true
 export class WorldWarView extends PIXI.Container {
   stage: any;
   worldWar: WorldWar;
@@ -15,10 +17,13 @@ export class WorldWarView extends PIXI.Container {
   rBloodRank: ScoreRank
   kdaTitle: PIXI.Sprite
 
-  title:WWTitle
+  title: WWTitle
   constructor(stage, io) {
     super();
     this.stage = stage;
+    if (isTest)
+      showPanel(BigBlood, {visible:true}, stage)
+
     TweenEx.delayedCall(1200, _ => {
       this.worldWar = new WorldWar();
       this.stage.addChild(this.worldWar);

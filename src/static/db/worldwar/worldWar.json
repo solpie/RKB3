@@ -1,6 +1,6 @@
 {
-    "date": "2018-09-16",
-    "dbIdx": "ww916",
+    "date": "2018-11-30",
+    "dbUrl": "http://rtmp.icassi.us:8090/event?idx=1130_1",
     "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/915/",
     "team": [
         { "idx": 1, "name": "魔王隊", "playerArr": ["p21", "p22", "p23", "p24", "p25"] },
