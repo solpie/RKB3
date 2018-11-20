@@ -1,4 +1,4 @@
-import { cloneMap } from "../../utils/JsFunc";
+import { cloneMap, mapToArr } from '../../utils/JsFunc';
 
 var _p = function (x, y) {
     return 'left:' + x + 'px;' + 'top:' + y + 'px;'
@@ -114,8 +114,10 @@ export function buildRec(doc, playerMap) {
     }
 }
 
-export function rank16(doc, playerMap,rank5Player) {
+export function rank16(doc, playerMap, rank5Player) {
     let rank16Map = {}
+    let arr_6_8 = []
+    let arr_9_16 = []
     for (let idx in doc.rec) {
         let rec = doc.rec[idx]
         let winner;
@@ -140,8 +142,26 @@ export function rank16(doc, playerMap,rank5Player) {
             rank16Map['4'] = loser
         }
         // 21 22 23 24
-        if (Number(idx) == 17) {
-            rank16Map[5] = loser
+        if ([21, 22, 23, 24].indexOf(Number(idx)) > -1) {
+            // rank16Map["5"] = loser
+            if (loser != rank5Player)
+                arr_6_8.push(loser)
+        }
+        if ([13, 14, 15, 16, 17, 18, 19, 20].indexOf(Number(idx)) > -1) {
+            arr_9_16.push(loser)
         }
     }
+
+    console.log('rank 16', rank16Map, arr_6_8, arr_9_16)
+    let rank16Arr = mapToArr(rank16Map)
+    rank16Arr.push(rank5Player)
+    rank16Arr = rank16Arr.concat(arr_6_8).concat(arr_9_16)
+    let rank = 0
+    let a = []
+    for (let playerId of rank16Arr) {
+        rank++
+        console.log(rank,playerMap[playerId].name)
+        a.push({rank:rank,name:playerMap[playerId].name})
+    }
+    return a
 }

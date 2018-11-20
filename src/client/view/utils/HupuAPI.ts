@@ -14,13 +14,18 @@ export let getHupuWS = (callback) => {
     callback(ws)
     // callback('tcp.lb.liangle.com:3081')
 }
-
+//冠军排位赛数据上传
 //开题延时
 export function setClientDelay(gameId, sec, callback) {
     let url = `http://pre.liangle.com/api/pbk/event/delay/` + gameId
     let data = { ':game_id': gameId + "", ctd: sec + '' }
     console.log(setClientDelay, data)
     $post(proxy(url), data, callback)
+}
+export function postRank16(rankData, callback) {
+    let url = `http://test.liangle.com/manage/create/game/jifen/`
+    console.log('postRank16', rankData)
+    $post(proxy(url), rankData, callback)
 }
 
 export function getClientDelay(gameId, callback) {

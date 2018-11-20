@@ -3,7 +3,7 @@ import { PanelId } from '../../const';
 import { updateWorldWarDoc } from '../../utils/HupuAPI';
 import { descendingProp } from '../../utils/JsFunc';
 import { VueBase } from '../../utils/VueBase';
-import { buildRec, newBracketRec1, newBracketRec2, newBracketRec3 } from './bracketRec';
+import { buildRec, newBracketRec1, newBracketRec2, newBracketRec3, rank16 } from './bracketRec';
 let confFile = null;
 let reader;
 let filesInput;
@@ -68,6 +68,9 @@ class _ScoreRankAdmin extends VueBase {
     bracketRec1 = VueBase.PROP
     bracketRec2 = VueBase.PROP
     bracketRec3 = VueBase.PROP
+
+    rank5Player = VueBase.PROP
+    rank16Arr = VueBase.PROP
     constructor() {
         super();
         VueBase.initProps(this);
@@ -78,6 +81,7 @@ class _ScoreRankAdmin extends VueBase {
         this.blueArr = []
         this.redArr = []
         this.vsPlayerArr = []
+        this.rank16Arr = []
         this.actTab = 'tab1'
         this.bracketRec = this.bracketRec1 = newBracketRec1()
         this.bracketRec2 = newBracketRec2()
@@ -198,6 +202,11 @@ class _ScoreRankAdmin extends VueBase {
                 this.bracketRec = this.bracketRec2
             if (bracketRecIdx == 3)
                 this.bracketRec = this.bracketRec3
+        },
+        onGenRank16(rank5Player) {
+            syncDoc(data => {
+                this.rank16Arr = rank16(data.doc, this.playerMap, rank5Player)
+            })
         },
         onEmitBracket() {
             opReq(`${CommandId.cs_bracket}`, {

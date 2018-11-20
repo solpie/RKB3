@@ -58,6 +58,12 @@
                         <span>rec</span>
                     </a>
                 </li>
+
+                <li v-bind:class="{ 'is-active': actTab== 'tab6'}" @click='tab("tab6")'>
+                    <a>
+                        <span>rank 16</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <div v-if='actTab=="tab2" ||actTab=="tab4"||actTab=="tab5"'>
@@ -126,6 +132,16 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div v-if="actTab=='tab6'">
+            rank 5 playerId<input type="text" v-model="rank5Player" style="width: 80px;">
+            <button class="button is-primary" @click="onGenRank16(rank5Player)">rank16</button>
+            <ul>
+                <li v-for="(player,index) in rank16Arr" :key="player" style="float:left;width:190px;padding:5px">
+                    {{player.rank}} - {{player.name}}
+                </li>
+            </ul>
         </div>
         {{p1WinMap}}
     </div>
