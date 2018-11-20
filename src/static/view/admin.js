@@ -2970,8 +2970,11 @@
 	var confFile = null;
 	var reader;
 	var filesInput;
+	var dbUrl;
 	var getDoc = function (callback) {
-	    $.get("http://rtmp.icassi.us:8090/event?idx=1130_0", function (res) {
+	    if (!dbUrl)
+	        dbUrl = "http://rtmp.icassi.us:8090/event?idx=1130_0";
+	    $.get(dbUrl, function (res) {
 	        if (res.length)
 	            callback(res[0]);
 	        else
@@ -3311,6 +3314,7 @@
 	            }
 	        this.options = a;
 	        this.gameConf = data;
+	        dbUrl = data.dbUrl;
 	        if (this.gameConf.scoreRank) {
 	            this.blueArr = [];
 	            this.redArr = [];

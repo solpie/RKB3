@@ -1,6 +1,7 @@
 {
     "date": "2018-11-30",
     "dbIdx": "worldwar",
+    "dbUrl": "http://rtmp.icassi.us:8090/event?idx=1020",
     "gameTitle": "新人魔王晋级赛",
     "gameTitleMap": {
         "1": "",

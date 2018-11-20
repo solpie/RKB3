@@ -8,9 +8,11 @@ let confFile = null;
 let reader;
 let filesInput;
 declare let $
-
+let dbUrl;
 const getDoc = callback => {
-    $.get("http://rtmp.icassi.us:8090/event?idx=1130_0", res => {
+    if (!dbUrl)
+        dbUrl = "http://rtmp.icassi.us:8090/event?idx=1130_0"
+    $.get(dbUrl, res => {
         if (res.length) callback(res[0]);
         else callback(null);
     });
@@ -105,6 +107,7 @@ class _ScoreRankAdmin extends VueBase {
                 _(data1)
             })
     }
+    //on loaded conf file
     createOption(data, callback?) {
         let a = [];
         let playerMap = data.playerMap
@@ -124,8 +127,8 @@ class _ScoreRankAdmin extends VueBase {
             }
         this.options = a
         this.gameConf = data
+        dbUrl = data.dbUrl
         // let a = [];
-        // let playerMap = data.playerMap
 
         if (this.gameConf.scoreRank) {
             this.blueArr = []
@@ -198,7 +201,7 @@ class _ScoreRankAdmin extends VueBase {
         },
         onEmitBracket() {
             opReq(`${CommandId.cs_bracket}`, {
-                playerMap:this.playerMap,
+                playerMap: this.playerMap,
                 bracketRec1: this.bracketRec1
                 , bracketRec2: this.bracketRec2
                 , bracketRec3: this.bracketRec3
