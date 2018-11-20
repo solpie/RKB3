@@ -67,5 +67,6 @@ export class BloodBar extends PIXI.Container {
     else {
       this.bloodFx.x = this.bloodFxPos[val]
     }
+    return val
   }
 }

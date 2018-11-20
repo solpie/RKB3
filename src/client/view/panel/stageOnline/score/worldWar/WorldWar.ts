@@ -264,11 +264,13 @@ export class WorldWar extends PIXI.Container {
     }
   }
   setBloodByDtScore(data) {
+    let blood;
     if (data.isLeft) {
-      this.rBlood.setBloodByDtScore(data.score);
+      blood = this.rBlood.setBloodByDtScore(data.score);
     } else {
-      this.lBlood.setBloodByDtScore(data.score);
+      blood = this.lBlood.setBloodByDtScore(data.score);
     }
+    return blood
   }
   setGameTitle(vl) {
     this.gameTitle.setText(vl)

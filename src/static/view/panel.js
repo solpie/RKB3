@@ -11209,6 +11209,9 @@
 	            .on(Command_1.CommandId.sc_setFoul, function (data) {
 	            _this.worldWar.setLeftFoul(data.lFoul);
 	            _this.worldWar.setRightFoul(data.rFoul);
+	            data.cid = Command_1.CommandId.sc_setFoul;
+	            data.visible = true;
+	            BasePanel_1.showPanel(BigBlood_1.BigBlood, data, stage);
 	        })
 	            .on(Command_1.CommandId.sc_teamScore, function (data) {
 	            _this.worldWar.setTeamScore(data);
@@ -11249,9 +11252,18 @@
 	                }
 	            }
 	        })
+	            .on(Command_1.CommandId.sc_timeOut, function (data) {
+	            data.cid = Command_1.CommandId.sc_timeOut;
+	            data.visible = true;
+	            BasePanel_1.showPanel(BigBlood_1.BigBlood, data, stage);
+	        })
 	            .on(Command_1.CommandId.sc_setBlood, function (data) {
-	            console.log("sc_setBlood", data);
-	            _this.worldWar.setBloodByDtScore(data);
+	            var blood = _this.worldWar.setBloodByDtScore(data);
+	            console.log("sc_setBlood", data, blood);
+	            data.cid = Command_1.CommandId.sc_setBlood;
+	            data.blood = blood;
+	            data.visible = true;
+	            BasePanel_1.showPanel(BigBlood_1.BigBlood, data, stage);
 	        });
 	    }
 	    return WorldWarView;
@@ -11467,12 +11479,14 @@
 	        }
 	    };
 	    WorldWar.prototype.setBloodByDtScore = function (data) {
+	        var blood;
 	        if (data.isLeft) {
-	            this.rBlood.setBloodByDtScore(data.score);
+	            blood = this.rBlood.setBloodByDtScore(data.score);
 	        }
 	        else {
-	            this.lBlood.setBloodByDtScore(data.score);
+	            blood = this.lBlood.setBloodByDtScore(data.score);
 	        }
+	        return blood;
 	    };
 	    WorldWar.prototype.setGameTitle = function (vl) {
 	        this.gameTitle.setText(vl)
@@ -11600,6 +11614,7 @@
 	        else {
 	            this.bloodFx.x = this.bloodFxPos[val];
 	        }
+	        return val;
 	    };
 	    return BloodBar;
 	}(PIXI.Container));
@@ -12654,10 +12669,12 @@
 	var PixiEx_1 = __webpack_require__(56);
 	var TextFac_1 = __webpack_require__(77);
 	var const_1 = __webpack_require__(27);
+	var Command_1 = __webpack_require__(28);
 	var urlBg1 = '/html/ww/bottomBlood/bg2.png';
 	var urlBloodFrame = '/html/ww/bottomBlood/frame.png';
 	var urlLBlood = '/html/ww/bottomBlood/lBlood.png';
 	var urlRBlood = '/html/ww/bottomBlood/rBlood.png';
+	var isTest = true;
 	var ___BloodPlayer = (function (_super) {
 	    __extends(___BloodPlayer, _super);
 	    function ___BloodPlayer(parent, isRight) {
@@ -12694,7 +12711,8 @@
 	            .setY(459);
 	        this.addChild(fg);
 	        parent.addChild(this);
-	        this.setInfo({ name: '黄玉军', bloodRaito: Math.random() });
+	        if (isTest)
+	            this.setInfo({ name: '黄玉军', bloodRaito: Math.random() });
 	    }
 	    ___BloodPlayer.prototype.setInfo = function (data) {
 	        this.pName.setText(data.name)
@@ -12753,17 +12771,51 @@
 	            _this.lTimeoutMaskArr.push(tm);
 	            tm = new PIXI.Graphics()
 	                .beginFill(0x020206)
-	                .drawRect(1060, 145, 130, 50);
-	            _this.addChild(tm);
-	            _this.lTimeoutMaskArr.push(tm);
-	            tm = new PIXI.Graphics()
-	                .beginFill(0x020206)
 	                .drawRect(1190, 145, 130, 50);
 	            _this.addChild(tm);
-	            _this.lTimeoutMaskArr.push(tm);
+	            _this.rTimeoutMaskArr.push(tm);
+	            tm = new PIXI.Graphics()
+	                .beginFill(0x020206)
+	                .drawRect(1060, 145, 130, 50);
+	            _this.addChild(tm);
+	            _this.rTimeoutMaskArr.push(tm);
+	            var ns = {
+	                fontFamily: const_1.FontName.MicrosoftYahei,
+	                fontSize: "45px",
+	                fontWeight: "",
+	                fill: "#ddd"
+	            };
+	            _this.lFoul = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(326);
+	            _this.rFoul = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(_this.lFoul.y);
+	            _this.lBlood = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(238);
+	            _this.rBlood = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(_this.lBlood.y);
 	        });
 	    };
 	    BigBlood.prototype._show = function (data) {
+	        if (data.cid == Command_1.CommandId.sc_setFoul) {
+	            this.lFoul.setText(data.lFoul)
+	                .setAlignCenter(805);
+	            this.rFoul.setText(data.rFoul)
+	                .setAlignCenter(1146);
+	        }
+	        if (data.cid == Command_1.CommandId.sc_setBlood) {
+	            if (data.isLeft)
+	                this.lBlood.setText(data.blood)
+	                    .setAlignCenter(805);
+	            else
+	                this.rBlood.setText(data.blood)
+	                    .setAlignCenter(1146);
+	        }
+	        if (data.cid == Command_1.CommandId.sc_timeOut) {
+	            this.lTimeoutMaskArr[0].visible = data.lTimeOut < 2;
+	            this.lTimeoutMaskArr[1].visible = data.lTimeOut < 1;
+	            this.rTimeoutMaskArr[0].visible = data.rTimeOut < 2;
+	            this.rTimeoutMaskArr[1].visible = data.rTimeOut < 1;
+	        }
 	        this.p.addChild(this);
 	    };
 	    BigBlood.cls = 'BigBlood';

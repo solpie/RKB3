@@ -22,7 +22,7 @@ export class WorldWarView extends PIXI.Container {
     super();
     this.stage = stage;
     if (isTest)
-      showPanel(BigBlood, {visible:true}, stage)
+      showPanel(BigBlood, { visible: true }, stage)
 
     TweenEx.delayedCall(1200, _ => {
       this.worldWar = new WorldWar();
@@ -94,6 +94,10 @@ export class WorldWarView extends PIXI.Container {
       .on(CommandId.sc_setFoul, data => {
         this.worldWar.setLeftFoul(data.lFoul);
         this.worldWar.setRightFoul(data.rFoul);
+
+        data.cid = CommandId.sc_setFoul
+        data.visible = true
+        showPanel(BigBlood, data, stage)
       })
       .on(CommandId.sc_teamScore, data => {
         this.worldWar.setTeamScore(data)
@@ -138,9 +142,19 @@ export class WorldWarView extends PIXI.Container {
           }
         }
       })
+      .on(CommandId.sc_timeOut, data => {
+        data.cid = CommandId.sc_timeOut
+        data.visible = true
+        showPanel(BigBlood, data, stage)
+      })
       .on(CommandId.sc_setBlood, data => {
-        console.log("sc_setBlood", data);
-        this.worldWar.setBloodByDtScore(data)
+        let blood = this.worldWar.setBloodByDtScore(data)
+        console.log("sc_setBlood", data, blood);
+
+        data.cid = CommandId.sc_setBlood
+        data.blood = blood
+        data.visible = true
+        showPanel(BigBlood, data, stage)
       });
   }
 }

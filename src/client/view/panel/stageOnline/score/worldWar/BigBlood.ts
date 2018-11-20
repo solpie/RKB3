@@ -2,11 +2,12 @@ import { BasePanel } from '../../../base/BasePanel';
 import { newBitmap } from '../../../../utils/PixiEx';
 import { Text2, TextFac } from '../../../../utils/TextFac';
 import { FontName } from '../../../../const';
+import { CommandId } from '../../../../Command';
 let urlBg1 = '/html/ww/bottomBlood/bg2.png'
 let urlBloodFrame = '/html/ww/bottomBlood/frame.png'
 let urlLBlood = '/html/ww/bottomBlood/lBlood.png'
 let urlRBlood = '/html/ww/bottomBlood/rBlood.png'
-
+const isTest = true
 class ___BloodPlayer extends PIXI.Container {
     pName: Text2
     isRight: Boolean
@@ -51,8 +52,8 @@ class ___BloodPlayer extends PIXI.Container {
         this.addChild(fg)
 
         parent.addChild(this)
-
-        this.setInfo({ name: '黄玉军', bloodRaito: Math.random() })
+        if (isTest)
+            this.setInfo({ name: '黄玉军', bloodRaito: Math.random() })
     }
     setInfo(data) {
         this.pName.setText(data.name)
@@ -78,6 +79,11 @@ export class BigBlood extends BasePanel {
     lTimeoutMaskArr: Array<PIXI.Graphics>
     rTimeoutMaskArr: Array<PIXI.Graphics>
     rTimeoutMask: PIXI.Graphics
+
+    lFoul: Text2
+    rFoul: Text2
+    lBlood: Text2
+    rBlood: Text2
     create() {
         console.log('scroll text creat1e');
         let imgArr = [urlBg1
@@ -118,18 +124,62 @@ export class BigBlood extends BasePanel {
 
             tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(1060, 145, 130, 50)
+                .drawRect(1190, 145, 130, 50)
             this.addChild(tm)
-            this.lTimeoutMaskArr.push(tm)
+            this.rTimeoutMaskArr.push(tm)
 
             tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(1190, 145, 130, 50)
+                .drawRect(1060, 145, 130, 50)
             this.addChild(tm)
-            this.lTimeoutMaskArr.push(tm)
+            this.rTimeoutMaskArr.push(tm)
+
+
+
+            let ns = {
+                fontFamily: FontName.MicrosoftYahei,
+                fontSize: "45px",
+                fontWeight: "",
+                fill: "#ddd"
+            };
+            this.lFoul = TextFac.new_(ns, this)
+                .setY(326)
+
+            this.rFoul = TextFac.new_(ns, this)
+                .setY(this.lFoul.y)
+
+            this.lBlood = TextFac.new_(ns, this)
+                .setY(238)
+
+            this.rBlood = TextFac.new_(ns, this)
+                .setY(this.lBlood.y)
         })
     }
     _show(data) {
+        if (data.cid ==CommandId.sc_setFoul) {
+            this.lFoul.setText(data.lFoul)
+                .setAlignCenter(805)
+            this.rFoul.setText(data.rFoul)
+                .setAlignCenter(1146)
+        }
+
+        if (data.cid == CommandId.sc_setBlood) {
+            if (data.isLeft)
+                this.lBlood.setText(data.blood)
+                    .setAlignCenter(805)
+            else
+                this.rBlood.setText(data.blood)
+                    .setAlignCenter(1146)
+        }
+
+        if (data.cid == CommandId.sc_timeOut) {
+            this.lTimeoutMaskArr[0].visible = data.lTimeOut < 2
+            this.lTimeoutMaskArr[1].visible = data.lTimeOut < 1
+
+            this.rTimeoutMaskArr[0].visible = data.rTimeOut < 2
+            this.rTimeoutMaskArr[1].visible = data.rTimeOut < 1
+        }
+
         this.p.addChild(this)
     }
 }
