@@ -1986,6 +1986,8 @@
 	        var data = {
 	            leftPlayer: p1,
 	            rightPlayer: p2,
+	            leftTeam: this.blueArr,
+	            rightTeam: this.redArr,
 	            gameTitle: gameTitle
 	        };
 	        opReq("cs_setPlayer", data);
@@ -2326,6 +2328,7 @@
 	                }
 	            }
 	            for (var player in curBloodMap) {
+	                this.playerMap[player].initBlood = bloodMapForShow[player].blood;
 	                this.playerMap[player].blood = curBloodMap[player].blood;
 	                this.playerMap[player].score = curBloodMap[player].score;
 	                this.playerMap[player].k = curBloodMap[player].k;
@@ -11190,6 +11193,9 @@
 	            if (data.isRestTeamScore) {
 	                _this.worldWar.setTeamScore({ lScore: 0, rScore: 0 });
 	            }
+	            data.cid = Command_1.CommandId.sc_setPlayer;
+	            data.visible = true;
+	            BasePanel_1.showPanel(BigBlood_1.BigBlood, data, stage);
 	        })
 	            .on(Command_1.CommandId.sc_showPanel, function (data) {
 	            console.log('sc_showPanel', data);
@@ -12674,6 +12680,7 @@
 	var urlBloodFrame = '/html/ww/bottomBlood/frame.png';
 	var urlLBlood = '/html/ww/bottomBlood/lBlood.png';
 	var urlRBlood = '/html/ww/bottomBlood/rBlood.png';
+	var urlFg = '/html/ww/bottomBlood/fg2.png';
 	var isTest = true;
 	var ___BloodPlayer = (function (_super) {
 	    __extends(___BloodPlayer, _super);
@@ -12705,6 +12712,8 @@
 	            fontFamily: const_1.FontName.MicrosoftYahei,
 	            fontSize: "45px",
 	            fontWeight: "",
+	            stroke: '#333',
+	            strokeThickness: 2,
 	            fill: "#ddd"
 	        };
 	        this.pName = TextFac_1.TextFac.new_(ns, this)
@@ -12715,16 +12724,23 @@
 	            this.setInfo({ name: '黄玉军', bloodRaito: Math.random() });
 	    }
 	    ___BloodPlayer.prototype.setInfo = function (data) {
-	        this.pName.setText(data.name)
-	            .setAlignCenter(645);
-	        var bloodWidth = 425 * data.bloodRaito;
-	        if (this.isRight) {
-	            this.bloodMask.x = bloodWidth;
-	            this.pName.setAlignCenter(1920 - 645);
+	        if (data.name) {
+	            this.pName.setText(data.name)
+	                .setAlignCenter(645);
 	        }
-	        else {
-	            this.bloodMask.x = -bloodWidth;
-	            this.pName.setAlignCenter(645);
+	        if (data.bloodRaito != null) {
+	            var bloodWidth = 425 * (1 - data.bloodRaito);
+	            if (data.bloodRaito == 0) {
+	                bloodWidth = 422;
+	            }
+	            if (this.isRight) {
+	                this.bloodMask.x = bloodWidth;
+	                this.pName.setAlignCenter(1920 - 645);
+	            }
+	            else {
+	                this.bloodMask.x = -bloodWidth;
+	                this.pName.setAlignCenter(645);
+	            }
 	        }
 	    };
 	    return ___BloodPlayer;
@@ -12740,7 +12756,8 @@
 	        var imgArr = [urlBg1,
 	            urlBloodFrame,
 	            urlLBlood,
-	            urlRBlood
+	            urlRBlood,
+	            urlFg
 	        ];
 	        this.load(imgArr, function (_) {
 	            _this.addChild(PixiEx_1.newBitmap({ url: urlBg1 }));
@@ -12780,20 +12797,74 @@
 	            _this.addChild(tm);
 	            _this.rTimeoutMaskArr.push(tm);
 	            var ns = {
-	                fontFamily: const_1.FontName.MicrosoftYahei,
-	                fontSize: "45px",
-	                fontWeight: "",
+	                fontFamily: const_1.FontName.dinCondensedC,
+	                fontSize: "70px",
+	                fontWeight: "bold",
 	                fill: "#ddd"
 	            };
 	            _this.lFoul = TextFac_1.TextFac.new_(ns, _this)
-	                .setY(326);
+	                .setY(300)
+	                .setText("0")
+	                .setAlignCenter(PixiEx_1._c(-133));
 	            _this.rFoul = TextFac_1.TextFac.new_(ns, _this)
-	                .setY(_this.lFoul.y);
+	                .setY(_this.lFoul.y)
+	                .setText("0")
+	                .setAlignCenter(PixiEx_1._c(133));
+	            ns.fontSize = "120px";
 	            _this.lBlood = TextFac_1.TextFac.new_(ns, _this)
-	                .setY(238);
+	                .setY(218 - 37)
+	                .setText("0")
+	                .setAlignCenter(PixiEx_1._c(-280));
 	            _this.rBlood = TextFac_1.TextFac.new_(ns, _this)
-	                .setY(_this.lBlood.y);
+	                .setY(_this.lBlood.y)
+	                .setText("0")
+	                .setAlignCenter(PixiEx_1._c(280));
+	            _this.addChild(PixiEx_1.newBitmap({ url: urlFg }));
+	            ns.fontFamily = const_1.FontName.MicrosoftYahei;
+	            ns.fontSize = "43px";
+	            _this.lName = TextFac_1.TextFac.new_(ns, _this)
+	                .setText('player1')
+	                .setY(312)
+	                .setAlignCenter(PixiEx_1._c(-516));
+	            _this.rName = TextFac_1.TextFac.new_(ns, _this)
+	                .setText('player2')
+	                .setY(_this.lName.y)
+	                .setAlignCenter(PixiEx_1._c(516));
 	        });
+	    };
+	    BigBlood.prototype._fillBlood = function (dataArr, bloodPlayerArr, curPlayer) {
+	        for (var i = 0; i < dataArr.length; i++) {
+	            var data = dataArr[i];
+	            var b = bloodPlayerArr[i];
+	            if (curPlayer.playerId == data.playerId) {
+	                data.blood = curPlayer.blood;
+	            }
+	            b.initBlood = data.initBlood;
+	            b.blood = data.blood;
+	            b.playerId = data.playerId;
+	            data.bloodRaito = data.blood / data.initBlood;
+	            b.setInfo(data);
+	        }
+	    };
+	    BigBlood.prototype._setCurBlood = function (data) {
+	        var curBloodArr = [0, 0];
+	        for (var i = 0; i < this.lPlayerArr.length; i++) {
+	            var b = this.lPlayerArr[i];
+	            if (b.playerId == data.lPlayer) {
+	                curBloodArr[0] = b.blood - data.rScore;
+	                data.bloodRaito = curBloodArr[0] / b.initBlood;
+	                b.setInfo(data);
+	            }
+	        }
+	        for (var i = 0; i < this.rPlayerArr.length; i++) {
+	            var b = this.rPlayerArr[i];
+	            if (b.playerId == data.rPlayer) {
+	                curBloodArr[1] = b.blood - data.lScore;
+	                data.bloodRaito = curBloodArr[1] / b.initBlood;
+	                b.setInfo(data);
+	            }
+	        }
+	        return curBloodArr;
 	    };
 	    BigBlood.prototype._show = function (data) {
 	        if (data.cid == Command_1.CommandId.sc_setFoul) {
@@ -12803,12 +12874,27 @@
 	                .setAlignCenter(1146);
 	        }
 	        if (data.cid == Command_1.CommandId.sc_setBlood) {
-	            if (data.isLeft)
-	                this.lBlood.setText(data.blood)
-	                    .setAlignCenter(805);
-	            else
-	                this.rBlood.setText(data.blood)
-	                    .setAlignCenter(1146);
+	            var curBloodArr = this._setCurBlood(data);
+	            this.lBlood.setText(curBloodArr[0])
+	                .setAlignCenter(PixiEx_1._c(-300));
+	            this.rBlood.setText(curBloodArr[1])
+	                .setAlignCenter(PixiEx_1._c(300));
+	        }
+	        if (data.cid == Command_1.CommandId.sc_setPlayer) {
+	            this.lBlood.setText(data.leftPlayer.blood)
+	                .setAlignCenter(PixiEx_1._c(-300));
+	            this.rBlood.setText(data.rightPlayer.blood)
+	                .setAlignCenter(PixiEx_1._c(300));
+	            this.lFoul.setText(0)
+	                .setAlignCenter(PixiEx_1._c(-133));
+	            this.rFoul.setText(0)
+	                .setAlignCenter(PixiEx_1._c(133));
+	            this.lName.setText(data.leftPlayer.name)
+	                .setAlignCenter(PixiEx_1._c(-516));
+	            this.rName.setText(data.rightPlayer.name)
+	                .setAlignCenter(PixiEx_1._c(516));
+	            this._fillBlood(data.leftTeam, this.lPlayerArr, data.leftPlayer);
+	            this._fillBlood(data.rightTeam, this.rPlayerArr, data.rightPlayer);
 	        }
 	        if (data.cid == Command_1.CommandId.sc_timeOut) {
 	            this.lTimeoutMaskArr[0].visible = data.lTimeOut < 2;

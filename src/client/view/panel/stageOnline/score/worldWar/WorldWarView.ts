@@ -66,6 +66,11 @@ export class WorldWarView extends PIXI.Container {
         if (data.isRestTeamScore) {
           this.worldWar.setTeamScore({ lScore: 0, rScore: 0 })
         }
+
+        //big blood view
+        data.cid = CommandId.sc_setPlayer
+        data.visible = true
+        showPanel(BigBlood, data, stage)
       })
       .on(CommandId.sc_showPanel, data => {
         console.log('sc_showPanel', data)

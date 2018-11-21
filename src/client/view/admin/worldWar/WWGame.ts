@@ -89,6 +89,7 @@ export class WWGame extends EventDispatcher {
         }
       }
       for (let player in curBloodMap) {
+        this.playerMap[player].initBlood = bloodMapForShow[player].blood;
         this.playerMap[player].blood = curBloodMap[player].blood;
         this.playerMap[player].score = curBloodMap[player].score;
         this.playerMap[player].k = curBloodMap[player].k;

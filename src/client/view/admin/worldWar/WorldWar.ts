@@ -112,8 +112,6 @@ class _worldWar extends VueBase {
     p2 = playerMap[p2];
     p1.avatar = this.gameView.data.avatarUrlBase + p1.playerId + ".png";
     p2.avatar = this.gameView.data.avatarUrlBase + p2.playerId + ".png";
-    // this.lPlayer = p1
-    // this.rPlayer = p2
     let gameTitle = "";
     // if (this.gameTitle)
     //     gameTitle = this.gameConf.gameTitle[this.gameTitle]
@@ -121,6 +119,8 @@ class _worldWar extends VueBase {
     let data = {
       leftPlayer: p1,
       rightPlayer: p2,
+      leftTeam:this.blueArr,
+      rightTeam:this.redArr,
       gameTitle: gameTitle
     };
     opReq("cs_setPlayer", data);

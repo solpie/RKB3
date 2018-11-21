@@ -1,5 +1,5 @@
 import { BasePanel } from '../../../base/BasePanel';
-import { newBitmap } from '../../../../utils/PixiEx';
+import { newBitmap, _c } from '../../../../utils/PixiEx';
 import { Text2, TextFac } from '../../../../utils/TextFac';
 import { FontName } from '../../../../const';
 import { CommandId } from '../../../../Command';
@@ -7,8 +7,12 @@ let urlBg1 = '/html/ww/bottomBlood/bg2.png'
 let urlBloodFrame = '/html/ww/bottomBlood/frame.png'
 let urlLBlood = '/html/ww/bottomBlood/lBlood.png'
 let urlRBlood = '/html/ww/bottomBlood/rBlood.png'
+let urlFg = '/html/ww/bottomBlood/fg2.png'
 const isTest = true
 class ___BloodPlayer extends PIXI.Container {
+    blood: number
+    initBlood: number
+    playerId: string
     pName: Text2
     isRight: Boolean
     bloodMask: PIXI.Graphics
@@ -44,8 +48,12 @@ class ___BloodPlayer extends PIXI.Container {
             fontFamily: FontName.MicrosoftYahei,
             fontSize: "45px",
             fontWeight: "",
+
+            stroke: '#333',
+            strokeThickness: 2,
             fill: "#ddd"
         };
+
         this.pName = TextFac.new_(ns, this)
             .setY(459)
 
@@ -56,18 +64,24 @@ class ___BloodPlayer extends PIXI.Container {
             this.setInfo({ name: '黄玉军', bloodRaito: Math.random() })
     }
     setInfo(data) {
-        this.pName.setText(data.name)
-            .setAlignCenter(645)
-        let bloodWidth = 425 * data.bloodRaito
-        if (this.isRight) {
-            this.bloodMask.x = bloodWidth
-            this.pName.setAlignCenter(1920 - 645)
+        if (data.name) {
+            this.pName.setText(data.name)
+                .setAlignCenter(645)
         }
-        else {
-            this.bloodMask.x = -bloodWidth
-            this.pName.setAlignCenter(645)
+        if (data.bloodRaito != null) {
+            let bloodWidth = 425 * (1 - data.bloodRaito)
+            if (data.bloodRaito == 0) {
+                bloodWidth = 422
+            }
+            if (this.isRight) {
+                this.bloodMask.x = bloodWidth
+                this.pName.setAlignCenter(1920 - 645)
+            }
+            else {
+                this.bloodMask.x = -bloodWidth
+                this.pName.setAlignCenter(645)
+            }
         }
-
     }
 }
 
@@ -80,16 +94,20 @@ export class BigBlood extends BasePanel {
     rTimeoutMaskArr: Array<PIXI.Graphics>
     rTimeoutMask: PIXI.Graphics
 
-    lFoul: Text2
-    rFoul: Text2
     lBlood: Text2
     rBlood: Text2
+    lFoul: Text2
+    rFoul: Text2
+    lName: Text2
+    rName: Text2
+
     create() {
         console.log('scroll text creat1e');
         let imgArr = [urlBg1
             , urlBloodFrame
             , urlLBlood
             , urlRBlood
+            , urlFg
         ]
         this.load(imgArr, _ => {
             this.addChild(newBitmap({ url: urlBg1 }))
@@ -134,29 +152,84 @@ export class BigBlood extends BasePanel {
             this.addChild(tm)
             this.rTimeoutMaskArr.push(tm)
 
-
-
             let ns = {
-                fontFamily: FontName.MicrosoftYahei,
-                fontSize: "45px",
-                fontWeight: "",
+                fontFamily: FontName.dinCondensedC,
+                fontSize: "70px",
+                fontWeight: "bold",
                 fill: "#ddd"
             };
+
             this.lFoul = TextFac.new_(ns, this)
-                .setY(326)
+                .setY(300)
+                .setText("0")
+                .setAlignCenter(_c(-133))
 
             this.rFoul = TextFac.new_(ns, this)
                 .setY(this.lFoul.y)
+                .setText("0")
+                .setAlignCenter(_c(133))
 
+            ns.fontSize = "120px"
             this.lBlood = TextFac.new_(ns, this)
-                .setY(238)
+                .setY(218 - 37)
+                .setText("0")
+                .setAlignCenter(_c(-280))
 
             this.rBlood = TextFac.new_(ns, this)
                 .setY(this.lBlood.y)
+                .setText("0")
+                .setAlignCenter(_c(280))
+            this.addChild(newBitmap({ url: urlFg }))
+            ns.fontFamily = FontName.MicrosoftYahei
+            ns.fontSize = "43px"
+            this.lName = TextFac.new_(ns, this)
+                .setText('player1')
+                .setY(312)
+                .setAlignCenter(_c(-516))
+
+            this.rName = TextFac.new_(ns, this)
+                .setText('player2')
+                .setY(this.lName.y)
+                .setAlignCenter(_c(516))
         })
     }
+
+    _fillBlood(dataArr, bloodPlayerArr: Array<___BloodPlayer>, curPlayer?) {
+        for (let i = 0; i < dataArr.length; i++) {
+            let data = dataArr[i]
+            let b = bloodPlayerArr[i]
+            if (curPlayer.playerId == data.playerId) {
+                data.blood = curPlayer.blood
+            }
+            b.initBlood = data.initBlood
+            b.blood = data.blood
+            b.playerId = data.playerId
+            data.bloodRaito = data.blood / data.initBlood
+            b.setInfo(data)
+        }
+    }
+    _setCurBlood(data) {
+        let curBloodArr = [0, 0]
+        for (let i = 0; i < this.lPlayerArr.length; i++) {
+            let b = this.lPlayerArr[i]
+            if (b.playerId == data.lPlayer) {
+                curBloodArr[0] = b.blood - data.rScore
+                data.bloodRaito = curBloodArr[0] / b.initBlood;
+                b.setInfo(data)
+            }
+        }
+        for (let i = 0; i < this.rPlayerArr.length; i++) {
+            let b = this.rPlayerArr[i]
+            if (b.playerId == data.rPlayer) {
+                curBloodArr[1] = b.blood - data.lScore
+                data.bloodRaito = curBloodArr[1] / b.initBlood;
+                b.setInfo(data)
+            }
+        }
+        return curBloodArr
+    }
     _show(data) {
-        if (data.cid ==CommandId.sc_setFoul) {
+        if (data.cid == CommandId.sc_setFoul) {
             this.lFoul.setText(data.lFoul)
                 .setAlignCenter(805)
             this.rFoul.setText(data.rFoul)
@@ -164,14 +237,32 @@ export class BigBlood extends BasePanel {
         }
 
         if (data.cid == CommandId.sc_setBlood) {
-            if (data.isLeft)
-                this.lBlood.setText(data.blood)
-                    .setAlignCenter(805)
-            else
-                this.rBlood.setText(data.blood)
-                    .setAlignCenter(1146)
+            let curBloodArr = this._setCurBlood(data)
+            this.lBlood.setText(curBloodArr[0])
+                .setAlignCenter(_c(-300))
+            this.rBlood.setText(curBloodArr[1])
+                .setAlignCenter(_c(300))
         }
 
+        if (data.cid == CommandId.sc_setPlayer) {
+            this.lBlood.setText(data.leftPlayer.blood)
+                .setAlignCenter(_c(-300))
+            this.rBlood.setText(data.rightPlayer.blood)
+                .setAlignCenter(_c(300))
+
+            this.lFoul.setText(0)
+                .setAlignCenter(_c(-133))
+            this.rFoul.setText(0)
+                .setAlignCenter(_c(133))
+
+            this.lName.setText(data.leftPlayer.name)
+                .setAlignCenter(_c(-516))
+            this.rName.setText(data.rightPlayer.name)
+                .setAlignCenter(_c(516))
+
+            this._fillBlood(data.leftTeam, this.lPlayerArr, data.leftPlayer)
+            this._fillBlood(data.rightTeam, this.rPlayerArr, data.rightPlayer)
+        }
         if (data.cid == CommandId.sc_timeOut) {
             this.lTimeoutMaskArr[0].visible = data.lTimeOut < 2
             this.lTimeoutMaskArr[1].visible = data.lTimeOut < 1

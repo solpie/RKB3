@@ -2416,6 +2416,8 @@
 	        var data = {
 	            leftPlayer: p1,
 	            rightPlayer: p2,
+	            leftTeam: this.blueArr,
+	            rightTeam: this.redArr,
 	            gameTitle: gameTitle
 	        };
 	        opReq("cs_setPlayer", data);
@@ -2756,6 +2758,7 @@
 	                }
 	            }
 	            for (var player in curBloodMap) {
+	                this.playerMap[player].initBlood = bloodMapForShow[player].blood;
 	                this.playerMap[player].blood = curBloodMap[player].blood;
 	                this.playerMap[player].score = curBloodMap[player].score;
 	                this.playerMap[player].k = curBloodMap[player].k;
