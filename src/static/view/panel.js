@@ -12676,28 +12676,42 @@
 	var TextFac_1 = __webpack_require__(77);
 	var const_1 = __webpack_require__(27);
 	var Command_1 = __webpack_require__(28);
+	var ImgLoader_1 = __webpack_require__(73);
 	var urlBg1 = '/html/ww/bottomBlood/bg2.png';
 	var urlBloodFrame = '/html/ww/bottomBlood/frame.png';
 	var urlLBlood = '/html/ww/bottomBlood/lBlood.png';
 	var urlRBlood = '/html/ww/bottomBlood/rBlood.png';
 	var urlFg = '/html/ww/bottomBlood/fg2.png';
-	var isTest = true;
+	var urlMask = '/html/ww/bottomBlood/avtMask.png';
+	var isTest = false;
+	var urlBase = 'http://rtmp.icassi.us:8092/img/player/915/';
 	var ___BloodPlayer = (function (_super) {
 	    __extends(___BloodPlayer, _super);
 	    function ___BloodPlayer(parent, isRight) {
 	        if (isRight === void 0) { isRight = false; }
 	        _super.call(this);
+	        this.isAvtLoaded = false;
 	        this.isRight = isRight;
 	        this.addChild(PixiEx_1.newBitmap({ url: urlBloodFrame }));
 	        var fg = PixiEx_1.newBitmap({ url: urlBloodFrame });
 	        var blood;
 	        this.bloodMask = new PIXI.Graphics()
 	            .beginFill(0xff0000);
+	        var ctn = new PIXI.Container();
+	        this.addChild(ctn);
+	        var avtMask = PixiEx_1.newBitmap({ url: urlMask });
+	        ctn.addChild(avtMask);
+	        this.avt = new PIXI.Sprite();
+	        this.avt.x = 324;
+	        this.avt.y = 420;
+	        this.avt.mask = avtMask;
+	        ctn.addChild(this.avt);
 	        if (isRight) {
 	            this.bloodMask
 	                .drawRect(1060, 449, 425, 90);
 	            fg.scale.x = -1;
 	            fg.x = 1920;
+	            ctn.x = 1173;
 	            blood = PixiEx_1.newBitmap({ url: urlRBlood });
 	        }
 	        else {
@@ -12719,11 +12733,15 @@
 	        this.pName = TextFac_1.TextFac.new_(ns, this)
 	            .setY(459);
 	        this.addChild(fg);
+	        ns.fontSize = '30px';
+	        this.kda = TextFac_1.TextFac.new_(ns, this)
+	            .setY(418);
 	        parent.addChild(this);
 	        if (isTest)
 	            this.setInfo({ name: '黄玉军', bloodRaito: Math.random() });
 	    }
 	    ___BloodPlayer.prototype.setInfo = function (data) {
+	        var _this = this;
 	        if (data.name) {
 	            this.pName.setText(data.name)
 	                .setAlignCenter(645);
@@ -12742,6 +12760,12 @@
 	                this.pName.setAlignCenter(645);
 	            }
 	        }
+	        console.log('set info', data.playerId);
+	        var avtUrl = urlBase + data.playerId + '.png';
+	        ImgLoader_1.imgLoader.loadTexRemote(avtUrl, function (_) {
+	            _this.avt.texture = ImgLoader_1.imgLoader.getTex(avtUrl);
+	            PixiEx_1.setScale(_this.avt, 104 / _this.avt.texture.width);
+	        });
 	    };
 	    return ___BloodPlayer;
 	}(PIXI.Container));
@@ -12757,9 +12781,14 @@
 	            urlBloodFrame,
 	            urlLBlood,
 	            urlRBlood,
-	            urlFg
+	            urlFg,
+	            urlMask
 	        ];
 	        this.load(imgArr, function (_) {
+	            var bg = new PIXI.Graphics()
+	                .beginFill(0x000000)
+	                .drawRect(0, 0, 1920, 1080);
+	            _this.addChild(bg);
 	            _this.addChild(PixiEx_1.newBitmap({ url: urlBg1 }));
 	            var lA = [], rA = [];
 	            for (var i = 0; i < 5; i++) {
@@ -12819,15 +12848,19 @@
 	                .setY(_this.lBlood.y)
 	                .setText("0")
 	                .setAlignCenter(PixiEx_1._c(280));
+	            _this.lAvt = new PIXI.Sprite();
+	            _this.addChild(_this.lAvt);
+	            _this.rAvt = new PIXI.Sprite();
+	            _this.addChild(_this.rAvt);
 	            _this.addChild(PixiEx_1.newBitmap({ url: urlFg }));
 	            ns.fontFamily = const_1.FontName.MicrosoftYahei;
 	            ns.fontSize = "43px";
 	            _this.lName = TextFac_1.TextFac.new_(ns, _this)
-	                .setText('player1')
-	                .setY(312)
+	                .setText('')
+	                .setY(315)
 	                .setAlignCenter(PixiEx_1._c(-516));
 	            _this.rName = TextFac_1.TextFac.new_(ns, _this)
-	                .setText('player2')
+	                .setText('')
 	                .setY(_this.lName.y)
 	                .setAlignCenter(PixiEx_1._c(516));
 	        });
@@ -12842,6 +12875,11 @@
 	            b.initBlood = data.initBlood;
 	            b.blood = data.blood;
 	            b.playerId = data.playerId;
+	            b.kda.setText(data.k + "/" + data.d + '/' + data.a);
+	            if (bloodPlayerArr == this.lPlayerArr)
+	                b.kda.setAlignRight(PixiEx_1._c(-130));
+	            else
+	                b.kda.setX(PixiEx_1._c(130));
 	            data.bloodRaito = data.blood / data.initBlood;
 	            b.setInfo(data);
 	        }
@@ -12867,6 +12905,7 @@
 	        return curBloodArr;
 	    };
 	    BigBlood.prototype._show = function (data) {
+	        var _this = this;
 	        if (data.cid == Command_1.CommandId.sc_setFoul) {
 	            this.lFoul.setText(data.lFoul)
 	                .setAlignCenter(805);
@@ -12893,6 +12932,20 @@
 	                .setAlignCenter(PixiEx_1._c(-516));
 	            this.rName.setText(data.rightPlayer.name)
 	                .setAlignCenter(PixiEx_1._c(516));
+	            var lAvtUrl_1 = urlBase + data.leftPlayer.playerId + '.png';
+	            this.lAvt.x = 351;
+	            this.lAvt.y = 144;
+	            ImgLoader_1.imgLoader.loadTexRemote(lAvtUrl_1, function (_) {
+	                _this.lAvt.texture = ImgLoader_1.imgLoader.getTex(lAvtUrl_1);
+	                PixiEx_1.setScale(_this.lAvt, 190 / _this.lAvt.texture.width);
+	            });
+	            this.rAvt.x = 1380;
+	            this.rAvt.y = this.lAvt.y;
+	            var rAvtUrl_1 = urlBase + data.rightPlayer.playerId + '.png';
+	            ImgLoader_1.imgLoader.loadTexRemote(rAvtUrl_1, function (_) {
+	                _this.rAvt.texture = ImgLoader_1.imgLoader.getTex(rAvtUrl_1);
+	                PixiEx_1.setScale(_this.rAvt, 190 / _this.rAvt.texture.width);
+	            });
 	            this._fillBlood(data.leftTeam, this.lPlayerArr, data.leftPlayer);
 	            this._fillBlood(data.rightTeam, this.rPlayerArr, data.rightPlayer);
 	        }

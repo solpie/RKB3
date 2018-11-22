@@ -1,14 +1,19 @@
 import { BasePanel } from '../../../base/BasePanel';
-import { newBitmap, _c } from '../../../../utils/PixiEx';
+import { newBitmap, _c, setScale } from '../../../../utils/PixiEx';
 import { Text2, TextFac } from '../../../../utils/TextFac';
 import { FontName } from '../../../../const';
 import { CommandId } from '../../../../Command';
+import { BaseAvatar } from '../../../base/BaseAvatar';
+import { MaskAvatar } from '../../../base/MaskAvatar';
+import { imgLoader } from '../../../../utils/ImgLoader';
 let urlBg1 = '/html/ww/bottomBlood/bg2.png'
 let urlBloodFrame = '/html/ww/bottomBlood/frame.png'
 let urlLBlood = '/html/ww/bottomBlood/lBlood.png'
 let urlRBlood = '/html/ww/bottomBlood/rBlood.png'
 let urlFg = '/html/ww/bottomBlood/fg2.png'
-const isTest = true
+let urlMask = '/html/ww/bottomBlood/avtMask.png'
+const isTest = false
+const urlBase = 'http://rtmp.icassi.us:8092/img/player/915/'
 class ___BloodPlayer extends PIXI.Container {
     blood: number
     initBlood: number
@@ -16,22 +21,40 @@ class ___BloodPlayer extends PIXI.Container {
     pName: Text2
     isRight: Boolean
     bloodMask: PIXI.Graphics
+    avt: PIXI.Sprite
+    kda: Text2
+
     constructor(parent, isRight = false) {
         super()
         this.isRight = isRight
         this.addChild(newBitmap({ url: urlBloodFrame }))
-
 
         let fg = newBitmap({ url: urlBloodFrame })
         let blood;
 
         this.bloodMask = new PIXI.Graphics()
             .beginFill(0xff0000)
+
+        let ctn = new PIXI.Container()
+        this.addChild(ctn)
+
+        let avtMask = newBitmap({ url: urlMask })
+        ctn.addChild(avtMask)
+
+        this.avt = new PIXI.Sprite()
+        this.avt.x = 324
+        this.avt.y = 420
+        this.avt.mask = avtMask
+        ctn.addChild(this.avt)
+        // this.avt = new MaskAvatar(urlMask)
+        // this.addChild(this.avt)
+
         if (isRight) {
             this.bloodMask
                 .drawRect(1060, 449, 425, 90)
             fg.scale.x = -1
             fg.x = 1920
+            ctn.x = 1173
             blood = newBitmap({ url: urlRBlood })
         }
         else {
@@ -48,7 +71,6 @@ class ___BloodPlayer extends PIXI.Container {
             fontFamily: FontName.MicrosoftYahei,
             fontSize: "45px",
             fontWeight: "",
-
             stroke: '#333',
             strokeThickness: 2,
             fill: "#ddd"
@@ -59,10 +81,16 @@ class ___BloodPlayer extends PIXI.Container {
 
         this.addChild(fg)
 
+        ns.fontSize = '30px'
+        this.kda = TextFac.new_(ns, this)
+            .setY(418)
+
         parent.addChild(this)
+
         if (isTest)
             this.setInfo({ name: '黄玉军', bloodRaito: Math.random() })
     }
+    isAvtLoaded = false
     setInfo(data) {
         if (data.name) {
             this.pName.setText(data.name)
@@ -82,11 +110,20 @@ class ___BloodPlayer extends PIXI.Container {
                 this.pName.setAlignCenter(645)
             }
         }
+        console.log('set info', data.playerId);
+        let avtUrl = urlBase + data.playerId + '.png'
+        imgLoader.loadTexRemote(avtUrl, _ => {
+            this.avt.texture = imgLoader.getTex(avtUrl)
+            setScale(this.avt, 104 / this.avt.texture.width)
+        })
     }
 }
 
 export class BigBlood extends BasePanel {
     static cls = 'BigBlood'
+    lAvt: PIXI.Sprite
+    rAvt: PIXI.Sprite
+
     lPlayerArr: Array<___BloodPlayer>
     rPlayerArr: Array<___BloodPlayer>
     lTimeoutMask: PIXI.Graphics
@@ -108,8 +145,13 @@ export class BigBlood extends BasePanel {
             , urlLBlood
             , urlRBlood
             , urlFg
+            , urlMask
         ]
         this.load(imgArr, _ => {
+            let bg = new PIXI.Graphics()
+                .beginFill(0x000000)
+                .drawRect(0, 0, 1920, 1080)
+            this.addChild(bg)
             this.addChild(newBitmap({ url: urlBg1 }))
             let lA = [], rA = []
             for (let i = 0; i < 5; i++) {
@@ -179,16 +221,23 @@ export class BigBlood extends BasePanel {
                 .setY(this.lBlood.y)
                 .setText("0")
                 .setAlignCenter(_c(280))
+
+            this.lAvt = new PIXI.Sprite()
+            this.addChild(this.lAvt)
+
+            this.rAvt = new PIXI.Sprite()
+            this.addChild(this.rAvt)
+
             this.addChild(newBitmap({ url: urlFg }))
             ns.fontFamily = FontName.MicrosoftYahei
             ns.fontSize = "43px"
             this.lName = TextFac.new_(ns, this)
-                .setText('player1')
-                .setY(312)
+                .setText('')
+                .setY(315)
                 .setAlignCenter(_c(-516))
 
             this.rName = TextFac.new_(ns, this)
-                .setText('player2')
+                .setText('')
                 .setY(this.lName.y)
                 .setAlignCenter(_c(516))
         })
@@ -204,6 +253,11 @@ export class BigBlood extends BasePanel {
             b.initBlood = data.initBlood
             b.blood = data.blood
             b.playerId = data.playerId
+            b.kda.setText(data.k + "/" + data.d + '/' + data.a)
+            if (bloodPlayerArr == this.lPlayerArr)
+                b.kda.setAlignRight(_c(-130))
+            else
+                b.kda.setX(_c(130))
             data.bloodRaito = data.blood / data.initBlood
             b.setInfo(data)
         }
@@ -228,6 +282,7 @@ export class BigBlood extends BasePanel {
         }
         return curBloodArr
     }
+
     _show(data) {
         if (data.cid == CommandId.sc_setFoul) {
             this.lFoul.setText(data.lFoul)
@@ -259,6 +314,22 @@ export class BigBlood extends BasePanel {
                 .setAlignCenter(_c(-516))
             this.rName.setText(data.rightPlayer.name)
                 .setAlignCenter(_c(516))
+
+            let lAvtUrl = urlBase + data.leftPlayer.playerId + '.png'
+            this.lAvt.x = 351
+            this.lAvt.y = 144
+            imgLoader.loadTexRemote(lAvtUrl, _ => {
+                this.lAvt.texture = imgLoader.getTex(lAvtUrl)
+                setScale(this.lAvt, 190 / this.lAvt.texture.width)
+            })
+
+            this.rAvt.x = 1380
+            this.rAvt.y = this.lAvt.y
+            let rAvtUrl = urlBase + data.rightPlayer.playerId + '.png'
+            imgLoader.loadTexRemote(rAvtUrl, _ => {
+                this.rAvt.texture = imgLoader.getTex(rAvtUrl)
+                setScale(this.rAvt, 190 / this.rAvt.texture.width)
+            })
 
             this._fillBlood(data.leftTeam, this.lPlayerArr, data.leftPlayer)
             this._fillBlood(data.rightTeam, this.rPlayerArr, data.rightPlayer)
