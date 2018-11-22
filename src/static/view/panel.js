@@ -11141,16 +11141,16 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var ScoreRank_1 = __webpack_require__(101);
 	var Command_1 = __webpack_require__(28);
-	var TweenEx_1 = __webpack_require__(57);
-	var WorldWar_1 = __webpack_require__(115);
-	var Pick8_1 = __webpack_require__(97);
 	var const_1 = __webpack_require__(27);
 	var PixiEx_1 = __webpack_require__(56);
-	var WWTitle_1 = __webpack_require__(118);
+	var TweenEx_1 = __webpack_require__(57);
 	var BasePanel_1 = __webpack_require__(88);
+	var Pick8_1 = __webpack_require__(97);
+	var ScoreRank_1 = __webpack_require__(101);
 	var BigBlood_1 = __webpack_require__(136);
+	var WorldWar_1 = __webpack_require__(115);
+	var WWTitle_1 = __webpack_require__(118);
 	var isTest = true;
 	var WorldWarView = (function (_super) {
 	    __extends(WorldWarView, _super);
@@ -12706,6 +12706,16 @@
 	        this.avt.y = 420;
 	        this.avt.mask = avtMask;
 	        ctn.addChild(this.avt);
+	        var bs = {
+	            fontFamily: const_1.FontName.dinCondensedC,
+	            fontSize: "45px",
+	            fontWeight: "",
+	            stroke: '#333',
+	            strokeThickness: 2,
+	            fill: "#ddd"
+	        };
+	        this.bloodText = TextFac_1.TextFac.new_(bs, this)
+	            .setY(442);
 	        if (isRight) {
 	            this.bloodMask
 	                .drawRect(1060, 449, 425, 90);
@@ -12759,6 +12769,14 @@
 	                this.bloodMask.x = -bloodWidth;
 	                this.pName.setAlignCenter(645);
 	            }
+	        }
+	        if (data.blood != null) {
+	            if (this.isRight)
+	                this.bloodText.setText('5')
+	                    .setAlignCenter(PixiEx_1._c(710));
+	            else
+	                this.bloodText.setText('5')
+	                    .setAlignCenter(PixiEx_1._c(-710));
 	        }
 	        console.log('set info', data.playerId);
 	        var avtUrl = urlBase + data.playerId + '.png';
@@ -12877,9 +12895,9 @@
 	            b.playerId = data.playerId;
 	            b.kda.setText(data.k + "/" + data.d + '/' + data.a);
 	            if (bloodPlayerArr == this.lPlayerArr)
-	                b.kda.setAlignRight(PixiEx_1._c(-130));
+	                b.kda.setAlignRight(PixiEx_1._c(-150));
 	            else
-	                b.kda.setX(PixiEx_1._c(130));
+	                b.kda.setX(PixiEx_1._c(150));
 	            data.bloodRaito = data.blood / data.initBlood;
 	            b.setInfo(data);
 	        }

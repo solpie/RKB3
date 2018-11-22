@@ -24,6 +24,8 @@ class ___BloodPlayer extends PIXI.Container {
     avt: PIXI.Sprite
     kda: Text2
 
+    bloodText: Text2
+
     constructor(parent, isRight = false) {
         super()
         this.isRight = isRight
@@ -48,6 +50,17 @@ class ___BloodPlayer extends PIXI.Container {
         ctn.addChild(this.avt)
         // this.avt = new MaskAvatar(urlMask)
         // this.addChild(this.avt)
+        let bs = {
+            fontFamily: FontName.dinCondensedC,
+            fontSize: "45px",
+            fontWeight: "",
+            stroke: '#333',
+            strokeThickness: 2,
+            fill: "#ddd"
+        };
+
+        this.bloodText = TextFac.new_(bs, this)
+            .setY(442)
 
         if (isRight) {
             this.bloodMask
@@ -110,6 +123,16 @@ class ___BloodPlayer extends PIXI.Container {
                 this.pName.setAlignCenter(645)
             }
         }
+        if (data.blood != null) {
+            if (this.isRight)
+                this.bloodText.setText('5')
+                    .setAlignCenter(_c(710))
+            else
+                this.bloodText.setText('5')
+                    .setAlignCenter(_c(-710))
+
+        }
+
         console.log('set info', data.playerId);
         let avtUrl = urlBase + data.playerId + '.png'
         imgLoader.loadTexRemote(avtUrl, _ => {
@@ -137,6 +160,7 @@ export class BigBlood extends BasePanel {
     rFoul: Text2
     lName: Text2
     rName: Text2
+
 
     create() {
         console.log('scroll text creat1e');
@@ -255,9 +279,9 @@ export class BigBlood extends BasePanel {
             b.playerId = data.playerId
             b.kda.setText(data.k + "/" + data.d + '/' + data.a)
             if (bloodPlayerArr == this.lPlayerArr)
-                b.kda.setAlignRight(_c(-130))
+                b.kda.setAlignRight(_c(-150))
             else
-                b.kda.setX(_c(130))
+                b.kda.setX(_c(150))
             data.bloodRaito = data.blood / data.initBlood
             b.setInfo(data)
         }

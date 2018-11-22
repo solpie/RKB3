@@ -156,9 +156,6 @@ class StageOnlineView extends VueBase {
 
     }
     showLottery(k, id) {
-        // if (!lottery) {
-        //     lottery = new Lottery(canvasStage, k, id)
-        // }
     }
     groupSp: any
     showGroup(data?) {

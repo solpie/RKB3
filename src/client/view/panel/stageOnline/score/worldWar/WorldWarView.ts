@@ -1,14 +1,13 @@
-import { ScoreRank } from '../../scoreRank/ScoreRank';
 import { CommandId } from "../../../../Command";
-import { TweenEx } from "../../../../utils/TweenEx";
-import { WorldWar } from "./WorldWar";
-import { Pick8Layer } from '../../pick8/Pick8';
 import { PanelId } from '../../../../const';
-import { Countdown } from '../Countdown';
 import { newBitmap } from '../../../../utils/PixiEx';
-import { WWTitle } from './WWTitle';
+import { TweenEx } from "../../../../utils/TweenEx";
 import { showPanel } from '../../../base/BasePanel';
+import { Pick8Layer } from '../../pick8/Pick8';
+import { ScoreRank } from '../../scoreRank/ScoreRank';
 import { BigBlood } from './BigBlood';
+import { WorldWar } from "./WorldWar";
+import { WWTitle } from './WWTitle';
 const isTest = true
 export class WorldWarView extends PIXI.Container {
   stage: any;
