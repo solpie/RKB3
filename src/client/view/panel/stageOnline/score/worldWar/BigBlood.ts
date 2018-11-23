@@ -60,11 +60,11 @@ class ___BloodPlayer extends PIXI.Container {
         };
 
         this.bloodText = TextFac.new_(bs, this)
-            .setY(442)
+            .setY(456)
 
         if (isRight) {
             this.bloodMask
-                .drawRect(1060, 449, 425, 90)
+                .drawRect(1015, 449, 400, 90)
             fg.scale.x = -1
             fg.x = 1920
             ctn.x = 1173
@@ -72,7 +72,7 @@ class ___BloodPlayer extends PIXI.Container {
         }
         else {
             this.bloodMask
-                .drawRect(436, 449, 425, 90)
+                .drawRect(505, 449, 400, 90)
             blood = newBitmap({ url: urlLBlood })
         }
 
@@ -110,9 +110,9 @@ class ___BloodPlayer extends PIXI.Container {
                 .setAlignCenter(645)
         }
         if (data.bloodRaito != null) {
-            let bloodWidth = 425 * (1 - data.bloodRaito)
+            let bloodWidth = 400 * (1 - data.bloodRaito)
             if (data.bloodRaito == 0) {
-                bloodWidth = 422
+                bloodWidth = 397
             }
             if (this.isRight) {
                 this.bloodMask.x = bloodWidth
@@ -123,16 +123,21 @@ class ___BloodPlayer extends PIXI.Container {
                 this.pName.setAlignCenter(_c(-267))
             }
         }
-        if (data.blood != null) {
-            if (this.isRight)
-                this.bloodText.setText('5')
-                    .setAlignCenter(_c(489))
-            else
-                this.bloodText.setText('5')
-                    .setAlignCenter(_c(-489))
+        let curBlood;
+        if (data.curBlood != null) {
+            curBlood = data.curBlood
         }
+        else if (data.blood != null) {
+            curBlood = data.blood
+        }
+        if (this.isRight)
+            this.bloodText.setText(curBlood)
+                .setAlignCenter(_c(492))
+        else
+            this.bloodText.setText(curBlood)
+                .setAlignCenter(_c(-492))
 
-        console.log('set info', data.playerId);
+        console.log('set info', data.cid);
         let avtUrl = urlBase + data.playerId + '.png'
         imgLoader.loadTexRemote(avtUrl, _ => {
             this.avt.texture = imgLoader.getTex(avtUrl)
@@ -195,25 +200,25 @@ export class BigBlood extends BasePanel {
             this.rTimeoutMaskArr = []
             let tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(600, 145, 130, 50)
+                .drawRect(600, 145-62, 130 , 50)
             this.addChild(tm)
             this.lTimeoutMaskArr.push(tm)
 
             tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(730, 145, 130, 50)
+                .drawRect(730, 145-62, 130 , 50)
             this.addChild(tm)
             this.lTimeoutMaskArr.push(tm)
 
             tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(1190, 145, 130, 50)
+                .drawRect(1190, 145-62, 130, 50)
             this.addChild(tm)
             this.rTimeoutMaskArr.push(tm)
 
             tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(1060, 145, 130, 50)
+                .drawRect(1060, 145-62, 130, 50)
             this.addChild(tm)
             this.rTimeoutMaskArr.push(tm)
 
@@ -225,7 +230,7 @@ export class BigBlood extends BasePanel {
             };
 
             this.lFoul = TextFac.new_(ns, this)
-                .setY(300)
+                .setY(300 - 62)
                 .setText("0")
                 .setAlignCenter(_c(-133))
 
@@ -236,7 +241,7 @@ export class BigBlood extends BasePanel {
 
             ns.fontSize = "120px"
             this.lBlood = TextFac.new_(ns, this)
-                .setY(218 - 37)
+                .setY(218 - 37 - 62)
                 .setText("0")
                 .setAlignCenter(_c(-280))
 
@@ -256,7 +261,7 @@ export class BigBlood extends BasePanel {
             ns.fontSize = "43px"
             this.lName = TextFac.new_(ns, this)
                 .setText('')
-                .setY(315)
+                .setY(315 - 62)
                 .setAlignCenter(_c(-516))
 
             this.rName = TextFac.new_(ns, this)
@@ -293,6 +298,7 @@ export class BigBlood extends BasePanel {
             if (b.playerId == data.lPlayer) {
                 curBloodArr[0] = b.blood - data.rScore
                 data.bloodRaito = curBloodArr[0] / b.initBlood;
+                data.curBlood = curBloodArr[0]
                 b.setInfo(data)
             }
         }
@@ -300,6 +306,7 @@ export class BigBlood extends BasePanel {
             let b = this.rPlayerArr[i]
             if (b.playerId == data.rPlayer) {
                 curBloodArr[1] = b.blood - data.lScore
+                data.curBlood = curBloodArr[1]
                 data.bloodRaito = curBloodArr[1] / b.initBlood;
                 b.setInfo(data)
             }
@@ -318,9 +325,9 @@ export class BigBlood extends BasePanel {
         if (data.cid == CommandId.sc_setBlood) {
             let curBloodArr = this._setCurBlood(data)
             this.lBlood.setText(curBloodArr[0])
-                .setAlignCenter(_c(-300))
+                .setAlignCenter(_c(-294))
             this.rBlood.setText(curBloodArr[1])
-                .setAlignCenter(_c(300))
+                .setAlignCenter(_c(294))
         }
 
         if (data.cid == CommandId.sc_setPlayer) {
@@ -341,7 +348,7 @@ export class BigBlood extends BasePanel {
 
             let lAvtUrl = urlBase + data.leftPlayer.playerId + '.png'
             this.lAvt.x = 351
-            this.lAvt.y = 144
+            this.lAvt.y = 144 - 62
             imgLoader.loadTexRemote(lAvtUrl, _ => {
                 this.lAvt.texture = imgLoader.getTex(lAvtUrl)
                 setScale(this.lAvt, 190 / this.lAvt.texture.width)
