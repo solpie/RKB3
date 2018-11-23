@@ -1,9 +1,8 @@
-import { newBitmap, loadRes, setScale, imgToTex } from '../../../utils/PixiEx';
-import { imgLoader } from '../../../utils/ImgLoader';
 import { FontName } from '../../../const';
-import { paddy, loadImg } from '../../../utils/JsFunc';
-import { $post } from '../../../utils/WebJsFunc';
-import { getTop5Data, getRankSection } from '../../../utils/HupuAPI';
+import { getRankSection } from '../../../utils/HupuAPI';
+import { imgLoader } from '../../../utils/ImgLoader';
+import { loadImg, paddy } from '../../../utils/JsFunc';
+import { imgToTex, newBitmap, setScale } from '../../../utils/PixiEx';
 import { fitWidth } from '../bracket/BracketGroup';
 class Tab2 extends PIXI.Container {
     playerName: PIXI.Text

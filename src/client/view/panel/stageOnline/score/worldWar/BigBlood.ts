@@ -52,7 +52,7 @@ class ___BloodPlayer extends PIXI.Container {
         // this.addChild(this.avt)
         let bs = {
             fontFamily: FontName.dinCondensedC,
-            fontSize: "45px",
+            fontSize: "65px",
             fontWeight: "",
             stroke: '#333',
             strokeThickness: 2,
@@ -116,21 +116,20 @@ class ___BloodPlayer extends PIXI.Container {
             }
             if (this.isRight) {
                 this.bloodMask.x = bloodWidth
-                this.pName.setAlignCenter(1920 - 645)
+                this.pName.setAlignCenter(_c(267))
             }
             else {
                 this.bloodMask.x = -bloodWidth
-                this.pName.setAlignCenter(645)
+                this.pName.setAlignCenter(_c(-267))
             }
         }
         if (data.blood != null) {
             if (this.isRight)
                 this.bloodText.setText('5')
-                    .setAlignCenter(_c(710))
+                    .setAlignCenter(_c(489))
             else
                 this.bloodText.setText('5')
-                    .setAlignCenter(_c(-710))
-
+                    .setAlignCenter(_c(-489))
         }
 
         console.log('set info', data.playerId);
@@ -277,11 +276,12 @@ export class BigBlood extends BasePanel {
             b.initBlood = data.initBlood
             b.blood = data.blood
             b.playerId = data.playerId
-            b.kda.setText(data.k + "/" + data.d + '/' + data.a)
-            if (bloodPlayerArr == this.lPlayerArr)
-                b.kda.setAlignRight(_c(-150))
-            else
-                b.kda.setX(_c(150))
+            //kda
+            // b.kda.setText(data.k + "/" + data.d + '/' + data.a)
+            // if (bloodPlayerArr == this.lPlayerArr)
+            //     b.kda.setAlignRight(_c(-150))
+            // else
+            //     b.kda.setX(_c(150))
             data.bloodRaito = data.blood / data.initBlood
             b.setInfo(data)
         }

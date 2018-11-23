@@ -12708,7 +12708,7 @@
 	        ctn.addChild(this.avt);
 	        var bs = {
 	            fontFamily: const_1.FontName.dinCondensedC,
-	            fontSize: "45px",
+	            fontSize: "65px",
 	            fontWeight: "",
 	            stroke: '#333',
 	            strokeThickness: 2,
@@ -12763,20 +12763,20 @@
 	            }
 	            if (this.isRight) {
 	                this.bloodMask.x = bloodWidth;
-	                this.pName.setAlignCenter(1920 - 645);
+	                this.pName.setAlignCenter(PixiEx_1._c(267));
 	            }
 	            else {
 	                this.bloodMask.x = -bloodWidth;
-	                this.pName.setAlignCenter(645);
+	                this.pName.setAlignCenter(PixiEx_1._c(-267));
 	            }
 	        }
 	        if (data.blood != null) {
 	            if (this.isRight)
 	                this.bloodText.setText('5')
-	                    .setAlignCenter(PixiEx_1._c(710));
+	                    .setAlignCenter(PixiEx_1._c(489));
 	            else
 	                this.bloodText.setText('5')
-	                    .setAlignCenter(PixiEx_1._c(-710));
+	                    .setAlignCenter(PixiEx_1._c(-489));
 	        }
 	        console.log('set info', data.playerId);
 	        var avtUrl = urlBase + data.playerId + '.png';
@@ -12893,11 +12893,6 @@
 	            b.initBlood = data.initBlood;
 	            b.blood = data.blood;
 	            b.playerId = data.playerId;
-	            b.kda.setText(data.k + "/" + data.d + '/' + data.a);
-	            if (bloodPlayerArr == this.lPlayerArr)
-	                b.kda.setAlignRight(PixiEx_1._c(-150));
-	            else
-	                b.kda.setX(PixiEx_1._c(150));
 	            data.bloodRaito = data.blood / data.initBlood;
 	            b.setInfo(data);
 	        }
