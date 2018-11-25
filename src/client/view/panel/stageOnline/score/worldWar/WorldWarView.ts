@@ -8,7 +8,8 @@ import { ScoreRank } from '../../scoreRank/ScoreRank';
 import { BigBlood } from './BigBlood';
 import { WorldWar } from "./WorldWar";
 import { WWTitle } from './WWTitle';
-const isTest = true
+const isTest = false
+let isBBlood = false
 export class WorldWarView extends PIXI.Container {
   stage: any;
   worldWar: WorldWar;
@@ -20,12 +21,14 @@ export class WorldWarView extends PIXI.Container {
   constructor(stage, io) {
     super();
     this.stage = stage;
-    if (isTest)
+    isBBlood = window['isBigBlood']
+    if (isBBlood)
       showPanel(BigBlood, { visible: true }, stage)
 
     TweenEx.delayedCall(1200, _ => {
       this.worldWar = new WorldWar();
-      this.stage.addChild(this.worldWar);
+      if (!window['isBigBlood'])
+        this.stage.addChild(this.worldWar);
 
 
       this.kdaTitle = newBitmap({ url: '/img/panel/worldwar/kdaTitle.png' })
@@ -65,11 +68,15 @@ export class WorldWarView extends PIXI.Container {
         if (data.isRestTeamScore) {
           this.worldWar.setTeamScore({ lScore: 0, rScore: 0 })
         }
-
+        if (data.foulToHint) {
+          window['foulToHint'] = data.foulToHint
+        }
         //big blood view
-        data.cid = CommandId.sc_setPlayer
-        data.visible = true
-        showPanel(BigBlood, data, stage)
+        if (isBBlood) {
+          data.cid = CommandId.sc_setPlayer
+          data.visible = true
+          showPanel(BigBlood, data, stage)
+        }
       })
       .on(CommandId.sc_showPanel, data => {
         console.log('sc_showPanel', data)
@@ -99,9 +106,11 @@ export class WorldWarView extends PIXI.Container {
         this.worldWar.setLeftFoul(data.lFoul);
         this.worldWar.setRightFoul(data.rFoul);
 
-        data.cid = CommandId.sc_setFoul
-        data.visible = true
-        showPanel(BigBlood, data, stage)
+        if (isBBlood) {
+          data.cid = CommandId.sc_setFoul
+          data.visible = true
+          showPanel(BigBlood, data, stage)
+        }
       })
       .on(CommandId.sc_teamScore, data => {
         this.worldWar.setTeamScore(data)
@@ -147,18 +156,21 @@ export class WorldWarView extends PIXI.Container {
         }
       })
       .on(CommandId.sc_timeOut, data => {
-        data.cid = CommandId.sc_timeOut
-        data.visible = true
-        showPanel(BigBlood, data, stage)
+        if (isBBlood) {
+          data.cid = CommandId.sc_timeOut
+          data.visible = true
+          showPanel(BigBlood, data, stage)
+        }
       })
       .on(CommandId.sc_setBlood, data => {
         let blood = this.worldWar.setBloodByDtScore(data)
         console.log("sc_setBlood", data, blood);
-
-        data.cid = CommandId.sc_setBlood
-        data.blood = blood
-        data.visible = true
-        showPanel(BigBlood, data, stage)
+        if (isBBlood) {
+          data.cid = CommandId.sc_setBlood
+          data.blood = blood
+          data.visible = true
+          showPanel(BigBlood, data, stage)
+        }
       });
   }
 }

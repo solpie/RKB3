@@ -5,7 +5,7 @@ import { TextTimer } from "../../../../utils/TextTimer";
 import { BloodBar } from "./BloodBar";
 import { MaskAvatar } from "../../../base/MaskAvatar";
 const isTest = false;
-const foulToBonus = 3;//
+let foulToHint = 3;//
 export class WorldWar extends PIXI.Container {
   lName: Text2;
   rName: Text2;
@@ -296,12 +296,16 @@ export class WorldWar extends PIXI.Container {
   }
 
   setLeftFoul(val) {
-    this.lFoulHint.visible = val >= foulToBonus;
+    if (window['foulToHint'] != null)
+      foulToHint = window['foulToHint']
+    this.lFoulHint.visible = val >= foulToHint;
     this.lFoul.setText("" + (val || 0)).setAlignCenter(_c(-100));
   }
   setRightFoul(val) {
+    if (window['foulToHint'] != null)
+      foulToHint = window['foulToHint']
     console.log('set right foul', val)
-    this.rFoulHint.visible = val >= foulToBonus;
+    this.rFoulHint.visible = val >= foulToHint;
     this.rFoul.setText("" + (val || 0)).setAlignCenter(_c(142));
   }
 

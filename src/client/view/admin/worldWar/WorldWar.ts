@@ -174,7 +174,6 @@ class _worldWar extends VueBase {
     },
     onShowTitle(v) {
       let playerMap = gameView.playerMap;
-      // let recArr = this.gameConf.rec
       let a = this.vsPlayer.split(" ");
       let p1 = a[0];
       let p2 = a[1];

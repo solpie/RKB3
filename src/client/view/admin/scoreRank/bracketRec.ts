@@ -5,41 +5,41 @@ var _p = function (x, y) {
 }
 export function newBracketRec1() {
     return [
-        { score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 13 },
-        { score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 15 },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 13 },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 15 },
 
-        { score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 14 },
-        { score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 16 },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 14 },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 16 },
 
-        { score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 21, isH: true },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 21, isH: true },
 
-        { score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 22, isH: true },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 22, isH: true },
     ]
 }
 export function newBracketRec2() {
     return [
-        { score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 17 },
-        { score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 19 },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 17 },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 19 },
 
-        { score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 18 },
-        { score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 20 },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 18 },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 20 },
 
-        { score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 23, isH: true },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 23, isH: true },
 
-        { score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 24, isH: true },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 24, isH: true },
     ]
 }
 export function newBracketRec3() {
     return [
-        { score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 25 },
-        { score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: -1 },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 25 },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: -1 },
 
-        { score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 26 },
-        { score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: -1 },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 26 },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: -1 },
 
-        { score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 27, isH: true },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 27, isH: true },
 
-        { score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: -1, isH: true },
+        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: -1, isH: true },
     ]
 }
 
@@ -83,21 +83,27 @@ export function buildRec(doc, playerMap) {
             winMap[p2].push(p1)
         }
         rec.name = [playerMap[p1].name, playerMap[p2].name]
+        
         for (let b of bracketRec_1) {
             if (b.gameIdx == Number(idx)) {
                 b.player = rec.name
+                b.playerId = [p1,p2]
                 b.score = rec.score
             }
         }
         for (let b of bracketRec_2) {
             if (b.gameIdx == Number(idx)) {
+                // b.player = rec.name
                 b.player = rec.name
+                b.playerId = [p1,p2]
                 b.score = rec.score
             }
         }
         for (let b of bracketRec_3) {
             if (b.gameIdx == Number(idx)) {
+                // b.player = rec.name
                 b.player = rec.name
+                b.playerId = [p1,p2]
                 b.score = rec.score
             }
         }

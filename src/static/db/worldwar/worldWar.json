@@ -1,5 +1,6 @@
 {
     "date": "2018-11-30",
+    "foulToHint": 3,
     "dbUrl": "http://rtmp.icassi.us:8090/event?idx=1130_1",
     "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/915/",
     "team": [

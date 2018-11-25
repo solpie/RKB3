@@ -262,7 +262,7 @@ class _ScoreRankAdmin extends VueBase {
                 let game = doc.rec[gameIdx];
                 if (game) game.player = this.vsPlayerArr;
                 this.initGameRecTable(this.playerMap, data)
-              }, true);
+            }, true);
         },
         onSetGroup(gameIdx) {
             syncDoc(data => {
@@ -350,6 +350,7 @@ class _ScoreRankAdmin extends VueBase {
             opReq(CommandId.cs_setPlayer, {
                 leftPlayer: p1, rightPlayer: p2,
                 isRestFoul: true,
+                foulToHint: this.gameConf.foulToHint,
                 isRestTeamScore: true
             })
         },

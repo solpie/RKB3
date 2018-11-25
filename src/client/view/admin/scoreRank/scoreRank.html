@@ -77,12 +77,12 @@
             <div v-for="(item, index) in bracketRec" :key="item.s">
                 <div v-if="item.gameIdx>0" :style='item.s+" position: absolute;"'>
                     <div v-if="item.isH">
-                        <a @click="setGameIdx(item.gameIdx)">#{{item.gameIdx}} {{item.player[0]}} {{item.score[0]}}</a> ----
-                        <a @click="setGameIdx(item.gameIdx)">{{item.score[1]}} {{item.player[1]}} </a>
+                        <a @click="setGameIdx(item.gameIdx)">#{{item.gameIdx}} {{item.player[0]}}_{{item.playerId[0]}}  {{item.score[0]}}</a> ----
+                        <a @click="setGameIdx(item.gameIdx)">{{item.score[1]}} {{item.player[1]}}_{{item.playerId[1]}}  </a>
                     </div>
                     <div v-if="!item.isH">
-                        <a @click="setGameIdx(item.gameIdx)">#{{item.gameIdx}} {{item.player[0]}} {{item.score[0]}}</a> <br>| <br>
-                        <a @click="setGameIdx(item.gameIdx)">### {{item.player[1]}} {{item.score[1]}}</a>
+                        <a @click="setGameIdx(item.gameIdx)">#{{item.gameIdx}} {{item.player[0]}}_{{item.playerId[0]}}  {{item.score[0]}}</a> <br>| <br>
+                        <a @click="setGameIdx(item.gameIdx)">### {{item.player[1]}}_{{item.playerId[1]}}  {{item.score[1]}}</a>
                     </div>
                 </div>
             </div>

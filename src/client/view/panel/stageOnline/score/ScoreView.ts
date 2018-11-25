@@ -57,6 +57,7 @@ export class ScoreView extends BasePanelView {
 
         this.isTest = $route.query.test == "1"
         this.isWorld = $route.query.world == "1"
+        window['isBigBlood'] = $route.query.bblood == "1"
         let isManmual = $route.query.m == '1'
         let m2 = $route.query.m2 == '1'
         // let s4 = $route.query.s4 == '1'
