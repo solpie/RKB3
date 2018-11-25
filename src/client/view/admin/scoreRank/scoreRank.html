@@ -71,8 +71,8 @@
                 selected gameIdx:{{selGameIdx}}
                 <input id="bracketScoreInput" class="input" type="text" style="width: 80px;">
                 <button class="button btn-setScore" @click="onSetScore(selGameIdx,'#bracketScoreInput')">修改比分</button>
-                <button class="button" @click="onSetGroup(selGameIdx,'#bracketScoreInput')">修改对阵</button>
-                <button class="button" @click="onEmitBracket()">emit bracket rec</button>
+                <button class="button" @click="onSetVsPlayer(selGameIdx,'#bracketScoreInput')">修改对阵</button>
+                <button class="button" @click="onEmitBracket(actTab)">emit bracket rec</button>
             </div>
             <div v-for="(item, index) in bracketRec" :key="item.s">
                 <div v-if="item.gameIdx>0" :style='item.s+" position: absolute;"'>
@@ -125,6 +125,7 @@
                             <div class="control" v-if="rec.gameIdx==selGameIdx">
                                 <input class="input" :id="'scoreInput'+rec.gameIdx" type="text" style="width: 80px;">
                                 <button class="button btn-setScore" @click="onSetScore(rec.gameIdx)">修改比分</button>
+                                <button class="button btn-setScore" @click="onSetVsPlayer(rec.gameIdx,vsPlayer)">修改对阵</button>
                                 <button class="button" @click="onSetGroup(rec.gameIdx)">小组赛记录</button>
                                 <button class="button is-danger" @click="onDeleteGameRec(rec.gameIdx)">删除</button>
                             </div>

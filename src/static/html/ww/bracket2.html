@@ -164,7 +164,7 @@
                     [x4, 255 + 126 + 186, x4 + scoreOfs],
                 ], x4r, x4r - scoreOfs + 300 - 38)
                 pos2 = pos2.concat([
-                    [605, 474, 605 + scoreOfs],
+                    [595, 474, 598 + scoreOfs],
                     [1021, 474, 1021 - scoreOfs + 300 - 38],
                     [819, 263, 605 + scoreOfs]
                     // [819, 263, 605 + scoreOfs],
@@ -185,13 +185,33 @@
                         item.name = ''
                         item.score = ''
                     }
-
                     this.isBg1 = true
+                    let recArr;
+                    if (data.bracketPage == 1) {
+                        recArr = data.bracketRec1
+                    }
+                    if (data.bracketPage == 2) {
+                        recArr = data.bracketRec2
+                    }
+                    if (data.bracketPage == 3) {
+                        recArr = []
+                        for (let r of data.bracketRec3) {
+                            if ([25, 26, 27].indexOf(r.gameIdx) > -1)
+                                recArr.push(r)
+                        }
+                        recArr.push({
+                            "score": [-1, -1],
+                            "player": ["p1", "p1"]
+                        })
+                        this.isBg1 = false
+                    }
+
                     let itemArr
                     this.isBg1 ? itemArr = this.items : itemArr = this.items2;
                     // let recArr = data.recMap['#' + recShow].rec
-                    let recArr;
-                    recArr = data.bracketRec1.sort(function(a, b) {
+
+
+                    recArr = recArr.sort(function(a, b) {
                         return a.gameIdx - b.gameIdx
                     })
                     for (var i = 0; i < recArr.length; i++) {
@@ -213,8 +233,8 @@
                             this.brackets[i] = [false, false]
                             this.brackets2[i] = [false, false]
                         } else {
+                            let isLWin = lScore > rScore
                             if (this.brackets[i]) {
-                                let isLWin = lScore > rScore
                                 this.brackets[i][0] = isLWin
                                 this.brackets[i][1] = !isLWin
                                 if (isLWin)

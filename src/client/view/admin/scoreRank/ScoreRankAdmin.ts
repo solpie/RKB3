@@ -208,8 +208,19 @@ class _ScoreRankAdmin extends VueBase {
                 this.rank16Arr = rank16(data.doc, this.playerMap, rank5Player)
             })
         },
-        onEmitBracket() {
+        onEmitBracket(tab) {
+            let bracketPage = 1
+            if (tab == 'tab2') {
+                bracketPage = 1
+            }
+            if (tab == 'tab4') {
+                bracketPage = 2
+            }
+            if (tab == 'tab5') {
+                bracketPage = 3
+            }
             opReq(`${CommandId.cs_bracket}`, {
+                bracketPage: bracketPage,
                 playerMap: this.playerMap,
                 bracketRec1: this.bracketRec1
                 , bracketRec2: this.bracketRec2
@@ -244,6 +255,14 @@ class _ScoreRankAdmin extends VueBase {
         onAddScore(isLeft, dtScore) {
             this.onShowScoreRank(true, dtScore, isLeft)
             opReq(`${CommandId.cs_updateScore}`, { dtScore: dtScore, isLeft: isLeft })
+        },
+        onSetVsPlayer(gameIdx, vsplayer) {
+            syncDoc(data => {
+                let doc = data.doc;
+                let game = doc.rec[gameIdx];
+                if (game) game.player = this.vsPlayerArr;
+                this.initGameRecTable(this.playerMap, data)
+              }, true);
         },
         onSetGroup(gameIdx) {
             syncDoc(data => {

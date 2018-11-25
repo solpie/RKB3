@@ -5,41 +5,41 @@ var _p = function (x, y) {
 }
 export function newBracketRec1() {
     return [
-        { score: [0, 0], player: ["p1", "p2"], s: _p(0, 373), gameIdx: 13 },
-        { score: [0, 0], player: ["p1", "p2"], s: _p(0, 473), gameIdx: 15 },
+        { score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 13 },
+        { score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 15 },
 
-        { score: [0, 0], player: ["p1", "p2"], s: _p(450, 373), gameIdx: 14 },
-        { score: [0, 0], player: ["p1", "p2"], s: _p(450, 473), gameIdx: 16 },
+        { score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 14 },
+        { score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 16 },
 
-        { score: [0, 0], player: ["p1", "p2"], s: _p(160, 398), gameIdx: 21, isH: true },
+        { score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 21, isH: true },
 
-        { score: [0, 0], player: ["p1", "p2"], s: _p(160, 498), gameIdx: 22, isH: true },
+        { score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 22, isH: true },
     ]
 }
 export function newBracketRec2() {
     return [
-        { score: [0, 0], player: ["p1", "p2"], s: _p(0, 373), gameIdx: 17 },
-        { score: [0, 0], player: ["p1", "p2"], s: _p(0, 473), gameIdx: 19 },
+        { score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 17 },
+        { score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 19 },
 
-        { score: [0, 0], player: ["p1", "p2"], s: _p(450, 373), gameIdx: 18 },
-        { score: [0, 0], player: ["p1", "p2"], s: _p(450, 473), gameIdx: 20 },
+        { score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 18 },
+        { score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 20 },
 
-        { score: [0, 0], player: ["p1", "p2"], s: _p(160, 398), gameIdx: 23, isH: true },
+        { score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 23, isH: true },
 
-        { score: [0, 0], player: ["p1", "p2"], s: _p(160, 498), gameIdx: 24, isH: true },
+        { score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 24, isH: true },
     ]
 }
 export function newBracketRec3() {
     return [
-        { score: [0, 0], player: ["p1", "p2"], s: _p(0, 373), gameIdx: 25 },
-        { score: [0, 0], player: ["p1", "p2"], s: _p(0, 473), gameIdx: -1 },
+        { score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 25 },
+        { score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: -1 },
 
-        { score: [0, 0], player: ["p1", "p2"], s: _p(450, 373), gameIdx: 26 },
-        { score: [0, 0], player: ["p1", "p2"], s: _p(450, 473), gameIdx: -1 },
+        { score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 26 },
+        { score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: -1 },
 
-        { score: [0, 0], player: ["p1", "p2"], s: _p(160, 398), gameIdx: 27, isH: true },
+        { score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 27, isH: true },
 
-        { score: [0, 0], player: ["p1", "p2"], s: _p(160, 498), gameIdx: -1, isH: true },
+        { score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: -1, isH: true },
     ]
 }
 
