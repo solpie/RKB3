@@ -260,7 +260,8 @@ class _ScoreRankAdmin extends VueBase {
             syncDoc(data => {
                 let doc = data.doc;
                 let game = doc.rec[gameIdx];
-                if (game) game.player = this.vsPlayerArr;
+                let a = vsplayer.split(' ')
+                if (game) game.player = a;
                 this.initGameRecTable(this.playerMap, data)
             }, true);
         },
@@ -298,8 +299,11 @@ class _ScoreRankAdmin extends VueBase {
                 this.initGameRecTable(this.playerMap, data)
             }, true);
         },
-        setGameIdx(gameIdx) {
+        setGameIdx(gameIdx, playerIdArr) {
             this.selGameIdx = gameIdx
+            this.vsPlayerArr[1] = playerIdArr[1]
+            this.vsPlayerArr[0] = playerIdArr[0]
+            this.vsPlayer = this.vsPlayerArr.join(" ")
         },
         onShowWinMap() {
             let p1 = this.vsPlayerArr[0]
