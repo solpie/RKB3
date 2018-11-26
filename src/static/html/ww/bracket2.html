@@ -194,14 +194,17 @@
                         recArr = data.bracketRec2
                     }
                     if (data.bracketPage == 3) {
+                        recArr = data.bracketRec3
+                    }
+                    if (data.bracketPage == 4) {
                         recArr = []
-                        for (let r of data.bracketRec3) {
+                        for (let r of data.bracketRecFinal) {
                             if ([25, 26, 27].indexOf(r.gameIdx) > -1)
                                 recArr.push(r)
                         }
                         recArr.push({
                             "score": [-1, -1],
-                            "player": ["p1", "p1"]
+                            "player": ["", ""]
                         })
                         this.isBg1 = false
                     }
@@ -210,10 +213,10 @@
                     this.isBg1 ? itemArr = this.items : itemArr = this.items2;
                     // let recArr = data.recMap['#' + recShow].rec
 
-
                     recArr = recArr.sort(function(a, b) {
                         return a.gameIdx - b.gameIdx
                     })
+                    let winItems = []
                     for (var i = 0; i < recArr.length; i++) {
                         let rec = recArr[i];
                         let item1 = itemArr[i * 2]
@@ -229,7 +232,9 @@
                         if (item2)
                             item2.score = rScore
                             //bracket
-                        if (lScore == 0 && rScore == 0) {
+                        this.brackets[i] = [false, false]
+                        this.brackets2[i] = [false, false]
+                        if (lScore == 0 && rScore == 0 || lScore == -1 && rScore == -1) {
                             this.brackets[i] = [false, false]
                             this.brackets2[i] = [false, false]
                         } else {
@@ -237,18 +242,31 @@
                             if (this.brackets[i]) {
                                 this.brackets[i][0] = isLWin
                                 this.brackets[i][1] = !isLWin
+                                console.log('winMap', i, p1, p2)
                                 if (isLWin)
-                                    this.items[winMap[i]].name = p1.name
+                                    winItems.push([winMap[i], p1])
                                 else
-                                    this.items[winMap[i]].name = p2.name
+                                    winItems.push([winMap[i], p2])
                             }
                             if (this.brackets2[i]) {
                                 if (!this.isBg1) {
                                     this.brackets2[i][0] = isLWin
                                     this.brackets2[i][1] = !isLWin
+                                    winMap = {
+                                        '0': 4,
+                                        '1': 5
+                                    }
+                                    if (isLWin)
+                                        winItems.push([winMap[i], p1])
+                                    else
+                                        winItems.push([winMap[i], p2])
                                 }
                             }
                         }
+                    }
+                    for (let i = 0; i < winItems.length; i++) {
+                        if (itemArr[winItems[i][0]])
+                            itemArr[winItems[i][0]].name = winItems[i][1]
                     }
                 })
             }

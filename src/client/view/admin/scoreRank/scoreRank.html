@@ -38,17 +38,22 @@
                         <span>picker</span>
                     </a>
                 </li>
-                <li v-bind:class="{ 'is-active': actTab== 'tab2'}" @click='tab("tab2",1)'>
+                <li v-bind:class="{ 'is-active': actTab== 'tab11'}" @click='tab("tab11",1)'>
                     <a>
                         <span>bracket rec 1</span>
                     </a>
                 </li>
-                <li v-bind:class="{ 'is-active': actTab== 'tab4'}" @click='tab("tab4",2)'>
+                <li v-bind:class="{ 'is-active': actTab== 'tab12'}" @click='tab("tab12",2)'>
                     <a>
                         <span> rec 2</span>
                     </a>
                 </li>
-                <li v-bind:class="{ 'is-active': actTab== 'tab5'}" @click='tab("tab5",3)'>
+                <li v-bind:class="{ 'is-active': actTab== 'tab13'}" @click='tab("tab13",3)'>
+                    <a>
+                        <span> 8-4</span>
+                    </a>
+                </li>
+                <li v-bind:class="{ 'is-active': actTab== 'tab14'}" @click='tab("tab14",4)'>
                     <a>
                         <span> final</span>
                     </a>
@@ -66,7 +71,7 @@
                 </li>
             </ul>
         </div>
-        <div v-if='actTab=="tab2" ||actTab=="tab4"||actTab=="tab5"'>
+        <div v-if='actTab=="tab11" ||actTab=="tab12"||actTab=="tab13"||actTab=="tab14"'>
             <div v-if="1" class="control">
                 selected gameIdx:{{selGameIdx}}
                 <input id="bracketScoreInput" class="input" type="text" style="width: 80px;">
