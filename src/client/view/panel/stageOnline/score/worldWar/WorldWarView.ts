@@ -8,8 +8,10 @@ import { ScoreRank } from '../../scoreRank/ScoreRank';
 import { BigBlood } from './BigBlood';
 import { WorldWar } from "./WorldWar";
 import { WWTitle } from './WWTitle';
+import { Game3v3 } from "./Game3v3";
 const isTest = false
 let isBBlood = false
+let isGame3v3 = false
 export class WorldWarView extends PIXI.Container {
   stage: any;
   worldWar: WorldWar;
@@ -22,12 +24,15 @@ export class WorldWarView extends PIXI.Container {
     super();
     this.stage = stage;
     isBBlood = window['isBigBlood']
+    isGame3v3 = window['isGame3v3']
     if (isBBlood)
       showPanel(BigBlood, { visible: true }, stage)
+    if (isGame3v3)
+      showPanel(Game3v3, { visible: true }, stage)
 
     TweenEx.delayedCall(1200, _ => {
       this.worldWar = new WorldWar();
-      if (!window['isBigBlood'])
+      if (!isBBlood && !isGame3v3)
         this.stage.addChild(this.worldWar);
 
 
