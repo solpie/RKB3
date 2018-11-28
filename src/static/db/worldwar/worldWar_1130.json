@@ -4,7 +4,7 @@
     "dbUrl": "http://rtmp.icassi.us:8090/event?idx=1130_1",
     "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/915/",
     "team": [
-        { "idx": 1, "name": "魔王隊", "playerArr": ["p21", "p22", "p23", "p24", "p25"] },
+        { "idx": 1, "name": "魔王隊", "playerArr": ["p21", "p22", "p23", "p24", "p27"] },
         { "idx": 2, "name": "中遠隊", "playerArr": ["p5", "p12", "p16", "p17", "p19"] }
     ],
     "gameTitle": {
