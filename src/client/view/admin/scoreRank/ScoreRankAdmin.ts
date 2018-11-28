@@ -43,7 +43,6 @@ class _ScoreRankAdmin extends VueBase {
     template = require('./scoreRank.html');
     actTab = VueBase.PROP;
 
-
     selected = VueBase.PROP;
     options = VueBase.PROP;
     gameConf = VueBase.PROP;
@@ -150,6 +149,7 @@ class _ScoreRankAdmin extends VueBase {
                 // }
             }
         }
+        window['gameConf'] = this.gameConf
         console.log('create gameConf ', this.gameConf);
         this.initGameRecTable(playerMap, null, _ => {
             data.totalScoreMap = this.totalScoreMap;

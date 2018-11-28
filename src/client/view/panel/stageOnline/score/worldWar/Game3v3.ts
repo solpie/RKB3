@@ -34,10 +34,10 @@ export class Game3v3 extends BasePanel {
         this.load(imgArr, _ => {
             this.addChild(newBitmap({ url: urlBg }))
             this.lScore = TextFac.new_(ns, this)
-                .setPos(1752, 817)
+                .setPos(1786, 817)
                 .setText('0')
             this.rScore = TextFac.new_(ns, this)
-                .setPos(1748, 876)
+                .setPos(1782, 876)
                 .setText('0')
 
             this.lTeamName = TextFac.new_(ts, this)
@@ -74,9 +74,9 @@ export class Game3v3 extends BasePanel {
             _io.on(CommandId.sc_updateScore, data => {
                 console.log('sc_updateScore', data)
                 this.lScore.setText(data.lScore)
-                    .setAlignCenter(1750 + 2)
+                    .setAlignCenter(1786)
                 this.rScore.setText(data.rScore)
-                    .setAlignCenter(1746 + 2)
+                    .setAlignCenter(1782)
             })
                 .on(CommandId.sc_timerEvent, data => {
                     console.log('sc_timerEvent', data)
@@ -85,9 +85,9 @@ export class Game3v3 extends BasePanel {
                 .on(CommandId.sc_setTeam, data => {
                     console.log('sc_setPlayer', data)
                     this.lTeamName.setText(data.lPlayer)
-                        .setAlignCenter(1645)
+                        .setAlignCenter(1635)
                     this.rTeamName.setText(data.rPlayer)
-                        .setAlignCenter(1641)
+                        .setAlignCenter(1631)
                 })
         }
         this.timer.toggleTimer()

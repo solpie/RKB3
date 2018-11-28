@@ -5,54 +5,54 @@ var _p = function (x, y) {
 }
 export function newBracketRec1() {
     return [
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 13 },
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 15 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 13 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 15 },
 
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 14 },
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 16 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 14 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 16 },
 
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 21, isH: true },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 21, isH: true },
 
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 22, isH: true },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 22, isH: true },
     ]
 }
 export function newBracketRec2() {
     return [
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 17 },
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 19 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 17 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 19 },
 
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 18 },
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 20 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 18 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 20 },
 
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 23, isH: true },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 23, isH: true },
 
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 24, isH: true },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 24, isH: true },
     ]
 }
 export function newBracketRec3() {
     return [
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 21 },
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 23 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 21 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 23 },
 
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 22 },
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 24 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 22 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 24 },
 
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 25, isH: true },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 25, isH: true },
 
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 26, isH: true },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 26, isH: true },
     ]
 }
 export function newBracketRecFinal() {
     return [
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 25 },
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: -1 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 25 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: -1 },
 
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 26 },
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: -1 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 26 },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: -1 },
 
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 27, isH: true },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 27, isH: true },
 
-        {playerId:['',''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: -1, isH: true },
+        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: -1, isH: true },
     ]
 }
 
@@ -96,11 +96,11 @@ export function buildRec(doc, playerMap) {
             winMap[p2].push(p1)
         }
         rec.name = [playerMap[p1].name, playerMap[p2].name]
-        
+
         for (let b of bracketRec_1) {
             if (b.gameIdx == Number(idx)) {
                 b.player = rec.name
-                b.playerId = [p1,p2]
+                b.playerId = [p1, p2]
                 b.score = rec.score
             }
         }
@@ -108,7 +108,7 @@ export function buildRec(doc, playerMap) {
             if (b.gameIdx == Number(idx)) {
                 // b.player = rec.name
                 b.player = rec.name
-                b.playerId = [p1,p2]
+                b.playerId = [p1, p2]
                 b.score = rec.score
             }
         }
@@ -116,7 +116,7 @@ export function buildRec(doc, playerMap) {
             if (b.gameIdx == Number(idx)) {
                 // b.player = rec.name
                 b.player = rec.name
-                b.playerId = [p1,p2]
+                b.playerId = [p1, p2]
                 b.score = rec.score
             }
         }
@@ -124,7 +124,7 @@ export function buildRec(doc, playerMap) {
             if (b.gameIdx == Number(idx)) {
                 // b.player = rec.name
                 b.player = rec.name
-                b.playerId = [p1,p2]
+                b.playerId = [p1, p2]
                 b.score = rec.score
             }
         }
@@ -186,10 +186,28 @@ export function rank16(doc, playerMap, rank5Player) {
     rank16Arr = rank16Arr.concat(arr_6_8).concat(arr_9_16)
     let rank = 0
     let a = []
+    let rankScoreMap = {
+        '1': 40, '2': 30, '3': 25, '4': 25, '5': 20
+        , '6': 15, '7': 15, '8': 15, '16': 10
+    }
+    //
+    let playerScore = window['gameConf'].playerScore
+    for (let k in playerScore) {
+        let a = k.split('_')
+        playerScore[a[0]] = playerScore[k]
+    }
     for (let playerId of rank16Arr) {
+        let rankScore = 0
         rank++
-        console.log(rank,playerMap[playerId].name)
-        a.push({rank:rank,name:playerMap[playerId].name})
+        if (rank > 8)
+            rankScore = rankScoreMap['16']
+        else if (rankScoreMap[rank])
+            rankScore = rankScoreMap[rank]
+        if (playerScore[playerId])
+            rankScore += playerScore[playerId]
+
+        console.log(rank, playerMap[playerId].name)
+        a.push({ rank: rank, name: playerMap[playerId].name, rankScore: rankScore })
     }
     return a
 }

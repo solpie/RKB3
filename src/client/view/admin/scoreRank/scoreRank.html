@@ -3,6 +3,7 @@
     <a href="/html/ww/bracket2.html">8进4 final晋级</a>
     <a href="/html/ww/rank8.html">rank8</a>
     <a href="/html/intro/ww/intro.html?group=a">小组介绍 group=a</a>
+    <a href="/panel/#/ol/ob/0?panel=score&s4=1&world=1&game3v3=1">3v3</a>
     <hr>
     <span class="select">
             <select v-model="selected" @change="onSelectGame">
@@ -145,7 +146,7 @@
             <button class="button is-primary" @click="onGenRank16(rank5Player)">rank16</button>
             <ul>
                 <li v-for="(player,index) in rank16Arr" :key="player" style="float:left;width:190px;padding:5px">
-                    {{player.rank}} - {{player.name}}
+                    {{player.rank}} - {{player.name}}[{{player.rankScore}}]
                 </li>
             </ul>
         </div>
