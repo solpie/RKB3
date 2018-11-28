@@ -1532,6 +1532,8 @@
 	    sc_showBottle: '',
 	    cs_setPlayer: '',
 	    sc_setPlayer: '',
+	    cs_setTeam: '',
+	    sc_setTeam: '',
 	    cs_showHeaderText: '',
 	    sc_showHeaderText: '',
 	    cs_5v5score: '',
@@ -11463,7 +11465,7 @@
 	        if (isBBlood)
 	            BasePanel_1.showPanel(BigBlood_1.BigBlood, { visible: true }, stage);
 	        if (isGame3v3)
-	            BasePanel_1.showPanel(Game3v3_1.Game3v3, { visible: true }, stage);
+	            BasePanel_1.showPanel(Game3v3_1.Game3v3, { visible: true, io: io }, stage);
 	        TweenEx_1.TweenEx.delayedCall(1200, function (_) {
 	            _this.worldWar = new WorldWar_1.WorldWar();
 	            if (!isBBlood && !isGame3v3)
@@ -12385,8 +12387,10 @@
 	var const_1 = __webpack_require__(27);
 	var TextFac_1 = __webpack_require__(78);
 	var TextTimer_1 = __webpack_require__(60);
+	var Command_1 = __webpack_require__(28);
 	var urlBg = '/img/panel/3v3/bg.png';
 	var isTest = true;
+	var _io;
 	var Game3v3 = (function (_super) {
 	    __extends(Game3v3, _super);
 	    function Game3v3() {
@@ -12408,23 +12412,23 @@
 	            fontFamily: const_1.FontName.MicrosoftYahei,
 	            fontSize: "38px",
 	            fontWeight: "bold",
-	            fill: "#ff0000"
+	            fill: "#ddd"
 	        };
 	        this.load(imgArr, function (_) {
 	            _this.addChild(PixiEx_1.newBitmap({ url: urlBg }));
 	            _this.lScore = TextFac_1.TextFac.new_(ns, _this)
-	                .setPos(1750, 817)
-	                .setText('11');
+	                .setPos(1752, 817)
+	                .setText('0');
 	            _this.rScore = TextFac_1.TextFac.new_(ns, _this)
-	                .setPos(1747, 876)
-	                .setText('11');
+	                .setPos(1748, 876)
+	                .setText('0');
 	            _this.lTeamName = TextFac_1.TextFac.new_(ts, _this)
 	                .setPos(1750, 817)
-	                .setText('日本')
+	                .setText('')
 	                .setAlignCenter(1476 + 169);
 	            _this.rTeamName = TextFac_1.TextFac.new_(ts, _this)
-	                .setPos(1747, 876)
-	                .setText('杭州')
+	                .setPos(1746, 876)
+	                .setText('')
 	                .setAlignCenter(1472 + 169);
 	            var s = {
 	                fontFamily: const_1.FontName.dinCondensedC,
@@ -12441,6 +12445,28 @@
 	        });
 	    };
 	    Game3v3.prototype._show = function (data) {
+	        var _this = this;
+	        if (!_io) {
+	            _io = data.io;
+	            _io.on(Command_1.CommandId.sc_updateScore, function (data) {
+	                console.log('sc_updateScore', data);
+	                _this.lScore.setText(data.lScore)
+	                    .setAlignCenter(1750 + 2);
+	                _this.rScore.setText(data.rScore)
+	                    .setAlignCenter(1746 + 2);
+	            })
+	                .on(Command_1.CommandId.sc_timerEvent, function (data) {
+	                console.log('sc_timerEvent', data);
+	                _this.timer.setTimerEvent(data);
+	            })
+	                .on(Command_1.CommandId.sc_setTeam, function (data) {
+	                console.log('sc_setPlayer', data);
+	                _this.lTeamName.setText(data.lPlayer)
+	                    .setAlignCenter(1645);
+	                _this.rTeamName.setText(data.rPlayer)
+	                    .setAlignCenter(1641);
+	            });
+	        }
 	        this.timer.toggleTimer();
 	        this.p.addChild(this);
 	    };

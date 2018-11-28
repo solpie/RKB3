@@ -147,6 +147,9 @@ export const CommandId = {
     sc_showBottle: '',
     cs_setPlayer: '',
     sc_setPlayer: '',
+    
+    cs_setTeam: '',
+    sc_setTeam: '',
     //---------------- 5v5 panel
     cs_showHeaderText: '',
     sc_showHeaderText: '',

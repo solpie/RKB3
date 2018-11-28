@@ -3,8 +3,10 @@ import { BasePanel } from '../../../base/BasePanel';
 import { FontName } from '../../../../const';
 import { Text2, TextFac } from '../../../../utils/TextFac';
 import { TextTimer } from '../../../../utils/TextTimer';
+import { CommandId } from '../../../../Command';
 let urlBg = '/img/panel/3v3/bg.png'
 const isTest = true
+let _io;
 export class Game3v3 extends BasePanel {
     static cls = 'Game3v3'
     lScore: Text2
@@ -27,24 +29,24 @@ export class Game3v3 extends BasePanel {
             fontFamily: FontName.MicrosoftYahei,
             fontSize: "38px",
             fontWeight: "bold",
-            fill: "#ff0000"
+            fill: "#ddd"
         };
         this.load(imgArr, _ => {
             this.addChild(newBitmap({ url: urlBg }))
             this.lScore = TextFac.new_(ns, this)
-                .setPos(1750, 817)
-                .setText('11')
+                .setPos(1752, 817)
+                .setText('0')
             this.rScore = TextFac.new_(ns, this)
-                .setPos(1747, 876)
-                .setText('11')
+                .setPos(1748, 876)
+                .setText('0')
 
             this.lTeamName = TextFac.new_(ts, this)
                 .setPos(1750, 817)
-                .setText('日本')
+                .setText('')
                 .setAlignCenter(1476 + 169)
             this.rTeamName = TextFac.new_(ts, this)
-                .setPos(1747, 876)
-                .setText('杭州')
+                .setPos(1746, 876)
+                .setText('')
                 .setAlignCenter(1472 + 169)
 
             let s = {
@@ -67,6 +69,27 @@ export class Game3v3 extends BasePanel {
         })
     }
     _show(data) {
+        if (!_io) {
+            _io = data.io
+            _io.on(CommandId.sc_updateScore, data => {
+                console.log('sc_updateScore', data)
+                this.lScore.setText(data.lScore)
+                    .setAlignCenter(1750 + 2)
+                this.rScore.setText(data.rScore)
+                    .setAlignCenter(1746 + 2)
+            })
+                .on(CommandId.sc_timerEvent, data => {
+                    console.log('sc_timerEvent', data)
+                    this.timer.setTimerEvent(data);
+                })
+                .on(CommandId.sc_setTeam, data => {
+                    console.log('sc_setPlayer', data)
+                    this.lTeamName.setText(data.lPlayer)
+                        .setAlignCenter(1645)
+                    this.rTeamName.setText(data.rPlayer)
+                        .setAlignCenter(1641)
+                })
+        }
         this.timer.toggleTimer()
         // this.lTeamName.setText(data.leftTeam)
         //     .setAlignCenter(1476)

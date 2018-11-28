@@ -1962,6 +1962,8 @@
 	    sc_showBottle: '',
 	    cs_setPlayer: '',
 	    sc_setPlayer: '',
+	    cs_setTeam: '',
+	    sc_setTeam: '',
 	    cs_showHeaderText: '',
 	    sc_showHeaderText: '',
 	    cs_5v5score: '',

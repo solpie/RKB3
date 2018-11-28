@@ -28,7 +28,7 @@ export class WorldWarView extends PIXI.Container {
     if (isBBlood)
       showPanel(BigBlood, { visible: true }, stage)
     if (isGame3v3)
-      showPanel(Game3v3, { visible: true }, stage)
+      showPanel(Game3v3, { visible: true, io: io }, stage)
 
     TweenEx.delayedCall(1200, _ => {
       this.worldWar = new WorldWar();

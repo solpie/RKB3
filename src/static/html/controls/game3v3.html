@@ -1,0 +1,128 @@
+<html>
+
+<head>
+    <style>
+        .bg {
+            position: static;
+            padding: 10px;
+        }
+        
+        .player {
+            position: absolute;
+            padding: 0px;
+            font-size: 40px;
+            color: #fff;
+            font-family: "微软雅黑"
+        }
+        
+        .blue {
+            color: #003da7;
+        }
+    </style>
+
+
+    <link type="text/css" rel="stylesheet" href="/css/bulma.min.css">
+
+    <script src="/js/vue.js"></script>
+    <script src="/js/jquery3.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="container" style="height: 700px">
+            [game3v3]
+            <div>
+                <input v-model="lScoreInput" class="input" type="text" style="width: 80px;">
+                <input v-model="rScoreInput" class="input" type="text" style="width: 80px;">
+                <button class="button" @click="onSetScore(lScoreInput,rScoreInput)">设置比分</button>
+                <br>
+                <input v-model="timerInput" class="input" type="text" style="width: 80px;">
+                <button class="button" @click="onSetTimer('start',scoreInput)">开始</button>
+                <button class="button" @click="onSetTimer('pause',scoreInput)">暂停</button>
+                <button class="button" @click="onSetTimer('setting',timerInput)">设置</button>
+                <button class="button" @click="onSetTimer('reset',scoreInput)">reset</button>
+                <br>
+                <input v-model="playerInput" class="input" type="text" style="width: 180px;">
+                <button class="button" @click="onSetPlayer(playerInput)">设置对阵</button>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        let opReq = (cmdId, param) => {
+            param._ = null
+            $.ajax({
+                url: `/panel/online/${cmdId}`,
+                type: 'post',
+                data: JSON.stringify(param),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                dataType: 'json'
+            });
+        }
+        var app = new Vue({
+            el: '#app',
+            data: {
+                scoreInput: '',
+                lScoreInput: '',
+                rScoreInput: '',
+                timerInput: '',
+                playerInput: '',
+                items: []
+            },
+            methods: {
+                onSetPlayer: (playerInput) => {
+                    let a = playerInput.split(' ')
+                    if (a.length == 2) {
+                        opReq('cs_setTeam', {
+                            lPlayer: a[0],
+                            rPlayer: a[1]
+                        })
+                        console.log('playerInput ', playerInput)
+                    }
+                },
+                onSetScore: (scoreInput, rScoreInput) => {
+                    let a = scoreInput.split(' ')
+                    if (a.length == 2) {
+                        opReq('cs_updateScore', {
+                            lScore: a[0],
+                            rScore: a[1]
+                        })
+                        console.log('score input', scoreInput)
+                    } else if (rScoreInput != '') {
+                        opReq('cs_updateScore', {
+                            lScore: scoreInput,
+                            rScore: rScoreInput
+                        })
+                    }
+                },
+                onSetTimer: (event, scoreInput) => {
+                    let sec
+                    if (scoreInput.search('-') > -1) {
+                        let a = scoreInput.split('-')
+                        sec = Number(a[0]) * 60 + Number(a[1])
+                    } else {
+                        sec = Number(scoreInput)
+                    }
+                    // cs_timerEvent
+                    opReq('cs_timerEvent', {
+                        event: event,
+                        param: sec
+                    })
+                }
+            },
+            // mounted: function() {
+            created: function() {
+                // console.log(this);
+                // let localWs = io.connect('/rkb')
+                // localWs.on('connect', () => {
+                //         console.log('connect', window.location.host)
+                //     })
+                //     .on('sc_data', (data) => {
+
+                //     })
+            }
+        })
+    </script>
+</body>
