@@ -60,3 +60,24 @@ export let $post = (url, data, callback, error?) => {
         error: error
     });
 }
+export let $postFormData = (url, data, callback, error?) => {
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+        dataType: 'json',
+        success: callback,
+        error: error
+    });
+}
+export let $postFormData2 = (url, data, callback, error?) => {
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: JSON.stringify(data),
+        headers: { "Content-Type": "text/plain" },
+        success: callback,
+        error: error
+    });
+}

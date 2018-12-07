@@ -1,9 +1,9 @@
 import { CommandId } from '../../Command';
 import { PanelId } from '../../const';
-import { updateWorldWarDoc } from '../../utils/HupuAPI';
+import { updateWorldWarDoc, postRank16 } from '../../utils/HupuAPI';
 import { descendingProp } from '../../utils/JsFunc';
 import { VueBase } from '../../utils/VueBase';
-import { buildRec, newBracketRec1, newBracketRec2, newBracketRec3, rank16, newBracketRecFinal } from './bracketRec';
+import { buildRec, newBracketRec1, newBracketRec2, newBracketRec3, rank16, newBracketRecFinal, postRank16_1020, postRank16_1130 } from './bracketRec';
 let confFile = null;
 let reader;
 let filesInput;
@@ -211,6 +211,18 @@ class _ScoreRankAdmin extends VueBase {
         onGenRank16(rank5Player) {
             syncDoc(data => {
                 this.rank16Arr = rank16(data.doc, this.playerMap, rank5Player)
+            })
+        },
+        onPostRank16(rankIdx) {
+            let data = postRank16_1130()
+            console.log('post rank16', data)
+            // setClientDelay(this.gameId, t, (res) => {
+            //     console.log('setClientDelay', res)
+            //     this.onGetClientDelay()
+            // })
+            // setClientDelay
+            postRank16(data, _ => {
+                console.log(_)
             })
         },
         onEmitBracket(tab) {
