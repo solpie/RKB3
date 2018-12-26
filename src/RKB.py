@@ -1,4 +1,17 @@
+import time
+from rawDay import setup as rawDaySetup
+from webDB import webDBView, webDBViewInitWS
+from online import onlineView
+from subprocess import Popen, PIPE
+import base64
+from requests_toolbelt import MultipartEncoder
+import requests
+from engineio import async_eventlet
+from flask_socketio import SocketIO, emit, disconnect
+from flask import Flask, render_template, session, request, make_response, redirect, jsonify
+import configparser
 import os
+import json
 # print(os.path.realpath(__file__))
 # server_path = os.path.realpath(__file__)
 serverConf = {"port": 80, "path": '.',
@@ -9,7 +22,6 @@ if serverConf["path"] == "":
     serverConf["path"] = os.path.realpath(".")
 print("server root:", serverConf["path"])
 # config
-import configparser
 
 config = configparser.RawConfigParser()
 
@@ -25,16 +37,15 @@ def loadConf():
         config.get('db', 'path')).split(",")
     print("serverConf:", serverConf)
     serverConf["views"] = ["admin", "panel", 'dmk', 'webDB']
+
+
 loadConf()
 
 # web server
-from flask import Flask, render_template, session, request, make_response, redirect, jsonify
-from flask_socketio import SocketIO, emit, disconnect
 
 # Set this variable to "threading", "eventlet" or "gevent" to test the
 # different async modes, or leave it set to None for the application to choose
 # the best option based on installed packages.
-from engineio import async_eventlet
 async_mode = "eventlet"
 app = Flask(__name__, static_url_path='')
 app.config['SECRET_KEY'] = 'secret!'
@@ -46,8 +57,6 @@ def index():
     return redirect('/admin')
     # return render_template('index.html')
 
-import time
-
 
 @app.route('/<viewname>')
 @app.route('/<viewname>/')
@@ -56,10 +65,8 @@ def view(viewname):
         return render_template(viewname + '.html', time=int(time.time()))
     return viewname
 
-# proxy
-import requests
 
-import base64
+# proxy
 
 
 @app.route('/proxy', methods=['GET', 'POST'])
@@ -70,7 +77,7 @@ def proxy():
     url = ""
     if request.method == "GET":
         url = request.args.get('url', '')
-        print('proxy get ',url)
+        print('proxy get ', url)
         r = requests.get(url, headers=req_headers)
         res = make_response(r.content)
 
@@ -91,18 +98,28 @@ def proxy():
 
     if request.method == "POST":
         url = request.values.get("url")
-        print(request.json)
-        r = requests.post(url, json=request.json, headers={
-                        'Content-type': 'application/json'})
-        if r.headers['Content-Type'].find('json') > -1:
-            c = r.json()
-        else:
-            c = r.text
-        r.close()
-        return jsonify({'Content-Type': r.headers['Content-Type'], 'content': c})
+        isForm = request.values.get("form")
+        print("[req json]",isForm)
+        if isForm == '1':
+            fd = json.loads(request.data.decode("utf-8"))
+            print(fd)
+            m = MultipartEncoder(fields={'player_list': ('filename', open('1130.json', 'rb'), 'text/plain')})
+            url = 'http://127.0.0.2/test'
+            r = requests.post(url, data=m,
+                              headers={'Content-Type':m.content_type})
+            r.close()
+            return r.json()
+        return 'ok'
+        # r = requests.post(url, json=request.json, headers={
+        #     'Content-type': 'application/json'})
+        # if r.headers['Content-Type'].find('json') > -1:
+        #     c = r.json()
+        # else:
+        #     c = r.text
+        # r.close()
+        # return jsonify({'Content-Type': r.headers['Content-Type'], 'content': c})
+
 # auto git pull
-import os
-from subprocess import Popen, PIPE
 
 
 @app.route('/git/<param>', methods=['GET', 'POST'])
@@ -115,6 +132,7 @@ def git(param):
 
 # panel router
 
+
 @app.route('/panel/online/<cmd>', methods=['POST'])
 def on_panel_cmd(cmd):
     print(cmd, request.json)
@@ -124,6 +142,7 @@ def on_panel_cmd(cmd):
     # else:
     #     actModel.onCmd(cmd, request.json)
     return 'ok'
+
 
 namespace_rkb = '/rkb'
 
@@ -137,15 +156,13 @@ def client_connect():
 def test_disconnect():
     print('Client disconnected', request.sid)
 
+
 # onlineView
-from online import onlineView
 app.register_blueprint(onlineView, url_prefix='/online')
 # webDB view
-from webDB import webDBView, webDBViewInitWS
 app.register_blueprint(webDBView, url_prefix='/db')
 webDBViewInitWS(socketio)
 # rawDay view
-from rawDay import setup as rawDaySetup
 rawDaySetup(app, socketio)
 
 # dmkLeecher

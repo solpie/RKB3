@@ -196,6 +196,7 @@ export function rank16(doc, playerMap, rank5Player) {
         let a = k.split('_')
         playerScore[a[0]] = playerScore[k]
     }
+
     for (let playerId of rank16Arr) {
         let rankScore = 0
         rank++
@@ -210,4 +211,58 @@ export function rank16(doc, playerMap, rank5Player) {
         a.push({ rank: rank, name: playerMap[playerId].name, rankScore: rankScore })
     }
     return a
+}
+export function postRank16_1130() {
+    let arr = [
+        46591,
+        15619,
+        574,
+        8066,
+        20250,
+        20597,
+        1754,
+        20375,
+        17392,
+        7435,
+        34224,
+        30907,
+        30830,
+        6487,
+        39262,
+        1900
+    ]
+    let postData = { "rank_idx": 2, "list": [] }
+    let rank = 0
+    for (let playerId of arr) {
+        rank++
+        postData.list.push({ "rank": rank, "player_id": playerId })
+    }
+    return postData
+}
+export function postRank16_1020() {
+    let arr = [
+        20250,
+        20375,
+        30103,
+        16767,
+        46591,
+        20319,
+        9118,
+        1098,
+        17484,
+        7054,
+        30047,
+        34224,
+        30848,
+        15619,
+        20597,
+        22887
+    ]
+    let postData = { "rank_idx": 1, "list": [] }
+    let rank = 0
+    for (let playerId of arr) {
+        rank++
+        postData.list.push({ "rank": rank, "player_id": playerId })
+    }
+    return postData
 }
