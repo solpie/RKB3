@@ -5,7 +5,8 @@ declare let $;
 let dbUrl;
 const getDoc = callback => {
   if (!dbUrl)
-    dbUrl = "http://rtmp.icassi.us:8090/event?idx=1130_1"
+    alert('no dbUrl')
+  // dbUrl = "http://rtmp.icassi.us:8090/event?idx=1130_1"
   $.get(dbUrl, res => {
     if (res.length) callback(res[0]);
     else callback(null);

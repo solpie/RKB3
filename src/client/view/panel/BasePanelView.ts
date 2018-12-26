@@ -21,18 +21,29 @@ export class BasePanelView extends EventDispatcher {
     }
 
     static initPixi() {
+        console.log('initPixi')
         let renderer = new PIXI.autoDetectRenderer(ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT,
             { antialias: false, transparent: true, resolution: 1 }, false);
         document.body.insertBefore(renderer.view, document.getElementById("panel"));
         renderer.stage = new PIXI.Container();
         renderer.backgroundColor = 0x00000000;
         //Loop this function 60 times per second
+
         renderer.renderStage = (time) => {
             requestAnimationFrame(renderer.renderStage);
             TWEEN.update(time)
             renderer.render(renderer.stage);
         };
         renderer.renderStage();
+
+        // let tk = PIXI.ticker.shared
+        // tk.autoStart = true
+        // tk.speed = 0.5
+        // tk.add((dt) => {
+        //     console.log('ticker', dt)
+        //     TWEEN.update(dt)
+        //     renderer.render(renderer.stage);
+        // })
         return renderer.stage;
     }
 

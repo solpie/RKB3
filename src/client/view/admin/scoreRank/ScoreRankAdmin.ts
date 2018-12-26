@@ -10,8 +10,10 @@ let filesInput;
 declare let $
 let dbUrl;
 const getDoc = callback => {
-    if (!dbUrl)
-        dbUrl = "http://rtmp.icassi.us:8090/event?idx=1130_0"
+    if (!dbUrl) {
+        alert('no dbUrl')
+    }
+    // dbUrl = "http://rtmp.icassi.us:8090/event?idx=1130_0"
     $.get(dbUrl, res => {
         if (res.length) callback(res[0]);
         else callback(null);
