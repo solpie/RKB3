@@ -21,7 +21,7 @@ export class BasePanelView extends EventDispatcher {
     }
 
     static initPixi() {
-        console.log('initPixi')
+        // console.log('initPixi')
         let renderer = new PIXI.autoDetectRenderer(ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT,
             { antialias: false, transparent: true, resolution: 1 }, false);
         document.body.insertBefore(renderer.view, document.getElementById("panel"));
@@ -29,22 +29,24 @@ export class BasePanelView extends EventDispatcher {
         renderer.backgroundColor = 0x00000000;
         //Loop this function 60 times per second
 
-        // renderer.renderStage = (time) => {
-        //     requestAnimationFrame(renderer.renderStage);
-        //     console.log(time)
-            
-        //     TWEEN.update(time)
-        //     renderer.render(renderer.stage);
-        // };
-        // renderer.renderStage();
-        let time =0
-        setInterval(() => {
-            TWEEN.update(time)
-            time += 33.3
-            // time += 66.6
+        renderer.renderStage = (time) => {
+            requestAnimationFrame(renderer.renderStage);
             // console.log(time)
+            TWEEN.update(time)
             renderer.render(renderer.stage);
-        }, 33.3)
+        };
+        renderer.renderStage();
+        // let time =0
+        // setInterval(() => {
+        //     TWEEN.update(time)
+        //     time += 16.7
+        //     renderer.render(renderer.stage);
+        // }, 16.7)
+        // setInterval(() => {
+        //     TWEEN.update(time)
+        //     time += 33.3
+        //     renderer.render(renderer.stage);
+        // }, 33.3)
         return renderer.stage;
     }
 

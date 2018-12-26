@@ -6074,17 +6074,16 @@
 	        return _this;
 	    }
 	    BasePanelView.initPixi = function () {
-	        console.log('initPixi');
 	        var renderer = new PIXI.autoDetectRenderer(const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT, { antialias: false, transparent: true, resolution: 1 }, false);
 	        document.body.insertBefore(renderer.view, document.getElementById("panel"));
 	        renderer.stage = new PIXI.Container();
 	        renderer.backgroundColor = 0x00000000;
-	        var time = 0;
-	        setInterval(function () {
+	        renderer.renderStage = function (time) {
+	            requestAnimationFrame(renderer.renderStage);
 	            TWEEN.update(time);
-	            time += 33.3;
 	            renderer.render(renderer.stage);
-	        }, 33.3);
+	        };
+	        renderer.renderStage();
 	        return renderer.stage;
 	    };
 	    BasePanelView.prototype.show = function () {
@@ -12945,6 +12944,7 @@
 	    BloodBar.prototype.setBlood = function (val) {
 	        this.initBlood = val;
 	        this._setBlood(val);
+	        val = Math.min(val, 6);
 	        this.bloodFx.x = this.bloodFxPos[val];
 	    };
 	    BloodBar.prototype._setBlood = function (val) {
@@ -12970,11 +12970,13 @@
 	            this._tmpBlood = val;
 	            TweenEx_1.TweenEx.delayedCall(1500, function (_) {
 	                if (_this._tmpBlood == val) {
+	                    val = Math.min(val, 6);
 	                    TweenEx_1.TweenEx.to(_this.bloodFx, 300, { x: _this.bloodFxPos[val] });
 	                }
 	            });
 	        }
 	        else {
+	            val = Math.min(val, 6);
 	            this.bloodFx.x = this.bloodFxPos[val];
 	        }
 	        return val;

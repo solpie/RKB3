@@ -36,6 +36,7 @@ export class BloodBar extends PIXI.Container {
   setBlood(val) {
     this.initBlood = val;
     this._setBlood(val);
+    val = Math.min(val, 6)
     this.bloodFx.x = this.bloodFxPos[val]
   }
 
@@ -61,14 +62,14 @@ export class BloodBar extends PIXI.Container {
       this._tmpBlood = val
       TweenEx.delayedCall(1500, _ => {
         if (this._tmpBlood == val) {
-          // if (val < 7)
-            TweenEx.to(this.bloodFx, 300, { x: this.bloodFxPos[val] })
+          val = Math.min(val, 6)
+          TweenEx.to(this.bloodFx, 300, { x: this.bloodFxPos[val] })
         }
       })
     }
     else {
-      // if (val < 7)
-        this.bloodFx.x = this.bloodFxPos[val]
+      val = Math.min(val, 6)
+      this.bloodFx.x = this.bloodFxPos[val]
     }
     return val
   }
