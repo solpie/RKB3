@@ -29,21 +29,22 @@ export class BasePanelView extends EventDispatcher {
         renderer.backgroundColor = 0x00000000;
         //Loop this function 60 times per second
 
-        renderer.renderStage = (time) => {
-            requestAnimationFrame(renderer.renderStage);
-            TWEEN.update(time)
-            renderer.render(renderer.stage);
-        };
-        renderer.renderStage();
-
-        // let tk = PIXI.ticker.shared
-        // tk.autoStart = true
-        // tk.speed = 0.5
-        // tk.add((dt) => {
-        //     console.log('ticker', dt)
-        //     TWEEN.update(dt)
+        // renderer.renderStage = (time) => {
+        //     requestAnimationFrame(renderer.renderStage);
+        //     console.log(time)
+            
+        //     TWEEN.update(time)
         //     renderer.render(renderer.stage);
-        // })
+        // };
+        // renderer.renderStage();
+        let time =0
+        setInterval(() => {
+            TWEEN.update(time)
+            time += 33.3
+            // time += 66.6
+            // console.log(time)
+            renderer.render(renderer.stage);
+        }, 33.3)
         return renderer.stage;
     }
 

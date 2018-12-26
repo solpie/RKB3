@@ -60,12 +60,15 @@ export class BloodBar extends PIXI.Container {
     if (dtScore > 0) {
       this._tmpBlood = val
       TweenEx.delayedCall(1500, _ => {
-        if (this._tmpBlood == val)
-          TweenEx.to(this.bloodFx, 300, { x: this.bloodFxPos[val] })
+        if (this._tmpBlood == val) {
+          // if (val < 7)
+            TweenEx.to(this.bloodFx, 300, { x: this.bloodFxPos[val] })
+        }
       })
     }
     else {
-      this.bloodFx.x = this.bloodFxPos[val]
+      // if (val < 7)
+        this.bloodFx.x = this.bloodFxPos[val]
     }
     return val
   }
