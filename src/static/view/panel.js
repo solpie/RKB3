@@ -12481,10 +12481,11 @@
 	            _this.rTimeoutMaskArr.push(tm);
 	            var ns = {
 	                fontFamily: const_1.FontName.dinCondensedC,
-	                fontSize: "70px",
+	                fontSize: "80px",
 	                fontWeight: "bold",
 	                fill: "#ddd"
 	            };
+	            ns.fill = '#d76102';
 	            _this.lFoul = TextFac_1.TextFac.new_(ns, _this)
 	                .setY(300 - 62)
 	                .setText("0")
@@ -12494,6 +12495,7 @@
 	                .setText("0")
 	                .setAlignCenter(PixiEx_1._c(133));
 	            ns.fontSize = "120px";
+	            ns.fill = '#ddd';
 	            _this.lBlood = TextFac_1.TextFac.new_(ns, _this)
 	                .setY(218 - 37 - 62)
 	                .setText("0")

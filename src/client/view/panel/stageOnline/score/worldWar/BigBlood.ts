@@ -224,11 +224,11 @@ export class BigBlood extends BasePanel {
 
             let ns = {
                 fontFamily: FontName.dinCondensedC,
-                fontSize: "70px",
+                fontSize: "80px",
                 fontWeight: "bold",
                 fill: "#ddd"
             };
-
+            ns.fill = '#d76102'
             this.lFoul = TextFac.new_(ns, this)
                 .setY(300 - 62)
                 .setText("0")
@@ -240,6 +240,7 @@ export class BigBlood extends BasePanel {
                 .setAlignCenter(_c(133))
 
             ns.fontSize = "120px"
+            ns.fill = '#ddd'
             this.lBlood = TextFac.new_(ns, this)
                 .setY(218 - 37 - 62)
                 .setText("0")
