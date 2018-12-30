@@ -102,9 +102,10 @@ class _ScoreRankAdmin extends VueBase {
                 this.winMap = ret.winMap
                 this.totalScoreMap = ret.totalScoreMap
                 this.recArr = ret.recArr
-                if (callback) {
-                    callback()
-                }
+               
+            }
+            if (callback) {
+                callback()
             }
         }
         if (data1)

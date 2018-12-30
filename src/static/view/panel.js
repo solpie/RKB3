@@ -2931,9 +2931,9 @@
 	                _this.winMap = ret.winMap;
 	                _this.totalScoreMap = ret.totalScoreMap;
 	                _this.recArr = ret.recArr;
-	                if (callback) {
-	                    callback();
-	                }
+	            }
+	            if (callback) {
+	                callback();
 	            }
 	        };
 	        if (data1)
