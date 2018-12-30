@@ -117,6 +117,7 @@ class _ScoreRankAdmin extends VueBase {
     }
     //on loaded conf file
     createOption(data, callback?) {
+        // console.log('on json data',data)
         let a = [];
         let playerMap = data.playerMap
         this.playerMap = playerMap
