@@ -51,13 +51,13 @@
 	__webpack_require__(10);
 	__webpack_require__(16);
 	__webpack_require__(18);
-	var KOA_1 = __webpack_require__(55);
 	var Stage5v5_1 = __webpack_require__(71);
 	var StageOnlineView_1 = __webpack_require__(82);
+	var CommonGame_1 = __webpack_require__(139);
 	var routes = [
 	    {
-	        path: '/koa/:op',
-	        components: { default: KOA_1.koa }
+	        path: '/com',
+	        components: { default: CommonGame_1.commonGame }
 	    },
 	    {
 	        path: '/studio/:op',
@@ -404,7 +404,7 @@
 	            { title: "直播间面板", url: "/panel/#/studio/ob/" },
 	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
-	            { title: "战队选择面板", url: "/html/pick/pick.html" },
+	            { title: "通用计分控制台", url: "/admin/#/com" },
 	        ];
 	    };
 	    HomeView.prototype.genQRCode = function () {
@@ -3332,559 +3332,8 @@
 	module.exports = "var TWEEN=TWEEN||function(){var n=[];return{getAll:function(){return n},removeAll:function(){n=[]},add:function(t){n.push(t)},remove:function(t){var r=n.indexOf(t);-1!==r&&n.splice(r,1)},update:function(t,r){if(0===n.length)return!1;var i=0;for(t=void 0!==t?t:TWEEN.now();i<n.length;)n[i].update(t)||r?i++:n.splice(i,1);return!0}}}();!function(){void 0===this.window&&void 0!==this.process?TWEEN.now=function(){var n=process.hrtime();return 1e3*n[0]+n[1]/1e3}:void 0!==this.window&&void 0!==window.performance&&void 0!==window.performance.now?TWEEN.now=window.performance.now.bind(window.performance):void 0!==Date.now?TWEEN.now=Date.now:TWEEN.now=function(){return(new Date).getTime()}}(),TWEEN.Tween=function(n){var t=n,r={},i={},o={},u=1e3,e=0,a=!1,f=!1,c=!1,s=0,h=null,l=TWEEN.Easing.Linear.None,E=TWEEN.Interpolation.Linear,p=[],d=null,v=!1,w=null,I=null,M=null;for(var T in n)r[T]=parseFloat(n[T],10);this.to=function(n,t){return void 0!==t&&(u=t),i=n,this},this.start=function(n){TWEEN.add(this),f=!0,v=!1,h=void 0!==n?n:TWEEN.now(),h+=s;for(var u in i){if(i[u]instanceof Array){if(0===i[u].length)continue;i[u]=[t[u]].concat(i[u])}void 0!==r[u]&&(r[u]=t[u],r[u]instanceof Array==!1&&(r[u]*=1),o[u]=r[u]||0)}return this},this.stop=function(){return f?(TWEEN.remove(this),f=!1,null!==M&&M.call(t),this.stopChainedTweens(),this):this},this.stopChainedTweens=function(){for(var n=0,t=p.length;t>n;n++)p[n].stop()},this.delay=function(n){return s=n,this},this.repeat=function(n){return e=n,this},this.yoyo=function(n){return a=n,this},this.easing=function(n){return l=n,this},this.interpolation=function(n){return E=n,this},this.chain=function(){return p=arguments,this},this.onStart=function(n){return d=n,this},this.onUpdate=function(n){return w=n,this},this.onComplete=function(n){return I=n,this},this.onStop=function(n){return M=n,this},this.update=function(n){var f,M,T;if(h>n)return!0;v===!1&&(null!==d&&d.call(t),v=!0),M=(n-h)/u,M=M>1?1:M,T=l(M);for(f in i)if(void 0!==r[f]){var N=r[f]||0,W=i[f];W instanceof Array?t[f]=E(W,T):(\"string\"==typeof W&&(W=\"+\"===W.charAt(0)||\"-\"===W.charAt(0)?N+parseFloat(W,10):parseFloat(W,10)),\"number\"==typeof W&&(t[f]=N+(W-N)*T))}if(null!==w&&w.call(t,T),1===M){if(e>0){isFinite(e)&&e--;for(f in o){if(\"string\"==typeof i[f]&&(o[f]=o[f]+parseFloat(i[f],10)),a){var O=o[f];o[f]=i[f],i[f]=O}r[f]=o[f]}return a&&(c=!c),h=n+s,!0}null!==I&&I.call(t);for(var m=0,g=p.length;g>m;m++)p[m].start(h+u);return!1}return!0}},TWEEN.Easing={Linear:{None:function(n){return n}},Quadratic:{In:function(n){return n*n},Out:function(n){return n*(2-n)},InOut:function(n){return(n*=2)<1?.5*n*n:-.5*(--n*(n-2)-1)}},Cubic:{In:function(n){return n*n*n},Out:function(n){return--n*n*n+1},InOut:function(n){return(n*=2)<1?.5*n*n*n:.5*((n-=2)*n*n+2)}},Quartic:{In:function(n){return n*n*n*n},Out:function(n){return 1- --n*n*n*n},InOut:function(n){return(n*=2)<1?.5*n*n*n*n:-.5*((n-=2)*n*n*n-2)}},Quintic:{In:function(n){return n*n*n*n*n},Out:function(n){return--n*n*n*n*n+1},InOut:function(n){return(n*=2)<1?.5*n*n*n*n*n:.5*((n-=2)*n*n*n*n+2)}},Sinusoidal:{In:function(n){return 1-Math.cos(n*Math.PI/2)},Out:function(n){return Math.sin(n*Math.PI/2)},InOut:function(n){return.5*(1-Math.cos(Math.PI*n))}},Exponential:{In:function(n){return 0===n?0:Math.pow(1024,n-1)},Out:function(n){return 1===n?1:1-Math.pow(2,-10*n)},InOut:function(n){return 0===n?0:1===n?1:(n*=2)<1?.5*Math.pow(1024,n-1):.5*(-Math.pow(2,-10*(n-1))+2)}},Circular:{In:function(n){return 1-Math.sqrt(1-n*n)},Out:function(n){return Math.sqrt(1- --n*n)},InOut:function(n){return(n*=2)<1?-.5*(Math.sqrt(1-n*n)-1):.5*(Math.sqrt(1-(n-=2)*n)+1)}},Elastic:{In:function(n){return 0===n?0:1===n?1:-Math.pow(2,10*(n-1))*Math.sin(5*(n-1.1)*Math.PI)},Out:function(n){return 0===n?0:1===n?1:Math.pow(2,-10*n)*Math.sin(5*(n-.1)*Math.PI)+1},InOut:function(n){return 0===n?0:1===n?1:(n*=2,1>n?-.5*Math.pow(2,10*(n-1))*Math.sin(5*(n-1.1)*Math.PI):.5*Math.pow(2,-10*(n-1))*Math.sin(5*(n-1.1)*Math.PI)+1)}},Back:{In:function(n){var t=1.70158;return n*n*((t+1)*n-t)},Out:function(n){var t=1.70158;return--n*n*((t+1)*n+t)+1},InOut:function(n){var t=2.5949095;return(n*=2)<1?.5*(n*n*((t+1)*n-t)):.5*((n-=2)*n*((t+1)*n+t)+2)}},Bounce:{In:function(n){return 1-TWEEN.Easing.Bounce.Out(1-n)},Out:function(n){return 1/2.75>n?7.5625*n*n:2/2.75>n?7.5625*(n-=1.5/2.75)*n+.75:2.5/2.75>n?7.5625*(n-=2.25/2.75)*n+.9375:7.5625*(n-=2.625/2.75)*n+.984375},InOut:function(n){return.5>n?.5*TWEEN.Easing.Bounce.In(2*n):.5*TWEEN.Easing.Bounce.Out(2*n-1)+.5}}},TWEEN.Interpolation={Linear:function(n,t){var r=n.length-1,i=r*t,o=Math.floor(i),u=TWEEN.Interpolation.Utils.Linear;return 0>t?u(n[0],n[1],i):t>1?u(n[r],n[r-1],r-i):u(n[o],n[o+1>r?r:o+1],i-o)},Bezier:function(n,t){for(var r=0,i=n.length-1,o=Math.pow,u=TWEEN.Interpolation.Utils.Bernstein,e=0;i>=e;e++)r+=o(1-t,i-e)*o(t,e)*n[e]*u(i,e);return r},CatmullRom:function(n,t){var r=n.length-1,i=r*t,o=Math.floor(i),u=TWEEN.Interpolation.Utils.CatmullRom;return n[0]===n[r]?(0>t&&(o=Math.floor(i=r*(1+t))),u(n[(o-1+r)%r],n[o],n[(o+1)%r],n[(o+2)%r],i-o)):0>t?n[0]-(u(n[0],n[0],n[1],n[1],-i)-n[0]):t>1?n[r]-(u(n[r],n[r],n[r-1],n[r-1],i-r)-n[r]):u(n[o?o-1:0],n[o],n[o+1>r?r:o+1],n[o+2>r?r:o+2],i-o)},Utils:{Linear:function(n,t,r){return(t-n)*r+n},Bernstein:function(n,t){var r=TWEEN.Interpolation.Utils.Factorial;return r(n)/r(t)/r(n-t)},Factorial:function(){var n=[1];return function(t){var r=1;if(n[t])return n[t];for(var i=t;i>1;i--)r*=i;return n[t]=r,r}}(),CatmullRom:function(n,t,r,i,o){var u=.5*(r-n),e=.5*(i-t),a=o*o,f=o*a;return(2*t-2*r+u+e)*f+(-3*t+3*r-2*u-e)*a+u*o+t}}},function(n){\"function\"==typeof define&&define.amd?define([],function(){return TWEEN}):\"undefined\"!=typeof module&&\"object\"==typeof exports?module.exports=TWEEN:void 0!==n&&(n.TWEEN=TWEEN)}(this);\r\n//# sourceMappingURL=Tween.min.js.map"
 
 /***/ },
-/* 55 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var Ready_1 = __webpack_require__(56);
-	var JsFunc_1 = __webpack_require__(21);
-	var HP_1 = __webpack_require__(59);
-	var HupuAPI_1 = __webpack_require__(24);
-	var PickupAnimation_1 = __webpack_require__(66);
-	var Command_1 = __webpack_require__(28);
-	var const_1 = __webpack_require__(27);
-	var WebJsFunc_1 = __webpack_require__(25);
-	var Pickup_1 = __webpack_require__(68);
-	var BasePanelView_1 = __webpack_require__(69);
-	var VueBase_1 = __webpack_require__(22);
-	var pickupScene;
-	var canvasStage;
-	var KOA = (function (_super) {
-	    __extends(KOA, _super);
-	    function KOA() {
-	        _super.call(this);
-	        this.template = __webpack_require__(70);
-	        this.isOp = VueBase_1.VueBase.PROP;
-	        this.playerDocArr = VueBase_1.VueBase.PROP;
-	        this.isPickup1p = VueBase_1.VueBase.PROP;
-	        this.teamId1p = VueBase_1.VueBase.PROP;
-	        this.teamId2p = VueBase_1.VueBase.PROP;
-	        this.orderArr1p = VueBase_1.VueBase.PROP;
-	        this.orderPlayerDocArr1p = VueBase_1.VueBase.PROP;
-	        this.orderPlayerDocArr2p = VueBase_1.VueBase.PROP;
-	        this.orderArr2p = VueBase_1.VueBase.PROP;
-	        this.gamePlayer1p = VueBase_1.VueBase.PROP;
-	        this.gamePlayer2p = VueBase_1.VueBase.PROP;
-	        this.bracketInfo = VueBase_1.VueBase.PROP;
-	        this.bracketIdx = VueBase_1.VueBase.PROP;
-	        this.teamNameArr = VueBase_1.VueBase.PROP;
-	        this.opReq = function (cmdId, param, callback) {
-	            $.ajax({
-	                url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
-	                type: 'post',
-	                data: JSON.stringify(param),
-	                headers: { "Content-Type": "application/json" },
-	                dataType: 'json',
-	                success: callback
-	            });
-	        };
-	        this.methods = {
-	            onShowPickup: function () {
-	                var getNumberArr = function (str) {
-	                    var a = str.split(' ');
-	                    for (var i = 0; i < a.length; i++) {
-	                        a[i] = Number(a[i]);
-	                    }
-	                    return a;
-	                };
-	                this.opReq("" + Command_1.CommandId.cs_showPickup, {
-	                    _: null,
-	                    teamId1p: this.teamId1p,
-	                    orderArr1p: this.orderArr1p,
-	                    orderArr2p: this.orderArr2p,
-	                    teamId2p: this.teamId2p
-	                });
-	            },
-	            onTabTeam: function (e, teamIdx) {
-	                console.log('onTabTeam:', e, teamIdx);
-	                if (this.$actTab) {
-	                    this.$actTab.removeClass('is-active');
-	                }
-	                this.$actTab = $(e.target.parentElement);
-	                this.$actTab.addClass('is-active');
-	                var a = [];
-	                for (var i = 1; i < 5; i++) {
-	                    a.push(this.playerIdMap[(teamIdx - 1) * 4 + i]);
-	                }
-	                console.log('playerDocArr', a);
-	                this.playerDocArr = a;
-	                if (this.isPickup1p)
-	                    this.teamId1p = teamIdx;
-	                else
-	                    this.teamId2p = teamIdx;
-	            },
-	            onPickup: function (is1p) {
-	                this.isPickup1p = is1p;
-	                if (is1p) {
-	                    this.orderPlayerDocArr1p = [];
-	                    this.orderArr1p = [];
-	                }
-	                else {
-	                    this.orderPlayerDocArr2p = [];
-	                    this.orderArr2p = [];
-	                }
-	            },
-	            onPickupPlayer: function (player) {
-	                if (this.isPickup1p) {
-	                    this.orderPlayerDocArr1p.push(player);
-	                    this.orderArr1p.push(player.id);
-	                }
-	                else {
-	                    this.orderPlayerDocArr2p.push(player);
-	                    this.orderArr2p.push(player.id);
-	                }
-	            },
-	            onStartPlayer: function (is1p, playerDoc) {
-	                is1p > 0 ? this.gamePlayer2p = playerDoc : this.gamePlayer1p = playerDoc;
-	                var a;
-	                is1p > 0 ? a = this.orderPlayerDocArr2p : a = this.orderPlayerDocArr1p;
-	                var isAfterPlayer = false;
-	                for (var i = 0; i < a.length; i++) {
-	                    var pdc = a[i];
-	                    if (pdc.id != playerDoc.id) {
-	                        pdc.isPlay = false;
-	                        isAfterPlayer ? pdc.isDead = false
-	                            : pdc.isDead = true;
-	                    }
-	                    else {
-	                        pdc.isDead = false;
-	                        pdc.isPlay = true;
-	                        isAfterPlayer = true;
-	                    }
-	                }
-	            },
-	            onStartGame: function (noFx) {
-	                if (noFx === void 0) { noFx = false; }
-	                if (this.gamePlayer1p.id && this.gamePlayer2p.id)
-	                    this.opReq("" + Command_1.CommandId.cs_startGame, {
-	                        noFx: noFx,
-	                        playerDocArr: [this.gamePlayer1p, this.gamePlayer2p],
-	                        partnerArr: [this.orderPlayerDocArr1p, this.orderPlayerDocArr2p],
-	                        stArr: [this.orderPlayerDocArr1p[3], this.orderPlayerDocArr2p[3]],
-	                    });
-	                else {
-	                    alert('没选人！');
-	                }
-	            },
-	            onToggleTimer: function () {
-	                this.opReq("" + Command_1.CommandId.cs_toggleTimer, {
-	                    _: null
-	                });
-	            },
-	            onResetTimer: function () {
-	                this.opReq("" + Command_1.CommandId.cs_resetTimer, {
-	                    _: null
-	                });
-	            },
-	            onSetBlood: function (is1p, dt) {
-	                this.opReq("" + Command_1.CommandId.cs_setBlood, {
-	                    is1p: is1p,
-	                    dt: dt
-	                });
-	            },
-	            onSetFoul: function (is1p, dt) {
-	                this.opReq("" + Command_1.CommandId.cs_setFoul, {
-	                    is1p: is1p,
-	                    dt: dt
-	                });
-	            },
-	            onHideSt: function () {
-	                this.opReq("" + Command_1.CommandId.cs_hideSt, {
-	                    _: null,
-	                });
-	            },
-	            onSetSt: function (is1p, dt) {
-	                this.opReq("" + Command_1.CommandId.cs_setSt, {
-	                    is1p: is1p,
-	                    dt: dt
-	                });
-	            },
-	            onCommitGame: function () {
-	                var bracketIdx = Number(this.bracketIdx);
-	                if (bracketIdx) {
-	                    this.bracketIdx = null;
-	                    this.opReq("" + Command_1.CommandId.cs_commitGame, { duration: this.hp.timeText.timeInSec, bracketIdx: bracketIdx }, function () {
-	                    });
-	                }
-	            },
-	            onReloadDB: function () {
-	                this.opReq('cs_reloadDB', {});
-	            },
-	            onCommitTeam: function () {
-	                var a = [];
-	                if (this.bracketInfo)
-	                    a = this.bracketInfo.split('-').concat([this.bracketIdx]);
-	                if (a.length) {
-	                    if (a.length == 3) {
-	                        this.opReq("" + Command_1.CommandId.cs_commitTeam, {
-	                            bracketIdx: Number(a[0]),
-	                            scoreArr: [Number(a[1]), Number(a[2])]
-	                        });
-	                    }
-	                    else
-	                        alert('数据录入错误！');
-	                }
-	                else {
-	                    if (this.bracketIdx)
-	                        this.opReq("" + Command_1.CommandId.cs_commitTeam, {
-	                            bracketIdx: Number(this.bracketIdx)
-	                        });
-	                    else
-	                        alert('数据录入错误！');
-	                }
-	            }
-	        };
-	        VueBase_1.VueBase.initProps(this);
-	    }
-	    KOA.prototype.created = function () {
-	        var _this = this;
-	        this.teamNameArr = ['FTG#1', 'Fe#1',
-	            'TSH#1', "GBA#1",
-	            'GBA#2', 'FTG#2',
-	            'TSH#2', 'Fe#2',
-	        ];
-	        this.initCanvas();
-	        this.gamePlayer1p = { name: '1p' };
-	        this.gamePlayer2p = { name: '2p' };
-	        this.isOp = this.$route.params['op'] == 'op';
-	        if (this.isOp) {
-	            WebJsFunc_1.dynamicLoading.css('/css/bulma.min.css');
-	        }
-	        console.log('route:', this.$route['op']);
-	        HupuAPI_1.getPlayerDoc(function (playerDocArr) {
-	            var playerMap = {};
-	            for (var _i = 0, playerDocArr_1 = playerDocArr; _i < playerDocArr_1.length; _i++) {
-	                var player = playerDocArr_1[_i];
-	                playerMap[player.id] = player;
-	            }
-	            _this.playerIdMap = playerMap;
-	        });
-	        HupuAPI_1.getGameInfo(function (res) {
-	            console.log('gameInfo', res);
-	            _this.startGame(res);
-	        });
-	        this.initIO();
-	    };
-	    KOA.prototype.initCanvas = function () {
-	        canvasStage = BasePanelView_1.BasePanelView.initPixi();
-	        this.hp = new HP_1.HP(canvasStage);
-	    };
-	    KOA.prototype.mounted = function () {
-	        this.isPickup1p = true;
-	    };
-	    KOA.prototype.showPickup = function (data) {
-	        pickupScene = new Pickup_1.PickupScene(canvasStage, this.playerIdMap);
-	        new PickupAnimation_1.PickupAnimation(pickupScene).startPick(data.teamId1p, data.teamId2p, data.orderArr1p, data.orderArr2p);
-	    };
-	    KOA.prototype.startGame = function (data) {
-	        if (data.start) {
-	            if (!data.noFx)
-	                new Ready_1.Ready(canvasStage, data.playerDocArr);
-	            this.hp.setPlayer(data.playerDocArr, data.partnerArr, data.stArr);
-	            this.hp.setBlood(true, data.playerDocArr[0].blood);
-	            this.hp.setBlood(false, data.playerDocArr[1].blood);
-	            this.hp.setFoul(true, data.playerDocArr[0].foul);
-	            this.hp.setFoul(false, data.playerDocArr[1].foul);
-	            this.hp.setSt(true, data.playerDocArr[0].st);
-	            this.hp.setSt(false, data.playerDocArr[1].st);
-	            if (data.beatBy01 && data.beatBy01[0] > -1) {
-	                this.hp.setBeatBy(data.beatBy01[0] == 0, data.beatBy01[1]);
-	            }
-	            this.hp.resetTimer();
-	            this.hp.toggleTimer(const_1.TimerState.PAUSE);
-	        }
-	    };
-	    KOA.prototype.initIO = function () {
-	        var _this = this;
-	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
-	        localWs.on('connect', function (msg) {
-	            console.log('connect', window.location.host);
-	        })
-	            .on("" + Command_1.CommandId.sc_showPickup, function (data) {
-	            console.log("CommandId.sc_showPickup", data);
-	            _this.showPickup(data);
-	        })
-	            .on("" + Command_1.CommandId.sc_startGame, function (data) {
-	            console.log('sc_startGame', data);
-	            _this.startGame(data);
-	        })
-	            .on("" + Command_1.CommandId.sc_toggleTimer, function (data) {
-	            _this.hp.toggleTimer();
-	        })
-	            .on("" + Command_1.CommandId.sc_resetTimer, function (data) {
-	            _this.hp.resetTimer();
-	        })
-	            .on("" + Command_1.CommandId.sc_setBlood, function (data) {
-	            _this.hp.setBlood(data.is1p, data.blood);
-	        })
-	            .on("" + Command_1.CommandId.sc_setFoul, function (data) {
-	            _this.hp.setFoul(data.is1p, data.foul);
-	        })
-	            .on("" + Command_1.CommandId.sc_setSt, function (data) {
-	            _this.hp.setSt(data.is1p, data.st);
-	        })
-	            .on("" + Command_1.CommandId.sc_hideSt, function (data) {
-	            _this.hp.hideSt();
-	        })
-	            .on("" + Command_1.CommandId.sc_commitGame, function (data) {
-	            _this.hp.toggleTimer(const_1.TimerState.PAUSE);
-	            if (data.sus)
-	                _this.hp.showWinner(data.winner == 0);
-	            console.log('cs_commitGame', data);
-	        })
-	            .on("" + Command_1.CommandId.sc_commitTeam, function (data) {
-	            console.log('sc_commitTeam', data);
-	            var winTeam;
-	            var g = data.group;
-	            var is1pWin = g.left.score > g.right.score;
-	            is1pWin ? winTeam = g.left
-	                : winTeam = g.right;
-	            var winGameDocArr = [];
-	            if (data.gameDocArr) {
-	                data.gameDocArr = data.gameDocArr.sort(JsFunc_1.ascendingProp('end'));
-	                for (var i = 0; i < data.gameDocArr.length; i++) {
-	                    var gameDoc = data.gameDocArr[i];
-	                    var loser = gameDoc.playerDocArr[Number(is1pWin)];
-	                    if (loser.blood == 0) {
-	                        var playerArr = [];
-	                        playerArr.push(_this.playerIdMap[gameDoc.playerDocArr[0].id]);
-	                        playerArr.push(_this.playerIdMap[gameDoc.playerDocArr[1].id]);
-	                        winGameDocArr.push(playerArr);
-	                    }
-	                }
-	            }
-	            console.log('winGameDocArr', winGameDocArr);
-	            winTeam.winPlayerDocArr = winGameDocArr;
-	            winTeam.is1pWin = is1pWin;
-	            winTeam.scoreArr = data.scoreArr;
-	            winTeam.duration = data.duration;
-	            _this.hp.showWinTeam(winTeam);
-	        });
-	    };
-	    return KOA;
-	}(VueBase_1.VueBase));
-	exports.koa = new KOA();
-
-
-/***/ },
-/* 56 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var PixiEx_1 = __webpack_require__(57);
-	var TweenEx_1 = __webpack_require__(58);
-	var const_1 = __webpack_require__(27);
-	var Ready = (function (_super) {
-	    __extends(Ready, _super);
-	    function Ready(parent, playerDocArr) {
-	        var _this = this;
-	        _super.call(this);
-	        parent.addChild(this);
-	        var player1p = playerDocArr[0];
-	        var player2p = playerDocArr[1];
-	        this.addChild(new PIXI.Graphics().drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT));
-	        var rc = new PIXI.Container;
-	        this.rotCtn = rc;
-	        this.addChild(rc);
-	        rc.pivot = new PIXI.Point(const_1.ViewConst.STAGE_WIDTH * .5, const_1.ViewConst.STAGE_HEIGHT * .5);
-	        rc.x = const_1.ViewConst.STAGE_WIDTH * .5;
-	        rc.y = const_1.ViewConst.STAGE_HEIGHT * .5;
-	        rc.rotation = PIXI.DEG_TO_RAD * 123;
-	        var blue = new PIXI.Graphics()
-	            .beginFill(0x2a6ad7)
-	            .drawRect(0, 0, 1920, 600);
-	        blue.y = 500;
-	        blue.x = -1200;
-	        rc.addChild(blue);
-	        var red = new PIXI.Graphics()
-	            .beginFill(0xD72A37)
-	            .drawRect(0, 0, 1920, 600);
-	        red.y = -60;
-	        red.x = 1500;
-	        rc.addChild(red);
-	        var gray = new PIXI.Graphics()
-	            .beginFill(0xb4b4b4)
-	            .drawRect(0, 0, 1920, 800);
-	        gray.pivot = new PIXI.Point(0, 400);
-	        gray.scale.x = gray.scale.y = 0;
-	        gray.y = const_1.ViewConst.STAGE_HEIGHT * .5;
-	        rc.addChild(gray);
-	        var blue2 = PixiEx_1.newBitmap({ x: -1920, url: '/img/panel/koa/ad/blue.png' });
-	        this.addChild(blue2);
-	        var red2 = PixiEx_1.newBitmap({ x: 1920, url: '/img/panel/koa/ad/red.png' });
-	        red2.y = const_1.ViewConst.STAGE_HEIGHT - 335;
-	        this.addChild(red2);
-	        var playerAvt1p = PixiEx_1.newBitmap({ x: -100, y: 35, url: player1p.portrait });
-	        var ns = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '50px',
-	            fontStyle: 'normal',
-	            fontWeight: 'bold',
-	            fill: '#fff',
-	            stroke: '#222',
-	            strokeThickness: 3,
-	        };
-	        var name1p = new PIXI.Text(player1p.name, ns);
-	        name1p.x = 430;
-	        name1p.y = 200;
-	        playerAvt1p.addChild(name1p);
-	        this.addChild(playerAvt1p);
-	        var playerAvt2p = PixiEx_1.newBitmap({ x: const_1.ViewConst.STAGE_WIDTH - 300, y: const_1.ViewConst.STAGE_HEIGHT - 300, url: player2p.portrait });
-	        var name2p = new PIXI.Text(player2p.name, ns);
-	        name2p.x = -30 - name2p.width;
-	        name2p.y = 200;
-	        playerAvt2p.addChild(name2p);
-	        this.addChild(playerAvt2p);
-	        var white = new PIXI.Graphics();
-	        white
-	            .beginFill(0xffffff)
-	            .drawRect(0, 0, 1920, 410);
-	        white.y = const_1.ViewConst.STAGE_HEIGHT * .5;
-	        white.pivot = new PIXI.Point(0, 205);
-	        white.scale.y = 0;
-	        this.addChild(white);
-	        var logo = PixiEx_1.newBitmap({ url: '/img/panel/koa/ad/logo1.png' });
-	        logo.pivot = new PIXI.Point(307 / 2, 307 / 2);
-	        logo.x = const_1.ViewConst.STAGE_WIDTH * .5;
-	        logo.y = const_1.ViewConst.STAGE_HEIGHT * .5;
-	        logo.scale.x = 1 / .24;
-	        logo.scale.y = 1 / .24;
-	        logo['1'] = PixiEx_1.newBitmap({ x: 35, y: 144, url: '/img/panel/koa/ad/1.png' });
-	        logo['2'] = PixiEx_1.newBitmap({ x: 85, y: 98, url: '/img/panel/koa/ad/2.png' });
-	        logo['3'] = PixiEx_1.newBitmap({ x: 140, y: 50, url: '/img/panel/koa/ad/3.png' });
-	        logo['yiqi'] = PixiEx_1.newBitmap({ x: const_1.ViewConst.STAGE_WIDTH * .5 - 200, y: 400, url: '/img/panel/koa/ad/yiqi.png' });
-	        logo['shoeMsk'] = PixiEx_1.newBitmap({ url: '/img/panel/koa/ad/msk.png' });
-	        logo.addChild(logo['shoeMsk']);
-	        logo['shoe'] = PixiEx_1.newBitmap({ x: 400, y: 0, url: '/img/panel/koa/ad/shoe.png' });
-	        logo['shoe'].mask = logo['shoeMsk'];
-	        logo['shoe'].alpha = 0;
-	        logo.addChild(logo['shoe']);
-	        PixiEx_1.setPivot(logo['1'], 35, 21);
-	        PixiEx_1.setPivot(logo['2'], 48, 44);
-	        PixiEx_1.setPivot(logo['3'], 62, 78);
-	        logo.addChild(logo['1']);
-	        logo.addChild(logo['2']);
-	        logo.addChild(logo['3']);
-	        this.addChild(logo);
-	        var whiteEnd = new PIXI.Graphics().beginFill(0xffffff).drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT);
-	        whiteEnd.alpha = 0;
-	        var _f = function (frame) {
-	            return frame * 1000 / 60 * 2;
-	        };
-	        TweenEx_1.TweenEx.delayedCall(200, function () {
-	            new TweenEx_1.TweenEx(playerAvt1p)
-	                .to({ x: 200 }, _f(5))
-	                .to({ x: 250 }, _f(28))
-	                .to({ x: 1000 }, _f(5))
-	                .start();
-	            new TweenEx_1.TweenEx(playerAvt2p)
-	                .to({ x: const_1.ViewConst.STAGE_WIDTH - 400 - 200 }, _f(5))
-	                .to({ x: const_1.ViewConst.STAGE_WIDTH - 400 - 250 }, _f(28))
-	                .to({ x: const_1.ViewConst.STAGE_WIDTH - 400 - 1000 }, _f(5))
-	                .start();
-	            TweenEx_1.TweenEx.to(gray.scale, _f(5), { x: 1, y: 1 });
-	            TweenEx_1.TweenEx.to(white.scale, _f(10), { y: 1 });
-	            TweenEx_1.TweenEx.to(logo.scale, _f(8), { x: 1, y: 1 }, function () {
-	                logo['shoe'].alpha = 0;
-	                new TweenEx_1.TweenEx(logo['shoe'])
-	                    .delay(_f(15))
-	                    .to({ alpha: 1, x: 0 }, _f(3))
-	                    .delay(_f(5))
-	                    .call(function () {
-	                    new TweenEx_1.TweenEx(logo['shoe'])
-	                        .to({ x: 300 }, _f(8))
-	                        .call(function () {
-	                        logo['shoe'].mask = null;
-	                        logo['shoe'].x = logo.x;
-	                        logo['shoe'].y = 400;
-	                        logo['shoeMsk'].visible = false;
-	                        _this.addChild(logo['shoe']);
-	                    })
-	                        .to({ x: 1200 }, _f(3))
-	                        .to({ x: 1300 }, _f(20))
-	                        .start();
-	                })
-	                    .start();
-	            });
-	            TweenEx_1.TweenEx.to(gray, _f(60), { height: 410 });
-	            TweenEx_1.TweenEx.to(blue, _f(12), { x: 0 });
-	            TweenEx_1.TweenEx.to(red, _f(12), { x: 0 }, function () {
-	                TweenEx_1.TweenEx.delayedCall(_f(4), function () {
-	                    TweenEx_1.TweenEx.to(gray.scale, _f(34 - 16), { y: .5 });
-	                });
-	            });
-	            TweenEx_1.TweenEx.delayedCall(_f(28), function () {
-	                TweenEx_1.TweenEx.to(rc, _f(6), { rotation: 180 * PIXI.DEG_TO_RAD }, function () {
-	                });
-	                TweenEx_1.TweenEx.delayedCall(_f(4), function () {
-	                    TweenEx_1.TweenEx.to(blue2, _f(28), { x: 0 });
-	                    TweenEx_1.TweenEx.to(red2, _f(28), { x: 0 });
-	                });
-	                var s150 = function (obj) {
-	                    new TweenEx_1.TweenEx(obj.scale)
-	                        .to({ x: 1.8, y: 1.8 }, _f(6))
-	                        .to({ x: 1, y: 1 }, _f(3))
-	                        .start();
-	                };
-	                new TweenEx_1.TweenEx(logo)
-	                    .call(function () {
-	                    s150(logo['1']);
-	                    TweenEx_1.TweenEx.delayedCall(_f(2), function () {
-	                        s150(logo['2']);
-	                        TweenEx_1.TweenEx.delayedCall(_f(2), function () {
-	                            s150(logo['3']);
-	                        });
-	                    });
-	                })
-	                    .call(function () {
-	                    logo['yiqi'].alpha = 0;
-	                    _this.addChild(logo['yiqi']);
-	                    new TweenEx_1.TweenEx(logo['yiqi'])
-	                        .delay(_f(12))
-	                        .to({ alpha: 1, x: const_1.ViewConst.STAGE_WIDTH * .5 - 250 }, _f(2))
-	                        .to({ alpha: 1, x: const_1.ViewConst.STAGE_WIDTH * .5 - 150 }, _f(20))
-	                        .start();
-	                })
-	                    .delay(_f(5))
-	                    .to({ x: const_1.ViewConst.STAGE_WIDTH * .5 - 150 }, _f(5))
-	                    .to({ x: const_1.ViewConst.STAGE_WIDTH * .5 - 600 }, _f(3))
-	                    .to({ x: const_1.ViewConst.STAGE_WIDTH * .5 - 550 }, _f(8))
-	                    .start();
-	            });
-	            new TweenEx_1.TweenEx(whiteEnd)
-	                .delay(_f(120))
-	                .call(function () { return [
-	                _this.addChild(whiteEnd)
-	            ]; })
-	                .to({ alpha: 1 }, _f(8))
-	                .call(function () {
-	                while (_this.children.length > 1) {
-	                    _this.removeChildAt(0);
-	                }
-	            })
-	                .to({ alpha: 0 }, _f(8))
-	                .call(function () {
-	                whiteEnd.parent.removeChild(whiteEnd);
-	            })
-	                .start();
-	        });
-	    }
-	    return Ready;
-	}(PIXI.Container));
-	exports.Ready = Ready;
-
-
-/***/ },
+/* 55 */,
+/* 56 */,
 /* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -4241,362 +3690,7 @@
 
 
 /***/ },
-/* 59 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var HupuAPI_1 = __webpack_require__(24);
-	var TextTimer_1 = __webpack_require__(60);
-	var Winner_1 = __webpack_require__(61);
-	var Win_1 = __webpack_require__(62);
-	var St_1 = __webpack_require__(65);
-	var SpriteGroup_1 = __webpack_require__(63);
-	var JsFunc_1 = __webpack_require__(21);
-	var const_1 = __webpack_require__(27);
-	var TweenEx_1 = __webpack_require__(58);
-	var Fx_1 = __webpack_require__(64);
-	var PixiEx_1 = __webpack_require__(57);
-	var HP = (function (_super) {
-	    __extends(HP, _super);
-	    function HP(stage) {
-	        var _this = this;
-	        _super.call(this);
-	        this.pointArr1p = [];
-	        this.pointArr2p = [];
-	        this.nameArr1p = [];
-	        this.nameArr2p = [];
-	        stage.addChild(this);
-	        var titleCtn = new PIXI.Container;
-	        this.addChild(titleCtn);
-	        titleCtn.addChild(PixiEx_1.newBitmap({ url: '/img/panel/koa/hp/bg.png' }));
-	        titleCtn.y = const_1.ViewConst.STAGE_HEIGHT - 136;
-	        var _b = function () {
-	            var bFx = new PIXI.Container();
-	            bFx['blood'] = PixiEx_1.newBitmap({ url: '/img/panel/koa/hp/bloodMask.png' });
-	            bFx['msk'] = PixiEx_1.newBitmap({ url: '/img/panel/koa/hp/bloodMask.png' });
-	            bFx['blink'] = PixiEx_1.newBitmap({ url: '/img/panel/koa/hp/blood.png' });
-	            bFx['blink'].visible = false;
-	            bFx['blink'].x = -5;
-	            bFx['blink'].y = -5;
-	            bFx.addChild(bFx['blink']);
-	            bFx.addChild(bFx['blood']);
-	            bFx.addChild(bFx['msk']);
-	            bFx['blood'].mask = bFx['msk'];
-	            titleCtn.addChild(bFx);
-	            return bFx;
-	        };
-	        this.bloodFx1p = _b();
-	        this.bloodFx1p.x = 519;
-	        this.bloodFx1p.y = 42;
-	        this.bloodFx2p = _b();
-	        this.bloodFx2p.scale.x = -1;
-	        this.bloodFx2p.x = 1400;
-	        this.bloodFx2p.y = this.bloodFx1p.y;
-	        var initPoint = function (is1p) {
-	            for (var i = 0; i < 5; i++) {
-	                var p = PixiEx_1.newBitmap({ url: '/img/panel/koa/hp/point.png' });
-	                if (is1p) {
-	                    p.x = 787 - 67 * i;
-	                    _this.pointArr1p.push(p);
-	                }
-	                else {
-	                    p.scale.x = -1;
-	                    p.x = 1132 + 67 * i;
-	                    _this.pointArr2p.push(p);
-	                }
-	                p.y = 42;
-	                titleCtn.addChild(p);
-	            }
-	        };
-	        initPoint(true);
-	        initPoint(false);
-	        var fpg = { dir: SpriteGroup_1.Direction.w, invert: 30, img: '/img/panel/koa/hp/foul.png', count: 5, flip: 1 };
-	        this.foulPG1p = new SpriteGroup_1.SpriteGroup(fpg);
-	        this.foulPG1p.x = 708;
-	        this.foulPG1p.y = 89;
-	        titleCtn.addChild(this.foulPG1p);
-	        fpg.flip = -1;
-	        fpg.dir = SpriteGroup_1.Direction.e;
-	        this.foulPG2p = new SpriteGroup_1.SpriteGroup(fpg);
-	        this.foulPG2p.x = 1091;
-	        this.foulPG2p.y = this.foulPG1p.y;
-	        titleCtn.addChild(this.foulPG2p);
-	        var fg = PixiEx_1.newBitmap({ x: 692, y: 75, url: '/img/panel/koa/hp/foulGlow.png' });
-	        this.foulGlow1p = fg;
-	        fg.visible = false;
-	        titleCtn.addChild(fg);
-	        fg = PixiEx_1.newBitmap({ x: 1045, y: fg.y, url: '/img/panel/koa/hp/foulGlow.png' });
-	        this.foulGlow2p = fg;
-	        fg.visible = false;
-	        titleCtn.addChild(fg);
-	        var initAvatar = function (is1p) {
-	            var url = HupuAPI_1._avatar('1p.png');
-	            var avt = PixiEx_1.newBitmap({ url: url });
-	            var msk1 = new PIXI.Graphics();
-	            msk1.beginFill(0xff0000);
-	            msk1.moveTo(0, 0);
-	            msk1.lineTo(0, 117);
-	            msk1.lineTo(100, 117);
-	            msk1.lineTo(112, 92);
-	            msk1.lineTo(120, 92);
-	            msk1.lineTo(120, 0);
-	            if (is1p) {
-	                avt.x = 380;
-	                msk1.x = avt.x;
-	                _this.avatar1p = avt;
-	            }
-	            else {
-	                avt.x = 1420 + 120;
-	                msk1.scale.x = -1;
-	                msk1.x = avt.x;
-	                _this.avatar2p = avt;
-	                avt.scale.x = -1;
-	            }
-	            titleCtn.addChild(avt);
-	            titleCtn.addChild(msk1);
-	            avt.mask = msk1;
-	        };
-	        initAvatar(true);
-	        initAvatar(false);
-	        titleCtn.addChild(PixiEx_1.newBitmap({ url: '/img/panel/koa/hp/deco.png' }));
-	        var ns = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '25px',
-	            fontStyle: 'normal',
-	            fontWeight: 'bold',
-	            stroke: '#000',
-	            strokeThickness: 3,
-	            fill: ['#dc6b17', '#debc1d', '#debc1d', '#dc6b17'],
-	            fillGradientType: PIXI['TEXT_GRADIENT'].LINEAR_VERTICAL,
-	        };
-	        ns.fill = ['#c0dbff', '#c0dbff', '#3b52b3'];
-	        var n1 = new PIXI.Text("player1", ns);
-	        this.name1p = n1;
-	        n1.x = 495;
-	        n1.y = 93;
-	        titleCtn.addChild(n1);
-	        ns.fill = ['#fff0f0', '#fff0f0', '#b33b3b'];
-	        var n2 = new PIXI.Text("player1", ns);
-	        this.name2p = n2;
-	        n2['x0'] = 1420;
-	        n2.x = n2['x0'] - n2.width;
-	        n2.y = n1.y;
-	        titleCtn.addChild(n2);
-	        var beatStyle = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '23px',
-	            fontStyle: 'normal',
-	            fontWeight: 'bold',
-	            fill: ['#dc6b17', '#debc1d', '#debc1d', '#dc6b17'],
-	            fillGradientType: PIXI['TEXT_GRADIENT'].LINEAR_VERTICAL,
-	        };
-	        var bb = new PIXI.Text('', beatStyle);
-	        bb.x = 540;
-	        bb.y = 2;
-	        titleCtn.addChild(bb);
-	        this.beatByNum1p = bb;
-	        var bb2 = new PIXI.Text('', beatStyle);
-	        bb2.x = 1240;
-	        bb2.y = bb.y;
-	        titleCtn.addChild(bb2);
-	        this.beatByNum2p = bb2;
-	        var ns2 = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '18px',
-	            fontStyle: 'normal',
-	            stroke: '#000',
-	            strokeThickness: 2,
-	            fill: null,
-	            fillGradientType: PIXI['TEXT_GRADIENT'].LINEAR_VERTICAL,
-	        };
-	        var _ns1 = function () {
-	            return '#3b52b3';
-	        };
-	        var _ns2 = function () {
-	            return '#b33b3b';
-	        };
-	        for (var i = 0; i < 2; i++) {
-	            ns2.fill = _ns1();
-	            var n1p = new PIXI.Text('player' + (i + 2), ns2);
-	            n1p['fill'] = _ns1();
-	            n1p['x0'] = 360;
-	            n1p.x = n1p['x0'] - n1p.width;
-	            n1p.y = 75 + i * 26;
-	            titleCtn.addChild(n1p);
-	            this.nameArr1p.push(n1p);
-	            ns2.fill = _ns2();
-	            var n2p = new PIXI.Text('player' + (i + 2), ns2);
-	            n2p['fill'] = _ns2();
-	            n2p.x = 1555;
-	            n2p.y = n1p.y;
-	            titleCtn.addChild(n2p);
-	            this.nameArr2p.push(n2p);
-	        }
-	        var ts = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '50px',
-	            fontStyle: 'normal',
-	            fontWeight: 'bold',
-	            fill: '#fff',
-	            stroke: '#222',
-	            strokeThickness: 3,
-	        };
-	        var t = new TextTimer_1.TextTimer("00:00", ts);
-	        this.timeText = t;
-	        t.x = 889;
-	        t.y = 35;
-	        titleCtn.addChild(t);
-	        this.st1p = new St_1.St(this, true);
-	        this.st1p.y = 500;
-	        this.st2p = new St_1.St(this, false);
-	        this.st2p.x = const_1.ViewConst.STAGE_WIDTH - 282;
-	        this.st2p.y = this.st1p.y;
-	        this.setFoul(true, 0);
-	        this.setFoul(false, 0);
-	        this.winner = new Winner_1.Winner(this);
-	        this.winner.y = 300;
-	        this.winTeam = new Win_1.WinTeam(this);
-	        this.test();
-	    }
-	    HP.prototype.test = function () {
-	        TweenEx_1.TweenEx.delayedCall(200, function () {
-	        });
-	    };
-	    HP.prototype.setPlayer = function (playerDocArr, partnerArr, stArr) {
-	        var _this = this;
-	        PixiEx_1.loadRes(HupuAPI_1._avatar(playerDocArr[0].avatar), function (img) {
-	            _this.avatar1p.texture = PixiEx_1.imgToTex(img);
-	        });
-	        PixiEx_1.loadRes(HupuAPI_1._avatar(playerDocArr[1].avatar), function (img) {
-	            _this.avatar2p.texture = PixiEx_1.imgToTex(img);
-	        });
-	        this.st1p.setName(stArr[0].name);
-	        this.st1p.setAvatar(HupuAPI_1._avatar(stArr[0].avatar));
-	        this.st2p.setName(stArr[1].name);
-	        this.st2p.setAvatar(HupuAPI_1._avatar(stArr[1].avatar));
-	        this.name1p.text = JsFunc_1.cnWrap(playerDocArr[0].name, 30, 12);
-	        this.name2p.text = JsFunc_1.cnWrap(playerDocArr[1].name, 30, 12);
-	        this.name2p.x = this.name2p['x0'] - this.name2p.width;
-	        var setPartner = function (idx, nameArr) {
-	            var isAfter = false;
-	            var j = 0;
-	            var head = [];
-	            var tail = [];
-	            for (var i = 0; i < partnerArr[idx].length - 1; i++) {
-	                var pn = partnerArr[idx][i];
-	                if (pn.id != playerDocArr[idx].id) {
-	                    isAfter ? head.push(pn) : tail.push(pn);
-	                }
-	                else {
-	                    isAfter = true;
-	                }
-	            }
-	            var f = new PIXI.filters.ColorMatrixFilter();
-	            f.greyscale(1);
-	            var reOrder = head.concat(tail);
-	            for (var j = 0; j < reOrder.length; j++) {
-	                var pn = reOrder[j];
-	                var nt = nameArr[j];
-	                nt.text = pn.name;
-	                idx == 0 ? nt.x = nt['x0'] - nt.width : nt;
-	                if (pn.isDead) {
-	                    nt.style.fill = '#ddd';
-	                }
-	                else {
-	                    nt.style.fill = nt['fill'];
-	                }
-	            }
-	        };
-	        setPartner(0, this.nameArr1p);
-	        setPartner(1, this.nameArr2p);
-	    };
-	    HP.prototype._pFx = function (bloodArr, num) {
-	        for (var i = 0; i < bloodArr.length; i++) {
-	            var b = bloodArr[i];
-	            if (i < num) {
-	                b.visible = true;
-	                Fx_1.blink3(b);
-	            }
-	            else
-	                b.visible = false;
-	        }
-	    };
-	    HP.prototype.setBlood = function (is1p, num) {
-	        is1p ? this._pFx(this.pointArr1p, num) : this._pFx(this.pointArr2p, num);
-	        var bFx;
-	        is1p ? bFx = this.bloodFx1p : bFx = this.bloodFx2p;
-	        TweenEx_1.TweenEx.to(bFx['msk'], 140 * (5 - num), { x: (5 - num) * 67 });
-	        if (num == 1) {
-	            bFx['blink'].visible = true;
-	            Fx_1.blink2({ target: bFx['blink'], time: 70 });
-	        }
-	        else if (num == 0) {
-	            bFx['blink'].visible = false;
-	            TweenEx_1.TweenEx.delayedCall(100, function () {
-	                bFx['blink'].visible = true;
-	            });
-	        }
-	        else
-	            bFx['blink'].visible = false;
-	    };
-	    HP.prototype.setSt = function (is1p, st) {
-	        var st12;
-	        is1p ? st12 = this.st1p
-	            : st12 = this.st2p;
-	        st12.setNum(st);
-	        new TweenEx_1.TweenEx(this.st1p)
-	            .to({ alpha: 1 }, 100)
-	            .start();
-	        new TweenEx_1.TweenEx(this.st2p)
-	            .to({ alpha: 1 }, 100)
-	            .start();
-	    };
-	    HP.prototype.hideSt = function () {
-	        this.st1p.alpha = 0;
-	        this.st2p.alpha = 0;
-	    };
-	    HP.prototype.setFoul = function (is1p, foul) {
-	        is1p ? this.foulPG1p.setNum(foul)
-	            : this.foulPG2p.setNum(foul);
-	        var fg;
-	        is1p ? fg = this.foulGlow1p
-	            : fg = this.foulGlow2p;
-	        if (foul > 4) {
-	            fg.visible = true;
-	            Fx_1.blink2({ target: fg, loop: Infinity });
-	        }
-	        else
-	            fg.visible = false;
-	    };
-	    HP.prototype.toggleTimer = function (state) {
-	        this.timeText.toggleTimer(state);
-	    };
-	    HP.prototype.resetTimer = function () {
-	        this.timeText.resetTimer();
-	    };
-	    HP.prototype.setBeatBy = function (is1p, num) {
-	        var bt;
-	        is1p ? bt = this.beatByNum1p
-	            : bt = this.beatByNum2p;
-	        bt.text = 'BEAT BY 0' + num;
-	    };
-	    HP.prototype.showWinner = function (is1p) {
-	        this.winner.show(is1p);
-	    };
-	    HP.prototype.showWinTeam = function (team) {
-	        this.winTeam.setTeam(team);
-	    };
-	    return HP;
-	}(PIXI.Container));
-	exports.HP = HP;
-
-
-/***/ },
+/* 59 */,
 /* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -4692,424 +3786,9 @@
 
 
 /***/ },
-/* 61 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var const_1 = __webpack_require__(27);
-	var TweenEx_1 = __webpack_require__(58);
-	var PixiEx_1 = __webpack_require__(57);
-	var Winner = (function (_super) {
-	    __extends(Winner, _super);
-	    function Winner(parent) {
-	        _super.call(this);
-	        parent.addChild(this);
-	        this.hide();
-	        this.spArr = [];
-	        var a = ['W', 'I', 'N', 'N', 'E', 'R'];
-	        var px = [0, 20, -3, -3, -3, -6];
-	        for (var i = 0; i < a.length; i++) {
-	            var chr = a[i];
-	            var sp = PixiEx_1.newBitmap({ url: '/img/panel/koa/hp/' + chr + '.png' });
-	            sp.pivot = new PIXI.Point(0, 35);
-	            sp.y = sp.pivot.y;
-	            sp.x = i * 65 + px[i];
-	            this.addChild(sp);
-	            this.spArr.push(sp);
-	            sp['white'] = PixiEx_1.newWhiteMask('/img/panel/koa/hp/' + chr + '.png');
-	            sp['white'].alpha = 0;
-	            sp.addChild(sp['white']);
-	        }
-	    }
-	    Winner.prototype.show = function (is1p) {
-	        var _this = this;
-	        this.visible = false;
-	        var spArrWidth = 72 * 6;
-	        is1p ? this.x = 100
-	            : this.x = const_1.ViewConst.STAGE_WIDTH - spArrWidth - 100;
-	        this.visible = true;
-	        var d1 = 70;
-	        var d2 = 90;
-	        var d3 = 70;
-	        var isodd = true;
-	        for (var i = 0; i < this.spArr.length; i++) {
-	            var sp = this.spArr[i];
-	            isodd ? sp.y = -60
-	                : sp.y = sp.height + 60;
-	            TweenEx_1.TweenEx.to(sp, i * d1 + 5, { y: 0 }, function (t) {
-	                new TweenEx_1.TweenEx(t.target)
-	                    .delay(i * d1)
-	                    .call(function (t) {
-	                    console.log('target', t);
-	                    new TweenEx_1.TweenEx(t.target.scale)
-	                        .to({ x: 1.5 }, d2)
-	                        .to({ x: 1 }, d3)
-	                        .start();
-	                    new TweenEx_1.TweenEx(t.target.white)
-	                        .to({ alpha: .2 }, d2 + 10)
-	                        .to({ alpha: 0 }, d3 + 20)
-	                        .to({ alpha: .1 }, 5)
-	                        .start();
-	                    new TweenEx_1.TweenEx(t.target.scale)
-	                        .to({ y: 1.5 }, d2)
-	                        .to({ y: 1 }, d3)
-	                        .start();
-	                })
-	                    .start();
-	            });
-	            isodd = !isodd;
-	        }
-	        TweenEx_1.TweenEx.delayedCall(3000, function () {
-	            is1p ? TweenEx_1.TweenEx.to(_this, 50, { x: -spArrWidth })
-	                : TweenEx_1.TweenEx.to(_this, 50, { x: const_1.ViewConst.STAGE_WIDTH });
-	        });
-	    };
-	    Winner.prototype.hide = function () {
-	        this.visible = false;
-	    };
-	    return Winner;
-	}(PIXI.Container));
-	exports.Winner = Winner;
-
-
-/***/ },
-/* 62 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var TextTimer_1 = __webpack_require__(60);
-	var HupuAPI_1 = __webpack_require__(24);
-	var JsFunc_1 = __webpack_require__(21);
-	var SpriteGroup_1 = __webpack_require__(63);
-	var PixiEx_1 = __webpack_require__(57);
-	var TweenEx_1 = __webpack_require__(58);
-	var const_1 = __webpack_require__(27);
-	var WinTeam = (function (_super) {
-	    __extends(WinTeam, _super);
-	    function WinTeam(parent) {
-	        _super.call(this);
-	        parent.addChild(this);
-	        this.modal = new PIXI.Graphics;
-	        this.modal.drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT);
-	        this.modal.alpha = 0;
-	        this.addChild(this.modal);
-	        this.ctn = new PIXI.Container();
-	        this.addChild(this.ctn);
-	        this.ax = 453;
-	        this.ay = 428;
-	        var bg = new PIXI.Graphics().beginFill(0x222222)
-	            .drawRect(0, 0, 326, 326);
-	        this.ctn.addChildAt(bg, 0);
-	        this.msk = PixiEx_1.newBitmap({ url: '/img/panel/koa/hp/winMask.png' });
-	        this.ctn.addChild(this.msk);
-	        bg.x = this.ax;
-	        bg.y = this.ay;
-	        bg.mask = this.msk;
-	        this.fx = 731;
-	        this.fy = 200;
-	        this.bg = PixiEx_1.newBitmap({ url: '/img/panel/koa/hp/winBg.png' });
-	        this.ctn.alpha = 0;
-	        this.ctn.addChild(this.bg);
-	        this.setAvatar(HupuAPI_1._avatar('st.png'));
-	        var ftStyle = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontWeight: 'bold',
-	            fontSize: '60px', fill: "#fff"
-	        };
-	        this.ftName = new PIXI.Text('', ftStyle);
-	        this.ftName.x = 830;
-	        this.ftName.y = 203;
-	        this.ctn.addChild(this.ftName);
-	        ftStyle.fontSize = '40px';
-	        ftStyle.fontWeight = '';
-	        this.teamName = new PIXI.Text('', ftStyle);
-	        this.teamName.x = 200;
-	        this.teamName.y = 303;
-	        this.ctn.addChild(this.teamName);
-	        this.groupCtn = new PIXI.Container;
-	        this.groupCtn.x = 820;
-	        this.groupCtn.y = 563;
-	        this.ctn.addChild(this.groupCtn);
-	        var winGroupBg = new SpriteGroup_1.SpriteGroup({ invert: 208, img: '/img/panel/koa/hp/winGroup.png', count: 3 });
-	        this.winGroupMask = new SpriteGroup_1.SpriteGroup({ invert: 208, img: '/img/panel/koa/hp/winGroupMask.png', count: 3 });
-	        this.groupCtn.addChild(this.winGroupMask);
-	        this.groupCtn.addChild(winGroupBg);
-	        this.winIcon = new SpriteGroup_1.SpriteGroup({ invert: 208, img: '/img/panel/koa/hp/win.png', count: 3 });
-	        this.winIcon.x = 820;
-	        this.winIcon.y = 535;
-	        this.ctn.addChild(this.winIcon);
-	        var introStyle = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '20px', fill: "#fff",
-	            lineHeight: 33
-	        };
-	        this.introText = new PIXI.Text('', introStyle);
-	        this.introText.x = 812;
-	        this.introText.y = 445;
-	        this.ctn.addChild(this.introText);
-	        var tts = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '50px', fill: "#fff",
-	            fontWeight: 'bold'
-	        };
-	        var tt = new TextTimer_1.TextTimer('', tts);
-	        tt.x = 1200;
-	        tt.y = 695;
-	        PixiEx_1.setPivot(tt, 70, 25);
-	        tt.setTimeBySec(0);
-	        this.ctn.addChild(tt);
-	        this.durationText = tt;
-	    }
-	    WinTeam.prototype.setDuration = function (d) {
-	        var _this = this;
-	        this.durationText.setTimeBySec(0);
-	        var delay = Math.min(d / 60 * 1000, 3000);
-	        var dropFrame = 0;
-	        new TweenEx_1.TweenEx({ sec: 0 })
-	            .to({ sec: d }, delay)
-	            .update(function (t) {
-	            if (dropFrame < 0) {
-	                dropFrame = 1;
-	                var r = Math.random();
-	                _this.durationText.scale.x = (r % .5) + 1;
-	                _this.durationText.scale.y = (r % .5) + 1;
-	            }
-	            dropFrame--;
-	            _this.durationText.setTimeBySec(parseInt(t.sec));
-	        })
-	            .call(function () {
-	            _this.durationText.scale.x = 1;
-	            _this.durationText.scale.y = 1;
-	        })
-	            .start();
-	    };
-	    WinTeam.prototype.test = function () {
-	        this.setIntro('今日，一段三星Galaxy Note 7爆炸的视频在YouTube上疯传（相关搜索结果达到了约6,550条），据传视频中被炸伤的是美国好声音导师、著名嘻哈歌手Cee-Lo Green。视频画面中，当时一位长相似Cee-Lo Green的黑人男子在演播室后台接电话时，手机突然爆炸冒出火花，随后男子倒地（疑似重伤，甚至传出了被炸死的消息）。不少网友猜测，爆炸的手机');
-	        this.setIntro('一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十');
-	        this.setFtName('FTG');
-	        this.setTeamName('爆炸的手机');
-	        this.show();
-	    };
-	    WinTeam.prototype.setFtName = function (n) {
-	        this.ftName.text = n;
-	        this.ftName.x = Math.max((const_1.ViewConst.STAGE_WIDTH - this.ftName.width) * .5, 830);
-	    };
-	    WinTeam.prototype.setTeamName = function (n) {
-	        this.teamName.text = n;
-	        this.teamName.x = (const_1.ViewConst.STAGE_WIDTH - this.teamName.width) * .5;
-	    };
-	    WinTeam.prototype.setIntro = function (text) {
-	        this.introText.text = JsFunc_1.cnWrap(text, 58, 115);
-	    };
-	    WinTeam.prototype.setAvatar = function (url) {
-	        var _this = this;
-	        if (this.avatar) {
-	            if (this.avatar.parent)
-	                this.avatar.parent.removeChild(this.avatar);
-	            this.avatar = null;
-	        }
-	        this.avatar = PixiEx_1.newBitmap({
-	            url: url, x: this.ax, y: this.ay, callback: function (img) {
-	                _this.avatar.scale.x = _this.avatar.scale.y = 324 / img.height;
-	                _this.avatar.x -= (_this.avatar.width - 326) * .5;
-	            }
-	        });
-	        this.avatar.mask = this.msk;
-	        this.ctn.addChildAt(this.avatar, 1);
-	    };
-	    WinTeam.prototype._makeGroup = function (urlArr) {
-	    };
-	    WinTeam.prototype.setFtLogo = function (url) {
-	        var _this = this;
-	        if (this.ftLogo) {
-	            if (this.ftLogo.parent)
-	                this.ftLogo.parent.removeChild(this.ftLogo);
-	            this.ftLogo = null;
-	        }
-	        this.ftLogo = PixiEx_1.newBitmap({
-	            url: url, x: this.fx, y: this.fy, callback: function (img) {
-	                _this.ftLogo.scale.x = _this.ftLogo.scale.y = 82 / 120;
-	                _this.ctn.addChildAt(_this.ftLogo, 0);
-	            }
-	        });
-	    };
-	    WinTeam.prototype.setTeam = function (team) {
-	        console.log('set Team', team);
-	        this.setDuration(team.duration);
-	        var sa = team.scoreArr;
-	        this.setTeamName(sa[0] + ' - ' + sa[1]);
-	        this.setFtName(team.name);
-	        var mvp = team.mvp;
-	        this.setFtLogo('/img/ft/' + team.logo);
-	        var introMap = {};
-	        introMap['1.jpg'] = '源于虎扑黑话“干过羊”，经团员引申为Fuck the GOAT(greatest all time)。他强任他强，我干我的羊正是羊团的座右铭。';
-	        introMap['2.jpg'] = '在虎扑社区文化中“二院”（The second hospital）是脑洞打开的代名词。二院战团，同样以球风或飘逸或诡异的球员著称。';
-	        introMap['3.jpg'] = '四氧化三铁，黑粉用来调侃科比的黑话如今却成了一种情怀。铁团成员风格迥异，却也同样有一颗好胜的心。';
-	        introMap['4.jpg'] = '甘比亚是是虎扑社区中最重要的板块之一，甘比亚战团也是由一群欢乐的JRs组成的战团。';
-	        this.setIntro(introMap[team.logo]);
-	        this.show();
-	        while (this.groupCtn.children.length > 2) {
-	            this.groupCtn.removeChildAt(0);
-	        }
-	        if (team.winPlayerDocArr.length > 3)
-	            team.winPlayerDocArr.length = 3;
-	        var mvpMap = {};
-	        var winPlayer;
-	        for (var i = 0; i < team.winPlayerDocArr.length; i++) {
-	            var ctn = new PIXI.Graphics().beginFill(0x222222)
-	                .drawRect(0, 0, 82 * 2, 82);
-	            this.groupCtn.addChildAt(ctn, 0);
-	            ctn.x = 2 + i * 208;
-	            var playerDocArr = team.winPlayerDocArr[i];
-	            if (team.is1pWin) {
-	                winPlayer = playerDocArr[0];
-	            }
-	            else {
-	                winPlayer = playerDocArr[1];
-	            }
-	            if (!mvpMap[winPlayer.id]) {
-	                mvpMap[winPlayer.id] = { win: 0, player: winPlayer };
-	            }
-	            mvpMap[winPlayer.id].win++;
-	            var p1 = PixiEx_1.newBitmap({ url: HupuAPI_1._avatar(playerDocArr[0].avatar) });
-	            p1.scale.x = p1.scale.y = 82 / 120;
-	            var p2 = PixiEx_1.newBitmap({ url: HupuAPI_1._avatar(playerDocArr[1].avatar) });
-	            p2.x = 83 / p1.scale.x * 2;
-	            p2.scale.x = -1;
-	            p1.addChild(p2);
-	            ctn.mask = this.winGroupMask.spArr[i];
-	            ctn.addChild(p1);
-	        }
-	        if (team.is1pWin) {
-	            this.winIcon.x = 820 + 8;
-	        }
-	        else {
-	            this.winIcon.x = 820 + 90;
-	        }
-	        var mvpArr = JsFunc_1.mapToArr(mvpMap);
-	        var mvp;
-	        if (mvpArr.length == 3 || mvpArr.length == 1)
-	            mvp = winPlayer;
-	        else if (mvpArr.length == 2) {
-	            mvpArr[0].win > mvpArr[1].win ? mvp = mvpArr[0].player
-	                : mvp = mvpArr[1].player;
-	        }
-	        console.log('mvp', mvp);
-	        this.setAvatar(mvp.portrait);
-	    };
-	    WinTeam.prototype.show = function () {
-	        var _this = this;
-	        console.log('show win');
-	        new TweenEx_1.TweenEx(this.modal)
-	            .to({ alpha: 0.7 }, 100)
-	            .call(function () {
-	            TweenEx_1.TweenEx.to(_this.ctn, 100, { alpha: 1 });
-	        })
-	            .delay(10000)
-	            .call(function () {
-	            _this.hide();
-	        })
-	            .start();
-	    };
-	    WinTeam.prototype.hide = function () {
-	        var _this = this;
-	        new TweenEx_1.TweenEx(this.ctn)
-	            .to({ alpha: 0 }, 100)
-	            .call(function () {
-	            TweenEx_1.TweenEx.to(_this.modal, 100, { alpha: 0 });
-	        })
-	            .start();
-	    };
-	    return WinTeam;
-	}(PIXI.Container));
-	exports.WinTeam = WinTeam;
-
-
-/***/ },
-/* 63 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var Fx_1 = __webpack_require__(64);
-	var PixiEx_1 = __webpack_require__(57);
-	(function (Direction) {
-	    Direction[Direction["e"] = 0] = "e";
-	    Direction[Direction["w"] = 1] = "w";
-	    Direction[Direction["s"] = 2] = "s";
-	    Direction[Direction["n"] = 3] = "n";
-	})(exports.Direction || (exports.Direction = {}));
-	var Direction = exports.Direction;
-	var SpriteGroup = (function (_super) {
-	    __extends(SpriteGroup, _super);
-	    function SpriteGroup(options) {
-	        _super.call(this);
-	        this.spArr = [];
-	        var dir = options.dir || Direction.e;
-	        var flip = options.flip || 1;
-	        var flipY = options.flipY || 1;
-	        var count = options.count;
-	        var invert = options.invert;
-	        this._w = count * invert;
-	        for (var i = 0; i < count; i++) {
-	            var sp = PixiEx_1.newBitmap({ url: options.img });
-	            if (dir == Direction.e)
-	                sp.x = i * options.invert;
-	            else if (dir == Direction.w)
-	                sp.x = (count - 1 - i) * invert;
-	            else if (dir == Direction.s)
-	                sp.y = i * invert;
-	            else if (dir == Direction.n)
-	                sp.y = (count - 1 - i) * invert;
-	            sp.scale.x = flip;
-	            sp.scale.y = flipY;
-	            this.spArr.push(sp);
-	            this.addChild(sp);
-	        }
-	    }
-	    SpriteGroup.prototype.setNum = function (num) {
-	        for (var i = 0; i < this.spArr.length; i++) {
-	            var sp = this.spArr[i];
-	            if (i < num)
-	                this.onShowPoint(sp);
-	            else
-	                this.onHidePoint(sp);
-	        }
-	    };
-	    Object.defineProperty(SpriteGroup.prototype, "width", {
-	        get: function () {
-	            return this._w;
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    SpriteGroup.prototype.onShowPoint = function (sp) {
-	        sp.visible = true;
-	        Fx_1.blink3(sp);
-	    };
-	    SpriteGroup.prototype.onHidePoint = function (sp) {
-	        sp.visible = false;
-	    };
-	    return SpriteGroup;
-	}(PIXI.Container));
-	exports.SpriteGroup = SpriteGroup;
-
-
-/***/ },
+/* 61 */,
+/* 62 */,
+/* 63 */,
 /* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -5177,723 +3856,10 @@
 
 
 /***/ },
-/* 65 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var HupuAPI_1 = __webpack_require__(24);
-	var const_1 = __webpack_require__(27);
-	var SpriteGroup_1 = __webpack_require__(63);
-	var PixiEx_1 = __webpack_require__(57);
-	var St = (function (_super) {
-	    __extends(St, _super);
-	    function St(parent, is1p) {
-	        _super.call(this);
-	        parent.addChild(this);
-	        this.is1p = is1p;
-	        var bg;
-	        var dir;
-	        this.ay = 10;
-	        var fill;
-	        if (is1p) {
-	            dir = SpriteGroup_1.Direction.e;
-	            this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/koa/hp/blueSt.png' }));
-	            bg = new SpriteGroup_1.SpriteGroup({
-	                dir: SpriteGroup_1.Direction.e,
-	                invert: 60,
-	                img: '/img/panel/koa/hp/bgSt.png',
-	                count: 2
-	            });
-	            bg.x = 82;
-	            bg.y = 50;
-	            this.addChild(bg);
-	            this.ax = 9;
-	            fill = ['#c0dbff', '#c0dbff', '#3b52b3'];
-	        }
-	        else {
-	            this.ax = 213;
-	            dir = SpriteGroup_1.Direction.w;
-	            this.addChild(PixiEx_1.newBitmap({ url: '/img/panel/koa/hp/redSt.png' }));
-	            bg = new SpriteGroup_1.SpriteGroup({
-	                dir: SpriteGroup_1.Direction.w,
-	                invert: 60,
-	                img: '/img/panel/koa/hp/bgSt.png',
-	                count: 2
-	            });
-	            bg.x = 282 - bg.width - 78;
-	            bg.y = 50;
-	            this.addChild(bg);
-	            fill = ['#fff0f0', '#fff0f0', '#b33b3b'];
-	        }
-	        this.spg = new SpriteGroup_1.SpriteGroup({
-	            dir: dir,
-	            invert: 60,
-	            img: '/img/panel/koa/hp/st.png',
-	            count: 2
-	        });
-	        this.spg.x = bg.x;
-	        this.spg.y = bg.y;
-	        this.addChild(this.spg);
-	        this.setAvatar(HupuAPI_1._avatar('st.png'));
-	        var ns = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: '20px',
-	            fontStyle: 'normal',
-	            fontWeight: 'bold',
-	            fill: fill,
-	            stroke: '#000',
-	            strokeThickness: 3,
-	            fillGradientType: PIXI['TEXT_GRADIENT'].LINEAR_VERTICAL,
-	        };
-	        var nt = new PIXI.Text('', ns);
-	        nt.y = 15;
-	        nt.x = 82;
-	        this.nameText = nt;
-	        this.addChild(nt);
-	        var avtBg = new PIXI.Graphics()
-	            .beginFill(0xb4b4b4)
-	            .drawRect(this.ax, this.ay, 68, 68);
-	        this.addChildAt(avtBg, 0);
-	    }
-	    St.prototype.setNum = function (n) {
-	        this.spg.setNum(n);
-	    };
-	    St.prototype.setAvatar = function (url) {
-	        var _this = this;
-	        if (this.avatar) {
-	            this.avatar.parent.removeChild(this.avatar);
-	            this.avatar = null;
-	        }
-	        this.avatar = PixiEx_1.newBitmap({
-	            url: url, x: this.ax, y: this.ay, callback: function (img) {
-	                _this.avatar.scale.x = _this.avatar.scale.y = 60 / img.width;
-	                if (!_this.is1p) {
-	                    _this.avatar.scale.x *= -1;
-	                    _this.avatar.x = _this.ax + 60;
-	                }
-	            }
-	        });
-	        this.addChildAt(this.avatar, 1);
-	    };
-	    St.prototype.setName = function (name) {
-	        this.nameText.text = name;
-	        if (!this.is1p) {
-	            this.nameText.x = 282 - 82 - this.nameText.width;
-	        }
-	    };
-	    return St;
-	}(PIXI.Container));
-	exports.St = St;
-
-
-/***/ },
-/* 66 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var TweenEx_1 = __webpack_require__(58);
-	var Order_1 = __webpack_require__(67);
-	var const_1 = __webpack_require__(27);
-	var Fx_1 = __webpack_require__(64);
-	var PixiEx_1 = __webpack_require__(57);
-	var PickupAnimation = (function () {
-	    function PickupAnimation(pickupScene) {
-	        this.curIdx1p = 0;
-	        this.curIdx2p = 0;
-	        this.pickupDone = 0;
-	        this.texMap = {};
-	        this.orderPortraitY = 230;
-	        this.orderDone = 0;
-	        this.scene = pickupScene;
-	        this.pickPlayerInfoArr1p = [];
-	        this.pickPlayerInfoArr2p = [];
-	    }
-	    PickupAnimation.prototype.startPick = function (teamIdx1p, teamIdx2p, orderArr1p, orderArr2p) {
-	        var _this = this;
-	        this.orderArr1p = orderArr1p;
-	        this.orderArr2p = orderArr2p;
-	        var previewMap = {
-	            "1": [1],
-	            "2": [8, 7, 6, 5],
-	            "3": [1, 10, 9],
-	            "4": [1, 2, 11, 12],
-	            "5": [1, 2, 3, 12, 13, 14, 15, 16],
-	            "6": [8, 7, 6, 21],
-	            "7": [1, 2, 3, 4, 13, 25],
-	            "8": [8, 7, 6, 5, 20, 19, 18]
-	        };
-	        var preview1p = previewMap[teamIdx1p];
-	        var preview2p = previewMap[teamIdx2p];
-	        var i = 0;
-	        for (i = 0; i < preview1p.length; i++) {
-	            var pickupIdx = preview1p[i];
-	            this.previewPlayer(pickupIdx, 200 * i, true);
-	        }
-	        TweenEx_1.TweenEx.delayedCall(200 * i, function () {
-	            _this.pickupTeam(Number(teamIdx1p), _this.scene.pickupFrame1p, function () {
-	                _this.transToOrder();
-	            });
-	        });
-	        TweenEx_1.TweenEx.delayedCall(100, function () {
-	            var j = 0;
-	            for (; j < preview2p.length; j++) {
-	                var pickupIdx = preview2p[j];
-	                _this.previewPlayer(pickupIdx, 0.12 * j, false);
-	            }
-	            TweenEx_1.TweenEx.delayedCall(120 * j, function () {
-	                _this.pickupTeam(Number(teamIdx2p), _this.scene.pickupFrame2p, function () {
-	                    _this.transToOrder();
-	                });
-	            });
-	        });
-	    };
-	    PickupAnimation.prototype.previewPlayer = function (playerId, delay, is1p) {
-	        var _this = this;
-	        TweenEx_1.TweenEx.delayedCall(delay, function () {
-	            var pickupFrame = is1p ? _this.scene.pickupFrame1p : _this.scene.pickupFrame2p;
-	            var playerInfo = _this.movePickupFrame(playerId, pickupFrame);
-	            _this.setPlayerName(playerInfo.name, is1p, true);
-	            _this.setPortrait(playerInfo.portrait, is1p, false);
-	        });
-	    };
-	    PickupAnimation.prototype.setPlayerName = function (name, is1p, isPreview) {
-	        if (isPreview === void 0) { isPreview = false; }
-	        if (is1p) {
-	            this.scene.pickupName1pArr[this.curIdx1p].text = name;
-	            if (!isPreview)
-	                this.curIdx1p++;
-	        }
-	        else {
-	            var rightAlign = 1600;
-	            console.log('curIdx2p', this.curIdx2p);
-	            var name2p = this.scene.pickupName2pArr[this.curIdx2p];
-	            name2p.text = name;
-	            name2p.x = rightAlign - name2p.width;
-	            if (!isPreview)
-	                this.curIdx2p++;
-	        }
-	    };
-	    PickupAnimation.prototype.pickupTeam = function (teamIdx, pickupFrame, callback) {
-	        var _this = this;
-	        var i = 0;
-	        var delaySel = function () {
-	            TweenEx_1.TweenEx.delayedCall(200 + Math.random() * 300, function () {
-	                if (i < 4) {
-	                    _this.selectPlayer(teamIdx * 4 + i - 3, pickupFrame);
-	                    i++;
-	                    delaySel();
-	                }
-	                else {
-	                    pickupFrame.visible = false;
-	                    callback();
-	                }
-	            });
-	        };
-	        delaySel();
-	    };
-	    PickupAnimation.prototype.movePickupFrame = function (playerId, pickupFrame) {
-	        var playerInfo = this.scene.playerIdMap[playerId];
-	        if (playerInfo) {
-	            pickupFrame.x = playerInfo.x - 9;
-	            pickupFrame.y = playerInfo.y - 9;
-	            pickupFrame.alpha = 1;
-	        }
-	        else {
-	            console.log('no playerId:', playerId);
-	        }
-	        return playerInfo;
-	    };
-	    PickupAnimation.prototype.selectPlayer = function (playerId, pickupFrame) {
-	        var playerInfo = this.movePickupFrame(playerId, pickupFrame);
-	        var is1p = pickupFrame == this.scene.pickupFrame1p;
-	        if (is1p)
-	            this.pickPlayerInfoArr1p.push(playerInfo);
-	        else
-	            this.pickPlayerInfoArr2p.push(playerInfo);
-	        this.setPortrait(playerInfo.portrait, is1p, true);
-	        this.setPlayerName(playerInfo.name, is1p);
-	    };
-	    PickupAnimation.prototype.setPortrait = function (url, is1p, isBlink) {
-	        var _this = this;
-	        if (isBlink === void 0) { isBlink = false; }
-	        var setTex = function (tex) {
-	            var x, y = 687, p;
-	            if (is1p) {
-	                x = 310;
-	                p = _this.scene.portrait1p;
-	            }
-	            else {
-	                x = 1210;
-	                p = _this.scene.portrait2p;
-	            }
-	            p.x = x + (400 - tex.width) * .5;
-	            p.y = y - tex.height;
-	            p.texture = tex;
-	            if (isBlink)
-	                Fx_1.blink2({ target: p, time: 60, loop: 5 });
-	        };
-	        if (!this.texMap[url])
-	            PixiEx_1.loadRes(url, function (img) {
-	                var tex = PixiEx_1.imgToTex(img);
-	                _this.texMap[url] = tex;
-	                setTex(tex);
-	            });
-	        else
-	            setTex(this.texMap[url]);
-	    };
-	    PickupAnimation.prototype.transToOrder = function () {
-	        var _this = this;
-	        console.log('transToOrder');
-	        if (this.pickupDone > 0) {
-	            TweenEx_1.TweenEx.delayedCall(500, function () {
-	                TweenEx_1.TweenEx.to(_this.scene.portrait1p, 50, { alpha: 0 });
-	                TweenEx_1.TweenEx.to(_this.scene.portrait2p, 50, { alpha: 0 });
-	                TweenEx_1.TweenEx.to(_this.scene.portraitBg1p, 80, { x: -_this.scene.portraitBg1p.width });
-	                TweenEx_1.TweenEx.to(_this.scene.portraitBg2p, 80, { x: const_1.ViewConst.STAGE_WIDTH });
-	                for (var i = 0; i < _this.scene.nameBg1pArr.length; i++) {
-	                    var name1p = _this.scene.pickupName1pArr[i];
-	                    var name2p = _this.scene.pickupName2pArr[i];
-	                    TweenEx_1.TweenEx.to(name1p, 50, { alpha: 0 });
-	                    TweenEx_1.TweenEx.to(name2p, 50, { alpha: 0 });
-	                    var nameBg = _this.scene.nameBg1pArr[i];
-	                    TweenEx_1.TweenEx.to(nameBg, 100 + 80 * i, { x: -nameBg.width });
-	                    var nameBg2p = _this.scene.nameBg2pArr[i];
-	                    TweenEx_1.TweenEx.to(nameBg2p, 100 + 80 * i, { x: const_1.ViewConst.STAGE_WIDTH });
-	                }
-	                TweenEx_1.TweenEx.to(_this.scene.title, 300, { y: -380 });
-	                TweenEx_1.TweenEx.to(_this.scene.bg, 500, { y: -132 });
-	                TweenEx_1.TweenEx.delayedCall(200, function () {
-	                    _this.fadeInOrder();
-	                });
-	            });
-	        }
-	        this.pickupDone++;
-	    };
-	    PickupAnimation.prototype.fadeInOrder = function () {
-	        var _this = this;
-	        this.order = new Order_1.OrderScene(this.scene.parent, this.pickPlayerInfoArr1p.concat(this.pickPlayerInfoArr2p));
-	        this.order.bg.alpha = 0;
-	        TweenEx_1.TweenEx.to(this.order.bg, 800, { alpha: 1 });
-	        TweenEx_1.TweenEx.delayedCall(200, function () {
-	            for (var i = 0; i < _this.order.portraitArr1p.length; i++) {
-	                var ctn1p = _this.order.portraitArr1p[i];
-	                var ctn2p = _this.order.portraitArr2p[i];
-	                console.log('tween to y');
-	                TweenEx_1.TweenEx.to(ctn1p, 100 + i * 80, { y: 40 + (3 - i) * _this.orderPortraitY });
-	                TweenEx_1.TweenEx.to(ctn2p, 100 + i * 80, { y: 40 + (3 - i) * _this.orderPortraitY });
-	            }
-	        });
-	        this.order.select1p.pivot = new PIXI.Point(210, 39);
-	        this.order.select2p.pivot = new PIXI.Point(210, 39);
-	        TweenEx_1.TweenEx.to(this.order.select1p, 300, { x: 375 + 210 });
-	        TweenEx_1.TweenEx.to(this.order.select2p, 300, { x: 1275 + 210 });
-	        TweenEx_1.TweenEx.delayedCall(800, function () {
-	            _this.pin(_this.orderArr1p, _this.order.portraitArr1p, _this.order.select1p);
-	            _this.pin(_this.orderArr2p, _this.order.portraitArr2p, _this.order.select2p);
-	        });
-	    };
-	    PickupAnimation.prototype.orderDown = function (portraitArr) {
-	        var len = portraitArr.length;
-	        var p0 = portraitArr.shift();
-	        if (p0) {
-	            console.log('curIdx:', p0['pickupIdx']);
-	            p0.parent.addChildAt(p0, 3 - portraitArr.length);
-	            TweenEx_1.TweenEx.to(p0, 200, { y: p0.y - (len - 1) * this.orderPortraitY });
-	            for (var i = 0; i < portraitArr.length; i++) {
-	                var p = portraitArr[i];
-	                p.filters = [p['filter']];
-	                var py = p.y + this.orderPortraitY;
-	                TweenEx_1.TweenEx.to(p, 200, { y: py });
-	            }
-	            portraitArr.push(p0);
-	            portraitArr[0].filters = null;
-	        }
-	    };
-	    PickupAnimation.prototype.pin = function (pickupIdxArr, portraitArr, selectSP) {
-	        var _this = this;
-	        if (portraitArr[0] && pickupIdxArr[0] == portraitArr[0]['pickupIdx']) {
-	            this.orderDown(portraitArr);
-	            var p0_1 = portraitArr.pop();
-	            pickupIdxArr.shift();
-	            var numSp = selectSP['numArr'].shift();
-	            p0_1.addChild(numSp);
-	            new TweenEx_1.TweenEx(p0_1['white'])
-	                .to({ alpha: 1 }, 100)
-	                .to({ alpha: 0 }, 100)
-	                .call(function () {
-	                p0_1.filters = [p0_1['filter']];
-	            })
-	                .start();
-	            var sp_1 = selectSP['spArr'].shift();
-	            new TweenEx_1.TweenEx(selectSP.scale)
-	                .to({ y: 0 }, 80)
-	                .call(function () {
-	                if (sp_1) {
-	                    selectSP.addChild(sp_1);
-	                }
-	                else
-	                    selectSP.visible = false;
-	            })
-	                .to({ y: 1 }, 80)
-	                .start();
-	            if (pickupIdxArr.length)
-	                TweenEx_1.TweenEx.delayedCall(400 - Math.random() * 200, function () {
-	                    _this.pin(pickupIdxArr, portraitArr, selectSP);
-	                });
-	            else {
-	                this.orderDone++;
-	                if (this.orderDone > 1)
-	                    TweenEx_1.TweenEx.delayedCall(3500, function () {
-	                        _this.fadeOut();
-	                    });
-	            }
-	        }
-	        else {
-	            this.orderDown(portraitArr);
-	            TweenEx_1.TweenEx.delayedCall(400 - Math.random() * 200, function () {
-	                _this.pin(pickupIdxArr, portraitArr, selectSP);
-	            });
-	        }
-	    };
-	    PickupAnimation.prototype.fadeOut = function () {
-	        var _this = this;
-	        var removeScene = function () {
-	            while (_this.order.children.length > 2) {
-	                _this.order.removeChildAt(0);
-	            }
-	            _this.scene.removeChildren();
-	        };
-	        var t1 = 200;
-	        new TweenEx_1.TweenEx(this.order.blackTop)
-	            .to({ y: 0 }, t1)
-	            .call(function () {
-	            removeScene();
-	        })
-	            .to({ y: -const_1.ViewConst.STAGE_HEIGHT * .5 }, t1)
-	            .start();
-	        new TweenEx_1.TweenEx(this.order.blackBottom)
-	            .to({ y: const_1.ViewConst.STAGE_HEIGHT * .5 }, t1)
-	            .call(function () {
-	            removeScene();
-	        })
-	            .to({ y: const_1.ViewConst.STAGE_HEIGHT }, t1)
-	            .start();
-	    };
-	    return PickupAnimation;
-	}());
-	exports.PickupAnimation = PickupAnimation;
-
-
-/***/ },
-/* 67 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var Pickup_1 = __webpack_require__(68);
-	var const_1 = __webpack_require__(27);
-	var PixiEx_1 = __webpack_require__(57);
-	var OrderScene = (function (_super) {
-	    __extends(OrderScene, _super);
-	    function OrderScene(stage, playerPortraitArr) {
-	        _super.call(this);
-	        stage.addChild(this);
-	        this.bg = PixiEx_1.newBitmap({ url: '/img/panel/koa/order/bg.png' });
-	        this.addChild(this.bg);
-	        this.portraitArr1p = [];
-	        this.portraitArr2p = [];
-	        var style = JSON.parse(JSON.stringify(Pickup_1.pickNameStyle));
-	        style['fontSize'] = '30px';
-	        var f = new PIXI.filters.ColorMatrixFilter();
-	        f.brightness(0.4);
-	        var ctn = new PIXI.Container();
-	        this.addChildAt(ctn, 1);
-	        for (var i = 0; i < 4; i++) {
-	            var ctn1p = new PIXI.Container();
-	            if (i > 0)
-	                ctn1p.filters = [f];
-	            ctn1p.x = 300;
-	            ctn1p.y = -300;
-	            ctn.addChildAt(ctn1p, 0);
-	            ctn1p.addChild(PixiEx_1.newBitmap({ x: -250, y: 200, url: '/img/panel/koa/pickup/blueName.png' }));
-	            var pickInfo = playerPortraitArr.shift();
-	            var name1p = new PIXI.Text(pickInfo.name, style);
-	            name1p.x = -230;
-	            name1p.y = 215;
-	            ctn1p.addChild(name1p);
-	            ctn1p['sp'] = PixiEx_1.newBitmap({ url: pickInfo.portrait });
-	            ctn1p['white'] = PixiEx_1.newWhiteMask(pickInfo.portrait);
-	            ctn1p['white'].alpha = 0;
-	            ctn1p['sp'].addChild(ctn1p['white']);
-	            ctn1p['filter'] = f;
-	            ctn1p['pickupIdx'] = pickInfo.pickupIdx;
-	            ctn1p.addChild(ctn1p['sp']);
-	            var bw = PixiEx_1.newBitmap({ url: '/img/panel/koa/order/blueWave.png' });
-	            bw.x = -39;
-	            bw.y = 262;
-	            ctn1p.addChild(bw);
-	            this.portraitArr1p.push(ctn1p);
-	        }
-	        ctn = new PIXI.Container();
-	        this.addChildAt(ctn, 1);
-	        for (var i = 0; i < 4; i++) {
-	            var ctn2p = new PIXI.Container();
-	            if (i > 0)
-	                ctn2p.filters = [f];
-	            ctn2p.x = 1200;
-	            ctn2p.y = -300;
-	            ctn.addChildAt(ctn2p, 0);
-	            ctn2p.addChild(PixiEx_1.newBitmap({ x: 250, y: 200, url: '/img/panel/koa/pickup/redName.png' }));
-	            var pickInfo = playerPortraitArr.shift();
-	            var name2p = new PIXI.Text(pickInfo.name, style);
-	            name2p.x = 230 + 420 - name2p.width;
-	            name2p.y = 215;
-	            ctn2p.addChild(name2p);
-	            ctn2p['sp'] = PixiEx_1.newBitmap({ url: pickInfo.portrait });
-	            ctn2p['white'] = PixiEx_1.newWhiteMask(pickInfo.portrait);
-	            ctn2p['white'].alpha = 0;
-	            ctn2p['sp'].addChild(ctn2p['white']);
-	            ctn2p['filter'] = f;
-	            ctn2p['pickupIdx'] = pickInfo.pickupIdx;
-	            ctn2p.addChild(ctn2p['sp']);
-	            var rw = PixiEx_1.newBitmap({ url: '/img/panel/koa/order/redWave.png' });
-	            rw.x = -39;
-	            rw.y = 262;
-	            ctn2p.addChild(rw);
-	            this.portraitArr2p.push(ctn2p);
-	        }
-	        var pivot = new PIXI.Point(210, 39);
-	        var blue1st = PixiEx_1.newBitmap({ url: '/img/panel/koa/order/blue1st.jpg' });
-	        blue1st.pivot = pivot;
-	        this.select1p = blue1st;
-	        blue1st['spArr'] =
-	            [PixiEx_1.newBitmap({ url: '/img/panel/koa/order/blue2nd.png' }),
-	                PixiEx_1.newBitmap({ url: '/img/panel/koa/order/blue3rd.png' })];
-	        blue1st['numArr'] = [
-	            PixiEx_1.newBitmap({ x: 345, y: 110, url: '/img/panel/koa/order/1.png' }),
-	            PixiEx_1.newBitmap({ x: 345, y: 110, url: '/img/panel/koa/order/2.png' }),
-	            PixiEx_1.newBitmap({ x: 345, y: 110, url: '/img/panel/koa/order/3.png' }),
-	            PixiEx_1.newBitmap({ x: 345, y: 110, url: '/img/panel/koa/order/st.png' }),
-	        ];
-	        blue1st.y = 970 + pivot.y;
-	        this.addChild(blue1st);
-	        var red1st = PixiEx_1.newBitmap({ url: '/img/panel/koa/order/red1st.jpg' });
-	        red1st.pivot = pivot;
-	        this.select2p = red1st;
-	        red1st['spArr'] = [PixiEx_1.newBitmap({ url: '/img/panel/koa/order/red2nd.png' }),
-	            PixiEx_1.newBitmap({ url: '/img/panel/koa/order/red3rd.png' })];
-	        red1st['numArr'] = [
-	            PixiEx_1.newBitmap({ x: -40, y: 110, url: '/img/panel/koa/order/1.png' }),
-	            PixiEx_1.newBitmap({ x: -40, y: 110, url: '/img/panel/koa/order/2.png' }),
-	            PixiEx_1.newBitmap({ x: -40, y: 110, url: '/img/panel/koa/order/3.png' }),
-	            PixiEx_1.newBitmap({ x: -40, y: 110, url: '/img/panel/koa/order/st.png' }),
-	        ];
-	        red1st.x = const_1.ViewConst.STAGE_WIDTH;
-	        red1st.y = blue1st.y;
-	        this.addChild(red1st);
-	        this.blackTop = new PIXI.Graphics();
-	        this.blackTop.drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT * .5);
-	        this.blackTop.y = -const_1.ViewConst.STAGE_HEIGHT * .5;
-	        this.addChild(this.blackTop);
-	        this.blackBottom = new PIXI.Graphics();
-	        this.blackBottom.drawRect(0, 0, const_1.ViewConst.STAGE_WIDTH, const_1.ViewConst.STAGE_HEIGHT * .5);
-	        this.blackBottom.y = const_1.ViewConst.STAGE_HEIGHT;
-	        this.addChild(this.blackBottom);
-	    }
-	    return OrderScene;
-	}(PIXI.Container));
-	exports.OrderScene = OrderScene;
-
-
-/***/ },
-/* 68 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var TweenEx_1 = __webpack_require__(58);
-	var HupuAPI_1 = __webpack_require__(24);
-	var const_1 = __webpack_require__(27);
-	var Fx_1 = __webpack_require__(64);
-	var PixiEx_1 = __webpack_require__(57);
-	var PickupPlayerInfo = (function () {
-	    function PickupPlayerInfo(options) {
-	        this.x = options.x;
-	        this.y = options.y;
-	    }
-	    return PickupPlayerInfo;
-	}());
-	exports.PickupPlayerInfo = PickupPlayerInfo;
-	exports.pickNameStyle = {
-	    fontFamily: const_1.FontName.MicrosoftYahei,
-	    fontSize: '40px',
-	    fontStyle: 'normal',
-	    fontWeight: 'bold',
-	    fill: '#fff',
-	    stroke: '#4a1850',
-	    strokeThickness: 5,
-	    dropShadow: false,
-	    dropShadowColor: '#000000',
-	    dropShadowAngle: Math.PI / 6,
-	    dropShadowDistance: 6,
-	    wordWrap: true,
-	    wordWrapWidth: 500
-	};
-	var PickupScene = (function (_super) {
-	    __extends(PickupScene, _super);
-	    function PickupScene(stage, playerMap) {
-	        _super.call(this);
-	        this.playerIdMap = {};
-	        stage.addChild(this);
-	        this.bg = PixiEx_1.newBitmap({ url: '/img/panel/koa/pickup/bg.png' });
-	        this.addChild(this.bg);
-	        this.title = PixiEx_1.newBitmap({ url: '/img/panel/koa/pickup/title.png', x: 96 });
-	        this.addChild(this.title);
-	        this.titleText = new PIXI.Text('KING OF AMATEUR', exports.pickNameStyle);
-	        this.titleText.x = 670;
-	        this.titleText.y = 35;
-	        this.title.addChild(this.titleText);
-	        this.portraitBg1p = PixiEx_1.newBitmap({ x: 300, y: 444, url: '/img/panel/koa/pickup/blueBg.png' });
-	        this.addChild(this.portraitBg1p);
-	        this.portraitBg2p = PixiEx_1.newBitmap({ x: 1200, y: 444, url: '/img/panel/koa/pickup/redBg.png' });
-	        this.addChild(this.portraitBg2p);
-	        this.initName();
-	        this.initPlayerData(playerMap);
-	    }
-	    PickupScene.prototype.initPlayerData = function (playerMap) {
-	        var teamPos = [
-	            { x: 245, y: 13, flip: 1 },
-	            { x: 1300, y: 13, flip: -1 },
-	            { x: 189, y: 110, flip: 1 },
-	            { x: 580, y: 110, flip: 1 },
-	            { x: 970, y: 110, flip: -1 },
-	            { x: 1365, y: 110, flip: -1 },
-	            { x: 528, y: 204, flip: 1 },
-	            { x: 1027, y: 204, flip: -1 },
-	        ];
-	        var invert = 95;
-	        var pickupIdx = 1;
-	        var r = 13;
-	        var reverseTeam = [1, 3, 4, 7];
-	        for (var _i = 0, teamPos_1 = teamPos; _i < teamPos_1.length; _i++) {
-	            var tp = teamPos_1[_i];
-	            for (var i = 0; i < 4; i++) {
-	                var px = tp.x + i * 95;
-	                if (tp.flip == 1) {
-	                    px = tp.x + (3 - i) * 95;
-	                }
-	                var p = new PickupPlayerInfo({ x: px, y: tp.y });
-	                var pDoc = playerMap[pickupIdx];
-	                p.name = pDoc.name;
-	                p.portrait = pDoc.portrait;
-	                p.avatar = pDoc.avatar;
-	                this.playerIdMap[pickupIdx] = p;
-	                p.pickupIdx = pickupIdx;
-	                var ax = p.x - this.title.x;
-	                var ay = p.y;
-	                var msk = new PIXI.Graphics();
-	                msk.beginFill(0xff0000, 0.5);
-	                msk.moveTo(17, 4);
-	                msk.lineTo(72, 4);
-	                msk.lineTo(72 + r, 4 + r);
-	                msk.lineTo(72 + r, 72);
-	                msk.lineTo(72, 72 + r);
-	                msk.lineTo(17, 72 + r);
-	                msk.lineTo(17 - r, 72);
-	                msk.lineTo(17 - r, 4 + r);
-	                msk.x = ax;
-	                msk.y = ay;
-	                this.title.addChild(msk);
-	                var avtBg = new PIXI.Graphics().beginFill(0x222222)
-	                    .drawRect(0, 0, 88, 88);
-	                avtBg.x = ax;
-	                avtBg.y = ay;
-	                avtBg.mask = msk;
-	                this.title.addChild(avtBg);
-	                var avt = PixiEx_1.newBitmap({ x: ax, y: ay, url: HupuAPI_1._avatar(pDoc.avatar) });
-	                avt.scale.x = avt.scale.y = 88 / 120;
-	                if (tp.flip < 0) {
-	                    avt.scale.x *= tp.flip;
-	                    avt.x += 88;
-	                }
-	                avt.mask = msk;
-	                this.title.addChild(avt);
-	                this.title.addChild(PixiEx_1.newBitmap({ x: ax, y: ay, url: '/img/panel/koa/pickup/avatar.png' }));
-	                pickupIdx++;
-	            }
-	        }
-	        console.log('playerIdMap', this.playerIdMap);
-	        var _1p = PixiEx_1.newBitmap({ url: '/img/panel/koa/pickup/pickupFrame.png' });
-	        _1p.alpha = 0;
-	        _1p.x = 0;
-	        _1p.y = 0;
-	        this.addChild(_1p);
-	        this.pickupFrame1p = _1p;
-	        Fx_1.blink2({ target: _1p, time: 50 });
-	        var _2p = PixiEx_1.newBitmap({ url: '/img/panel/koa/pickup/pickupFrame.png' });
-	        _2p.alpha = 0;
-	        _2p.x = 0;
-	        _2p.y = 0;
-	        this.addChild(_2p);
-	        this.pickupFrame2p = _2p;
-	        Fx_1.blink2({ target: _2p, time: 50 });
-	        var ptt1p = new PIXI.Sprite();
-	        this.portrait1p = ptt1p;
-	        this.addChild(ptt1p);
-	        var ptt2p = new PIXI.Sprite();
-	        this.portrait2p = ptt2p;
-	        this.addChild(ptt2p);
-	    };
-	    PickupScene.prototype.initName = function () {
-	        this.pickupName1pArr = [];
-	        this.pickupName2pArr = [];
-	        this.nameBg1pArr = [];
-	        this.nameBg2pArr = [];
-	        var ivt = 90;
-	        for (var i = 0; i < 4; i++) {
-	            var blueNameBg = PixiEx_1.newBitmap({ x: -400, y: 710 + i * ivt, url: '/img/panel/koa/pickup/blueName.png' });
-	            this.addChild(blueNameBg);
-	            var name1p = new PIXI.Text('', exports.pickNameStyle);
-	            name1p.x = 330;
-	            name1p.y = 718 + i * ivt;
-	            this.addChild(name1p);
-	            this.pickupName1pArr.push(name1p);
-	            var redNameBg = PixiEx_1.newBitmap({ x: const_1.ViewConst.STAGE_WIDTH, y: 710 + i * ivt, url: '/img/panel/koa/pickup/redName.png' });
-	            this.addChild(redNameBg);
-	            this.nameBg1pArr.push(blueNameBg);
-	            this.nameBg2pArr.push(redNameBg);
-	            this.fadeInNameBg(blueNameBg, 0.02 + i * .07, { x: 300 });
-	            this.fadeInNameBg(redNameBg, 0.02 + i * .07, { x: 1200 });
-	            var name2p = new PIXI.Text('', exports.pickNameStyle);
-	            name2p.y = name1p.y;
-	            this.addChild(name2p);
-	            this.pickupName2pArr.push(name2p);
-	        }
-	    };
-	    PickupScene.prototype.fadeInNameBg = function (target, delay, pos) {
-	        TweenEx_1.TweenEx.delayedCall(delay, function () {
-	            TweenEx_1.TweenEx.to(target, 80, pos);
-	        });
-	    };
-	    return PickupScene;
-	}(PIXI.Container));
-	exports.PickupScene = PickupScene;
-
-
-/***/ },
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
 /* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -5936,12 +3902,7 @@
 
 
 /***/ },
-/* 70 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"box\" v-if='isOp' style=\"opacity:0.8;width:1000px;left:100px;top:50px\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            <label class=\"label\">出场顺序</label>\r\n            <div class=\"columns\">\r\n                <div class=\"column\">\r\n                    <button class=\"button is-medium\" @click=\"onPickup(true)\">1P</button>\r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer1p.name}}]</label>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(true,-1)\"> -1</button>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(true,1)\">+1</button> {{orderArr1p|json}}\r\n                    <br>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(true,-1)\">犯规 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(true,1)\">犯规 +1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(true,-1)\">援助 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(true,1)\">援助 +1</button>\r\n                    <br>\r\n                    <p v-for=\"player in orderPlayerDocArr1p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(0,player)\"> {{player.id +' ' +player.name}} {{player.isDead?\"败\":\"\"}}</a>\r\n                    </p>\r\n                </div>\r\n                <div class=\"column\">\r\n                    <button class=\"button is-medium\" @click=\"onPickup(false)\">2P</button>\r\n                    <label class=\"label\" style=\"font-size:20px\">[{{gamePlayer2p.name}}]</label>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(false,-1)\"> -1</button>\r\n                    <button class=\"button is-large\" @click=\"onSetBlood(false,1)\"> +1</button>{{orderArr2p|json}}\r\n                    <br>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(false,-1)\">犯规 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetFoul(false,1)\">犯规 +1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(false,-1)\">援助 -1</button>\r\n                    <button class=\"button is-medium\" @click=\"onSetSt(false,1)\">援助 +1</button>\r\n                    <br>\r\n                    <p v-for=\"player in orderPlayerDocArr2p\">\r\n                        <img :src=\"player.portrait\" style=\"width:40px\">\r\n                        <a style=\"font-size:20px\" @click=\"onStartPlayer(1,player)\"> {{player.id +' ' +player.name}} {{player.isDead?\"败\":\"\"}} </a>\r\n                    </p>\r\n                </div>\r\n            </div>\r\n\r\n            <p>\r\n                <div class=\"tabs is-boxed\">\r\n                    <ul>\r\n                        <li v-for=\"teamIdx in 8\"><a @click=\"onTabTeam($event,teamIdx)\">{{teamNameArr[teamIdx-1]}}</a></li>\r\n                    </ul>\r\n                </div>\r\n                <div v-for=\"player in playerDocArr\">\r\n                    <a class=\"box\" style=\"font-size:15px\" @click='onPickupPlayer(player)'> <img :src=\"player.portrait\" style=\"width:60px\"> {{player.id +' ' +player.name}}</a>\r\n                    <p>\r\n                </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            <button class=\"button is-large\" @click=\"onShowPickup\">出阵</button>\r\n            <button class=\"button is-large\" @click=\"onStartGame(false)\">开始</button>\r\n            <button class=\"button is-large\" @click=\"onStartGame(true)\">开始 No fx</button>\r\n            <button class=\"button is-medium\" @click=\"onHideSt()\">援助 隐藏</button>\r\n            <p>\r\n                <button class=\"button is-large\" @click=\"onToggleTimer()\">Toggle</button>\r\n                <button class=\"button is-large\" @click=\"onResetTimer()\">Reset</button>\r\n                <p>\r\n                    <hr>\r\n                    <div class=\"control\">\r\n                        <label class=\"label\">Bracket场次</label>\r\n                        <input class=\"input\" id=\"bracketIdx\" type=\"text\" v-model='bracketIdx' style=\"width:50px\" />\r\n                        <button class=\"button \" @click=\"onCommitGame()\">单场结算</button>\r\n                    </div>\r\n                    <p class=\"control\">\r\n                        <label class=\"label\">蓝队比分-红队比分</label>\r\n                        <input class=\"input\" type=\"text\" v-model='bracketInfo' style=\"width:150px\" />\r\n                    </p>\r\n                    <button class=\"button is-large\" @click=\"onCommitTeam()\">战团结算</button>\r\n                    <hr>\r\n                    <button class=\"button is-large\" @click=\"onReloadDB()\">reload db</button>\r\n\r\n\r\n        </div>\r\n    </div>\r\n</div>";
-
-/***/ },
+/* 70 */,
 /* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -9464,12 +7425,9 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var const_1 = __webpack_require__(27);
-	var JsFunc_1 = __webpack_require__(21);
 	var PixiEx_1 = __webpack_require__(57);
 	var TweenEx_1 = __webpack_require__(58);
 	var BasePanel_1 = __webpack_require__(89);
-	var BracketGroup_1 = __webpack_require__(79);
-	var Pick8_1 = __webpack_require__(98);
 	var ScoreRank_1 = __webpack_require__(99);
 	var BottomNotice_1 = __webpack_require__(100);
 	var NoticeV2_1 = __webpack_require__(101);
@@ -9477,8 +7435,6 @@
 	var RankV2_1 = __webpack_require__(104);
 	var ScrollTextV2_1 = __webpack_require__(106);
 	var Champion_1 = __webpack_require__(107);
-	var Com2017_1 = __webpack_require__(108);
-	var Group_1 = __webpack_require__(109);
 	var LogoFx_1 = __webpack_require__(110);
 	var ScoreFx_1 = __webpack_require__(111);
 	var TagFx_1 = __webpack_require__(112);
@@ -9558,63 +7514,6 @@
 	        this.medal.y = 544;
 	        this.winPanel.addChild(this.medal);
 	    }
-	    Event2017.prototype.showWin = function (player) {
-	        var _this = this;
-	        var level = Number(player.level);
-	        var medal = level;
-	        if (medal > 0) {
-	            var medalUrl_1 = '/img/panel/score2017/medal' + medal + '.png';
-	            if (!this._texMap[medalUrl_1])
-	                JsFunc_1.loadImg(medalUrl_1, function (img) {
-	                    _this.medal.texture = _this._texMap[medalUrl_1] = PixiEx_1.imgToTex(img);
-	                });
-	            else
-	                this.medal.texture = this._texMap[medalUrl_1];
-	            this.medal.visible = true;
-	        }
-	        else
-	            this.medal.visible = false;
-	        var avatar = player.avatar;
-	        var ftName = Com2017_1.getFtName(player.groupId);
-	        this.pName.text = player.name;
-	        this.pIntro.text = JsFunc_1.cnWrap('参赛宣言：' + player.intro, 49, 98);
-	        this.pWeight.text = player.weight + " KG";
-	        this.pHeight.text = player.height + " CM";
-	        this.ftName.text = ftName;
-	        BracketGroup_1.fitWidth(this.ftName, 155, 50);
-	        this.winLose.text = player.winAmount + ' 胜 / ' + player.loseAmount + ' 负';
-	        this.winLose.x = 935 - this.winLose.width * .5;
-	        this.pRankScore.text = player.roundScore;
-	        this.pRankScore.x = 1265 - this.pRankScore.width * 0.5;
-	        if (!this._texMap[avatar])
-	            PixiEx_1.loadRes(avatar, function (img) {
-	                _this.avatar.texture = _this._texMap[avatar] = PixiEx_1.imgToTex(img);
-	                _this.avatar.texture['w'] = img.width;
-	                _this.avatar.texture['h'] = img.height;
-	            }, true);
-	        else
-	            this.avatar.texture = this._texMap[avatar];
-	        console.log('tex width', this.avatar.texture['w']);
-	        this.avatar.height = this.avatar.width = 213;
-	        var ftUrl = Com2017_1.getFtLogoUrl2(player.groupId);
-	        if (!this._texMap[ftUrl])
-	            JsFunc_1.loadImg(ftUrl, function (img) {
-	                _this.ftLogo.texture = _this._texMap[ftUrl] = PixiEx_1.imgToTex(img);
-	                _this.ftLogo.visible = true;
-	            }, function (e) {
-	                console.log('fterror', e);
-	                _this.ftLogo.visible = false;
-	            });
-	        else {
-	            this.ftLogo.texture = this._texMap[ftUrl];
-	            this.ftLogo.visible = true;
-	        }
-	        this.ftLogo.width = this.ftLogo.height = 56;
-	        this.winPanel.visible = true;
-	        TweenEx_1.TweenEx.delayedCall(6000, function () {
-	            _this.winPanel.visible = false;
-	        });
-	    };
 	    Event2017.prototype.showNotice = function (data) {
 	        if (!this.noticeV2)
 	            this.noticeV2 = new NoticeV2_1.NoticeV2(this);
@@ -9665,15 +7564,6 @@
 	            this.addChild(this.bdBg);
 	        }
 	        this.bdBg.visible = v;
-	    };
-	    Event2017.prototype.showGroup = function (data) {
-	        if (!this.groupPanel) {
-	            this.groupPanel = new Group_1.Group(this);
-	        }
-	        this.groupPanel.show(data.group, data.playerArr);
-	    };
-	    Event2017.prototype.hideGroup = function () {
-	        this.groupPanel.hide();
 	    };
 	    Event2017.prototype.showTopInfo = function (progressText, roundText) {
 	        if (!this.topInfo)
@@ -9737,7 +7627,6 @@
 	        BasePanel_1.showPanel(ScrollTextV2_1.ScrollTextV2, data, this);
 	    };
 	    Event2017.prototype.showPick8 = function (data) {
-	        Pick8_1.Pick8Layer.get(this).show(data);
 	    };
 	    Event2017.prototype.showVsList = function (data) {
 	    };
@@ -9750,107 +7639,7 @@
 
 
 /***/ },
-/* 98 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var PixiEx_1 = __webpack_require__(57);
-	var ImgLoader_1 = __webpack_require__(74);
-	var BasePanel_1 = __webpack_require__(89);
-	var TextFac_1 = __webpack_require__(78);
-	var const_1 = __webpack_require__(27);
-	var Pick8 = (function (_super) {
-	    __extends(Pick8, _super);
-	    function Pick8(parent) {
-	        var _this = this;
-	        _super.call(this, parent);
-	        this.isLoaded = false;
-	        var url_bg = '/img/panel/worldwar/pick8/bg.png';
-	        ImgLoader_1.imgLoader.loadTexArr([url_bg], function (_) {
-	            var bg = PixiEx_1.newBitmap({ url: url_bg });
-	            _this.addChild(bg);
-	            _this.vsPlayerArr = [];
-	            var ps = {
-	                fontFamily: const_1.FontName.MicrosoftYahei,
-	                fontSize: "28px",
-	                fill: "#aaa"
-	            };
-	            var x1 = 420, y1 = 853, x2 = 1185 - 47;
-	            for (var i = 0; i < 8; i++) {
-	                var lPlayerText = TextFac_1.TextFac.new_(ps, _this);
-	                var rPlayerText = TextFac_1.TextFac.new_(ps, _this);
-	                if (i < 4) {
-	                    lPlayerText.setPos(x1, y1 + i * 48).alignRight = 558;
-	                    rPlayerText.setPos(x1 + 165, y1 + i * 48);
-	                }
-	                else {
-	                    lPlayerText.setPos(x2, y1 + (i - 4) * 48).alignRight = 1280;
-	                    rPlayerText.setPos(x2 + 165, y1 + (i - 4) * 48);
-	                }
-	                _this.vsPlayerArr.push([lPlayerText, rPlayerText]);
-	            }
-	            _this.isLoaded = true;
-	            if (_this.tmpData) {
-	                _this.show(_this.tmpData);
-	                _this.tmpData = null;
-	            }
-	        });
-	    }
-	    Pick8.prototype.test = function () {
-	        this.show({
-	            playerArr: [
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	                [{ name: '郝天吉' }, { name: "TBD" }],
-	            ]
-	        });
-	    };
-	    Pick8.prototype.show = function (data) {
-	        if (this.isLoaded) {
-	            if (data.visible) {
-	                _super.prototype.show.call(this, data);
-	                for (var i = 0; i < this.vsPlayerArr.length; i++) {
-	                    var playerTextArr = this.vsPlayerArr[i];
-	                    playerTextArr[0].setText(data.playerArr[i][0].name)
-	                        .setAlignRight();
-	                    playerTextArr[1].setText("vs   " + data.playerArr[i][1].name);
-	                }
-	            }
-	            else {
-	                this.hide(data);
-	            }
-	        }
-	        else
-	            this.tmpData = data;
-	    };
-	    return Pick8;
-	}(BasePanel_1.BasePanel));
-	exports.Pick8 = Pick8;
-	var Pick8Layer = (function () {
-	    function Pick8Layer() {
-	    }
-	    Pick8Layer.get = function (parent) {
-	        if (!window[Pick8Layer.cls])
-	            window[Pick8Layer.cls] = new Pick8(parent);
-	        return window[Pick8Layer.cls];
-	    };
-	    Pick8Layer.cls = 'Pick8';
-	    return Pick8Layer;
-	}());
-	exports.Pick8Layer = Pick8Layer;
-
-
-/***/ },
+/* 98 */,
 /* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -10995,140 +8784,8 @@
 
 
 /***/ },
-/* 108 */
-/***/ function(module, exports) {
-
-	"use strict";
-	function getFtlogoUrl(ftName) {
-	    return '/img/ft/' + ftName + '.jpg';
-	}
-	exports.getFtlogoUrl = getFtlogoUrl;
-	function getFtLineUrl(ftId) {
-	    return '/img/ft/' + ftId + 'L.png';
-	}
-	exports.getFtLineUrl = getFtLineUrl;
-	function getFtLogoUrl2(ftId) {
-	    return '/img/ft/' + ftId + '.jpg';
-	}
-	exports.getFtLogoUrl2 = getFtLogoUrl2;
-	var ftName = {
-	    '1': 'Gambia',
-	    '2': 'TSH',
-	    '3': 'Fe3O4',
-	    '4': 'FTG',
-	    '5': '3P-Shot',
-	    '6': 'Bravo!',
-	    '7': 'XJBD',
-	    '8': 'GreenLight',
-	};
-	function getFtName(ftId) {
-	    return ftName[ftId] || '';
-	}
-	exports.getFtName = getFtName;
-	function getFtId(fn) {
-	    for (var k in ftName) {
-	        if (fn == ftName[k]) {
-	            return k;
-	        }
-	    }
-	}
-	exports.getFtId = getFtId;
-
-
-/***/ },
-/* 109 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var Com2017_1 = __webpack_require__(108);
-	var const_1 = __webpack_require__(27);
-	var PixiEx_1 = __webpack_require__(57);
-	var Group = (function (_super) {
-	    __extends(Group, _super);
-	    function Group(parent) {
-	        _super.call(this);
-	        this.playerTextArr = [];
-	        this.avatarArr = [];
-	        this.ftArr = [];
-	        this.p = parent;
-	        var gt = this.groupText = new PIXI.Text;
-	        gt.style.fill = '#fff';
-	        gt.style.fontSize = '50px';
-	        gt.x = 345;
-	        gt.y = 170;
-	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/group/bg.png' });
-	        this.addChild(bg);
-	        bg.addChild(this.groupText);
-	        var xs = [100, 565, 835, 1080];
-	        for (var i = 0; i < 4; i++) {
-	            for (var j = 0; j < 4; j++) {
-	                var pt = new PIXI.Text;
-	                pt.x = xs[j];
-	                pt.y = 262 + i * 80;
-	                pt.style.fontSize = '35px';
-	                pt.style.fontWeight = 'bold';
-	                this.playerTextArr.push(pt);
-	                bg.addChild(pt);
-	            }
-	            var avt = new PIXI.Sprite();
-	            avt.y = 252 + i * 80;
-	            avt.x = 20;
-	            bg.addChild(avt);
-	            this.avatarArr.push(avt);
-	            var ft = new PIXI.Sprite();
-	            ft.y = avt.y;
-	            ft.x = 495;
-	            bg.addChild(ft);
-	            this.ftArr.push(ft);
-	        }
-	        bg.x = (const_1.ViewConst.STAGE_WIDTH - 1200) * .5;
-	        bg.y = const_1.ViewConst.STAGE_HEIGHT - 558;
-	    }
-	    Group.prototype.show = function (group, playerArr) {
-	        this.groupText.text = group.toLocaleUpperCase() + '组';
-	        var _loop_1 = function(i) {
-	            var p = playerArr[i];
-	            var ptName = this_1.playerTextArr[i * 4];
-	            ptName.text = p.name;
-	            var ptFt = this_1.playerTextArr[i * 4 + 1];
-	            ptFt.text = Com2017_1.getFtName(p.groupId);
-	            var ptWin = this_1.playerTextArr[i * 4 + 2];
-	            ptWin.text = p.win || (0 + "");
-	            var ptScore = this_1.playerTextArr[i * 4 + 3];
-	            ptScore.text = p.dtScore || (0 + "");
-	            var avt = this_1.avatarArr[i];
-	            PixiEx_1.loadRes(p.avatar, function (img) {
-	                avt.texture = PixiEx_1.imgToTex(img);
-	                var s = 60 / img.width;
-	                avt.scale.x = avt.scale.y = s;
-	            }, true);
-	            var ft = this_1.ftArr[i];
-	            PixiEx_1.loadRes(Com2017_1.getFtLogoUrl2(p.groupId), function (img) {
-	                ft.texture = PixiEx_1.imgToTex(img);
-	                var s = 60 / img.width;
-	                ft.scale.x = ft.scale.y = s;
-	            }, false);
-	        };
-	        var this_1 = this;
-	        for (var i = 0; i < 4; i++) {
-	            _loop_1(i);
-	        }
-	        this.p.addChild(this);
-	    };
-	    Group.prototype.hide = function () {
-	        this.p.removeChild(this);
-	    };
-	    return Group;
-	}(PIXI.Container));
-	exports.Group = Group;
-
-
-/***/ },
+/* 108 */,
+/* 109 */,
 /* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -11549,7 +9206,6 @@
 	var PixiEx_1 = __webpack_require__(57);
 	var TweenEx_1 = __webpack_require__(58);
 	var BasePanel_1 = __webpack_require__(89);
-	var Pick8_1 = __webpack_require__(98);
 	var ScoreRank_1 = __webpack_require__(99);
 	var BigBlood_1 = __webpack_require__(116);
 	var WorldWar_1 = __webpack_require__(117);
@@ -11667,10 +9323,6 @@
 	                        rp = playerMap[rPlayer];
 	                    playerArr.push([lp, rp]);
 	                }
-	                Pick8_1.Pick8Layer.get(_this.stage).show({
-	                    playerArr: playerArr,
-	                    visible: data.isShowPick
-	                });
 	                if (data.isShowPick) {
 	                    _this.worldWar.hide();
 	                }
@@ -11709,12 +9361,12 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var BasePanel_1 = __webpack_require__(89);
+	var Command_1 = __webpack_require__(28);
+	var const_1 = __webpack_require__(27);
+	var ImgLoader_1 = __webpack_require__(74);
 	var PixiEx_1 = __webpack_require__(57);
 	var TextFac_1 = __webpack_require__(78);
-	var const_1 = __webpack_require__(27);
-	var Command_1 = __webpack_require__(28);
-	var ImgLoader_1 = __webpack_require__(74);
+	var BasePanel_1 = __webpack_require__(89);
 	var urlBg1 = '/html/ww/bottomBlood/bg2.png';
 	var urlBloodFrame = '/html/ww/bottomBlood/frame.png';
 	var urlLBlood = '/html/ww/bottomBlood/lBlood.png';
@@ -13279,6 +10931,346 @@
 /***/ function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px;height:700px;overflow-y: scroll;overflow-x:hidden;\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告 MISC</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒 timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <!-- <label class=\"label\">现场时间:{{liveTime}}</label>\r\n                <label class=\"label\">面板时间:{{panelTime}}</label> -->\r\n\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 30px;font-family: 'NotoSansHans-Regular'\">\r\n               {{lLiveName}}  vs {{rLiveName}} \r\n                <br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false,1)\">隐藏底部</button>\r\n\r\n            <button class=\"button\" @click=\"onClkShowStage(false)\">隐藏所有</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(true)\">显示所有</button>\r\n            <br>时间控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">设定时间(秒)</button>\r\n\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            </p>\r\n            比分控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onUpdateScore(true ,panelTime2Set)\">蓝方比分</button>\r\n            <button class=\"button\" @click=\"onUpdateScore(false,panelTime2Set)\">红方比分</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(true)\">切换攻守</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(false)\">隐藏</button>\r\n            <br>\r\n\r\n            <button class=\"button\" @click=\"onUpdateFoul(true ,panelTime2Set)\">蓝方犯规</button>\r\n            <button class=\"button\" @click=\"onUpdateFoul(false,panelTime2Set)\">红方犯规</button>\r\n\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <label class=\"checkbox\">\r\n                    <input type=\"checkbox\" v-model='isShowGroupLeft'>\r\n                    靠左边\r\n                  </label>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">修改并显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,'')\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <!-- <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button> -->\r\n\r\n            <label class=\"label\">  赛区实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,1)\">东南</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,2)\">东北</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,3)\">西方</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,4)\">南方</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,0)\">总榜</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,-1)\">首页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,2,-1)\">上一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,3,-1)\">下一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <label class=\"label\">  八强面板:</label><br>\r\n            <button class=\"button\" @click=\"onBracketShow(0,true)\">八强对阵</button>\r\n            <button class=\"button\" @click=\"onBracketShow(1,true)\">第一页 八进四</button>\r\n            <button class=\"button\" @click=\"onBracketShow(2,true)\">第二页</button>\r\n\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <div class='column is-one-quarter' style=\"position: fixed;top: 260px;right: 10px;\">\r\n                <input class=\"input\" type=\"text\" style=\"width: 30px;\" v-model=\"gameTitleType\">1 '8进4' 2 '4进2' 3 '2进1'\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"蓝方名字-红方名字\" style=\"width: 300px;\" v-model=\"vsPlayer\">\r\n                <button class=\"button\" @click=\"onSetPlayer(vsPlayer,gameTitleType)\">设置球员</button>\r\n                <br> <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button>蓝方: <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button> 比分\r\n                <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>:红方<button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n                <br><br> <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button>-----\r\n                <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button> 犯规\r\n                <button class=\"button\" @click=\"onAddFoul(false,+1)\">+1</button>-----<button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <div v-if='isRmOp||isOp' style=\"position: absolute;left: 0px;top:60px;\">\r\n                <label class=\"radio\">\r\n                                    <input type=\"radio\" name=\"bold\" value='1' v-model='isWrap' checked >\r\n                                    自动换行\r\n                                </label>\r\n\r\n                <label class=\"radio\">\r\n                                    <input type=\"radio\" name=\"bold\" value='0' v-model='isWrap'>\r\n                                    手动换行\r\n                                </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <br>\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <br>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n                <br>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <button class=\"button\" @click=\"onNoticePresets('network')\">网络故障 模版</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\" style=\"position: absolute;left: 200px;top: 60px;\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n\r\n                滚动文字：\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"inputRollText\">\r\n                <br>\r\n\r\n                <!-- <el-input v-model=\"inputRollText\" style=\"width:250px\"></el-input> -->\r\n                <button class=\"button\" @click='showRollText(inputRollText,true)'>发送</button>\r\n                <button class=\"button\" @click='showRollText(inputRollText,false)'>隐藏</button>\r\n                <br> 主播面板:\r\n                <br>\r\n                <button class=\"button\" @click='showCommentator(true,1)'>显示主播</button>\r\n                <button class=\"button\" @click='showCommentator(true,3)'>显示主播 广告位</button>\r\n                <button class=\"button\" @click='showCommentator(true,2)'>显示主播 合并</button>\r\n                <button class=\"button\" @click='showCommentatorInfoPage(true,2)'>显示信息2（info2）</button>\r\n                <button class=\"button\" @click='showCommentator(false)'>隐藏</button>\r\n                <br>图片:\r\n                <br>\r\n                <button class=\"button\" @click='showStaticImage(true,1)'>微信小程序</button>\r\n                <button class=\"button\" @click='showStaticImage(false,1)'>隐藏</button>\r\n\r\n                <label class=\"label\"> 平台展示:</label><br>\r\n                <button class=\"button\" @click=\"onShowAccount(1,true)\">抖音 快手</button>\r\n                <button class=\"button\" @click=\"onShowAccount(2,true)\">今日头条 西瓜视频</button>\r\n                <button class=\"button\" @click=\"onShowAccount(3,true)\">微博 微信</button>\r\n                <button class=\"button\" @click=\"onShowAccount(4,true)\">优酷 uc</button>\r\n                <button class=\"button\" @click=\"onShowAccount(5,true)\">B站 微视</button>\r\n                <button class=\"button\" @click=\"onShowAccount(6,true)\">腾讯视频 YouTube</button>\r\n                <button class=\"button\" @click=\"onShowAccount(7,true)\">知乎 网易新闻</button>\r\n                <button class=\"button\" @click=\"onShowAccount(1,false)\">隐藏</button>\r\n\r\n                <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n                <p class=\"control\">\r\n                    <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                               return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                    <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n                </p>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>";
+
+/***/ },
+/* 126 */,
+/* 127 */,
+/* 128 */,
+/* 129 */,
+/* 130 */,
+/* 131 */,
+/* 132 */,
+/* 133 */,
+/* 134 */,
+/* 135 */,
+/* 136 */,
+/* 137 */,
+/* 138 */,
+/* 139 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var Command_1 = __webpack_require__(28);
+	var const_1 = __webpack_require__(27);
+	var ImgLoader_1 = __webpack_require__(74);
+	var PixiEx_1 = __webpack_require__(57);
+	var TextFac_1 = __webpack_require__(78);
+	var BasePanel_1 = __webpack_require__(89);
+	var BasePanelView_1 = __webpack_require__(69);
+	var urlBg1 = '/html/ww/bottomBlood/bg2.png';
+	var urlBloodFrame = '/html/ww/bottomBlood/frame.png';
+	var urlLBlood = '/html/ww/bottomBlood/lBlood.png';
+	var urlRBlood = '/html/ww/bottomBlood/rBlood.png';
+	var urlFg = '/html/ww/bottomBlood/fg2.png';
+	var urlMask = '/html/ww/bottomBlood/avtMask.png';
+	var isTest = false;
+	var urlBase = 'http://rtmp.icassi.us:8092/img/player/915/';
+	var ___BloodPlayer = (function (_super) {
+	    __extends(___BloodPlayer, _super);
+	    function ___BloodPlayer(parent, isRight) {
+	        if (isRight === void 0) { isRight = false; }
+	        _super.call(this);
+	        this.isAvtLoaded = false;
+	        this.isRight = isRight;
+	        this.addChild(PixiEx_1.newBitmap({ url: urlBloodFrame }));
+	        var fg = PixiEx_1.newBitmap({ url: urlBloodFrame });
+	        var blood;
+	        this.bloodMask = new PIXI.Graphics()
+	            .beginFill(0xff0000);
+	        var ctn = new PIXI.Container();
+	        this.addChild(ctn);
+	        var avtMask = PixiEx_1.newBitmap({ url: urlMask });
+	        ctn.addChild(avtMask);
+	        this.avt = new PIXI.Sprite();
+	        this.avt.x = 324;
+	        this.avt.y = 420;
+	        this.avt.mask = avtMask;
+	        ctn.addChild(this.avt);
+	        var bs = {
+	            fontFamily: const_1.FontName.dinCondensedC,
+	            fontSize: "65px",
+	            fontWeight: "",
+	            stroke: '#333',
+	            strokeThickness: 2,
+	            fill: "#ddd"
+	        };
+	        this.bloodText = TextFac_1.TextFac.new_(bs, this)
+	            .setY(456);
+	        if (isRight) {
+	            this.bloodMask
+	                .drawRect(1015, 449, 400, 90);
+	            fg.scale.x = -1;
+	            fg.x = 1920;
+	            ctn.x = 1173;
+	            blood = PixiEx_1.newBitmap({ url: urlRBlood });
+	        }
+	        else {
+	            this.bloodMask
+	                .drawRect(505, 449, 400, 90);
+	            blood = PixiEx_1.newBitmap({ url: urlLBlood });
+	        }
+	        this.addChild(blood);
+	        blood.mask = this.bloodMask;
+	        this.addChild(this.bloodMask);
+	        var ns = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: "45px",
+	            fontWeight: "",
+	            stroke: '#333',
+	            strokeThickness: 2,
+	            fill: "#ddd"
+	        };
+	        this.pName = TextFac_1.TextFac.new_(ns, this)
+	            .setY(459);
+	        this.addChild(fg);
+	        ns.fontSize = '30px';
+	        this.kda = TextFac_1.TextFac.new_(ns, this)
+	            .setY(418);
+	        parent.addChild(this);
+	        if (isTest)
+	            this.setInfo({ name: '黄玉军', bloodRaito: Math.random() });
+	    }
+	    ___BloodPlayer.prototype.setInfo = function (data) {
+	        var _this = this;
+	        if (data.name) {
+	            this.pName.setText(data.name)
+	                .setAlignCenter(645);
+	        }
+	        if (data.bloodRaito != null) {
+	            var bloodWidth = 400 * (1 - data.bloodRaito);
+	            if (data.bloodRaito == 0) {
+	                bloodWidth = 397;
+	            }
+	            if (this.isRight) {
+	                this.bloodMask.x = bloodWidth;
+	                this.pName.setAlignCenter(PixiEx_1._c(267));
+	            }
+	            else {
+	                this.bloodMask.x = -bloodWidth;
+	                this.pName.setAlignCenter(PixiEx_1._c(-267));
+	            }
+	        }
+	        var curBlood;
+	        if (data.curBlood != null) {
+	            curBlood = data.curBlood;
+	        }
+	        else if (data.blood != null) {
+	            curBlood = data.blood;
+	        }
+	        if (this.isRight)
+	            this.bloodText.setText(curBlood)
+	                .setAlignCenter(PixiEx_1._c(492));
+	        else
+	            this.bloodText.setText(curBlood)
+	                .setAlignCenter(PixiEx_1._c(-492));
+	        console.log('set info', data.cid);
+	        var avtUrl = urlBase + data.playerId + '.png';
+	        ImgLoader_1.imgLoader.loadTexRemote(avtUrl, function (_) {
+	            _this.avt.texture = ImgLoader_1.imgLoader.getTex(avtUrl);
+	            PixiEx_1.setScale(_this.avt, 104 / _this.avt.texture.width);
+	        });
+	    };
+	    return ___BloodPlayer;
+	}(PIXI.Container));
+	var CommonGame = (function (_super) {
+	    __extends(CommonGame, _super);
+	    function CommonGame() {
+	        _super.apply(this, arguments);
+	    }
+	    CommonGame.prototype.create = function () {
+	        var _this = this;
+	        console.log('scroll text creat1e');
+	        var imgArr = [urlBg1,
+	            urlBloodFrame,
+	            urlLBlood,
+	            urlRBlood,
+	            urlFg,
+	            urlMask
+	        ];
+	        this.load(imgArr, function (_) {
+	            var bg = new PIXI.Graphics()
+	                .beginFill(0x000000)
+	                .drawRect(0, 0, 1920, 1080);
+	            _this.addChild(bg);
+	            _this.addChild(PixiEx_1.newBitmap({ url: urlBg1 }));
+	            var lA = [], rA = [];
+	            for (var i = 0; i < 5; i++) {
+	                var lP = new ___BloodPlayer(_this);
+	                lP.x = 0;
+	                lP.y = i * 115;
+	                lA.push(lP);
+	                var rP = new ___BloodPlayer(_this, true);
+	                rP.x = 0;
+	                rP.y = lP.y;
+	                rA.push(rP);
+	            }
+	            _this.lPlayerArr = lA;
+	            _this.rPlayerArr = rA;
+	            _this.lTimeoutMaskArr = [];
+	            _this.rTimeoutMaskArr = [];
+	            var tm = new PIXI.Graphics()
+	                .beginFill(0x020206)
+	                .drawRect(600, 145 - 62, 130, 50);
+	            _this.addChild(tm);
+	            _this.lTimeoutMaskArr.push(tm);
+	            tm = new PIXI.Graphics()
+	                .beginFill(0x020206)
+	                .drawRect(730, 145 - 62, 130, 50);
+	            _this.addChild(tm);
+	            _this.lTimeoutMaskArr.push(tm);
+	            tm = new PIXI.Graphics()
+	                .beginFill(0x020206)
+	                .drawRect(1190, 145 - 62, 130, 50);
+	            _this.addChild(tm);
+	            _this.rTimeoutMaskArr.push(tm);
+	            tm = new PIXI.Graphics()
+	                .beginFill(0x020206)
+	                .drawRect(1060, 145 - 62, 130, 50);
+	            _this.addChild(tm);
+	            _this.rTimeoutMaskArr.push(tm);
+	            var ns = {
+	                fontFamily: const_1.FontName.dinCondensedC,
+	                fontSize: "80px",
+	                fontWeight: "bold",
+	                fill: "#ddd"
+	            };
+	            ns.fill = '#d76102';
+	            _this.lFoul = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(300 - 62)
+	                .setText("0")
+	                .setAlignCenter(PixiEx_1._c(-133));
+	            _this.rFoul = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(_this.lFoul.y)
+	                .setText("0")
+	                .setAlignCenter(PixiEx_1._c(133));
+	            ns.fontSize = "120px";
+	            ns.fill = '#ddd';
+	            _this.lBlood = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(218 - 37 - 62)
+	                .setText("0")
+	                .setAlignCenter(PixiEx_1._c(-280));
+	            _this.rBlood = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(_this.lBlood.y)
+	                .setText("0")
+	                .setAlignCenter(PixiEx_1._c(280));
+	            _this.lAvt = new PIXI.Sprite();
+	            _this.addChild(_this.lAvt);
+	            _this.rAvt = new PIXI.Sprite();
+	            _this.addChild(_this.rAvt);
+	            _this.addChild(PixiEx_1.newBitmap({ url: urlFg }));
+	            ns.fontFamily = const_1.FontName.MicrosoftYahei;
+	            ns.fontSize = "43px";
+	            _this.lName = TextFac_1.TextFac.new_(ns, _this)
+	                .setText('')
+	                .setY(315 - 62)
+	                .setAlignCenter(PixiEx_1._c(-516));
+	            _this.rName = TextFac_1.TextFac.new_(ns, _this)
+	                .setText('')
+	                .setY(_this.lName.y)
+	                .setAlignCenter(PixiEx_1._c(516));
+	        });
+	    };
+	    CommonGame.prototype._fillBlood = function (dataArr, bloodPlayerArr, curPlayer) {
+	        for (var i = 0; i < dataArr.length; i++) {
+	            var data = dataArr[i];
+	            var b = bloodPlayerArr[i];
+	            if (curPlayer.playerId == data.playerId) {
+	                data.blood = curPlayer.blood;
+	            }
+	            b.initBlood = data.initBlood;
+	            b.blood = data.blood;
+	            b.playerId = data.playerId;
+	            data.bloodRaito = data.blood / data.initBlood;
+	            b.setInfo(data);
+	        }
+	    };
+	    CommonGame.prototype._setCurBlood = function (data) {
+	        var curBloodArr = [0, 0];
+	        for (var i = 0; i < this.lPlayerArr.length; i++) {
+	            var b = this.lPlayerArr[i];
+	            if (b.playerId == data.lPlayer) {
+	                curBloodArr[0] = b.blood - data.rScore;
+	                data.bloodRaito = curBloodArr[0] / b.initBlood;
+	                data.curBlood = curBloodArr[0];
+	                b.setInfo(data);
+	            }
+	        }
+	        for (var i = 0; i < this.rPlayerArr.length; i++) {
+	            var b = this.rPlayerArr[i];
+	            if (b.playerId == data.rPlayer) {
+	                curBloodArr[1] = b.blood - data.lScore;
+	                data.curBlood = curBloodArr[1];
+	                data.bloodRaito = curBloodArr[1] / b.initBlood;
+	                b.setInfo(data);
+	            }
+	        }
+	        return curBloodArr;
+	    };
+	    CommonGame.prototype._show = function (data) {
+	        var _this = this;
+	        if (data.cid == Command_1.CommandId.sc_setFoul) {
+	            this.lFoul.setText(data.lFoul)
+	                .setAlignCenter(805);
+	            this.rFoul.setText(data.rFoul)
+	                .setAlignCenter(1146);
+	        }
+	        if (data.cid == Command_1.CommandId.sc_setBlood) {
+	            var curBloodArr = this._setCurBlood(data);
+	            this.lBlood.setText(curBloodArr[0])
+	                .setAlignCenter(PixiEx_1._c(-294));
+	            this.rBlood.setText(curBloodArr[1])
+	                .setAlignCenter(PixiEx_1._c(294));
+	        }
+	        if (data.cid == Command_1.CommandId.sc_setPlayer) {
+	            this.lBlood.setText(data.leftPlayer.blood)
+	                .setAlignCenter(PixiEx_1._c(-300));
+	            this.rBlood.setText(data.rightPlayer.blood)
+	                .setAlignCenter(PixiEx_1._c(300));
+	            this.lFoul.setText(0)
+	                .setAlignCenter(PixiEx_1._c(-133));
+	            this.rFoul.setText(0)
+	                .setAlignCenter(PixiEx_1._c(133));
+	            this.lName.setText(data.leftPlayer.name)
+	                .setAlignCenter(PixiEx_1._c(-516));
+	            this.rName.setText(data.rightPlayer.name)
+	                .setAlignCenter(PixiEx_1._c(516));
+	            var lAvtUrl_1 = urlBase + data.leftPlayer.playerId + '.png';
+	            this.lAvt.x = 351;
+	            this.lAvt.y = 144 - 62;
+	            ImgLoader_1.imgLoader.loadTexRemote(lAvtUrl_1, function (_) {
+	                _this.lAvt.texture = ImgLoader_1.imgLoader.getTex(lAvtUrl_1);
+	                PixiEx_1.setScale(_this.lAvt, 190 / _this.lAvt.texture.width);
+	            });
+	            this.rAvt.x = 1380;
+	            this.rAvt.y = this.lAvt.y;
+	            var rAvtUrl_1 = urlBase + data.rightPlayer.playerId + '.png';
+	            ImgLoader_1.imgLoader.loadTexRemote(rAvtUrl_1, function (_) {
+	                _this.rAvt.texture = ImgLoader_1.imgLoader.getTex(rAvtUrl_1);
+	                PixiEx_1.setScale(_this.rAvt, 190 / _this.rAvt.texture.width);
+	            });
+	            this._fillBlood(data.leftTeam, this.lPlayerArr, data.leftPlayer);
+	            this._fillBlood(data.rightTeam, this.rPlayerArr, data.rightPlayer);
+	        }
+	        if (data.cid == Command_1.CommandId.sc_timeOut) {
+	            this.lTimeoutMaskArr[0].visible = data.lTimeOut < 2;
+	            this.lTimeoutMaskArr[1].visible = data.lTimeOut < 1;
+	            this.rTimeoutMaskArr[0].visible = data.rTimeOut < 2;
+	            this.rTimeoutMaskArr[1].visible = data.rTimeOut < 1;
+	        }
+	        this.p.addChild(this);
+	    };
+	    CommonGame.cls = 'CommonGame';
+	    return CommonGame;
+	}(BasePanel_1.BasePanel));
+	exports.CommonGame = CommonGame;
+	var canvasStage = BasePanelView_1.BasePanelView.initPixi();
+	BasePanel_1.showPanel(CommonGame, { visible: true }, canvasStage);
+
 
 /***/ }
 /******/ ]);

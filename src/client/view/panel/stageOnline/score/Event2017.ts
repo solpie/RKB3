@@ -4,7 +4,6 @@ import { imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
 import { TweenEx } from '../../../utils/TweenEx';
 import { showPanel } from '../../base/BasePanel';
 import { fitWidth } from '../bracket/BracketGroup';
-import { Pick8Layer } from '../pick8/Pick8';
 import { RankSection } from '../rank/RankSection';
 import { ScoreRank } from '../scoreRank/ScoreRank';
 import { BottomNotice } from '../scoreV2/BottomNotice';
@@ -13,8 +12,6 @@ import { PlayerInfoV2 } from '../scoreV2/PlayerInfoV2';
 import { RankV2 } from '../scoreV2/RankV2';
 import { ScrollTextV2 } from '../scoreV2/ScrollTextV2';
 import { Champion } from './Champion';
-import { getFtLogoUrl2, getFtName } from './Com2017';
-import { Group } from './Group';
 import { LogoFx } from './LogoFx';
 import { ScoreFx } from './ScoreFx';
 import { TagFx } from './TagFx';
@@ -129,76 +126,6 @@ export class Event2017 extends PIXI.Container {
         this.winPanel.addChild(this.medal)
     }
 
-    showWin(player) {
-        // let name = player.name
-        let level = Number(player.level)
-        // var medal = Math.ceil(level / 5)
-        let medal = level
-        // if (medal > 5)
-        //     medal = 5
-        // medal = 2
-        if (medal > 0) {
-            let medalUrl = '/img/panel/score2017/medal' + medal + '.png'
-            if (!this._texMap[medalUrl])
-                loadImg(medalUrl, (img) => {
-                    this.medal.texture = this._texMap[medalUrl] = imgToTex(img)
-                })
-            else
-                this.medal.texture = this._texMap[medalUrl]
-            this.medal.visible = true
-        }
-        else
-            this.medal.visible = false
-        // let intro = player.intro
-        // let weight = player.weight
-        // let height = player.height
-        let avatar = player.avatar
-        let ftName = getFtName(player.groupId)
-
-        this.pName.text = player.name
-        this.pIntro.text = cnWrap('参赛宣言：' + player.intro, 49, 98)
-        this.pWeight.text = player.weight + " KG"
-        this.pHeight.text = player.height + " CM"
-        this.ftName.text = ftName
-
-        fitWidth(this.ftName, 155, 50)
-        this.winLose.text = player.winAmount + ' 胜 / ' + player.loseAmount + ' 负'
-        this.winLose.x = 935 - this.winLose.width * .5
-        this.pRankScore.text = player.roundScore
-        this.pRankScore.x = 1265 - this.pRankScore.width * 0.5
-        if (!this._texMap[avatar])
-            loadRes(avatar, (img) => {
-                this.avatar.texture = this._texMap[avatar] = imgToTex(img)
-                this.avatar.texture['w'] = img.width
-                this.avatar.texture['h'] = img.height
-            }, true)
-        else
-            this.avatar.texture = this._texMap[avatar]
-        console.log('tex width', this.avatar.texture['w'])
-        // this.avatar.scale.x = this.avatar.scale.y = 213
-        this.avatar.height = this.avatar.width = 213
-
-        let ftUrl = getFtLogoUrl2(player.groupId)
-        if (!this._texMap[ftUrl])
-            loadImg(ftUrl, (img) => {
-                this.ftLogo.texture = this._texMap[ftUrl] = imgToTex(img)
-                this.ftLogo.visible = true
-            }, (e) => {
-                console.log('fterror', e)
-                this.ftLogo.visible = false
-            })
-        else {
-            this.ftLogo.texture = this._texMap[ftUrl]
-            this.ftLogo.visible = true
-        }
-        this.ftLogo.width = this.ftLogo.height = 56
-        this.winPanel.visible = true
-
-        TweenEx.delayedCall(6000, () => {
-            this.winPanel.visible = false
-        })
-    }
-
     noticeV2: NoticeV2
     showNotice(data) {
         if (!this.noticeV2)
@@ -271,18 +198,6 @@ export class Event2017 extends PIXI.Container {
             this.addChild(this.bdBg)
         }
         this.bdBg.visible = v
-    }
-
-    groupPanel: Group
-    showGroup(data) {
-        if (!this.groupPanel) {
-            this.groupPanel = new Group(this)
-        }
-        this.groupPanel.show(data.group, data.playerArr)
-    }
-
-    hideGroup() {
-        this.groupPanel.hide()
     }
 
 
@@ -375,7 +290,7 @@ export class Event2017 extends PIXI.Container {
     }
 
     showPick8(data) {
-        Pick8Layer.get(this).show(data)
+        // Pick8Layer.get(this).show(data)
     }
 
     showVsList(data) {

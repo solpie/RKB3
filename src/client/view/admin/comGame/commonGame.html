@@ -1,0 +1,74 @@
+<div class="container">
+    比赛时间设置:<input class="input" v-model="timeInSec" type="text" style="width: 100px;">
+
+    <table class="table is-striped is-bordered" style="font-size:30px;">
+        <thead>
+        </thead>
+        <tbody>
+            <tr>
+                <th>
+                    <div hidden>{{updateTime}}</div>
+                </th>
+                <th>
+                    <a id="vudp" @click="onVueUpdate"></a>
+                </th>
+                <th>蓝方球员</th>
+                <th>score</th>
+                <th>红方球员</th>
+                <th>
+                </th>
+            </tr>
+            <tr>
+                <th style="font-size:25px;">
+                    <a @click="onSetTimerEvent('start')">开始  </a><a @click="onSetTimerEvent('pause')">暂停  </a>
+                    <a @click="onSetTimerEvent('setting',timeInSec)">设置</a>
+                    <a @click="onSetTimerEvent('reset')">reset</a>
+                </th>
+                <th>
+                    <button class="button" @click="onSetScore(true,1)">+1</button>
+                    <button class="button" @click="onSetScore(true,-1)">-1</button>
+                </th>
+                <th>
+                    {{baseGame.lName}}
+                </th>
+                <th style="font-size:40px;">
+                    <span id="lScore">{{baseGame.lScore}}</span> - <span id="rScore">{{baseGame.rScore}}</span>
+                </th>
+                <th>
+                    {{baseGame.rName}}
+                </th>
+                <th>
+                    <button class="button" @click="onSetScore(false,1)">+1</button>
+                    <button class="button" @click="onSetScore(false,-1)">-1</button>
+                </th>
+            </tr>
+            <tr>
+                <th style="font-size:25px;">犯规
+                    <a @click="onResetFoul"> 重置</a>
+                </th>
+                <th>
+                    <button class="button" @click="onSetFoul(true,1)">+1</button>
+                    <button class="button" @click="onSetFoul(true,-1)">-1</button>
+                </th>
+                <th>
+                    -
+                </th>
+                <th>
+                    <span id="lFoul">{{baseGame.lFoul}}</span> - <span id="rFoul">{{baseGame.rFoul}}</span>
+                </th>
+                <th>
+                    -
+                </th>
+                <th>
+                    <button class="button" @click="onSetFoul(false,1)">+1</button>
+                    <button class="button" @click="onSetFoul(false,-1)">-1</button>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+    进攻时间设置:
+    <input class="input" v-model="buzzerTimeInSec" type="text" style="width: 100px;">
+    <a @click="onSetTimerEvent('setting',timeInSec)">设置</a>
+    <a @click="onSetTimerEvent('reset')">reset</a>
+    <input id="buzzer" maxlength="1" class="input" @click="onBuzzer" @keydown="onBuzzer" type="text" style="width: 100px;">
+</div>

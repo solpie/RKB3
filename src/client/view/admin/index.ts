@@ -15,6 +15,7 @@ import { homeView } from "./home/home";
 
 import { playerView } from './player/player';
 import { GameAdmin } from './gameAdmin/GameAdmin';
+import {CommonGameAdmin} from './comGame/CommonGameAdmin'
 //////////////
 var routes = [
     {
@@ -22,17 +23,9 @@ var routes = [
         components: { content: homeView, GameAdmin: GameAdmin }
     },
     {
-        path: '/player', name: 'player',
-        components: { content: playerView },
+        path: '/com', name: 'com',
+        components: { content: CommonGameAdmin },
     },
-    // {
-    //     path: '/panel', name: 'panel',
-    //     components: { content: PanelView, Navbar: Navbar },
-    // },
-    // {
-    //     path: '/rank', name: 'rank',
-    //     components: { content: rankView, Navbar: Navbar },
-    // }
 ];
 
 declare let VueRouter;

@@ -1,0 +1,21 @@
+{
+    "rank_idx": 3,
+    "list": [
+        { "rank": 1, "player_id": 13666 },
+        { "rank": 2, "player_id": 6874 },
+        { "rank": 3, "player_id": 20250 },
+        { "rank": 4, "player_id": 20375 },
+        { "rank": 5, "player_id": 9118 },
+        { "rank": 6, "player_id": 36244 },
+        { "rank": 7, "player_id": 46591 },
+        { "rank": 8, "player_id": 574 },
+        { "rank": 9, "player_id": 1213 },
+        { "rank": 10, "player_id": 1001 },
+        { "rank": 11, "player_id": 18295 },
+        { "rank": 12, "player_id": 17392 },
+        { "rank": 13, "player_id": 1176 },
+        { "rank": 14, "player_id": 1754 },
+        { "rank": 15, "player_id": 4 },
+        { "rank": 16, "player_id": 34496 }
+    ]
+}

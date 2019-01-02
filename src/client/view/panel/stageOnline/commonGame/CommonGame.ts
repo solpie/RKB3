@@ -1,9 +1,10 @@
-import { CommandId } from '../../../../Command';
-import { FontName } from '../../../../const';
-import { imgLoader } from '../../../../utils/ImgLoader';
-import { newBitmap, setScale, _c } from '../../../../utils/PixiEx';
-import { Text2, TextFac } from '../../../../utils/TextFac';
-import { BasePanel } from '../../../base/BasePanel';
+import { CommandId } from '../../../Command';
+import { FontName } from '../../../const';
+import { imgLoader } from '../../../utils/ImgLoader';
+import { newBitmap, setScale, _c } from '../../../utils/PixiEx';
+import { Text2, TextFac } from '../../../utils/TextFac';
+import { BasePanel, showPanel } from '../../base/BasePanel';
+import { BasePanelView } from '../../BasePanelView';
 let urlBg1 = '/html/ww/bottomBlood/bg2.png'
 let urlBloodFrame = '/html/ww/bottomBlood/frame.png'
 let urlLBlood = '/html/ww/bottomBlood/lBlood.png'
@@ -144,8 +145,8 @@ class ___BloodPlayer extends PIXI.Container {
     }
 }
 
-export class BigBlood extends BasePanel {
-    static cls = 'BigBlood'
+export class CommonGame extends BasePanel{
+    static cls = 'CommonGame'
     lAvt: PIXI.Sprite
     rAvt: PIXI.Sprite
 
@@ -162,7 +163,6 @@ export class BigBlood extends BasePanel {
     rFoul: Text2
     lName: Text2
     rName: Text2
-
 
     create() {
         console.log('scroll text creat1e');
@@ -198,25 +198,25 @@ export class BigBlood extends BasePanel {
             this.rTimeoutMaskArr = []
             let tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(600, 145-62, 130 , 50)
+                .drawRect(600, 145 - 62, 130, 50)
             this.addChild(tm)
             this.lTimeoutMaskArr.push(tm)
 
             tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(730, 145-62, 130 , 50)
+                .drawRect(730, 145 - 62, 130, 50)
             this.addChild(tm)
             this.lTimeoutMaskArr.push(tm)
 
             tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(1190, 145-62, 130, 50)
+                .drawRect(1190, 145 - 62, 130, 50)
             this.addChild(tm)
             this.rTimeoutMaskArr.push(tm)
 
             tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(1060, 145-62, 130, 50)
+                .drawRect(1060, 145 - 62, 130, 50)
             this.addChild(tm)
             this.rTimeoutMaskArr.push(tm)
 
@@ -375,3 +375,6 @@ export class BigBlood extends BasePanel {
         this.p.addChild(this)
     }
 }
+
+let canvasStage = BasePanelView.initPixi()
+showPanel(CommonGame, { visible: true }, canvasStage)

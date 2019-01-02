@@ -3,7 +3,6 @@ import { PanelId } from '../../../../const';
 import { newBitmap } from '../../../../utils/PixiEx';
 import { TweenEx } from "../../../../utils/TweenEx";
 import { showPanel } from '../../../base/BasePanel';
-import { Pick8Layer } from '../../pick8/Pick8';
 import { ScoreRank } from '../../scoreRank/ScoreRank';
 import { BigBlood } from './BigBlood';
 import { WorldWar } from "./WorldWar";
@@ -151,10 +150,6 @@ export class WorldWarView extends PIXI.Container {
 
             playerArr.push([lp, rp])
           }
-          Pick8Layer.get(this.stage).show({
-            playerArr: playerArr,
-            visible: data.isShowPick
-          })
           if (data.isShowPick) {
             this.worldWar.hide()
           }
