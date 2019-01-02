@@ -1,15 +1,11 @@
-import { getFtName } from './Com2017';
-import { FoulText } from './FoulText';
-import { blink2 } from '../../../utils/Fx';
-import { TweenEx } from '../../../utils/TweenEx';
-import { FoulGroup } from './FoulGroup';
-import { _avatar } from '../../../utils/HupuAPI';
-import { proxy } from '../../../utils/WebJsFunc';
-import { TextTimer } from '../../../utils/TextTimer';
-import { Direction, SpriteGroup } from '../../../utils/SpriteGroup';
 import { FontName, ViewConst } from '../../../const';
+import { blink2 } from '../../../utils/Fx';
 import { loadImg, paddy } from '../../../utils/JsFunc';
 import { BitmapText, imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
+import { Direction, SpriteGroup } from '../../../utils/SpriteGroup';
+import { TextTimer } from '../../../utils/TextTimer';
+import { FoulGroup } from './FoulGroup';
+import { FoulText } from './FoulText';
 const skin = {
     light: {
         bg: '/img/panel/score2017/bgLight.png',
@@ -472,7 +468,6 @@ export class Score2017 {
         }
 
         // this.lFtName.text = ft
-        this._fixFtName(this.lFtName, getFtName(ftId))
         this.lFtName.x = 630 - this.lFtName.width * .5
         this.lPlayerRanking.x = 510 - this.lPlayerRanking.width
     }
@@ -514,7 +509,6 @@ export class Score2017 {
         this.rPlayerInfo.text = height + 'CM ' + weight + "KG "
 
         // this.rFtName.text = ft
-        this._fixFtName(this.rFtName, getFtName(ftId))
         this.rFtName.x = 1293 - this.rFtName.width * .5
         this.rPlayerRanking.x = 1410
 

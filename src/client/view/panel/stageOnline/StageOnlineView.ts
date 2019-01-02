@@ -93,6 +93,7 @@ class StageOnlineView extends VueBase {
     }
 
     protected created() {
+        console.log('created ol view')
         this.basePanelArr = []
         this.isRmOp = this.$route.params.op == "rmop"
         this.isOp = this.$route.params.op == "op" || (this.isRmOp)

@@ -1,9 +1,7 @@
-import { getFtlogoUrl, getFtLogoUrl2, getFtName } from './Com2017';
-import { loadImg, loadImgArr } from '../../../utils/JsFunc';
 import { FontName, ViewConst } from '../../../const';
-import { imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
+import { loadImgArr } from '../../../utils/JsFunc';
+import { newBitmap } from '../../../utils/PixiEx';
 import { TweenEx } from '../../../utils/TweenEx';
-import { imgLoader } from '../../../utils/ImgLoader';
 export class Champion extends PIXI.Container {
     title: PIXI.Text
     playerName: PIXI.Text

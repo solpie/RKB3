@@ -1,13 +1,9 @@
+import { FontName, ViewConst } from "../../../const";
 import { imgLoader } from '../../../utils/ImgLoader';
-import { getFtName } from './Com2017';
-import { FoulText } from './FoulText';
-import { FoulGroup } from './FoulGroup';
-import { BitmapText, newBitmap, imgToTex, loadRes, polygon } from "../../../utils/PixiEx";
-import { SpriteGroup, Direction } from "../../../utils/SpriteGroup";
+import { paddy } from "../../../utils/JsFunc";
+import { BitmapText, imgToTex, loadRes, newBitmap } from "../../../utils/PixiEx";
+import { SpriteGroup } from "../../../utils/SpriteGroup";
 import { TextTimer } from "../../../utils/TextTimer";
-import { ViewConst, FontName } from "../../../const";
-import { paddy, loadImg } from "../../../utils/JsFunc";
-import { blink2 } from "../../../utils/Fx";
 import { FoulTextM2 } from "./FoulTextM2";
 const skin = {
     light: {

@@ -5,6 +5,8 @@ import { newBitmap, setScale, _c } from '../../../utils/PixiEx';
 import { Text2, TextFac } from '../../../utils/TextFac';
 import { BasePanel, showPanel } from '../../base/BasePanel';
 import { BasePanelView } from '../../BasePanelView';
+import { TextTimer } from '../../../utils/TextTimer';
+import { VueBase } from '../../../utils/VueBase';
 let urlBg1 = '/html/ww/bottomBlood/bg2.png'
 let urlBloodFrame = '/html/ww/bottomBlood/frame.png'
 let urlLBlood = '/html/ww/bottomBlood/lBlood.png'
@@ -145,7 +147,7 @@ class ___BloodPlayer extends PIXI.Container {
     }
 }
 
-export class CommonGame extends BasePanel{
+export class CommonGame extends BasePanel {
     static cls = 'CommonGame'
     lAvt: PIXI.Sprite
     rAvt: PIXI.Sprite
@@ -164,8 +166,21 @@ export class CommonGame extends BasePanel{
     lName: Text2
     rName: Text2
 
+    gameTime: TextTimer
+    buzzerTime: TextTimer
+
+    preLoadFont(fontName) {
+        let t = new PIXI.Text('', {
+            fontFamily: fontName,
+        })
+        t.text = '0'
+        t.alpha = 0
+        return t
+    }
     create() {
         console.log('scroll text creat1e');
+        let f3 = this.preLoadFont(FontName.dinCondensedC)
+        this.p.addChild(f3)
         let imgArr = [urlBg1
             , urlBloodFrame
             , urlLBlood
@@ -256,6 +271,22 @@ export class CommonGame extends BasePanel{
             this.addChild(this.rAvt)
 
             this.addChild(newBitmap({ url: urlFg }))
+
+            this.gameTime = new TextTimer('', ns)
+            this.gameTime.isMin = true
+            this.addChild(this.gameTime)
+            this.gameTime.setTimeBySec(60 * 5)
+            this.gameTime.x = 640
+            this.gameTime.y = 400
+
+            this.buzzerTime = new TextTimer('', ns)
+            this.buzzerTime.isMin = true
+            this.addChild(this.buzzerTime)
+            this.buzzerTime.setTimeBySec(60 * 5)
+            this.buzzerTime.x = 640
+            this.buzzerTime.y = 600
+
+
             ns.fontFamily = FontName.MicrosoftYahei
             ns.fontSize = "43px"
             this.lName = TextFac.new_(ns, this)
@@ -267,6 +298,8 @@ export class CommonGame extends BasePanel{
                 .setText('')
                 .setY(this.lName.y)
                 .setAlignCenter(_c(516))
+
+
         })
     }
 
@@ -375,6 +408,14 @@ export class CommonGame extends BasePanel{
         this.p.addChild(this)
     }
 }
+let canvasStage
 
-let canvasStage = BasePanelView.initPixi()
-showPanel(CommonGame, { visible: true }, canvasStage)
+class CommonGameView extends VueBase {
+    protected mounted() {
+        console.log('mouted commonGame view');
+        if (!canvasStage)
+            canvasStage = BasePanelView.initPixi()
+        showPanel(CommonGame, { visible: true }, canvasStage)
+    }
+}
+export let commonGame = new CommonGameView()
