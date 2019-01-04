@@ -1,17 +1,17 @@
 import { VueBase } from '../../utils/VueBase';
-import { PanelId } from '../../const';
+import { PanelId, TimerEvent } from '../../const';
 import { CommandId } from '../../Command';
 declare let $;
 let opReq = (cmdId: string, param: any) => {
     param._ = null;
     $.ajax({
-      url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
-      type: "post",
-      data: JSON.stringify(param),
-      headers: { "Content-Type": "application/json" },
-      dataType: "json"
+        url: `/panel/${PanelId.onlinePanel}/${cmdId}`,
+        type: "post",
+        data: JSON.stringify(param),
+        headers: { "Content-Type": "application/json" },
+        dataType: "json"
     });
-  };
+};
 export class BaseGame {
     lScore: number = 0;
     rScore: number = 0;
@@ -22,7 +22,7 @@ export class BaseGame {
     lPlayerId: string = "";
     rPlayerId: string = "";
     gameTime: number = 0//in sec
-    buzzerTime:number = 24//
+    buzzerTime: number = 24//
     constructor() { }
 }
 const baseGame = new BaseGame();
@@ -33,6 +33,8 @@ class _CommonGameAdmin extends VueBase {
     updateTime = VueBase.PROP;
     lTeamScore = VueBase.PROP
     rTeamScore = VueBase.PROP
+    isFocusBuzzer = VueBase.PROP
+
     constructor() {
         super();
         VueBase.initProps(this);
@@ -43,6 +45,19 @@ class _CommonGameAdmin extends VueBase {
         this.timeInSec = 0;
         this.buzzerTimeInSec = 0;
         this.lTeamScore = this.rTeamScore = 0
+        window.onkeydown = (e) => {
+            let isFocus = $("#buzzer").is(":focus")
+            if (isFocus) {
+                console.log(e.keyCode, 'key code')
+                if (e.keyCode == 32) {
+                    console.log('buzzer toggle')
+                    opReq(CommandId.cs_timerEvent_buzzer, { event: "toggle" })
+                }
+                else if (e.keyCode == 82) {
+                    this.resetBuzzer()
+                }
+            }
+        }
     }
     initView(data) {
         baseGame.lName = data.leftPlayer.name;
@@ -62,11 +77,23 @@ class _CommonGameAdmin extends VueBase {
             console.log("lname", val);
         },
     };
+    resetBuzzer() {
+        opReq(CommandId.cs_timerEvent_buzzer, { event: TimerEvent.RESET })
+    }
     methods = {
-        onBuzzer() {
-            // $("#buzzer").click(function () {
-                $("#buzzer").select();
-            //  });
+        onSetBuzzer(v) {
+            let ms10;
+            let isNum = /(-?\d*)\.?\d+/.test(v)
+            if (isNum) {
+                if (!/\./.test(v)) {
+                    v+='.0'
+                }
+                let a = v.split('.')
+                ms10 = Number(a[1]) + Number(a[0]) * 100
+                opReq(CommandId.cs_timerEvent_buzzer, { event: TimerEvent.SETTING, param: ms10 })
+            }
+            console.log('set buzzer', isNum, v, Number(v) * 100, ms10)
+
         },
         onSetTimerEvent(event, param?) {
             opReq(CommandId.cs_timerEvent, { event: event, param: param });
@@ -94,19 +121,12 @@ class _CommonGameAdmin extends VueBase {
                 baseGame.rScore += dtScore;
                 score = baseGame.rScore;
             }
-            opReq(CommandId.cs_setBlood, {
-                isLeft: isLeft, score: score,
-                lScore: baseGame.lScore, rScore: baseGame.rScore,
-                lPlayer: baseGame.lPlayerId, rPlayer: baseGame.rPlayerId
-            });
+            opReq(CommandId.cs_scoreFoul_common, baseGame);
             this.vueUpdate();
         },
         onSetFoul(isLeft, dtFoul) {
             isLeft ? (baseGame.lFoul += dtFoul) : (baseGame.rFoul += dtFoul);
-            opReq(CommandId.cs_setFoul, {
-                lFoul: baseGame.lFoul,
-                rFoul: baseGame.rFoul
-            });
+            opReq(CommandId.cs_scoreFoul_common, baseGame);
             this.vueUpdate();
         },
         onResetFoul() {

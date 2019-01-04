@@ -193,6 +193,7 @@ class StageOnlineView extends VueBase {
         }
         this.showOnly(bracketView.name)
     }
+    
     _setLiveData(data?) {
         if (data == null)
             data = {

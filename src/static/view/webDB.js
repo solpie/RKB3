@@ -623,7 +623,8 @@
 	    return r;
 	}
 	exports.combineArr = combineArr;
-	function formatSecond(sec, minStr, secStr) {
+	function formatSecond(sec, isSecOnly, minStr, secStr) {
+	    if (isSecOnly === void 0) { isSecOnly = false; }
 	    if (minStr === void 0) { minStr = ":"; }
 	    if (secStr === void 0) { secStr = ""; }
 	    var min = Math.floor(sec / 60);
@@ -634,9 +635,33 @@
 	        strMin = "0" + strMin;
 	    if (s < 10)
 	        strSec = "0" + strSec;
+	    if (isSecOnly)
+	        return strSec;
 	    return strMin + minStr + strSec + secStr;
 	}
 	exports.formatSecond = formatSecond;
+	function format10ms(ms10, isSecOnly, minStr, secStr) {
+	    if (isSecOnly === void 0) { isSecOnly = false; }
+	    if (minStr === void 0) { minStr = ":"; }
+	    if (secStr === void 0) { secStr = ""; }
+	    var sec = Math.floor(ms10 / 100);
+	    var min = Math.floor(sec / 60);
+	    var s = sec % 60;
+	    var ms = ms10 % 100;
+	    var strMin = min + "";
+	    var strSec = s + "";
+	    var str10ms = ms + "";
+	    if (min < 10)
+	        strMin = "0" + strMin;
+	    if (s < 10)
+	        strSec = "0" + strSec;
+	    if (ms < 10)
+	        str10ms = '0' + str10ms;
+	    if (isSecOnly)
+	        return strSec + secStr + '.' + str10ms;
+	    return strMin + minStr + strSec + secStr + '.' + str10ms;
+	}
+	exports.format10ms = format10ms;
 	function getLength(str) {
 	    var realLength = 0, len = str.length, charCode = -1;
 	    for (var i = 0; i < len; i++) {

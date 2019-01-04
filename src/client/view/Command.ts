@@ -118,6 +118,14 @@ export const CommandId = {
     sc_pauseTimer: '',
     cs_timerEvent: '',
     sc_timerEvent: '',
+    //common game
+    cs_timerEvent_common: '',
+    sc_timerEvent_common: '',
+    cs_timerEvent_buzzer: '',
+    sc_timerEvent_buzzer: '',
+    cs_scoreFoul_common:'',
+    sc_scoreFoul_common:'',
+    ///
     cs_showPickup: '',//
     sc_showPickup: '',//
     //hp

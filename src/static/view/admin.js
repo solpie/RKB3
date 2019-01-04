@@ -990,7 +990,8 @@
 	    return r;
 	}
 	exports.combineArr = combineArr;
-	function formatSecond(sec, minStr, secStr) {
+	function formatSecond(sec, isSecOnly, minStr, secStr) {
+	    if (isSecOnly === void 0) { isSecOnly = false; }
 	    if (minStr === void 0) { minStr = ":"; }
 	    if (secStr === void 0) { secStr = ""; }
 	    var min = Math.floor(sec / 60);
@@ -1001,9 +1002,33 @@
 	        strMin = "0" + strMin;
 	    if (s < 10)
 	        strSec = "0" + strSec;
+	    if (isSecOnly)
+	        return strSec;
 	    return strMin + minStr + strSec + secStr;
 	}
 	exports.formatSecond = formatSecond;
+	function format10ms(ms10, isSecOnly, minStr, secStr) {
+	    if (isSecOnly === void 0) { isSecOnly = false; }
+	    if (minStr === void 0) { minStr = ":"; }
+	    if (secStr === void 0) { secStr = ""; }
+	    var sec = Math.floor(ms10 / 100);
+	    var min = Math.floor(sec / 60);
+	    var s = sec % 60;
+	    var ms = ms10 % 100;
+	    var strMin = min + "";
+	    var strSec = s + "";
+	    var str10ms = ms + "";
+	    if (min < 10)
+	        strMin = "0" + strMin;
+	    if (s < 10)
+	        strSec = "0" + strSec;
+	    if (ms < 10)
+	        str10ms = '0' + str10ms;
+	    if (isSecOnly)
+	        return strSec + secStr + '.' + str10ms;
+	    return strMin + minStr + strSec + secStr + '.' + str10ms;
+	}
+	exports.format10ms = format10ms;
 	function getLength(str) {
 	    var realLength = 0, len = str.length, charCode = -1;
 	    for (var i = 0; i < len; i++) {
@@ -1825,7 +1850,8 @@
 	    Gamer: "gamer",
 	    Geodet: "geodet",
 	    dinCondensedC: "dinCondensedC",
-	    DigiLED: "digital"
+	    DigiLED: "digital",
+	    DigiLED2: "digital2"
 	};
 	exports.ServerConst = {
 	    SEND_ASYNC: true,
@@ -1844,6 +1870,7 @@
 	exports.TimerEvent = {
 	    START: 'start',
 	    PAUSE: 'pause',
+	    TOGGLE: 'toggle',
 	    RESET: 'reset',
 	    SETTING: 'setting'
 	};
@@ -1957,6 +1984,12 @@
 	    sc_pauseTimer: '',
 	    cs_timerEvent: '',
 	    sc_timerEvent: '',
+	    cs_timerEvent_common: '',
+	    sc_timerEvent_common: '',
+	    cs_timerEvent_buzzer: '',
+	    sc_timerEvent_buzzer: '',
+	    cs_scoreFoul_common: '',
+	    sc_scoreFoul_common: '',
 	    cs_showPickup: '',
 	    sc_showPickup: '',
 	    cs_startGame: '',
@@ -3779,14 +3812,25 @@
 	        this.updateTime = VueBase_1.VueBase.PROP;
 	        this.lTeamScore = VueBase_1.VueBase.PROP;
 	        this.rTeamScore = VueBase_1.VueBase.PROP;
+	        this.isFocusBuzzer = VueBase_1.VueBase.PROP;
 	        this.watch = {
 	            "baseGame.lName": function (val) {
 	                console.log("lname", val);
 	            },
 	        };
 	        this.methods = {
-	            onBuzzer: function () {
-	                $("#buzzer").select();
+	            onSetBuzzer: function (v) {
+	                var ms10;
+	                var isNum = /(-?\d*)\.?\d+/.test(v);
+	                if (isNum) {
+	                    if (!/\./.test(v)) {
+	                        v += '.0';
+	                    }
+	                    var a = v.split('.');
+	                    ms10 = Number(a[1]) + Number(a[0]) * 100;
+	                    opReq(Command_1.CommandId.cs_timerEvent_buzzer, { event: const_1.TimerEvent.SETTING, param: ms10 });
+	                }
+	                console.log('set buzzer', isNum, v, Number(v) * 100, ms10);
 	            },
 	            onSetTimerEvent: function (event, param) {
 	                opReq(Command_1.CommandId.cs_timerEvent, { event: event, param: param });
@@ -3808,19 +3852,12 @@
 	                    baseGame.rScore += dtScore;
 	                    score = baseGame.rScore;
 	                }
-	                opReq(Command_1.CommandId.cs_setBlood, {
-	                    isLeft: isLeft, score: score,
-	                    lScore: baseGame.lScore, rScore: baseGame.rScore,
-	                    lPlayer: baseGame.lPlayerId, rPlayer: baseGame.rPlayerId
-	                });
+	                opReq(Command_1.CommandId.cs_scoreFoul_common, baseGame);
 	                this.vueUpdate();
 	            },
 	            onSetFoul: function (isLeft, dtFoul) {
 	                isLeft ? (baseGame.lFoul += dtFoul) : (baseGame.rFoul += dtFoul);
-	                opReq(Command_1.CommandId.cs_setFoul, {
-	                    lFoul: baseGame.lFoul,
-	                    rFoul: baseGame.rFoul
-	                });
+	                opReq(Command_1.CommandId.cs_scoreFoul_common, baseGame);
 	                this.vueUpdate();
 	            },
 	            onResetFoul: function () {
@@ -3834,10 +3871,24 @@
 	        VueBase_1.VueBase.initProps(this);
 	    }
 	    _CommonGameAdmin.prototype.created = function () {
+	        var _this = this;
 	        this.baseGame = baseGame;
 	        this.timeInSec = 0;
 	        this.buzzerTimeInSec = 0;
 	        this.lTeamScore = this.rTeamScore = 0;
+	        window.onkeydown = function (e) {
+	            var isFocus = $("#buzzer").is(":focus");
+	            if (isFocus) {
+	                console.log(e.keyCode, 'key code');
+	                if (e.keyCode == 32) {
+	                    console.log('buzzer toggle');
+	                    opReq(Command_1.CommandId.cs_timerEvent_buzzer, { event: "toggle" });
+	                }
+	                else if (e.keyCode == 82) {
+	                    _this.resetBuzzer();
+	                }
+	            }
+	        };
 	    };
 	    _CommonGameAdmin.prototype.initView = function (data) {
 	        baseGame.lName = data.leftPlayer.name;
@@ -3852,6 +3903,9 @@
 	    _CommonGameAdmin.prototype.vueUpdate = function () {
 	        this.updateTime = new Date().getTime();
 	    };
+	    _CommonGameAdmin.prototype.resetBuzzer = function () {
+	        opReq(Command_1.CommandId.cs_timerEvent_buzzer, { event: const_1.TimerEvent.RESET });
+	    };
 	    return _CommonGameAdmin;
 	}(VueBase_1.VueBase));
 	exports.CommonGameAdmin = new _CommonGameAdmin();
@@ -3861,7 +3915,7 @@
 /* 44 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    比赛时间设置:<input class=\"input\" v-model=\"timeInSec\" type=\"text\" style=\"width: 100px;\">\r\n\r\n    <table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n        <thead>\r\n        </thead>\r\n        <tbody>\r\n            <tr>\r\n                <th>\r\n                    <div hidden>{{updateTime}}</div>\r\n                </th>\r\n                <th>\r\n                    <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n                </th>\r\n                <th>蓝方球员</th>\r\n                <th>score</th>\r\n                <th>红方球员</th>\r\n                <th>\r\n                </th>\r\n            </tr>\r\n            <tr>\r\n                <th style=\"font-size:25px;\">\r\n                    <a @click=\"onSetTimerEvent('start')\">开始  </a><a @click=\"onSetTimerEvent('pause')\">暂停  </a>\r\n                    <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n                    <a @click=\"onSetTimerEvent('reset')\">reset</a>\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n                </th>\r\n                <th>\r\n                    {{baseGame.lName}}\r\n                </th>\r\n                <th style=\"font-size:40px;\">\r\n                    <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n                </th>\r\n                <th>\r\n                    {{baseGame.rName}}\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n                </th>\r\n            </tr>\r\n            <tr>\r\n                <th style=\"font-size:25px;\">犯规\r\n                    <a @click=\"onResetFoul\"> 重置</a>\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n                </th>\r\n                <th>\r\n                    -\r\n                </th>\r\n                <th>\r\n                    <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n                </th>\r\n                <th>\r\n                    -\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n                </th>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n    进攻时间设置:\r\n    <input class=\"input\" v-model=\"buzzerTimeInSec\" type=\"text\" style=\"width: 100px;\">\r\n    <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n    <a @click=\"onSetTimerEvent('reset')\">reset</a>\r\n    <input id=\"buzzer\" maxlength=\"1\" class=\"input\" @click=\"onBuzzer\" @keydown=\"onBuzzer\" type=\"text\" style=\"width: 100px;\">\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n        <thead>\r\n        </thead>\r\n        <tbody>\r\n            <tr>\r\n                <th>\r\n                    <div hidden>{{updateTime}}</div>\r\n                </th>\r\n                <th>\r\n                    <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n                </th>\r\n                <th>蓝方球员</th>\r\n                <th> </th>\r\n                <th>红方球员</th>\r\n                <th>\r\n                </th>\r\n            </tr>\r\n            <tr>\r\n                <th style=\"font-size:25px;\">\r\n\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n                </th>\r\n                <th>\r\n                    {{baseGame.lName}}\r\n                </th>\r\n                <th style=\"font-size:40px;\">\r\n                    <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n                </th>\r\n                <th>\r\n                    {{baseGame.rName}}\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n                </th>\r\n            </tr>\r\n            <tr>\r\n                <th style=\"font-size:25px;\">犯规\r\n                    <a @click=\"onResetFoul\"> 重置</a>\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n                </th>\r\n                <th>\r\n                    -\r\n                </th>\r\n                <th>\r\n                    <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n                </th>\r\n                <th>\r\n                    -\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n                </th>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n    <div style=\"font-size:30px;\">\r\n        比赛时间设置:<input class=\"input\" v-model=\"timeInSec\" type=\"text\" style=\"width: 100px;\">\r\n        <a @click=\"onSetTimerEvent('start')\">开始  </a><a @click=\"onSetTimerEvent('pause')\">暂停  </a>\r\n        <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n        <a @click=\"onSetTimerEvent('reset')\">reset</a>\r\n        <hr> 进攻时间设置:\r\n        <input class=\"input\" v-model=\"buzzerTimeInSec\" type=\"text\" style=\"width: 100px;\">\r\n        <a @click=\"onSetBuzzer(buzzerTimeInSec)\">设置</a>\r\n        <a @click=\"resetBuzzer\">reset</a>\r\n        <input id=\"buzzer\" maxlength=\"1\" class=\"input\" type=\"text\" style=\"width: 60px;\">\r\n    </div>\r\n</div>";
 
 /***/ }
 /******/ ]);

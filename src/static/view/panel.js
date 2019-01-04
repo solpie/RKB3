@@ -560,7 +560,8 @@
 	    return r;
 	}
 	exports.combineArr = combineArr;
-	function formatSecond(sec, minStr, secStr) {
+	function formatSecond(sec, isSecOnly, minStr, secStr) {
+	    if (isSecOnly === void 0) { isSecOnly = false; }
 	    if (minStr === void 0) { minStr = ":"; }
 	    if (secStr === void 0) { secStr = ""; }
 	    var min = Math.floor(sec / 60);
@@ -571,9 +572,33 @@
 	        strMin = "0" + strMin;
 	    if (s < 10)
 	        strSec = "0" + strSec;
+	    if (isSecOnly)
+	        return strSec;
 	    return strMin + minStr + strSec + secStr;
 	}
 	exports.formatSecond = formatSecond;
+	function format10ms(ms10, isSecOnly, minStr, secStr) {
+	    if (isSecOnly === void 0) { isSecOnly = false; }
+	    if (minStr === void 0) { minStr = ":"; }
+	    if (secStr === void 0) { secStr = ""; }
+	    var sec = Math.floor(ms10 / 100);
+	    var min = Math.floor(sec / 60);
+	    var s = sec % 60;
+	    var ms = ms10 % 100;
+	    var strMin = min + "";
+	    var strSec = s + "";
+	    var str10ms = ms + "";
+	    if (min < 10)
+	        strMin = "0" + strMin;
+	    if (s < 10)
+	        strSec = "0" + strSec;
+	    if (ms < 10)
+	        str10ms = '0' + str10ms;
+	    if (isSecOnly)
+	        return strSec + secStr + '.' + str10ms;
+	    return strMin + minStr + strSec + secStr + '.' + str10ms;
+	}
+	exports.format10ms = format10ms;
 	function getLength(str) {
 	    var realLength = 0, len = str.length, charCode = -1;
 	    for (var i = 0; i < len; i++) {
@@ -1395,7 +1420,8 @@
 	    Gamer: "gamer",
 	    Geodet: "geodet",
 	    dinCondensedC: "dinCondensedC",
-	    DigiLED: "digital"
+	    DigiLED: "digital",
+	    DigiLED2: "digital2"
 	};
 	exports.ServerConst = {
 	    SEND_ASYNC: true,
@@ -1414,6 +1440,7 @@
 	exports.TimerEvent = {
 	    START: 'start',
 	    PAUSE: 'pause',
+	    TOGGLE: 'toggle',
 	    RESET: 'reset',
 	    SETTING: 'setting'
 	};
@@ -1527,6 +1554,12 @@
 	    sc_pauseTimer: '',
 	    cs_timerEvent: '',
 	    sc_timerEvent: '',
+	    cs_timerEvent_common: '',
+	    sc_timerEvent_common: '',
+	    cs_timerEvent_buzzer: '',
+	    sc_timerEvent_buzzer: '',
+	    cs_scoreFoul_common: '',
+	    sc_scoreFoul_common: '',
 	    cs_showPickup: '',
 	    sc_showPickup: '',
 	    cs_startGame: '',
@@ -4737,11 +4770,17 @@
 	};
 	var TextTimer = (function (_super) {
 	    __extends(TextTimer, _super);
-	    function TextTimer() {
-	        _super.apply(this, arguments);
+	    function TextTimer(text, style, resolution) {
+	        _super.call(this, text, style, resolution);
 	        this.timeInSec = 0;
+	        this.resetTime = 0;
 	        this.timerId = null;
 	        this.isMin = false;
+	        this.isSecOnly = false;
+	        this.isMsTimer = false;
+	        this.isTimeOut = false;
+	        this._tickCache = 0;
+	        this.formatTime = JsFunc_1.formatSecond;
 	    }
 	    TextTimer.prototype.setTimerEvent = function (data) {
 	        if (data.event == const_1.TimerEvent.PAUSE) {
@@ -4757,6 +4796,9 @@
 	        else if (data.event == const_1.TimerEvent.SETTING) {
 	            this.setTimeBySec(data.param);
 	        }
+	        else if (data.event == const_1.TimerEvent.TOGGLE) {
+	            this.toggleTimer();
+	        }
 	    };
 	    Object.defineProperty(TextTimer.prototype, "textInSec", {
 	        set: function (v) {
@@ -4767,51 +4809,87 @@
 	    });
 	    TextTimer.prototype.setTimeBySec = function (sec) {
 	        this.timeInSec = sec;
-	        this.text = JsFunc_1.formatSecond(this.timeInSec);
+	        this.text = this.formatTime(this.timeInSec, this.isSecOnly);
+	    };
+	    TextTimer.prototype.pauseTimer = function () {
+	        if (this.timerId) {
+	            clearInterval(this.timerId);
+	            this.timerId = 0;
+	            this.timerState = TimerState.PAUSE;
+	        }
 	    };
 	    TextTimer.prototype.toggleTimer = function (state) {
-	        var _this = this;
-	        var pauseTimer = function () {
-	            if (_this.timerId) {
-	                clearInterval(_this.timerId);
-	                _this.timerId = 0;
-	                _this.timerState = TimerState.PAUSE;
-	            }
-	        };
-	        var playTimer = function () {
-	            if (_this.timerId)
-	                clearInterval(_this.timerId);
-	            _this.timerId = setInterval(function () {
-	                if (_this.isMin) {
-	                    _this.timeInSec--;
-	                    if (_this.timeInSec < 0)
-	                        _this.timeInSec = 0;
-	                }
-	                else
-	                    _this.timeInSec++;
-	                _this.text = JsFunc_1.formatSecond(_this.timeInSec);
-	                _this.emit('sec', _this.text);
-	            }, 1000);
-	            _this.timerState = TimerState.RUNNING;
-	        };
 	        if (state != null) {
 	            if (state == TimerState.PAUSE)
-	                pauseTimer();
+	                this.pauseTimer();
 	            else if (state == TimerState.RUNNING)
-	                playTimer();
+	                this.newTimer();
 	        }
 	        else {
-	            this.timerId ? pauseTimer() : playTimer();
+	            this.timerId ? this.pauseTimer() : this.newTimer();
 	        }
 	    };
+	    TextTimer.prototype.tick = function (n) {
+	        if (n === void 0) { n = 1; }
+	        if (n < 1) {
+	            this._tickCache += n;
+	            n = this._tickCache;
+	        }
+	        if (n >= 1) {
+	            this._tickCache = 0;
+	            if (this.isMin) {
+	                this.timeInSec--;
+	                if (this.timeInSec < 0)
+	                    this.timeInSec = 0;
+	                if (this.timeInSec < 1) {
+	                    console.log('timeout', this.timeInSec);
+	                    this.pauseTimer();
+	                    this.emit('timeout', this.timeInSec);
+	                }
+	            }
+	            else
+	                this.timeInSec++;
+	            this.text = this.formatTime(this.timeInSec, this.isSecOnly);
+	            this.emit('tick', this.timeInSec);
+	        }
+	    };
+	    TextTimer.prototype.newTimer = function () {
+	        var _this = this;
+	        this.isTimeOut = true;
+	        if (this.timerId)
+	            clearInterval(this.timerId);
+	        this.timerId = setInterval(function () {
+	            _this.tick();
+	        }, 1000);
+	        this.timerState = TimerState.RUNNING;
+	    };
 	    TextTimer.prototype.resetTimer = function () {
-	        this.timeInSec = 0;
+	        this.timeInSec = this.resetTime;
 	        this.timerState = TimerState.PAUSE;
-	        this.text = JsFunc_1.formatSecond(this.timeInSec);
+	        this.text = this.formatTime(this.timeInSec, this.isSecOnly);
 	    };
 	    return TextTimer;
 	}(PIXI.Text));
 	exports.TextTimer = TextTimer;
+	var TextTime10ms = (function (_super) {
+	    __extends(TextTime10ms, _super);
+	    function TextTime10ms(text, style, resolution) {
+	        _super.call(this, text, style, resolution);
+	        this.formatTime = JsFunc_1.format10ms;
+	    }
+	    TextTime10ms.prototype.newTimer = function () {
+	        var _this = this;
+	        this.esclaptime = this.timeInSec;
+	        if (this.timerId)
+	            clearInterval(this.timerId);
+	        this.timerId = setInterval(function () {
+	            _this.tick();
+	        }, 10);
+	        this.timerState = TimerState.RUNNING;
+	    };
+	    return TextTime10ms;
+	}(TextTimer));
+	exports.TextTime10ms = TextTime10ms;
 
 
 /***/ },
@@ -10936,7 +11014,7 @@
 	var BasePanelView_1 = __webpack_require__(54);
 	var TextTimer_1 = __webpack_require__(67);
 	var VueBase_1 = __webpack_require__(22);
-	var urlBg1 = '/html/ww/bottomBlood/bg2.png';
+	var urlBg1 = '/html/ww/bottomBlood/commonGameBg.png';
 	var urlBloodFrame = '/html/ww/bottomBlood/frame.png';
 	var urlLBlood = '/html/ww/bottomBlood/lBlood.png';
 	var urlRBlood = '/html/ww/bottomBlood/rBlood.png';
@@ -10944,113 +11022,9 @@
 	var urlMask = '/html/ww/bottomBlood/avtMask.png';
 	var isTest = false;
 	var urlBase = 'http://rtmp.icassi.us:8092/img/player/915/';
-	var ___BloodPlayer = (function (_super) {
-	    __extends(___BloodPlayer, _super);
-	    function ___BloodPlayer(parent, isRight) {
-	        if (isRight === void 0) { isRight = false; }
-	        _super.call(this);
-	        this.isAvtLoaded = false;
-	        this.isRight = isRight;
-	        this.addChild(PixiEx_1.newBitmap({ url: urlBloodFrame }));
-	        var fg = PixiEx_1.newBitmap({ url: urlBloodFrame });
-	        var blood;
-	        this.bloodMask = new PIXI.Graphics()
-	            .beginFill(0xff0000);
-	        var ctn = new PIXI.Container();
-	        this.addChild(ctn);
-	        var avtMask = PixiEx_1.newBitmap({ url: urlMask });
-	        ctn.addChild(avtMask);
-	        this.avt = new PIXI.Sprite();
-	        this.avt.x = 324;
-	        this.avt.y = 420;
-	        this.avt.mask = avtMask;
-	        ctn.addChild(this.avt);
-	        var bs = {
-	            fontFamily: const_1.FontName.dinCondensedC,
-	            fontSize: "65px",
-	            fontWeight: "",
-	            stroke: '#333',
-	            strokeThickness: 2,
-	            fill: "#ddd"
-	        };
-	        this.bloodText = TextFac_1.TextFac.new_(bs, this)
-	            .setY(456);
-	        if (isRight) {
-	            this.bloodMask
-	                .drawRect(1015, 449, 400, 90);
-	            fg.scale.x = -1;
-	            fg.x = 1920;
-	            ctn.x = 1173;
-	            blood = PixiEx_1.newBitmap({ url: urlRBlood });
-	        }
-	        else {
-	            this.bloodMask
-	                .drawRect(505, 449, 400, 90);
-	            blood = PixiEx_1.newBitmap({ url: urlLBlood });
-	        }
-	        this.addChild(blood);
-	        blood.mask = this.bloodMask;
-	        this.addChild(this.bloodMask);
-	        var ns = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: "45px",
-	            fontWeight: "",
-	            stroke: '#333',
-	            strokeThickness: 2,
-	            fill: "#ddd"
-	        };
-	        this.pName = TextFac_1.TextFac.new_(ns, this)
-	            .setY(459);
-	        this.addChild(fg);
-	        ns.fontSize = '30px';
-	        this.kda = TextFac_1.TextFac.new_(ns, this)
-	            .setY(418);
-	        parent.addChild(this);
-	        if (isTest)
-	            this.setInfo({ name: '黄玉军', bloodRaito: Math.random() });
-	    }
-	    ___BloodPlayer.prototype.setInfo = function (data) {
-	        var _this = this;
-	        if (data.name) {
-	            this.pName.setText(data.name)
-	                .setAlignCenter(645);
-	        }
-	        if (data.bloodRaito != null) {
-	            var bloodWidth = 400 * (1 - data.bloodRaito);
-	            if (data.bloodRaito == 0) {
-	                bloodWidth = 397;
-	            }
-	            if (this.isRight) {
-	                this.bloodMask.x = bloodWidth;
-	                this.pName.setAlignCenter(PixiEx_1._c(267));
-	            }
-	            else {
-	                this.bloodMask.x = -bloodWidth;
-	                this.pName.setAlignCenter(PixiEx_1._c(-267));
-	            }
-	        }
-	        var curBlood;
-	        if (data.curBlood != null) {
-	            curBlood = data.curBlood;
-	        }
-	        else if (data.blood != null) {
-	            curBlood = data.blood;
-	        }
-	        if (this.isRight)
-	            this.bloodText.setText(curBlood)
-	                .setAlignCenter(PixiEx_1._c(492));
-	        else
-	            this.bloodText.setText(curBlood)
-	                .setAlignCenter(PixiEx_1._c(-492));
-	        console.log('set info', data.cid);
-	        var avtUrl = urlBase + data.playerId + '.png';
-	        ImgLoader_1.imgLoader.loadTexRemote(avtUrl, function (_) {
-	            _this.avt.texture = ImgLoader_1.imgLoader.getTex(avtUrl);
-	            PixiEx_1.setScale(_this.avt, 104 / _this.avt.texture.width);
-	        });
-	    };
-	    return ___BloodPlayer;
-	}(PIXI.Container));
+	var resetGameTime = 1 * 60 + 2;
+	var resetGameTime1min = 60 * 100 - 3;
+	var resetBuzzerTime = 5 * 100;
 	var CommonGame = (function (_super) {
 	    __extends(CommonGame, _super);
 	    function CommonGame() {
@@ -11069,6 +11043,8 @@
 	        console.log('scroll text creat1e');
 	        var f3 = this.preLoadFont(const_1.FontName.dinCondensedC);
 	        this.p.addChild(f3);
+	        var f2 = this.preLoadFont(const_1.FontName.DigiLED2);
+	        this.p.addChild(f2);
 	        var imgArr = [urlBg1,
 	            urlBloodFrame,
 	            urlLBlood,
@@ -11083,18 +11059,6 @@
 	            _this.addChild(bg);
 	            _this.addChild(PixiEx_1.newBitmap({ url: urlBg1 }));
 	            var lA = [], rA = [];
-	            for (var i = 0; i < 5; i++) {
-	                var lP = new ___BloodPlayer(_this);
-	                lP.x = 0;
-	                lP.y = i * 115;
-	                lA.push(lP);
-	                var rP = new ___BloodPlayer(_this, true);
-	                rP.x = 0;
-	                rP.y = lP.y;
-	                rA.push(rP);
-	            }
-	            _this.lPlayerArr = lA;
-	            _this.rPlayerArr = rA;
 	            _this.lTimeoutMaskArr = [];
 	            _this.rTimeoutMaskArr = [];
 	            var tm = new PIXI.Graphics()
@@ -11147,18 +11111,6 @@
 	            _this.rAvt = new PIXI.Sprite();
 	            _this.addChild(_this.rAvt);
 	            _this.addChild(PixiEx_1.newBitmap({ url: urlFg }));
-	            _this.gameTime = new TextTimer_1.TextTimer('', ns);
-	            _this.gameTime.isMin = true;
-	            _this.addChild(_this.gameTime);
-	            _this.gameTime.setTimeBySec(60 * 5);
-	            _this.gameTime.x = 640;
-	            _this.gameTime.y = 400;
-	            _this.buzzerTime = new TextTimer_1.TextTimer('', ns);
-	            _this.buzzerTime.isMin = true;
-	            _this.addChild(_this.buzzerTime);
-	            _this.buzzerTime.setTimeBySec(60 * 5);
-	            _this.buzzerTime.x = 640;
-	            _this.buzzerTime.y = 600;
 	            ns.fontFamily = const_1.FontName.MicrosoftYahei;
 	            ns.fontSize = "43px";
 	            _this.lName = TextFac_1.TextFac.new_(ns, _this)
@@ -11169,43 +11121,64 @@
 	                .setText('')
 	                .setY(_this.lName.y)
 	                .setAlignCenter(PixiEx_1._c(516));
+	            ns.fontFamily = const_1.FontName.DigiLED2;
+	            ns.fontWeight = "normal";
+	            ns.fontSize = '140px';
+	            _this.gameTimer = new TextTimer_1.TextTimer('', ns);
+	            _this.gameTimer.isMin = true;
+	            _this.gameTimer.resetTime = resetGameTime;
+	            _this.gameTimer.setTimeBySec(resetGameTime);
+	            _this.gameTimer.x = 640 + 50;
+	            _this.gameTimer.y = 400;
+	            _this.gameTimer.on('tick', function (sec) {
+	                if (sec < 61) {
+	                    _this.gameTimer1min.visible = true;
+	                    _this.gameTimer.visible = false;
+	                }
+	            });
+	            _this.addChild(_this.gameTimer);
+	            _this.gameTimer1min = new TextTimer_1.TextTime10ms('', ns);
+	            _this.gameTimer1min.isMin = true;
+	            _this.gameTimer1min.isSecOnly = true;
+	            _this.gameTimer1min.resetTime = resetGameTime1min;
+	            _this.gameTimer1min.setTimeBySec(resetGameTime1min);
+	            _this.gameTimer1min.visible = false;
+	            _this.gameTimer1min.x = _this.gameTimer.x;
+	            _this.gameTimer1min.y = _this.gameTimer.y;
+	            _this.addChild(_this.gameTimer1min);
+	            _this.buzzerTimer = new TextTimer_1.TextTime10ms('', ns);
+	            _this.buzzerTimer.isMin = true;
+	            _this.buzzerTimer.isSecOnly = true;
+	            _this.buzzerTimer.resetTime = resetBuzzerTime;
+	            _this.buzzerTimer.on('timeout', function (_) {
+	                console.log('buzzer timer timeout');
+	                _this.timer10ms.pauseTimer();
+	            });
+	            _this.buzzerTimer.setTimeBySec(resetBuzzerTime);
+	            _this.buzzerTimer.x = 640 + 50;
+	            _this.buzzerTimer.y = 676;
+	            _this.addChild(_this.buzzerTimer);
+	            _this.timer10ms = new TextTimer_1.TextTime10ms('', ns);
+	            _this.timer10ms.isMin = true;
+	            _this.timer10ms.setTimeBySec(8 * 60 * 60 * 100);
+	            _this.timer10ms.on('tick', function (_) {
+	                console.log('10 ms tick');
+	                if (_this.gameTimer.visible)
+	                    _this.gameTimer.tick(0.01);
+	                if (_this.gameTimer1min.visible)
+	                    _this.gameTimer1min.tick(1);
+	                _this.buzzerTimer.tick();
+	            });
 	        });
 	    };
-	    CommonGame.prototype._fillBlood = function (dataArr, bloodPlayerArr, curPlayer) {
-	        for (var i = 0; i < dataArr.length; i++) {
-	            var data = dataArr[i];
-	            var b = bloodPlayerArr[i];
-	            if (curPlayer.playerId == data.playerId) {
-	                data.blood = curPlayer.blood;
-	            }
-	            b.initBlood = data.initBlood;
-	            b.blood = data.blood;
-	            b.playerId = data.playerId;
-	            data.bloodRaito = data.blood / data.initBlood;
-	            b.setInfo(data);
+	    CommonGame.prototype.setBuzzerTimerEvent = function (data) {
+	        console.log('game timer');
+	        if (data.event == const_1.TimerEvent.TOGGLE) {
+	            this.timer10ms.setTimerEvent(data);
 	        }
-	    };
-	    CommonGame.prototype._setCurBlood = function (data) {
-	        var curBloodArr = [0, 0];
-	        for (var i = 0; i < this.lPlayerArr.length; i++) {
-	            var b = this.lPlayerArr[i];
-	            if (b.playerId == data.lPlayer) {
-	                curBloodArr[0] = b.blood - data.rScore;
-	                data.bloodRaito = curBloodArr[0] / b.initBlood;
-	                data.curBlood = curBloodArr[0];
-	                b.setInfo(data);
-	            }
+	        else {
+	            this.buzzerTimer.setTimerEvent(data);
 	        }
-	        for (var i = 0; i < this.rPlayerArr.length; i++) {
-	            var b = this.rPlayerArr[i];
-	            if (b.playerId == data.rPlayer) {
-	                curBloodArr[1] = b.blood - data.lScore;
-	                data.curBlood = curBloodArr[1];
-	                data.bloodRaito = curBloodArr[1] / b.initBlood;
-	                b.setInfo(data);
-	            }
-	        }
-	        return curBloodArr;
 	    };
 	    CommonGame.prototype._show = function (data) {
 	        var _this = this;
@@ -11215,12 +11188,8 @@
 	            this.rFoul.setText(data.rFoul)
 	                .setAlignCenter(1146);
 	        }
-	        if (data.cid == Command_1.CommandId.sc_setBlood) {
-	            var curBloodArr = this._setCurBlood(data);
-	            this.lBlood.setText(curBloodArr[0])
-	                .setAlignCenter(PixiEx_1._c(-294));
-	            this.rBlood.setText(curBloodArr[1])
-	                .setAlignCenter(PixiEx_1._c(294));
+	        if (data.cid == Command_1.CommandId.sc_timerEvent_buzzer) {
+	            this.setBuzzerTimerEvent(data);
 	        }
 	        if (data.cid == Command_1.CommandId.sc_setPlayer) {
 	            this.lBlood.setText(data.leftPlayer.blood)
@@ -11249,14 +11218,6 @@
 	                _this.rAvt.texture = ImgLoader_1.imgLoader.getTex(rAvtUrl_1);
 	                PixiEx_1.setScale(_this.rAvt, 190 / _this.rAvt.texture.width);
 	            });
-	            this._fillBlood(data.leftTeam, this.lPlayerArr, data.leftPlayer);
-	            this._fillBlood(data.rightTeam, this.rPlayerArr, data.rightPlayer);
-	        }
-	        if (data.cid == Command_1.CommandId.sc_timeOut) {
-	            this.lTimeoutMaskArr[0].visible = data.lTimeOut < 2;
-	            this.lTimeoutMaskArr[1].visible = data.lTimeOut < 1;
-	            this.rTimeoutMaskArr[0].visible = data.rTimeOut < 2;
-	            this.rTimeoutMaskArr[1].visible = data.rTimeOut < 1;
 	        }
 	        this.p.addChild(this);
 	    };
@@ -11275,6 +11236,19 @@
 	        if (!canvasStage)
 	            canvasStage = BasePanelView_1.BasePanelView.initPixi();
 	        BasePanel_1.showPanel(CommonGame, { visible: true }, canvasStage);
+	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
+	        localWs.on('connect', function (msg) {
+	            console.log('connect', window.location.host);
+	        });
+	        var _adept = function (event) {
+	            localWs.on(event, function (data) {
+	                data.cid = event;
+	                data.visible = true;
+	                console.log(event, data);
+	                BasePanel_1.showPanel(CommonGame, data, canvasStage);
+	            });
+	        };
+	        _adept(Command_1.CommandId.sc_timerEvent_buzzer);
 	    };
 	    return CommonGameView;
 	}(VueBase_1.VueBase));

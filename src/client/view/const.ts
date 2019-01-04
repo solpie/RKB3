@@ -22,7 +22,8 @@ export const FontName = {
     Gamer: "gamer",
     Geodet: "geodet",
     dinCondensedC: "dinCondensedC",
-    DigiLED: "digital"
+    DigiLED: "digital",
+    DigiLED2: "digital2"
 };
 export const ServerConst = {
     SEND_ASYNC: true,
@@ -41,6 +42,7 @@ export const TimerState = {
 export const TimerEvent = {
     START: 'start',
     PAUSE: 'pause',
+    TOGGLE: 'toggle',
     RESET: 'reset',
     SETTING: 'setting'
 };

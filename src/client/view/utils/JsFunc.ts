@@ -28,14 +28,13 @@ export function mapToSortArray(map, prop, sortFunc) {
     return arr;
 }
 //object clone
-export function clone(obj){
+export function clone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
-export function cloneMap(map)
-{
+export function cloneMap(map) {
     let a = {}
     for (let k in map) {
-        a[k]  = map[k]
+        a[k] = map[k]
     }
     return a
 }
@@ -132,7 +131,7 @@ export function combineArr(arr, num) {
     })([], arr, num);
     return r;
 }
-export function formatSecond(sec, minStr = ":", secStr = "") {
+export function formatSecond(sec, isSecOnly = false, minStr = ":", secStr = "") {
     let min = Math.floor(sec / 60);
     let s = sec % 60;
     let strMin = min + "";
@@ -141,7 +140,27 @@ export function formatSecond(sec, minStr = ":", secStr = "") {
         strMin = "0" + strMin;
     if (s < 10)
         strSec = "0" + strSec;
+    if (isSecOnly)
+        return strSec
     return strMin + minStr + strSec + secStr;
+}
+export function format10ms(ms10, isSecOnly = false, minStr = ":", secStr = "") {
+    let sec = Math.floor(ms10 / 100)
+    let min = Math.floor(sec / 60);
+    let s = sec % 60;
+    let ms = ms10 % 100
+    let strMin = min + "";
+    let strSec = s + "";
+    let str10ms = ms + ""
+    if (min < 10)
+        strMin = "0" + strMin;
+    if (s < 10)
+        strSec = "0" + strSec;
+    if (ms < 10)
+        str10ms = '0' + str10ms
+    if (isSecOnly)
+        return strSec + secStr + '.' + str10ms
+    return strMin + minStr + strSec + secStr + '.' + str10ms;
 }
 
 export function getLength(str) {

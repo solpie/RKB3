@@ -359,6 +359,7 @@ export class Score2017 {
         }
         this.gameIdx.text = '第' + paddy(gameIdx, 2) + '场'
     }
+    
     _showWinScore() {
         this.winScoreText.visible = true
         this.timer.visible = false
@@ -420,6 +421,7 @@ export class Score2017 {
         this.setLeftFoul(0);
         this.setRightFoul(0);
     }
+
     _fixFtName(label: PIXI.Text, name: string) {
         if (name.toUpperCase() == "GREENLIGHT") {
             name = "GREENLIGHT"
