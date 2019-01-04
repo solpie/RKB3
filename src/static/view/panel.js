@@ -11176,6 +11176,7 @@
 	    CommonGame.prototype.setBuzzerTimerEvent = function (data) {
 	        console.log('setBuzzerTimerEvent');
 	        if (data.event == const_1.TimerEvent.TOGGLE) {
+	            this.isBlockBuzzer = false;
 	            this.timer10ms.setTimerEvent(data);
 	        }
 	        else {

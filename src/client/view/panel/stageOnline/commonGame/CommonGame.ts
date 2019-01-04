@@ -232,6 +232,7 @@ export class CommonGame extends BasePanel {
     setBuzzerTimerEvent(data) {
         console.log('setBuzzerTimerEvent');
         if (data.event == TimerEvent.TOGGLE) {
+            this.isBlockBuzzer = false
             this.timer10ms.setTimerEvent(data)
         }
         else {
