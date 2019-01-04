@@ -15,140 +15,9 @@ let urlFg = '/html/ww/bottomBlood/fg2.png'
 let urlMask = '/html/ww/bottomBlood/avtMask.png'
 const isTest = false
 const urlBase = 'http://rtmp.icassi.us:8092/img/player/915/'
-// class ___BloodPlayer extends PIXI.Container {
-//     blood: number
-//     initBlood: number
-//     playerId: string
-//     pName: Text2
-//     isRight: Boolean
-//     bloodMask: PIXI.Graphics
-//     avt: PIXI.Sprite
-//     kda: Text2
-
-//     bloodText: Text2
-
-//     constructor(parent, isRight = false) {
-//         super()
-//         this.isRight = isRight
-//         this.addChild(newBitmap({ url: urlBloodFrame }))
-
-//         let fg = newBitmap({ url: urlBloodFrame })
-//         let blood;
-
-//         this.bloodMask = new PIXI.Graphics()
-//             .beginFill(0xff0000)
-
-//         let ctn = new PIXI.Container()
-//         this.addChild(ctn)
-
-//         let avtMask = newBitmap({ url: urlMask })
-//         ctn.addChild(avtMask)
-
-//         this.avt = new PIXI.Sprite()
-//         this.avt.x = 324
-//         this.avt.y = 420
-//         this.avt.mask = avtMask
-//         ctn.addChild(this.avt)
-//         // this.avt = new MaskAvatar(urlMask)
-//         // this.addChild(this.avt)
-//         let bs = {
-//             fontFamily: FontName.dinCondensedC,
-//             fontSize: "65px",
-//             fontWeight: "",
-//             stroke: '#333',
-//             strokeThickness: 2,
-//             fill: "#ddd"
-//         };
-
-//         this.bloodText = TextFac.new_(bs, this)
-//             .setY(456)
-
-//         if (isRight) {
-//             this.bloodMask
-//                 .drawRect(1015, 449, 400, 90)
-//             fg.scale.x = -1
-//             fg.x = 1920
-//             ctn.x = 1173
-//             blood = newBitmap({ url: urlRBlood })
-//         }
-//         else {
-//             this.bloodMask
-//                 .drawRect(505, 449, 400, 90)
-//             blood = newBitmap({ url: urlLBlood })
-//         }
-
-//         this.addChild(blood)
-//         blood.mask = this.bloodMask
-//         this.addChild(this.bloodMask)
-
-//         let ns = {
-//             fontFamily: FontName.MicrosoftYahei,
-//             fontSize: "45px",
-//             fontWeight: "",
-//             stroke: '#333',
-//             strokeThickness: 2,
-//             fill: "#ddd"
-//         };
-
-//         this.pName = TextFac.new_(ns, this)
-//             .setY(459)
-
-//         this.addChild(fg)
-
-//         ns.fontSize = '30px'
-//         this.kda = TextFac.new_(ns, this)
-//             .setY(418)
-
-//         parent.addChild(this)
-
-//         if (isTest)
-//             this.setInfo({ name: '黄玉军', bloodRaito: Math.random() })
-//     }
-//     isAvtLoaded = false
-//     setInfo(data) {
-//         if (data.name) {
-//             this.pName.setText(data.name)
-//                 .setAlignCenter(645)
-//         }
-//         if (data.bloodRaito != null) {
-//             let bloodWidth = 400 * (1 - data.bloodRaito)
-//             if (data.bloodRaito == 0) {
-//                 bloodWidth = 397
-//             }
-//             if (this.isRight) {
-//                 this.bloodMask.x = bloodWidth
-//                 this.pName.setAlignCenter(_c(267))
-//             }
-//             else {
-//                 this.bloodMask.x = -bloodWidth
-//                 this.pName.setAlignCenter(_c(-267))
-//             }
-//         }
-//         let curBlood;
-//         if (data.curBlood != null) {
-//             curBlood = data.curBlood
-//         }
-//         else if (data.blood != null) {
-//             curBlood = data.blood
-//         }
-//         if (this.isRight)
-//             this.bloodText.setText(curBlood)
-//                 .setAlignCenter(_c(492))
-//         else
-//             this.bloodText.setText(curBlood)
-//                 .setAlignCenter(_c(-492))
-
-//         console.log('set info', data.cid);
-//         let avtUrl = urlBase + data.playerId + '.png'
-//         imgLoader.loadTexRemote(avtUrl, _ => {
-//             this.avt.texture = imgLoader.getTex(avtUrl)
-//             setScale(this.avt, 104 / this.avt.texture.width)
-//         })
-//     }
-// }
-const resetGameTime = 1 * 60 + 2// 7 * 60
-const resetGameTime1min = 60 * 100 - 3 // 7 * 60
-const resetBuzzerTime = 5 * 100// 20 * 100
+const resetGameTime =  7 * 60
+const resetGameTime1min = 60 * 100 
+const resetBuzzerTime =  20 * 100
 export class CommonGame extends BasePanel {
     static cls = 'CommonGame'
     lAvt: PIXI.Sprite
@@ -360,13 +229,32 @@ export class CommonGame extends BasePanel {
     }
 
     setBuzzerTimerEvent(data) {
-        console.log('game timer');
+        console.log('setBuzzerTimerEvent');
         if (data.event == TimerEvent.TOGGLE) {
             this.timer10ms.setTimerEvent(data)
         }
         else {
             this.buzzerTimer.setTimerEvent(data);
         }
+    }
+    setGameTimerEvent(data) {
+        console.log('setGameTimerEvent');
+        if (data.event == TimerEvent.SETTING) {
+            let secOr10ms = Number(data.param)
+            if (data.isSec) {
+                this.gameTimer.visible = true
+                this.gameTimer1min.visible = false
+                this.gameTimer.setTimeBySec(secOr10ms)
+                this.gameTimer1min.setTimeBySec(resetGameTime1min)
+            }
+            else {
+                this.gameTimer1min.visible = true
+                this.gameTimer.visible = false
+                this.gameTimer1min.setTimeBySec(secOr10ms)
+            }
+            this.gameTimer.setTimerEvent(data)
+        }
+        
     }
 
     _show(data) {
@@ -380,6 +268,9 @@ export class CommonGame extends BasePanel {
 
         if (data.cid == CommandId.sc_timerEvent_buzzer) {
             this.setBuzzerTimerEvent(data)
+        }
+        if (data.cid == CommandId.sc_timerEvent_common) {
+            this.setGameTimerEvent(data)
         }
 
         if (data.cid == CommandId.sc_setPlayer) {
@@ -450,6 +341,7 @@ class CommonGameView extends VueBase {
             })
         }
         _adept(CommandId.sc_timerEvent_buzzer)
+        _adept(CommandId.sc_timerEvent_common)
     }
 }
 export let commonGame = new CommonGameView()

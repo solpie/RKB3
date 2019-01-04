@@ -64,9 +64,10 @@
     </table>
     <div style="font-size:30px;">
         比赛时间设置:<input class="input" v-model="timeInSec" type="text" style="width: 100px;">
-        <a @click="onSetTimerEvent('start')">开始  </a><a @click="onSetTimerEvent('pause')">暂停  </a>
+        <!-- <a @click="onSetTimerEvent('start')">开始  </a>
+        <a @click="onSetTimerEvent('pause')">暂停  </a> -->
         <a @click="onSetTimerEvent('setting',timeInSec)">设置</a>
-        <a @click="onSetTimerEvent('reset')">reset</a>
+        <a @click="onSetTimerEvent('setting','7-0')">reset</a> 分钟-秒数 时间格式"7-0"，大于60秒不要加".""
         <hr> 进攻时间设置:
         <input class="input" v-model="buzzerTimeInSec" type="text" style="width: 100px;">
         <a @click="onSetBuzzer(buzzerTimeInSec)">设置</a>

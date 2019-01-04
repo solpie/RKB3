@@ -81,22 +81,46 @@ class _CommonGameAdmin extends VueBase {
         opReq(CommandId.cs_timerEvent_buzzer, { event: TimerEvent.RESET })
     }
     methods = {
+        onSetTimerEvent(event, v) {
+            let isNum = /(-?\d*)\-?\d+/.test(v) || /(-?\d*)\.?\d+/.test(v)
+            let isSec = true;
+            if (isNum) {
+                let sec;
+                if (/\./.test(v)) {
+                    isSec = false
+                    let a = v.split('.')
+                    sec = Number(a[1]) + Number(a[0]) * 100
+                }
+                else {
+                    if (/\-/.test(v)) {
+                        let a = v.split('-')
+                        sec = Number(a[0]) * 60 + Number(a[1])
+                    }
+                    else {
+                        sec = v
+                    }
+                    if (sec < 60) {
+                        sec *= 100
+                        isSec = false
+                    }
+                }
+
+                opReq(CommandId.cs_timerEvent_common, { event: event, param: sec,isSec:isSec })
+            }
+            console.log('onSetTimerEvent', isNum, v)
+        },
         onSetBuzzer(v) {
             let ms10;
             let isNum = /(-?\d*)\.?\d+/.test(v)
             if (isNum) {
                 if (!/\./.test(v)) {
-                    v+='.0'
+                    v += '.0'
                 }
                 let a = v.split('.')
                 ms10 = Number(a[1]) + Number(a[0]) * 100
                 opReq(CommandId.cs_timerEvent_buzzer, { event: TimerEvent.SETTING, param: ms10 })
             }
             console.log('set buzzer', isNum, v, Number(v) * 100, ms10)
-
-        },
-        onSetTimerEvent(event, param?) {
-            opReq(CommandId.cs_timerEvent, { event: event, param: param });
         },
         onRestTeamScore() {
             this.lTeamScore = this.rTeamScore = 0

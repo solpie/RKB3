@@ -11022,9 +11022,9 @@
 	var urlMask = '/html/ww/bottomBlood/avtMask.png';
 	var isTest = false;
 	var urlBase = 'http://rtmp.icassi.us:8092/img/player/915/';
-	var resetGameTime = 1 * 60 + 2;
-	var resetGameTime1min = 60 * 100 - 3;
-	var resetBuzzerTime = 5 * 100;
+	var resetGameTime = 7 * 60;
+	var resetGameTime1min = 60 * 100;
+	var resetBuzzerTime = 20 * 100;
 	var CommonGame = (function (_super) {
 	    __extends(CommonGame, _super);
 	    function CommonGame() {
@@ -11172,12 +11172,30 @@
 	        });
 	    };
 	    CommonGame.prototype.setBuzzerTimerEvent = function (data) {
-	        console.log('game timer');
+	        console.log('setBuzzerTimerEvent');
 	        if (data.event == const_1.TimerEvent.TOGGLE) {
 	            this.timer10ms.setTimerEvent(data);
 	        }
 	        else {
 	            this.buzzerTimer.setTimerEvent(data);
+	        }
+	    };
+	    CommonGame.prototype.setGameTimerEvent = function (data) {
+	        console.log('setGameTimerEvent');
+	        if (data.event == const_1.TimerEvent.SETTING) {
+	            var secOr10ms = Number(data.param);
+	            if (data.isSec) {
+	                this.gameTimer.visible = true;
+	                this.gameTimer1min.visible = false;
+	                this.gameTimer.setTimeBySec(secOr10ms);
+	                this.gameTimer1min.setTimeBySec(resetGameTime1min);
+	            }
+	            else {
+	                this.gameTimer1min.visible = true;
+	                this.gameTimer.visible = false;
+	                this.gameTimer1min.setTimeBySec(secOr10ms);
+	            }
+	            this.gameTimer.setTimerEvent(data);
 	        }
 	    };
 	    CommonGame.prototype._show = function (data) {
@@ -11190,6 +11208,9 @@
 	        }
 	        if (data.cid == Command_1.CommandId.sc_timerEvent_buzzer) {
 	            this.setBuzzerTimerEvent(data);
+	        }
+	        if (data.cid == Command_1.CommandId.sc_timerEvent_common) {
+	            this.setGameTimerEvent(data);
 	        }
 	        if (data.cid == Command_1.CommandId.sc_setPlayer) {
 	            this.lBlood.setText(data.leftPlayer.blood)
@@ -11249,6 +11270,7 @@
 	            });
 	        };
 	        _adept(Command_1.CommandId.sc_timerEvent_buzzer);
+	        _adept(Command_1.CommandId.sc_timerEvent_common);
 	    };
 	    return CommonGameView;
 	}(VueBase_1.VueBase));

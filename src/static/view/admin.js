@@ -3819,6 +3819,33 @@
 	            },
 	        };
 	        this.methods = {
+	            onSetTimerEvent: function (event, v) {
+	                var isNum = /(-?\d*)\-?\d+/.test(v) || /(-?\d*)\.?\d+/.test(v);
+	                var isSec = true;
+	                if (isNum) {
+	                    var sec = void 0;
+	                    if (/\./.test(v)) {
+	                        isSec = false;
+	                        var a = v.split('.');
+	                        sec = Number(a[1]) + Number(a[0]) * 100;
+	                    }
+	                    else {
+	                        if (/\-/.test(v)) {
+	                            var a = v.split('-');
+	                            sec = Number(a[0]) * 60 + Number(a[1]);
+	                        }
+	                        else {
+	                            sec = v;
+	                        }
+	                        if (sec < 60) {
+	                            sec *= 100;
+	                            isSec = false;
+	                        }
+	                    }
+	                    opReq(Command_1.CommandId.cs_timerEvent_common, { event: event, param: sec, isSec: isSec });
+	                }
+	                console.log('onSetTimerEvent', isNum, v);
+	            },
 	            onSetBuzzer: function (v) {
 	                var ms10;
 	                var isNum = /(-?\d*)\.?\d+/.test(v);
@@ -3831,9 +3858,6 @@
 	                    opReq(Command_1.CommandId.cs_timerEvent_buzzer, { event: const_1.TimerEvent.SETTING, param: ms10 });
 	                }
 	                console.log('set buzzer', isNum, v, Number(v) * 100, ms10);
-	            },
-	            onSetTimerEvent: function (event, param) {
-	                opReq(Command_1.CommandId.cs_timerEvent, { event: event, param: param });
 	            },
 	            onRestTeamScore: function () {
 	                this.lTeamScore = this.rTeamScore = 0;
@@ -3915,7 +3939,7 @@
 /* 44 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n        <thead>\r\n        </thead>\r\n        <tbody>\r\n            <tr>\r\n                <th>\r\n                    <div hidden>{{updateTime}}</div>\r\n                </th>\r\n                <th>\r\n                    <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n                </th>\r\n                <th>蓝方球员</th>\r\n                <th> </th>\r\n                <th>红方球员</th>\r\n                <th>\r\n                </th>\r\n            </tr>\r\n            <tr>\r\n                <th style=\"font-size:25px;\">\r\n\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n                </th>\r\n                <th>\r\n                    {{baseGame.lName}}\r\n                </th>\r\n                <th style=\"font-size:40px;\">\r\n                    <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n                </th>\r\n                <th>\r\n                    {{baseGame.rName}}\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n                </th>\r\n            </tr>\r\n            <tr>\r\n                <th style=\"font-size:25px;\">犯规\r\n                    <a @click=\"onResetFoul\"> 重置</a>\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n                </th>\r\n                <th>\r\n                    -\r\n                </th>\r\n                <th>\r\n                    <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n                </th>\r\n                <th>\r\n                    -\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n                </th>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n    <div style=\"font-size:30px;\">\r\n        比赛时间设置:<input class=\"input\" v-model=\"timeInSec\" type=\"text\" style=\"width: 100px;\">\r\n        <a @click=\"onSetTimerEvent('start')\">开始  </a><a @click=\"onSetTimerEvent('pause')\">暂停  </a>\r\n        <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n        <a @click=\"onSetTimerEvent('reset')\">reset</a>\r\n        <hr> 进攻时间设置:\r\n        <input class=\"input\" v-model=\"buzzerTimeInSec\" type=\"text\" style=\"width: 100px;\">\r\n        <a @click=\"onSetBuzzer(buzzerTimeInSec)\">设置</a>\r\n        <a @click=\"resetBuzzer\">reset</a>\r\n        <input id=\"buzzer\" maxlength=\"1\" class=\"input\" type=\"text\" style=\"width: 60px;\">\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n        <thead>\r\n        </thead>\r\n        <tbody>\r\n            <tr>\r\n                <th>\r\n                    <div hidden>{{updateTime}}</div>\r\n                </th>\r\n                <th>\r\n                    <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n                </th>\r\n                <th>蓝方球员</th>\r\n                <th> </th>\r\n                <th>红方球员</th>\r\n                <th>\r\n                </th>\r\n            </tr>\r\n            <tr>\r\n                <th style=\"font-size:25px;\">\r\n\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n                </th>\r\n                <th>\r\n                    {{baseGame.lName}}\r\n                </th>\r\n                <th style=\"font-size:40px;\">\r\n                    <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n                </th>\r\n                <th>\r\n                    {{baseGame.rName}}\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n                </th>\r\n            </tr>\r\n            <tr>\r\n                <th style=\"font-size:25px;\">犯规\r\n                    <a @click=\"onResetFoul\"> 重置</a>\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n                </th>\r\n                <th>\r\n                    -\r\n                </th>\r\n                <th>\r\n                    <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n                </th>\r\n                <th>\r\n                    -\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n                </th>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n    <div style=\"font-size:30px;\">\r\n        比赛时间设置:<input class=\"input\" v-model=\"timeInSec\" type=\"text\" style=\"width: 100px;\">\r\n        <!-- <a @click=\"onSetTimerEvent('start')\">开始  </a>\r\n        <a @click=\"onSetTimerEvent('pause')\">暂停  </a> -->\r\n        <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n        <a @click=\"onSetTimerEvent('setting','7-0')\">reset</a> 分钟-秒数 时间格式\"7-0\"，大于60秒不要加\".\"\"\r\n        <hr> 进攻时间设置:\r\n        <input class=\"input\" v-model=\"buzzerTimeInSec\" type=\"text\" style=\"width: 100px;\">\r\n        <a @click=\"onSetBuzzer(buzzerTimeInSec)\">设置</a>\r\n        <a @click=\"resetBuzzer\">reset</a>\r\n        <input id=\"buzzer\" maxlength=\"1\" class=\"input\" type=\"text\" style=\"width: 60px;\">\r\n    </div>\r\n</div>";
 
 /***/ }
 /******/ ]);
