@@ -15,9 +15,9 @@ let urlFg = '/html/ww/bottomBlood/fg2.png'
 let urlMask = '/html/ww/bottomBlood/avtMask.png'
 const isTest = false
 const urlBase = 'http://rtmp.icassi.us:8092/img/player/915/'
-const resetGameTime =  7 * 60
-const resetGameTime1min = 60 * 100 
-const resetBuzzerTime =  20 * 100
+const resetGameTime = 7 * 60
+const resetGameTime1min = 60 * 100
+const resetBuzzerTime = 20 * 100
 export class CommonGame extends BasePanel {
     static cls = 'CommonGame'
     lAvt: PIXI.Sprite
@@ -222,18 +222,21 @@ export class CommonGame extends BasePanel {
                     this.gameTimer.tick(0.01)
                 if (this.gameTimer1min.visible)
                     this.gameTimer1min.tick(1)
-                this.buzzerTimer.tick()
+                if (!this.isBlockBuzzer)
+                    this.buzzerTimer.tick()
             })
 
         })
     }
-
+    isBlockBuzzer = false
     setBuzzerTimerEvent(data) {
         console.log('setBuzzerTimerEvent');
         if (data.event == TimerEvent.TOGGLE) {
             this.timer10ms.setTimerEvent(data)
         }
         else {
+            if (data.isToggle)
+                this.isBlockBuzzer = !this.isBlockBuzzer
             this.buzzerTimer.setTimerEvent(data);
         }
     }
@@ -254,7 +257,6 @@ export class CommonGame extends BasePanel {
             }
             this.gameTimer.setTimerEvent(data)
         }
-        
     }
 
     _show(data) {

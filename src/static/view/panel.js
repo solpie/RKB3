@@ -11029,6 +11029,7 @@
 	    __extends(CommonGame, _super);
 	    function CommonGame() {
 	        _super.apply(this, arguments);
+	        this.isBlockBuzzer = false;
 	    }
 	    CommonGame.prototype.preLoadFont = function (fontName) {
 	        var t = new PIXI.Text('', {
@@ -11167,7 +11168,8 @@
 	                    _this.gameTimer.tick(0.01);
 	                if (_this.gameTimer1min.visible)
 	                    _this.gameTimer1min.tick(1);
-	                _this.buzzerTimer.tick();
+	                if (!_this.isBlockBuzzer)
+	                    _this.buzzerTimer.tick();
 	            });
 	        });
 	    };
@@ -11177,6 +11179,8 @@
 	            this.timer10ms.setTimerEvent(data);
 	        }
 	        else {
+	            if (data.isToggle)
+	                this.isBlockBuzzer = !this.isBlockBuzzer;
 	            this.buzzerTimer.setTimerEvent(data);
 	        }
 	    };

@@ -56,6 +56,9 @@ class _CommonGameAdmin extends VueBase {
                 else if (e.keyCode == 82) {
                     this.resetBuzzer()
                 }
+                else if (e.keyCode == 81) {
+                    this.resetBuzzer(true)
+                }
             }
         }
     }
@@ -77,8 +80,10 @@ class _CommonGameAdmin extends VueBase {
             console.log("lname", val);
         },
     };
-    resetBuzzer() {
-        opReq(CommandId.cs_timerEvent_buzzer, { event: TimerEvent.RESET })
+    resetBuzzer(isToggle = false) {
+        // if (isToggle)
+        //     opReq(CommandId.cs_timerEvent_buzzer, { event: TimerEvent.TOGGLE })
+        opReq(CommandId.cs_timerEvent_buzzer, { event: TimerEvent.RESET ,isToggle:isToggle})
     }
     methods = {
         onSetTimerEvent(event, v) {
@@ -104,8 +109,7 @@ class _CommonGameAdmin extends VueBase {
                         isSec = false
                     }
                 }
-
-                opReq(CommandId.cs_timerEvent_common, { event: event, param: sec,isSec:isSec })
+                opReq(CommandId.cs_timerEvent_common, { event: event, param: sec, isSec: isSec })
             }
             console.log('onSetTimerEvent', isNum, v)
         },
