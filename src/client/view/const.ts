@@ -23,6 +23,7 @@ export const FontName = {
     Geodet: "geodet",
     dinCondensedC: "dinCondensedC",
     DigiLED: "digital",
+    Industry: "Industry",
     DigiLED2: "digital2"
 };
 export const ServerConst = {

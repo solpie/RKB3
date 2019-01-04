@@ -52,7 +52,7 @@ export class CommonGame extends BasePanel {
     }
     create() {
         console.log('scroll text creat1e');
-        let f3 = this.preLoadFont(FontName.dinCondensedC)
+        let f3 = this.preLoadFont(FontName.Industry)
         this.p.addChild(f3)
         let f2 = this.preLoadFont(FontName.DigiLED2)
         this.p.addChild(f2)
@@ -111,27 +111,27 @@ export class CommonGame extends BasePanel {
             this.rTimeoutMaskArr.push(tm)
 
             let ns = {
-                fontFamily: FontName.dinCondensedC,
-                fontSize: "80px",
+                fontFamily: FontName.Industry,
+                fontSize: "100px",
                 fontWeight: "bold",
                 fill: "#ddd"
             };
             ns.fill = '#d76102'
             this.lFoul = TextFac.new_(ns, this)
                 .setY(300 - 62)
-                .setText("0")
+                .setText("3")
                 .setAlignCenter(_c(-133))
 
             this.rFoul = TextFac.new_(ns, this)
                 .setY(this.lFoul.y)
-                .setText("0")
+                .setText("2")
                 .setAlignCenter(_c(133))
 
-            ns.fontSize = "120px"
+            ns.fontSize = "160px"
             ns.fill = '#ddd'
             this.lBlood = TextFac.new_(ns, this)
                 .setY(218 - 37 - 62)
-                .setText("0")
+                .setText("5")
                 .setAlignCenter(_c(-280))
 
             this.rBlood = TextFac.new_(ns, this)
@@ -197,7 +197,7 @@ export class CommonGame extends BasePanel {
             this.addChild(this.gameTimer1min)
 
 
-
+            ns.fill='#ad1515'
             this.buzzerTimer = new TextTime10ms('', ns)
             this.buzzerTimer.isMin = true
             this.buzzerTimer.isSecOnly = true

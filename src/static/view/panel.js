@@ -1421,6 +1421,7 @@
 	    Geodet: "geodet",
 	    dinCondensedC: "dinCondensedC",
 	    DigiLED: "digital",
+	    Industry: "Industry",
 	    DigiLED2: "digital2"
 	};
 	exports.ServerConst = {
@@ -11042,7 +11043,7 @@
 	    CommonGame.prototype.create = function () {
 	        var _this = this;
 	        console.log('scroll text creat1e');
-	        var f3 = this.preLoadFont(const_1.FontName.dinCondensedC);
+	        var f3 = this.preLoadFont(const_1.FontName.Industry);
 	        this.p.addChild(f3);
 	        var f2 = this.preLoadFont(const_1.FontName.DigiLED2);
 	        this.p.addChild(f2);
@@ -11083,25 +11084,25 @@
 	            _this.addChild(tm);
 	            _this.rTimeoutMaskArr.push(tm);
 	            var ns = {
-	                fontFamily: const_1.FontName.dinCondensedC,
-	                fontSize: "80px",
+	                fontFamily: const_1.FontName.Industry,
+	                fontSize: "100px",
 	                fontWeight: "bold",
 	                fill: "#ddd"
 	            };
 	            ns.fill = '#d76102';
 	            _this.lFoul = TextFac_1.TextFac.new_(ns, _this)
 	                .setY(300 - 62)
-	                .setText("0")
+	                .setText("3")
 	                .setAlignCenter(PixiEx_1._c(-133));
 	            _this.rFoul = TextFac_1.TextFac.new_(ns, _this)
 	                .setY(_this.lFoul.y)
-	                .setText("0")
+	                .setText("2")
 	                .setAlignCenter(PixiEx_1._c(133));
-	            ns.fontSize = "120px";
+	            ns.fontSize = "160px";
 	            ns.fill = '#ddd';
 	            _this.lBlood = TextFac_1.TextFac.new_(ns, _this)
 	                .setY(218 - 37 - 62)
-	                .setText("0")
+	                .setText("5")
 	                .setAlignCenter(PixiEx_1._c(-280));
 	            _this.rBlood = TextFac_1.TextFac.new_(ns, _this)
 	                .setY(_this.lBlood.y)
@@ -11147,6 +11148,7 @@
 	            _this.gameTimer1min.x = _this.gameTimer.x;
 	            _this.gameTimer1min.y = _this.gameTimer.y;
 	            _this.addChild(_this.gameTimer1min);
+	            ns.fill = '#ad1515';
 	            _this.buzzerTimer = new TextTimer_1.TextTime10ms('', ns);
 	            _this.buzzerTimer.isMin = true;
 	            _this.buzzerTimer.isSecOnly = true;
