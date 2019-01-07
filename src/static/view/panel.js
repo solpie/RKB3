@@ -11017,9 +11017,6 @@
 	var TextTimer_1 = __webpack_require__(67);
 	var VueBase_1 = __webpack_require__(22);
 	var urlBg1 = '/html/ww/bottomBlood/commonGameBg.png';
-	var urlBloodFrame = '/html/ww/bottomBlood/frame.png';
-	var urlLBlood = '/html/ww/bottomBlood/lBlood.png';
-	var urlRBlood = '/html/ww/bottomBlood/rBlood.png';
 	var urlFg = '/html/ww/bottomBlood/fg2.png';
 	var urlMask = '/html/ww/bottomBlood/avtMask.png';
 	var isTest = false;
@@ -11027,7 +11024,7 @@
 	var resetGameTime = 7 * 60;
 	var resetGameTime1min = 60 * 100;
 	var resetBuzzerTime = 20 * 100;
-	var audio = new Audio('/sound/buzzer.wav');
+	var buzzer = new Audio('/sound/buzzer.mp3');
 	var CommonGame = (function (_super) {
 	    __extends(CommonGame, _super);
 	    function CommonGame() {
@@ -11050,9 +11047,6 @@
 	        var f2 = this.preLoadFont(const_1.FontName.DigiLED2);
 	        this.p.addChild(f2);
 	        var imgArr = [urlBg1,
-	            urlBloodFrame,
-	            urlLBlood,
-	            urlRBlood,
 	            urlFg,
 	            urlMask
 	        ];
@@ -11062,7 +11056,6 @@
 	                .drawRect(0, 0, 1920, 1080);
 	            _this.addChild(bg);
 	            _this.addChild(PixiEx_1.newBitmap({ url: urlBg1 }));
-	            var lA = [], rA = [];
 	            _this.lTimeoutMaskArr = [];
 	            _this.rTimeoutMaskArr = [];
 	            var tm = new PIXI.Graphics()
@@ -11160,7 +11153,7 @@
 	                if (_this.gameTimer.timeInSec < 61 ||
 	                    _this.gameTimer1min.timeInSec < 60 * 100)
 	                    _this.timer10ms.pauseTimer();
-	                audio.play();
+	                buzzer.play();
 	            });
 	            _this.buzzerTimer.setTimeBySec(resetBuzzerTime);
 	            _this.buzzerTimer.x = _this.gameTimer.x;

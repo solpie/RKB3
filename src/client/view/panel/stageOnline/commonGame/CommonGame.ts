@@ -8,9 +8,6 @@ import { BasePanelView } from '../../BasePanelView';
 import { TextTimer, TextTime10ms } from '../../../utils/TextTimer';
 import { VueBase } from '../../../utils/VueBase';
 let urlBg1 = '/html/ww/bottomBlood/commonGameBg.png'
-let urlBloodFrame = '/html/ww/bottomBlood/frame.png'
-let urlLBlood = '/html/ww/bottomBlood/lBlood.png'
-let urlRBlood = '/html/ww/bottomBlood/rBlood.png'
 let urlFg = '/html/ww/bottomBlood/fg2.png'
 let urlMask = '/html/ww/bottomBlood/avtMask.png'
 const isTest = false
@@ -19,10 +16,7 @@ const resetGameTime = 7 * 60
 const resetGameTime1min = 60 * 100
 const resetBuzzerTime = 20 * 100
 
-// const sound = PIXI.sound.Sound.from('resources/boing.mp3');
-// sound.play();
-
-const audio = new Audio('/sound/buzzer.wav');
+const buzzer = new Audio('/sound/buzzer.mp3');
 export class CommonGame extends BasePanel {
     static cls = 'CommonGame'
     lAvt: PIXI.Sprite
@@ -62,9 +56,6 @@ export class CommonGame extends BasePanel {
         let f2 = this.preLoadFont(FontName.DigiLED2)
         this.p.addChild(f2)
         let imgArr = [urlBg1
-            , urlBloodFrame
-            , urlLBlood
-            , urlRBlood
             , urlFg
             , urlMask
         ]
@@ -74,20 +65,6 @@ export class CommonGame extends BasePanel {
                 .drawRect(0, 0, 1920, 1080)
             this.addChild(bg)
             this.addChild(newBitmap({ url: urlBg1 }))
-            let lA = [], rA = []
-            // for (let i = 0; i < 5; i++) {
-            //     let lP = new ___BloodPlayer(this)
-            //     lP.x = 0
-            //     lP.y = i * 115
-            //     lA.push(lP)
-
-            //     let rP = new ___BloodPlayer(this, true)
-            //     rP.x = 0
-            //     rP.y = lP.y
-            //     rA.push(rP)
-            // }
-            // this.lPlayerArr = lA
-            // this.rPlayerArr = rA
 
             this.lTimeoutMaskArr = []
             this.rTimeoutMaskArr = []
@@ -212,7 +189,7 @@ export class CommonGame extends BasePanel {
                 if (this.gameTimer.timeInSec < 61 ||
                     this.gameTimer1min.timeInSec<60*100)
                     this.timer10ms.pauseTimer()
-                audio.play();
+                buzzer.play();
             })
             this.buzzerTimer.setTimeBySec(resetBuzzerTime)
             this.buzzerTimer.x = this.gameTimer.x
