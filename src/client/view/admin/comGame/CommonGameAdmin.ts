@@ -130,15 +130,6 @@ class _CommonGameAdmin extends VueBase {
             this.lTeamScore = this.rTeamScore = 0
             opReq(CommandId.cs_teamScore, { lScore: this.lTeamScore, rScore: this.rTeamScore });
         },
-        onSetTeamScore(isLeft, dtScore) {
-            // isLeft ? (baseGame.lScore += dtScore) : (baseGame.rScore += dtScore);
-            // if (isLeft)
-            //   this.lTeamScore += dtScore;
-            // else
-            //   this.rTeamScore += dtScore;
-
-            opReq(CommandId.cs_teamScore, { dtScore: dtScore, isLeft: isLeft });
-        },
         onSetScore(isLeft, dtScore) {
             // isLeft ? (baseGame.lScore += dtScore) : (baseGame.rScore += dtScore);
             let score;
@@ -160,6 +151,7 @@ class _CommonGameAdmin extends VueBase {
         onResetFoul() {
             this.onSetFoul(true, -baseGame.lFoul)
             this.onSetFoul(false, -baseGame.rFoul)
+            opReq(CommandId.cs_scoreFoul_common, baseGame);
         },
         onVueUpdate() {
             this.vueUpdate();

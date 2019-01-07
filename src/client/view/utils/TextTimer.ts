@@ -82,7 +82,8 @@ export class TextTimer extends PIXI.Text {
         if (this.timeInSec < 0)
           this.timeInSec = 0;
 
-        if (this.timeInSec < 1) {
+        if (this.timeInSec < 1 && !this.isTimeOut) {
+          this.isTimeOut = true
           console.log('timeout', this.timeInSec)
           this.pauseTimer()
           this.emit('timeout', this.timeInSec)
@@ -93,7 +94,7 @@ export class TextTimer extends PIXI.Text {
     }
   }
   newTimer() {
-    this.isTimeOut = true
+    this.isTimeOut = false
     if (this.timerId) clearInterval(this.timerId);
     this.timerId = setInterval(() => {
       this.tick()

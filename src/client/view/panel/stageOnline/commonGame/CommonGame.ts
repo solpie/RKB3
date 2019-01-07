@@ -18,6 +18,11 @@ const urlBase = 'http://rtmp.icassi.us:8092/img/player/915/'
 const resetGameTime = 7 * 60
 const resetGameTime1min = 60 * 100
 const resetBuzzerTime = 20 * 100
+
+// const sound = PIXI.sound.Sound.from('resources/boing.mp3');
+// sound.play();
+
+const audio = new Audio('/sound/buzzer.wav');
 export class CommonGame extends BasePanel {
     static cls = 'CommonGame'
     lAvt: PIXI.Sprite
@@ -30,8 +35,8 @@ export class CommonGame extends BasePanel {
     rTimeoutMaskArr: Array<PIXI.Graphics>
     rTimeoutMask: PIXI.Graphics
 
-    lBlood: Text2
-    rBlood: Text2
+    lScore: Text2
+    rScore: Text2
     lFoul: Text2
     rFoul: Text2
     lName: Text2
@@ -112,32 +117,32 @@ export class CommonGame extends BasePanel {
 
             let ns = {
                 fontFamily: FontName.Industry,
-                fontSize: "100px",
-                fontWeight: "bold",
+                fontSize: "140px",
+                fontWeight: "normal",
                 fill: "#ddd"
             };
             ns.fill = '#d76102'
             this.lFoul = TextFac.new_(ns, this)
-                .setY(300 - 62)
-                .setText("3")
-                .setAlignCenter(_c(-133))
+                .setY(180)
+                .setText("0")
+                .setAlignCenter(_c(-140))
 
             this.rFoul = TextFac.new_(ns, this)
                 .setY(this.lFoul.y)
-                .setText("2")
-                .setAlignCenter(_c(133))
+                .setText("0")
+                .setAlignCenter(_c(150))
 
             ns.fontSize = "160px"
             ns.fill = '#ddd'
-            this.lBlood = TextFac.new_(ns, this)
-                .setY(218 - 37 - 62)
-                .setText("5")
-                .setAlignCenter(_c(-280))
-
-            this.rBlood = TextFac.new_(ns, this)
-                .setY(this.lBlood.y)
+            this.lScore = TextFac.new_(ns, this)
+                .setY(80)
                 .setText("0")
-                .setAlignCenter(_c(280))
+                .setAlignCenter(_c(-290))
+
+            this.rScore = TextFac.new_(ns, this)
+                .setY(this.lScore.y)
+                .setText("0")
+                .setAlignCenter(_c(290))
 
             this.lAvt = new PIXI.Sprite()
             this.addChild(this.lAvt)
@@ -164,15 +169,15 @@ export class CommonGame extends BasePanel {
 
             ns.fontFamily = FontName.DigiLED2
             ns.fontWeight = "normal"
-            ns.fontSize = '140px'
+            ns.fontSize = '130px'
 
 
             this.gameTimer = new TextTimer('', ns)
             this.gameTimer.isMin = true
             this.gameTimer.resetTime = resetGameTime
             this.gameTimer.setTimeBySec(resetGameTime)
-            this.gameTimer.x = 640 + 50
-            this.gameTimer.y = 400
+            this.gameTimer.x = 640 + 90
+            this.gameTimer.y = 450
             this.gameTimer.on('tick', sec => {
                 if (sec < 61) {
                     this.gameTimer1min.visible = true
@@ -197,18 +202,21 @@ export class CommonGame extends BasePanel {
             this.addChild(this.gameTimer1min)
 
 
-            ns.fill='#ad1515'
+            ns.fill = '#ad1515'
             this.buzzerTimer = new TextTime10ms('', ns)
             this.buzzerTimer.isMin = true
             this.buzzerTimer.isSecOnly = true
             this.buzzerTimer.resetTime = resetBuzzerTime
             this.buzzerTimer.on('timeout', _ => {
                 console.log('buzzer timer timeout')
-                this.timer10ms.pauseTimer()
+                if (this.gameTimer.timeInSec < 61 ||
+                    this.gameTimer1min.timeInSec<60*100)
+                    this.timer10ms.pauseTimer()
+                audio.play();
             })
             this.buzzerTimer.setTimeBySec(resetBuzzerTime)
-            this.buzzerTimer.x = 640 + 50
-            this.buzzerTimer.y = 676
+            this.buzzerTimer.x = this.gameTimer.x
+            this.buzzerTimer.y = 676 + 50
             this.addChild(this.buzzerTimer)
 
 
@@ -233,11 +241,15 @@ export class CommonGame extends BasePanel {
         console.log('setBuzzerTimerEvent');
         if (data.event == TimerEvent.TOGGLE) {
             this.isBlockBuzzer = false
+            this.buzzerTimer.isTimeOut = false
             this.timer10ms.setTimerEvent(data)
         }
         else {
-            if (data.isToggle)
+            if (data.isToggle) {
                 this.isBlockBuzzer = !this.isBlockBuzzer
+                if (!this.isBlockBuzzer)
+                    this.buzzerTimer.isTimeOut = false
+            }
             this.buzzerTimer.setTimerEvent(data);
         }
     }
@@ -259,27 +271,31 @@ export class CommonGame extends BasePanel {
             this.gameTimer.setTimerEvent(data)
         }
     }
-
+    setScoreFoulEvent(data) {
+        this.lFoul.setText(data.lFoul)
+            .setAlignCenter(_c(-140))
+        this.rFoul.setText(data.rFoul)
+            .setAlignCenter(_c(150))
+        this.lScore.setText(data.lScore)
+            .setAlignCenter(_c(-290))
+        this.rScore.setText(data.rScore)
+            .setAlignCenter(_c(290))
+    }
     _show(data) {
-        if (data.cid == CommandId.sc_setFoul) {
-            this.lFoul.setText(data.lFoul)
-                .setAlignCenter(805)
-            this.rFoul.setText(data.rFoul)
-                .setAlignCenter(1146)
-        }
-
-
         if (data.cid == CommandId.sc_timerEvent_buzzer) {
             this.setBuzzerTimerEvent(data)
         }
         if (data.cid == CommandId.sc_timerEvent_common) {
             this.setGameTimerEvent(data)
         }
+        if (data.cid == CommandId.sc_scoreFoul_common) {
+            this.setScoreFoulEvent(data)
+        }
 
         if (data.cid == CommandId.sc_setPlayer) {
-            this.lBlood.setText(data.leftPlayer.blood)
+            this.lScore.setText(data.leftPlayer.blood)
                 .setAlignCenter(_c(-300))
-            this.rBlood.setText(data.rightPlayer.blood)
+            this.rScore.setText(data.rightPlayer.blood)
                 .setAlignCenter(_c(300))
 
             this.lFoul.setText(0)
@@ -308,17 +324,7 @@ export class CommonGame extends BasePanel {
                 setScale(this.rAvt, 190 / this.rAvt.texture.width)
             })
 
-            // this._fillBlood(data.leftTeam, this.lPlayerArr, data.leftPlayer)
-            // this._fillBlood(data.rightTeam, this.rPlayerArr, data.rightPlayer)
         }
-        // if (data.cid == CommandId.sc_timeOut) {
-        //     this.lTimeoutMaskArr[0].visible = data.lTimeOut < 2
-        //     this.lTimeoutMaskArr[1].visible = data.lTimeOut < 1
-
-        //     this.rTimeoutMaskArr[0].visible = data.rTimeOut < 2
-        //     this.rTimeoutMaskArr[1].visible = data.rTimeOut < 1
-        // }
-
         this.p.addChild(this)
     }
 }
@@ -345,6 +351,8 @@ class CommonGameView extends VueBase {
         }
         _adept(CommandId.sc_timerEvent_buzzer)
         _adept(CommandId.sc_timerEvent_common)
+        _adept(CommandId.sc_scoreFoul_common)
+        _adept(CommandId.sc_setPlayer)
     }
 }
 export let commonGame = new CommonGameView()

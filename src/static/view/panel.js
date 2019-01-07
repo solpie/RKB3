@@ -4842,7 +4842,8 @@
 	                this.timeInSec--;
 	                if (this.timeInSec < 0)
 	                    this.timeInSec = 0;
-	                if (this.timeInSec < 1) {
+	                if (this.timeInSec < 1 && !this.isTimeOut) {
+	                    this.isTimeOut = true;
 	                    console.log('timeout', this.timeInSec);
 	                    this.pauseTimer();
 	                    this.emit('timeout', this.timeInSec);
@@ -4856,7 +4857,7 @@
 	    };
 	    TextTimer.prototype.newTimer = function () {
 	        var _this = this;
-	        this.isTimeOut = true;
+	        this.isTimeOut = false;
 	        if (this.timerId)
 	            clearInterval(this.timerId);
 	        this.timerId = setInterval(function () {
@@ -11026,6 +11027,7 @@
 	var resetGameTime = 7 * 60;
 	var resetGameTime1min = 60 * 100;
 	var resetBuzzerTime = 20 * 100;
+	var audio = new Audio('/sound/buzzer.wav');
 	var CommonGame = (function (_super) {
 	    __extends(CommonGame, _super);
 	    function CommonGame() {
@@ -11085,29 +11087,29 @@
 	            _this.rTimeoutMaskArr.push(tm);
 	            var ns = {
 	                fontFamily: const_1.FontName.Industry,
-	                fontSize: "100px",
-	                fontWeight: "bold",
+	                fontSize: "140px",
+	                fontWeight: "normal",
 	                fill: "#ddd"
 	            };
 	            ns.fill = '#d76102';
 	            _this.lFoul = TextFac_1.TextFac.new_(ns, _this)
-	                .setY(300 - 62)
-	                .setText("3")
-	                .setAlignCenter(PixiEx_1._c(-133));
+	                .setY(180)
+	                .setText("0")
+	                .setAlignCenter(PixiEx_1._c(-140));
 	            _this.rFoul = TextFac_1.TextFac.new_(ns, _this)
 	                .setY(_this.lFoul.y)
-	                .setText("2")
-	                .setAlignCenter(PixiEx_1._c(133));
+	                .setText("0")
+	                .setAlignCenter(PixiEx_1._c(150));
 	            ns.fontSize = "160px";
 	            ns.fill = '#ddd';
-	            _this.lBlood = TextFac_1.TextFac.new_(ns, _this)
-	                .setY(218 - 37 - 62)
-	                .setText("5")
-	                .setAlignCenter(PixiEx_1._c(-280));
-	            _this.rBlood = TextFac_1.TextFac.new_(ns, _this)
-	                .setY(_this.lBlood.y)
+	            _this.lScore = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(80)
 	                .setText("0")
-	                .setAlignCenter(PixiEx_1._c(280));
+	                .setAlignCenter(PixiEx_1._c(-290));
+	            _this.rScore = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(_this.lScore.y)
+	                .setText("0")
+	                .setAlignCenter(PixiEx_1._c(290));
 	            _this.lAvt = new PIXI.Sprite();
 	            _this.addChild(_this.lAvt);
 	            _this.rAvt = new PIXI.Sprite();
@@ -11125,13 +11127,13 @@
 	                .setAlignCenter(PixiEx_1._c(516));
 	            ns.fontFamily = const_1.FontName.DigiLED2;
 	            ns.fontWeight = "normal";
-	            ns.fontSize = '140px';
+	            ns.fontSize = '130px';
 	            _this.gameTimer = new TextTimer_1.TextTimer('', ns);
 	            _this.gameTimer.isMin = true;
 	            _this.gameTimer.resetTime = resetGameTime;
 	            _this.gameTimer.setTimeBySec(resetGameTime);
-	            _this.gameTimer.x = 640 + 50;
-	            _this.gameTimer.y = 400;
+	            _this.gameTimer.x = 640 + 90;
+	            _this.gameTimer.y = 450;
 	            _this.gameTimer.on('tick', function (sec) {
 	                if (sec < 61) {
 	                    _this.gameTimer1min.visible = true;
@@ -11155,11 +11157,14 @@
 	            _this.buzzerTimer.resetTime = resetBuzzerTime;
 	            _this.buzzerTimer.on('timeout', function (_) {
 	                console.log('buzzer timer timeout');
-	                _this.timer10ms.pauseTimer();
+	                if (_this.gameTimer.timeInSec < 61 ||
+	                    _this.gameTimer1min.timeInSec < 60 * 100)
+	                    _this.timer10ms.pauseTimer();
+	                audio.play();
 	            });
 	            _this.buzzerTimer.setTimeBySec(resetBuzzerTime);
-	            _this.buzzerTimer.x = 640 + 50;
-	            _this.buzzerTimer.y = 676;
+	            _this.buzzerTimer.x = _this.gameTimer.x;
+	            _this.buzzerTimer.y = 676 + 50;
 	            _this.addChild(_this.buzzerTimer);
 	            _this.timer10ms = new TextTimer_1.TextTime10ms('', ns);
 	            _this.timer10ms.isMin = true;
@@ -11179,11 +11184,15 @@
 	        console.log('setBuzzerTimerEvent');
 	        if (data.event == const_1.TimerEvent.TOGGLE) {
 	            this.isBlockBuzzer = false;
+	            this.buzzerTimer.isTimeOut = false;
 	            this.timer10ms.setTimerEvent(data);
 	        }
 	        else {
-	            if (data.isToggle)
+	            if (data.isToggle) {
 	                this.isBlockBuzzer = !this.isBlockBuzzer;
+	                if (!this.isBlockBuzzer)
+	                    this.buzzerTimer.isTimeOut = false;
+	            }
 	            this.buzzerTimer.setTimerEvent(data);
 	        }
 	    };
@@ -11205,24 +11214,31 @@
 	            this.gameTimer.setTimerEvent(data);
 	        }
 	    };
+	    CommonGame.prototype.setScoreFoulEvent = function (data) {
+	        this.lFoul.setText(data.lFoul)
+	            .setAlignCenter(PixiEx_1._c(-140));
+	        this.rFoul.setText(data.rFoul)
+	            .setAlignCenter(PixiEx_1._c(150));
+	        this.lScore.setText(data.lScore)
+	            .setAlignCenter(PixiEx_1._c(-290));
+	        this.rScore.setText(data.rScore)
+	            .setAlignCenter(PixiEx_1._c(290));
+	    };
 	    CommonGame.prototype._show = function (data) {
 	        var _this = this;
-	        if (data.cid == Command_1.CommandId.sc_setFoul) {
-	            this.lFoul.setText(data.lFoul)
-	                .setAlignCenter(805);
-	            this.rFoul.setText(data.rFoul)
-	                .setAlignCenter(1146);
-	        }
 	        if (data.cid == Command_1.CommandId.sc_timerEvent_buzzer) {
 	            this.setBuzzerTimerEvent(data);
 	        }
 	        if (data.cid == Command_1.CommandId.sc_timerEvent_common) {
 	            this.setGameTimerEvent(data);
 	        }
+	        if (data.cid == Command_1.CommandId.sc_scoreFoul_common) {
+	            this.setScoreFoulEvent(data);
+	        }
 	        if (data.cid == Command_1.CommandId.sc_setPlayer) {
-	            this.lBlood.setText(data.leftPlayer.blood)
+	            this.lScore.setText(data.leftPlayer.blood)
 	                .setAlignCenter(PixiEx_1._c(-300));
-	            this.rBlood.setText(data.rightPlayer.blood)
+	            this.rScore.setText(data.rightPlayer.blood)
 	                .setAlignCenter(PixiEx_1._c(300));
 	            this.lFoul.setText(0)
 	                .setAlignCenter(PixiEx_1._c(-133));
@@ -11278,6 +11294,8 @@
 	        };
 	        _adept(Command_1.CommandId.sc_timerEvent_buzzer);
 	        _adept(Command_1.CommandId.sc_timerEvent_common);
+	        _adept(Command_1.CommandId.sc_scoreFoul_common);
+	        _adept(Command_1.CommandId.sc_setPlayer);
 	    };
 	    return CommonGameView;
 	}(VueBase_1.VueBase));
