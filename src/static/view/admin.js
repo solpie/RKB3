@@ -56,6 +56,7 @@
 	var home_1 = __webpack_require__(20);
 	var GameAdmin_1 = __webpack_require__(26);
 	var CommonGameAdmin_1 = __webpack_require__(43);
+	var PickTeamAdmin_1 = __webpack_require__(45);
 	var routes = [
 	    {
 	        path: '/', name: 'home',
@@ -64,6 +65,10 @@
 	    {
 	        path: '/com', name: 'com',
 	        components: { content: CommonGameAdmin_1.CommonGameAdmin },
+	    },
+	    {
+	        path: '/pick', name: 'pick',
+	        components: { content: PickTeamAdmin_1.PickTeamAdmin },
 	    },
 	];
 	var router = new VueRouter({
@@ -3943,6 +3948,44 @@
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"container\">\r\n    <a href=\"/panel/#/com\">计分板面板地址</a>\r\n    <table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n        <thead>\r\n        </thead>\r\n        <tbody>\r\n            <tr>\r\n                <th>\r\n                    <div hidden>{{updateTime}}</div>\r\n                </th>\r\n                <th>\r\n                    <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n                </th>\r\n                <th>蓝方球员</th>\r\n                <th> </th>\r\n                <th>红方球员</th>\r\n                <th>\r\n                </th>\r\n            </tr>\r\n            <tr>\r\n                <th style=\"font-size:25px;\">\r\n\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n                </th>\r\n                <th>\r\n                    {{baseGame.lName}}\r\n                </th>\r\n                <th style=\"font-size:40px;\">\r\n                    <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n                </th>\r\n                <th>\r\n                    {{baseGame.rName}}\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n                </th>\r\n            </tr>\r\n            <tr>\r\n                <th style=\"font-size:25px;\">犯规\r\n                    <a @click=\"onResetFoul\"> 重置</a>\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n                </th>\r\n                <th>\r\n                    -\r\n                </th>\r\n                <th>\r\n                    <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n                </th>\r\n                <th>\r\n                    -\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n                </th>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n    <div style=\"font-size:30px;\">\r\n        比赛时间设置:<input class=\"input\" @keyup.enter=\"onSetTimerEvent('setting',timeInSec)\" v-model=\"timeInSec\" type=\"text\" style=\"width: 100px;\">\r\n        <!-- <a @click=\"onSetTimerEvent('start')\">开始  </a>\r\n        <a @click=\"onSetTimerEvent('pause')\">暂停  </a> -->\r\n        <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n        <a @click=\"onSetTimerEvent('setting','7-0')\">reset</a> 分钟-秒数 时间格式\"7-0\"，大于60秒不要加\".\"\"\r\n        <hr> 进攻时间设置:\r\n        <input class=\"input\" v-model=\"buzzerTimeInSec\" @keyup.enter=\"onSetBuzzer(buzzerTimeInSec)\" type=\"text\" style=\"width: 100px;\">\r\n        <a @click=\"onSetBuzzer(buzzerTimeInSec)\">设置</a>\r\n        <a @click=\"resetBuzzer\">reset</a>\r\n        <input id=\"buzzer\" maxlength=\"1\" class=\"input\" type=\"text\" style=\"width: 60px;\"> q 复位并暂停/开始 进攻时间 r复位进攻时间 空格暂停/开始比赛时间和进攻时间\r\n    </div>\r\n</div>";
+
+/***/ },
+/* 45 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var VueBase_1 = __webpack_require__(22);
+	var _PickTeamAdmin = (function (_super) {
+	    __extends(_PickTeamAdmin, _super);
+	    function _PickTeamAdmin() {
+	        _super.call(this);
+	        this.template = __webpack_require__(46);
+	        this.teamArr1 = VueBase_1.VueBase.PROP;
+	        this.teamArr2 = VueBase_1.VueBase.PROP;
+	        this.teamArr3 = VueBase_1.VueBase.PROP;
+	        VueBase_1.VueBase.initProps(this);
+	    }
+	    _PickTeamAdmin.prototype.created = function () {
+	        this.teamArr1 = [{ name: '1', playerId: 1 }];
+	        this.teamArr2 = [{ name: '2', playerId: 1 }];
+	        this.teamArr3 = [{ name: '3', playerId: 1 }];
+	    };
+	    return _PickTeamAdmin;
+	}(VueBase_1.VueBase));
+	exports._PickTeamAdmin = _PickTeamAdmin;
+	exports.PickTeamAdmin = new _PickTeamAdmin();
+
+
+/***/ },
+/* 46 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"container\">\r\n    <a href=\"/panel/#/pick\">选人面板地址</a>\r\n    <hr>\r\n    <div style=\"display: inline-flex\">\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in teamArr1\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in teamArr2\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in teamArr3\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</div>";
 
 /***/ }
 /******/ ]);

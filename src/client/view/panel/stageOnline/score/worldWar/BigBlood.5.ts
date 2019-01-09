@@ -4,7 +4,7 @@ import { imgLoader } from '../../../../utils/ImgLoader';
 import { newBitmap, setScale, _c } from '../../../../utils/PixiEx';
 import { Text2, TextFac } from '../../../../utils/TextFac';
 import { BasePanel } from '../../../base/BasePanel';
-let urlBg1 = '/html/ww/bottomBlood/blood4.png'
+let urlBg1 = '/html/ww/bottomBlood/bg2.png'
 let urlBloodFrame = '/html/ww/bottomBlood/frame.png'
 let urlLBlood = '/html/ww/bottomBlood/lBlood.png'
 let urlRBlood = '/html/ww/bottomBlood/rBlood.png'
@@ -191,8 +191,6 @@ export class BigBlood extends BasePanel {
                 rP.y = lP.y
                 rA.push(rP)
             }
-            //hide for final
-            lA[4].visible = rA[4].visible = false
             this.lPlayerArr = lA
             this.rPlayerArr = rA
 

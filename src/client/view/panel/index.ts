@@ -10,12 +10,17 @@ require(`script!./../../libs/vue/vue-router.min.js`);
 import { studio } from './stage5v5/Stage5v5';
 import { stageOnlineView } from './stageOnline/StageOnlineView';
 import { commonGame } from './stageOnline/commonGame/CommonGame';
+import { bracketS5Final } from './stageOnline/bracket/BracketS5Final';
 //////////////
 
 let routes = [
     {
         path: '/com',
         components: { default: commonGame }
+    },
+    {
+        path: '/bracketS5',
+        components: { default: bracketS5Final }
     },
     {
         path: '/studio/:op',

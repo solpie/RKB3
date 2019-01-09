@@ -80,7 +80,7 @@ export class StudioPanel extends PIXI.Container {
             turn()
             setInterval(_ => {
                 turn()
-            }, 30000)
+            }, 20000)
         }
         else {
 

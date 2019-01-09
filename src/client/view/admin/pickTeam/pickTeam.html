@@ -1,0 +1,21 @@
+<div class="container">
+    <a href="/panel/#/pick">选人面板地址</a>
+    <hr>
+    <div style="display: inline-flex">
+        <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
+            <li style="float:left;width:130px;padding:5px" v-for="player in teamArr1">
+                <button class="button is-primary" @click="onChangePlayer(false,player.playerId)">{{player.name}}</button>
+            </li>
+        </ul>
+        <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
+            <li style="float:left;width:130px;padding:5px" v-for="player in teamArr2">
+                <button class="button is-primary" @click="onChangePlayer(false,player.playerId)">{{player.name}}</button>
+            </li>
+        </ul>
+        <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
+            <li style="float:left;width:130px;padding:5px" v-for="player in teamArr3">
+                <button class="button is-primary" @click="onChangePlayer(false,player.playerId)">{{player.name}}</button>
+            </li>
+        </ul>
+    </div>
+</div>

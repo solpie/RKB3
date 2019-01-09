@@ -16,7 +16,7 @@ const resetGameTime = 7 * 60
 const resetGameTime1min = 60 * 100
 const resetBuzzerTime = 20 * 100
 
-const buzzer = new Audio('/sound/buzzer.mp3');
+let buzzer;
 export class CommonGame extends BasePanel {
     static cls = 'CommonGame'
     lAvt: PIXI.Sprite
@@ -309,6 +309,7 @@ let canvasStage
 declare let io;
 class CommonGameView extends VueBase {
     protected mounted() {
+        buzzer = new Audio('/sound/buzzer.mp3');
         console.log('mouted commonGame view');
         if (!canvasStage)
             canvasStage = BasePanelView.initPixi()

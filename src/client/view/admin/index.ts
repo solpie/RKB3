@@ -13,9 +13,9 @@ require(`script!./../../libs/vue/vue.min.js`);
 require(`script!./../../libs/vue/vue-router.min.js`);
 import { homeView } from "./home/home";
 
-import { playerView } from './player/player';
 import { GameAdmin } from './gameAdmin/GameAdmin';
 import {CommonGameAdmin} from './comGame/CommonGameAdmin'
+import { PickTeamAdmin } from './pickTeam/PickTeamAdmin';
 //////////////
 var routes = [
     {
@@ -25,6 +25,10 @@ var routes = [
     {
         path: '/com', name: 'com',
         components: { content: CommonGameAdmin },
+    },
+    {
+        path: '/pick', name: 'pick',
+        components: { content: PickTeamAdmin },
     },
 ];
 
