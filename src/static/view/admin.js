@@ -840,6 +840,7 @@
 	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
 	            { title: "通用计分控制台", url: "/admin/#/com" },
+	            { title: "S5总决赛晋级面板", url: "/panel/#/brackets5" },
 	        ];
 	    };
 	    HomeView.prototype.genQRCode = function () {
@@ -3102,6 +3103,7 @@
 	        this.bracketRec2 = VueBase_1.VueBase.PROP;
 	        this.bracketRec3 = VueBase_1.VueBase.PROP;
 	        this.bracketRecFinal = VueBase_1.VueBase.PROP;
+	        this.bracketRec16 = VueBase_1.VueBase.PROP;
 	        this.rank5Player = VueBase_1.VueBase.PROP;
 	        this.rank16Arr = VueBase_1.VueBase.PROP;
 	        this.methods = {
@@ -3145,7 +3147,8 @@
 	                    bracketRec1: this.bracketRec1,
 	                    bracketRec2: this.bracketRec2,
 	                    bracketRec3: this.bracketRec3,
-	                    bracketRecFinal: this.bracketRecFinal
+	                    bracketRecFinal: this.bracketRecFinal,
+	                    bracketRec16: this.bracketRec16
 	                });
 	            },
 	            onReloadShow: function () {
@@ -3397,6 +3400,7 @@
 	                _this.bracketRec2 = ret.bracketRec2;
 	                _this.bracketRec3 = ret.bracketRec3;
 	                _this.bracketRecFinal = ret.bracketRecFinal;
+	                _this.bracketRec16 = ret.bracketRec16;
 	                _this.winMap = ret.winMap;
 	                _this.totalScoreMap = ret.totalScoreMap;
 	                _this.recArr = ret.recArr;
@@ -3546,6 +3550,15 @@
 	    ];
 	}
 	exports.newBracketRecFinal = newBracketRecFinal;
+	function newBracketRec16() {
+	    var a = [];
+	    for (var i = 0; i < 16; i++) {
+	        var gameIdx = i + 1;
+	        a.push({ playerId: ['', ''], score: [-1, -1], player: ["", ""], gameIdx: gameIdx });
+	    }
+	    return a;
+	}
+	exports.newBracketRec16 = newBracketRec16;
 	function buildRec(doc, playerMap) {
 	    var a = [];
 	    var winMap = {};
@@ -3554,7 +3567,8 @@
 	    var bracketRec_2 = newBracketRec2();
 	    var bracketRec_3 = newBracketRec3();
 	    var bracketRec_final = newBracketRecFinal();
-	    for (var idx in doc.rec) {
+	    var bracketRec_16 = newBracketRec16();
+	    var _loop_1 = function(idx) {
 	        var rec = doc.rec[idx];
 	        var p1 = rec.player[0];
 	        var p2 = rec.player[1];
@@ -3617,8 +3631,22 @@
 	                b.score = rec.score;
 	            }
 	        }
+	        var fillBracketSection = function (section) {
+	            for (var _i = 0, section_1 = section; _i < section_1.length; _i++) {
+	                var b = section_1[_i];
+	                if (b.gameIdx == Number(idx)) {
+	                    b.player = rec.name;
+	                    b.playerId = [p1, p2];
+	                    b.score = rec.score;
+	                }
+	            }
+	        };
+	        fillBracketSection(bracketRec_16);
 	        rec.gameIdx = idx;
 	        a.push(rec);
+	    };
+	    for (var idx in doc.rec) {
+	        _loop_1(idx);
 	    }
 	    return {
 	        winMap: winMap,
@@ -3627,6 +3655,7 @@
 	        bracketRec1: bracketRec_1,
 	        bracketRec2: bracketRec_2,
 	        bracketRec3: bracketRec_3,
+	        bracketRec16: bracketRec_16,
 	        bracketRecFinal: bracketRec_final
 	    };
 	}

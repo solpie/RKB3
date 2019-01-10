@@ -10,7 +10,7 @@ let urlBg = '/img/panel/bracket/s5/bg.png'
 
 class BracketS5Final extends BasePanel {
     static cls = 'BracketS5Final'
-
+    groupMap: any
     create() {
         let imgArr = [urlBg
             // , urlFg
@@ -33,12 +33,13 @@ class BracketS5Final extends BasePanel {
             , "11": { x: _c(x1), y: 318 }
             , "12": { x: _c(x1), y: 612 }
 
-            , "13": { x: _c(x2), y: 467 }
-            , "14": { x: _c(-x2), y: 467 }
+            , "13": { x: _c(-x2), y: 467 }
+            , "14": { x: _c(x2), y: 467 }
 
             , "15": { x: 125, y: 749 }
             , "16": { x: 125, y: 220 }
         }
+        this.groupMap = groupMap
         this.addChild(new PIXI.Graphics()
             .beginFill(0x000000)
             .drawRect(0, 0, 1920, 1080))
@@ -47,8 +48,12 @@ class BracketS5Final extends BasePanel {
             let ns = {
                 fontFamily: FontName.MicrosoftYahei,
                 fontSize: "30px",
-                fontWeight: "normal",
-                fill: "#ddd"
+                dropShadow: true,
+                dropShadowColor: '#222222',
+                dropShadowAngle: Math.PI * 1 / 3,
+                dropShadowDistance: 3,
+                fontWeight: "bold",
+                fill: "#acacac"
             };
 
             this.addChild(newBitmap({ url: urlBg }))
@@ -56,9 +61,9 @@ class BracketS5Final extends BasePanel {
             for (let k in groupMap) {
                 let group = groupMap[k]
                 group.lName = TextFac.new_(ns, this)
-                    .setText('郝天佶')
+                    .setText('')
                 group.rName = TextFac.new_(ns, this)
-                    .setText('郝天佶')
+                    .setText('')
                 if (Number(k) > 14) {
                     group.lName.setSize('43px')
                     group.rName.setSize('43px')
@@ -76,9 +81,40 @@ class BracketS5Final extends BasePanel {
             }
         })
     }
+    fillData(data) {
+        let rec = data.bracketRec16
+        for (let r of rec) {
+            let group = this.groupMap[r.gameIdx]
+            if (r.gameIdx > 14) {
+                group.lName.setText(r.player[0])
+                    .setAlignCenter(_c(group.x))
+                group.rName.setText(r.player[1])
+                    .setAlignCenter(_c(-group.x))
+            }
+            else {
+                group.lName.setText(r.player[0])
+                    .setAlignCenter(group.x)
+                group.rName.setText(r.player[1])
+                    .setAlignCenter(group.x)
+            }
+
+            let lScore = r.score[0], rScore = r.score[1]
+
+            group.lName.alpha =
+                group.rName.alpha = 1
+            if (r.score[0] != 0 || r.score[1] != 0) {
+                if (lScore > rScore) {
+                    group.lName.alpha = 0.4
+                }
+                else {
+                    group.rName.alpha = 0.4
+                }
+            }
+        }
+    }
     _show(data) {
-        if (data.cid == CommandId.sc_timerEvent_buzzer) {
-            // this.setBuzzerTimerEvent(data)
+        if (data.cid == CommandId.sc_bracket) {
+            this.fillData(data)
         }
         this.p.addChild(this)
     }
@@ -105,7 +141,7 @@ class BracketS5FinalView extends VueBase {
                 showPanel(BracketS5Final, data, canvasStage)
             })
         }
-        // _adept(CommandId.sc_timerEvent_buzzer)
+        _adept(CommandId.sc_bracket)
     }
 }
 export let bracketS5Final = new BracketS5FinalView()

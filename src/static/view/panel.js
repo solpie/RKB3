@@ -54,7 +54,7 @@
 	var Stage5v5_1 = __webpack_require__(55);
 	var StageOnlineView_1 = __webpack_require__(71);
 	var CommonGame_1 = __webpack_require__(112);
-	var BracketS5Final_1 = __webpack_require__(124);
+	var BracketS5Final_1 = __webpack_require__(113);
 	var routes = [
 	    {
 	        path: '/com',
@@ -410,6 +410,7 @@
 	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
 	            { title: "通用计分控制台", url: "/admin/#/com" },
+	            { title: "S5总决赛晋级面板", url: "/panel/#/brackets5" },
 	        ];
 	    };
 	    HomeView.prototype.genQRCode = function () {
@@ -2672,6 +2673,7 @@
 	        this.bracketRec2 = VueBase_1.VueBase.PROP;
 	        this.bracketRec3 = VueBase_1.VueBase.PROP;
 	        this.bracketRecFinal = VueBase_1.VueBase.PROP;
+	        this.bracketRec16 = VueBase_1.VueBase.PROP;
 	        this.rank5Player = VueBase_1.VueBase.PROP;
 	        this.rank16Arr = VueBase_1.VueBase.PROP;
 	        this.methods = {
@@ -2715,7 +2717,8 @@
 	                    bracketRec1: this.bracketRec1,
 	                    bracketRec2: this.bracketRec2,
 	                    bracketRec3: this.bracketRec3,
-	                    bracketRecFinal: this.bracketRecFinal
+	                    bracketRecFinal: this.bracketRecFinal,
+	                    bracketRec16: this.bracketRec16
 	                });
 	            },
 	            onReloadShow: function () {
@@ -2967,6 +2970,7 @@
 	                _this.bracketRec2 = ret.bracketRec2;
 	                _this.bracketRec3 = ret.bracketRec3;
 	                _this.bracketRecFinal = ret.bracketRecFinal;
+	                _this.bracketRec16 = ret.bracketRec16;
 	                _this.winMap = ret.winMap;
 	                _this.totalScoreMap = ret.totalScoreMap;
 	                _this.recArr = ret.recArr;
@@ -3116,6 +3120,15 @@
 	    ];
 	}
 	exports.newBracketRecFinal = newBracketRecFinal;
+	function newBracketRec16() {
+	    var a = [];
+	    for (var i = 0; i < 16; i++) {
+	        var gameIdx = i + 1;
+	        a.push({ playerId: ['', ''], score: [-1, -1], player: ["", ""], gameIdx: gameIdx });
+	    }
+	    return a;
+	}
+	exports.newBracketRec16 = newBracketRec16;
 	function buildRec(doc, playerMap) {
 	    var a = [];
 	    var winMap = {};
@@ -3124,7 +3137,8 @@
 	    var bracketRec_2 = newBracketRec2();
 	    var bracketRec_3 = newBracketRec3();
 	    var bracketRec_final = newBracketRecFinal();
-	    for (var idx in doc.rec) {
+	    var bracketRec_16 = newBracketRec16();
+	    var _loop_1 = function(idx) {
 	        var rec = doc.rec[idx];
 	        var p1 = rec.player[0];
 	        var p2 = rec.player[1];
@@ -3187,8 +3201,22 @@
 	                b.score = rec.score;
 	            }
 	        }
+	        var fillBracketSection = function (section) {
+	            for (var _i = 0, section_1 = section; _i < section_1.length; _i++) {
+	                var b = section_1[_i];
+	                if (b.gameIdx == Number(idx)) {
+	                    b.player = rec.name;
+	                    b.playerId = [p1, p2];
+	                    b.score = rec.score;
+	                }
+	            }
+	        };
+	        fillBracketSection(bracketRec_16);
 	        rec.gameIdx = idx;
 	        a.push(rec);
+	    };
+	    for (var idx in doc.rec) {
+	        _loop_1(idx);
 	    }
 	    return {
 	        winMap: winMap,
@@ -3197,6 +3225,7 @@
 	        bracketRec1: bracketRec_1,
 	        bracketRec2: bracketRec_2,
 	        bracketRec3: bracketRec_3,
+	        bracketRec16: bracketRec_16,
 	        bracketRecFinal: bracketRec_final
 	    };
 	}
@@ -11305,18 +11334,7 @@
 
 
 /***/ },
-/* 113 */,
-/* 114 */,
-/* 115 */,
-/* 116 */,
-/* 117 */,
-/* 118 */,
-/* 119 */,
-/* 120 */,
-/* 121 */,
-/* 122 */,
-/* 123 */,
-/* 124 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -11356,11 +11374,12 @@
 	            "10": { x: PixiEx_1._c(-x1), y: 612 },
 	            "11": { x: PixiEx_1._c(x1), y: 318 },
 	            "12": { x: PixiEx_1._c(x1), y: 612 },
-	            "13": { x: PixiEx_1._c(x2), y: 467 },
-	            "14": { x: PixiEx_1._c(-x2), y: 467 },
+	            "13": { x: PixiEx_1._c(-x2), y: 467 },
+	            "14": { x: PixiEx_1._c(x2), y: 467 },
 	            "15": { x: 125, y: 749 },
 	            "16": { x: 125, y: 220 }
 	        };
+	        this.groupMap = groupMap;
 	        this.addChild(new PIXI.Graphics()
 	            .beginFill(0x000000)
 	            .drawRect(0, 0, 1920, 1080));
@@ -11369,16 +11388,20 @@
 	            var ns = {
 	                fontFamily: const_1.FontName.MicrosoftYahei,
 	                fontSize: "30px",
-	                fontWeight: "normal",
-	                fill: "#ddd"
+	                dropShadow: true,
+	                dropShadowColor: '#222222',
+	                dropShadowAngle: Math.PI * 1 / 3,
+	                dropShadowDistance: 3,
+	                fontWeight: "bold",
+	                fill: "#acacac"
 	            };
 	            _this.addChild(PixiEx_1.newBitmap({ url: urlBg }));
 	            for (var k in groupMap) {
 	                var group = groupMap[k];
 	                group.lName = TextFac_1.TextFac.new_(ns, _this)
-	                    .setText('郝天佶');
+	                    .setText('');
 	                group.rName = TextFac_1.TextFac.new_(ns, _this)
-	                    .setText('郝天佶');
+	                    .setText('');
 	                if (Number(k) > 14) {
 	                    group.lName.setSize('43px');
 	                    group.rName.setSize('43px');
@@ -11396,8 +11419,39 @@
 	            }
 	        });
 	    };
+	    BracketS5Final.prototype.fillData = function (data) {
+	        var rec = data.bracketRec16;
+	        for (var _i = 0, rec_1 = rec; _i < rec_1.length; _i++) {
+	            var r = rec_1[_i];
+	            var group = this.groupMap[r.gameIdx];
+	            if (r.gameIdx > 14) {
+	                group.lName.setText(r.player[0])
+	                    .setAlignCenter(PixiEx_1._c(group.x));
+	                group.rName.setText(r.player[1])
+	                    .setAlignCenter(PixiEx_1._c(-group.x));
+	            }
+	            else {
+	                group.lName.setText(r.player[0])
+	                    .setAlignCenter(group.x);
+	                group.rName.setText(r.player[1])
+	                    .setAlignCenter(group.x);
+	            }
+	            var lScore = r.score[0], rScore = r.score[1];
+	            group.lName.alpha =
+	                group.rName.alpha = 1;
+	            if (r.score[0] != 0 || r.score[1] != 0) {
+	                if (lScore > rScore) {
+	                    group.lName.alpha = 0.4;
+	                }
+	                else {
+	                    group.rName.alpha = 0.4;
+	                }
+	            }
+	        }
+	    };
 	    BracketS5Final.prototype._show = function (data) {
-	        if (data.cid == Command_1.CommandId.sc_timerEvent_buzzer) {
+	        if (data.cid == Command_1.CommandId.sc_bracket) {
+	            this.fillData(data);
 	        }
 	        this.p.addChild(this);
 	    };
@@ -11427,6 +11481,7 @@
 	                BasePanel_1.showPanel(BracketS5Final, data, canvasStage);
 	            });
 	        };
+	        _adept(Command_1.CommandId.sc_bracket);
 	    };
 	    return BracketS5FinalView;
 	}(VueBase_1.VueBase));

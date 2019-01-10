@@ -55,6 +55,16 @@ export function newBracketRecFinal() {
         { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: -1, isH: true },
     ]
 }
+export function newBracketRec16() {
+    let a = []
+    for (let i = 0; i < 16; i++) {
+        let gameIdx = i + 1
+        a.push(
+            { playerId: ['', ''], score: [-1, -1], player: ["", ""], gameIdx: gameIdx },
+        )
+    }
+    return a
+}
 
 export function buildRec(doc, playerMap) {
     let a = []
@@ -64,6 +74,8 @@ export function buildRec(doc, playerMap) {
     let bracketRec_2 = newBracketRec2()
     let bracketRec_3 = newBracketRec3()
     let bracketRec_final = newBracketRecFinal()
+    let bracketRec_16 = newBracketRec16()
+
     for (let idx in doc.rec) {
         let rec = doc.rec[idx]
 
@@ -128,6 +140,16 @@ export function buildRec(doc, playerMap) {
                 b.score = rec.score
             }
         }
+        let fillBracketSection = (section) => {
+            for (let b of section) {
+                if (b.gameIdx == Number(idx)) {
+                    b.player = rec.name
+                    b.playerId = [p1, p2]
+                    b.score = rec.score
+                }
+            }
+        }
+        fillBracketSection(bracketRec_16)
         rec.gameIdx = idx
         a.push(rec)
     }
@@ -138,6 +160,7 @@ export function buildRec(doc, playerMap) {
         , bracketRec1: bracketRec_1
         , bracketRec2: bracketRec_2
         , bracketRec3: bracketRec_3
+        , bracketRec16: bracketRec_16
         , bracketRecFinal: bracketRec_final
     }
 }

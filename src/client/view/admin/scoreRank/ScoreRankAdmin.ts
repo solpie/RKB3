@@ -70,6 +70,7 @@ class _ScoreRankAdmin extends VueBase {
     bracketRec2 = VueBase.PROP
     bracketRec3 = VueBase.PROP
     bracketRecFinal = VueBase.PROP
+    bracketRec16 = VueBase.PROP
 
     rank5Player = VueBase.PROP
     rank16Arr = VueBase.PROP
@@ -99,6 +100,7 @@ class _ScoreRankAdmin extends VueBase {
                 this.bracketRec2 = ret.bracketRec2
                 this.bracketRec3 = ret.bracketRec3
                 this.bracketRecFinal = ret.bracketRecFinal
+                this.bracketRec16 = ret.bracketRec16
                 this.winMap = ret.winMap
                 this.totalScoreMap = ret.totalScoreMap
                 this.recArr = ret.recArr
@@ -247,6 +249,7 @@ class _ScoreRankAdmin extends VueBase {
                 , bracketRec2: this.bracketRec2
                 , bracketRec3: this.bracketRec3
                 , bracketRecFinal: this.bracketRecFinal
+                , bracketRec16: this.bracketRec16
             })
         },
         onReloadShow() {

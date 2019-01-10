@@ -52,8 +52,8 @@
 	__webpack_require__(16);
 	__webpack_require__(18);
 	__webpack_require__(10);
-	var Navbar_1 = __webpack_require__(113);
-	var GameMonth_1 = __webpack_require__(115);
+	var Navbar_1 = __webpack_require__(114);
+	var GameMonth_1 = __webpack_require__(116);
 	var routes = [
 	    {
 	        path: '/', name: 'home',
@@ -1125,7 +1125,7 @@
 
 /***/ },
 
-/***/ 113:
+/***/ 114:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1133,20 +1133,20 @@
 	    props: {
 	        active: {},
 	    },
-	    template: __webpack_require__(114)
+	    template: __webpack_require__(115)
 	};
 
 
 /***/ },
 
-/***/ 114:
+/***/ 115:
 /***/ function(module, exports) {
 
 	module.exports = "<nav class=\"nav has-shadow\">\r\n    <div class=\"container\">\r\n        <div class=\"nav-left\">\r\n            <a class=\"nav-item\" :class=\"{active: active === ''}\">\r\n                <i class=\"home icon\"></i>\r\n                <router-link :to=\"{ name: 'home'}\">Home</router-link>\r\n            </a>\r\n        </div>\r\n    </div>\r\n</nav>";
 
 /***/ },
 
-/***/ 115:
+/***/ 116:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1155,12 +1155,12 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var RawDayClient_1 = __webpack_require__(116);
-	var RawDayInfo_1 = __webpack_require__(117);
-	var CampusInfo_1 = __webpack_require__(120);
-	var thenBy_1 = __webpack_require__(121);
+	var RawDayClient_1 = __webpack_require__(117);
+	var RawDayInfo_1 = __webpack_require__(118);
+	var CampusInfo_1 = __webpack_require__(121);
+	var thenBy_1 = __webpack_require__(122);
 	var JsFunc_1 = __webpack_require__(21);
-	var GameInfo_1 = __webpack_require__(122);
+	var GameInfo_1 = __webpack_require__(123);
 	var WebDBCmd_1 = __webpack_require__(62);
 	var VueBase_1 = __webpack_require__(22);
 	var HupuAPI_1 = __webpack_require__(24);
@@ -1197,7 +1197,7 @@
 	    __extends(GameMonth, _super);
 	    function GameMonth() {
 	        _super.call(this);
-	        this.template = __webpack_require__(123);
+	        this.template = __webpack_require__(124);
 	        this.db = VueBase_1.VueBase.PROP;
 	        this.isOld = VueBase_1.VueBase.PROP;
 	        this.recMap = VueBase_1.VueBase.PROP;
@@ -1565,7 +1565,7 @@
 
 /***/ },
 
-/***/ 116:
+/***/ 117:
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1617,15 +1617,15 @@
 
 /***/ },
 
-/***/ 117:
+/***/ 118:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var RawDayClient_1 = __webpack_require__(116);
+	var RawDayClient_1 = __webpack_require__(117);
 	var WebDBCmd_1 = __webpack_require__(62);
 	var JsFunc_1 = __webpack_require__(21);
-	var PlayerInfo_1 = __webpack_require__(118);
-	var RawDayCmd_1 = __webpack_require__(119);
+	var PlayerInfo_1 = __webpack_require__(119);
+	var RawDayCmd_1 = __webpack_require__(120);
 	var srvIO;
 	var rawDayClient;
 	var $post = function (url, param, callback) {
@@ -1897,7 +1897,7 @@
 
 /***/ },
 
-/***/ 118:
+/***/ 119:
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1911,7 +1911,7 @@
 
 /***/ },
 
-/***/ 119:
+/***/ 120:
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1936,7 +1936,7 @@
 
 /***/ },
 
-/***/ 120:
+/***/ 121:
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1986,7 +1986,7 @@
 
 /***/ },
 
-/***/ 121:
+/***/ 122:
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2024,12 +2024,12 @@
 
 /***/ },
 
-/***/ 122:
+/***/ 123:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var PlayerInfo_1 = __webpack_require__(118);
-	var thenBy_1 = __webpack_require__(121);
+	var PlayerInfo_1 = __webpack_require__(119);
+	var thenBy_1 = __webpack_require__(122);
 	var RecData = (function () {
 	    function RecData() {
 	        this.gameIdx = -1;
@@ -2299,7 +2299,7 @@
 
 /***/ },
 
-/***/ 123:
+/***/ 124:
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"container\" v-if=\"!isOld\">\r\n    <div class=\"columns\">\r\n        <div class=\"column\">\r\n            game list\r\n            <div>\r\n                <li v-for=\"(r,idx) in recMap\">\r\n                    <a v-if='idx<24' href='#' @click='onSetGameIdx(idx)'>\r\n                        [{{r.player[0]+':'+r.player[1]}}] {{r.gameIdx+1}}: {{gameInfo.h(r.player[0])}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{gameInfo.h(r.player[1])}}\r\n                    </a>\r\n                    <a v-if='idx>23' href='#' @click='onSetGameIdx(idx)'>\r\n                        [{{r.player[0]+':'+r.player[1]}}] {{r.gameIdx-23}}: {{gameInfo.h(r.player[0])}} [{{r.score[0]}}]vs [{{r.score[1]}}] {{gameInfo.h(r.player[1])}}\r\n                    </a>\r\n                    <div v-if='idx==23'>-----master-----</div>\r\n                </li>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <div v-if='gameInfo.gameIdx<24'>\r\n                小组赛第{{gameInfo.gameIdx+1}}场\r\n            </div>\r\n            <div v-else>\r\n                大师赛第{{gameInfo.gameIdx-23}}场\r\n            </div>\r\n            {{gameInfoStr}}\r\n            <span></span><br> Score\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button> {{gameInfo.lScore}}\r\n            <br> Foul\r\n            <br>\r\n            <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button> {{gameInfo.lFoul}}\r\n            <br>\r\n            <button class=\"button\" @click=\"onStartGame()\">开始比赛</button>\r\n            <button class=\"button\" @click=\"onStartTimer(true)\">开始计时</button>\r\n            <button class=\"button\" @click=\"onStartTimer(false)\">暂停计时</button>\r\n            <button class=\"button\" @click=\"onCommitGame(true)\">提交比赛</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onProgress('a')\">A组进度</button>\r\n            <button class=\"button\" @click=\"onProgress('b')\">B组进度</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onProgress('c')\">C组进度</button>\r\n            <button class=\"button\" @click=\"onProgress('d')\">D组进度</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onHideProgress()\">隐藏进度</button>\r\n            <br>\r\n            <span>加赛操作：左边选择对阵，开始比赛，提交加赛。修改对阵<br>大师赛确认对阵之后刷新本页面推送到面板</span>\r\n            <button class=\"button\" @click=\"onCommitGame(false)\">提交加赛</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onSetResult\">修改比分</button>\r\n            <br>\r\n            <input v-model='vs' style=\"width:80px\"></input>\r\n            <button class=\"button\" @click=\"onSetVS(vs)\">修改对阵</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onBracket\">bracket</button>\r\n            <br>\r\n            <button class=\"button\" @click=\"onClearGame(0)\">清除比赛数据</button>\r\n            <button class=\"button\" @click=\"onClearGame(1)\">清除大师赛数据</button>\r\n            <button class=\"button\" @click=\"onTestGame\">testGame</button>\r\n        </div>\r\n        <div class=\"column\">\r\n            <br>\r\n            <br>\r\n            <br> {{gameInfo.rScore}}\r\n            <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n            <br>\r\n            <br> {{gameInfo.rFoul}}\r\n            <button class=\"button\" @click=\"onAddFoul(false,1)\">+1</button>\r\n            <button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n\r\n        </div>\r\n\r\n        <div class=\"column\">\r\n            <button class=\"button\" @click=\"onProgress()\">小组进度</button>\r\n            <button class=\"button\" @click=\"onSetMaster()\">大师赛排名</button>\r\n            <div>\r\n                <li v-for=\"(p,idx) in playerRank\">\r\n                    [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                    <div v-if='idx==7'>----------</div>\r\n                </li>\r\n                <div>-----master-----</div>\r\n                <li v-for=\"(p,idx) in masterBracket\">\r\n                    <button class=\"button\" @click=\"onAddFoul(false,-1)\">↑</button>\r\n                    <button class=\"button\" @click=\"onAddFoul(false,-1)\">↓</button> [{{idx+1}}] {{p.name}} win {{p.win}} beat{{p.beat}} 净胜{{p.dtScore}}\r\n                </li>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\">\r\n            校园赛\r\n            <br>\r\n            <input v-model='campusL' style=\"width:40px\"></input>\r\n            <input v-model='campusR' style=\"width:40px\"></input>\r\n            winScore\r\n            <input v-model='campusWinScore' style=\"width:40px\"></input>\r\n            gameIdx<input v-model='campusGameIdx' style=\"width:40px\"></input>\r\n            <button class=\"button\" @click=\"onStartCampus()\">开始比赛</button>\r\n            <li v-for=\"p in campusPlayer\">\r\n                {{p.id}}:{{p.name}}\r\n            </li>\r\n            <div v-if='rawdayInfo'>\r\n                rawdayInfo winArr length: {{rawdayInfo.winArr.length}}\r\n                <li v-for=\"p in rawdayInfo.winArr\">\r\n                    {{p.id}}:{{p.name}}\r\n                </li>\r\n            </div>\r\n\r\n            <button class=\"button\" @click=\"onCreateCampus(campusInput)\">录入</button>\r\n            <button class=\"button\" @click=\"onLiveData('emitInfo')\">emitInit</button>\r\n            <button class=\"button\" @click=\"onLiveData('createClient')\">LiveData</button>\r\n            <button class=\"button\" @click=\"onLiveData('rdcStart')\">start</button>\r\n            <button class=\"button\" @click=\"onLiveData('rdcPush')\">push</button>\r\n            <button class=\"button\" @click=\"onLiveData('rdcCommit')\">commit</button>\r\n            <button class=\"button\" @click=\"onLiveData('rdcFallback')\">fallback</button>\r\n            <button class=\"button\" @click=\"onLiveData('rdcDrop')\">drop</button>\r\n            <textarea v-model='campusInput' style=\"height:200px\">\r\n                \r\n            </textarea>\r\n        </div>\r\n    </div>\r\n</div>";
