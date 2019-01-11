@@ -125,7 +125,9 @@ export const CommandId = {
     sc_timerEvent_buzzer: '',
     cs_scoreFoul_common:'',
     sc_scoreFoul_common:'',
-    ///
+    //
+    cs_showLowerThird: '',//
+    sc_showLowerThird: '',//
     cs_showPickup: '',//
     sc_showPickup: '',//
     //hp
@@ -205,9 +207,6 @@ export const CommandId = {
     //top 5
     cs_showTop5: '',
     sc_showTop5: '',
-    ///screen
-    cs_inScreenScore: '',
-    inScreenScore: '',
     //world war
     cs_teamScore: '',
     sc_teamScore: '',

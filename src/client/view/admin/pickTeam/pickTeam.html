@@ -1,6 +1,13 @@
 <div class="container">
-    <a href="/panel/#/pick">选人面板地址</a>
+    <a href="/panel/#/lowerthird">面板地址</a>
     <hr>
+    <button class="button is-primary" @click="onShowLowerThird({},false)">隐藏</button>
+    <div style="padding:5px;">
+        <button v-for="(btn,index) in conf" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
+    </div>
+    <div style="padding:5px;">
+        <button v-for="(btn,index) in conf" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
+    </div>
     <div style="display: inline-flex">
         <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
             <li style="float:left;width:130px;padding:5px" v-for="player in teamArr1">

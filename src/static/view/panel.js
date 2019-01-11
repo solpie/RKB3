@@ -55,6 +55,7 @@
 	var StageOnlineView_1 = __webpack_require__(71);
 	var CommonGame_1 = __webpack_require__(112);
 	var BracketS5Final_1 = __webpack_require__(113);
+	var LowerThird_1 = __webpack_require__(125);
 	var routes = [
 	    {
 	        path: '/com',
@@ -63,6 +64,10 @@
 	    {
 	        path: '/bracketS5',
 	        components: { default: BracketS5Final_1.bracketS5Final }
+	    },
+	    {
+	        path: '/lowerthird',
+	        components: { default: LowerThird_1.lowerThird }
 	    },
 	    {
 	        path: '/studio/:op',
@@ -410,6 +415,7 @@
 	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
 	            { title: "通用计分控制台", url: "/admin/#/com" },
+	            { title: "S5总决赛LowerThird", url: "/admin/#/pick" },
 	            { title: "S5总决赛晋级面板", url: "/panel/#/brackets5" },
 	        ];
 	    };
@@ -1567,6 +1573,8 @@
 	    sc_timerEvent_buzzer: '',
 	    cs_scoreFoul_common: '',
 	    sc_scoreFoul_common: '',
+	    cs_showLowerThird: '',
+	    sc_showLowerThird: '',
 	    cs_showPickup: '',
 	    sc_showPickup: '',
 	    cs_startGame: '',
@@ -1636,8 +1644,6 @@
 	    sc_joinState: '',
 	    cs_showTop5: '',
 	    sc_showTop5: '',
-	    cs_inScreenScore: '',
-	    inScreenScore: '',
 	    cs_teamScore: '',
 	    sc_teamScore: '',
 	    cs_timeOut: '',
@@ -4359,6 +4365,7 @@
 	    function Text2() {
 	        _super.apply(this, arguments);
 	        this.alignRight = 0;
+	        this.alignCenterX = 0;
 	    }
 	    Text2.prototype.setParent = function (p) {
 	        p.addChild(this);
@@ -4402,6 +4409,9 @@
 	        return this.setX(v - this.width);
 	    };
 	    Text2.prototype.setAlignCenter = function (v) {
+	        if (!v)
+	            v = this.alignCenterX;
+	        this.alignCenterX = v;
 	        return this.setX(v - this.width * .5);
 	    };
 	    return Text2;
@@ -11486,6 +11496,211 @@
 	    return BracketS5FinalView;
 	}(VueBase_1.VueBase));
 	exports.bracketS5Final = new BracketS5FinalView();
+
+
+/***/ },
+/* 114 */,
+/* 115 */,
+/* 116 */,
+/* 117 */,
+/* 118 */,
+/* 119 */,
+/* 120 */,
+/* 121 */,
+/* 122 */,
+/* 123 */,
+/* 124 */,
+/* 125 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var VueBase_1 = __webpack_require__(22);
+	var BasePanelView_1 = __webpack_require__(56);
+	var BasePanel_1 = __webpack_require__(78);
+	var const_1 = __webpack_require__(27);
+	var Command_1 = __webpack_require__(28);
+	var TextFac_1 = __webpack_require__(64);
+	var PixiEx_1 = __webpack_require__(60);
+	var BaseLowerThird_1 = __webpack_require__(126);
+	var TextType1 = (function (_super) {
+	    __extends(TextType1, _super);
+	    function TextType1(parent) {
+	        _super.call(this, parent);
+	        this.addChild(PixiEx_1.newBitmap({ url: urlType_1 }));
+	        var ns = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: "42px",
+	            dropShadow: true,
+	            dropShadowColor: '#222222',
+	            dropShadowAngle: Math.PI * 1 / 3,
+	            dropShadowDistance: 3,
+	            fontWeight: "bold",
+	            fill: "#acacac"
+	        };
+	        this.lName = TextFac_1.TextFac.new_(ns, this)
+	            .setY(948)
+	            .setAlignCenter(PixiEx_1._c(-340));
+	        this.rName = TextFac_1.TextFac.new_(ns, this)
+	            .setY(this.lName.y)
+	            .setAlignCenter(PixiEx_1._c(340));
+	        ns.fontSize = "24px";
+	        this.lTitle = TextFac_1.TextFac.new_(ns, this)
+	            .setY(948 + 62)
+	            .setAlignCenter(PixiEx_1._c(-340));
+	        this.rTitle = TextFac_1.TextFac.new_(ns, this)
+	            .setY(this.lTitle.y)
+	            .setAlignCenter(PixiEx_1._c(340));
+	    }
+	    TextType1.prototype.fillData = function (data) {
+	        var l = data.cont[0].split('_');
+	        this.lName.setText(l[0])
+	            .setAlignCenter();
+	        this.lTitle.setText(l[1])
+	            .setAlignCenter();
+	        var r = data.cont[1].split('_');
+	        this.rName.setText(r[0])
+	            .setAlignCenter();
+	        this.rTitle.setText(r[1])
+	            .setAlignCenter();
+	    };
+	    return TextType1;
+	}(BaseLowerThird_1.BaseLowerThird));
+	var TextType2 = (function (_super) {
+	    __extends(TextType2, _super);
+	    function TextType2(parent) {
+	        _super.call(this, parent);
+	        this.addChild(PixiEx_1.newBitmap({ url: urlType_2 }));
+	        var ns = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: "42px",
+	            dropShadow: true,
+	            dropShadowColor: '#222222',
+	            dropShadowAngle: Math.PI * 1 / 3,
+	            dropShadowDistance: 3,
+	            fontWeight: "bold",
+	            fill: "#acacac"
+	        };
+	        this.lName = TextFac_1.TextFac.new_(ns, this)
+	            .setY(968)
+	            .setAlignCenter(PixiEx_1._c(0));
+	    }
+	    TextType2.prototype.fillData = function (data) {
+	        this.lName.setText(data.cont)
+	            .setAlignCenter();
+	    };
+	    return TextType2;
+	}(BaseLowerThird_1.BaseLowerThird));
+	var urlType_1, urlType_2;
+	var LowerThird = (function (_super) {
+	    __extends(LowerThird, _super);
+	    function LowerThird() {
+	        _super.apply(this, arguments);
+	    }
+	    LowerThird.prototype.create = function () {
+	        var _this = this;
+	        urlType_1 = '/img/panel/lowerThird/type_1.png';
+	        urlType_2 = '/img/panel/lowerThird/type_2.png';
+	        this.load([urlType_1,
+	            urlType_2
+	        ], function (_) {
+	            _this.showOnlyMap = {};
+	        });
+	    };
+	    LowerThird.prototype.showOnly = function (type) {
+	        for (var t in this.showOnlyMap) {
+	            if (Number(t) == type) {
+	                this.showOnlyMap[t].show();
+	            }
+	            else {
+	                this.showOnlyMap[t].hide();
+	            }
+	        }
+	    };
+	    LowerThird.prototype._show = function (param) {
+	        var data = param.data;
+	        if (param.cid == Command_1.CommandId.sc_showLowerThird) {
+	            if (data.type == 1) {
+	                if (!this.t1)
+	                    this.t1 = new TextType1(this);
+	                this.t1.fillData(data);
+	                this.showOnlyMap[1] = this.t1;
+	                this.showOnly(1);
+	            }
+	            else if (data.type == 2) {
+	                if (!this.t2)
+	                    this.t2 = new TextType2(this);
+	                this.t2.fillData(data);
+	                this.showOnlyMap[2] = this.t2;
+	                this.showOnly(2);
+	            }
+	        }
+	        this.p.addChild(this);
+	    };
+	    LowerThird.cls = 'LowerThird';
+	    return LowerThird;
+	}(BasePanel_1.BasePanel));
+	var canvasStage;
+	var LowerThirdView = (function (_super) {
+	    __extends(LowerThirdView, _super);
+	    function LowerThirdView() {
+	        _super.apply(this, arguments);
+	    }
+	    LowerThirdView.prototype.mounted = function () {
+	        console.log('mouted LowerThirdView view');
+	        if (!canvasStage)
+	            canvasStage = BasePanelView_1.BasePanelView.initPixi();
+	        BasePanel_1.showPanel(LowerThird, { visible: true }, canvasStage);
+	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
+	        localWs.on('connect', function (msg) {
+	            console.log('connect', window.location.host);
+	        });
+	        var _adept = function (event) {
+	            localWs.on(event, function (data) {
+	                data.cid = event;
+	                if (data.visible == null)
+	                    data.visible = true;
+	                console.log(event, data);
+	                BasePanel_1.showPanel(LowerThird, data, canvasStage);
+	            });
+	        };
+	        _adept(Command_1.CommandId.sc_showLowerThird);
+	    };
+	    return LowerThirdView;
+	}(VueBase_1.VueBase));
+	exports.lowerThird = new LowerThirdView();
+
+
+/***/ },
+/* 126 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var BaseLowerThird = (function (_super) {
+	    __extends(BaseLowerThird, _super);
+	    function BaseLowerThird(parent) {
+	        _super.call(this);
+	        this.p = parent;
+	    }
+	    BaseLowerThird.prototype.show = function () {
+	        this.p.addChild(this);
+	    };
+	    BaseLowerThird.prototype.hide = function () {
+	        if (this.parent)
+	            this.parent.removeChild(this);
+	    };
+	    return BaseLowerThird;
+	}(PIXI.Container));
+	exports.BaseLowerThird = BaseLowerThird;
 
 
 /***/ }

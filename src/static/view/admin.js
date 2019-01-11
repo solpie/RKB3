@@ -840,6 +840,7 @@
 	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
 	            { title: "通用计分控制台", url: "/admin/#/com" },
+	            { title: "S5总决赛LowerThird", url: "/admin/#/pick" },
 	            { title: "S5总决赛晋级面板", url: "/panel/#/brackets5" },
 	        ];
 	    };
@@ -1997,6 +1998,8 @@
 	    sc_timerEvent_buzzer: '',
 	    cs_scoreFoul_common: '',
 	    sc_scoreFoul_common: '',
+	    cs_showLowerThird: '',
+	    sc_showLowerThird: '',
 	    cs_showPickup: '',
 	    sc_showPickup: '',
 	    cs_startGame: '',
@@ -2066,8 +2069,6 @@
 	    sc_joinState: '',
 	    cs_showTop5: '',
 	    sc_showTop5: '',
-	    cs_inScreenScore: '',
-	    inScreenScore: '',
 	    cs_teamScore: '',
 	    sc_teamScore: '',
 	    cs_timeOut: '',
@@ -3989,6 +3990,18 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var VueBase_1 = __webpack_require__(22);
+	var const_1 = __webpack_require__(27);
+	var Command_1 = __webpack_require__(28);
+	var opReq = function (cmdId, param) {
+	    param._ = null;
+	    $.ajax({
+	        url: "/panel/" + const_1.PanelId.onlinePanel + "/" + cmdId,
+	        type: "post",
+	        data: JSON.stringify(param),
+	        headers: { "Content-Type": "application/json" },
+	        dataType: "json"
+	    });
+	};
 	var _PickTeamAdmin = (function (_super) {
 	    __extends(_PickTeamAdmin, _super);
 	    function _PickTeamAdmin() {
@@ -3997,12 +4010,51 @@
 	        this.teamArr1 = VueBase_1.VueBase.PROP;
 	        this.teamArr2 = VueBase_1.VueBase.PROP;
 	        this.teamArr3 = VueBase_1.VueBase.PROP;
+	        this.conf = VueBase_1.VueBase.PROP;
+	        this.methods = {
+	            onShowLowerThird: function (lt, visible) {
+	                console.log('show');
+	                opReq(Command_1.CommandId.cs_showLowerThird, { data: lt, visible: visible });
+	            }
+	        };
 	        VueBase_1.VueBase.initProps(this);
 	    }
 	    _PickTeamAdmin.prototype.created = function () {
 	        this.teamArr1 = [{ name: '1', playerId: 1 }];
 	        this.teamArr2 = [{ name: '2', playerId: 1 }];
 	        this.teamArr3 = [{ name: '3', playerId: 1 }];
+	        this.conf = [
+	            {
+	                "button": "小易 余霜",
+	                "type": 1,
+	                "cont": ["小易_MC小易", "余霜_英雄联盟官方主持人"]
+	            },
+	            {
+	                "button": "余霜 小易 ",
+	                "type": 1,
+	                "cont": ["余霜_英雄联盟官方主持人", "小易_MC小易"]
+	            },
+	            {
+	                "button": "gary 杨毅",
+	                "type": 1,
+	                "cont": ["gary_主播", "杨毅_嘉宾"]
+	            },
+	            {
+	                "button": "黄宇军",
+	                "type": 2,
+	                "cont": "黄宇军(军哥)"
+	            },
+	            {
+	                "button": "小青龙",
+	                "type": 2,
+	                "cont": "说唱歌手：小青龙"
+	            },
+	            {
+	                "button": "有奖互动",
+	                "type": 3,
+	                "cont": "url"
+	            }
+	        ];
 	    };
 	    return _PickTeamAdmin;
 	}(VueBase_1.VueBase));
@@ -4014,7 +4066,7 @@
 /* 46 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <a href=\"/panel/#/pick\">选人面板地址</a>\r\n    <hr>\r\n    <div style=\"display: inline-flex\">\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in teamArr1\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in teamArr2\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in teamArr3\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <a href=\"/panel/#/lowerthird\">面板地址</a>\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onShowLowerThird({},false)\">隐藏</button>\r\n    <div style=\"padding:5px;\">\r\n        <button v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n    </div>\r\n    <div style=\"padding:5px;\">\r\n        <button v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n    </div>\r\n    <div style=\"display: inline-flex\">\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in teamArr1\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in teamArr2\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in teamArr3\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</div>";
 
 /***/ }
 /******/ ]);

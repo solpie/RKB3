@@ -121,6 +121,7 @@ class HomeView extends VueBase {
             { title: "八强面板", url: `/panel/#/ol/ob/${gameId}?panel=bracket` },
 
             { title: "通用计分控制台", url: `/admin/#/com` },
+            { title: "S5总决赛LowerThird", url: `/admin/#/pick` },
             { title: "S5总决赛晋级面板", url: `/panel/#/brackets5` },
         ];
     }
