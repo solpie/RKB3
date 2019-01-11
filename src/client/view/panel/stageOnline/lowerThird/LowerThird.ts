@@ -6,6 +6,7 @@ import { CommandId } from '../../../Command';
 import { Text2, TextFac } from '../../../utils/TextFac';
 import { newBitmap, _c } from '../../../utils/PixiEx';
 import { BaseLowerThird } from './BaseLowerThird';
+import { PickTeam } from '../pickTeam/PickTeam';
 
 class TextType1 extends BaseLowerThird {
     lName: Text2
@@ -81,6 +82,7 @@ class TextType2 extends BaseLowerThird {
     }
 }
 let urlType_1, urlType_2;
+let pt: PickTeam
 class LowerThird extends BasePanel {
     static cls = 'LowerThird'
     t1: TextType1
@@ -109,7 +111,6 @@ class LowerThird extends BasePanel {
     _show(param) {
         let data = param.data
         if (param.cid == CommandId.sc_showLowerThird) {
-            // this.fillData(data)
             if (data.type == 1) {
                 if (!this.t1)
                     this.t1 = new TextType1(this)
@@ -125,6 +126,14 @@ class LowerThird extends BasePanel {
                 this.showOnly(2)
             }
         }
+
+        if (param.cid == CommandId.sc_showPickup) {
+            pt.setData(param)
+        }
+        if (param.cid == CommandId.sc_setTeamColor) {
+            pt.setColor(param)
+        }
+
         this.p.addChild(this)
     }
 }
@@ -141,6 +150,8 @@ class LowerThirdView extends VueBase {
             console.log('connect', window.location.host)
         })
 
+
+
         let _adept = (event) => {
             localWs.on(event, data => {
                 data.cid = event
@@ -151,6 +162,10 @@ class LowerThirdView extends VueBase {
             })
         }
         _adept(CommandId.sc_showLowerThird)
+        _adept(CommandId.sc_showPickup)
+        _adept(CommandId.sc_setTeamColor)
+
+        pt = new PickTeam(canvasStage)
     }
 }
 export let lowerThird = new LowerThirdView()

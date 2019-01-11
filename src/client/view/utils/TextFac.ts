@@ -38,7 +38,7 @@ export class Text2 extends PIXI.Text {
         return this
     }
     alignRight: number = 0
-    alignCenterX: number = 0
+    alignCenterX: number = null
     setAlignRight(v) {
         if (!v)
             return this.setX(this.alignRight - this.width)
@@ -47,7 +47,8 @@ export class Text2 extends PIXI.Text {
     setAlignCenter(v?) {
         if (!v)
             v = this.alignCenterX
-        this.alignCenterX = v
+        else
+            this.alignCenterX = v
         return this.setX(v - this.width * .5)
     }
 }

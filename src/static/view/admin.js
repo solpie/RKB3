@@ -2002,6 +2002,8 @@
 	    sc_showLowerThird: '',
 	    cs_showPickup: '',
 	    sc_showPickup: '',
+	    cs_setTeamColor: '',
+	    sc_setTeamColor: '',
 	    cs_startGame: '',
 	    sc_startGame: '',
 	    cs_commitGame: '',
@@ -4011,15 +4013,70 @@
 	        this.teamArr2 = VueBase_1.VueBase.PROP;
 	        this.teamArr3 = VueBase_1.VueBase.PROP;
 	        this.conf = VueBase_1.VueBase.PROP;
+	        this.color1 = VueBase_1.VueBase.PROP;
+	        this.color2 = VueBase_1.VueBase.PROP;
+	        this.color3 = VueBase_1.VueBase.PROP;
+	        this.colorArr = VueBase_1.VueBase.PROP;
+	        this.team1_1 = VueBase_1.VueBase.PROP;
+	        this.team1_2 = VueBase_1.VueBase.PROP;
+	        this.team1_3 = VueBase_1.VueBase.PROP;
+	        this.team1_4 = VueBase_1.VueBase.PROP;
+	        this.team2_1 = VueBase_1.VueBase.PROP;
+	        this.team2_2 = VueBase_1.VueBase.PROP;
+	        this.team2_3 = VueBase_1.VueBase.PROP;
+	        this.team2_4 = VueBase_1.VueBase.PROP;
+	        this.team3_1 = VueBase_1.VueBase.PROP;
+	        this.team3_2 = VueBase_1.VueBase.PROP;
+	        this.team3_3 = VueBase_1.VueBase.PROP;
+	        this.team3_4 = VueBase_1.VueBase.PROP;
 	        this.methods = {
 	            onShowLowerThird: function (lt, visible) {
 	                console.log('show');
 	                opReq(Command_1.CommandId.cs_showLowerThird, { data: lt, visible: visible });
+	            },
+	            onSetColor: function () {
+	                if (this.colorArr[0] != this.colorArr[1]
+	                    && this.colorArr[1] != this.colorArr[2]
+	                    && this.colorArr[0] != this.colorArr[2]) {
+	                    opReq(Command_1.CommandId.cs_setTeamColor, {
+	                        colorArr: this.colorArr, visible: true
+	                    });
+	                }
+	                else {
+	                    alert('颜色相同');
+	                }
+	            },
+	            onShowPick: function () {
+	                opReq(Command_1.CommandId.cs_showPickup, {
+	                    teamArr1: [
+	                        this.team1_1,
+	                        this.team1_2,
+	                        this.team1_3,
+	                        this.team1_4,
+	                    ],
+	                    teamArr2: [
+	                        this.team2_1,
+	                        this.team2_2,
+	                        this.team2_3,
+	                        this.team2_4,
+	                    ],
+	                    teamArr3: [
+	                        this.team3_1,
+	                        this.team3_2,
+	                        this.team3_3,
+	                        this.team3_4,
+	                    ],
+	                    visible: true
+	                });
 	            }
 	        };
 	        VueBase_1.VueBase.initProps(this);
 	    }
 	    _PickTeamAdmin.prototype.created = function () {
+	        this.color1 = '绿';
+	        this.color2 = '红';
+	        this.color3 = '白';
+	        this.colorArr = ['绿', '红', '白'];
 	        this.teamArr1 = [{ name: '1', playerId: 1 }];
 	        this.teamArr2 = [{ name: '2', playerId: 1 }];
 	        this.teamArr3 = [{ name: '3', playerId: 1 }];
@@ -4027,17 +4084,27 @@
 	            {
 	                "button": "小易 余霜",
 	                "type": 1,
-	                "cont": ["小易_MC小易", "余霜_英雄联盟官方主持人"]
+	                "cont": ["小易_MC小易", "余霜_英雄联盟官方主持"]
 	            },
 	            {
 	                "button": "余霜 小易 ",
 	                "type": 1,
-	                "cont": ["余霜_英雄联盟官方主持人", "小易_MC小易"]
+	                "cont": ["余霜_英雄联盟官方主持", "小易_MC小易"]
+	            },
+	            {
+	                "button": "小易 盼盼",
+	                "type": 1,
+	                "cont": ["小易_MC小易", "盼盼_路人王官方主播"]
 	            },
 	            {
 	                "button": "gary 杨毅",
 	                "type": 1,
-	                "cont": ["gary_主播", "杨毅_嘉宾"]
+	                "cont": ["gary_路人王官方主播", "杨毅_篮球评论员"]
+	            },
+	            {
+	                "button": "gary 堂主",
+	                "type": 1,
+	                "cont": ["gary_路人王官方主播", "堂主_路人王官方主播"]
 	            },
 	            {
 	                "button": "黄宇军",
@@ -4066,7 +4133,7 @@
 /* 46 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <a href=\"/panel/#/lowerthird\">面板地址</a>\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onShowLowerThird({},false)\">隐藏</button>\r\n    <div style=\"padding:5px;\">\r\n        <button v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n    </div>\r\n    <div style=\"padding:5px;\">\r\n        <button v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n    </div>\r\n    <div style=\"display: inline-flex\">\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in teamArr1\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in teamArr2\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n        <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in teamArr3\">\r\n                <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <a href=\"/panel/#/lowerthird\">面板地址</a>\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onShowLowerThird({},false)\">隐藏</button>\r\n    <div style=\"padding:5px;\">\r\n        <button v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n    </div>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onShowPick()\">emit选人</button>\r\n    <div style=\"display: inline-flex\">\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_4\" style=\"width: 180px;\">\r\n        </ul>\r\n    </div>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onSetColor()\">emit 颜色</button>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[0]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[1]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[2]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n</div>";
 
 /***/ }
 /******/ ]);

@@ -1577,6 +1577,8 @@
 	    sc_showLowerThird: '',
 	    cs_showPickup: '',
 	    sc_showPickup: '',
+	    cs_setTeamColor: '',
+	    sc_setTeamColor: '',
 	    cs_startGame: '',
 	    sc_startGame: '',
 	    cs_commitGame: '',
@@ -4365,7 +4367,7 @@
 	    function Text2() {
 	        _super.apply(this, arguments);
 	        this.alignRight = 0;
-	        this.alignCenterX = 0;
+	        this.alignCenterX = null;
 	    }
 	    Text2.prototype.setParent = function (p) {
 	        p.addChild(this);
@@ -4411,7 +4413,8 @@
 	    Text2.prototype.setAlignCenter = function (v) {
 	        if (!v)
 	            v = this.alignCenterX;
-	        this.alignCenterX = v;
+	        else
+	            this.alignCenterX = v;
 	        return this.setX(v - this.width * .5);
 	    };
 	    return Text2;
@@ -11527,6 +11530,7 @@
 	var TextFac_1 = __webpack_require__(64);
 	var PixiEx_1 = __webpack_require__(60);
 	var BaseLowerThird_1 = __webpack_require__(126);
+	var PickTeam_1 = __webpack_require__(127);
 	var TextType1 = (function (_super) {
 	    __extends(TextType1, _super);
 	    function TextType1(parent) {
@@ -11596,6 +11600,7 @@
 	    return TextType2;
 	}(BaseLowerThird_1.BaseLowerThird));
 	var urlType_1, urlType_2;
+	var pt;
 	var LowerThird = (function (_super) {
 	    __extends(LowerThird, _super);
 	    function LowerThird() {
@@ -11639,6 +11644,12 @@
 	                this.showOnly(2);
 	            }
 	        }
+	        if (param.cid == Command_1.CommandId.sc_showPickup) {
+	            pt.setData(param);
+	        }
+	        if (param.cid == Command_1.CommandId.sc_setTeamColor) {
+	            pt.setColor(param);
+	        }
 	        this.p.addChild(this);
 	    };
 	    LowerThird.cls = 'LowerThird';
@@ -11669,6 +11680,9 @@
 	            });
 	        };
 	        _adept(Command_1.CommandId.sc_showLowerThird);
+	        _adept(Command_1.CommandId.sc_showPickup);
+	        _adept(Command_1.CommandId.sc_setTeamColor);
+	        pt = new PickTeam_1.PickTeam(canvasStage);
 	    };
 	    return LowerThirdView;
 	}(VueBase_1.VueBase));
@@ -11701,6 +11715,122 @@
 	    return BaseLowerThird;
 	}(PIXI.Container));
 	exports.BaseLowerThird = BaseLowerThird;
+
+
+/***/ },
+/* 127 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var PixiEx_1 = __webpack_require__(60);
+	var ImgLoader_1 = __webpack_require__(59);
+	var TextFac_1 = __webpack_require__(64);
+	var const_1 = __webpack_require__(27);
+	var PickTeam = (function (_super) {
+	    __extends(PickTeam, _super);
+	    function PickTeam(parent) {
+	        var _this = this;
+	        _super.call(this);
+	        this.teamNameArr = [];
+	        this.playerNameArr1 = [];
+	        this.playerNameArr2 = [];
+	        this.playerNameArr3 = [];
+	        this.posArr = [-480 - 77, -77, 480 - 77];
+	        parent.addChild(this);
+	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/pickTeam/bg.png' });
+	        this.addChild(bg);
+	        this.bg1 = new PIXI.Sprite();
+	        this.bg1.x = -77;
+	        this.addChild(this.bg1);
+	        this.bg2 = new PIXI.Sprite();
+	        this.bg2.x = 480 - 77;
+	        this.addChild(this.bg2);
+	        this.bg3 = new PIXI.Sprite();
+	        this.bg3.x = -480 - 77;
+	        this.addChild(this.bg3);
+	        this.colorMap = { '红': this.bg1, '白': this.bg2, '绿': this.bg3 };
+	        ImgLoader_1.imgLoader.loadTexArr([
+	            '/img/panel/pickTeam/bg.png',
+	            '/img/panel/pickTeam/bg1.png',
+	            '/img/panel/pickTeam/bg2.png',
+	            '/img/panel/pickTeam/bg3.png',
+	        ], function (_) {
+	            _this.bg1.texture =
+	                ImgLoader_1.imgLoader.getTex('/img/panel/pickTeam/bg1.png');
+	            _this.bg2.texture =
+	                ImgLoader_1.imgLoader.getTex('/img/panel/pickTeam/bg2.png');
+	            _this.bg3.texture =
+	                ImgLoader_1.imgLoader.getTex('/img/panel/pickTeam/bg3.png');
+	            var ns = {
+	                fontFamily: const_1.FontName.MicrosoftYahei,
+	                fontSize: "32px",
+	                dropShadow: true,
+	                dropShadowColor: '#222222',
+	                dropShadowAngle: Math.PI * 1 / 3,
+	                dropShadowDistance: 3,
+	                fontWeight: "bold",
+	                fill: "#acacac"
+	            };
+	            var name;
+	            var name2;
+	            var name3;
+	            var a = [];
+	            for (var i = 0; i < 3; i++) {
+	                name = TextFac_1.TextFac.new_(ns, _this)
+	                    .setText('')
+	                    .setPos(520, 878 + i * 51);
+	                _this.playerNameArr1.push(name);
+	                name2 = TextFac_1.TextFac.new_(ns, _this)
+	                    .setText('')
+	                    .setPos(1000, name.y);
+	                _this.playerNameArr2.push(name2);
+	                name3 = TextFac_1.TextFac.new_(ns, _this)
+	                    .setText('')
+	                    .setPos(1476, name.y);
+	                _this.playerNameArr3.push(name3);
+	                name = TextFac_1.TextFac.new_(ns, _this)
+	                    .setY(986)
+	                    .setSize("24px")
+	                    .setText("")
+	                    .setAlignCenter(406 + i * 480);
+	                a.push(name);
+	            }
+	            _this.playerNameArr1 = [a[0]].concat(_this.playerNameArr1);
+	            _this.playerNameArr2 = [a[1]].concat(_this.playerNameArr2);
+	            _this.playerNameArr3 = [a[2]].concat(_this.playerNameArr3);
+	        });
+	    }
+	    PickTeam.prototype.setData = function (data) {
+	        for (var i = 0; i < 4; i++) {
+	            this.playerNameArr1[i]
+	                .setText(data.teamArr1[i]);
+	            this.playerNameArr2[i]
+	                .setText(data.teamArr2[i]);
+	            this.playerNameArr3[i]
+	                .setText(data.teamArr3[i]);
+	            if (i == 0) {
+	                console.log('set align');
+	                this.playerNameArr1[i].setAlignCenter();
+	                this.playerNameArr2[i].setAlignCenter();
+	                this.playerNameArr3[i].setAlignCenter();
+	            }
+	        }
+	    };
+	    PickTeam.prototype.setColor = function (data) {
+	        for (var i = 0; i < 3; i++) {
+	            var color = data.colorArr[i];
+	            var sp = this.colorMap[color];
+	            sp.x = this.posArr[i];
+	        }
+	    };
+	    return PickTeam;
+	}(PIXI.Container));
+	exports.PickTeam = PickTeam;
 
 
 /***/ }

@@ -130,6 +130,8 @@ export const CommandId = {
     sc_showLowerThird: '',//
     cs_showPickup: '',//
     sc_showPickup: '',//
+    cs_setTeamColor: '',//
+    sc_setTeamColor: '',//
     //hp
     cs_startGame: '',
     sc_startGame: '',
