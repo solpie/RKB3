@@ -104,10 +104,10 @@ class BracketS5Final extends BasePanel {
                 group.rName.alpha = 1
             if (r.score[0] != 0 || r.score[1] != 0) {
                 if (lScore > rScore) {
-                    group.lName.alpha = 0.4
+                    group.rName.alpha = 0.4
                 }
                 else {
-                    group.rName.alpha = 0.4
+                    group.lName.alpha = 0.4
                 }
             }
         }

@@ -129,9 +129,16 @@ class LowerThird extends BasePanel {
 
         if (param.cid == CommandId.sc_showPickup) {
             pt.setData(param)
+            pt.visible = true
         }
         if (param.cid == CommandId.sc_setTeamColor) {
             pt.setColor(param)
+            pt.visible = true
+        }
+
+        if (param.cid == CommandId.sc_bracket) {
+            pt.setAvtByRec(param)
+            pt.visible = true
         }
 
         this.p.addChild(this)
@@ -164,8 +171,10 @@ class LowerThirdView extends VueBase {
         _adept(CommandId.sc_showLowerThird)
         _adept(CommandId.sc_showPickup)
         _adept(CommandId.sc_setTeamColor)
+        _adept(CommandId.sc_bracket)
 
         pt = new PickTeam(canvasStage)
+        pt.visible = false
     }
 }
 export let lowerThird = new LowerThirdView()

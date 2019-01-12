@@ -110,7 +110,7 @@
             </div>
         </div>
         <div v-if='actTab=="tab3"' style="overflow-y: scroll;height: 800px;">
-            <button class="button is-danger" @click="onInitDoc">init doc</button>
+            <button class="button" @click="onEmitBracket(actTab)">emit bracket rec</button>
             <table class="table is-striped is-bordered">
                 <thead>
                     <tr>
@@ -139,6 +139,7 @@
                     </tr>
                 </tbody>
             </table>
+            <button class="button is-danger" @click="onInitDoc">init doc</button>
         </div>
 
         <div v-if="actTab=='tab6'">

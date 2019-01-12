@@ -7,12 +7,15 @@ export class MaskAvatar extends PIXI.Container {
     constructor(maskUrl, callback?) {
         super()
         // imgLoader.loadTexArr([maskUrl], _ => {
-        this.maskSp = newBitmap({ url: maskUrl })
-        this.addChild(this.maskSp)
+        if (maskUrl) {
+            this.maskSp = newBitmap({ url: maskUrl })
+            this.addChild(this.maskSp)
+            this.maskSp.visible = false
+        }
+
         this.avtSp = new PIXI.Sprite()
         this.addChild(this.avtSp)
 
-        this.maskSp.visible = false
         if (callback)
             callback
     }
@@ -22,7 +25,8 @@ export class MaskAvatar extends PIXI.Container {
     }
 
     setTest(width, height, x, y) {
-        this.maskSp.visible = true
+        if (this.maskSp)
+            this.maskSp.visible = true
         this.testSp = new PIXI.Graphics()
         this.addChild(this.testSp)
         this.testSp.beginFill(0xffff00)
@@ -37,7 +41,8 @@ export class MaskAvatar extends PIXI.Container {
             setScale(this.avtSp, this.xyw[2] / this.avtSp.texture.width)
             this.avtSp.x = this.xyw[0]
             this.avtSp.y = this.xyw[1]
-            this.avtSp.mask = this.maskSp
+            if (this.maskSp)
+                this.avtSp.mask = this.maskSp
         })
     }
 }
