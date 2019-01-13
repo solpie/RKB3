@@ -87,8 +87,10 @@ class _worldWar extends VueBase {
   onInit(data) {
     console.log("on load conf", data);
     gameView.loadConf(data);
-    this.blueArr = gameView.getTeamByIdx(1);
-    this.redArr = gameView.getTeamByIdx(2);
+    let t1Idx = data.vs[0]
+    let t2Idx = data.vs[1]
+    this.blueArr = gameView.getTeamByIdx(t1Idx);
+    this.redArr = gameView.getTeamByIdx(t2Idx);
     syncDoc(data2 => {
       this.initDocView(data2.doc);
     });
@@ -119,8 +121,8 @@ class _worldWar extends VueBase {
     let data = {
       leftPlayer: p1,
       rightPlayer: p2,
-      leftTeam:this.blueArr,
-      rightTeam:this.redArr,
+      leftTeam: this.blueArr,
+      rightTeam: this.redArr,
       gameTitle: gameTitle
     };
     opReq("cs_setPlayer", data);
@@ -156,8 +158,10 @@ class _worldWar extends VueBase {
       let bloodArr = $(".blood");
       for (const $elm of bloodArr) {
         let playerId = $elm.id.split("blood")[1];
-        let blood = bloodMap[playerId].blood;
-        $elm.value = blood;
+        if (bloodMap[playerId]) {
+          let blood = bloodMap[playerId].blood;
+          $elm.value = blood;
+        }
         // console.log("player", playerId, "blood", blood);
       }
       this.vueUpdate();
