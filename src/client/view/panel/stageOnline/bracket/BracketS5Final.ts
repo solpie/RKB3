@@ -5,6 +5,7 @@ import { BasePanelView } from '../../BasePanelView';
 import { PanelId, FontName } from '../../../const';
 import { newBitmap, _c } from '../../../utils/PixiEx';
 import { TextFac } from '../../../utils/TextFac';
+import { BracketS5Team } from './BracketS5Team';
 
 let urlBg = '/img/panel/bracket/s5/bg.png'
 
@@ -127,12 +128,17 @@ class BracketS5FinalView extends VueBase {
         console.log('mouted BracketS5FinalView view');
         if (!canvasStage)
             canvasStage = BasePanelView.initPixi()
-        showPanel(BracketS5Final, { visible: true }, canvasStage)
+        // showPanel(BracketS5Final, { visible: true }, canvasStage)
+        showPanel(BracketS5Team, { visible: true }, canvasStage)
         let localWs = io.connect(`/${PanelId.rkbPanel}`)
         localWs.on('connect', (msg) => {
             console.log('connect', window.location.host)
         })
-
+            .on(CommandId.sc_bracketS5, data => {
+                data.cid = CommandId.sc_bracketS5
+                data.visible = true
+                showPanel(BracketS5Team, data, canvasStage)
+            })
         let _adept = (event) => {
             localWs.on(event, data => {
                 data.cid = event

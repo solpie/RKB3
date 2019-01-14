@@ -84,6 +84,7 @@ class _worldWar extends VueBase {
     }
     return null;
   }
+  //after reload file
   onInit(data) {
     console.log("on load conf", data);
     gameView.loadConf(data);
@@ -91,6 +92,8 @@ class _worldWar extends VueBase {
     let t2Idx = data.vs[1]
     this.blueArr = gameView.getTeamByIdx(t1Idx);
     this.redArr = gameView.getTeamByIdx(t2Idx);
+
+    opReq(CommandId.cs_bracketS5, data)
     syncDoc(data2 => {
       this.initDocView(data2.doc);
     });

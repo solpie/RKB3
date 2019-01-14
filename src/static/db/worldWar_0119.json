@@ -4,11 +4,40 @@
     "dbUrl": "http://rtmp.icassi.us:8090/event?idx=0119_1",
     "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/915/",
     "vs": [3, 4],
+    "rec": [{
+            "vs": [2, 3],
+            "score": [1, 0]
+        },
+        {
+            "vs": [1, 4],
+            "score": [0, 0]
+        },
+        {
+            "vs": [1, 3],
+            "score": [0, 0]
+        },
+        {
+            "vs": [2, 4],
+            "score": [0, 0]
+        },
+        {
+            "vs": [1, 2],
+            "score": [0, 0]
+        },
+        {
+            "vs": [3, 4],
+            "score": [0, 0]
+        },
+        {
+            "vs": [3, 4],
+            "score": [0, 0]
+        }
+    ],
     "team": [
-        { "idx": 1, "name": "魔王隊", "playerArr": ["p25", "p22", "p23", "p24", "p0"] },
-        { "idx": 2, "name": "中遠隊", "playerArr": ["p9", "p4", "p18", "p20", "p0"] },
-        { "idx": 3, "name": "魔王隊", "playerArr": ["p1", "p2", "p3", "p7", "p0"] },
-        { "idx": 4, "name": "中遠隊", "playerArr": ["p5", "p6", "p7", "p8", "p0"] }
+        { "idx": 1, "name": "张梓祎队", "playerArr": ["p25", "p22", "p23", "p24", "p0"] },
+        { "idx": 2, "name": "王晶队", "playerArr": ["p9", "p4", "p18", "p20", "p0"] },
+        { "idx": 3, "name": "马克队", "playerArr": ["p1", "p2", "p3", "p7", "p0"] },
+        { "idx": 4, "name": "塞尔维亚队", "playerArr": ["p5", "p6", "p7", "p8", "p0"] }
     ],
     "gameTitle": {
         "1": "小组赛",

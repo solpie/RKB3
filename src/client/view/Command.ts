@@ -216,6 +216,8 @@ export const CommandId = {
     sc_timeOut: '',
     sc_bracket:'',
     cs_bracket:'',
+    sc_bracketS5:'',
+    cs_bracketS5:'',
     //// RKB
     cs_attack: '',
     attack: '',
