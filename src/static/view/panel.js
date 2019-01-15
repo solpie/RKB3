@@ -11493,7 +11493,7 @@
 	        console.log('mouted BracketS5FinalView view');
 	        if (!canvasStage)
 	            canvasStage = BasePanelView_1.BasePanelView.initPixi();
-	        BasePanel_1.showPanel(BracketS5Team_1.BracketS5Team, { visible: true }, canvasStage);
+	        BasePanel_1.showPanel(BracketS5Final, { visible: true }, canvasStage);
 	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
 	        localWs.on('connect', function (msg) {
 	            console.log('connect', window.location.host);
@@ -11942,12 +11942,30 @@
 	            fill: "#acacac"
 	        };
 	        var cName = TextFac_1.TextFac.new_(ns, this)
-	            .setText('马克队')
+	            .setText('')
 	            .setY(737)
 	            .setAlignCenter(PixiEx_1._c(-240));
 	        this.nameArr.push(cName);
+	        for (var i = 0; i < 3; i++) {
+	            var n = TextFac_1.TextFac.new_(ns, this)
+	                .setPos(815, 656 + i * 38)
+	                .setText('');
+	            this.nameArr.push(n);
+	        }
 	    }
-	    Team.prototype.setNameArr = function (nameArr) {
+	    Team.prototype.setNameArr = function (playerIdArr, playerMap) {
+	        for (var i = 0; i < 4; i++) {
+	            var n = this.nameArr[i];
+	            var name_1 = playerMap[playerIdArr[i]].name;
+	            if (i == 0) {
+	                n.setSize('22px')
+	                    .setText(name_1 + '队')
+	                    .setAlignCenter();
+	            }
+	            else {
+	                n.setText(name_1);
+	            }
+	        }
 	    };
 	    return Team;
 	}(PIXI.Container));
@@ -11989,6 +12007,7 @@
 	    function BracketS5Team() {
 	        _super.apply(this, arguments);
 	        this.teamVsItemArr = [];
+	        this.teamArr = [];
 	        this.teamAvtArr = [];
 	    }
 	    BracketS5Team.prototype.create = function () {
@@ -12023,8 +12042,7 @@
 	                _this.teamAvtArr.push(sp);
 	                _this.addChild(teamBg);
 	                _this.addChild(team);
-	            }
-	            for (var i = 0; i < 3; i++) {
+	                _this.teamArr.push(team);
 	            }
 	            for (var i = 0; i < 6; i++) {
 	                var tvi = new TeamVsItem(_this);
@@ -12067,16 +12085,18 @@
 	        this.p.addChild(this);
 	        for (var i = 0; i < 4; i++) {
 	            var sp = this.teamAvtArr[i];
-	            sp.load(data.avatarUrlBase + data.team[i].c + '.png');
+	            sp.load(data.avatarUrlBase + data.team[i].playerArr[0] + '.png');
+	            var team = this.teamArr[i];
+	            team.setNameArr(data.team[i].playerArr, data.playerMap);
 	        }
 	        for (var i = 0; i < 6; i++) {
 	            var tvi = this.teamVsItemArr[i];
 	            var rec = data.rec[i];
-	            var name_1 = [
+	            var name_2 = [
 	                data.team[rec.vs[0] - 1].name,
 	                data.team[rec.vs[1] - 1].name
 	            ];
-	            tvi.setData({ name: name_1, score: rec.score });
+	            tvi.setData({ name: name_2, score: rec.score });
 	        }
 	        var recFinal = data.rec[6];
 	        if (recFinal.score[0] != 0 || recFinal.score[0] != 0) {

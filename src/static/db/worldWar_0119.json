@@ -34,10 +34,10 @@
         }
     ],
     "team": [
-        { "idx": 1, "c": "p1", "name": "张梓祎队", "playerArr": ["p25", "p22", "p23", "p24", "p0"] },
-        { "idx": 2, "c": "p5", "name": "王晶队", "playerArr": ["p9", "p4", "p18", "p20", "p0"] },
-        { "idx": 3, "c": "p9", "name": "马克队", "playerArr": ["p1", "p2", "p3", "p7", "p0"] },
-        { "idx": 4, "c": "p13", "name": "塞尔维亚队", "playerArr": ["p5", "p6", "p7", "p8", "p0"] }
+        { "idx": 1, "name": "张梓祎队", "playerArr": ["p1", "p2", "p3", "p4", "p0"] },
+        { "idx": 2, "name": "王晶队", "playerArr": ["p5", "p6", "p7", "p8", "p0"] },
+        { "idx": 3, "name": "马克队", "playerArr": ["p9", "p10", "p11", "p12", "p0"] },
+        { "idx": 4, "name": "塞尔维亚队", "playerArr": ["p13", "p14", "p15", "p16", "p0"] }
     ],
     "gameTitle": {
         "1": "小组赛",

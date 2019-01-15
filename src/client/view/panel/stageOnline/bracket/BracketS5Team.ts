@@ -20,14 +20,31 @@ class Team extends PIXI.Container {
             fill: "#acacac"
         };
         let cName = TextFac.new_(ns, this)
-            .setText('马克队')
+            .setText('')
             .setY(737)
             .setAlignCenter(_c(-240))
         this.nameArr.push(cName)
+        for (let i = 0; i < 3; i++) {
+            let n = TextFac.new_(ns, this)
+                .setPos(815, 656 + i * 38)
+                .setText('')
+            this.nameArr.push(n)
+        }
     }
 
-    setNameArr(nameArr) {
-        //todo
+    setNameArr(playerIdArr, playerMap) {
+        for (let i = 0; i < 4; i++) {
+            let n = this.nameArr[i]
+            let name = playerMap[playerIdArr[i]].name
+            if (i == 0) {
+                n.setSize('22px')
+                    .setText(name + '队')
+                    .setAlignCenter()
+            }
+            else {
+                n.setText(name)
+            }
+        }
     }
 }
 class TeamVsItem extends PIXI.Container {
@@ -69,6 +86,7 @@ class TeamVsItem extends PIXI.Container {
 export class BracketS5Team extends BasePanel {
     static cls = 'BracketS5Team'
     teamVsItemArr: Array<TeamVsItem> = []
+    teamArr: Array<Team> = []
     teamAvtArr: Array<MaskAvatar> = []
     lName: Text2
     rName: Text2
@@ -110,11 +128,9 @@ export class BracketS5Team extends BasePanel {
 
                 this.addChild(teamBg)
                 this.addChild(team)
+                this.teamArr.push(team)
             }
 
-            for (let i = 0; i < 3; i++) {
-
-            }
 
             for (let i = 0; i < 6; i++) {
                 let tvi = new TeamVsItem(this)
@@ -153,8 +169,6 @@ export class BracketS5Team extends BasePanel {
                 .setSize("36px")
                 .setText('')
                 .setAlignCenter(_c(0))
-
-
         })
     }
     _show(data) {
@@ -162,7 +176,9 @@ export class BracketS5Team extends BasePanel {
         this.p.addChild(this)
         for (let i = 0; i < 4; i++) {
             let sp = this.teamAvtArr[i]
-            sp.load(data.avatarUrlBase + data.team[i].c + '.png')
+            sp.load(data.avatarUrlBase + data.team[i].playerArr[0] + '.png')
+            let team = this.teamArr[i]
+            team.setNameArr(data.team[i].playerArr, data.playerMap)
         }
         for (let i = 0; i < 6; i++) {
             let tvi = this.teamVsItemArr[i]
@@ -174,6 +190,7 @@ export class BracketS5Team extends BasePanel {
 
             tvi.setData({ name: name, score: rec.score })
         }
+        
         let recFinal = data.rec[6]
 
         if (recFinal.score[0] != 0 || recFinal.score[0] != 0) {

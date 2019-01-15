@@ -128,8 +128,8 @@ class BracketS5FinalView extends VueBase {
         console.log('mouted BracketS5FinalView view');
         if (!canvasStage)
             canvasStage = BasePanelView.initPixi()
-        // showPanel(BracketS5Final, { visible: true }, canvasStage)
-        showPanel(BracketS5Team, { visible: true }, canvasStage)
+        showPanel(BracketS5Final, { visible: true }, canvasStage)
+        // showPanel(BracketS5Team, { visible: true }, canvasStage)
         let localWs = io.connect(`/${PanelId.rkbPanel}`)
         localWs.on('connect', (msg) => {
             console.log('connect', window.location.host)
