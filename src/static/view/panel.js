@@ -11775,7 +11775,7 @@
 	        for (var i = 0; i < 3; i++) {
 	            var sp = new MaskAvatar_1.MaskAvatar(null);
 	            sp.setAvtPos(326 + i * 480, 846, 153);
-	            sp.load('http://rtmp.icassi.us:8092/img/player/915/p1.png');
+	            sp.load('http://rtmp.icassi.us:8092/img/player/915/p0.png');
 	            this.addChild(sp);
 	            this.avtArr.push(sp);
 	        }
@@ -11924,7 +11924,33 @@
 	var TextFac_1 = __webpack_require__(64);
 	var PixiEx_1 = __webpack_require__(60);
 	var const_1 = __webpack_require__(27);
+	var MaskAvatar_1 = __webpack_require__(105);
 	var urlItem, urlBg;
+	var Team = (function (_super) {
+	    __extends(Team, _super);
+	    function Team() {
+	        _super.call(this);
+	        this.nameArr = [];
+	        var ns = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: "26px",
+	            dropShadow: true,
+	            dropShadowColor: '#222222',
+	            dropShadowAngle: Math.PI * 1 / 3,
+	            dropShadowDistance: 3,
+	            fontWeight: "bold",
+	            fill: "#acacac"
+	        };
+	        var cName = TextFac_1.TextFac.new_(ns, this)
+	            .setText('马克队')
+	            .setY(737)
+	            .setAlignCenter(PixiEx_1._c(-240));
+	        this.nameArr.push(cName);
+	    }
+	    Team.prototype.setNameArr = function (nameArr) {
+	    };
+	    return Team;
+	}(PIXI.Container));
 	var TeamVsItem = (function (_super) {
 	    __extends(TeamVsItem, _super);
 	    function TeamVsItem(parent) {
@@ -11942,7 +11968,7 @@
 	            fill: "#acacac"
 	        };
 	        this.lName = TextFac_1.TextFac.new_(ns, this)
-	            .setText("张梓祎队 21-6 塞尔维亚队")
+	            .setText("")
 	            .setY(498)
 	            .setAlignCenter(PixiEx_1._c(0));
 	    }
@@ -11963,6 +11989,7 @@
 	    function BracketS5Team() {
 	        _super.apply(this, arguments);
 	        this.teamVsItemArr = [];
+	        this.teamAvtArr = [];
 	    }
 	    BracketS5Team.prototype.create = function () {
 	        var _this = this;
@@ -11986,7 +12013,18 @@
 	                PixiEx_1.setScale(teamBg, 0.75);
 	                teamBg.y = 158;
 	                teamBg.x = -350 + i * 350;
+	                var team = new Team();
+	                team.x = teamBg.x;
+	                team.y = teamBg.y;
+	                var sp = new MaskAvatar_1.MaskAvatar(null);
+	                sp.setAvtPos(teamBg.x + 660, teamBg.y + 737 - 102, 120);
+	                sp.load('http://rtmp.icassi.us:8092/img/player/915/p0.png');
+	                _this.addChild(sp);
+	                _this.teamAvtArr.push(sp);
 	                _this.addChild(teamBg);
+	                _this.addChild(team);
+	            }
+	            for (var i = 0; i < 3; i++) {
 	            }
 	            for (var i = 0; i < 6; i++) {
 	                var tvi = new TeamVsItem(_this);
@@ -11994,11 +12032,43 @@
 	                tvi.y = pos[i][1];
 	                _this.teamVsItemArr.push(tvi);
 	            }
+	            var ns = {
+	                fontFamily: const_1.FontName.MicrosoftYahei,
+	                fontSize: "40px",
+	                dropShadow: true,
+	                dropShadowColor: '#222222',
+	                dropShadowAngle: Math.PI * 1 / 3,
+	                dropShadowDistance: 3,
+	                fontWeight: "bold",
+	                fill: "#acacac"
+	            };
+	            _this.lName = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(208)
+	                .setText('')
+	                .setAlignCenter(PixiEx_1._c(-162));
+	            _this.rName = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(208)
+	                .setText('')
+	                .setAlignCenter(PixiEx_1._c(162));
+	            _this.finalMask = new PIXI.Graphics()
+	                .beginFill(0x111017)
+	                .drawRect(897, 293, 123, 33);
+	            _this.finalMask.visible = false;
+	            _this.addChild(_this.finalMask);
+	            _this.finalScore = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(283)
+	                .setSize("36px")
+	                .setText('')
+	                .setAlignCenter(PixiEx_1._c(0));
 	        });
 	    };
 	    BracketS5Team.prototype._show = function (data) {
 	        console.log('on S5 bracket d2', data);
 	        this.p.addChild(this);
+	        for (var i = 0; i < 4; i++) {
+	            var sp = this.teamAvtArr[i];
+	            sp.load(data.avatarUrlBase + data.team[i].c + '.png');
+	        }
 	        for (var i = 0; i < 6; i++) {
 	            var tvi = this.teamVsItemArr[i];
 	            var rec = data.rec[i];
@@ -12007,6 +12077,18 @@
 	                data.team[rec.vs[1] - 1].name
 	            ];
 	            tvi.setData({ name: name_1, score: rec.score });
+	        }
+	        var recFinal = data.rec[6];
+	        if (recFinal.score[0] != 0 || recFinal.score[0] != 0) {
+	            this.finalMask.visible = true;
+	            this.finalScore.setText(recFinal.score[0] + '-' + recFinal.score[1])
+	                .setAlignCenter(PixiEx_1._c(0));
+	        }
+	        if (recFinal.vs[0] != 0) {
+	            this.lName.setText(data.team[recFinal.vs[0] - 1].name)
+	                .setAlignCenter();
+	            this.rName.setText(data.team[recFinal.vs[1] - 1].name)
+	                .setAlignCenter();
 	        }
 	    };
 	    BracketS5Team.cls = 'BracketS5Team';

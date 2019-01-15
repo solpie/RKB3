@@ -30,14 +30,14 @@
         },
         {
             "vs": [3, 4],
-            "score": [0, 0]
+            "score": [1, 1]
         }
     ],
     "team": [
-        { "idx": 1, "name": "张梓祎队", "playerArr": ["p25", "p22", "p23", "p24", "p0"] },
-        { "idx": 2, "name": "王晶队", "playerArr": ["p9", "p4", "p18", "p20", "p0"] },
-        { "idx": 3, "name": "马克队", "playerArr": ["p1", "p2", "p3", "p7", "p0"] },
-        { "idx": 4, "name": "塞尔维亚队", "playerArr": ["p5", "p6", "p7", "p8", "p0"] }
+        { "idx": 1, "c": "p1", "name": "张梓祎队", "playerArr": ["p25", "p22", "p23", "p24", "p0"] },
+        { "idx": 2, "c": "p5", "name": "王晶队", "playerArr": ["p9", "p4", "p18", "p20", "p0"] },
+        { "idx": 3, "c": "p9", "name": "马克队", "playerArr": ["p1", "p2", "p3", "p7", "p0"] },
+        { "idx": 4, "c": "p13", "name": "塞尔维亚队", "playerArr": ["p5", "p6", "p7", "p8", "p0"] }
     ],
     "gameTitle": {
         "1": "小组赛",
@@ -46,7 +46,6 @@
         "4": "季军赛",
         "5": "决赛"
     },
-    "p0": { "name": "", "hwa": [0, 0, 0], "title": "", "playerId": "p0", "info": "" },
     "playerMap": {
         "p0": { "name": "", "hwa": [0, 0, 0], "title": "", "playerId": "p0", "info": "" },
         "p1": { "name": "陈泽文", "hwa": [186, 73, 19], "title": "路人王12冠王-“答案”\n", "playerId": "p1", "info": "年仅19岁，是路人王唯一一位从S1到S5赛季都能拿到冠军的选手。" },

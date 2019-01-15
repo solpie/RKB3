@@ -30,7 +30,7 @@ export class PickTeam extends PIXI.Container {
         for (let i = 0; i < 3; i++) {
             let sp = new MaskAvatar(null)
             sp.setAvtPos(326 + i * 480, 846, 153)
-            sp.load('http://rtmp.icassi.us:8092/img/player/915/p1.png')
+            sp.load('http://rtmp.icassi.us:8092/img/player/915/p0.png')
             this.addChild(sp)
             this.avtArr.push(sp)
         }
