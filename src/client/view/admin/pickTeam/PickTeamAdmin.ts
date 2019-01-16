@@ -77,20 +77,92 @@ export class _PickTeamAdmin extends VueBase {
                 "type": 1,//ppd logo 
                 "cont": ["gary_路人王官方主播", "堂主_路人王官方主播"]
             },
+            //
             {
                 "button": "黄宇军",
                 "type": 2,
                 "cont": "黄宇军(军哥)"
             },
             {
+                "button": "马克",
+                "type": 2,
+                "cont": "马克"
+            },
+            {
+                "button": "王晶",
+                "type": 2,
+                "cont": "王晶"
+            },
+            {
+                "button": "张梓祎",
+                "type": 2,
+                "cont": "张梓祎"
+            },
+            {
+                "button": "张帅康",
+                "type": 2,
+                "cont": "张帅康"
+            },
+            {
+                "button": "陈凯涛",
+                "type": 2,
+                "cont": "陈凯涛"
+            },
+            {
+                "button": "李俊达",
+                "type": 2,
+                "cont": "李俊达"
+            },
+            {
+                "button": "宋流轩",
+                "type": 2,
+                "cont": "宋流轩(宋教练)"
+            },
+            {
+                "button": "徐长龙",
+                "type": 2,
+                "cont": "徐长龙"
+            },
+            {
+                "button": "张天宇",
+                "type": 2,
+                "cont": "张天宇"
+            },
+            {
+                "button": "张智扬",
+                "type": 2,
+                "cont": "张智扬"
+            },
+            {
+                "button": "孟亚东",
+                "type": 2,
+                "cont": "孟亚东(平常心)"
+            },
+            {
+                "button": "郝天佶",
+                "type": 2,
+                "cont": "郝天佶(头盔哥)"
+            },
+            {
+                "button": "陈泽文",
+                "type": 2,
+                "cont": "陈泽文"
+            },
+            {
+                "button": "耿骁骐",
+                "type": 2,
+                "cont": "耿骁骐"
+            },
+            {
+                "button": "安云鹏",
+                "type": 2,
+                "cont": "安云鹏"
+            },
+
+            {
                 "button": "小青龙",
                 "type": 2,
                 "cont": "说唱歌手：小青龙"
-            },
-            {
-                "button": "有奖互动",
-                "type": 3,//福利题
-                "cont": "url"
             }
         ]
     }

@@ -2,8 +2,10 @@
     <a href="/panel/#/lowerthird">面板地址</a>
     <hr>
     <button class="button is-primary" @click="onShowLowerThird({},false)">隐藏</button>
-    <div style="padding:5px;">
-        <button v-for="(btn,index) in conf" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
+    <div style="width:680px">
+        <button style="margin:5px;" v-if="btn.type==1" v-for="(btn,index) in conf" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
+        <br>
+        <button style="margin:5px;" v-if="btn.type==2" v-for="(btn,index) in conf" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
     </div>
     <br>
     <br>
