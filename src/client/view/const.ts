@@ -11,6 +11,7 @@ export const PanelId = {
     screenPanel: 'screen',
     worldwarPanel: 'worldwarPanel',
     worldwarTitle: 'worldwarTitle',
+    worldwarTeamMateBlood: 'worldwarTeamMateBlood',
     worldwarKDA: 'worldwarKDAPanel',
     bottomNoticeAccount: 'bottomNoticeAccount',
     playerPanel: 'player'

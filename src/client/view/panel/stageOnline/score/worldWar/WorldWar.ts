@@ -4,6 +4,7 @@ import { FontName, TimerState, TimerEvent } from "../../../../const";
 import { TextTimer } from "../../../../utils/TextTimer";
 import { BloodBar } from "./BloodBar";
 import { MaskAvatar } from "../../../base/MaskAvatar";
+import { TeamMateBlood } from './TeamMateBlood';
 const isTest = false;
 let foulToHint = 3;//
 export class WorldWar extends PIXI.Container {
@@ -33,6 +34,7 @@ export class WorldWar extends PIXI.Container {
   lTitleTex: PIXI.Sprite
   rTitleTex: PIXI.Sprite
 
+  teamMateBlood: TeamMateBlood
   constructor() {
     super();
     let bg = newBitmap({ url: "/img/panel/worldWar/bg.png" });
@@ -45,6 +47,8 @@ export class WorldWar extends PIXI.Container {
     let rBlood = new BloodBar(false);
     this.rBlood = rBlood;
     this.addChild(rBlood);
+
+
 
     loadRes('/img/panel/score2018/score.png', (img) => {
       // loadRes(skin.score, (img) => {
@@ -125,6 +129,10 @@ export class WorldWar extends PIXI.Container {
 
     this.addChild(this.rAvt)
 
+    let teamMateBlood = new TeamMateBlood()
+    this.addChild(teamMateBlood)
+    this.teamMateBlood = teamMateBlood
+
     //foul hint
     let lFoulHint = newBitmap({ url: "/img/panel/worldWar/foulHintL.png" });
     let rFoulHint = newBitmap({ url: "/img/panel/worldWar/foulHintR.png" });
@@ -135,6 +143,8 @@ export class WorldWar extends PIXI.Container {
     this.lFoulHint = lFoulHint;
     this.rFoulHint = rFoulHint;
     this.addChild(newBitmap({ url: "/img/panel/worldWar/fg.png" }));
+
+    teamMateBlood.addCtn(this)
     ns.fontSize = "35px";
     ns.fill = "#ddd";
     ns.fontFamily = 'dinCondensedC'
@@ -172,6 +182,8 @@ export class WorldWar extends PIXI.Container {
     this.addChild(this.lTitleTex)
     this.addChild(this.rTitleTex)
 
+
+
     this.initData()
     if (isTest) this.test();
   }
@@ -205,6 +217,10 @@ export class WorldWar extends PIXI.Container {
 
     // this.lBlood.setBlood(4);
     // this.rBlood.setBlood(2);
+  }
+
+  setTeamMateBlood(data) {
+    this.teamMateBlood.show(data)
   }
   setRightPlayer(rPlayer) {
     this.rTitle.setText(rPlayer.title).setAlignCenter(_c(300));

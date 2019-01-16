@@ -16,7 +16,7 @@ export class WorldWarView extends PIXI.Container {
   worldWar: WorldWar;
   lBloodRank: ScoreRank
   rBloodRank: ScoreRank
-  kdaTitle: PIXI.Sprite
+  // kdaTitle: PIXI.Sprite
 
   title: WWTitle
   constructor(stage, io) {
@@ -35,9 +35,9 @@ export class WorldWarView extends PIXI.Container {
         this.stage.addChild(this.worldWar);
 
 
-      this.kdaTitle = newBitmap({ url: '/img/panel/worldwar/kdaTitle.png' })
-      this.kdaTitle.visible = false;
-      this.worldWar.addChild(this.kdaTitle)
+      // this.kdaTitle = newBitmap({ url: '/img/panel/worldwar/kdaTitle.png' })
+      // this.kdaTitle.visible = false;
+      // this.worldWar.addChild(this.kdaTitle)
 
       this.lBloodRank = new ScoreRank()
       this.lBloodRank.create(this.worldWar, false)
@@ -95,15 +95,7 @@ export class WorldWarView extends PIXI.Container {
             this.title.hide();
         }
         if (data.panel == PanelId.worldwarKDA) {
-          // if (data.visible) {
-          //   this.lBloodRank.show({ scoreArr: data.lScoreArr, visible: true })
-          //   this.rBloodRank.show({ scoreArr: data.rScoreArr, visible: true })
-          // }
-          // else {
-          //   this.lBloodRank.hide()
-          //   this.rBloodRank.hide()
-          // }
-          // this.kdaTitle.visible = data.visible
+          this.worldWar.setTeamMateBlood(data)          
         }
       })
       .on(CommandId.sc_setFoul, data => {
