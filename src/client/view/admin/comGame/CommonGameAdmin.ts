@@ -132,19 +132,23 @@ class _CommonGameAdmin extends VueBase {
         },
         onSetScore(isLeft, dtScore) {
             // isLeft ? (baseGame.lScore += dtScore) : (baseGame.rScore += dtScore);
-            let score;
+            // let score;
             if (isLeft) {
                 baseGame.lScore += dtScore;
-                score = baseGame.lScore;
             } else {
                 baseGame.rScore += dtScore;
-                score = baseGame.rScore;
             }
             opReq(CommandId.cs_scoreFoul_common, baseGame);
             this.vueUpdate();
         },
         onSetFoul(isLeft, dtFoul) {
             isLeft ? (baseGame.lFoul += dtFoul) : (baseGame.rFoul += dtFoul);
+            opReq(CommandId.cs_scoreFoul_common, baseGame);
+            this.vueUpdate();
+        },
+        onResetScore() {
+            baseGame.lScore = 0
+            baseGame.rScore = 0
             opReq(CommandId.cs_scoreFoul_common, baseGame);
             this.vueUpdate();
         },
