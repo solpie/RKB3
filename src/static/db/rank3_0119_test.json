@@ -2,7 +2,7 @@
     "date": "2018-12-30",
     "dbIdx": "worldwar",
     "foulToHint": 4,
-    "dbUrl": "http://rtmp.icassi.us:8090/event?idx=0119_0",
+    "dbUrl": "http://rtmp.icassi.us:8090/event?idx=test",
     "rank5": "p12_王晶",
     "playerScore": {},
     "gameTitle": "新人魔王晋级赛",

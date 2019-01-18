@@ -47,8 +47,8 @@
         "5": "决赛"
     },
     "playerMap": {
-        "p1": { "name": "马克", "hwa": [187, 93, 24], "title": "路人王8冠王/体能怪", "playerId": "p1", "info": "" },
-        "p2": { "name": "王晶", "hwa": [196, 95, 40], "title": "路人王深圳站3站3冠/前CBA名将", "playerId": "p2", "info": "" },
+        "p1": { "name": "马克", "hwa": [187, 93, 24], "title": "路人王8冠王-体能怪", "playerId": "p1", "info": "" },
+        "p2": { "name": "王晶", "hwa": [196, 95, 40], "title": "路人王深圳站3站3冠-前CBA名将", "playerId": "p2", "info": "" },
         "p3": { "name": "张梓祎", "hwa": [191, 85, 24], "title": "北京站7战7冠的霸主", "playerId": "p3", "info": "" },
         "p4": { "name": "张帅康", "hwa": [195, 90, 24], "title": "路人王五冠王\n郑州站霸主", "playerId": "p4", "info": "" },
         "p5": { "name": "陈凯涛", "hwa": [188, 78, 23], "title": "CUBA山西大学核心", "playerId": "p5", "info": "" },
