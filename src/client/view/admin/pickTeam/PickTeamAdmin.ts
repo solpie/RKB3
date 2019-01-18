@@ -168,12 +168,22 @@ export class _PickTeamAdmin extends VueBase {
                 "type": 2,
                 "cont": "耿骁骐"
             },
+           
             {
                 "button": "安云鹏",
                 "type": 2,
                 "cont": "安云鹏"
             },
-
+            {
+                "button": "张祎逊",
+                "type": 2,
+                "cont": "张祎逊"
+            },
+            {
+                "button": "矣进宏",
+                "type": 2,
+                "cont": "矣进宏"
+            },
             {
                 "button": "小青龙",
                 "type": 2,
