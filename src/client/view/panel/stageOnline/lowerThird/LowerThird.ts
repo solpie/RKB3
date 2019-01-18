@@ -130,15 +130,18 @@ class LowerThird extends BasePanel {
         if (param.cid == CommandId.sc_showPickup) {
             pt.setData(param)
             pt.visible = true
-        }
+            this.p.addChild(pt)
+         }
         if (param.cid == CommandId.sc_setTeamColor) {
             pt.setColor(param)
             pt.visible = true
-        }
+            this.p.addChild(pt)
+          }
 
         if (param.cid == CommandId.sc_bracket) {
             pt.setAvtByRec(param)
             pt.visible = true
+            this.p.addChild(pt)
         }
 
         this.p.addChild(this)
@@ -151,6 +154,7 @@ class LowerThirdView extends VueBase {
         console.log('mouted LowerThirdView view');
         if (!canvasStage)
             canvasStage = BasePanelView.initPixi()
+        
         showPanel(LowerThird, { visible: true }, canvasStage)
         let localWs = io.connect(`/${PanelId.rkbPanel}`)
         localWs.on('connect', (msg) => {
