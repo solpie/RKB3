@@ -54,9 +54,9 @@
 	__webpack_require__(18);
 	var Stage5v5_1 = __webpack_require__(55);
 	var StageOnlineView_1 = __webpack_require__(71);
-	var CommonGame_1 = __webpack_require__(113);
-	var BracketS5Final_1 = __webpack_require__(114);
-	var LowerThird_1 = __webpack_require__(115);
+	var CommonGame_1 = __webpack_require__(114);
+	var BracketS5Final_1 = __webpack_require__(115);
+	var LowerThird_1 = __webpack_require__(117);
 	var routes = [
 	    {
 	        path: '/com',
@@ -5128,7 +5128,7 @@
 	var BracketView_1 = __webpack_require__(75);
 	var RankView_1 = __webpack_require__(82);
 	var ScoreView_1 = __webpack_require__(86);
-	var GroupV2_1 = __webpack_require__(110);
+	var GroupV2_1 = __webpack_require__(111);
 	var rankView;
 	var bracketView;
 	var scoreView;
@@ -5140,7 +5140,7 @@
 	    __extends(StageOnlineView, _super);
 	    function StageOnlineView() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(112);
+	        _this.template = __webpack_require__(113);
 	        _this.actTab = VueBase_1.VueBase.PROP;
 	        _this.gameId = VueBase_1.VueBase.String;
 	        _this.isOp = VueBase_1.VueBase.PROP;
@@ -7560,7 +7560,7 @@
 	var TweenEx_1 = __webpack_require__(67);
 	var BasePanelView_1 = __webpack_require__(56);
 	var WorldWarView_1 = __webpack_require__(102);
-	var ScoreV2_1 = __webpack_require__(109);
+	var ScoreV2_1 = __webpack_require__(110);
 	function logEvent() {
 	    var a = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
@@ -9841,8 +9841,8 @@
 	var ScoreRank_1 = __webpack_require__(88);
 	var BigBlood_1 = __webpack_require__(103);
 	var WorldWar_1 = __webpack_require__(104);
-	var WWTitle_1 = __webpack_require__(107);
-	var Game3v3_1 = __webpack_require__(108);
+	var WWTitle_1 = __webpack_require__(108);
+	var Game3v3_1 = __webpack_require__(109);
 	var isTest = false;
 	var isBBlood = false;
 	var isGame3v3 = false;
@@ -10335,7 +10335,7 @@
 	var TextTimer_1 = __webpack_require__(69);
 	var BloodBar_1 = __webpack_require__(105);
 	var MaskAvatar_1 = __webpack_require__(106);
-	var TeamMateBlood_1 = __webpack_require__(130);
+	var TeamMateBlood_1 = __webpack_require__(107);
 	var isTest = false;
 	var foulToHint = 3;
 	var WorldWar = (function (_super) {
@@ -10774,6 +10774,120 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var PixiEx_1 = __webpack_require__(60);
+	var MaskAvatar_1 = __webpack_require__(106);
+	var TextFac_1 = __webpack_require__(64);
+	var const_1 = __webpack_require__(27);
+	var ImgLoader_1 = __webpack_require__(59);
+	var TeamMateBlood = (function (_super) {
+	    __extends(TeamMateBlood, _super);
+	    function TeamMateBlood() {
+	        var _this = _super.call(this) || this;
+	        _this.ctnArr = [];
+	        _this.avtArr = [];
+	        _this.bloodArr = [];
+	        var ns = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: "30px",
+	            dropShadow: true,
+	            dropShadowColor: '#222222',
+	            dropShadowAngle: Math.PI * 1 / 3,
+	            dropShadowDistance: 3,
+	            fontWeight: "bold",
+	            fill: "#acacac"
+	        };
+	        _this.bg = PixiEx_1.newBitmap({ url: '/img/panel/worldwar/teamMate/bg.png' });
+	        _this.addChild(_this.bg);
+	        for (var i = 0; i < 8; i++) {
+	            var ctn = new PIXI.Container();
+	            ctn.x = i * 99;
+	            if (i > 3)
+	                ctn.x += 398;
+	            _this.addChild(ctn);
+	            _this.ctnArr.push(ctn);
+	            var avt = new MaskAvatar_1.MaskAvatar(null);
+	            avt.setAvtPos(375, 930, 83);
+	            ctn.addChild(avt);
+	            _this.avtArr.push(avt);
+	            var item = PixiEx_1.newBitmap({ url: '/img/panel/worldwar/teamMate/item.png' });
+	            ctn.addChild(item);
+	            var blood = TextFac_1.TextFac.new_(ns, ctn)
+	                .setText("")
+	                .setY(914)
+	                .setAlignCenter(370 + 21);
+	            _this.bloodArr.push(blood);
+	        }
+	        return _this;
+	    }
+	    TeamMateBlood.prototype.addCtn = function (parent) {
+	        var teamMateBloodLayer = new PIXI.Container();
+	        parent.addChild(teamMateBloodLayer);
+	        this.teamMateBloodLayer = teamMateBloodLayer;
+	        for (var _i = 0, _a = this.ctnArr; _i < _a.length; _i++) {
+	            var ctn = _a[_i];
+	            teamMateBloodLayer.addChild(ctn);
+	        }
+	        teamMateBloodLayer.addChild(PixiEx_1.newBitmap({ url: '/img/panel/worldwar/teamMate/fg.png' }));
+	        this.setVisible(false);
+	    };
+	    TeamMateBlood.prototype.show = function (data) {
+	        var _this = this;
+	        if (data.visible) {
+	            var avtArr = [];
+	            for (var i = 0; i < 4; i++) {
+	                var lp = data.lScoreArr[i];
+	                var rp = data.rScoreArr[i];
+	                avtArr.push(lp.avatar);
+	                avtArr.push(rp.avatar);
+	            }
+	            ImgLoader_1.imgLoader.loadTexArr(avtArr, function (_) {
+	                for (var i = 0; i < 4; i++) {
+	                    var lAvt = _this.avtArr[i];
+	                    var lp = data.lScoreArr[i];
+	                    lAvt.load(lp.avatar);
+	                    var lt = _this.bloodArr[i];
+	                    lt.setText(lp.score)
+	                        .setAlignCenter();
+	                    var rAvt = _this.avtArr[i + 4];
+	                    var rp = data.rScoreArr[i];
+	                    rAvt.load(rp.avatar);
+	                    var rt = _this.bloodArr[i + 4];
+	                    rt.setText(rp.score)
+	                        .setAlignCenter();
+	                }
+	                _this.setVisible(true);
+	            }, true);
+	        }
+	        else {
+	            this.setVisible();
+	        }
+	    };
+	    TeamMateBlood.prototype.setVisible = function (v) {
+	        if (v === void 0) { v = false; }
+	        this.bg.visible = v;
+	        this.teamMateBloodLayer.visible = v;
+	    };
+	    return TeamMateBlood;
+	}(PIXI.Container));
+	exports.TeamMateBlood = TeamMateBlood;
+
+
+/***/ }),
+/* 108 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var PixiEx_1 = __webpack_require__(60);
 	var TextFac_1 = __webpack_require__(64);
 	var const_1 = __webpack_require__(27);
 	var WWTitle = (function (_super) {
@@ -10813,7 +10927,7 @@
 
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -10936,7 +11050,7 @@
 
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -11274,7 +11388,7 @@
 
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -11293,7 +11407,7 @@
 	var HupuAPI_1 = __webpack_require__(24);
 	var PixiEx_1 = __webpack_require__(60);
 	var TextFac_1 = __webpack_require__(64);
-	var thenBy_1 = __webpack_require__(111);
+	var thenBy_1 = __webpack_require__(112);
 	var BracketGroup_1 = __webpack_require__(65);
 	var AvtV2_1 = __webpack_require__(81);
 	var Row1 = (function (_super) {
@@ -11590,7 +11704,7 @@
 
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -11628,13 +11742,13 @@
 
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div>\r\n    <div v-if=\"isOp\" id=\"opPanel\" style=\"position: absolute;left: 100px;top:60px;width: 1000px;height:700px;overflow-y: scroll;overflow-x:hidden;\">\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-if='!isRmOp' v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>Main</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                    <a>\r\n                        <span>公告 MISC</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"'>\r\n            <h2>game id:{{gameId}} 当前延时:{{delayTimeShowOnly||0}}秒 timeDiff:{{timeDiff}}\r\n            </h2>\r\n            <label class=\"label\">设置延时时间(秒)</label>\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                   return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"delayTime\">\r\n                <button class=\"button\" @click=\"onClkSetDelay\">确定</button>\r\n            </p>\r\n\r\n            <!-- <label class=\"label\">现场时间:{{liveTime}}</label>\r\n                <label class=\"label\">面板时间:{{panelTime}}</label> -->\r\n\r\n\r\n            <!--<button class=\"button\" @click=\"onClkRenderData\">刷新现场数据到面板</button><br>-->\r\n            <label class=\"label\" style=\"font-size: 30px;font-family: 'NotoSansHans-Regular'\">\r\n               {{lLiveName}}  vs {{rLiveName}} \r\n                <br>蓝:{{lLiveScore}} foul:{{lLiveFoul}} 红: {{rLiveScore}} foul:{{rLiveFoul}}</label>\r\n            <label class=\"label\">比分面板:</label><br>\r\n            <button class=\"button\" @click=\"onClkShowScore(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false)\">隐藏</button>\r\n            <button class=\"button\" @click=\"onClkShowScore(false,1)\">隐藏底部</button>\r\n\r\n            <button class=\"button\" @click=\"onClkShowStage(false)\">隐藏所有</button>\r\n            <button class=\"button\" @click=\"onClkShowStage(true)\">显示所有</button>\r\n            <br>时间控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkStartTimer\">开始</button>\r\n            <button class=\"button\" @click=\"onClkPauseTimer\">暂停</button>\r\n            <button class=\"button\" @click=\"onClkResetTimer\">重置</button>\r\n            <button class=\"button\" @click=\"onClkSetPanelTime(panelTime2Set)\">设定时间(秒)</button>\r\n\r\n            <p class=\"control\">\r\n                <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"panelTime2Set\">\r\n            </p>\r\n            比分控制:\r\n            <br>\r\n            <button class=\"button\" @click=\"onUpdateScore(true ,panelTime2Set)\">蓝方比分</button>\r\n            <button class=\"button\" @click=\"onUpdateScore(false,panelTime2Set)\">红方比分</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(true)\">切换攻守</button>\r\n            <button class=\"button\" @click=\"onTogglePlayerState(false)\">隐藏</button>\r\n            <br>\r\n\r\n            <button class=\"button\" @click=\"onUpdateFoul(true ,panelTime2Set)\">蓝方犯规</button>\r\n            <button class=\"button\" @click=\"onUpdateFoul(false,panelTime2Set)\">红方犯规</button>\r\n\r\n\r\n            <label class=\"label\">  小组面板:</label><br>\r\n            <label class=\"checkbox\">\r\n                    <input type=\"checkbox\" v-model='isShowGroupLeft'>\r\n                    靠左边\r\n                  </label>\r\n            <button class=\"button\" @click=\"onClkGroup(true,-1)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,1)\">A</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,2)\">B</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,3)\">C</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,4)\">D</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,5)\">E</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,6)\">F</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,7)\">G</button>\r\n            <button class=\"button\" @click=\"onClkGroup(true,8)\">H</button>\r\n            <button class=\"button\" @click=\"onClkGroup(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  对局Title:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"cuba校队 街头霸王 空格隔开\" style=\"width: 400px;\" v-model=\"vsTitle\">\r\n            <br>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,vsTitle)\">修改并显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(true,'')\">显示</button>\r\n            <button class=\"button\" @click=\"onClkVsTitle(false,vsTitle)\">隐藏</button>\r\n            <!-- <button class=\"button\" @click=\"onClkLoadVsTitle()\">自动加载配置文件</button> -->\r\n\r\n            <label class=\"label\">  赛区实力榜:</label><br>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,1)\">东南</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,2)\">东北</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,3)\">西方</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,4)\">南方</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,0)\">总榜</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,1,-1)\">首页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,2,-1)\">上一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(true,3,-1)\">下一页</button>\r\n            <button class=\"button\" @click=\"onShowRank(false,-1)\">隐藏</button>\r\n\r\n            <label class=\"label\">  夺冠热门:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"1 3 4 6 10空格隔开比赛出场场次\" style=\"width: 250px;\" v-model=\"gameIdxArr\">\r\n            <button class=\"button\" @click=\"onClkTop5(true,1,gameIdxArr)\">p1</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,2,gameIdxArr)\">p2</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,3,gameIdxArr)\">p3</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,4,gameIdxArr)\">p4</button>\r\n            <button class=\"button\" @click=\"onClkTop5(true,5,gameIdxArr)\">p5</button>\r\n            <button class=\"button\" @click=\"onClkTop5(false,1)\">隐藏</button>\r\n            <label class=\"label\">  八强面板:</label><br>\r\n            <button class=\"button\" @click=\"onBracketShow(0,true)\">八强对阵</button>\r\n            <button class=\"button\" @click=\"onBracketShow(1,true)\">第一页 八进四</button>\r\n            <button class=\"button\" @click=\"onBracketShow(2,true)\">第二页</button>\r\n\r\n            <br>\r\n            <label class=\"label\">  冠军面板:</label><br>\r\n            <input class=\"input\" type=\"text\" placeholder=\"2017上海站第二轮冠军\" style=\"width: 250px;\" v-model=\"championTitle\">\r\n            <button class=\"button\" @click=\"onClkLeftChampion\">{{lLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkRightChampion\">{{rLiveName}} 冠军</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(true)\">显示</button>\r\n            <button class=\"button\" @click=\"onClkToggleChampionPanel(false)\">隐藏</button>\r\n            <br>\r\n            <div class='column is-one-quarter' style=\"position: fixed;top: 260px;right: 10px;\">\r\n                <input class=\"input\" type=\"text\" style=\"width: 30px;\" v-model=\"gameTitleType\">1 '8进4' 2 '4进2' 3 '2进1'\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"蓝方名字-红方名字\" style=\"width: 300px;\" v-model=\"vsPlayer\">\r\n                <button class=\"button\" @click=\"onSetPlayer(vsPlayer,gameTitleType)\">设置球员</button>\r\n                <br> <button class=\"button\" @click=\"onAddScore(true,-1)\">-1</button>蓝方: <button class=\"button\" @click=\"onAddScore(true,1)\">+1</button> 比分\r\n                <button class=\"button\" @click=\"onAddScore(false,1)\">+1</button>:红方<button class=\"button\" @click=\"onAddScore(false,-1)\">-1</button>\r\n                <br><br> <button class=\"button\" @click=\"onAddFoul(true,-1)\">-1</button>-----\r\n                <button class=\"button\" @click=\"onAddFoul(true,1)\">+1</button> 犯规\r\n                <button class=\"button\" @click=\"onAddFoul(false,+1)\">+1</button>-----<button class=\"button\" @click=\"onAddFoul(false,-1)\">-1</button>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab2\"'>\r\n            <div v-if='isRmOp||isOp' style=\"position: absolute;left: 0px;top:60px;\">\r\n                <label class=\"radio\">\r\n                                    <input type=\"radio\" name=\"bold\" value='1' v-model='isWrap' checked >\r\n                                    自动换行\r\n                                </label>\r\n\r\n                <label class=\"radio\">\r\n                                    <input type=\"radio\" name=\"bold\" value='0' v-model='isWrap'>\r\n                                    手动换行\r\n                                </label>\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"noticeTitle\">\r\n                <br>\r\n                <textarea style=\"width:580px;height:250px\" v-model=\"noticeContent\"></textarea>\r\n                <br>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true,true)\">左边预览</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false,true)\">右边预览</button>\r\n                <br>\r\n                <button class=\"button\" @click=\"onClkNotice(true,true)\">左边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(true,false)\">右边显示</button>\r\n                <button class=\"button\" @click=\"onClkNotice(false,false)\">隐藏</button>\r\n                <br>\r\n                <button class=\"button\" @click=\"onNoticePresets('network')\">网络故障 模版</button>\r\n                <br>\r\n                <div v-for=\"(n,idx) in noticeHistory\" style=\"position: absolute;left: 200px;top: 60px;\">\r\n                    <a @click=\"onClkNoticePresets(n.title,n.content)\" style=\"font-size:35px;\">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>\r\n                    <a @click=\"onDelNoticePresets(n.content)\">del</a>\r\n                </div>\r\n\r\n                滚动文字：\r\n                <br>\r\n                <input class=\"input\" type=\"text\" placeholder=\"公告\" style=\"width: 280px;\" v-model=\"inputRollText\">\r\n                <br>\r\n\r\n                <!-- <el-input v-model=\"inputRollText\" style=\"width:250px\"></el-input> -->\r\n                <button class=\"button\" @click='showRollText(inputRollText,true)'>发送</button>\r\n                <button class=\"button\" @click='showRollText(inputRollText,false)'>隐藏</button>\r\n                <br> 主播面板:\r\n                <br>\r\n                <button class=\"button\" @click='showCommentator(true,1)'>显示主播</button>\r\n                <button class=\"button\" @click='showCommentator(true,3)'>显示主播 广告位</button>\r\n                <button class=\"button\" @click='showCommentator(true,2)'>显示主播 合并</button>\r\n                <button class=\"button\" @click='showCommentatorInfoPage(true,2)'>显示信息2（info2）</button>\r\n                <button class=\"button\" @click='showCommentator(false)'>隐藏</button>\r\n                <br>图片:\r\n                <br>\r\n                <button class=\"button\" @click='showStaticImage(true,1)'>微信小程序</button>\r\n                <button class=\"button\" @click='showStaticImage(false,1)'>隐藏</button>\r\n\r\n                <label class=\"label\"> 平台展示:</label><br>\r\n                <button class=\"button\" @click=\"onShowAccount(1,true)\">抖音 快手</button>\r\n                <button class=\"button\" @click=\"onShowAccount(2,true)\">今日头条 西瓜视频</button>\r\n                <button class=\"button\" @click=\"onShowAccount(3,true)\">微博 微信</button>\r\n                <button class=\"button\" @click=\"onShowAccount(4,true)\">优酷 uc</button>\r\n                <button class=\"button\" @click=\"onShowAccount(5,true)\">B站 微视</button>\r\n                <button class=\"button\" @click=\"onShowAccount(6,true)\">腾讯视频 YouTube</button>\r\n                <button class=\"button\" @click=\"onShowAccount(7,true)\">知乎 网易新闻</button>\r\n                <button class=\"button\" @click=\"onShowAccount(1,false)\">隐藏</button>\r\n\r\n                <label class=\"label\">自动开题延时(秒){{clientDelayTimeSrv}}</label>\r\n                <p class=\"control\">\r\n                    <input class=\"input\" type=\"text\" onkeypress='var c = event.charCode;\r\n                               return c >= 48 && c <= 57 ||c==46' placeholder=\"\" style=\"width: 50px;\" v-model=\"clientDelayTime\">\r\n                    <button class=\"button\" @click=\"onSetClientDelay(clientDelayTime)\">确定</button>\r\n                </p>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -11940,7 +12054,7 @@
 
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -11962,7 +12076,7 @@
 	var const_1 = __webpack_require__(27);
 	var PixiEx_1 = __webpack_require__(60);
 	var TextFac_1 = __webpack_require__(64);
-	var BracketS5Team_1 = __webpack_require__(129);
+	var BracketS5Team_1 = __webpack_require__(116);
 	var urlBg = '/img/panel/bracket/s5/bg.png';
 	var BracketS5Final = (function (_super) {
 	    __extends(BracketS5Final, _super);
@@ -12107,420 +12221,7 @@
 
 
 /***/ }),
-/* 115 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var VueBase_1 = __webpack_require__(22);
-	var BasePanelView_1 = __webpack_require__(56);
-	var BasePanel_1 = __webpack_require__(79);
-	var const_1 = __webpack_require__(27);
-	var Command_1 = __webpack_require__(28);
-	var TextFac_1 = __webpack_require__(64);
-	var PixiEx_1 = __webpack_require__(60);
-	var BaseLowerThird_1 = __webpack_require__(116);
-	var PickTeam_1 = __webpack_require__(117);
-	var TextType1 = (function (_super) {
-	    __extends(TextType1, _super);
-	    function TextType1(parent) {
-	        var _this = _super.call(this, parent) || this;
-	        _this.addChild(PixiEx_1.newBitmap({ url: urlType_1 }));
-	        var ns = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: "42px",
-	            dropShadow: true,
-	            dropShadowColor: '#222222',
-	            dropShadowAngle: Math.PI * 1 / 3,
-	            dropShadowDistance: 3,
-	            fontWeight: "bold",
-	            fill: "#acacac"
-	        };
-	        _this.lName = TextFac_1.TextFac.new_(ns, _this)
-	            .setY(948)
-	            .setAlignCenter(PixiEx_1._c(-340));
-	        _this.rName = TextFac_1.TextFac.new_(ns, _this)
-	            .setY(_this.lName.y)
-	            .setAlignCenter(PixiEx_1._c(340));
-	        ns.fontSize = "24px";
-	        _this.lTitle = TextFac_1.TextFac.new_(ns, _this)
-	            .setY(948 + 62)
-	            .setAlignCenter(PixiEx_1._c(-340));
-	        _this.rTitle = TextFac_1.TextFac.new_(ns, _this)
-	            .setY(_this.lTitle.y)
-	            .setAlignCenter(PixiEx_1._c(340));
-	        return _this;
-	    }
-	    TextType1.prototype.fillData = function (data) {
-	        var l = data.cont[0].split('_');
-	        this.lName.setText(l[0])
-	            .setAlignCenter();
-	        this.lTitle.setText(l[1])
-	            .setAlignCenter();
-	        var r = data.cont[1].split('_');
-	        this.rName.setText(r[0])
-	            .setAlignCenter();
-	        this.rTitle.setText(r[1])
-	            .setAlignCenter();
-	    };
-	    return TextType1;
-	}(BaseLowerThird_1.BaseLowerThird));
-	var TextType2 = (function (_super) {
-	    __extends(TextType2, _super);
-	    function TextType2(parent) {
-	        var _this = _super.call(this, parent) || this;
-	        _this.addChild(PixiEx_1.newBitmap({ url: urlType_2 }));
-	        var ns = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: "42px",
-	            dropShadow: true,
-	            dropShadowColor: '#222222',
-	            dropShadowAngle: Math.PI * 1 / 3,
-	            dropShadowDistance: 3,
-	            fontWeight: "bold",
-	            fill: "#acacac"
-	        };
-	        _this.lName = TextFac_1.TextFac.new_(ns, _this)
-	            .setY(968)
-	            .setAlignCenter(PixiEx_1._c(0));
-	        return _this;
-	    }
-	    TextType2.prototype.fillData = function (data) {
-	        this.lName.setText(data.cont)
-	            .setAlignCenter();
-	    };
-	    return TextType2;
-	}(BaseLowerThird_1.BaseLowerThird));
-	var urlType_1, urlType_2;
-	var pt;
-	var LowerThird = (function (_super) {
-	    __extends(LowerThird, _super);
-	    function LowerThird() {
-	        return _super !== null && _super.apply(this, arguments) || this;
-	    }
-	    LowerThird.prototype.create = function () {
-	        var _this = this;
-	        urlType_1 = '/img/panel/lowerThird/type_1.png';
-	        urlType_2 = '/img/panel/lowerThird/type_2.png';
-	        this.load([urlType_1,
-	            urlType_2
-	        ], function (_) {
-	            _this.showOnlyMap = {};
-	        });
-	    };
-	    LowerThird.prototype.showOnly = function (type) {
-	        for (var t in this.showOnlyMap) {
-	            if (Number(t) == type) {
-	                this.showOnlyMap[t].show();
-	            }
-	            else {
-	                this.showOnlyMap[t].hide();
-	            }
-	        }
-	    };
-	    LowerThird.prototype._show = function (param) {
-	        var data = param.data;
-	        if (param.cid == Command_1.CommandId.sc_showLowerThird) {
-	            if (data.type == 1) {
-	                if (!this.t1)
-	                    this.t1 = new TextType1(this);
-	                this.t1.fillData(data);
-	                this.showOnlyMap[1] = this.t1;
-	                this.showOnly(1);
-	            }
-	            else if (data.type == 2) {
-	                if (!this.t2)
-	                    this.t2 = new TextType2(this);
-	                this.t2.fillData(data);
-	                this.showOnlyMap[2] = this.t2;
-	                this.showOnly(2);
-	            }
-	        }
-	        if (param.cid == Command_1.CommandId.sc_showPickup) {
-	            pt.setData(param);
-	            pt.visible = true;
-	        }
-	        if (param.cid == Command_1.CommandId.sc_setTeamColor) {
-	            pt.setColor(param);
-	            pt.visible = true;
-	        }
-	        if (param.cid == Command_1.CommandId.sc_bracket) {
-	            pt.setAvtByRec(param);
-	            pt.visible = true;
-	        }
-	        this.p.addChild(this);
-	    };
-	    LowerThird.cls = 'LowerThird';
-	    return LowerThird;
-	}(BasePanel_1.BasePanel));
-	var canvasStage;
-	var LowerThirdView = (function (_super) {
-	    __extends(LowerThirdView, _super);
-	    function LowerThirdView() {
-	        return _super !== null && _super.apply(this, arguments) || this;
-	    }
-	    LowerThirdView.prototype.mounted = function () {
-	        console.log('mouted LowerThirdView view');
-	        if (!canvasStage)
-	            canvasStage = BasePanelView_1.BasePanelView.initPixi();
-	        BasePanel_1.showPanel(LowerThird, { visible: true }, canvasStage);
-	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
-	        localWs.on('connect', function (msg) {
-	            console.log('connect', window.location.host);
-	        });
-	        var _adept = function (event) {
-	            localWs.on(event, function (data) {
-	                data.cid = event;
-	                if (data.visible == null)
-	                    data.visible = true;
-	                console.log(event, data);
-	                BasePanel_1.showPanel(LowerThird, data, canvasStage);
-	            });
-	        };
-	        _adept(Command_1.CommandId.sc_showLowerThird);
-	        _adept(Command_1.CommandId.sc_showPickup);
-	        _adept(Command_1.CommandId.sc_setTeamColor);
-	        _adept(Command_1.CommandId.sc_bracket);
-	        pt = new PickTeam_1.PickTeam(canvasStage);
-	        pt.visible = false;
-	    };
-	    return LowerThirdView;
-	}(VueBase_1.VueBase));
-	exports.lowerThird = new LowerThirdView();
-
-
-/***/ }),
 /* 116 */
-/***/ (function(module, exports) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var BaseLowerThird = (function (_super) {
-	    __extends(BaseLowerThird, _super);
-	    function BaseLowerThird(parent) {
-	        var _this = _super.call(this) || this;
-	        _this.p = parent;
-	        return _this;
-	    }
-	    BaseLowerThird.prototype.show = function () {
-	        this.p.addChild(this);
-	    };
-	    BaseLowerThird.prototype.hide = function () {
-	        if (this.parent)
-	            this.parent.removeChild(this);
-	    };
-	    return BaseLowerThird;
-	}(PIXI.Container));
-	exports.BaseLowerThird = BaseLowerThird;
-
-
-/***/ }),
-/* 117 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(60);
-	var ImgLoader_1 = __webpack_require__(59);
-	var TextFac_1 = __webpack_require__(64);
-	var const_1 = __webpack_require__(27);
-	var MaskAvatar_1 = __webpack_require__(106);
-	var avtBase = 'http://rtmp.icassi.us:8092/img/player/915/';
-	var PickTeam = (function (_super) {
-	    __extends(PickTeam, _super);
-	    function PickTeam(parent) {
-	        var _this = _super.call(this) || this;
-	        _this.avtArr = [];
-	        _this.teamNameArr = [];
-	        _this.playerNameArr1 = [];
-	        _this.playerNameArr2 = [];
-	        _this.playerNameArr3 = [];
-	        _this.posArr = [-480 - 77, -77, 480 - 77];
-	        parent.addChild(_this);
-	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/pickTeam/bg.png' });
-	        _this.addChild(bg);
-	        for (var i = 0; i < 3; i++) {
-	            var sp = new MaskAvatar_1.MaskAvatar(null);
-	            sp.setAvtPos(326 + i * 480, 846, 153);
-	            sp.load('http://rtmp.icassi.us:8092/img/player/915/p0.png');
-	            _this.addChild(sp);
-	            _this.avtArr.push(sp);
-	        }
-	        _this.bg1 = new PIXI.Sprite();
-	        _this.bg1.x = -77;
-	        _this.addChild(_this.bg1);
-	        _this.bg2 = new PIXI.Sprite();
-	        _this.bg2.x = 480 - 77;
-	        _this.addChild(_this.bg2);
-	        _this.bg3 = new PIXI.Sprite();
-	        _this.bg3.x = -480 - 77;
-	        _this.addChild(_this.bg3);
-	        _this.colorMap = { '红': _this.bg1, '白': _this.bg2, '绿': _this.bg3 };
-	        ImgLoader_1.imgLoader.loadTexArr([
-	            '/img/panel/pickTeam/bg.png',
-	            '/img/panel/pickTeam/bg1.png',
-	            '/img/panel/pickTeam/bg2.png',
-	            '/img/panel/pickTeam/bg3.png',
-	        ], function (_) {
-	            _this.bg1.texture =
-	                ImgLoader_1.imgLoader.getTex('/img/panel/pickTeam/bg1.png');
-	            _this.bg2.texture =
-	                ImgLoader_1.imgLoader.getTex('/img/panel/pickTeam/bg2.png');
-	            _this.bg3.texture =
-	                ImgLoader_1.imgLoader.getTex('/img/panel/pickTeam/bg3.png');
-	            var ns = {
-	                fontFamily: const_1.FontName.MicrosoftYahei,
-	                fontSize: "32px",
-	                dropShadow: true,
-	                dropShadowColor: '#222222',
-	                dropShadowAngle: Math.PI * 1 / 3,
-	                dropShadowDistance: 3,
-	                fontWeight: "bold",
-	                fill: "#acacac"
-	            };
-	            var name;
-	            var name2;
-	            var name3;
-	            var a = [];
-	            for (var i = 0; i < 3; i++) {
-	                name = TextFac_1.TextFac.new_(ns, _this)
-	                    .setText('')
-	                    .setPos(520, 878 + i * 51);
-	                _this.playerNameArr1.push(name);
-	                name2 = TextFac_1.TextFac.new_(ns, _this)
-	                    .setText('')
-	                    .setPos(1000, name.y);
-	                _this.playerNameArr2.push(name2);
-	                name3 = TextFac_1.TextFac.new_(ns, _this)
-	                    .setText('')
-	                    .setPos(1476, name.y);
-	                _this.playerNameArr3.push(name3);
-	                name = TextFac_1.TextFac.new_(ns, _this)
-	                    .setY(986)
-	                    .setSize("24px")
-	                    .setText("")
-	                    .setAlignCenter(406 + i * 480);
-	                a.push(name);
-	            }
-	            _this.playerNameArr1 = [a[0]].concat(_this.playerNameArr1);
-	            _this.playerNameArr2 = [a[1]].concat(_this.playerNameArr2);
-	            _this.playerNameArr3 = [a[2]].concat(_this.playerNameArr3);
-	        });
-	        return _this;
-	    }
-	    PickTeam.prototype.setData = function (data) {
-	        for (var i = 0; i < 4; i++) {
-	            if (data.teamArr1[i])
-	                this.playerNameArr1[i]
-	                    .setText(data.teamArr1[i]);
-	            if (data.teamArr2[i])
-	                this.playerNameArr2[i]
-	                    .setText(data.teamArr2[i]);
-	            if (data.teamArr3[i])
-	                this.playerNameArr3[i]
-	                    .setText(data.teamArr3[i]);
-	            if (i == 0) {
-	                this.playerNameArr1[i].setAlignCenter();
-	                this.playerNameArr2[i].setAlignCenter();
-	                this.playerNameArr3[i].setAlignCenter();
-	            }
-	        }
-	    };
-	    PickTeam.prototype.setAvtByRec = function (data) {
-	        console.log('setAvtByRec', data);
-	        var p1, p2, p3;
-	        var n1, n2, n3;
-	        for (var _i = 0, _a = data.bracketRec16; _i < _a.length; _i++) {
-	            var rec = _a[_i];
-	            if (rec.gameIdx == 15) {
-	                if (rec.score[0] > rec.score[1]) {
-	                    p3 = rec.playerId[0];
-	                    this.playerNameArr1[0].setText(rec.player[0]);
-	                }
-	                else if (rec.score[0] < rec.score[1]) {
-	                    p3 = rec.playerId[1];
-	                    this.playerNameArr1[0].setText(rec.player[1]);
-	                }
-	                this.avtArr[0].load(avtBase + p3 + '.png');
-	                this.playerNameArr1[0].setAlignCenter();
-	            }
-	            if (rec.gameIdx == 16) {
-	                if (rec.score[0] > rec.score[1]) {
-	                    p1 = rec.playerId[0];
-	                    p2 = rec.playerId[1];
-	                    n1 = rec.player[0];
-	                    n2 = rec.player[1];
-	                }
-	                else if (rec.score[0] < rec.score[1]) {
-	                    p1 = rec.playerId[1];
-	                    p2 = rec.playerId[0];
-	                    n1 = rec.player[1];
-	                    n2 = rec.player[0];
-	                }
-	                this.avtArr[1].load(avtBase + p1 + '.png');
-	                this.avtArr[2].load(avtBase + p2 + '.png');
-	                this.playerNameArr2[0].setText(n1)
-	                    .setAlignCenter();
-	                this.playerNameArr3[0].setText(n2)
-	                    .setAlignCenter();
-	            }
-	        }
-	    };
-	    PickTeam.prototype.setColor = function (data) {
-	        for (var i = 0; i < 3; i++) {
-	            var color = data.colorArr[i];
-	            var sp = this.colorMap[color];
-	            sp.x = this.posArr[i];
-	        }
-	    };
-	    return PickTeam;
-	}(PIXI.Container));
-	exports.PickTeam = PickTeam;
-
-
-/***/ }),
-/* 118 */,
-/* 119 */,
-/* 120 */,
-/* 121 */,
-/* 122 */,
-/* 123 */,
-/* 124 */,
-/* 125 */,
-/* 126 */,
-/* 127 */,
-/* 128 */,
-/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -12736,7 +12437,235 @@
 
 
 /***/ }),
-/* 130 */
+/* 117 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var VueBase_1 = __webpack_require__(22);
+	var BasePanelView_1 = __webpack_require__(56);
+	var BasePanel_1 = __webpack_require__(79);
+	var const_1 = __webpack_require__(27);
+	var Command_1 = __webpack_require__(28);
+	var TextFac_1 = __webpack_require__(64);
+	var PixiEx_1 = __webpack_require__(60);
+	var BaseLowerThird_1 = __webpack_require__(118);
+	var PickTeam_1 = __webpack_require__(119);
+	var TextType1 = (function (_super) {
+	    __extends(TextType1, _super);
+	    function TextType1(parent) {
+	        var _this = _super.call(this, parent) || this;
+	        _this.addChild(PixiEx_1.newBitmap({ url: urlType_1 }));
+	        var ns = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: "42px",
+	            dropShadow: true,
+	            dropShadowColor: '#222222',
+	            dropShadowAngle: Math.PI * 1 / 3,
+	            dropShadowDistance: 3,
+	            fontWeight: "bold",
+	            fill: "#acacac"
+	        };
+	        _this.lName = TextFac_1.TextFac.new_(ns, _this)
+	            .setY(948)
+	            .setAlignCenter(PixiEx_1._c(-340));
+	        _this.rName = TextFac_1.TextFac.new_(ns, _this)
+	            .setY(_this.lName.y)
+	            .setAlignCenter(PixiEx_1._c(340));
+	        ns.fontSize = "24px";
+	        _this.lTitle = TextFac_1.TextFac.new_(ns, _this)
+	            .setY(948 + 62)
+	            .setAlignCenter(PixiEx_1._c(-340));
+	        _this.rTitle = TextFac_1.TextFac.new_(ns, _this)
+	            .setY(_this.lTitle.y)
+	            .setAlignCenter(PixiEx_1._c(340));
+	        return _this;
+	    }
+	    TextType1.prototype.fillData = function (data) {
+	        var l = data.cont[0].split('_');
+	        this.lName.setText(l[0])
+	            .setAlignCenter();
+	        this.lTitle.setText(l[1])
+	            .setAlignCenter();
+	        var r = data.cont[1].split('_');
+	        this.rName.setText(r[0])
+	            .setAlignCenter();
+	        this.rTitle.setText(r[1])
+	            .setAlignCenter();
+	    };
+	    return TextType1;
+	}(BaseLowerThird_1.BaseLowerThird));
+	var TextType2 = (function (_super) {
+	    __extends(TextType2, _super);
+	    function TextType2(parent) {
+	        var _this = _super.call(this, parent) || this;
+	        _this.addChild(PixiEx_1.newBitmap({ url: urlType_2 }));
+	        var ns = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: "42px",
+	            dropShadow: true,
+	            dropShadowColor: '#222222',
+	            dropShadowAngle: Math.PI * 1 / 3,
+	            dropShadowDistance: 3,
+	            fontWeight: "bold",
+	            fill: "#acacac"
+	        };
+	        _this.lName = TextFac_1.TextFac.new_(ns, _this)
+	            .setY(968)
+	            .setAlignCenter(PixiEx_1._c(0));
+	        return _this;
+	    }
+	    TextType2.prototype.fillData = function (data) {
+	        this.lName.setText(data.cont)
+	            .setAlignCenter();
+	    };
+	    return TextType2;
+	}(BaseLowerThird_1.BaseLowerThird));
+	var urlType_1, urlType_2;
+	var pt;
+	var LowerThird = (function (_super) {
+	    __extends(LowerThird, _super);
+	    function LowerThird() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    LowerThird.prototype.create = function () {
+	        var _this = this;
+	        urlType_1 = '/img/panel/lowerThird/type_1.png';
+	        urlType_2 = '/img/panel/lowerThird/type_2.png';
+	        this.load([urlType_1,
+	            urlType_2
+	        ], function (_) {
+	            _this.showOnlyMap = {};
+	        });
+	    };
+	    LowerThird.prototype.showOnly = function (type) {
+	        for (var t in this.showOnlyMap) {
+	            if (Number(t) == type) {
+	                this.showOnlyMap[t].show();
+	            }
+	            else {
+	                this.showOnlyMap[t].hide();
+	            }
+	        }
+	    };
+	    LowerThird.prototype._show = function (param) {
+	        var data = param.data;
+	        if (param.cid == Command_1.CommandId.sc_showLowerThird) {
+	            if (data.type == 1) {
+	                if (!this.t1)
+	                    this.t1 = new TextType1(this);
+	                this.t1.fillData(data);
+	                this.showOnlyMap[1] = this.t1;
+	                this.showOnly(1);
+	            }
+	            else if (data.type == 2) {
+	                if (!this.t2)
+	                    this.t2 = new TextType2(this);
+	                this.t2.fillData(data);
+	                this.showOnlyMap[2] = this.t2;
+	                this.showOnly(2);
+	            }
+	        }
+	        if (param.cid == Command_1.CommandId.sc_showPickup) {
+	            pt.setData(param);
+	            pt.visible = true;
+	        }
+	        if (param.cid == Command_1.CommandId.sc_setTeamColor) {
+	            pt.setColor(param);
+	            pt.visible = true;
+	        }
+	        if (param.cid == Command_1.CommandId.sc_bracket) {
+	            pt.setAvtByRec(param);
+	            pt.visible = true;
+	        }
+	        this.p.addChild(this);
+	    };
+	    LowerThird.cls = 'LowerThird';
+	    return LowerThird;
+	}(BasePanel_1.BasePanel));
+	var canvasStage;
+	var LowerThirdView = (function (_super) {
+	    __extends(LowerThirdView, _super);
+	    function LowerThirdView() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    LowerThirdView.prototype.mounted = function () {
+	        console.log('mouted LowerThirdView view');
+	        if (!canvasStage)
+	            canvasStage = BasePanelView_1.BasePanelView.initPixi();
+	        BasePanel_1.showPanel(LowerThird, { visible: true }, canvasStage);
+	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
+	        localWs.on('connect', function (msg) {
+	            console.log('connect', window.location.host);
+	        });
+	        var _adept = function (event) {
+	            localWs.on(event, function (data) {
+	                data.cid = event;
+	                if (data.visible == null)
+	                    data.visible = true;
+	                console.log(event, data);
+	                BasePanel_1.showPanel(LowerThird, data, canvasStage);
+	            });
+	        };
+	        _adept(Command_1.CommandId.sc_showLowerThird);
+	        _adept(Command_1.CommandId.sc_showPickup);
+	        _adept(Command_1.CommandId.sc_setTeamColor);
+	        _adept(Command_1.CommandId.sc_bracket);
+	        pt = new PickTeam_1.PickTeam(canvasStage);
+	        pt.visible = false;
+	    };
+	    return LowerThirdView;
+	}(VueBase_1.VueBase));
+	exports.lowerThird = new LowerThirdView();
+
+
+/***/ }),
+/* 118 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var BaseLowerThird = (function (_super) {
+	    __extends(BaseLowerThird, _super);
+	    function BaseLowerThird(parent) {
+	        var _this = _super.call(this) || this;
+	        _this.p = parent;
+	        return _this;
+	    }
+	    BaseLowerThird.prototype.show = function () {
+	        this.p.addChild(this);
+	    };
+	    BaseLowerThird.prototype.hide = function () {
+	        if (this.parent)
+	            this.parent.removeChild(this);
+	    };
+	    return BaseLowerThird;
+	}(PIXI.Container));
+	exports.BaseLowerThird = BaseLowerThird;
+
+
+/***/ }),
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -12752,101 +12681,161 @@
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var PixiEx_1 = __webpack_require__(60);
-	var MaskAvatar_1 = __webpack_require__(106);
+	var ImgLoader_1 = __webpack_require__(59);
 	var TextFac_1 = __webpack_require__(64);
 	var const_1 = __webpack_require__(27);
-	var ImgLoader_1 = __webpack_require__(59);
-	var TeamMateBlood = (function (_super) {
-	    __extends(TeamMateBlood, _super);
-	    function TeamMateBlood() {
+	var MaskAvatar_1 = __webpack_require__(106);
+	var avtBase = 'http://rtmp.icassi.us:8092/img/player/915/';
+	var PickTeam = (function (_super) {
+	    __extends(PickTeam, _super);
+	    function PickTeam(parent) {
 	        var _this = _super.call(this) || this;
-	        _this.ctnArr = [];
 	        _this.avtArr = [];
-	        _this.bloodArr = [];
-	        var ns = {
-	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: "30px",
-	            dropShadow: true,
-	            dropShadowColor: '#222222',
-	            dropShadowAngle: Math.PI * 1 / 3,
-	            dropShadowDistance: 3,
-	            fontWeight: "bold",
-	            fill: "#acacac"
-	        };
-	        _this.bg = PixiEx_1.newBitmap({ url: '/img/panel/worldwar/teamMate/bg.png' });
-	        _this.addChild(_this.bg);
-	        for (var i = 0; i < 8; i++) {
-	            var ctn = new PIXI.Container();
-	            ctn.x = i * 99;
-	            if (i > 3)
-	                ctn.x += 398;
-	            _this.addChild(ctn);
-	            _this.ctnArr.push(ctn);
-	            var avt = new MaskAvatar_1.MaskAvatar(null);
-	            avt.setAvtPos(375, 930, 83);
-	            ctn.addChild(avt);
-	            _this.avtArr.push(avt);
-	            var item = PixiEx_1.newBitmap({ url: '/img/panel/worldwar/teamMate/item.png' });
-	            ctn.addChild(item);
-	            var blood = TextFac_1.TextFac.new_(ns, ctn)
-	                .setText("")
-	                .setY(914)
-	                .setAlignCenter(370 + 21);
-	            _this.bloodArr.push(blood);
+	        _this.teamNameArr = [];
+	        _this.playerNameArr1 = [];
+	        _this.playerNameArr2 = [];
+	        _this.playerNameArr3 = [];
+	        _this.posArr = [-480 - 77, -77, 480 - 77];
+	        parent.addChild(_this);
+	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/pickTeam/bg.png' });
+	        _this.addChild(bg);
+	        for (var i = 0; i < 3; i++) {
+	            var sp = new MaskAvatar_1.MaskAvatar(null);
+	            sp.setAvtPos(326 + i * 480, 846, 153);
+	            sp.load('http://rtmp.icassi.us:8092/img/player/915/p0.png');
+	            _this.addChild(sp);
+	            _this.avtArr.push(sp);
 	        }
+	        _this.bg1 = new PIXI.Sprite();
+	        _this.bg1.x = -77;
+	        _this.addChild(_this.bg1);
+	        _this.bg2 = new PIXI.Sprite();
+	        _this.bg2.x = 480 - 77;
+	        _this.addChild(_this.bg2);
+	        _this.bg3 = new PIXI.Sprite();
+	        _this.bg3.x = -480 - 77;
+	        _this.addChild(_this.bg3);
+	        _this.colorMap = { '红': _this.bg1, '白': _this.bg2, '绿': _this.bg3 };
+	        ImgLoader_1.imgLoader.loadTexArr([
+	            '/img/panel/pickTeam/bg.png',
+	            '/img/panel/pickTeam/bg1.png',
+	            '/img/panel/pickTeam/bg2.png',
+	            '/img/panel/pickTeam/bg3.png',
+	        ], function (_) {
+	            _this.bg1.texture =
+	                ImgLoader_1.imgLoader.getTex('/img/panel/pickTeam/bg1.png');
+	            _this.bg2.texture =
+	                ImgLoader_1.imgLoader.getTex('/img/panel/pickTeam/bg2.png');
+	            _this.bg3.texture =
+	                ImgLoader_1.imgLoader.getTex('/img/panel/pickTeam/bg3.png');
+	            var ns = {
+	                fontFamily: const_1.FontName.MicrosoftYahei,
+	                fontSize: "32px",
+	                dropShadow: true,
+	                dropShadowColor: '#222222',
+	                dropShadowAngle: Math.PI * 1 / 3,
+	                dropShadowDistance: 3,
+	                fontWeight: "bold",
+	                fill: "#acacac"
+	            };
+	            var name;
+	            var name2;
+	            var name3;
+	            var a = [];
+	            for (var i = 0; i < 3; i++) {
+	                name = TextFac_1.TextFac.new_(ns, _this)
+	                    .setText('')
+	                    .setPos(520, 878 + i * 51);
+	                _this.playerNameArr1.push(name);
+	                name2 = TextFac_1.TextFac.new_(ns, _this)
+	                    .setText('')
+	                    .setPos(1000, name.y);
+	                _this.playerNameArr2.push(name2);
+	                name3 = TextFac_1.TextFac.new_(ns, _this)
+	                    .setText('')
+	                    .setPos(1476, name.y);
+	                _this.playerNameArr3.push(name3);
+	                name = TextFac_1.TextFac.new_(ns, _this)
+	                    .setY(986)
+	                    .setSize("24px")
+	                    .setText("")
+	                    .setAlignCenter(406 + i * 480);
+	                a.push(name);
+	            }
+	            _this.playerNameArr1 = [a[0]].concat(_this.playerNameArr1);
+	            _this.playerNameArr2 = [a[1]].concat(_this.playerNameArr2);
+	            _this.playerNameArr3 = [a[2]].concat(_this.playerNameArr3);
+	        });
 	        return _this;
 	    }
-	    TeamMateBlood.prototype.addCtn = function (parent) {
-	        var teamMateBloodLayer = new PIXI.Container();
-	        parent.addChild(teamMateBloodLayer);
-	        this.teamMateBloodLayer = teamMateBloodLayer;
-	        for (var _i = 0, _a = this.ctnArr; _i < _a.length; _i++) {
-	            var ctn = _a[_i];
-	            teamMateBloodLayer.addChild(ctn);
-	        }
-	        teamMateBloodLayer.addChild(PixiEx_1.newBitmap({ url: '/img/panel/worldwar/teamMate/fg.png' }));
-	        this.setVisible(false);
-	    };
-	    TeamMateBlood.prototype.show = function (data) {
-	        var _this = this;
-	        if (data.visible) {
-	            var avtArr = [];
-	            for (var i = 0; i < 4; i++) {
-	                var lp = data.lScoreArr[i];
-	                var rp = data.rScoreArr[i];
-	                avtArr.push(lp.avatar);
-	                avtArr.push(rp.avatar);
+	    PickTeam.prototype.setData = function (data) {
+	        for (var i = 0; i < 4; i++) {
+	            if (data.teamArr1[i])
+	                this.playerNameArr1[i]
+	                    .setText(data.teamArr1[i]);
+	            if (data.teamArr2[i])
+	                this.playerNameArr2[i]
+	                    .setText(data.teamArr2[i]);
+	            if (data.teamArr3[i])
+	                this.playerNameArr3[i]
+	                    .setText(data.teamArr3[i]);
+	            if (i == 0) {
+	                this.playerNameArr1[i].setAlignCenter();
+	                this.playerNameArr2[i].setAlignCenter();
+	                this.playerNameArr3[i].setAlignCenter();
 	            }
-	            ImgLoader_1.imgLoader.loadTexArr(avtArr, function (_) {
-	                for (var i = 0; i < 4; i++) {
-	                    var lAvt = _this.avtArr[i];
-	                    var lp = data.lScoreArr[i];
-	                    lAvt.load(lp.avatar);
-	                    var lt = _this.bloodArr[i];
-	                    lt.setText(lp.score)
-	                        .setAlignCenter();
-	                    var rAvt = _this.avtArr[i + 4];
-	                    var rp = data.rScoreArr[i];
-	                    rAvt.load(rp.avatar);
-	                    var rt = _this.bloodArr[i + 4];
-	                    rt.setText(rp.score)
-	                        .setAlignCenter();
+	        }
+	    };
+	    PickTeam.prototype.setAvtByRec = function (data) {
+	        console.log('setAvtByRec', data);
+	        var p1, p2, p3;
+	        var n1, n2, n3;
+	        for (var _i = 0, _a = data.bracketRec16; _i < _a.length; _i++) {
+	            var rec = _a[_i];
+	            if (rec.gameIdx == 15) {
+	                if (rec.score[0] > rec.score[1]) {
+	                    p3 = rec.playerId[0];
+	                    this.playerNameArr1[0].setText(rec.player[0]);
 	                }
-	                _this.setVisible(true);
-	            }, true);
-	        }
-	        else {
-	            this.setVisible();
+	                else if (rec.score[0] < rec.score[1]) {
+	                    p3 = rec.playerId[1];
+	                    this.playerNameArr1[0].setText(rec.player[1]);
+	                }
+	                this.avtArr[0].load(avtBase + p3 + '.png');
+	                this.playerNameArr1[0].setAlignCenter();
+	            }
+	            if (rec.gameIdx == 16) {
+	                if (rec.score[0] > rec.score[1]) {
+	                    p1 = rec.playerId[0];
+	                    p2 = rec.playerId[1];
+	                    n1 = rec.player[0];
+	                    n2 = rec.player[1];
+	                }
+	                else if (rec.score[0] < rec.score[1]) {
+	                    p1 = rec.playerId[1];
+	                    p2 = rec.playerId[0];
+	                    n1 = rec.player[1];
+	                    n2 = rec.player[0];
+	                }
+	                this.avtArr[1].load(avtBase + p1 + '.png');
+	                this.avtArr[2].load(avtBase + p2 + '.png');
+	                this.playerNameArr2[0].setText(n1)
+	                    .setAlignCenter();
+	                this.playerNameArr3[0].setText(n2)
+	                    .setAlignCenter();
+	            }
 	        }
 	    };
-	    TeamMateBlood.prototype.setVisible = function (v) {
-	        if (v === void 0) { v = false; }
-	        this.bg.visible = v;
-	        this.teamMateBloodLayer.visible = v;
+	    PickTeam.prototype.setColor = function (data) {
+	        for (var i = 0; i < 3; i++) {
+	            var color = data.colorArr[i];
+	            var sp = this.colorMap[color];
+	            sp.x = this.posArr[i];
+	        }
 	    };
-	    return TeamMateBlood;
+	    return PickTeam;
 	}(PIXI.Container));
-	exports.TeamMateBlood = TeamMateBlood;
+	exports.PickTeam = PickTeam;
 
 
 /***/ })
