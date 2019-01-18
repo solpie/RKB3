@@ -129,18 +129,18 @@ class LowerThird extends BasePanel {
         this.p.addChild(this)
         if (param.cid == CommandId.sc_showPickup) {
             pt.setData(param)
-            pt.visible = data.visible
+            pt.visible = param.visible
             this.p.addChild(pt)
          }
         if (param.cid == CommandId.sc_setTeamColor) {
             pt.setColor(param)
-            pt.visible =  data.visible
+            pt.visible =  param.visible
             this.p.addChild(pt)
           }
 
         if (param.cid == CommandId.sc_bracket) {
             pt.setAvtByRec(param)
-            pt.visible =  data.visible
+            pt.visible =  param.visible
             this.p.addChild(pt)
         }
 
