@@ -68,6 +68,11 @@ export class _PickTeamAdmin extends VueBase {
                 "cont": ["小易_MC小易", "盼盼_路人王官方主播"]
             },
             {
+                "button": "盼盼 小易",
+                "type": 1,//ppd logo 
+                "cont": ["盼盼_路人王官方主播", "小易_MC小易"]
+            },
+            {
                 "button": "gary 杨毅",
                 "type": 1,//ppd logo 
                 "cont": ["gary_路人王官方主播", "杨毅_篮球评论员"]
