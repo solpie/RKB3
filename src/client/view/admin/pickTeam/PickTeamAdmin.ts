@@ -75,22 +75,22 @@ export class _PickTeamAdmin extends VueBase {
             {
                 "button": "Gary 杨毅",
                 "type": 1,//ppd logo 
-                "cont": ["鹅黄Gary_路人王官方主播", "杨毅_篮球评论员"]
+                "cont": ["鹅皇Gary_路人王官方主播", "杨毅_篮球评论员"]
             },
             {
                 "button": "杨毅 Gary",
                 "type": 1,//ppd logo 
-                "cont": ["杨毅_篮球评论员", "鹅黄Gary_路人王官方主播"]
+                "cont": ["杨毅_篮球评论员", "鹅皇Gary_路人王官方主播"]
             },
             {
                 "button": "Gary 堂主",
                 "type": 1,//ppd logo 
-                "cont": ["鹅黄Gary_路人王官方主播", "堂主_路人王官方主播"]
+                "cont": ["鹅皇Gary_路人王官方主播", "堂主_路人王官方主播"]
             },
             {
                 "button": "堂主 Gary",
                 "type": 1,//ppd logo 
-                "cont": ["堂主_路人王官方主播", "鹅黄Gary_路人王官方主播"]
+                "cont": ["堂主_路人王官方主播", "鹅皇Gary_路人王官方主播"]
             },
             //
             {
