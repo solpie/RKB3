@@ -12568,6 +12568,7 @@
 	                this.showOnly(2);
 	            }
 	        }
+	        this.p.addChild(this);
 	        if (param.cid == Command_1.CommandId.sc_showPickup) {
 	            pt.setData(param);
 	            pt.visible = true;
@@ -12583,7 +12584,6 @@
 	            pt.visible = true;
 	            this.p.addChild(pt);
 	        }
-	        this.p.addChild(this);
 	    };
 	    LowerThird.cls = 'LowerThird';
 	    return LowerThird;

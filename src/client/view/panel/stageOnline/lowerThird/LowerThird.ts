@@ -126,7 +126,7 @@ class LowerThird extends BasePanel {
                 this.showOnly(2)
             }
         }
-
+        this.p.addChild(this)
         if (param.cid == CommandId.sc_showPickup) {
             pt.setData(param)
             pt.visible = true
@@ -144,7 +144,7 @@ class LowerThird extends BasePanel {
             this.p.addChild(pt)
         }
 
-        this.p.addChild(this)
+       
     }
 }
 let canvasStage
