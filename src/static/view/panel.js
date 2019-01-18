@@ -12571,17 +12571,17 @@
 	        this.p.addChild(this);
 	        if (param.cid == Command_1.CommandId.sc_showPickup) {
 	            pt.setData(param);
-	            pt.visible = true;
+	            pt.visible = data.visible;
 	            this.p.addChild(pt);
 	        }
 	        if (param.cid == Command_1.CommandId.sc_setTeamColor) {
 	            pt.setColor(param);
-	            pt.visible = true;
+	            pt.visible = data.visible;
 	            this.p.addChild(pt);
 	        }
 	        if (param.cid == Command_1.CommandId.sc_bracket) {
 	            pt.setAvtByRec(param);
-	            pt.visible = true;
+	            pt.visible = data.visible;
 	            this.p.addChild(pt);
 	        }
 	    };
