@@ -11986,14 +11986,6 @@
 	            this.setScoreFoulEvent(data);
 	        }
 	        if (data.cid == Command_1.CommandId.sc_setPlayer) {
-	            this.lScore.setText(data.leftPlayer.blood)
-	                .setAlignCenter(PixiEx_1._c(-300));
-	            this.rScore.setText(data.rightPlayer.blood)
-	                .setAlignCenter(PixiEx_1._c(300));
-	            this.lFoul.setText(0)
-	                .setAlignCenter(PixiEx_1._c(-133));
-	            this.rFoul.setText(0)
-	                .setAlignCenter(PixiEx_1._c(133));
 	            this.lName.setText(data.leftPlayer.name)
 	                .setAlignCenter(PixiEx_1._c(-516));
 	            this.rName.setText(data.rightPlayer.name)

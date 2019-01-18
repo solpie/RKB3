@@ -270,15 +270,15 @@ export class CommonGame extends BasePanel {
         }
 
         if (data.cid == CommandId.sc_setPlayer) {
-            this.lScore.setText(data.leftPlayer.blood)
-                .setAlignCenter(_c(-300))
-            this.rScore.setText(data.rightPlayer.blood)
-                .setAlignCenter(_c(300))
+            // this.lScore.setText(data.leftPlayer.blood)
+            //     .setAlignCenter(_c(-300))
+            // this.rScore.setText(data.rightPlayer.blood)
+            //     .setAlignCenter(_c(300))
 
-            this.lFoul.setText(0)
-                .setAlignCenter(_c(-133))
-            this.rFoul.setText(0)
-                .setAlignCenter(_c(133))
+            // this.lFoul.setText(0)
+            //     .setAlignCenter(_c(-133))
+            // this.rFoul.setText(0)
+            //     .setAlignCenter(_c(133))
 
             this.lName.setText(data.leftPlayer.name)
                 .setAlignCenter(_c(-516))
