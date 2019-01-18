@@ -9,7 +9,8 @@
     </div>
     <br>
     <br>
-    <button class="button is-primary" @click="onShowPick()">emit选人</button>
+    <button class="button is-primary" @click="onShowPick(false)">hide选人</button>
+    <button class="button is-primary" @click="onShowPick(true)">emit选人</button>
     <div style="display: inline-flex">
         队长：
         <ul style="width:200px;overflow:hidden;zoom:1;border:1px solid #ccc">

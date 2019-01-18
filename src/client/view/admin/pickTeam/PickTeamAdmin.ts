@@ -209,7 +209,7 @@ export class _PickTeamAdmin extends VueBase {
                 alert('颜色相同')
             }
         },
-        onShowPick() {
+        onShowPick(v=true) {
             opReq(CommandId.cs_showPickup, {
                 teamArr1: [
                     this.team1_1,
@@ -229,7 +229,7 @@ export class _PickTeamAdmin extends VueBase {
                     this.team3_3,
                     this.team3_4,
                 ],
-                visible: true
+                visible: v
             })
         }
     }
