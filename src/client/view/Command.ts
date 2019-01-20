@@ -123,6 +123,8 @@ export const CommandId = {
     sc_timerEvent_common: '',
     cs_timerEvent_buzzer: '',
     sc_timerEvent_buzzer: '',
+    cs_sync_buzzer: '',
+    sc_sync_buzzer: '',
     cs_scoreFoul_common:'',
     sc_scoreFoul_common:'',
     //

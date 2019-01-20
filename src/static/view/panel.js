@@ -1611,6 +1611,8 @@
 	    sc_timerEvent_common: '',
 	    cs_timerEvent_buzzer: '',
 	    sc_timerEvent_buzzer: '',
+	    cs_sync_buzzer: '',
+	    sc_sync_buzzer: '',
 	    cs_scoreFoul_common: '',
 	    sc_scoreFoul_common: '',
 	    cs_showLowerThird: '',
@@ -11988,6 +11990,11 @@
 	        if (data.cid == Command_1.CommandId.sc_scoreFoul_common) {
 	            this.setScoreFoulEvent(data);
 	        }
+	        if (data.cid == Command_1.CommandId.sc_sync_buzzer) {
+	            if (this.gameTimer1min.visible) {
+	                this.buzzerTimer.setTimeBySec(this.gameTimer1min.timeInSec);
+	            }
+	        }
 	        if (data.cid == Command_1.CommandId.sc_setPlayer) {
 	            this.lName.setText(data.leftPlayer.name)
 	                .setAlignCenter(PixiEx_1._c(-516));
@@ -12041,6 +12048,7 @@
 	        _adept(Command_1.CommandId.sc_timerEvent_buzzer);
 	        _adept(Command_1.CommandId.sc_timerEvent_common);
 	        _adept(Command_1.CommandId.sc_scoreFoul_common);
+	        _adept(Command_1.CommandId.sc_sync_buzzer);
 	        _adept(Command_1.CommandId.sc_setPlayer);
 	    };
 	    return CommonGameView;

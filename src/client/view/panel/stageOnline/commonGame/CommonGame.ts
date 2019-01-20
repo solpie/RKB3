@@ -274,7 +274,12 @@ export class CommonGame extends BasePanel {
         if (data.cid == CommandId.sc_scoreFoul_common) {
             this.setScoreFoulEvent(data)
         }
-
+        if (data.cid == CommandId.sc_sync_buzzer) {
+            if(this.gameTimer1min.visible)
+            {
+                this.buzzerTimer.setTimeBySec(this.gameTimer1min.timeInSec)
+            }
+        }
         if (data.cid == CommandId.sc_setPlayer) {
             // this.lScore.setText(data.leftPlayer.blood)
             //     .setAlignCenter(_c(-300))
@@ -336,6 +341,8 @@ class CommonGameView extends VueBase {
         _adept(CommandId.sc_timerEvent_buzzer)
         _adept(CommandId.sc_timerEvent_common)
         _adept(CommandId.sc_scoreFoul_common)
+        _adept(CommandId.sc_sync_buzzer)
+        // cs_sync_buzzer
         _adept(CommandId.sc_setPlayer)
     }
 }

@@ -73,6 +73,7 @@
         <hr> 进攻时间设置:
         <input class="input" v-model="buzzerTimeInSec" @keyup.enter="onSetBuzzer(buzzerTimeInSec)" type="text" style="width: 100px;">
         <a @click="onSetBuzzer(buzzerTimeInSec)">设置</a>
+        <a @click="onSyncBuzzer()">同步进攻时间</a>
         <a @click="resetBuzzer">reset</a>
         <input id="buzzer" maxlength="1" class="input" type="text" style="width: 60px;"> q 复位并暂停/开始 进攻时间 r复位进攻时间 空格暂停/开始比赛时间和进攻时间
     </div>

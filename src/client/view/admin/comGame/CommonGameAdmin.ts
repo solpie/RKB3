@@ -126,6 +126,9 @@ class _CommonGameAdmin extends VueBase {
             }
             console.log('set buzzer', isNum, v, Number(v) * 100, ms10)
         },
+        onSyncBuzzer(){
+            opReq(CommandId.cs_sync_buzzer, {visible:true })
+        },
         onRestTeamScore() {
             this.lTeamScore = this.rTeamScore = 0
             opReq(CommandId.cs_teamScore, { lScore: this.lTeamScore, rScore: this.rTeamScore });
