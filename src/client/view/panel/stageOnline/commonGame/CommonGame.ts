@@ -199,16 +199,19 @@ export class CommonGame extends BasePanel {
 
             this.timer10ms = new TextTime10ms('', ns)
             this.timer10ms.isMin = true
+            this.timer10ms.minUnit = 1
+            this.gameTimer1min.minUnit = 10
+            this.buzzerTimer.minUnit = 10
 
-            this.timer10ms.setTimeBySec(8 * 60 * 60 * 100)
+            this.timer10ms.setTimeBySec(8 * 60 * 60 * 1000)
             this.timer10ms.on('tick', _ => {
-                console.log('10 ms tick')
+                // console.log('10 ms tick')
                 if (this.gameTimer.visible)
-                    this.gameTimer.tick(0.01)
+                    this.gameTimer.tick(0.1005)
                 if (this.gameTimer1min.visible)
-                    this.gameTimer1min.tick(1)
+                    this.gameTimer1min.tick(100)
                 if (!this.isBlockBuzzer)
-                    this.buzzerTimer.tick()
+                    this.buzzerTimer.tick(100)
             })
 
         })

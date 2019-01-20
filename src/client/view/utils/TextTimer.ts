@@ -70,6 +70,7 @@ export class TextTimer extends PIXI.Text {
     }
   }
   _tickCache = 0
+  minUnit = 1
   tick(n = 1) {
     if (n < 1) {
       this._tickCache += n
@@ -78,7 +79,7 @@ export class TextTimer extends PIXI.Text {
     if (n >= 1) {
       this._tickCache = 0
       if (this.isMin) {
-        this.timeInSec--;
+        this.timeInSec-=this.minUnit;
         if (this.timeInSec < 0)
           this.timeInSec = 0;
 
@@ -119,7 +120,7 @@ export class TextTime10ms extends TextTimer {
     if (this.timerId) clearInterval(this.timerId);
     this.timerId = setInterval(() => {
       this.tick()
-    }, 10);
+    },100);
     this.timerState = TimerState.RUNNING;
   }
 }

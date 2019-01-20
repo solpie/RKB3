@@ -4978,6 +4978,7 @@
 	        _this.isMsTimer = false;
 	        _this.isTimeOut = false;
 	        _this._tickCache = 0;
+	        _this.minUnit = 1;
 	        _this.formatTime = JsFunc_1.formatSecond;
 	        return _this;
 	    }
@@ -5037,7 +5038,7 @@
 	        if (n >= 1) {
 	            this._tickCache = 0;
 	            if (this.isMin) {
-	                this.timeInSec--;
+	                this.timeInSec -= this.minUnit;
 	                if (this.timeInSec < 0)
 	                    this.timeInSec = 0;
 	                if (this.timeInSec < 1 && !this.isTimeOut) {
@@ -5085,7 +5086,7 @@
 	            clearInterval(this.timerId);
 	        this.timerId = setInterval(function () {
 	            _this.tick();
-	        }, 10);
+	        }, 100);
 	        this.timerState = TimerState.RUNNING;
 	    };
 	    return TextTime10ms;
@@ -11918,15 +11919,17 @@
 	            _this.addChild(_this.buzzerTimer);
 	            _this.timer10ms = new TextTimer_1.TextTime10ms('', ns);
 	            _this.timer10ms.isMin = true;
-	            _this.timer10ms.setTimeBySec(8 * 60 * 60 * 100);
+	            _this.timer10ms.minUnit = 1;
+	            _this.gameTimer1min.minUnit = 10;
+	            _this.buzzerTimer.minUnit = 10;
+	            _this.timer10ms.setTimeBySec(8 * 60 * 60 * 1000);
 	            _this.timer10ms.on('tick', function (_) {
-	                console.log('10 ms tick');
 	                if (_this.gameTimer.visible)
-	                    _this.gameTimer.tick(0.01);
+	                    _this.gameTimer.tick(0.1005);
 	                if (_this.gameTimer1min.visible)
-	                    _this.gameTimer1min.tick(1);
+	                    _this.gameTimer1min.tick(100);
 	                if (!_this.isBlockBuzzer)
-	                    _this.buzzerTimer.tick();
+	                    _this.buzzerTimer.tick(100);
 	            });
 	        });
 	    };

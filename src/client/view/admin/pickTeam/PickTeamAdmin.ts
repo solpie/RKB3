@@ -52,16 +52,16 @@ export class _PickTeamAdmin extends VueBase {
         this.teamArr2 = [{ name: '2', playerId: 1 }]
         this.teamArr3 = [{ name: '3', playerId: 1 }]
         this.conf = [
-            {
-                "button": "小易 余霜",
-                "type": 1,//ppd logo 
-                "cont": ["小易_MC小易", "余霜_英雄联盟官方主持"]
-            },
-            {
-                "button": "余霜 小易 ",
-                "type": 1,//ppd logo 
-                "cont": ["余霜_英雄联盟官方主持", "小易_MC小易"]
-            },
+            // {
+            //     "button": "小易 余霜",
+            //     "type": 1,//ppd logo 
+            //     "cont": ["小易_MC小易", "余霜_英雄联盟官方主持"]
+            // },
+            // {
+            //     "button": "余霜 小易 ",
+            //     "type": 1,//ppd logo 
+            //     "cont": ["余霜_英雄联盟官方主持", "小易_MC小易"]
+            // },
             {
                 "button": "小易 盼盼",
                 "type": 1,//ppd logo 
@@ -72,16 +72,16 @@ export class _PickTeamAdmin extends VueBase {
                 "type": 1,//ppd logo 
                 "cont": ["盼盼_路人王官方主播", "小易_MC小易"]
             },
-            {
-                "button": "Gary 杨毅",
-                "type": 1,//ppd logo 
-                "cont": ["鹅皇Gary_路人王官方主播", "杨毅_篮球评论员"]
-            },
-            {
-                "button": "杨毅 Gary",
-                "type": 1,//ppd logo 
-                "cont": ["杨毅_篮球评论员", "鹅皇Gary_路人王官方主播"]
-            },
+            // {
+            //     "button": "Gary 杨毅",
+            //     "type": 1,//ppd logo 
+            //     "cont": ["鹅皇Gary_路人王官方主播", "杨毅_篮球评论员"]
+            // },
+            // {
+            //     "button": "杨毅 Gary",
+            //     "type": 1,//ppd logo 
+            //     "cont": ["杨毅_篮球评论员", "鹅皇Gary_路人王官方主播"]
+            // },
             {
                 "button": "Gary 堂主",
                 "type": 1,//ppd logo 
@@ -94,9 +94,32 @@ export class _PickTeamAdmin extends VueBase {
             },
             //
             {
-                "button": "黄宇军",
+                "button": "陈凯涛",
                 "type": 2,
-                "cont": "黄宇军(军哥)"
+                "cont": "陈凯涛"
+            },
+            {
+                "button": "张天宇",
+                "type": 2,
+                "cont": "张天宇"
+            },
+
+            {
+                "button": "王晶",
+                "type": 2,
+                "cont": "王晶"
+            },
+
+            {
+                "button": "徐长龙",
+                "type": 2,
+                "cont": "徐长龙"
+            },
+
+            {
+                "button": "张智扬",
+                "type": 2,
+                "cont": "张智扬"
             },
             {
                 "button": "马克",
@@ -104,91 +127,75 @@ export class _PickTeamAdmin extends VueBase {
                 "cont": "马克"
             },
             {
-                "button": "王晶",
+                "button": "耿骁骐",
                 "type": 2,
-                "cont": "王晶"
-            },
-            {
-                "button": "张梓祎",
-                "type": 2,
-                "cont": "张梓祎"
-            },
-            {
-                "button": "张帅康",
-                "type": 2,
-                "cont": "张帅康"
-            },
-            {
-                "button": "陈凯涛",
-                "type": 2,
-                "cont": "陈凯涛"
+                "cont": "耿骁骐"
             },
             {
                 "button": "李俊达",
                 "type": 2,
                 "cont": "李俊达"
             },
+
             {
-                "button": "宋流轩",
+                "button": "张梓祎",
                 "type": 2,
-                "cont": "宋流轩(宋教练)"
+                "cont": "张梓祎"
             },
-            {
-                "button": "徐长龙",
-                "type": 2,
-                "cont": "徐长龙"
-            },
-            {
-                "button": "张天宇",
-                "type": 2,
-                "cont": "张天宇"
-            },
-            {
-                "button": "张智扬",
-                "type": 2,
-                "cont": "张智扬"
-            },
-            {
-                "button": "孟亚东",
-                "type": 2,
-                "cont": "孟亚东(平常心)"
-            },
-            {
-                "button": "郝天佶",
-                "type": 2,
-                "cont": "郝天佶(头盔哥)"
-            },
-            {
-                "button": "陈泽文",
-                "type": 2,
-                "cont": "陈泽文"
-            },
-            {
-                "button": "耿骁骐",
-                "type": 2,
-                "cont": "耿骁骐"
-            },
-           
+          
             {
                 "button": "安云鹏",
                 "type": 2,
                 "cont": "安云鹏"
             },
             {
-                "button": "张祎逊",
+                "button": "张帅康",
                 "type": 2,
-                "cont": "张祎逊"
+                "cont": "张帅康"
+            },
+            
+            {
+                "button": "孟亚东",
+                "type": 2,
+                "cont": "孟亚东(平常心)"
+            }            ,
+            {
+                "button": "Rudan",
+                "type": 2,
+                "cont": "Rudan"
+            },
+
+            // {
+            //     "button": "郝天佶",
+            //     "type": 2,
+            //     "cont": "郝天佶(头盔哥)"
+            // },
+            {
+                "button": "Ivan",
+                "type": 2,
+                "cont": "Ivan"
             },
             {
-                "button": "矣进宏",
+                "button": "Dusan",
                 "type": 2,
-                "cont": "矣进宏"
+                "cont": "Dusan"
             },
             {
-                "button": "小青龙",
+                "button": "Milos",
                 "type": 2,
-                "cont": "说唱歌手：小青龙"
+                "cont": "Milos"
             }
+            // ,
+            // {
+            //     "button": "矣进宏",
+            //     "type": 2,
+            //     "cont": "矣进宏"
+            // },
+            // {
+            //     "button": "小青龙",
+            //     "type": 2,
+            //     "cont": "说唱歌手：小青龙"
+            // }
         ]
     }
     methods = {

@@ -4184,16 +4184,6 @@
 	        this.teamArr3 = [{ name: '3', playerId: 1 }];
 	        this.conf = [
 	            {
-	                "button": "小易 余霜",
-	                "type": 1,
-	                "cont": ["小易_MC小易", "余霜_英雄联盟官方主持"]
-	            },
-	            {
-	                "button": "余霜 小易 ",
-	                "type": 1,
-	                "cont": ["余霜_英雄联盟官方主持", "小易_MC小易"]
-	            },
-	            {
 	                "button": "小易 盼盼",
 	                "type": 1,
 	                "cont": ["小易_MC小易", "盼盼_路人王官方主播"]
@@ -4202,16 +4192,6 @@
 	                "button": "盼盼 小易",
 	                "type": 1,
 	                "cont": ["盼盼_路人王官方主播", "小易_MC小易"]
-	            },
-	            {
-	                "button": "Gary 杨毅",
-	                "type": 1,
-	                "cont": ["鹅皇Gary_路人王官方主播", "杨毅_篮球评论员"]
-	            },
-	            {
-	                "button": "杨毅 Gary",
-	                "type": 1,
-	                "cont": ["杨毅_篮球评论员", "鹅皇Gary_路人王官方主播"]
 	            },
 	            {
 	                "button": "Gary 堂主",
@@ -4224,49 +4204,9 @@
 	                "cont": ["堂主_路人王官方主播", "鹅皇Gary_路人王官方主播"]
 	            },
 	            {
-	                "button": "黄宇军",
-	                "type": 2,
-	                "cont": "黄宇军(军哥)"
-	            },
-	            {
-	                "button": "马克",
-	                "type": 2,
-	                "cont": "马克"
-	            },
-	            {
-	                "button": "王晶",
-	                "type": 2,
-	                "cont": "王晶"
-	            },
-	            {
-	                "button": "张梓祎",
-	                "type": 2,
-	                "cont": "张梓祎"
-	            },
-	            {
-	                "button": "张帅康",
-	                "type": 2,
-	                "cont": "张帅康"
-	            },
-	            {
 	                "button": "陈凯涛",
 	                "type": 2,
 	                "cont": "陈凯涛"
-	            },
-	            {
-	                "button": "李俊达",
-	                "type": 2,
-	                "cont": "李俊达"
-	            },
-	            {
-	                "button": "宋流轩",
-	                "type": 2,
-	                "cont": "宋流轩(宋教练)"
-	            },
-	            {
-	                "button": "徐长龙",
-	                "type": 2,
-	                "cont": "徐长龙"
 	            },
 	            {
 	                "button": "张天宇",
@@ -4274,24 +4214,24 @@
 	                "cont": "张天宇"
 	            },
 	            {
+	                "button": "王晶",
+	                "type": 2,
+	                "cont": "王晶"
+	            },
+	            {
+	                "button": "徐长龙",
+	                "type": 2,
+	                "cont": "徐长龙"
+	            },
+	            {
 	                "button": "张智扬",
 	                "type": 2,
 	                "cont": "张智扬"
 	            },
 	            {
-	                "button": "孟亚东",
+	                "button": "马克",
 	                "type": 2,
-	                "cont": "孟亚东(平常心)"
-	            },
-	            {
-	                "button": "郝天佶",
-	                "type": 2,
-	                "cont": "郝天佶(头盔哥)"
-	            },
-	            {
-	                "button": "陈泽文",
-	                "type": 2,
-	                "cont": "陈泽文"
+	                "cont": "马克"
 	            },
 	            {
 	                "button": "耿骁骐",
@@ -4299,24 +4239,49 @@
 	                "cont": "耿骁骐"
 	            },
 	            {
+	                "button": "李俊达",
+	                "type": 2,
+	                "cont": "李俊达"
+	            },
+	            {
+	                "button": "张梓祎",
+	                "type": 2,
+	                "cont": "张梓祎"
+	            },
+	            {
 	                "button": "安云鹏",
 	                "type": 2,
 	                "cont": "安云鹏"
 	            },
 	            {
-	                "button": "张祎逊",
+	                "button": "张帅康",
 	                "type": 2,
-	                "cont": "张祎逊"
+	                "cont": "张帅康"
 	            },
 	            {
-	                "button": "矣进宏",
+	                "button": "孟亚东",
 	                "type": 2,
-	                "cont": "矣进宏"
+	                "cont": "孟亚东(平常心)"
 	            },
 	            {
-	                "button": "小青龙",
+	                "button": "Rudan",
 	                "type": 2,
-	                "cont": "说唱歌手：小青龙"
+	                "cont": "Rudan"
+	            },
+	            {
+	                "button": "Ivan",
+	                "type": 2,
+	                "cont": "Ivan"
+	            },
+	            {
+	                "button": "Dusan",
+	                "type": 2,
+	                "cont": "Dusan"
+	            },
+	            {
+	                "button": "Milos",
+	                "type": 2,
+	                "cont": "Milos"
 	            }
 	        ];
 	    };
