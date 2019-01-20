@@ -11778,9 +11778,9 @@
 	var urlMask = '/html/ww/bottomBlood/avtMask.png';
 	var isTest = false;
 	var urlBase = 'http://rtmp.icassi.us:8092/img/player/915/';
-	var resetGameTime = 7 * 60;
+	var resetGameTime = 20 * 60;
 	var resetGameTime1min = 60 * 100;
-	var resetBuzzerTime = 20 * 100;
+	var resetBuzzerTime = 14 * 100;
 	var buzzer;
 	var CommonGame = (function (_super) {
 	    __extends(CommonGame, _super);
@@ -11925,7 +11925,7 @@
 	            _this.timer10ms.setTimeBySec(8 * 60 * 60 * 1000);
 	            _this.timer10ms.on('tick', function (_) {
 	                if (_this.gameTimer.visible)
-	                    _this.gameTimer.tick(0.1005);
+	                    _this.gameTimer.tick(0.101);
 	                if (_this.gameTimer1min.visible)
 	                    _this.gameTimer1min.tick(100);
 	                if (!_this.isBlockBuzzer)

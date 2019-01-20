@@ -12,9 +12,9 @@ let urlFg = '/html/ww/bottomBlood/fg2.png'
 let urlMask = '/html/ww/bottomBlood/avtMask.png'
 const isTest = false
 const urlBase = 'http://rtmp.icassi.us:8092/img/player/915/'
-const resetGameTime = 7 * 60
+const resetGameTime = 20 * 60
 const resetGameTime1min = 60 * 100
-const resetBuzzerTime = 20 * 100
+const resetBuzzerTime = 14 * 100
 
 let buzzer;
 export class CommonGame extends BasePanel {
@@ -176,6 +176,9 @@ export class CommonGame extends BasePanel {
             this.gameTimer1min.visible = false
             this.gameTimer1min.x = this.gameTimer.x
             this.gameTimer1min.y = this.gameTimer.y
+            // this.gameTimer1min.on('timeout', _ => {
+            //     buzzer.play();
+            // })
             this.addChild(this.gameTimer1min)
 
 
@@ -207,7 +210,7 @@ export class CommonGame extends BasePanel {
             this.timer10ms.on('tick', _ => {
                 // console.log('10 ms tick')
                 if (this.gameTimer.visible)
-                    this.gameTimer.tick(0.1005)
+                    this.gameTimer.tick(0.101)
                 if (this.gameTimer1min.visible)
                     this.gameTimer1min.tick(100)
                 if (!this.isBlockBuzzer)
