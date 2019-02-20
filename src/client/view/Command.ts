@@ -125,8 +125,8 @@ export const CommandId = {
     sc_timerEvent_buzzer: '',
     cs_sync_buzzer: '',
     sc_sync_buzzer: '',
-    cs_scoreFoul_common:'',
-    sc_scoreFoul_common:'',
+    cs_scoreFoul_common: '',
+    sc_scoreFoul_common: '',
     //
     cs_showLowerThird: '',//
     sc_showLowerThird: '',//
@@ -161,7 +161,7 @@ export const CommandId = {
     sc_showBottle: '',
     cs_setPlayer: '',
     sc_setPlayer: '',
-    
+
     cs_setTeam: '',
     sc_setTeam: '',
     //---------------- 5v5 panel
@@ -216,10 +216,13 @@ export const CommandId = {
     sc_teamScore: '',
     cs_timeOut: '',
     sc_timeOut: '',
-    sc_bracket:'',
-    cs_bracket:'',
-    sc_bracketS5:'',
-    cs_bracketS5:'',
+    sc_bracket: '',
+    cs_bracket: '',
+    sc_bracketS5: '',
+    cs_bracketS5: '',
+    //vs info
+    cs_vsInfo: '',
+    sc_vsInfo: '',
     //// RKB
     cs_attack: '',
     attack: '',
