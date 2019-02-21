@@ -1,5 +1,6 @@
 import { $post, proxy, $postFormData, $postFormData2 } from './WebJsFunc';
 declare let $;
+export let hupuWsEvent = { 'START_GAME': 'startGame','INIT':'init' }
 export let getHupuWS = (callback) => {
     // let url = 'http://test.jrstvapi.hupu.com/zhubo/getNodeServer'
     // $.get(proxy(url), (res) => {
@@ -11,7 +12,9 @@ export let getHupuWS = (callback) => {
     // })
     let ws = 'tcp.lb.liangle.com:3081'
     console.log('ws:', ws);
-    callback(ws)
+    if (callback)
+        callback(ws)
+    return ws
     // callback('tcp.lb.liangle.com:3081')
 }
 //开题延时
@@ -25,7 +28,7 @@ export function setClientDelay(gameId, sec, callback) {
 export function postRank16(rankData, callback) {
     let url = `http://pre.liangle.com/api/create/game/jifen`
     console.log('postRank16', rankData)
-    $postFormData2(proxy(url) +'&form=1', rankData , callback)
+    $postFormData2(proxy(url) + '&form=1', rankData, callback)
 }
 
 export function getClientDelay(gameId, callback) {

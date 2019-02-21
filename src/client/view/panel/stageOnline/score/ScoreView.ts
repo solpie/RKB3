@@ -327,7 +327,6 @@ export class ScoreView extends BasePanelView {
                     game_id: this.gameId,
                     page: 'score'
                 })
-
                 // TweenEx.delayedCall(3000, () => {
                 //     if (!isRunning)
                 //         this.initDefaultPlayer()

@@ -1318,10 +1318,13 @@
 	"use strict";
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var WebJsFunc_1 = __webpack_require__(25);
+	exports.hupuWsEvent = { 'START_GAME': 'startGame', 'INIT': 'init' };
 	exports.getHupuWS = function (callback) {
 	    var ws = 'tcp.lb.liangle.com:3081';
 	    console.log('ws:', ws);
-	    callback(ws);
+	    if (callback)
+	        callback(ws);
+	    return ws;
 	};
 	function setClientDelay(gameId, sec, callback) {
 	    var url = "http://pre.liangle.com/api/pbk/event/delay/" + gameId;
@@ -2121,6 +2124,8 @@
 	    cs_bracket: '',
 	    sc_bracketS5: '',
 	    cs_bracketS5: '',
+	    cs_vsInfo: '',
+	    sc_vsInfo: '',
 	    cs_attack: '',
 	    attack: '',
 	    cs_addHealth: '',
