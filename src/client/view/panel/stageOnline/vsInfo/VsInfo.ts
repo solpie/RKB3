@@ -10,20 +10,20 @@ let urlBg = '/img/panel/bracket/s5/bg.png'
 
 class VsInfo extends BasePanel {
     static cls = 'VsInfo'
-    lZhiye: Text2
-    rZhiye: Text2
+    lJob: Text2//Job
+    rJob: Text2
 
-    lCity: Text2
-    rCity: Text2
+    lLocation: Text2//location
+    rLocation: Text2
 
-    lCollege: Text2
+    lCollege: Text2//school
     rCollege: Text2
 
-    lInfo: Text2
+    lInfo: Text2//entry_reflections
     rInfo: Text2
 
-    lStart: Text2
-    rStart: Text2
+    lConstellation: Text2//constellation
+    rConstellation: Text2
 
     create() {
         let imgArr = [urlBg
@@ -44,10 +44,10 @@ class VsInfo extends BasePanel {
                 fontWeight: "bold",
                 fill: "#acacac"
             };
-            this.lZhiye = TextFac.new_(ns, this)
+            this.lJob = TextFac.new_(ns, this)
                 .setY(30)
-            this.rZhiye = TextFac.new_(ns, this)
-                .setY(this.lZhiye.y)
+            this.rJob = TextFac.new_(ns, this)
+                .setY(this.lJob.y)
             
             this.addChild(newBitmap({ url: urlBg }))
         })
