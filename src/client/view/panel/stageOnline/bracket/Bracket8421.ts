@@ -7,38 +7,29 @@ import { _c, newBitmap } from '../../../utils/PixiEx';
 import { TextFac } from '../../../utils/TextFac';
 
 
-let urlBg = '/img/panel/bracket/s5/bg.png'
+let urlBg = '/img/panel/bracket/s5/bg_8421.png'
 
-class BracketS5Final extends BasePanel {
-    static cls = 'BracketS5Final'
+class Bracket8421 extends BasePanel {
+    static cls = 'Bracket8421'
     groupMap: any
     create() {
         let imgArr = [urlBg
             // , urlFg
         ]
-        let x0 = 730, x1 = 421, x2 = 421 - 252
+        let x0 = 652, x1 = 421, x2 = 421 - 252
         let groupMap = {
-            "1": { x: _c(-x0), y: 252 }
-            , "2": { x: _c(-x0), y: 383 }
-            , "3": { x: _c(-x0), y: 540 }
-            , "4": { x: _c(-x0), y: 671 }
+            "1": { x: _c(-x0), y: 426 }
+            , "2": { x: _c(-x0), y: 777 }
 
-            , "5": { x: _c(x0), y: 252 }
-            , "6": { x: _c(x0), y: 383 }
-            , "7": { x: _c(x0), y: 540 }
-            , "8": { x: _c(x0), y: 671 }
+            , "3": { x: _c(x0), y: 426 }
+            , "4": { x: _c(x0), y: 777 }
 
-            , "9": { x: _c(-x1), y: 318 }
-            , "10": { x: _c(-x1), y: 612 }
+            , "5": { x: _c(-248), y: 606 }
 
-            , "11": { x: _c(x1), y: 318 }
-            , "12": { x: _c(x1), y: 612 }
+            , "6": { x: _c(248), y: 606 }
 
-            , "13": { x: _c(-x2), y: 467 }
-            , "14": { x: _c(x2), y: 467 }
-
-            , "15": { x: 125, y: 749 }
-            , "16": { x: 125, y: 220 }
+            , "7": { x: 114, y: 408 }
+            , "8": { x: 166, y: 214 }
         }
         this.groupMap = groupMap
         this.addChild(new PIXI.Graphics()
@@ -48,7 +39,8 @@ class BracketS5Final extends BasePanel {
             console.log('on loaded imgArr')
             let ns = {
                 fontFamily: FontName.MicrosoftYahei,
-                fontSize: "30px",
+                fontSize: "35px",
+
                 dropShadow: true,
                 dropShadowColor: '#222222',
                 dropShadowAngle: Math.PI * 1 / 3,
@@ -65,7 +57,7 @@ class BracketS5Final extends BasePanel {
                     .setText('')
                 group.rName = TextFac.new_(ns, this)
                     .setText('')
-                if (Number(k) > 14) {
+                if (Number(k) > 6) {
                     group.lName.setSize('43px')
                     group.rName.setSize('43px')
                     group.lName.setPos(group.x, group.y)
@@ -76,7 +68,7 @@ class BracketS5Final extends BasePanel {
                 else {
                     group.lName.setPos(group.x, group.y)
                         .setAlignCenter(group.x)
-                    group.rName.setPos(group.x, group.y + 43)
+                    group.rName.setPos(group.x, group.y + 51)
                         .setAlignCenter(group.x)
                 }
             }
@@ -86,7 +78,7 @@ class BracketS5Final extends BasePanel {
         let rec = data.bracketRec16
         for (let r of rec) {
             let group = this.groupMap[r.gameIdx]
-            if (r.gameIdx > 14) {
+            if (r.gameIdx > 6) {
                 group.lName.setText(r.player[0])
                     .setAlignCenter(_c(group.x))
                 group.rName.setText(r.player[1])
@@ -127,29 +119,29 @@ let canvasStage
 declare let io;
 class Bracket8421View extends VueBase {
     protected mounted() {
-        console.log('mouted BracketS5FinalView view');
+        console.log('mouted Bracket8421View view');
         if (!canvasStage)
             canvasStage = BasePanelView.initPixi()
-        // showPanel(BracketS5Final, { visible: true }, canvasStage)
-        // showPanel(BracketS5Team, { visible: true }, canvasStage)
+        showPanel(Bracket8421, { visible: true }, canvasStage)
         let localWs = io.connect(`/${PanelId.rkbPanel}`)
         localWs.on('connect', (msg) => {
             console.log('connect', window.location.host)
         })
-            .on(CommandId.sc_bracketS5, data => {
-                data.cid = CommandId.sc_bracketS5
+            .on(CommandId.sc_bracket, data => {
+                console.log('sc bracket')
+                data.cid = CommandId.sc_bracket
                 data.visible = true
-                // showPanel(BracketS5Team, data, canvasStage)
+                showPanel(Bracket8421, data, canvasStage)
             })
-        let _adept = (event) => {
-            localWs.on(event, data => {
-                data.cid = event
-                data.visible = true
-                console.log(event, data)
-                // showPanel(BracketS5Final, data, canvasStage)
-            })
-        }
-        _adept(CommandId.sc_bracket)
+        // let _adept = (event) => {
+        //     localWs.on(event, data => {
+        //         data.cid = event
+        //         data.visible = true
+        //         console.log(event, data)
+        //         // showPanel(BracketS5Final, data, canvasStage)
+        //     })
+        // }
+        // _adept(CommandId.sc_bracket)
     }
 }
 export let bracket8421 = new Bracket8421View()

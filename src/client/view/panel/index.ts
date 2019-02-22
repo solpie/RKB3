@@ -13,6 +13,7 @@ import { commonGame } from './stageOnline/commonGame/CommonGame';
 import { bracketS5Final } from './stageOnline/bracket/BracketS5Final';
 import { lowerThird } from './stageOnline/lowerThird/LowerThird';
 import { vsInfo } from './stageOnline/vsInfo/VsInfo';
+import { bracket8421 } from './stageOnline/bracket/Bracket8421';
 //////////////
 
 let routes = [
@@ -22,7 +23,8 @@ let routes = [
     },
     {
         path: '/bracketS5',
-        components: { default: bracketS5Final }
+        components: { default: bracket8421 }
+        // components: { default: bracketS5Final }
     },
     {
         path: '/vsInfo',
