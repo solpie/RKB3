@@ -12942,27 +12942,25 @@
 	        if (data.left) {
 	            var lPlayer = data.left;
 	            var rPlayer = data.right;
-	            this.lJob.setText(lPlayer.job);
-	            this.rJob.setText(rPlayer.job);
 	            this.lConstellation.setText(lPlayer.constellation)
 	                .setAlignRight(PixiEx_1._c(-335));
 	            this.rConstellation.setText(rPlayer.constellation)
 	                .setX(PixiEx_1._c(335));
-	            this.lInfo.setText(lPlayer.entry_reflections || "这家伙很懒")
+	            this.lInfo.setText(lPlayer.entry_reflections || "无")
 	                .setAlignRight(PixiEx_1._c(-335));
-	            this.rInfo.setText(rPlayer.entry_reflections || "这家伙很懒")
+	            this.rInfo.setText(rPlayer.entry_reflections || "无")
 	                .setX(PixiEx_1._c(335));
-	            this.lSchool.setText(lPlayer.school)
+	            this.lSchool.setText(lPlayer.school || '未知')
 	                .setAlignRight(PixiEx_1._c(-335));
-	            this.rSchool.setText(rPlayer.school)
+	            this.rSchool.setText(rPlayer.school || '未知')
 	                .setX(PixiEx_1._c(335));
-	            this.lLocation.setText(lPlayer.location)
+	            this.lLocation.setText(lPlayer.location || '未知')
 	                .setAlignRight(PixiEx_1._c(-335));
-	            this.rLocation.setText(rPlayer.location)
+	            this.rLocation.setText(rPlayer.location || '未知')
 	                .setX(PixiEx_1._c(335));
-	            this.lJob.setText(lPlayer.job || '无')
+	            this.lJob.setText(lPlayer.job || '未知')
 	                .setAlignRight(PixiEx_1._c(-335));
-	            this.rJob.setText(rPlayer.job || '无')
+	            this.rJob.setText(rPlayer.job || '未知')
 	                .setX(PixiEx_1._c(335));
 	            this.lName.setText(lPlayer.name)
 	                .setAlignCenter(PixiEx_1._c(-178));
