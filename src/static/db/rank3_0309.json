@@ -12,7 +12,7 @@
         "3": "",
         "4": ""
     },
-    "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/915/",
+    "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/0309/",
     "rec-show": 1,
     "isShowPick": 0,
     "group": {
@@ -85,11 +85,7 @@
         ["p9_毕博文", 0],
         ["p10_乔翔泽", 0],
         ["p11_杜超", 0],
-        ["p12_古展腾", 0],
-        ["p13_韩曙光", -1],
-        ["p14_陈泽文", -1],
-        ["p15_马克", -1],
-        ["p16_郭凌川", -1]
+        ["p12_古展腾", 0]
     ],
     "rank8": [{
             "playerId": "p1",

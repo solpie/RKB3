@@ -2,7 +2,7 @@
     "date": "2018-12-30",
     "foulToHint": 3,
     "dbUrl": "http://rtmp.icassi.us:8090/event?idx=0309_1",
-    "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/915/",
+    "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/0309/",
     "vs": [1, 2],
     "rec": [{
         "vs": [3, 4],
