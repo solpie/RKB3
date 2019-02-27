@@ -62,15 +62,16 @@ export class _PickTeamAdmin extends VueBase {
             //     "type": 1,//ppd logo 
             //     "cont": ["余霜_英雄联盟官方主持", "小易_MC小易"]
             // },
+            //lowerthird
             {
-                "button": "小易 盼盼",
+                "button": "盼盼 姜冕",
                 "type": 1,//ppd logo 
-                "cont": ["小易_MC小易", "盼盼_路人王官方主播"]
+                "cont": ["盼盼_路人王官方主播", "姜冕_路人王官方主播"]
             },
             {
-                "button": "盼盼 小易",
+                "button": "姜冕 盼盼",
                 "type": 1,//ppd logo 
-                "cont": ["盼盼_路人王官方主播", "小易_MC小易"]
+                "cont": ["姜冕_路人王官方主播", "盼盼_路人王官方主播"]
             },
             // {
             //     "button": "Gary 杨毅",
@@ -94,108 +95,55 @@ export class _PickTeamAdmin extends VueBase {
             },
             //
             {
-                "button": "陈凯涛",
-                "type": 2,
-                "cont": "陈凯涛"
-            },
-            {
-                "button": "张天宇",
-                "type": 2,
-                "cont": "张天宇"
-            },
-
-            {
-                "button": "王晶",
-                "type": 2,
-                "cont": "王晶"
-            },
-
-            {
-                "button": "徐长龙",
-                "type": 2,
-                "cont": "徐长龙"
-            },
-
-            {
-                "button": "张智扬",
-                "type": 2,
-                "cont": "张智扬"
-            },
-            {
-                "button": "马克",
-                "type": 2,
-                "cont": "马克"
-            },
-            {
-                "button": "耿骁骐",
-                "type": 2,
-                "cont": "耿骁骐"
-            },
-            {
-                "button": "李俊达",
-                "type": 2,
-                "cont": "李俊达"
-            },
-
-            {
-                "button": "张梓祎",
-                "type": 2,
-                "cont": "张梓祎"
-            },
-          
-            {
-                "button": "安云鹏",
-                "type": 2,
-                "cont": "安云鹏"
-            },
-            {
-                "button": "张帅康",
-                "type": 2,
-                "cont": "张帅康"
-            },
-            
-            {
                 "button": "孟亚东",
                 "type": 2,
-                "cont": "孟亚东(平常心)"
-            }            ,
+                "cont": "孟亚东"
+            },
             {
-                "button": "Rudan",
+                "button": "黄宇军",
                 "type": 2,
-                "cont": "Rudan"
+                "cont": "黄宇军"
             },
 
-            // {
-            //     "button": "郝天佶",
-            //     "type": 2,
-            //     "cont": "郝天佶(头盔哥)"
-            // },
             {
-                "button": "Ivan",
+                "button": "宋流轩",
                 "type": 2,
-                "cont": "Ivan"
+                "cont": "宋流轩"
+            },
+
+            {
+                "button": "方良超",
+                "type": 2,
+                "cont": "方良超"
+            },
+
+            {
+                "button": "董康潮",
+                "type": 2,
+                "cont": "董康潮"
             },
             {
-                "button": "Dusan",
+                "button": "崔超",
                 "type": 2,
-                "cont": "Dusan"
+                "cont": "崔超"
             },
             {
-                "button": "Milos",
+                "button": "柳杨杰",
                 "type": 2,
-                "cont": "Milos"
-            }
-            // ,
-            // {
-            //     "button": "矣进宏",
-            //     "type": 2,
-            //     "cont": "矣进宏"
-            // },
-            // {
-            //     "button": "小青龙",
-            //     "type": 2,
-            //     "cont": "说唱歌手：小青龙"
-            // }
+                "cont": "柳杨杰"
+            },
+            {
+                "button": "鲁静思",
+                "type": 2,
+                "cont": "鲁静思"
+            },
+
+            {
+                "button": "King handls",
+                "type": 2,
+                "cont": "King handls"
+            },
+
         ]
     }
     methods = {
@@ -216,7 +164,7 @@ export class _PickTeamAdmin extends VueBase {
                 alert('颜色相同')
             }
         },
-        onShowPick(v=true) {
+        onShowPick(v = true) {
             opReq(CommandId.cs_showPickup, {
                 teamArr1: [
                     this.team1_1,

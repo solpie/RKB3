@@ -4,7 +4,7 @@ import { PanelId, FontName } from '../../../const';
 import { showPanel, BasePanel } from '../../base/BasePanel';
 import { CommandId } from '../../../Command';
 import { _c, newBitmap } from '../../../utils/PixiEx';
-import { TextFac } from '../../../utils/TextFac';
+import { TextFac, Text2 } from '../../../utils/TextFac';
 
 
 let urlBg = '/img/panel/bracket/s5/bg_8421.png'
@@ -12,6 +12,7 @@ let urlBg = '/img/panel/bracket/s5/bg_8421.png'
 class Bracket8421 extends BasePanel {
     static cls = 'Bracket8421'
     groupMap: any
+    finalScore: Text2
     create() {
         let imgArr = [urlBg
             // , urlFg
@@ -72,6 +73,12 @@ class Bracket8421 extends BasePanel {
                         .setAlignCenter(group.x)
                 }
             }
+
+            this.finalScore = TextFac.new_(ns, this)
+                .setY(283)
+                .setSize("36px")
+                .setText('')
+                .setAlignCenter(_c(0))
         })
     }
     fillData(data) {
