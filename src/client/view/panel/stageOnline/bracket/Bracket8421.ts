@@ -30,7 +30,7 @@ class Bracket8421 extends BasePanel {
             , "6": { x: _c(248), y: 606 }
 
             , "7": { x: 114, y: 408 }
-            , "8": { x: 166, y: 214 }
+            , "8": { x: 169, y: 214 }
         }
         this.groupMap = groupMap
         this.addChild(new PIXI.Graphics()
@@ -59,8 +59,8 @@ class Bracket8421 extends BasePanel {
                 group.rName = TextFac.new_(ns, this)
                     .setText('')
                 if (Number(k) > 6) {
-                    group.lName.setSize('43px')
-                    group.rName.setSize('43px')
+                    group.lName.setSize('42px')
+                    group.rName.setSize('42px')
                     group.lName.setPos(group.x, group.y)
                         .setAlignCenter(_c(group.x))
                     group.rName.setPos(group.x, group.y)
@@ -75,40 +75,54 @@ class Bracket8421 extends BasePanel {
             }
 
             this.finalScore = TextFac.new_(ns, this)
-                .setY(283)
+                .setY(293)
                 .setSize("36px")
                 .setText('')
                 .setAlignCenter(_c(0))
         })
     }
     fillData(data) {
-        let rec = data.bracketRec16
-        for (let r of rec) {
-            let group = this.groupMap[r.gameIdx]
-            if (r.gameIdx > 6) {
-                group.lName.setText(r.player[0])
-                    .setAlignCenter(_c(group.x))
-                group.rName.setText(r.player[1])
+        let recArr = data.bracketRec16
+        for (let rec of recArr) {
+            let group = this.groupMap[rec.gameIdx]
+            if (rec.gameIdx > 6) {
+                group.lName.setText(rec.player[0])
                     .setAlignCenter(_c(-group.x))
+
+                group.rName.setText(rec.player[1])
+                    .setAlignCenter(_c(group.x))
+
+                if (group.rName.width > 170) {
+                    group.rName.setSize('38px')
+                        .setAlignCenter(_c(group.x))
+                }
             }
             else {
-                group.lName.setText(r.player[0])
+                group.lName.setText(rec.player[0])
                     .setAlignCenter(group.x)
-                group.rName.setText(r.player[1])
+                group.rName.setText(rec.player[1])
                     .setAlignCenter(group.x)
             }
 
-            let lScore = r.score[0], rScore = r.score[1]
+            let lScore = rec.score[0], rScore = rec.score[1]
 
             group.lName.alpha =
                 group.rName.alpha = 1
-            if (r.score[0] != 0 || r.score[1] != 0) {
+            if (rec.score[0] != 0 || rec.score[1] != 0) {
                 if (lScore > rScore) {
                     group.rName.alpha = 0.4
                 }
                 else {
                     group.lName.alpha = 0.4
                 }
+            }
+
+            if (rec.gameIdx == 8&&rec.player[0]
+            ) {
+                this.finalScore.setText(rec.score[0] + ' - ' + rec.score[1])
+                    .setAlignCenter(_c(0))
+                group.lName.alpha =
+                    group.rName.alpha = 1
             }
         }
     }

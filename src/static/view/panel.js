@@ -12681,7 +12681,7 @@
 	            "5": { x: PixiEx_1._c(-248), y: 606 },
 	            "6": { x: PixiEx_1._c(248), y: 606 },
 	            "7": { x: 114, y: 408 },
-	            "8": { x: 166, y: 214 }
+	            "8": { x: 169, y: 214 }
 	        };
 	        this.groupMap = groupMap;
 	        this.addChild(new PIXI.Graphics()
@@ -12707,8 +12707,8 @@
 	                group.rName = TextFac_1.TextFac.new_(ns, _this)
 	                    .setText('');
 	                if (Number(k) > 6) {
-	                    group.lName.setSize('43px');
-	                    group.rName.setSize('43px');
+	                    group.lName.setSize('42px');
+	                    group.rName.setSize('42px');
 	                    group.lName.setPos(group.x, group.y)
 	                        .setAlignCenter(PixiEx_1._c(group.x));
 	                    group.rName.setPos(group.x, group.y)
@@ -12722,39 +12722,49 @@
 	                }
 	            }
 	            _this.finalScore = TextFac_1.TextFac.new_(ns, _this)
-	                .setY(283)
+	                .setY(293)
 	                .setSize("36px")
 	                .setText('')
 	                .setAlignCenter(PixiEx_1._c(0));
 	        });
 	    };
 	    Bracket8421.prototype.fillData = function (data) {
-	        var rec = data.bracketRec16;
-	        for (var _i = 0, rec_1 = rec; _i < rec_1.length; _i++) {
-	            var r = rec_1[_i];
-	            var group = this.groupMap[r.gameIdx];
-	            if (r.gameIdx > 6) {
-	                group.lName.setText(r.player[0])
-	                    .setAlignCenter(PixiEx_1._c(group.x));
-	                group.rName.setText(r.player[1])
+	        var recArr = data.bracketRec16;
+	        for (var _i = 0, recArr_1 = recArr; _i < recArr_1.length; _i++) {
+	            var rec = recArr_1[_i];
+	            var group = this.groupMap[rec.gameIdx];
+	            if (rec.gameIdx > 6) {
+	                group.lName.setText(rec.player[0])
 	                    .setAlignCenter(PixiEx_1._c(-group.x));
+	                group.rName.setText(rec.player[1])
+	                    .setAlignCenter(PixiEx_1._c(group.x));
+	                if (group.rName.width > 170) {
+	                    group.rName.setSize('38px')
+	                        .setAlignCenter(PixiEx_1._c(group.x));
+	                }
 	            }
 	            else {
-	                group.lName.setText(r.player[0])
+	                group.lName.setText(rec.player[0])
 	                    .setAlignCenter(group.x);
-	                group.rName.setText(r.player[1])
+	                group.rName.setText(rec.player[1])
 	                    .setAlignCenter(group.x);
 	            }
-	            var lScore = r.score[0], rScore = r.score[1];
+	            var lScore = rec.score[0], rScore = rec.score[1];
 	            group.lName.alpha =
 	                group.rName.alpha = 1;
-	            if (r.score[0] != 0 || r.score[1] != 0) {
+	            if (rec.score[0] != 0 || rec.score[1] != 0) {
 	                if (lScore > rScore) {
 	                    group.rName.alpha = 0.4;
 	                }
 	                else {
 	                    group.lName.alpha = 0.4;
 	                }
+	            }
+	            if (rec.gameIdx == 8 && rec.player[0]) {
+	                this.finalScore.setText(rec.score[0] + ' - ' + rec.score[1])
+	                    .setAlignCenter(PixiEx_1._c(0));
+	                group.lName.alpha =
+	                    group.rName.alpha = 1;
 	            }
 	        }
 	    };

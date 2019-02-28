@@ -33,14 +33,14 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
     v = table.cell(2, 0)
     print(v)
     row = 1
-    playerNum = 12
+    playerNum = 9
     playerMap = {}
     for i in range(0, playerNum):
         n = table.cell(row + i, 0).value
         # hupuID = table.cell(1 + i, 1).value
-        a = int(table.cell(row + i, 1).value)
-        h = int(table.cell(row + i, 2).value)
-        w = int(table.cell(row + i, 3).value)
+        h = int(table.cell(row + i, 1).value)
+        w = int(table.cell(row + i, 2).value)
+        a = int(table.cell(row + i, 3).value)
         print(n, 'p' + str(i + 1))
         # t = ''
         title = table.cell(row + i, 4).value.replace(',', '\n').replace(' ',
