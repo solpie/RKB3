@@ -61,6 +61,7 @@ export class Game3v3 extends BasePanel {
             this.timer.x = 1685
             this.timer.y = 932
             this.addChild(this.timer)
+            this.timer.resetTime = 15*60
             this.timer.setTimeBySec(15 * 60)
             // if (isTest) {
             //     this._show({ leftTeam: '日本somecity', rightTeam: '杭州' })
