@@ -5,12 +5,12 @@
     "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/0309/",
     "vs": [1, 2],
     "rec": [{
-        "vs": [3, 4],
+        "vs": [1, 2],
         "score": [1, 1]
     }],
     "team": [
-        { "idx": 1, "name": "张梓祎队", "playerArr": ["p1", "p2", "p3", "p4", "p4", "p4"] },
-        { "idx": 2, "name": "王晶队", "playerArr": ["p5", "p6", "p7", "p8", "p4", "p4"] }
+        { "idx": 1, "name": "石一童队", "playerArr": ["p1", "p2", "p3", "p4", "p5", "p6"] },
+        { "idx": 2, "name": "傅攀怡队", "playerArr": ["p7", "p8", "p9", "p10", "p11", "p12"] }
     ],
     "gameTitle": {
         "1": "小组赛",
@@ -19,27 +19,5 @@
         "4": "季军赛",
         "5": "决赛"
     },
-    "playerMap": {
-        "p1": { "name": "马克", "hwa": [187, 93, 24], "title": "路人王8冠王-体能怪", "playerId": "p1", "info": "" },
-        "p2": { "name": "王晶", "hwa": [196, 95, 40], "title": "路人王深圳站3站3冠-前CBA名将", "playerId": "p2", "info": "" },
-        "p3": { "name": "张梓祎", "hwa": [191, 85, 24], "title": "北京站7战7冠的霸主", "playerId": "p3", "info": "" },
-        "p4": { "name": "张帅康", "hwa": [195, 90, 24], "title": "路人王五冠王\n郑州站霸主", "playerId": "p4", "info": "" },
-        "p5": { "name": "陈凯涛", "hwa": [188, 78, 23], "title": "CUBA山西大学核心", "playerId": "p5", "info": "" },
-        "p6": { "name": "黄宇军", "hwa": [172, 68, 25], "title": "路人王人气王/七冠选手", "playerId": "p6", "info": "" },
-        "p7": { "name": "李俊达", "hwa": [189, 89, 25], "title": "路人王12冠王\n", "playerId": "p7", "info": "" },
-        "p8": { "name": "宋流轩", "hwa": [183, 75, 21], "title": "路人王4冠王\n变向狂魔", "playerId": "p8", "info": "" },
-        "p9": { "name": "徐长龙", "hwa": [195, 95, 30], "title": "路人王山东赛区霸主", "playerId": "p9", "info": "" },
-        "p10": { "name": "张天宇", "hwa": [198, 100, 25], "title": "路人王太原站霸主", "playerId": "p10", "info": "" },
-        "p11": { "name": "张智扬", "hwa": [190, 80, 24], "title": "路人王S3-S4八冠王", "playerId": "p11", "info": "" },
-        "p12": { "name": "孟亚东", "hwa": [191, 88, 21], "title": "超人气选手\n14冠王", "playerId": "p12", "info": "" },
-        "p13": { "name": "郝天佶", "hwa": [190, 100, 25], "title": "路人王46冠王\n头盔哥\n", "playerId": "p13", "info": "" },
-        "p14": { "name": "陈泽文", "hwa": [186, 73, 19], "title": "路人王12冠王\n“答案”\n", "playerId": "p14", "info": "" },
-        "p15": { "name": "耿骁骐", "hwa": [193, 120, 28], "title": "路人王S5上海站冠军\n", "playerId": "p15", "info": "" },
-        "p16": { "name": "安云鹏", "hwa": [189, 89, 26], "title": "路人王30冠王\n", "playerId": "p16", "info": "" },
-        "p17": { "name": "Ivan", "hwa": [193, 96, 27], "title": "", "playerId": "p17", "info": "" },
-        "p18": { "name": "Dusan", "hwa": [193, 90, 24], "title": "", "playerId": "p18", "info": "" },
-        "p19": { "name": "Milos", "hwa": [199, 110, 29], "title": "", "playerId": "p19", "info": "" },
-        "p20": { "name": "Rudan", "hwa": [200, 100, 26], "title": "", "playerId": "p20", "info": "" },
-        "p0": { "name": "", "hwa": [0, 0, 0], "title": "", "playerId": "p0", "info": "" }
-    }
+    "playerMap": { "p1": { "name": "石一童", "hwa": [181, 65, 29], "title": "", "playerId": "p1", "info": "" }, "p2": { "name": "艾林林", "hwa": [174, 58, 21], "title": "", "playerId": "p2", "info": "" }, "p3": { "name": "亿元", "hwa": [163, 53, 22], "title": "", "playerId": "p3", "info": "" }, "p4": { "name": "李俊（水果人Kenya）", "hwa": [165, 52, 25], "title": "", "playerId": "p4", "info": "" }, "p5": { "name": "肖颖", "hwa": [166, 55, 23], "title": "", "playerId": "p5", "info": "" }, "p6": { "name": "陈婵丽（茶丽3）", "hwa": [163, 50, 23], "title": "", "playerId": "p6", "info": "" }, "p7": { "name": "周薇（篮球少年哎哟薇）", "hwa": [168, 56, 21], "title": "", "playerId": "p7", "info": "" }, "p8": { "name": "苏锦欣（嚯嚯）", "hwa": [169, 50, 20], "title": "", "playerId": "p8", "info": "" }, "p9": { "name": "傅攀怡", "hwa": [180, 65, 26], "title": "", "playerId": "p9", "info": "" }, "p10": { "name": "姜冕", "hwa": [165, 45, 22], "title": "", "playerId": "p10", "info": "" }, "p11": { "name": "徐心雨", "hwa": [174, 55, 23], "title": "", "playerId": "p11", "info": "" }, "p12": { "name": "叶凤阳（Anker叶公子）", "hwa": [160, 45, 31], "title": "", "playerId": "p12", "info": "" }, "p0": { "name": "", "hwa": [0, 0, 0], "title": "", "playerId": "p0", "info": "" } }
 }

@@ -198,25 +198,25 @@ export class BigBlood extends BasePanel {
             this.rTimeoutMaskArr = []
             let tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(600, 145-62, 130 , 50)
+                .drawRect(600, 145 - 62, 130, 50)
             this.addChild(tm)
             this.lTimeoutMaskArr.push(tm)
 
             tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(730, 145-62, 130 , 50)
+                .drawRect(730, 145 - 62, 130, 50)
             this.addChild(tm)
             this.lTimeoutMaskArr.push(tm)
 
             tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(1190, 145-62, 130, 50)
+                .drawRect(1190, 145 - 62, 130, 50)
             this.addChild(tm)
             this.rTimeoutMaskArr.push(tm)
 
             tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(1060, 145-62, 130, 50)
+                .drawRect(1060, 145 - 62, 130, 50)
             this.addChild(tm)
             this.rTimeoutMaskArr.push(tm)
 

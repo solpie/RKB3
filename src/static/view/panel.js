@@ -9499,14 +9499,14 @@
 	var PixiEx_1 = __webpack_require__(56);
 	var TextFac_1 = __webpack_require__(60);
 	var BasePanel_1 = __webpack_require__(74);
-	var urlBg1 = '/html/ww/bottomBlood/blood4.png';
+	var urlBg1 = '/html/ww/bottomBlood/bg2.png';
 	var urlBloodFrame = '/html/ww/bottomBlood/frame.png';
 	var urlLBlood = '/html/ww/bottomBlood/lBlood.png';
 	var urlRBlood = '/html/ww/bottomBlood/rBlood.png';
 	var urlFg = '/html/ww/bottomBlood/fg2.png';
 	var urlMask = '/html/ww/bottomBlood/avtMask.png';
 	var isTest = false;
-	var urlBase = 'http://rtmp.icassi.us:8092/img/player/915/';
+	var urlBase = 'http://rtmp.icassi.us:8092/img/player/0309/';
 	var ___BloodPlayer = (function (_super) {
 	    __extends(___BloodPlayer, _super);
 	    function ___BloodPlayer(parent, isRight) {
@@ -9575,6 +9575,15 @@
 	    ___BloodPlayer.prototype.setInfo = function (data) {
 	        var _this = this;
 	        if (data.name) {
+	            var a = data.name.split('（');
+	            if (a.length > 1) {
+	                this.pName.setSize('36px')
+	                    .setY(464);
+	            }
+	            else {
+	                this.pName.setSize('45px')
+	                    .setY(459);
+	            }
 	            this.pName.setText(data.name)
 	                .setAlignCenter(645);
 	        }
@@ -9646,7 +9655,6 @@
 	                rP.y = lP.y;
 	                rA.push(rP);
 	            }
-	            lA[4].visible = rA[4].visible = false;
 	            _this.lPlayerArr = lA;
 	            _this.rPlayerArr = rA;
 	            _this.lTimeoutMaskArr = [];
@@ -9714,8 +9722,15 @@
 	        });
 	    };
 	    BigBlood.prototype._fillBlood = function (dataArr, bloodPlayerArr, curPlayer) {
+	        var data5 = [];
 	        for (var i = 0; i < dataArr.length; i++) {
 	            var data = dataArr[i];
+	            if (curPlayer.playerId != data.playerId) {
+	                data5.push(data);
+	            }
+	        }
+	        for (var i = 0; i < data5.length; i++) {
+	            var data = data5[i];
 	            var b = bloodPlayerArr[i];
 	            if (curPlayer.playerId == data.playerId) {
 	                data.blood = curPlayer.blood;
@@ -9759,12 +9774,14 @@
 	        }
 	        if (data.cid == Command_1.CommandId.sc_setBlood) {
 	            var curBloodArr = this._setCurBlood(data);
-	            this.lBlood.setText(curBloodArr[0])
+	            this.lBlood.setText(this.lCurPlayerBlood - data.rScore)
 	                .setAlignCenter(PixiEx_1._c(-294));
-	            this.rBlood.setText(curBloodArr[1])
+	            this.rBlood.setText(this.rCurPlayerBlood - data.lScore)
 	                .setAlignCenter(PixiEx_1._c(294));
 	        }
 	        if (data.cid == Command_1.CommandId.sc_setPlayer) {
+	            this.lCurPlayerBlood = data.leftPlayer.blood;
+	            this.rCurPlayerBlood = data.rightPlayer.blood;
 	            this.lBlood.setText(data.leftPlayer.blood)
 	                .setAlignCenter(PixiEx_1._c(-300));
 	            this.rBlood.setText(data.rightPlayer.blood)

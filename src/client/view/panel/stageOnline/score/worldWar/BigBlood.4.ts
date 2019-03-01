@@ -4,14 +4,14 @@ import { imgLoader } from '../../../../utils/ImgLoader';
 import { newBitmap, setScale, _c } from '../../../../utils/PixiEx';
 import { Text2, TextFac } from '../../../../utils/TextFac';
 import { BasePanel } from '../../../base/BasePanel';
-let urlBg1 = '/html/ww/bottomBlood/bg2.png'
+let urlBg1 = '/html/ww/bottomBlood/blood4.png'
 let urlBloodFrame = '/html/ww/bottomBlood/frame.png'
 let urlLBlood = '/html/ww/bottomBlood/lBlood.png'
 let urlRBlood = '/html/ww/bottomBlood/rBlood.png'
 let urlFg = '/html/ww/bottomBlood/fg2.png'
 let urlMask = '/html/ww/bottomBlood/avtMask.png'
 const isTest = false
-const urlBase = 'http://rtmp.icassi.us:8092/img/player/0309/'
+const urlBase = 'http://rtmp.icassi.us:8092/img/player/915/'
 class ___BloodPlayer extends PIXI.Container {
     blood: number
     initBlood: number
@@ -104,16 +104,6 @@ class ___BloodPlayer extends PIXI.Container {
     isAvtLoaded = false
     setInfo(data) {
         if (data.name) {
-            let a = data.name.split('（')
-            if (a.length > 1) {
-                this.pName.setSize('36px')
-                    .setY(464)
-            }
-            else {
-                this.pName.setSize('45px')
-                    .setY(459)
-            }
-
             this.pName.setText(data.name)
                 .setAlignCenter(645)
         }
@@ -161,9 +151,6 @@ export class BigBlood extends BasePanel {
 
     lPlayerArr: Array<___BloodPlayer>
     rPlayerArr: Array<___BloodPlayer>
-
-    lCurPlayerBlood:number
-    rCurPlayerBlood:number
     lTimeoutMask: PIXI.Graphics
     lTimeoutMaskArr: Array<PIXI.Graphics>
     rTimeoutMaskArr: Array<PIXI.Graphics>
@@ -204,6 +191,8 @@ export class BigBlood extends BasePanel {
                 rP.y = lP.y
                 rA.push(rP)
             }
+            //hide for final
+            lA[4].visible = rA[4].visible = false
             this.lPlayerArr = lA
             this.rPlayerArr = rA
 
@@ -211,25 +200,25 @@ export class BigBlood extends BasePanel {
             this.rTimeoutMaskArr = []
             let tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(600, 145 - 62, 130, 50)
+                .drawRect(600, 145-62, 130 , 50)
             this.addChild(tm)
             this.lTimeoutMaskArr.push(tm)
 
             tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(730, 145 - 62, 130, 50)
+                .drawRect(730, 145-62, 130 , 50)
             this.addChild(tm)
             this.lTimeoutMaskArr.push(tm)
 
             tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(1190, 145 - 62, 130, 50)
+                .drawRect(1190, 145-62, 130, 50)
             this.addChild(tm)
             this.rTimeoutMaskArr.push(tm)
 
             tm = new PIXI.Graphics()
                 .beginFill(0x020206)
-                .drawRect(1060, 145 - 62, 130, 50)
+                .drawRect(1060, 145-62, 130, 50)
             this.addChild(tm)
             this.rTimeoutMaskArr.push(tm)
 
@@ -284,16 +273,8 @@ export class BigBlood extends BasePanel {
     }
 
     _fillBlood(dataArr, bloodPlayerArr: Array<___BloodPlayer>, curPlayer?) {
-        let data5 = []
-
         for (let i = 0; i < dataArr.length; i++) {
             let data = dataArr[i]
-            if (curPlayer.playerId != data.playerId) {
-                data5.push(data)
-            }
-        }
-        for (let i = 0; i < data5.length; i++) {
-            let data = data5[i]
             let b = bloodPlayerArr[i]
             if (curPlayer.playerId == data.playerId) {
                 data.blood = curPlayer.blood
@@ -344,16 +325,13 @@ export class BigBlood extends BasePanel {
 
         if (data.cid == CommandId.sc_setBlood) {
             let curBloodArr = this._setCurBlood(data)
-
-            this.lBlood.setText(this.lCurPlayerBlood-data.rScore)
+            this.lBlood.setText(curBloodArr[0])
                 .setAlignCenter(_c(-294))
-            this.rBlood.setText(this.rCurPlayerBlood-data.lScore)
+            this.rBlood.setText(curBloodArr[1])
                 .setAlignCenter(_c(294))
         }
 
         if (data.cid == CommandId.sc_setPlayer) {
-            this.lCurPlayerBlood = data.leftPlayer.blood
-            this.rCurPlayerBlood = data.rightPlayer.blood
             this.lBlood.setText(data.leftPlayer.blood)
                 .setAlignCenter(_c(-300))
             this.rBlood.setText(data.rightPlayer.blood)
