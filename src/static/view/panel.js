@@ -12533,7 +12533,7 @@
 	        i = 0;
 	        while (line.width < 460 && total < str.length + 1) {
 	            total++;
-	            line.setText(str.substr(idx, i++));
+	            line.setText(str.substr(idx, ++i));
 	        }
 	        if (isAlignRight)
 	            line.setAlignRight(PixiEx_1._c(-335));
@@ -12634,6 +12634,7 @@
 	                .setAlignRight(PixiEx_1._c(-335));
 	            this.rInfo.setText(rPlayer.entry_reflections || "无")
 	                .setX(PixiEx_1._c(335));
+	            lPlayer.entry_reflections = '希望可以提高自己的篮球水平，以球会友';
 	            wrapLineArr([this.rInfo, this.rInfo2, this.rInfo3], rPlayer.entry_reflections, false);
 	            wrapLineArr([this.lInfo, this.lInfo2, this.lInfo3], lPlayer.entry_reflections, true);
 	            this.lSchool.setText(lPlayer.school || '未知')
