@@ -22,7 +22,11 @@ class VsInfo extends BasePanel {
     rLocation: Text2
 
     lInfo: Text2//entry_reflections
+    lInfo2: Text2//entry_reflections
+    lInfo3: Text2//entry_reflections
     rInfo: Text2
+    rInfo2: Text2
+    rInfo3: Text2
 
     lConstellation: Text2//constellation
     rConstellation: Text2
@@ -114,9 +118,10 @@ class VsInfo extends BasePanel {
                 .setAlignRight(_c(-335))
             this.rConstellation.setText(rPlayer.constellation)
                 .setX(_c(335))
-
+            
             this.lInfo.setText(lPlayer.entry_reflections || "无")
                 .setAlignRight(_c(-335))
+            
             this.rInfo.setText(rPlayer.entry_reflections || "无")
                 .setX(_c(335))
 
@@ -153,9 +158,11 @@ class VsInfoView extends VueBase {
     protected mounted() {
         console.log('mouted VsInfoView view');
         if (!canvasStage)
-            canvasStage = BasePanelView.initPixi()
+        canvasStage = BasePanelView.initPixi()
         let wsUrl = getHupuWS(null)
         let gameId = 492
+        gameId = this.$route.query.game_id
+        console.log('gameId',this.$route,gameId);
         let remoteWs = io.connect(wsUrl)
         showPanel(VsInfo, { visible: true }, canvasStage)
         remoteWs.on('connect', (msg) => {

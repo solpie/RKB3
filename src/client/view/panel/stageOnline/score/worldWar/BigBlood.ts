@@ -162,8 +162,8 @@ export class BigBlood extends BasePanel {
     lPlayerArr: Array<___BloodPlayer>
     rPlayerArr: Array<___BloodPlayer>
 
-    lCurPlayerBlood:number
-    rCurPlayerBlood:number
+    lCurPlayerBlood: number
+    rCurPlayerBlood: number
     lTimeoutMask: PIXI.Graphics
     lTimeoutMaskArr: Array<PIXI.Graphics>
     rTimeoutMaskArr: Array<PIXI.Graphics>
@@ -176,6 +176,8 @@ export class BigBlood extends BasePanel {
     lName: Text2
     rName: Text2
 
+    lTeam: Text2
+    rTeam: Text2
 
     create() {
         console.log('scroll text creat1e');
@@ -280,6 +282,18 @@ export class BigBlood extends BasePanel {
                 .setText('')
                 .setY(this.lName.y)
                 .setAlignCenter(_c(516))
+
+            ns.fill = '#434249'
+            ns.fill = '#a9a9a9'
+            this.lTeam = TextFac.new_(ns, this)
+                .setText('石一童队')
+                .setY(352)
+                .setAlignCenter(_c(-325))
+
+            this.rTeam = TextFac.new_(ns, this)
+                .setText('傅攀怡队')
+                .setY(this.lTeam.y)
+                .setAlignCenter(_c(325))
         })
     }
 
@@ -345,9 +359,9 @@ export class BigBlood extends BasePanel {
         if (data.cid == CommandId.sc_setBlood) {
             let curBloodArr = this._setCurBlood(data)
 
-            this.lBlood.setText(this.lCurPlayerBlood-data.rScore)
+            this.lBlood.setText(this.lCurPlayerBlood - data.rScore)
                 .setAlignCenter(_c(-294))
-            this.rBlood.setText(this.rCurPlayerBlood-data.lScore)
+            this.rBlood.setText(this.rCurPlayerBlood - data.lScore)
                 .setAlignCenter(_c(294))
         }
 

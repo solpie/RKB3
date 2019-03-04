@@ -419,6 +419,7 @@
 	            { title: "直播间面板", url: "/panel/#/studio/ob/" },
 	            { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
+	            { title: "对阵球员信息面板", url: "/panel/#/vsInfo?game_id=" + gameId },
 	            { title: "-----线下操作面板-----", url: "" },
 	            { title: "魔王挑战赛LowerThird", url: "/admin/#/pick" },
 	            { title: "通用计分控制台", url: "/admin/#/com" },
@@ -9719,6 +9720,16 @@
 	                .setText('')
 	                .setY(_this.lName.y)
 	                .setAlignCenter(PixiEx_1._c(516));
+	            ns.fill = '#434249';
+	            ns.fill = '#a9a9a9';
+	            _this.lTeam = TextFac_1.TextFac.new_(ns, _this)
+	                .setText('石一童队')
+	                .setY(352)
+	                .setAlignCenter(PixiEx_1._c(-325));
+	            _this.rTeam = TextFac_1.TextFac.new_(ns, _this)
+	                .setText('傅攀怡队')
+	                .setY(_this.lTeam.y)
+	                .setAlignCenter(PixiEx_1._c(325));
 	        });
 	    };
 	    BigBlood.prototype._fillBlood = function (dataArr, bloodPlayerArr, curPlayer) {
@@ -12015,6 +12026,8 @@
 	            canvasStage = BasePanelView_1.BasePanelView.initPixi();
 	        var wsUrl = HupuAPI_1.getHupuWS(null);
 	        var gameId = 492;
+	        gameId = this.$route.query.game_id;
+	        console.log('gameId', this.$route, gameId);
 	        var remoteWs = io.connect(wsUrl);
 	        BasePanel_1.showPanel(VsInfo, { visible: true }, canvasStage);
 	        remoteWs.on('connect', function (msg) {
