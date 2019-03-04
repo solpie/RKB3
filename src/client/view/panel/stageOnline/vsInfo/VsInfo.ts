@@ -164,7 +164,7 @@ class VsInfo extends BasePanel {
             this.rInfo.setText(rPlayer.entry_reflections || "无")
                 .setX(_c(335))
 
-            lPlayer.entry_reflections = '希望可以提高自己的篮球水平，以球会友'
+            // lPlayer.entry_reflections = '希望可以提高自己的篮球水平，以球会友'
             wrapLineArr([this.rInfo, this.rInfo2, this.rInfo3], rPlayer.entry_reflections, false)
             wrapLineArr([this.lInfo, this.lInfo2, this.lInfo3], lPlayer.entry_reflections, true)
 
