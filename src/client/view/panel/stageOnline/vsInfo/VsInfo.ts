@@ -5,11 +5,24 @@ import { CommandId } from '../../../Command';
 import { TextFac, Text2 } from '../../../utils/TextFac';
 import { _c, newBitmap } from '../../../utils/PixiEx';
 import { BasePanel, showPanel } from '../../base/BasePanel';
-import { getHupuWS, hupuWsEvent } from '../../../utils/HupuAPI';
+import { getHupuWS, hupuWsEvent, getLive } from '../../../utils/HupuAPI';
 import { MaskAvatar } from '../../base/MaskAvatar';
 
 let urlBg = '/img/panel/vsInfo/bg.png'
-
+function wrapLineArr(arr: Array<Text2>, str: string, isAlignRight) {
+    let idx = 0, i, total = 0
+    for (let line of arr) {
+        line.setText('')
+        i = 0
+        while (line.width < 460 && total < str.length + 1) {
+            total++
+            line.setText(str.substr(idx, i++))
+        }
+        if (isAlignRight)
+            line.setAlignRight(_c(-335))
+        idx += i
+    }
+}
 class VsInfo extends BasePanel {
     static cls = 'VsInfo'
     lJob: Text2//Job
@@ -40,6 +53,9 @@ class VsInfo extends BasePanel {
     lAvt: MaskAvatar
     rAvt: MaskAvatar
 
+    roundTitle: Text2
+
+
     create() {
         let imgArr = [urlBg
             // , urlFg
@@ -63,7 +79,7 @@ class VsInfo extends BasePanel {
             let ns = {
                 fontFamily: FontName.MicrosoftYahei,
                 fontSize: "34px",
-                dropShadow: true,
+                dropShadow: false,
                 dropShadowColor: '#222222',
                 dropShadowAngle: Math.PI * 1 / 3,
                 dropShadowDistance: 1,
@@ -82,6 +98,19 @@ class VsInfo extends BasePanel {
                 .setY(612)
             this.rInfo = TextFac.new_(ns, this)
                 .setY(this.lInfo.y)
+
+            this.lInfo2 = TextFac.new_(ns, this)
+                .setY(this.lInfo.y + 45 * 1)
+            this.rInfo2 = TextFac.new_(ns, this)
+                .setY(this.lInfo2.y)
+                .setX(_c(335))
+
+            this.lInfo3 = TextFac.new_(ns, this)
+                .setY(this.lInfo.y + 45 * 2)
+
+            this.rInfo3 = TextFac.new_(ns, this)
+                .setY(this.lInfo3.y)
+                .setX(_c(335))
 
             this.lSchool = TextFac.new_(ns, this)
                 .setY(495)
@@ -103,6 +132,16 @@ class VsInfo extends BasePanel {
             this.rName = TextFac.new_(ns, this)
                 .setY(this.lName.y)
 
+
+            this.roundTitle = TextFac.new_(ns, this)
+                .setY(141)
+            getLive(conf => {
+                console.log('inti live conf', conf);
+                this.roundTitle.setText(conf.round_title)
+                    .setSize('54px')
+                    .setAlignCenter(_c(0))
+                    .setFill('#582e2a')
+            })
         })
     }
     fillData(data) {
@@ -118,12 +157,15 @@ class VsInfo extends BasePanel {
                 .setAlignRight(_c(-335))
             this.rConstellation.setText(rPlayer.constellation)
                 .setX(_c(335))
-            
+
             this.lInfo.setText(lPlayer.entry_reflections || "无")
                 .setAlignRight(_c(-335))
-            
+
             this.rInfo.setText(rPlayer.entry_reflections || "无")
                 .setX(_c(335))
+
+            wrapLineArr([this.rInfo, this.rInfo2, this.rInfo3], rPlayer.entry_reflections, false)
+            wrapLineArr([this.lInfo, this.lInfo2, this.lInfo3], lPlayer.entry_reflections, true)
 
             this.lSchool.setText(lPlayer.school || '未知')
                 .setAlignRight(_c(-335))
@@ -158,11 +200,11 @@ class VsInfoView extends VueBase {
     protected mounted() {
         console.log('mouted VsInfoView view');
         if (!canvasStage)
-        canvasStage = BasePanelView.initPixi()
+            canvasStage = BasePanelView.initPixi()
         let wsUrl = getHupuWS(null)
         let gameId = 492
         gameId = this.$route.query.game_id
-        console.log('gameId',this.$route,gameId);
+        console.log('gameId', this.$route, gameId);
         let remoteWs = io.connect(wsUrl)
         showPanel(VsInfo, { visible: true }, canvasStage)
         remoteWs.on('connect', (msg) => {
