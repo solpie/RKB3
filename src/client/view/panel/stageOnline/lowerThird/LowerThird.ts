@@ -6,7 +6,7 @@ import { CommandId } from '../../../Command';
 import { Text2, TextFac } from '../../../utils/TextFac';
 import { newBitmap, _c } from '../../../utils/PixiEx';
 import { BaseLowerThird } from './BaseLowerThird';
-import { PickTeam } from '../pickTeam/PickTeam';
+// import { PickTeam } from '../pickTeam/PickTeam';
 
 class TextType1 extends BaseLowerThird {
     lName: Text2
@@ -82,7 +82,7 @@ class TextType2 extends BaseLowerThird {
     }
 }
 let urlType_1, urlType_2;
-let pt: PickTeam
+// let pt: PickTeam
 class LowerThird extends BasePanel {
     static cls = 'LowerThird'
     t1: TextType1
@@ -127,22 +127,22 @@ class LowerThird extends BasePanel {
             }
         }
         this.p.addChild(this)
-        if (param.cid == CommandId.sc_showPickup) {
-            pt.setData(param)
-            pt.visible = param.visible
-            this.p.addChild(pt)
-         }
-        if (param.cid == CommandId.sc_setTeamColor) {
-            pt.setColor(param)
-            pt.visible =  param.visible
-            this.p.addChild(pt)
-          }
+        // if (param.cid == CommandId.sc_showPickup) {
+        //     pt.setData(param)
+        //     pt.visible = param.visible
+        //     this.p.addChild(pt)
+        //  }
+        // if (param.cid == CommandId.sc_setTeamColor) {
+        //     pt.setColor(param)
+        //     pt.visible =  param.visible
+        //     this.p.addChild(pt)
+        //   }
 
-        if (param.cid == CommandId.sc_bracket) {
-            pt.setAvtByRec(param)
-            pt.visible =  param.visible
-            this.p.addChild(pt)
-        }
+        // if (param.cid == CommandId.sc_bracket) {
+        //     pt.setAvtByRec(param)
+        //     pt.visible =  param.visible
+        //     this.p.addChild(pt)
+        // }
 
        
     }
@@ -177,8 +177,8 @@ class LowerThirdView extends VueBase {
         _adept(CommandId.sc_setTeamColor)
         _adept(CommandId.sc_bracket)
 
-        pt = new PickTeam(canvasStage)
-        pt.visible = false
+        // pt = new PickTeam(canvasStage)
+        // pt.visible = false
     }
 }
 export let lowerThird = new LowerThirdView()

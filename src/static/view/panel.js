@@ -12119,7 +12119,6 @@
 	var TextFac_1 = __webpack_require__(60);
 	var PixiEx_1 = __webpack_require__(56);
 	var BaseLowerThird_1 = __webpack_require__(112);
-	var PickTeam_1 = __webpack_require__(113);
 	var TextType1 = (function (_super) {
 	    __extends(TextType1, _super);
 	    function TextType1(parent) {
@@ -12191,7 +12190,6 @@
 	    return TextType2;
 	}(BaseLowerThird_1.BaseLowerThird));
 	var urlType_1, urlType_2;
-	var pt;
 	var LowerThird = (function (_super) {
 	    __extends(LowerThird, _super);
 	    function LowerThird() {
@@ -12236,21 +12234,6 @@
 	            }
 	        }
 	        this.p.addChild(this);
-	        if (param.cid == Command_1.CommandId.sc_showPickup) {
-	            pt.setData(param);
-	            pt.visible = param.visible;
-	            this.p.addChild(pt);
-	        }
-	        if (param.cid == Command_1.CommandId.sc_setTeamColor) {
-	            pt.setColor(param);
-	            pt.visible = param.visible;
-	            this.p.addChild(pt);
-	        }
-	        if (param.cid == Command_1.CommandId.sc_bracket) {
-	            pt.setAvtByRec(param);
-	            pt.visible = param.visible;
-	            this.p.addChild(pt);
-	        }
 	    };
 	    LowerThird.cls = 'LowerThird';
 	    return LowerThird;
@@ -12283,8 +12266,6 @@
 	        _adept(Command_1.CommandId.sc_showPickup);
 	        _adept(Command_1.CommandId.sc_setTeamColor);
 	        _adept(Command_1.CommandId.sc_bracket);
-	        pt = new PickTeam_1.PickTeam(canvasStage);
-	        pt.visible = false;
 	    };
 	    return LowerThirdView;
 	}(VueBase_1.VueBase));
@@ -12327,180 +12308,7 @@
 
 
 /***/ }),
-/* 113 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var PixiEx_1 = __webpack_require__(56);
-	var ImgLoader_1 = __webpack_require__(55);
-	var TextFac_1 = __webpack_require__(60);
-	var const_1 = __webpack_require__(27);
-	var MaskAvatar_1 = __webpack_require__(102);
-	var avtBase = 'http://rtmp.icassi.us:8092/img/player/915/';
-	var PickTeam = (function (_super) {
-	    __extends(PickTeam, _super);
-	    function PickTeam(parent) {
-	        var _this = _super.call(this) || this;
-	        _this.avtArr = [];
-	        _this.teamNameArr = [];
-	        _this.playerNameArr1 = [];
-	        _this.playerNameArr2 = [];
-	        _this.playerNameArr3 = [];
-	        _this.posArr = [-480 - 77, -77, 480 - 77];
-	        parent.addChild(_this);
-	        var bg = PixiEx_1.newBitmap({ url: '/img/panel/pickTeam/bg.png' });
-	        _this.addChild(bg);
-	        for (var i = 0; i < 3; i++) {
-	            var sp = new MaskAvatar_1.MaskAvatar(null);
-	            sp.setAvtPos(326 + i * 480, 846, 153);
-	            sp.load('http://rtmp.icassi.us:8092/img/player/915/p0.png');
-	            _this.addChild(sp);
-	            _this.avtArr.push(sp);
-	        }
-	        _this.bg1 = new PIXI.Sprite();
-	        _this.bg1.x = -77;
-	        _this.addChild(_this.bg1);
-	        _this.bg2 = new PIXI.Sprite();
-	        _this.bg2.x = 480 - 77;
-	        _this.addChild(_this.bg2);
-	        _this.bg3 = new PIXI.Sprite();
-	        _this.bg3.x = -480 - 77;
-	        _this.addChild(_this.bg3);
-	        _this.colorMap = { '红': _this.bg1, '白': _this.bg2, '绿': _this.bg3 };
-	        ImgLoader_1.imgLoader.loadTexArr([
-	            '/img/panel/pickTeam/bg.png',
-	            '/img/panel/pickTeam/bg1.png',
-	            '/img/panel/pickTeam/bg2.png',
-	            '/img/panel/pickTeam/bg3.png',
-	        ], function (_) {
-	            _this.bg1.texture =
-	                ImgLoader_1.imgLoader.getTex('/img/panel/pickTeam/bg1.png');
-	            _this.bg2.texture =
-	                ImgLoader_1.imgLoader.getTex('/img/panel/pickTeam/bg2.png');
-	            _this.bg3.texture =
-	                ImgLoader_1.imgLoader.getTex('/img/panel/pickTeam/bg3.png');
-	            var ns = {
-	                fontFamily: const_1.FontName.MicrosoftYahei,
-	                fontSize: "32px",
-	                dropShadow: true,
-	                dropShadowColor: '#222222',
-	                dropShadowAngle: Math.PI * 1 / 3,
-	                dropShadowDistance: 3,
-	                fontWeight: "bold",
-	                fill: "#acacac"
-	            };
-	            var name;
-	            var name2;
-	            var name3;
-	            var a = [];
-	            for (var i = 0; i < 3; i++) {
-	                name = TextFac_1.TextFac.new_(ns, _this)
-	                    .setText('')
-	                    .setPos(520, 878 + i * 51);
-	                _this.playerNameArr1.push(name);
-	                name2 = TextFac_1.TextFac.new_(ns, _this)
-	                    .setText('')
-	                    .setPos(1000, name.y);
-	                _this.playerNameArr2.push(name2);
-	                name3 = TextFac_1.TextFac.new_(ns, _this)
-	                    .setText('')
-	                    .setPos(1476, name.y);
-	                _this.playerNameArr3.push(name3);
-	                name = TextFac_1.TextFac.new_(ns, _this)
-	                    .setY(986)
-	                    .setSize("24px")
-	                    .setText("")
-	                    .setAlignCenter(406 + i * 480);
-	                a.push(name);
-	            }
-	            _this.playerNameArr1 = [a[0]].concat(_this.playerNameArr1);
-	            _this.playerNameArr2 = [a[1]].concat(_this.playerNameArr2);
-	            _this.playerNameArr3 = [a[2]].concat(_this.playerNameArr3);
-	        });
-	        return _this;
-	    }
-	    PickTeam.prototype.setData = function (data) {
-	        for (var i = 0; i < 4; i++) {
-	            if (data.teamArr1[i])
-	                this.playerNameArr1[i]
-	                    .setText(data.teamArr1[i]);
-	            if (data.teamArr2[i])
-	                this.playerNameArr2[i]
-	                    .setText(data.teamArr2[i]);
-	            if (data.teamArr3[i])
-	                this.playerNameArr3[i]
-	                    .setText(data.teamArr3[i]);
-	            if (i == 0) {
-	                this.playerNameArr1[i].setAlignCenter();
-	                this.playerNameArr2[i].setAlignCenter();
-	                this.playerNameArr3[i].setAlignCenter();
-	            }
-	        }
-	    };
-	    PickTeam.prototype.setAvtByRec = function (data) {
-	        console.log('setAvtByRec', data);
-	        var p1, p2, p3;
-	        var n1, n2, n3;
-	        for (var _i = 0, _a = data.bracketRec16; _i < _a.length; _i++) {
-	            var rec = _a[_i];
-	            if (rec.gameIdx == 15) {
-	                if (rec.score[0] > rec.score[1]) {
-	                    p3 = rec.playerId[0];
-	                    this.playerNameArr1[0].setText(rec.player[0]);
-	                }
-	                else if (rec.score[0] < rec.score[1]) {
-	                    p3 = rec.playerId[1];
-	                    this.playerNameArr1[0].setText(rec.player[1]);
-	                }
-	                this.avtArr[0].load(avtBase + p3 + '.png');
-	                this.playerNameArr1[0].setAlignCenter();
-	            }
-	            if (rec.gameIdx == 16) {
-	                if (rec.score[0] > rec.score[1]) {
-	                    p1 = rec.playerId[0];
-	                    p2 = rec.playerId[1];
-	                    n1 = rec.player[0];
-	                    n2 = rec.player[1];
-	                }
-	                else if (rec.score[0] < rec.score[1]) {
-	                    p1 = rec.playerId[1];
-	                    p2 = rec.playerId[0];
-	                    n1 = rec.player[1];
-	                    n2 = rec.player[0];
-	                }
-	                this.avtArr[1].load(avtBase + p1 + '.png');
-	                this.avtArr[2].load(avtBase + p2 + '.png');
-	                this.playerNameArr2[0].setText(n1)
-	                    .setAlignCenter();
-	                this.playerNameArr3[0].setText(n2)
-	                    .setAlignCenter();
-	            }
-	        }
-	    };
-	    PickTeam.prototype.setColor = function (data) {
-	        for (var i = 0; i < 3; i++) {
-	            var color = data.colorArr[i];
-	            var sp = this.colorMap[color];
-	            sp.x = this.posArr[i];
-	        }
-	    };
-	    return PickTeam;
-	}(PIXI.Container));
-	exports.PickTeam = PickTeam;
-
-
-/***/ }),
+/* 113 */,
 /* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 

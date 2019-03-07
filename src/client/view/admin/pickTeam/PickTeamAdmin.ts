@@ -51,6 +51,22 @@ export class _PickTeamAdmin extends VueBase {
         this.teamArr1 = [{ name: '1', playerId: 1 }]
         this.teamArr2 = [{ name: '2', playerId: 1 }]
         this.teamArr3 = [{ name: '3', playerId: 1 }]
+        let arr2 = [
+            '傅攀怡'
+            , '姜冕'
+            , '徐心雨'
+            , '叶凤阳'
+            , '石一童'
+            , '艾林林'
+            , '陈婵丽'
+            , '苏锦欣'
+            , '亿元'
+            , '李俊'
+            , '肖颖'
+            , '周薇'
+
+
+        ]
         this.conf = [
             // {
             //     "button": "小易 余霜",
@@ -94,57 +110,11 @@ export class _PickTeamAdmin extends VueBase {
                 "cont": ["堂主_路人王官方主播", "鹅皇Gary_路人王官方主播"]
             },
             //
-            {
-                "button": "孟亚东",
-                "type": 2,
-                "cont": "孟亚东"
-            },
-            {
-                "button": "黄宇军",
-                "type": 2,
-                "cont": "黄宇军"
-            },
-
-            {
-                "button": "宋流轩",
-                "type": 2,
-                "cont": "宋流轩"
-            },
-
-            {
-                "button": "方良超",
-                "type": 2,
-                "cont": "方良超"
-            },
-
-            {
-                "button": "董康潮",
-                "type": 2,
-                "cont": "董康潮"
-            },
-            {
-                "button": "崔超",
-                "type": 2,
-                "cont": "崔超"
-            },
-            {
-                "button": "柳杨杰",
-                "type": 2,
-                "cont": "柳杨杰"
-            },
-            {
-                "button": "鲁静思",
-                "type": 2,
-                "cont": "鲁静思"
-            },
-
-            {
-                "button": "King handls",
-                "type": 2,
-                "cont": "King handls"
-            },
 
         ]
+        for (let n of arr2) {
+            this.conf.push({ "button": n, type: 2, cont: n })
+        }
     }
     methods = {
         onShowLowerThird(lt, visible?) {
