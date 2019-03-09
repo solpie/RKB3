@@ -4213,14 +4213,14 @@
 	        ];
 	        this.conf = [
 	            {
-	                "button": "盼盼 姜冕",
+	                "button": "盼盼 flyyoung",
 	                "type": 1,
-	                "cont": ["盼盼_路人王官方主播", "姜冕_路人王官方主播"]
+	                "cont": ["盼盼_路人王官方主播", "flyyoung_路人王官方主播"]
 	            },
 	            {
-	                "button": "姜冕 盼盼",
+	                "button": "flyyoung 盼盼",
 	                "type": 1,
-	                "cont": ["姜冕_路人王官方主播", "盼盼_路人王官方主播"]
+	                "cont": ["flyyoung_路人王官方主播", "盼盼_路人王官方主播"]
 	            },
 	            {
 	                "button": "Gary 堂主",
