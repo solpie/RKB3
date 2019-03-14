@@ -73,6 +73,7 @@ class _ScoreRankAdmin extends VueBase {
     bracketRec16 = VueBase.PROP
 
     rank5Player = VueBase.PROP
+    rank5PlayerArr = VueBase.PROP
     rank16Arr = VueBase.PROP
     constructor() {
         super();
@@ -85,6 +86,7 @@ class _ScoreRankAdmin extends VueBase {
         this.redArr = []
         this.vsPlayerArr = []
         this.rank16Arr = []
+        this.rank5PlayerArr = ''
         this.actTab = 'tab1'
         this.bracketRec = this.bracketRec1 = newBracketRec1()
         this.bracketRec2 = newBracketRec2()
@@ -104,7 +106,7 @@ class _ScoreRankAdmin extends VueBase {
                 this.winMap = ret.winMap
                 this.totalScoreMap = ret.totalScoreMap
                 this.recArr = ret.recArr
-               
+
             }
             if (callback) {
                 callback()
@@ -387,7 +389,13 @@ class _ScoreRankAdmin extends VueBase {
             this.vsPlayer = ''
             this.onShowScoreRank(true)
         },
-        onShowScoreRank(visible) {
+        onUpdateRank5Score(playerId, score) {
+            opReq(CommandId.cs_showScoreRank, {
+                visible: true,
+                scoreArr: this.rank5PlayerArr
+            })
+        },
+        onShowScoreRank(visible) {//抢五 rank5
             let scoreArr = []
             let isInitScoreArr = false
             let scoreFx = 0
@@ -406,6 +414,7 @@ class _ScoreRankAdmin extends VueBase {
 
                     let scoreFxItem = {
                         score: this.gameConf.scoreRank[i][1]
+                        , playerId: pn
                         , name: player.name
                         , isSmall: true
                         , scoreFx: 0
@@ -432,7 +441,7 @@ class _ScoreRankAdmin extends VueBase {
                 }
             }
             scoreArr = scoreArr.sort(descendingProp('score'))
-
+            this.rank5PlayerArr = scoreArr
             opReq(CommandId.cs_showScoreRank, {
                 visible: visible,
                 scoreArr: scoreArr

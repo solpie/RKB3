@@ -14,6 +14,7 @@ import { bracketS5Final } from './stageOnline/bracket/BracketS5Final';
 import { lowerThird } from './stageOnline/lowerThird/LowerThird';
 import { vsInfo } from './stageOnline/vsInfo/VsInfo';
 import { bracket8421 } from './stageOnline/bracket/Bracket8421';
+import { scoreRank5 } from './stageOnline/scoreRank/ScoreRank5';
 //////////////
 
 let routes = [
@@ -33,6 +34,10 @@ let routes = [
     {
         path: '/lowerthird',
         components: { default: lowerThird }
+    },
+    {
+        path: '/rank5',
+        components: { default: scoreRank5 }
     },
     {
         path: '/studio/:op',

@@ -56,8 +56,9 @@
 	var StageOnlineView_1 = __webpack_require__(67);
 	var CommonGame_1 = __webpack_require__(110);
 	var LowerThird_1 = __webpack_require__(111);
-	var VsInfo_1 = __webpack_require__(114);
-	var Bracket8421_1 = __webpack_require__(115);
+	var VsInfo_1 = __webpack_require__(113);
+	var Bracket8421_1 = __webpack_require__(114);
+	var ScoreRank5_1 = __webpack_require__(115);
 	var routes = [
 	    {
 	        path: '/com',
@@ -74,6 +75,10 @@
 	    {
 	        path: '/lowerthird',
 	        components: { default: LowerThird_1.lowerThird }
+	    },
+	    {
+	        path: '/rank5',
+	        components: { default: ScoreRank5_1.scoreRank5 }
 	    },
 	    {
 	        path: '/studio/:op',
@@ -447,11 +452,12 @@
 	            { title: "对阵球员信息面板", url: "/panel/#/vsInfo?game_id=" + gameId },
 	            { title: "-----线下操作面板-----", url: "" },
 	            { title: "魔王挑战赛LowerThird", url: "/admin/#/pick" },
+	            { title: "魔王挑战赛比分面板", url: "/panel/#/ol/ob/0?panel=score&s4=1&world=1" },
+	            { title: "魔王挑战赛晋级图", url: "/panel/#/brackets5" },
+	            { title: "冠军排位赛抢五面板", url: "/panel/#/rank5" },
 	            { title: "通用计分控制台", url: "/admin/#/com" },
 	            { title: "3v3计分", url: "/html/controls/game3v3.html" },
 	            { title: "3v3面板", url: "/panel/#/ol/ob/0?panel=score&s4=1&world=1&game3v3=1" },
-	            { title: "魔王挑战赛比分面板", url: "/panel/#/ol/ob/0?panel=score&s4=1&world=1" },
-	            { title: "魔王挑战赛晋级图", url: "/panel/#/brackets5" },
 	        ];
 	    };
 	    HomeView.prototype.genQRCode = function () {
@@ -2782,6 +2788,7 @@
 	        _this.bracketRecFinal = VueBase_1.VueBase.PROP;
 	        _this.bracketRec16 = VueBase_1.VueBase.PROP;
 	        _this.rank5Player = VueBase_1.VueBase.PROP;
+	        _this.rank5PlayerArr = VueBase_1.VueBase.PROP;
 	        _this.rank16Arr = VueBase_1.VueBase.PROP;
 	        _this.methods = {
 	            tab: function (s, bracketRecIdx) {
@@ -2967,6 +2974,12 @@
 	                this.vsPlayer = '';
 	                this.onShowScoreRank(true);
 	            },
+	            onUpdateRank5Score: function (playerId, score) {
+	                opReq(Command_1.CommandId.cs_showScoreRank, {
+	                    visible: true,
+	                    scoreArr: this.rank5PlayerArr
+	                });
+	            },
 	            onShowScoreRank: function (visible) {
 	                var scoreArr = [];
 	                var isInitScoreArr = false;
@@ -2985,6 +2998,7 @@
 	                        var player = this.gameConf.playerMap[pn];
 	                        var scoreFxItem = {
 	                            score: this.gameConf.scoreRank[i][1],
+	                            playerId: pn,
 	                            name: player.name,
 	                            isSmall: true,
 	                            scoreFx: 0,
@@ -3008,6 +3022,7 @@
 	                    }
 	                }
 	                scoreArr = scoreArr.sort(JsFunc_1.descendingProp('score'));
+	                this.rank5PlayerArr = scoreArr;
 	                opReq(Command_1.CommandId.cs_showScoreRank, {
 	                    visible: visible,
 	                    scoreArr: scoreArr
@@ -3062,6 +3077,7 @@
 	        this.redArr = [];
 	        this.vsPlayerArr = [];
 	        this.rank16Arr = [];
+	        this.rank5PlayerArr = '';
 	        this.actTab = 'tab1';
 	        this.bracketRec = this.bracketRec1 = bracketRec_1.newBracketRec1();
 	        this.bracketRec2 = bracketRec_1.newBracketRec2();
@@ -3468,7 +3484,7 @@
 /* 41 */
 /***/ (function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <a href=\"/html/ww/group.html\">小组赛</a>\r\n    <a href=\"/html/ww/bracket2.html\">8进4 final晋级</a>\r\n    <a href=\"/html/ww/rank8.html\">rank8</a>\r\n    <a href=\"/html/intro/ww/intro.html?group=a\">小组介绍 group=a</a>\r\n    <a href=\"/panel/#/ol/ob/0?panel=score&s4=1&world=1&game3v3=1\">3v3</a>\r\n    <hr>\r\n    <span class=\"select\">\r\n            <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                    {{ option.text }}\r\n                </option>\r\n            </select>\r\n        </span>\r\n\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <button class=\"button is-primary\" @click=\"onCreateGame\">创建比赛</button>\r\n    <button class=\"button is-primary\" @click=\"onShowWinMap\">战胜对手</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n\r\n    <div style=\"width: 900px;\">\r\n        <br> score rank:\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onReloadShow()\">reload show</button>\r\n        <button class=\"button is-primary\" @click=\"onSetPlayerDeactive()\">set player deactive</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>picker</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab11'}\" @click='tab(\"tab11\",1)'>\r\n                    <a>\r\n                        <span>bracket rec 1</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab12'}\" @click='tab(\"tab12\",2)'>\r\n                    <a>\r\n                        <span> rec 2</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab13'}\" @click='tab(\"tab13\",3)'>\r\n                    <a>\r\n                        <span> 8-4</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab14'}\" @click='tab(\"tab14\",4)'>\r\n                    <a>\r\n                        <span> final</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab3'}\" @click='tab(\"tab3\")'>\r\n                    <a>\r\n                        <span>rec</span>\r\n                    </a>\r\n                </li>\r\n\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab6'}\" @click='tab(\"tab6\")'>\r\n                    <a>\r\n                        <span>rank 16</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab11\" ||actTab==\"tab12\"||actTab==\"tab13\"||actTab==\"tab14\"'>\r\n            <div v-if=\"1\" class=\"control\">\r\n                selected gameIdx:{{selGameIdx}}\r\n                <input id=\"bracketScoreInput\" class=\"input\" type=\"text\" style=\"width: 80px;\">\r\n                <button class=\"button btn-setScore\" @click=\"onSetScore(selGameIdx,'#bracketScoreInput')\">修改比分</button>\r\n                <button class=\"button\" @click=\"onSetVsPlayer(selGameIdx,vsPlayer)\">修改对阵↑</button>\r\n                <button class=\"button\" @click=\"onEmitBracket(actTab)\">emit bracket rec</button>\r\n            </div>\r\n            <div v-for=\"(item, index) in bracketRec\" :key=\"item.s\">\r\n                <div v-if=\"item.gameIdx>0\" :style='item.s+\" position: absolute;\"'>\r\n                    <div v-if=\"item.isH\">\r\n                        <a @click=\"setGameIdx(item.gameIdx,item.playerId)\">#{{item.gameIdx}} {{item.player[0]}}_{{item.playerId[0]}}  {{item.score[0]}}</a> ----\r\n                        <a @click=\"setGameIdx(item.gameIdx,item.playerId)\">{{item.score[1]}} {{item.player[1]}}_{{item.playerId[1]}}  </a>\r\n                    </div>\r\n                    <div v-if=\"!item.isH\">\r\n                        <a @click=\"setGameIdx(item.gameIdx,item.playerId)\">#{{item.gameIdx}} {{item.player[0]}}_{{item.playerId[0]}}  {{item.score[0]}}</a> <br>| <br>\r\n                        <a @click=\"setGameIdx(item.gameIdx,item.playerId)\">### {{item.player[1]}}_{{item.playerId[1]}}  {{item.score[1]}}</a>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"' class=\"level\">\r\n            <div class=\"level-left\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in blueArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n            <div class=\"level-right\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in redArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab3\"' style=\"overflow-y: scroll;height: 800px;\">\r\n            <button class=\"button\" @click=\"onEmitBracket(actTab)\">emit bracket rec</button>\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                        <th>L player</th>\r\n                        <th>score</th>\r\n                        <th>R player</th>\r\n                        <th>operation</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==selGameIdx?'is-selected':'']\">\r\n                        <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}} {{rec.isGroup}}</a></th>\r\n                        <td> {{rec.name[0]}} </td>\r\n                        <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                        <td> {{rec.name[1]}} </td>\r\n                        <td>\r\n                            <div class=\"control\" v-if=\"rec.gameIdx==selGameIdx\">\r\n                                <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                                <button class=\"button btn-setScore\" @click=\"onSetScore(rec.gameIdx)\">修改比分</button>\r\n                                <button class=\"button btn-setScore\" @click=\"onSetVsPlayer(rec.gameIdx,vsPlayer)\">修改对阵</button>\r\n                                <button class=\"button\" @click=\"onSetGroup(rec.gameIdx)\">小组赛记录</button>\r\n                                <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                            </div>\r\n                        </td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n            <button class=\"button is-danger\" @click=\"onInitDoc\">init doc</button>\r\n        </div>\r\n\r\n        <div v-if=\"actTab=='tab6'\">\r\n            rank 5 playerId<input type=\"text\" v-model=\"rank5Player\" style=\"width: 80px;\">\r\n            <button class=\"button is-primary\" @click=\"onGenRank16(rank5Player)\">rank16</button>\r\n            <br>\r\n            <button class=\"button is-primary\" @click=\"onPostRank16(1)\">rank16 1120</button>\r\n            <ul>\r\n                <li v-for=\"(player,index) in rank16Arr\" :key=\"player\" style=\"float:left;width:190px;padding:5px\">\r\n                    {{player.rank}} - {{player.name}}[{{player.rankScore}}]\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        {{p1WinMap}}\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <a href=\"/html/ww/group.html\">小组赛</a>\r\n    <a href=\"/html/ww/bracket2.html\">8进4 final晋级</a>\r\n    <a href=\"/html/ww/rank8.html\">rank8</a>\r\n    <a href=\"/html/intro/ww/intro.html?group=a\">小组介绍 group=a</a>\r\n    <a href=\"/panel/#/ol/ob/0?panel=score&s4=1&world=1&game3v3=1\">3v3</a>\r\n    <hr>\r\n    <span class=\"select\">\r\n            <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                    {{ option.text }}\r\n                </option>\r\n            </select>\r\n        </span>\r\n\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <button class=\"button is-primary\" @click=\"onCreateGame\">创建比赛</button>\r\n    <button class=\"button is-primary\" @click=\"onShowWinMap\">战胜对手</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n    <br>\r\n\r\n    <div style=\"width: 900px;\">\r\n        <br> score rank:\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onReloadShow()\">reload show</button>\r\n        <button class=\"button is-primary\" @click=\"onSetPlayerDeactive()\">set player deactive</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <br> rank5 playerId\r\n        <div v-for=\"(p, index) in rank5PlayerArr\" :key=\"p.name\">\r\n            <button class=\"button is-primary\" @click=\"onUpdateRank5Score(p.playerId,p.score)\">{{p.name}}</button>\r\n            <input type=\"text\" v-model=\"p.score\" style=\"width: 100px;\">\r\n        </div>\r\n        <br>\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>picker</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab11'}\" @click='tab(\"tab11\",1)'>\r\n                    <a>\r\n                        <span>bracket rec 1</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab12'}\" @click='tab(\"tab12\",2)'>\r\n                    <a>\r\n                        <span> rec 2</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab13'}\" @click='tab(\"tab13\",3)'>\r\n                    <a>\r\n                        <span> 8-4</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab14'}\" @click='tab(\"tab14\",4)'>\r\n                    <a>\r\n                        <span> final</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab3'}\" @click='tab(\"tab3\")'>\r\n                    <a>\r\n                        <span>rec</span>\r\n                    </a>\r\n                </li>\r\n\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab6'}\" @click='tab(\"tab6\")'>\r\n                    <a>\r\n                        <span>rank 16</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab11\" ||actTab==\"tab12\"||actTab==\"tab13\"||actTab==\"tab14\"'>\r\n            <div v-if=\"1\" class=\"control\">\r\n                selected gameIdx:{{selGameIdx}}\r\n                <input id=\"bracketScoreInput\" class=\"input\" type=\"text\" style=\"width: 80px;\">\r\n                <button class=\"button btn-setScore\" @click=\"onSetScore(selGameIdx,'#bracketScoreInput')\">修改比分</button>\r\n                <button class=\"button\" @click=\"onSetVsPlayer(selGameIdx,vsPlayer)\">修改对阵↑</button>\r\n                <button class=\"button\" @click=\"onEmitBracket(actTab)\">emit bracket rec</button>\r\n            </div>\r\n            <div v-for=\"(item, index) in bracketRec\" :key=\"item.s\">\r\n                <div v-if=\"item.gameIdx>0\" :style='item.s+\" position: absolute;\"'>\r\n                    <div v-if=\"item.isH\">\r\n                        <a @click=\"setGameIdx(item.gameIdx,item.playerId)\">#{{item.gameIdx}} {{item.player[0]}}_{{item.playerId[0]}}  {{item.score[0]}}</a> ----\r\n                        <a @click=\"setGameIdx(item.gameIdx,item.playerId)\">{{item.score[1]}} {{item.player[1]}}_{{item.playerId[1]}}  </a>\r\n                    </div>\r\n                    <div v-if=\"!item.isH\">\r\n                        <a @click=\"setGameIdx(item.gameIdx,item.playerId)\">#{{item.gameIdx}} {{item.player[0]}}_{{item.playerId[0]}}  {{item.score[0]}}</a> <br>| <br>\r\n                        <a @click=\"setGameIdx(item.gameIdx,item.playerId)\">### {{item.player[1]}}_{{item.playerId[1]}}  {{item.score[1]}}</a>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"' class=\"level\">\r\n            <div class=\"level-left\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in blueArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n            <div class=\"level-right\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in redArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab3\"' style=\"overflow-y: scroll;height: 800px;\">\r\n            <button class=\"button\" @click=\"onEmitBracket(actTab)\">emit bracket rec</button>\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                        <th>L player</th>\r\n                        <th>score</th>\r\n                        <th>R player</th>\r\n                        <th>operation</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==selGameIdx?'is-selected':'']\">\r\n                        <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}} {{rec.isGroup}}</a></th>\r\n                        <td> {{rec.name[0]}} </td>\r\n                        <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                        <td> {{rec.name[1]}} </td>\r\n                        <td>\r\n                            <div class=\"control\" v-if=\"rec.gameIdx==selGameIdx\">\r\n                                <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                                <button class=\"button btn-setScore\" @click=\"onSetScore(rec.gameIdx)\">修改比分</button>\r\n                                <button class=\"button btn-setScore\" @click=\"onSetVsPlayer(rec.gameIdx,vsPlayer)\">修改对阵</button>\r\n                                <button class=\"button\" @click=\"onSetGroup(rec.gameIdx)\">小组赛记录</button>\r\n                                <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                            </div>\r\n                        </td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n            <button class=\"button is-danger\" @click=\"onInitDoc\">init doc</button>\r\n        </div>\r\n\r\n        <div v-if=\"actTab=='tab6'\">\r\n            rank 5 playerId<input type=\"text\" v-model=\"rank5Player\" style=\"width: 80px;\">\r\n            <button class=\"button is-primary\" @click=\"onGenRank16(rank5Player)\">rank16</button>\r\n            <br>\r\n            <button class=\"button is-primary\" @click=\"onPostRank16(1)\">rank16 1120</button>\r\n            <ul>\r\n                <li v-for=\"(player,index) in rank16Arr\" :key=\"player\" style=\"float:left;width:190px;padding:5px\">\r\n                    {{player.rank}} - {{player.name}}[{{player.rankScore}}]\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        {{p1WinMap}}\r\n    </div>\r\n</div>";
 
 /***/ }),
 /* 42 */
@@ -8340,12 +8356,12 @@
 	    };
 	    return PlayerItem;
 	}(PIXI.Container));
+	var urlBg = '/img/panel/scoreRank/rank5_bg.png';
 	var ScoreRank = (function (_super) {
 	    __extends(ScoreRank, _super);
 	    function ScoreRank() {
 	        var _this = _super !== null && _super.apply(this, arguments) || this;
 	        _this.isRight = true;
-	        _this.isShowKDA = false;
 	        return _this;
 	    }
 	    ScoreRank.prototype.create = function (p, isRight) {
@@ -8357,8 +8373,8 @@
 	        for (var i = 0; i < data.scoreArr.length; i++) {
 	            var pi = this.itemArr[i];
 	            var scoreData = data.scoreArr[i];
-	            pi.y = i * 160;
-	            pi.pKDA.visible = this.isShowKDA;
+	            pi.y = 938;
+	            pi.x = i * 160;
 	            pi.setScore(scoreData);
 	        }
 	    };
@@ -8378,6 +8394,7 @@
 	        console.log('show socre rank', data);
 	        if (this.itemArr.length) {
 	            this._arrangeY(data);
+	            this.addChild(PixiEx_1.newBitmap({ url: urlBg }));
 	            this.p.addChild(this);
 	        }
 	        else {
@@ -8388,10 +8405,7 @@
 	            }
 	            ImgLoader_1.imgLoader.loadTexArr(imgArr, function (_) {
 	                ImgLoader_1.imgLoader.loadTexArr([
-	                    '/img/panel/scoreRank/itemBg_on.png',
-	                    '/img/panel/scoreRank/itemFg_on.png',
-	                    '/img/panel/scoreRank/itemFg_off.png',
-	                    '/img/panel/scoreRank/itemBg_off.png'
+	                    urlBg,
 	                ], function (_) {
 	                    for (var i = 0; i < data.scoreArr.length; i++) {
 	                        var pi = (new PlayerItem()).create(true, { score: 8, name: '' });
@@ -9877,12 +9891,6 @@
 	                _this.stage.addChild(_this.worldWar);
 	            _this.lBloodRank = new ScoreRank_1.ScoreRank();
 	            _this.lBloodRank.create(_this.worldWar, false);
-	            _this.rBloodRank = new ScoreRank_1.ScoreRank();
-	            _this.rBloodRank.create(_this.worldWar, true);
-	            _this.lBloodRank.isShowKDA =
-	                _this.rBloodRank.isShowKDA = true;
-	            _this.lBloodRank.y = -60;
-	            _this.rBloodRank.y = -60;
 	            _this.title = new WWTitle_1.WWTitle();
 	            _this.worldWar.addChild(_this.title);
 	            _this.title.hide();
@@ -9942,8 +9950,6 @@
 	            .on(Command_1.CommandId.sc_showKDARank, function (data) {
 	            data.isRight = false;
 	            _this.lBloodRank.show(data);
-	            data.isRight = true;
-	            _this.rBloodRank.show(data);
 	        })
 	            .on("sc_data", function (data) {
 	            if (data.dbIdx == 'worldwar') {
@@ -12308,8 +12314,7 @@
 
 
 /***/ }),
-/* 113 */,
-/* 114 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -12517,7 +12522,7 @@
 
 
 /***/ }),
-/* 115 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -12679,6 +12684,176 @@
 	    return Bracket8421View;
 	}(VueBase_1.VueBase));
 	exports.bracket8421 = new Bracket8421View();
+
+
+/***/ }),
+/* 115 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var BasePanel_1 = __webpack_require__(75);
+	var Command_1 = __webpack_require__(28);
+	var VueBase_1 = __webpack_require__(22);
+	var BasePanelView_1 = __webpack_require__(52);
+	var const_1 = __webpack_require__(27);
+	var PixiEx_1 = __webpack_require__(56);
+	var TextFac_1 = __webpack_require__(60);
+	var MaskAvatar_1 = __webpack_require__(102);
+	var JsFunc_1 = __webpack_require__(21);
+	var urlBg = '/img/panel/scoreRank/rank5_bg.png';
+	var urlMask = '/img/panel/scoreRank/rank5_mask.png';
+	var urlAvtDef = '/img/panel/scoreRank/rank5_patch.png';
+	var urlPlayer0 = '/img/panel/scoreRank/rank5_p0.png';
+	var PlayerItem = (function (_super) {
+	    __extends(PlayerItem, _super);
+	    function PlayerItem() {
+	        var _this = _super.call(this) || this;
+	        _this.avt = new MaskAvatar_1.MaskAvatar(null);
+	        _this.avt.setAvtPos(0, 0, 115);
+	        _this.addChild(_this.avt);
+	        var ns = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: '32px', fill: "#ccc",
+	            fontWeight: 'bold'
+	        };
+	        _this.pName = TextFac_1.TextFac.new_(ns, _this)
+	            .setText("");
+	        return _this;
+	    }
+	    PlayerItem.prototype.show = function (v) {
+	        this.avt.visible =
+	            this.pName.visible = v;
+	    };
+	    return PlayerItem;
+	}(PIXI.Container));
+	var ScoreRank5 = (function (_super) {
+	    __extends(ScoreRank5, _super);
+	    function ScoreRank5() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    ScoreRank5.prototype.create = function () {
+	        var _this = this;
+	        this.load([
+	            urlBg,
+	            urlMask,
+	            urlAvtDef,
+	            urlPlayer0,
+	        ], function (_) {
+	            console.log('score rank5');
+	            _this.playerItemArr = [];
+	            var avtCtn = new PIXI.Container();
+	            _this.addChild(avtCtn);
+	            var avtMask = PixiEx_1.newBitmap({ url: urlMask });
+	            avtCtn.addChild(avtMask);
+	            _this.avtPlayer0 = PixiEx_1.newBitmap({ url: urlPlayer0 });
+	            _this.addChild(_this.avtPlayer0);
+	            var bg = PixiEx_1.newBitmap({ url: urlBg });
+	            _this.addChild(bg);
+	            _this.avtPatch = PixiEx_1.newBitmap({ url: urlAvtDef });
+	            _this.addChild(_this.avtPatch);
+	            for (var i = 0; i < 5; i++) {
+	                var player = new PlayerItem();
+	                _this.addChild(player);
+	                if (i == 0) {
+	                    player.x = 524;
+	                    player.y = 800 + 212;
+	                    player.avt.x = 524;
+	                    player.avt.mask = avtMask;
+	                    player.avt.y = 800 + 88;
+	                    player.avt.setAvtPos(0, 0, 132);
+	                }
+	                else {
+	                    player.x = 760 + (i - 1) * 175;
+	                    player.y = 800 + 212;
+	                    player.avt.x = 760 + (i - 1) * 175;
+	                    player.avt.y = 800 + 132;
+	                }
+	                avtCtn.addChild(player.avt);
+	                _this.playerItemArr.push(player);
+	            }
+	        });
+	    };
+	    ScoreRank5.prototype._show = function (data) {
+	        if (data.cid == Command_1.CommandId.sc_showScoreRank) {
+	            console.log('sc_showKDARank');
+	            for (var i = 0; i < 4; i++) {
+	                var dataPlayer = data.scoreArr[i];
+	                dataPlayer.score = Number(dataPlayer.score);
+	            }
+	            var a = data.scoreArr.sort(JsFunc_1.descendingProp('score'));
+	            var hasScore = a[0].score != 0;
+	            var noScore = (a[0].score == 0
+	                && a[1].score == 0
+	                && a[2].score == 0
+	                && a[3].score == 0);
+	            var ofsAvt = Number(!hasScore);
+	            if (hasScore) {
+	                this.playerItemArr[4].show(false);
+	                this.playerItemArr[0].show(true);
+	                this.avtPatch.visible = true;
+	                this.avtPlayer0.visible = false;
+	            }
+	            else {
+	                this.playerItemArr[4].show(true);
+	                this.playerItemArr[0].show(false);
+	                this.avtPatch.visible = false;
+	                this.avtPlayer0.visible = true;
+	            }
+	            for (var i = 0; i < 4; i++) {
+	                var player = this.playerItemArr[i + ofsAvt];
+	                var dataPlayer = a[i];
+	                player.avt.load(dataPlayer.avatar);
+	                if (noScore)
+	                    player.pName.setText(dataPlayer.name);
+	                else
+	                    player.pName.setText(dataPlayer.name + ' ' + dataPlayer.score);
+	            }
+	        }
+	        this.p.addChild(this);
+	    };
+	    ScoreRank5.cls = 'ScoreRank5';
+	    return ScoreRank5;
+	}(BasePanel_1.BasePanel));
+	var canvasStage;
+	var ScoreRank5View = (function (_super) {
+	    __extends(ScoreRank5View, _super);
+	    function ScoreRank5View() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    ScoreRank5View.prototype.mounted = function () {
+	        console.log('mouted ScoreRank5View view');
+	        if (!canvasStage)
+	            canvasStage = BasePanelView_1.BasePanelView.initPixi();
+	        BasePanel_1.showPanel(ScoreRank5, { visible: true }, canvasStage);
+	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
+	        localWs.on('connect', function (msg) {
+	            console.log('connect', window.location.host);
+	        });
+	        var _adept = function (event) {
+	            localWs.on(event, function (data) {
+	                data.cid = event;
+	                if (data.visible == null)
+	                    data.visible = true;
+	                console.log(event, data);
+	                BasePanel_1.showPanel(ScoreRank5, data, canvasStage);
+	            });
+	        };
+	        _adept(Command_1.CommandId.sc_showScoreRank);
+	    };
+	    return ScoreRank5View;
+	}(VueBase_1.VueBase));
+	exports.scoreRank5 = new ScoreRank5View();
 
 
 /***/ })

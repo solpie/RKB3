@@ -15,7 +15,7 @@ export class WorldWarView extends PIXI.Container {
   stage: any;
   worldWar: WorldWar;
   lBloodRank: ScoreRank
-  rBloodRank: ScoreRank
+  // rBloodRank: ScoreRank
   // kdaTitle: PIXI.Sprite
 
   title: WWTitle
@@ -42,14 +42,13 @@ export class WorldWarView extends PIXI.Container {
       this.lBloodRank = new ScoreRank()
       this.lBloodRank.create(this.worldWar, false)
 
-      this.rBloodRank = new ScoreRank()
-      this.rBloodRank.create(this.worldWar, true)
+      // this.rBloodRank = new ScoreRank()
+      // this.rBloodRank.create(this.worldWar, true)
 
-      this.lBloodRank.isShowKDA =
-        this.rBloodRank.isShowKDA = true
+      // this.lBloodRank.isShowKDA = true
 
-      this.lBloodRank.y = -60;
-      this.rBloodRank.y = -60;
+      // this.lBloodRank.y = -60;
+      // this.rBloodRank.y = -60;
 
       this.title = new WWTitle()
       this.worldWar.addChild(this.title)
@@ -114,8 +113,6 @@ export class WorldWarView extends PIXI.Container {
       .on(CommandId.sc_showKDARank, data => {
         data.isRight = false
         this.lBloodRank.show(data)
-        data.isRight = true
-        this.rBloodRank.show(data)
       })
       .on("sc_data", data => {
         if (data.dbIdx == 'worldwar') {

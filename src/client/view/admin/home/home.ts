@@ -122,11 +122,13 @@ class HomeView extends VueBase {
             { title: "对阵球员信息面板", url: `/panel/#/vsInfo?game_id=${gameId}` },
             { title: "-----线下操作面板-----", url: `` },
             { title: "魔王挑战赛LowerThird", url: `/admin/#/pick` },
+            { title: "魔王挑战赛比分面板", url: `/panel/#/ol/ob/0?panel=score&s4=1&world=1` },
+            { title: "魔王挑战赛晋级图", url: `/panel/#/brackets5` },
+            { title: "冠军排位赛抢五面板", url: `/panel/#/rank5` },
+
             { title: "通用计分控制台", url: `/admin/#/com` },
             { title: "3v3计分", url: `/html/controls/game3v3.html` },
             { title: "3v3面板", url: `/panel/#/ol/ob/0?panel=score&s4=1&world=1&game3v3=1` },
-            { title: "魔王挑战赛比分面板", url: `/panel/#/ol/ob/0?panel=score&s4=1&world=1` },
-            { title: "魔王挑战赛晋级图", url: `/panel/#/brackets5` },
         ];
     }
 
