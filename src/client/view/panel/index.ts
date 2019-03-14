@@ -15,6 +15,7 @@ import { lowerThird } from './stageOnline/lowerThird/LowerThird';
 import { vsInfo } from './stageOnline/vsInfo/VsInfo';
 import { bracket8421 } from './stageOnline/bracket/Bracket8421';
 import { scoreRank5 } from './stageOnline/scoreRank/ScoreRank5';
+import { bracket16 } from './stageOnline/bracket/Bracket16';
 //////////////
 
 let routes = [
@@ -24,7 +25,8 @@ let routes = [
     },
     {
         path: '/bracketS5',
-        components: { default: bracket8421 }
+        components: { default: bracket16 }
+        // components: { default: bracket8421 }
         // components: { default: bracketS5Final }
     },
     {
