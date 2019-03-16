@@ -57,8 +57,8 @@
 	var CommonGame_1 = __webpack_require__(110);
 	var LowerThird_1 = __webpack_require__(111);
 	var VsInfo_1 = __webpack_require__(113);
-	var ScoreRank5_1 = __webpack_require__(115);
-	var Bracket16_1 = __webpack_require__(118);
+	var ScoreRank5_1 = __webpack_require__(114);
+	var Bracket16_1 = __webpack_require__(115);
 	var routes = [
 	    {
 	        path: '/com',
@@ -9948,8 +9948,6 @@
 	            _this.worldWar.setTeamScore(data);
 	        })
 	            .on(Command_1.CommandId.sc_showKDARank, function (data) {
-	            data.isRight = false;
-	            _this.lBloodRank.show(data);
 	        })
 	            .on("sc_data", function (data) {
 	            if (data.dbIdx == 'worldwar') {
@@ -12422,6 +12420,10 @@
 	                .setY(508);
 	            _this.rName = TextFac_1.TextFac.new_(ns, _this)
 	                .setY(_this.lName.y);
+	            _this.lRank = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(600);
+	            _this.rRank = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(_this.lRank.y);
 	            _this.roundTitle = TextFac_1.TextFac.new_(ns, _this)
 	                .setY(141);
 	            HupuAPI_1.getLive(function (conf) {
@@ -12464,6 +12466,10 @@
 	            this.lName.setText(lPlayer.name)
 	                .setAlignCenter(PixiEx_1._c(-178));
 	            this.rName.setText(rPlayer.name)
+	                .setAlignCenter(PixiEx_1._c(178));
+	            this.lRank.setText(lPlayer.power_rank)
+	                .setAlignCenter(PixiEx_1._c(-178));
+	            this.rRank.setText(rPlayer.power_rank)
 	                .setAlignCenter(PixiEx_1._c(178));
 	            this.lAvt.load(lPlayer.avatar);
 	            this.rAvt.load(rPlayer.avatar);
@@ -12522,8 +12528,7 @@
 
 
 /***/ }),
-/* 114 */,
-/* 115 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -12548,6 +12553,7 @@
 	var MaskAvatar_1 = __webpack_require__(102);
 	var JsFunc_1 = __webpack_require__(21);
 	var urlBg = '/img/panel/scoreRank/rank5_bg.png';
+	var urlBg0 = '/img/panel/scoreRank/rank5_bg0.png';
 	var urlMask = '/img/panel/scoreRank/rank5_mask.png';
 	var urlAvtDef = '/img/panel/scoreRank/rank5_patch.png';
 	var urlPlayer0 = '/img/panel/scoreRank/rank5_p0.png';
@@ -12581,6 +12587,7 @@
 	    ScoreRank5.prototype.create = function () {
 	        var _this = this;
 	        this.load([
+	            urlBg0,
 	            urlBg,
 	            urlMask,
 	            urlAvtDef,
@@ -12588,6 +12595,8 @@
 	        ], function (_) {
 	            console.log('score rank5');
 	            _this.playerItemArr = [];
+	            var bg1 = PixiEx_1.newBitmap({ url: urlBg0 });
+	            _this.addChild(bg1);
 	            var avtCtn = new PIXI.Container();
 	            _this.addChild(avtCtn);
 	            var avtMask = PixiEx_1.newBitmap({ url: urlMask });
@@ -12693,8 +12702,174 @@
 
 
 /***/ }),
-/* 116 */,
-/* 117 */
+/* 115 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = Object.setPrototypeOf ||
+	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var VueBase_1 = __webpack_require__(22);
+	var Command_1 = __webpack_require__(28);
+	var BasePanel_1 = __webpack_require__(75);
+	var BasePanelView_1 = __webpack_require__(52);
+	var const_1 = __webpack_require__(27);
+	var PixiEx_1 = __webpack_require__(56);
+	var TextFac_1 = __webpack_require__(60);
+	var BracketS5Team_1 = __webpack_require__(116);
+	var urlBg = '/img/panel/bracket/s5/bg_16.png';
+	var BracketS5Final = (function (_super) {
+	    __extends(BracketS5Final, _super);
+	    function BracketS5Final() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    BracketS5Final.prototype.create = function () {
+	        var _this = this;
+	        var imgArr = [urlBg
+	        ];
+	        var x0 = 730, x1 = 421, x2 = 421 - 252;
+	        var groupMap = {
+	            "1": { x: PixiEx_1._c(-x0), y: 252 },
+	            "2": { x: PixiEx_1._c(-x0), y: 383 },
+	            "3": { x: PixiEx_1._c(-x0), y: 540 },
+	            "4": { x: PixiEx_1._c(-x0), y: 671 },
+	            "5": { x: PixiEx_1._c(x0), y: 252 },
+	            "6": { x: PixiEx_1._c(x0), y: 383 },
+	            "7": { x: PixiEx_1._c(x0), y: 540 },
+	            "8": { x: PixiEx_1._c(x0), y: 671 },
+	            "9": { x: PixiEx_1._c(-x1), y: 318 },
+	            "10": { x: PixiEx_1._c(-x1), y: 612 },
+	            "11": { x: PixiEx_1._c(x1), y: 318 },
+	            "12": { x: PixiEx_1._c(x1), y: 612 },
+	            "13": { x: PixiEx_1._c(-x2), y: 467 },
+	            "14": { x: PixiEx_1._c(x2), y: 467 },
+	            "15": { x: 125, y: 1080 },
+	            "16": { x: 125, y: 220 }
+	        };
+	        this.groupMap = groupMap;
+	        this.addChild(new PIXI.Graphics()
+	            .beginFill(0x000000)
+	            .drawRect(0, 0, 1920, 1080));
+	        this.load(imgArr, function (_) {
+	            console.log('on loaded imgArr');
+	            var ns = {
+	                fontFamily: const_1.FontName.MicrosoftYahei,
+	                fontSize: "30px",
+	                dropShadow: true,
+	                dropShadowColor: '#222222',
+	                dropShadowAngle: Math.PI * 1 / 3,
+	                dropShadowDistance: 3,
+	                fontWeight: "bold",
+	                fill: "#acacac"
+	            };
+	            _this.addChild(PixiEx_1.newBitmap({ url: urlBg }));
+	            for (var k in groupMap) {
+	                var group = groupMap[k];
+	                group.lName = TextFac_1.TextFac.new_(ns, _this)
+	                    .setText('');
+	                group.rName = TextFac_1.TextFac.new_(ns, _this)
+	                    .setText('');
+	                if (Number(k) > 14) {
+	                    group.lName.setSize('43px');
+	                    group.rName.setSize('43px');
+	                    group.lName.setPos(group.x, group.y)
+	                        .setAlignCenter(PixiEx_1._c(group.x));
+	                    group.rName.setPos(group.x, group.y)
+	                        .setAlignCenter(PixiEx_1._c(-group.x));
+	                }
+	                else {
+	                    group.lName.setPos(group.x, group.y)
+	                        .setAlignCenter(group.x);
+	                    group.rName.setPos(group.x, group.y + 43)
+	                        .setAlignCenter(group.x);
+	                }
+	            }
+	        });
+	    };
+	    BracketS5Final.prototype.fillData = function (data) {
+	        var rec = data.bracketRec16;
+	        for (var _i = 0, rec_1 = rec; _i < rec_1.length; _i++) {
+	            var r = rec_1[_i];
+	            var group = this.groupMap[r.gameIdx];
+	            if (r.gameIdx > 14) {
+	                group.lName.setText(r.player[0])
+	                    .setAlignCenter(PixiEx_1._c(group.x));
+	                group.rName.setText(r.player[1])
+	                    .setAlignCenter(PixiEx_1._c(-group.x));
+	            }
+	            else {
+	                group.lName.setText(r.player[0])
+	                    .setAlignCenter(group.x);
+	                group.rName.setText(r.player[1])
+	                    .setAlignCenter(group.x);
+	            }
+	            var lScore = r.score[0], rScore = r.score[1];
+	            group.lName.alpha =
+	                group.rName.alpha = 1;
+	            if (r.score[0] != 0 || r.score[1] != 0) {
+	                if (lScore > rScore) {
+	                    group.rName.alpha = 0.4;
+	                }
+	                else {
+	                    group.lName.alpha = 0.4;
+	                }
+	            }
+	        }
+	    };
+	    BracketS5Final.prototype._show = function (data) {
+	        if (data.cid == Command_1.CommandId.sc_bracket) {
+	            this.fillData(data);
+	        }
+	        this.p.addChild(this);
+	    };
+	    BracketS5Final.cls = 'BracketS5Final';
+	    return BracketS5Final;
+	}(BasePanel_1.BasePanel));
+	var canvasStage;
+	var Bracket16View = (function (_super) {
+	    __extends(Bracket16View, _super);
+	    function Bracket16View() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    Bracket16View.prototype.mounted = function () {
+	        console.log('mouted BracketS5FinalView view');
+	        if (!canvasStage)
+	            canvasStage = BasePanelView_1.BasePanelView.initPixi();
+	        BasePanel_1.showPanel(BracketS5Final, { visible: true }, canvasStage);
+	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
+	        localWs.on('connect', function (msg) {
+	            console.log('connect', window.location.host);
+	        })
+	            .on(Command_1.CommandId.sc_bracketS5, function (data) {
+	            data.cid = Command_1.CommandId.sc_bracketS5;
+	            data.visible = true;
+	            BasePanel_1.showPanel(BracketS5Team_1.BracketS5Team, data, canvasStage);
+	        });
+	        var _adept = function (event) {
+	            localWs.on(event, function (data) {
+	                data.cid = event;
+	                data.visible = true;
+	                console.log(event, data);
+	                BasePanel_1.showPanel(BracketS5Final, data, canvasStage);
+	            });
+	        };
+	        _adept(Command_1.CommandId.sc_bracket);
+	    };
+	    return Bracket16View;
+	}(VueBase_1.VueBase));
+	exports.bracket16 = new Bracket16View();
+
+
+/***/ }),
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -12907,173 +13082,6 @@
 	    return BracketS5Team;
 	}(BasePanel_1.BasePanel));
 	exports.BracketS5Team = BracketS5Team;
-
-
-/***/ }),
-/* 118 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || (function () {
-	    var extendStatics = Object.setPrototypeOf ||
-	        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-	        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-	    return function (d, b) {
-	        extendStatics(d, b);
-	        function __() { this.constructor = d; }
-	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	    };
-	})();
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var VueBase_1 = __webpack_require__(22);
-	var Command_1 = __webpack_require__(28);
-	var BasePanel_1 = __webpack_require__(75);
-	var BasePanelView_1 = __webpack_require__(52);
-	var const_1 = __webpack_require__(27);
-	var PixiEx_1 = __webpack_require__(56);
-	var TextFac_1 = __webpack_require__(60);
-	var BracketS5Team_1 = __webpack_require__(117);
-	var urlBg = '/img/panel/bracket/s5/bg_16.png';
-	var BracketS5Final = (function (_super) {
-	    __extends(BracketS5Final, _super);
-	    function BracketS5Final() {
-	        return _super !== null && _super.apply(this, arguments) || this;
-	    }
-	    BracketS5Final.prototype.create = function () {
-	        var _this = this;
-	        var imgArr = [urlBg
-	        ];
-	        var x0 = 730, x1 = 421, x2 = 421 - 252;
-	        var groupMap = {
-	            "1": { x: PixiEx_1._c(-x0), y: 252 },
-	            "2": { x: PixiEx_1._c(-x0), y: 383 },
-	            "3": { x: PixiEx_1._c(-x0), y: 540 },
-	            "4": { x: PixiEx_1._c(-x0), y: 671 },
-	            "5": { x: PixiEx_1._c(x0), y: 252 },
-	            "6": { x: PixiEx_1._c(x0), y: 383 },
-	            "7": { x: PixiEx_1._c(x0), y: 540 },
-	            "8": { x: PixiEx_1._c(x0), y: 671 },
-	            "9": { x: PixiEx_1._c(-x1), y: 318 },
-	            "10": { x: PixiEx_1._c(-x1), y: 612 },
-	            "11": { x: PixiEx_1._c(x1), y: 318 },
-	            "12": { x: PixiEx_1._c(x1), y: 612 },
-	            "13": { x: PixiEx_1._c(-x2), y: 467 },
-	            "14": { x: PixiEx_1._c(x2), y: 467 },
-	            "15": { x: 125, y: 1080 },
-	            "16": { x: 125, y: 220 }
-	        };
-	        this.groupMap = groupMap;
-	        this.addChild(new PIXI.Graphics()
-	            .beginFill(0x000000)
-	            .drawRect(0, 0, 1920, 1080));
-	        this.load(imgArr, function (_) {
-	            console.log('on loaded imgArr');
-	            var ns = {
-	                fontFamily: const_1.FontName.MicrosoftYahei,
-	                fontSize: "30px",
-	                dropShadow: true,
-	                dropShadowColor: '#222222',
-	                dropShadowAngle: Math.PI * 1 / 3,
-	                dropShadowDistance: 3,
-	                fontWeight: "bold",
-	                fill: "#acacac"
-	            };
-	            _this.addChild(PixiEx_1.newBitmap({ url: urlBg }));
-	            for (var k in groupMap) {
-	                var group = groupMap[k];
-	                group.lName = TextFac_1.TextFac.new_(ns, _this)
-	                    .setText('');
-	                group.rName = TextFac_1.TextFac.new_(ns, _this)
-	                    .setText('');
-	                if (Number(k) > 14) {
-	                    group.lName.setSize('43px');
-	                    group.rName.setSize('43px');
-	                    group.lName.setPos(group.x, group.y)
-	                        .setAlignCenter(PixiEx_1._c(group.x));
-	                    group.rName.setPos(group.x, group.y)
-	                        .setAlignCenter(PixiEx_1._c(-group.x));
-	                }
-	                else {
-	                    group.lName.setPos(group.x, group.y)
-	                        .setAlignCenter(group.x);
-	                    group.rName.setPos(group.x, group.y + 43)
-	                        .setAlignCenter(group.x);
-	                }
-	            }
-	        });
-	    };
-	    BracketS5Final.prototype.fillData = function (data) {
-	        var rec = data.bracketRec16;
-	        for (var _i = 0, rec_1 = rec; _i < rec_1.length; _i++) {
-	            var r = rec_1[_i];
-	            var group = this.groupMap[r.gameIdx];
-	            if (r.gameIdx > 14) {
-	                group.lName.setText(r.player[0])
-	                    .setAlignCenter(PixiEx_1._c(group.x));
-	                group.rName.setText(r.player[1])
-	                    .setAlignCenter(PixiEx_1._c(-group.x));
-	            }
-	            else {
-	                group.lName.setText(r.player[0])
-	                    .setAlignCenter(group.x);
-	                group.rName.setText(r.player[1])
-	                    .setAlignCenter(group.x);
-	            }
-	            var lScore = r.score[0], rScore = r.score[1];
-	            group.lName.alpha =
-	                group.rName.alpha = 1;
-	            if (r.score[0] != 0 || r.score[1] != 0) {
-	                if (lScore > rScore) {
-	                    group.rName.alpha = 0.4;
-	                }
-	                else {
-	                    group.lName.alpha = 0.4;
-	                }
-	            }
-	        }
-	    };
-	    BracketS5Final.prototype._show = function (data) {
-	        if (data.cid == Command_1.CommandId.sc_bracket) {
-	            this.fillData(data);
-	        }
-	        this.p.addChild(this);
-	    };
-	    BracketS5Final.cls = 'BracketS5Final';
-	    return BracketS5Final;
-	}(BasePanel_1.BasePanel));
-	var canvasStage;
-	var Bracket16View = (function (_super) {
-	    __extends(Bracket16View, _super);
-	    function Bracket16View() {
-	        return _super !== null && _super.apply(this, arguments) || this;
-	    }
-	    Bracket16View.prototype.mounted = function () {
-	        console.log('mouted BracketS5FinalView view');
-	        if (!canvasStage)
-	            canvasStage = BasePanelView_1.BasePanelView.initPixi();
-	        BasePanel_1.showPanel(BracketS5Final, { visible: true }, canvasStage);
-	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
-	        localWs.on('connect', function (msg) {
-	            console.log('connect', window.location.host);
-	        })
-	            .on(Command_1.CommandId.sc_bracketS5, function (data) {
-	            data.cid = Command_1.CommandId.sc_bracketS5;
-	            data.visible = true;
-	            BasePanel_1.showPanel(BracketS5Team_1.BracketS5Team, data, canvasStage);
-	        });
-	        var _adept = function (event) {
-	            localWs.on(event, function (data) {
-	                data.cid = event;
-	                data.visible = true;
-	                console.log(event, data);
-	                BasePanel_1.showPanel(BracketS5Final, data, canvasStage);
-	            });
-	        };
-	        _adept(Command_1.CommandId.sc_bracket);
-	    };
-	    return Bracket16View;
-	}(VueBase_1.VueBase));
-	exports.bracket16 = new Bracket16View();
 
 
 /***/ })

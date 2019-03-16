@@ -9,6 +9,7 @@ import { MaskAvatar } from '../../base/MaskAvatar';
 import { descendingProp } from '../../../utils/JsFunc';
 
 let urlBg = '/img/panel/scoreRank/rank5_bg.png'
+let urlBg0 = '/img/panel/scoreRank/rank5_bg0.png'
 let urlMask = '/img/panel/scoreRank/rank5_mask.png'
 let urlAvtDef = '/img/panel/scoreRank/rank5_patch.png'
 let urlPlayer0 = '/img/panel/scoreRank/rank5_p0.png'
@@ -41,6 +42,7 @@ class ScoreRank5 extends BasePanel {
     avtPlayer0: PIXI.Sprite
     create() {
         this.load([
+            urlBg0,
             urlBg,
             urlMask,
             urlAvtDef,
@@ -48,6 +50,10 @@ class ScoreRank5 extends BasePanel {
         ], _ => {
             console.log('score rank5')
             this.playerItemArr = []
+
+            let bg1 = newBitmap({ url: urlBg0 })
+            this.addChild(bg1)
+
             let avtCtn = new PIXI.Container()
             this.addChild(avtCtn)
 
@@ -126,7 +132,7 @@ class ScoreRank5 extends BasePanel {
                 let dataPlayer = a[i]
                 player.avt.load(dataPlayer.avatar)
                 if (noScore)
-                    player.pName.setText(dataPlayer.name )
+                    player.pName.setText(dataPlayer.name)
                 else
                     player.pName.setText(dataPlayer.name + ' ' + dataPlayer.score)
             }

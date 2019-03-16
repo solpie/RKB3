@@ -111,8 +111,8 @@ export class WorldWarView extends PIXI.Container {
         this.worldWar.setTeamScore(data)
       })
       .on(CommandId.sc_showKDARank, data => {
-        data.isRight = false
-        this.lBloodRank.show(data)
+        // data.isRight = false
+        // this.lBloodRank.show(data)
       })
       .on("sc_data", data => {
         if (data.dbIdx == 'worldwar') {

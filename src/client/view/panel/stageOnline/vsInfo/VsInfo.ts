@@ -133,6 +133,11 @@ class VsInfo extends BasePanel {
                 .setY(this.lName.y)
 
 
+            this.lRank = TextFac.new_(ns, this)
+                .setY(600)
+            this.rRank = TextFac.new_(ns, this)
+                .setY(this.lRank.y)
+
             this.roundTitle = TextFac.new_(ns, this)
                 .setY(141)
             getLive(conf => {
@@ -186,6 +191,12 @@ class VsInfo extends BasePanel {
             this.lName.setText(lPlayer.name)
                 .setAlignCenter(_c(-178))
             this.rName.setText(rPlayer.name)
+                .setAlignCenter(_c(178))
+            
+            
+            this.lRank.setText(lPlayer.power_rank)
+                .setAlignCenter(_c(-178))
+            this.rRank.setText(rPlayer.power_rank)
                 .setAlignCenter(_c(178))
 
             this.lAvt.load(lPlayer.avatar)

@@ -4224,14 +4224,24 @@
 	        ];
 	        this.conf = [
 	            {
-	                "button": "盼盼 flyyoung",
+	                "button": "盼盼 姜冕",
 	                "type": 1,
-	                "cont": ["盼盼_路人王官方主播", "flyyoung_路人王官方主播"]
+	                "cont": ["盼盼_路人王官方主播", "姜冕_路人王官方主播"]
 	            },
 	            {
-	                "button": "flyyoung 盼盼",
+	                "button": "姜冕 盼盼",
 	                "type": 1,
-	                "cont": ["flyyoung_路人王官方主播", "盼盼_路人王官方主播"]
+	                "cont": ["姜冕_路人王官方主播", "盼盼_路人王官方主播"]
+	            },
+	            {
+	                "button": "Gary 殳海",
+	                "type": 1,
+	                "cont": ["鹅皇Gary_路人王官方主播", "殳海_腾讯NBA解说嘉宾"]
+	            },
+	            {
+	                "button": "殳海 Gary",
+	                "type": 1,
+	                "cont": ["殳海_腾讯NBA解说嘉宾", "鹅皇Gary_路人王官方主播"]
 	            },
 	            {
 	                "button": "Gary 堂主",

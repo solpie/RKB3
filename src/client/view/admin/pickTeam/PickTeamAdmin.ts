@@ -73,40 +73,40 @@ export class _PickTeamAdmin extends VueBase {
             //     "type": 1,//ppd logo 
             //     "cont": ["小易_MC小易", "余霜_英雄联盟官方主持"]
             // },
-            // {
+            // { 
             //     "button": "余霜 小易 ",
             //     "type": 1,//ppd logo 
             //     "cont": ["余霜_英雄联盟官方主持", "小易_MC小易"]
             // },
             //lowerthird
             {
-                "button": "盼盼 flyyoung",
-                "type": 1,//ppd logo 
-                "cont": ["盼盼_路人王官方主播", "flyyoung_路人王官方主播"]
+                "button": "盼盼 姜冕",
+                "type": 1, 
+                "cont": ["盼盼_路人王官方主播", "姜冕_路人王官方主播"]
             },
             {
-                "button": "flyyoung 盼盼",
-                "type": 1,//ppd logo 
-                "cont": ["flyyoung_路人王官方主播", "盼盼_路人王官方主播"]
+                "button": "姜冕 盼盼",
+                "type": 1, 
+                "cont": ["姜冕_路人王官方主播", "盼盼_路人王官方主播"]
             },
-            // {
-            //     "button": "Gary 杨毅",
-            //     "type": 1,//ppd logo 
-            //     "cont": ["鹅皇Gary_路人王官方主播", "杨毅_篮球评论员"]
-            // },
-            // {
-            //     "button": "杨毅 Gary",
-            //     "type": 1,//ppd logo 
-            //     "cont": ["杨毅_篮球评论员", "鹅皇Gary_路人王官方主播"]
-            // },
+            {
+                "button": "Gary 殳海",
+                "type": 1, 
+                "cont": ["鹅皇Gary_路人王官方主播", "殳海_腾讯NBA解说嘉宾"]
+            },
+            {
+                "button": "殳海 Gary",
+                "type": 1, 
+                "cont": ["殳海_腾讯NBA解说嘉宾", "鹅皇Gary_路人王官方主播"]
+            },
             {
                 "button": "Gary 堂主",
-                "type": 1,//ppd logo 
+                "type": 1, 
                 "cont": ["鹅皇Gary_路人王官方主播", "堂主_路人王官方主播"]
             },
             {
                 "button": "堂主 Gary",
-                "type": 1,//ppd logo 
+                "type": 1, 
                 "cont": ["堂主_路人王官方主播", "鹅皇Gary_路人王官方主播"]
             },
             //
