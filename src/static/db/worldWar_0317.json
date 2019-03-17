@@ -1,0 +1,38 @@
+{
+    "date": "2018-12-30",
+    "foulToHint": 3,
+    "dbUrl": "http://rtmp.icassi.us:8090/event?idx=0317_1",
+    "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/0316/",
+    "vs": [1, 2],
+    "rec": [{
+        "vs": [1, 2],
+        "score": [1, 1]
+    }],
+    "team": [
+        { "idx": 1, "name": "路人王队", "playerArr": ["p3", "p1", "p2", "p4", "p15"] },
+        { "idx": 2, "name": "美国联队", "playerArr": ["p17", "p18", "p19", "p20", "p21"] }
+    ],
+    "pick": [
+        "p1_石一童",
+        "p2_艾林林",
+        "p3_亿元",
+        "p4_李俊",
+        "p5_肖颖",
+        "p6_陈婵丽",
+
+        "p7_周薇",
+        "p8_苏锦欣",
+        "p9_傅攀怡",
+        "p10_姜冕",
+        "p11_徐心雨",
+        "p12_叶凤阳"
+    ],
+    "gameTitle": {
+        "1": "小组赛",
+        "2": "八强赛",
+        "3": "四强赛",
+        "4": "季军赛",
+        "5": "决赛"
+    },
+    "playerMap": { "p1": { "name": "郭凌川", "hwa": [190, 90, 24], "title": "路人王26冠怼派代言人大N", "playerId": "p1", "info": "" }, "p2": { "name": "王晶", "hwa": [196, 95, 40], "title": "深圳站3站3冠 前CBA名将", "playerId": "p2", "info": "" }, "p3": { "name": "马克", "hwa": [187, 93, 24], "title": "路人王8冠王 体能怪", "playerId": "p3", "info": "" }, "p4": { "name": "李瑞", "hwa": [190, 85, 21], "title": "路人王15冠 面框进攻第一人", "playerId": "p4", "info": "" }, "p5": { "name": "李峙锦", "hwa": [197, 100, 21], "title": "西安站4冠王 西安浓眉哥", "playerId": "p5", "info": "" }, "p6": { "name": "项麒芸", "hwa": [190, 87, 31], "title": "路人王6冠王 最强特警", "playerId": "p6", "info": "" }, "p7": { "name": "闫帅", "hwa": [183, 85, 27], "title": "路人王S6北京站冠军街球名宿", "playerId": "p7", "info": "" }, "p8": { "name": "唐日辉", "hwa": [185, 77, 23], "title": "路人王4冠王长沙街球明星", "playerId": "p8", "info": "" }, "p9": { "name": "肖尧", "hwa": [190, 100, 26], "title": "路人王长沙站冠军", "playerId": "p9", "info": "" }, "p10": { "name": "郭晓博", "hwa": [188, 90, 27], "title": "前CUBA河南大学核心", "playerId": "p10", "info": "" }, "p11": { "name": "耿骁骐", "hwa": [193, 120, 28], "title": "路人王S5上海站冠军", "playerId": "p11", "info": "" }, "p12": { "name": "林聚敏", "hwa": [183, 78, 27], "title": "路人王厦门站亚军", "playerId": "p12", "info": "" }, "p13": { "name": "孙振豪", "hwa": [190, 95, 24], "title": "路人王太原站冠军", "playerId": "p13", "info": "" }, "p14": { "name": "张梓祎", "hwa": [191, 85, 24], "title": "北京站7战7冠的霸主", "playerId": "p14", "info": "" }, "p15": { "name": "张帅康", "hwa": [195, 90, 24], "title": "路人王五冠王 郑州站霸主", "playerId": "p15", "info": "" }, "p16": { "name": "程南", "hwa": [192, 110, 32], "title": "7站7冠东北霸主 百分百胜率", "playerId": "p16", "info": "" }, "p17": { "name": "Myron Allen", "hwa": [180, 82, 39], "title": "前CBA新疆队超级外援", "playerId": "p17", "info": "" }, "p18": { "name": "Tiras Wade", "hwa": [198, 95, 37], "title": "前NCAA球队核心", "playerId": "p18", "info": "" }, "p19": { "name": "Julius Allgood", "hwa": [198, 100, 35], "title": "NBA 5V5全国总决赛MVP", "playerId": "p19", "info": "" }, "p20": { "name": "Cameron Bell", "hwa": [191, 84, 28], "title": "曾带队击败哈登+沃尔", "playerId": "p20", "info": "" }, "p21": { "name": "Tony Hooper ", "hwa": [180, 79, 31], "title": "ABA联赛最佳阵容球员", "playerId": "p21", "info": "" }, "p0": { "name": "", "hwa": [0, 0, 0], "title": "", "playerId": "p0", "info": "" } }
+}

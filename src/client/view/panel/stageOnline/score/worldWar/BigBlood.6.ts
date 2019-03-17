@@ -11,7 +11,7 @@ let urlRBlood = '/html/ww/bottomBlood/rBlood.png'
 let urlFg = '/html/ww/bottomBlood/fg2.png'
 let urlMask = '/html/ww/bottomBlood/avtMask.png'
 const isTest = false
-const urlBase = 'http://rtmp.icassi.us:8092/img/player/0316/'
+const urlBase = 'http://rtmp.icassi.us:8092/img/player/0309/'
 class ___BloodPlayer extends PIXI.Container {
     blood: number
     initBlood: number
@@ -104,6 +104,16 @@ class ___BloodPlayer extends PIXI.Container {
     isAvtLoaded = false
     setInfo(data) {
         if (data.name) {
+            let a = data.name.split('（')
+            if (a.length > 1) {
+                this.pName.setSize('36px')
+                    .setY(464)
+            }
+            else {
+                this.pName.setSize('45px')
+                    .setY(459)
+            }
+
             this.pName.setText(data.name)
                 .setAlignCenter(645)
         }
@@ -151,6 +161,9 @@ export class BigBlood extends BasePanel {
 
     lPlayerArr: Array<___BloodPlayer>
     rPlayerArr: Array<___BloodPlayer>
+
+    lCurPlayerBlood: number
+    rCurPlayerBlood: number
     lTimeoutMask: PIXI.Graphics
     lTimeoutMaskArr: Array<PIXI.Graphics>
     rTimeoutMaskArr: Array<PIXI.Graphics>
@@ -165,6 +178,7 @@ export class BigBlood extends BasePanel {
 
     lTeam: Text2
     rTeam: Text2
+
     create() {
         console.log('scroll text creat1e');
         let imgArr = [urlBg1
@@ -268,23 +282,32 @@ export class BigBlood extends BasePanel {
                 .setText('')
                 .setY(this.lName.y)
                 .setAlignCenter(_c(516))
-            
-                ns.fill = '#a9a9a9'
-                this.lTeam = TextFac.new_(ns, this)
-                    .setText('路人王队')
-                    .setY(352)
-                    .setAlignCenter(_c(-325))
-    
-                this.rTeam = TextFac.new_(ns, this)
-                    .setText('美国联队')
-                    .setY(this.lTeam.y)
-                    .setAlignCenter(_c(325))
+
+            ns.fill = '#434249'
+            ns.fill = '#a9a9a9'
+            this.lTeam = TextFac.new_(ns, this)
+                .setText('路人王队')
+                .setY(352)
+                .setAlignCenter(_c(-325))
+
+            this.rTeam = TextFac.new_(ns, this)
+                .setText('美国联队')
+                .setY(this.lTeam.y)
+                .setAlignCenter(_c(325))
         })
     }
 
     _fillBlood(dataArr, bloodPlayerArr: Array<___BloodPlayer>, curPlayer?) {
+        let data5 = []
+
         for (let i = 0; i < dataArr.length; i++) {
             let data = dataArr[i]
+            if (curPlayer.playerId != data.playerId) {
+                data5.push(data)
+            }
+        }
+        for (let i = 0; i < data5.length; i++) {
+            let data = data5[i]
             let b = bloodPlayerArr[i]
             if (curPlayer.playerId == data.playerId) {
                 data.blood = curPlayer.blood
@@ -335,13 +358,16 @@ export class BigBlood extends BasePanel {
 
         if (data.cid == CommandId.sc_setBlood) {
             let curBloodArr = this._setCurBlood(data)
-            this.lBlood.setText(curBloodArr[0])
+
+            this.lBlood.setText(this.lCurPlayerBlood - data.rScore)
                 .setAlignCenter(_c(-294))
-            this.rBlood.setText(curBloodArr[1])
+            this.rBlood.setText(this.rCurPlayerBlood - data.lScore)
                 .setAlignCenter(_c(294))
         }
 
         if (data.cid == CommandId.sc_setPlayer) {
+            this.lCurPlayerBlood = data.leftPlayer.blood
+            this.rCurPlayerBlood = data.rightPlayer.blood
             this.lBlood.setText(data.leftPlayer.blood)
                 .setAlignCenter(_c(-300))
             this.rBlood.setText(data.rightPlayer.blood)
