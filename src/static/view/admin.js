@@ -4209,18 +4209,16 @@
 	        this.teamArr2 = [{ name: '2', playerId: 1 }];
 	        this.teamArr3 = [{ name: '3', playerId: 1 }];
 	        var arr2 = [
-	            '傅攀怡',
-	            '姜冕',
-	            '徐心雨',
-	            '叶凤阳',
-	            '石一童',
-	            '艾林林',
-	            '陈婵丽',
-	            '苏锦欣',
-	            '亿元',
-	            '李俊',
-	            '肖颖',
-	            '周薇'
+	            '郭凌川',
+	            '王晶',
+	            '马克',
+	            '李瑞',
+	            '张帅康',
+	            'Myron Allen',
+	            'Cameron Bell',
+	            'Julius Allgood',
+	            'Tiras Wade',
+	            'Tony Hooper'
 	        ];
 	        this.conf = [
 	            {
@@ -4232,16 +4230,6 @@
 	                "button": "姜冕 盼盼",
 	                "type": 1,
 	                "cont": ["姜冕_路人王官方主播", "盼盼_路人王官方主播"]
-	            },
-	            {
-	                "button": "Gary 殳海",
-	                "type": 1,
-	                "cont": ["鹅皇Gary_路人王官方主播", "殳海_腾讯NBA解说嘉宾"]
-	            },
-	            {
-	                "button": "殳海 Gary",
-	                "type": 1,
-	                "cont": ["殳海_腾讯NBA解说嘉宾", "鹅皇Gary_路人王官方主播"]
 	            },
 	            {
 	                "button": "Gary 堂主",
