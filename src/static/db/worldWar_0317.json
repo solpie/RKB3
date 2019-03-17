@@ -9,8 +9,8 @@
         "score": [1, 1]
     }],
     "team": [
-        { "idx": 1, "name": "路人王队", "playerArr": ["p3", "p1", "p2", "p4", "p15"] },
-        { "idx": 2, "name": "美国联队", "playerArr": ["p17", "p18", "p19", "p20", "p21"] }
+        { "idx": 1, "name": "美国联队", "playerArr": ["p17", "p18", "p19", "p20", "p21"] },
+        { "idx": 2, "name": "路人王队", "playerArr": ["p3", "p1", "p2", "p4", "p15"] }
     ],
     "pick": [
         "p1_石一童",

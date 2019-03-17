@@ -271,12 +271,12 @@ export class BigBlood extends BasePanel {
             
                 ns.fill = '#a9a9a9'
                 this.lTeam = TextFac.new_(ns, this)
-                    .setText('路人王队')
+                    .setText('美国联队')
                     .setY(352)
                     .setAlignCenter(_c(-325))
     
                 this.rTeam = TextFac.new_(ns, this)
-                    .setText('美国联队')
+                    .setText('路人王队')
                     .setY(this.lTeam.y)
                     .setAlignCenter(_c(325))
         })
