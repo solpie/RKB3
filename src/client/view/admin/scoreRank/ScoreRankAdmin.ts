@@ -392,6 +392,8 @@ class _ScoreRankAdmin extends VueBase {
         onUpdateRank5Score(playerId, score) {
             opReq(CommandId.cs_showScoreRank, {
                 visible: true,
+                updatePlayerId: playerId,
+                updatePlayerScore: score,
                 scoreArr: this.rank5PlayerArr
             })
         },

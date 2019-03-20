@@ -120,6 +120,19 @@ class ScoreRank5 extends BasePanel {
                 this.playerItemArr[0].show(true)
                 this.avtPatch.visible = true
                 this.avtPlayer0.visible = false
+                //后来更新比分到球员排第一
+                if (a[0].score == data.updatePlayerScore) {
+                    let restArr = []
+                    let updatePlayer
+                    for (let p of a) {
+                        if (p.playerId != data.updatePlayerId) {
+                            restArr.push(p)
+                        }
+                        else
+                            updatePlayer = p
+                    }
+                    a = [updatePlayer].concat(restArr)
+                }
             }
             else {
                 this.playerItemArr[4].show(true)
