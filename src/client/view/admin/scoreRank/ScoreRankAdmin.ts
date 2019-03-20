@@ -1,7 +1,7 @@
 import { CommandId } from '../../Command';
 import { PanelId } from '../../const';
 import { updateWorldWarDoc, postRank16 } from '../../utils/HupuAPI';
-import { descendingProp } from '../../utils/JsFunc';
+import { descendingProp, clone } from '../../utils/JsFunc';
 import { VueBase } from '../../utils/VueBase';
 import { buildRec, newBracketRec1, newBracketRec2, newBracketRec3, rank16, newBracketRecFinal, postRank16_1020, postRank16_1130 } from './bracketRec';
 let confFile = null;
@@ -388,6 +388,37 @@ class _ScoreRankAdmin extends VueBase {
         onSetPlayerDeactive() {
             this.vsPlayer = ''
             this.onShowScoreRank(true)
+        },
+        onGetRank5Player() {
+            syncDoc(data => {
+                console.log('onGetRank5Player', data.doc, this.gameConf.playerMap)
+                let gameIdxArr = [9, 10, 11, 12]
+                let loserArr = []
+                let m = this.gameConf.playerMap
+                for (let gameIdx in data.doc.rec) {
+                    let rec = data.doc.rec[gameIdx]
+                    if (gameIdxArr.indexOf(Number(gameIdx)) > -1) {
+                        let loser;
+                        if (rec.score[0] > rec.score[1]) {
+                            loser = clone(m[rec.player[1]])
+                        }
+                        else {
+                            loser = clone(m[rec.player[0]])
+                        }
+                        loser.score = 0
+                        loser.avatar = this.gameConf.avatarUrlBase + loser.playerId + '.png'
+                        loserArr.push(loser)
+                    }
+                }
+
+                this.rank5PlayerArr = loserArr
+                opReq(CommandId.cs_showScoreRank, {
+                    visible: true,
+                    scoreArr: loserArr
+                })
+                // this.gameConf.playerMap[pn]
+                console.log('loser arr', loserArr)
+            })
         },
         onUpdateRank5Score(playerId, score) {
             opReq(CommandId.cs_showScoreRank, {

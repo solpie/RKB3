@@ -194,9 +194,9 @@ class VsInfo extends BasePanel {
                 .setAlignCenter(_c(178))
             
             
-            this.lRank.setText(lPlayer.power_rank)
+            this.lRank.setText("第"+lPlayer.power_rank+"名")
                 .setAlignCenter(_c(-178))
-            this.rRank.setText(rPlayer.power_rank)
+            this.rRank.setText("第"+rPlayer.power_rank+"名")
                 .setAlignCenter(_c(178))
 
             this.lAvt.load(lPlayer.avatar)

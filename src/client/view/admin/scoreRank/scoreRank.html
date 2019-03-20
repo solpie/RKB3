@@ -33,6 +33,7 @@
         <button class="button is-primary" @click="onShowScoreRank(false)">hide</button>
         <br>
         <br>抢五比分 rank5 playerId
+        <button class="button is-primary" @click="onGetRank5Player()">获取球员</button>
         <div v-for="(p, index) in rank5PlayerArr" :key="p.name">
             <button class="button is-primary" @click="onUpdateRank5Score(p.playerId,p.score)">{{p.name}}</button>
             <input type="text" v-model="p.score" style="width: 100px;">
