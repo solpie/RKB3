@@ -30,6 +30,10 @@ let routes = [
         // components: { default: bracketS5Final }
     },
     {
+        path: '/bracket8',
+        components: { default: bracket8421 }
+    },
+    {
         path: '/vsInfo',
         components: { default: vsInfo }
     },

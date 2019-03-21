@@ -41,7 +41,6 @@ export class _PickTeamAdmin extends VueBase {
     constructor() {
         super();
         VueBase.initProps(this);
-
     }
     created() {
         this.color1 = '绿'
@@ -108,6 +107,17 @@ export class _PickTeamAdmin extends VueBase {
                 "type": 1, 
                 "cont": ["堂主_路人王官方主播", "鹅皇Gary_路人王官方主播"]
             },
+            {
+                "button": "(抖音/微信)堂主 Gary",
+                "type": 1, 
+                "cont": ["堂主_微博/抖音号：信堂堂主", "鹅皇Gary_微博/抖音号：鹅皇Gary"]
+            },
+            {
+                "button": "(抖音/微信)Gary 堂主",
+                "type": 1, 
+                "cont": ["鹅皇Gary_微博/抖音号：鹅皇Gary","堂主_微博/抖音号：信堂堂主"]
+            },
+
             //
 
         ]

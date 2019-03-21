@@ -4183,6 +4183,16 @@
 	                "type": 1,
 	                "cont": ["堂主_路人王官方主播", "鹅皇Gary_路人王官方主播"]
 	            },
+	            {
+	                "button": "(抖音/微信)堂主 Gary",
+	                "type": 1,
+	                "cont": ["堂主_微博/抖音号：信堂堂主", "鹅皇Gary_微博/抖音号：鹅皇Gary"]
+	            },
+	            {
+	                "button": "(抖音/微信)Gary 堂主",
+	                "type": 1,
+	                "cont": ["鹅皇Gary_微博/抖音号：鹅皇Gary", "堂主_微博/抖音号：信堂堂主"]
+	            },
 	        ];
 	        for (var _i = 0, arr2_1 = arr2; _i < arr2_1.length; _i++) {
 	            var n = arr2_1[_i];

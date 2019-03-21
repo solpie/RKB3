@@ -56,6 +56,7 @@
 	var CommonGame_1 = __webpack_require__(109);
 	var LowerThird_1 = __webpack_require__(110);
 	var VsInfo_1 = __webpack_require__(113);
+	var Bracket8421_1 = __webpack_require__(114);
 	var ScoreRank5_1 = __webpack_require__(115);
 	var Bracket16_1 = __webpack_require__(116);
 	var routes = [
@@ -66,6 +67,10 @@
 	    {
 	        path: '/bracketS5',
 	        components: { default: Bracket16_1.bracket16 }
+	    },
+	    {
+	        path: '/bracket8',
+	        components: { default: Bracket8421_1.bracket8421 }
 	    },
 	    {
 	        path: '/vsInfo',
@@ -11939,7 +11944,165 @@
 
 
 /***/ },
-/* 114 */,
+/* 114 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var VueBase_1 = __webpack_require__(22);
+	var BasePanelView_1 = __webpack_require__(52);
+	var const_1 = __webpack_require__(27);
+	var BasePanel_1 = __webpack_require__(74);
+	var Command_1 = __webpack_require__(28);
+	var PixiEx_1 = __webpack_require__(56);
+	var TextFac_1 = __webpack_require__(60);
+	var urlBg = '/img/panel/bracket/s5/bg_8421.png';
+	var Bracket8421 = (function (_super) {
+	    __extends(Bracket8421, _super);
+	    function Bracket8421() {
+	        _super.apply(this, arguments);
+	    }
+	    Bracket8421.prototype.create = function () {
+	        var _this = this;
+	        var imgArr = [urlBg
+	        ];
+	        var x0 = 652, x1 = 421, x2 = 421 - 252;
+	        var groupMap = {
+	            "1": { x: PixiEx_1._c(-x0), y: 426 },
+	            "2": { x: PixiEx_1._c(-x0), y: 777 },
+	            "3": { x: PixiEx_1._c(x0), y: 426 },
+	            "4": { x: PixiEx_1._c(x0), y: 777 },
+	            "5": { x: PixiEx_1._c(-248), y: 606 },
+	            "6": { x: PixiEx_1._c(248), y: 606 },
+	            "7": { x: 114, y: 408 },
+	            "8": { x: 169, y: 214 }
+	        };
+	        this.groupMap = groupMap;
+	        this.addChild(new PIXI.Graphics()
+	            .beginFill(0x000000)
+	            .drawRect(0, 0, 1920, 1080));
+	        this.load(imgArr, function (_) {
+	            console.log('on loaded imgArr');
+	            var ns = {
+	                fontFamily: const_1.FontName.MicrosoftYahei,
+	                fontSize: "35px",
+	                dropShadow: true,
+	                dropShadowColor: '#222222',
+	                dropShadowAngle: Math.PI * 1 / 3,
+	                dropShadowDistance: 3,
+	                fontWeight: "bold",
+	                fill: "#acacac"
+	            };
+	            _this.addChild(PixiEx_1.newBitmap({ url: urlBg }));
+	            for (var k in groupMap) {
+	                var group = groupMap[k];
+	                group.lName = TextFac_1.TextFac.new_(ns, _this)
+	                    .setText('');
+	                group.rName = TextFac_1.TextFac.new_(ns, _this)
+	                    .setText('');
+	                if (Number(k) > 6) {
+	                    group.lName.setSize('42px');
+	                    group.rName.setSize('42px');
+	                    group.lName.setPos(group.x, group.y)
+	                        .setAlignCenter(PixiEx_1._c(group.x));
+	                    group.rName.setPos(group.x, group.y)
+	                        .setAlignCenter(PixiEx_1._c(-group.x));
+	                }
+	                else {
+	                    group.lName.setPos(group.x, group.y)
+	                        .setAlignCenter(group.x);
+	                    group.rName.setPos(group.x, group.y + 51)
+	                        .setAlignCenter(group.x);
+	                }
+	            }
+	            _this.finalScore = TextFac_1.TextFac.new_(ns, _this)
+	                .setY(293)
+	                .setSize("36px")
+	                .setText('')
+	                .setAlignCenter(PixiEx_1._c(0));
+	        });
+	    };
+	    Bracket8421.prototype.fillData = function (data) {
+	        var recArr = data.bracketRec16;
+	        for (var _i = 0, recArr_1 = recArr; _i < recArr_1.length; _i++) {
+	            var rec = recArr_1[_i];
+	            var group = this.groupMap[rec.gameIdx];
+	            if (rec.gameIdx > 6) {
+	                group.lName.setText(rec.player[0])
+	                    .setAlignCenter(PixiEx_1._c(-group.x));
+	                group.rName.setText(rec.player[1])
+	                    .setAlignCenter(PixiEx_1._c(group.x));
+	                if (group.rName.width > 170) {
+	                    group.rName.setSize('38px')
+	                        .setAlignCenter(PixiEx_1._c(group.x));
+	                }
+	            }
+	            else {
+	                group.lName.setText(rec.player[0])
+	                    .setAlignCenter(group.x);
+	                group.rName.setText(rec.player[1])
+	                    .setAlignCenter(group.x);
+	            }
+	            var lScore = rec.score[0], rScore = rec.score[1];
+	            group.lName.alpha =
+	                group.rName.alpha = 1;
+	            if (rec.score[0] != 0 || rec.score[1] != 0) {
+	                if (lScore > rScore) {
+	                    group.rName.alpha = 0.4;
+	                }
+	                else {
+	                    group.lName.alpha = 0.4;
+	                }
+	            }
+	            if (rec.gameIdx == 8 && rec.player[0]) {
+	                this.finalScore.setText(rec.score[0] + ' - ' + rec.score[1])
+	                    .setAlignCenter(PixiEx_1._c(0));
+	                group.lName.alpha =
+	                    group.rName.alpha = 1;
+	            }
+	        }
+	    };
+	    Bracket8421.prototype._show = function (data) {
+	        if (data.cid == Command_1.CommandId.sc_bracket) {
+	            this.fillData(data);
+	        }
+	        this.p.addChild(this);
+	    };
+	    Bracket8421.cls = 'Bracket8421';
+	    return Bracket8421;
+	}(BasePanel_1.BasePanel));
+	var canvasStage;
+	var Bracket8421View = (function (_super) {
+	    __extends(Bracket8421View, _super);
+	    function Bracket8421View() {
+	        _super.apply(this, arguments);
+	    }
+	    Bracket8421View.prototype.mounted = function () {
+	        console.log('mouted Bracket8421View view');
+	        if (!canvasStage)
+	            canvasStage = BasePanelView_1.BasePanelView.initPixi();
+	        BasePanel_1.showPanel(Bracket8421, { visible: true }, canvasStage);
+	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
+	        localWs.on('connect', function (msg) {
+	            console.log('connect', window.location.host);
+	        })
+	            .on(Command_1.CommandId.sc_bracket, function (data) {
+	            console.log('sc bracket');
+	            data.cid = Command_1.CommandId.sc_bracket;
+	            data.visible = true;
+	            BasePanel_1.showPanel(Bracket8421, data, canvasStage);
+	        });
+	    };
+	    return Bracket8421View;
+	}(VueBase_1.VueBase));
+	exports.bracket8421 = new Bracket8421View();
+
+
+/***/ },
 /* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
