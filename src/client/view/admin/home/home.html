@@ -49,13 +49,13 @@
                 </a>
                 <!--<button class="button">复制地址</button>-->
             </div>
-            <div>
+            <!-- <div>
                 抽奖id（编号）:<input type="text" v-model="lotteryId" style="width: 60px"> 次序k:
                 <input type="text" v-model="lotteryIdx" style="width: 60px">
                 <a v-if='lotteryId&&lotteryIdx' class="panel-block" :href="'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx" target="_blank">
                            {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}
                         </a>
-            </div>
+            </div> -->
 
             <p>
                 command:
@@ -70,9 +70,9 @@
                 播放地址2:<input type="text" v-model="playUrl2" style="width: 1000px">
                 <p>
                     推流地址2:<input type="text" v-model="rmtpUrl2" style="width: 1000px">
-                    <p>
+                    <!-- <p>
                         <button class="button is-primary" @click="onClkQRCode">生成IOS二维码</button> {{iosParam | json}}
-                        <div id="qrcode"></div>
+                        <div id="qrcode"></div> -->
     </div>
 
     <div v-if='actTab=="tab2"' class="ctn2" style="display: inline-flex;">

@@ -45,6 +45,7 @@ export const TimerEvent = {
     START: 'start',
     PAUSE: 'pause',
     TOGGLE: 'toggle',
+    SHIFT: 'shift',//1s 校准
     RESET: 'reset',
     SETTING: 'setting'
 };

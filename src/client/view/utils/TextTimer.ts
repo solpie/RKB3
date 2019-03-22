@@ -32,6 +32,9 @@ export class TextTimer extends PIXI.Text {
     } else if (data.event == TimerEvent.SETTING) {
       this.setTimeBySec(data.param);
     }
+    else if (data.event == TimerEvent.SHIFT) {
+      this.setTimeBySec(this.timeInSec + data.param);
+    }
     else if (data.event == TimerEvent.TOGGLE) {
       this.toggleTimer();
     }
@@ -79,7 +82,7 @@ export class TextTimer extends PIXI.Text {
     if (n >= 1) {
       this._tickCache = 0
       if (this.isMin) {
-        this.timeInSec-=this.minUnit;
+        this.timeInSec -= this.minUnit;
         if (this.timeInSec < 0)
           this.timeInSec = 0;
 
@@ -120,7 +123,7 @@ export class TextTime10ms extends TextTimer {
     if (this.timerId) clearInterval(this.timerId);
     this.timerId = setInterval(() => {
       this.tick()
-    },100);
+    }, 100);
     this.timerState = TimerState.RUNNING;
   }
 }
