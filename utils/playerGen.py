@@ -23,17 +23,17 @@ def addToClipBoard(text):
     os.system(command)
 
 
-def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
+def excel_table_byindex(file='file.xls',num=0):
     data = open_excel(file)
+    by_index = 0
     table = data.sheets()[by_index]
-    nrows = table.nrows  # 行数
-    ncols = table.ncols  # 列数
-    colnames = table.row_values(colnameindex)  # 某一行数据
     plist = []
     v = table.cell(2, 0)
     print(v)
     row = 1
-    playerNum = 21
+    playerNum = 9
+    if num > 0:
+        playerNum = num
     playerMap = {}
     for i in range(0, playerNum):
         n = table.cell(row + i, 0).value
@@ -61,6 +61,9 @@ def excel_table_byindex(file='file.xls', colnameindex=0, by_index=0):
 
 
 def main():
+    if len(sys.argv)>1:
+        num = sys.argv[1]
+        print('num',num)
     tables = excel_table_byindex('player.xlsx')
     # for row in tables:
     #     print(row)

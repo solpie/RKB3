@@ -1,0 +1,57 @@
+{
+    "date": "2018-12-30",
+    "dbIdx": "worldwar",
+    "foulToHint": 4,
+    "dbUrl": "http://rtmp.icassi.us:8090/event?idx=0323_0",
+    "rank5": "p12_王晶",
+    "playerScore": {},
+    "gameTitle": "新人魔王晋级赛",
+    "gameTitleMap": {
+        "1": "",
+        "2": "",
+        "3": "",
+        "4": ""
+    },
+    "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/0323/",
+    "rec-show": 1,
+    "isShowPick": 0,
+    "group": {
+        "A": [
+            { "playerId": "p1" },
+            { "playerId": "p2" },
+            { "playerId": "p3" }
+        ],
+        "B": [
+            { "playerId": "p4" },
+            { "playerId": "p5" },
+            { "playerId": "p6" }
+        ],
+        "C": [
+            { "playerId": "p7" },
+            { "playerId": "p8" },
+            { "playerId": "p9" }
+        ],
+        "D": [
+            { "playerId": "p10" },
+            { "playerId": "p11" },
+            { "playerId": "p12" }
+        ]
+    },
+    "recMap": {},
+    "scoreRank": [
+        ["p1_叶凯帆", -1],
+        ["p2_塔拉甫", -1],
+        ["p3_马智飞", -1],
+        ["p4_陈国玺", -1],
+        ["p5_赵学志", -1],
+        ["p6_韩飞", -1],
+        ["p7_张铭辰", -1],
+        ["p8_陈杰", -1],
+        ["p9_毕博文", 0]
+    ],
+    "rank8": [],
+    "rec": [
+
+    ],
+    "playerMap": { "p1": { "name": "陈泽文", "hwa": [186, 73, 19], "title": "路人王12冠王“答案”", "playerId": "p1", "info": "" }, "p2": { "name": "闫帅", "hwa": [183, 85, 27], "title": "S6北京站冠军街球名宿", "playerId": "p2", "info": "" }, "p3": { "name": "董康潮", "hwa": [172, 70, 24], "title": "路人王知名篮球网红", "playerId": "p3", "info": "" }, "p4": { "name": "宋流轩", "hwa": [183, 75, 21], "title": "路人王4冠王 变向狂魔", "playerId": "p4", "info": "" }, "p5": { "name": "唐日辉", "hwa": [185, 77, 23], "title": "路人王4冠王长沙街球明星", "playerId": "p5", "info": "" }, "p6": { "name": "柳杨杰", "hwa": [178, 70, 23], "title": "S2-S4八冠王“打铁哥”", "playerId": "p6", "info": "" }, "p7": { "name": "孟亚东", "hwa": [191, 88, 21], "title": "路人王15冠王“平常心”", "playerId": "p7", "info": "" }, "p8": { "name": "张宏宇", "hwa": [174, 70, 27], "title": "路人王S3长春站冠军", "playerId": "p8", "info": "" }, "p9": { "name": "Kiwi", "hwa": [170, 70, 25], "title": "“地表最强170”", "playerId": "p9", "info": "" }, "p0": { "name": "", "hwa": [0, 0, 0], "title": "", "playerId": "p0", "info": "" } }
+}
