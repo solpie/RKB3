@@ -4244,16 +4244,15 @@
 	        this.teamArr2 = [{ name: '2', playerId: 1 }];
 	        this.teamArr3 = [{ name: '3', playerId: 1 }];
 	        var arr2 = [
-	            '郭凌川',
-	            '王晶',
-	            '马克',
-	            '李瑞',
-	            '张帅康',
-	            'Myron Allen',
-	            'Cameron Bell',
-	            'Julius Allgood',
-	            'Tiras Wade',
-	            'Tony Hooper'
+	            '陈泽文',
+	            '闫帅',
+	            '董康潮',
+	            '宋流轩',
+	            '唐日辉',
+	            '柳杨杰',
+	            '孟亚东',
+	            '刘洋彤',
+	            'Kiwi'
 	        ];
 	        this.conf = [
 	            {
