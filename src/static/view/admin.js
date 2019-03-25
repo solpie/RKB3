@@ -713,7 +713,6 @@
 	                    var p = res1.data.stream.publish;
 	                    _this.rmtpUrl = p.url + "/" + p.stream;
 	                    _this.playUrl = res1.data.stream.play;
-	                    _this.genQRCode();
 	                    p = res1.data.stream2.publish;
 	                    _this.rmtpUrl2 = p.url + "/" + p.stream;
 	                    _this.playUrl2 = res1.data.stream2.play;

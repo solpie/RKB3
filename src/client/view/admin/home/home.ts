@@ -196,11 +196,11 @@ class HomeView extends VueBase {
                 let p = res1.data.stream.publish
                 this.rmtpUrl = p.url + "/" + p.stream
                 this.playUrl = res1.data.stream.play
-                this.genQRCode()
+                // this.genQRCode()
 
                 p = res1.data.stream2.publish
                 this.rmtpUrl2 = p.url + "/" + p.stream
-                this.playUrl2 = res1.data.stream2.play
+                this.playUrl2 =res1.data.stream2.play
             });
         },
         onViewPlayer(player_id) {
