@@ -41,7 +41,6 @@ class Bracket8421 extends BasePanel {
             let ns = {
                 fontFamily: FontName.MicrosoftYahei,
                 fontSize: "35px",
-
                 dropShadow: true,
                 dropShadowColor: '#222222',
                 dropShadowAngle: Math.PI * 1 / 3,
