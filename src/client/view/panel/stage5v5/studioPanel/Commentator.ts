@@ -67,6 +67,7 @@ export class Commentator extends PIXI.Container implements IPopup {
             .setPos(this.rName.x, this.lInfo.y)
     }
     bgV2: PIXI.Sprite
+    bgV2_mid: PIXI.Sprite
     showBg(idx) {
         for (let i = 0; i < this.bgArr.length; i++) {
             const element = this.bgArr[i];
@@ -84,6 +85,39 @@ export class Commentator extends PIXI.Container implements IPopup {
                 this.bgV2 = newBitmap({ url: '/img/panel/studio/commentatorV2.png' })
                 this.addChildAt(this.bgV2, 0)
                 this.bgArr.push(this.bgV2)
+            }
+            this.lName.style.fill =
+                this.lInfo.style.fill =
+                this.rName.style.fill =
+                this.rInfo.style.fill = '#fff'
+            this.lName
+                .setPos(783, 953)
+            this.lInfo
+                .setPos(this.lName.x, 1006)
+            this.rName
+                .setPos(1163, this.lName.y)
+            this.rInfo
+                .setPos(this.rName.x, this.lInfo.y)
+
+            this.showBg(2)
+            this.lName.visible =
+                this.rName.visible =
+                this.lInfo.visible =
+                this.rInfo.visible = true
+            bottomMoveIn(this)
+        })
+    }
+    _fillData4(data) {
+        this.lName.visible =
+            this.rName.visible =
+            this.lInfo.visible =
+            this.rInfo.visible = false
+
+        imgLoader.loadTexArr(['/img/panel/studio/commentatorV2_mid.png'], _ => {
+            if (!this.bgV2) {
+                this.bgV2_mid = newBitmap({ url: '/img/panel/studio/commentatorV2_mid.png' })
+                this.addChildAt(this.bgV2_mid, 0)
+                this.bgArr.push(this.bgV2_mid)
             }
             this.lName.style.fill =
                 this.lInfo.style.fill =
@@ -137,6 +171,8 @@ export class Commentator extends PIXI.Container implements IPopup {
                 this._fillData2(param)
             else if (param.style == 3)
                 this._fillData3(param)
+            else if (param.style == 4)
+                this._fillData4(param)
             console.log('sc_commentator', param);
         }
         this.p.addChild(this)
