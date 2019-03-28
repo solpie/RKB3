@@ -11,14 +11,21 @@ export class Commentator extends PIXI.Container implements IPopup {
     bg1: PIXI.Sprite
     bg2: PIXI.Sprite
     bgArr: any
+    bgMap: any
     create(parent: any) {
         let bg = newBitmap({ url: '/img/panel/studio/commentator.png' })
         let bg2 = newBitmap({ url: '/img/panel/studio/commentator2.png' })
+        // this.bgMap = { 1: bg, 2: bg2 }
+
         this.bg2 = bg2
         this.bg1 = bg
         this.bg1.visible = false
         this.bg2.visible = false
-        this.bgArr = [this.bg1, this.bg2]
+        this.bgArr = new Array(4)
+        this.bgArr[0] = this.bg1
+        this.bgArr[1] = this.bg2
+        // this.bgArr = [this.bg1, this.bg2]
+        // this.bgMap = { 0: this.bg1, 1: this.bg2 }
         this.addChild(bg)
         this.addChild(bg2)
         let ns = {
@@ -71,7 +78,8 @@ export class Commentator extends PIXI.Container implements IPopup {
     showBg(idx) {
         for (let i = 0; i < this.bgArr.length; i++) {
             const element = this.bgArr[i];
-            element.visible = i == idx
+            if (element)
+                element.visible = i == idx
         }
     }
     _fillData3(data) {
@@ -83,8 +91,9 @@ export class Commentator extends PIXI.Container implements IPopup {
         imgLoader.loadTexArr(['/img/panel/studio/commentatorV2.png'], _ => {
             if (!this.bgV2) {
                 this.bgV2 = newBitmap({ url: '/img/panel/studio/commentatorV2.png' })
+                this.bgArr[2] = this.bgV2
                 this.addChildAt(this.bgV2, 0)
-                this.bgArr.push(this.bgV2)
+                // this.bgArr.push(this.bgV2)
             }
             this.lName.style.fill =
                 this.lInfo.style.fill =
@@ -117,14 +126,15 @@ export class Commentator extends PIXI.Container implements IPopup {
             if (!this.bgV2) {
                 this.bgV2_mid = newBitmap({ url: '/img/panel/studio/commentatorV2_mid.png' })
                 this.addChildAt(this.bgV2_mid, 0)
-                this.bgArr.push(this.bgV2_mid)
+                this.bgArr[3] = this.bgV2_mid
+                // this.bgArr.push(this.bgV2_mid)
             }
             this.lName.style.fill =
                 this.lInfo.style.fill =
                 this.rName.style.fill =
                 this.rInfo.style.fill = '#fff'
             this.lName
-                .setPos(783, 953)
+                .setPos(483, 953)
             this.lInfo
                 .setPos(this.lName.x, 1006)
             this.rName
@@ -132,7 +142,7 @@ export class Commentator extends PIXI.Container implements IPopup {
             this.rInfo
                 .setPos(this.rName.x, this.lInfo.y)
 
-            this.showBg(2)
+            this.showBg(3)
             this.lName.visible =
                 this.rName.visible =
                 this.lInfo.visible =
