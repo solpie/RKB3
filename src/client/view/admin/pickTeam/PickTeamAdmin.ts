@@ -51,15 +51,22 @@ export class _PickTeamAdmin extends VueBase {
         this.teamArr2 = [{ name: '2', playerId: 1 }]
         this.teamArr3 = [{ name: '3', playerId: 1 }]
         let arr2 = [
-            '陈泽文'
-            , '闫帅'
-            , '董康潮'
-            , '宋流轩'
-            , '唐日辉'
-            , '柳杨杰'
-            , '孟亚东'
-            , '刘洋彤'
-            , 'Kiwi'
+            '周锐'
+            , '马克'
+            , '陈凯涛'
+            , '安云鹏'
+            , '王晶'
+            , '项麒芸'
+            , '刘宇'
+            , '陈泽文'
+            , '黄一鸣'
+            , '夏威'
+            , '李保兴'
+            , '刘涛'
+            , '蔺睿'
+            , '白晶'
+            , '朱春强'
+            , '杰夫'
         ]
         this.conf = [
             // {
