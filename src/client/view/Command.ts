@@ -212,6 +212,8 @@ export const CommandId = {
     cs_showTop5: '',
     sc_showTop5: '',
     //world war
+    cs_setPlayerDot: '',
+    sc_setPlayerDot: '',
     cs_teamScore: '',
     sc_teamScore: '',
     cs_timeOut: '',

@@ -33,6 +33,7 @@ class _worldWar extends VueBase {
   gameIdx: number;
   teamVsIdx = VueBase.PROP;
   teamScore = VueBase.PROP;
+  playerDots = VueBase.PROP;
   isShowCurTeamVsOnly = VueBase.PROP;
   updateTime = VueBase.PROP;
   delay = VueBase.PROP;
@@ -201,6 +202,13 @@ class _worldWar extends VueBase {
         this.emitTeamScore({
           lScore: a[0], rScore: a[1]
         })
+      }
+    },
+    onSetPlayerDots(v,isOn) {
+      let a = v.split(' ')
+      if (a.length == 2) {
+        opReq(CommandId.cs_setPlayerDot, { playerDot_L: a[0], playerDot_R: a[1],isOn:isOn })
+
       }
     },
     onSetTimeOut(v) {
