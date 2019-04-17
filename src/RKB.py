@@ -50,7 +50,8 @@ async_mode = "eventlet"
 app = Flask(__name__, static_url_path='')
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, async_mode=async_mode)
-
+from flask_cors import CORS
+CORS(app)
 
 @app.route('/')
 def index():
