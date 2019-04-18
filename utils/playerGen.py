@@ -28,6 +28,7 @@ def excel_table_byindex(file='file.xls',num=0):
     by_index = 0
     table = data.sheets()[by_index]
     plist = []
+    plist_for_lowerthird = []
     v = table.cell(2, 0)
     print(v)
     row = 1
@@ -52,11 +53,13 @@ def excel_table_byindex(file='file.xls',num=0):
                      h, w, a], 'title': title, 'playerId': 'p' + str(i + 1), 'info': info
         })
         playerMap['p' + str(i + 1)] = plist[-1:][0]
+        plist_for_lowerthird.append(n)
     playerMap['p0'] = {"name": "", "hwa": [0, 0, 0],
                        "title": "", "playerId": "p0", "info": ""}
     jstr = json.dumps(playerMap, ensure_ascii=False)
     addToClipBoard(jstr)
     print(jstr)
+    # print(plist_for_lowerthird)
     return plist
 
 

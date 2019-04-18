@@ -5,6 +5,7 @@ import { clone } from "../../utils/JsFunc";
 import { VueBase } from "../../utils/VueBase";
 import { BaseGameView, _baseGameView } from "./BaseGame";
 import { syncDoc, WWGame } from "./WWGame";
+import { syncWorldWarPanel3 } from '../../utils/HupuAPI';
 declare let $;
 declare let io;
 let opReq = (cmdId: string, param: any) => {
@@ -273,6 +274,14 @@ class _worldWar extends VueBase {
     onFile(e) {
       console.log("load file");
       this.conf.onFile(e);
+    },
+    onUploadPlayerMap()
+    {
+      // console.log('upload playerMap',this.gameView.playerMap)
+      syncWorldWarPanel3(doc => {
+        doc.playerMap = JSON.stringify(this.gameView.playerMap_data)
+      },true)
+      console.log('upload playerMap',this.gameView.playerMap_data)
     },
     onEmitGameInfo() {
       this.emitGameInfo();

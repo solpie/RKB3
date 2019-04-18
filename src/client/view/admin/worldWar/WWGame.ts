@@ -1,5 +1,6 @@
 import { EventDispatcher } from "../../utils/EventDispatcher";
 import { updateWorldWarDoc } from "../../utils/HupuAPI";
+import { clone } from "../../utils/JsFunc";
 
 declare let $;
 let dbUrl;
@@ -24,6 +25,7 @@ export const syncDoc = (cb, isSave = false) => {
 export class WWGame extends EventDispatcher {
   static InitDocView: "init doc view";
   playerMap: any;
+  playerMap_data:any//原数据
   teamArr: any;
   gameIdx: number;
   teamVsRec: any;
@@ -31,6 +33,7 @@ export class WWGame extends EventDispatcher {
   loadConf(data) {
     dbUrl = data.dbUrl
     this.playerMap = data.playerMap;
+    this.playerMap_data = clone(data.playerMap)
     this.teamArr = data.team;
     this.teamVsRec = data.teamVsRec;
     this.data = data;

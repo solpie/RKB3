@@ -1494,6 +1494,50 @@
 	    });
 	}
 	exports.updateWorldWarDoc = updateWorldWarDoc;
+	function _putDoc(url, data, callback) {
+	    var strJson = JSON.stringify(data);
+	    console.log('strJson', strJson);
+	    $.ajax(url, {
+	        method: 'PUT',
+	        processData: false,
+	        contentType: 'application/json',
+	        data: strJson,
+	        success: callback,
+	    });
+	}
+	function syncWorldWarPanel3(cb, isSave) {
+	    if (isSave === void 0) { isSave = false; }
+	    var docUrl = "http://rtmp.icassi.us:8090/panel/?pid=ww3";
+	    var getDoc = function (callback) {
+	        $.get(docUrl, function (res) {
+	            if (res.length)
+	                callback(res[0]);
+	            else
+	                callback(null);
+	        });
+	    };
+	    getDoc(function (doc) {
+	        cb(doc);
+	        if (isSave) {
+	            var putUrl = 'http://rtmp.icassi.us:8090/panel/' + doc._id;
+	            _putDoc(putUrl, doc, function (res) {
+	                console.log(res);
+	            });
+	        }
+	    });
+	}
+	exports.syncWorldWarPanel3 = syncWorldWarPanel3;
+	function updatePanelWorldWar3Doc(docData, callback) {
+	    var strJson = JSON.stringify(docData);
+	    console.log('strJson', strJson);
+	    $.ajax('http://rtmp.icassi.us:8090/panel/' + docData._id, {
+	        method: 'PUT',
+	        processData: false,
+	        contentType: 'application/json',
+	        data: strJson,
+	        success: callback,
+	    });
+	}
 
 
 /***/ },
@@ -2279,6 +2323,7 @@
 	var VueBase_1 = __webpack_require__(22);
 	var BaseGame_1 = __webpack_require__(34);
 	var WWGame_1 = __webpack_require__(36);
+	var HupuAPI_1 = __webpack_require__(24);
 	var opReq = function (cmdId, param) {
 	    param._ = null;
 	    $.ajax({
@@ -2412,6 +2457,13 @@
 	            onFile: function (e) {
 	                console.log("load file");
 	                this.conf.onFile(e);
+	            },
+	            onUploadPlayerMap: function () {
+	                var _this = this;
+	                HupuAPI_1.syncWorldWarPanel3(function (doc) {
+	                    doc.playerMap = JSON.stringify(_this.gameView.playerMap_data);
+	                }, true);
+	                console.log('upload playerMap', this.gameView.playerMap_data);
 	            },
 	            onEmitGameInfo: function () {
 	                this.emitGameInfo();
@@ -2773,6 +2825,7 @@
 	};
 	var EventDispatcher_1 = __webpack_require__(37);
 	var HupuAPI_1 = __webpack_require__(24);
+	var JsFunc_1 = __webpack_require__(21);
 	var dbUrl;
 	var getDoc = function (callback) {
 	    if (!dbUrl)
@@ -2802,6 +2855,7 @@
 	    WWGame.prototype.loadConf = function (data) {
 	        dbUrl = data.dbUrl;
 	        this.playerMap = data.playerMap;
+	        this.playerMap_data = JsFunc_1.clone(data.playerMap);
 	        this.teamArr = data.team;
 	        this.teamVsRec = data.teamVsRec;
 	        this.data = data;
@@ -3056,7 +3110,7 @@
 /* 38 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n\r\n    <input type=\"file\" id=\"file\" accept=\"*.xlsx\" hidden>\r\n    <br>\r\n\r\n    <a href=\"/panel/#/ol/ob/0?panel=score&s4=1&world=1\">world panel</a>\r\n    <a href=\"/panel/#/ol/ob/0?panel=score&s4=1&world=1&bblood=1\">team blood</a>\r\n    <a href=\"/html/ww/blood.html?m=obs\">team blood obs</a>\r\n\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开本地配置</button>\r\n    <button class=\"button is-primary\" id=\"reload\" @click=\"onReload\">reload</button> 比分面板延时(秒)\r\n    <input class=\"input\" v-model=\"delay\" type=\"text\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onSetDelay(delay)\">设置</button>\r\n    <br>\r\n    <br>\r\n\r\n    <div class=\"control\">\r\n        vs player <input class=\"input\" v-model=\"vsPlayer\" type=\"text\" style=\"width: 100px;\">\r\n        <button class=\"button is-primary\" @click=\"onEmitGameInfo\">初始比赛</button>\r\n        <button class=\"button is-primary\" @click=\"onAddGame\">创建REC</button>\r\n        <button class=\"button is-primary\" @click=\"onCommitGame(gameIdx)\">提交比赛</button> teamVsIdx:\r\n        <input class=\"input\" v-model=\"teamVsIdx\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetBlood(teamVsIdx)\">设置初始血量</a>\r\n        <input class=\"input\" v-model=\"teamScore\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetTeamScore(teamScore)\">设置团队比分</a>\r\n        <a class=\"button is-warnning\" @click=\"onSetTimeOut(teamScore)\">设置团队暂停</a>\r\n        <a class=\"button\" @click=\"onShowKDA(true)\">显示kda</a>\r\n        <a class=\"button\" @click=\"onShowKDA(false)\">隐藏kda</a>\r\n        <hr> 比分面板\r\n        <a class=\"button\" @click=\"onShowPanel(true)\">显示</a>\r\n        <a class=\"button\" @click=\"onShowPanel(false)\">隐藏</a> title\r\n        <a class=\"button\" @click=\"onShowTitle(true)\">显示</a>\r\n        <a class=\"button\" @click=\"onShowTitle(false)\">隐藏</a>\r\n        <input class=\"input\" v-model=\"playerDots\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetPlayerDots(playerDots,false)\">设置团队剩余5 3</a>\r\n        <a class=\"button is-warnning\" @click=\"onSetPlayerDots(playerDots,true)\">on 打开状态</a>\r\n\r\n\r\n    </div>\r\n\r\n    <!-- Main container -->\r\n    <div class=\"level\">\r\n        <!-- Left side -->\r\n        <div class=\"level-left\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                    <a class=\"button is-info\" @click=\"pickPlayer(true,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <!-- Right side -->\r\n        <div class=\"level-right\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                    <a class=\"button is-danger\" @click=\"pickPlayer(false,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div id='table' class=\"table\"></div>\r\n    <BaseGame/>\r\n    <div style=\"overflow-y: scroll;height: 400px;\">\r\n        <table class=\"table is-striped is-bordered\">\r\n            <thead>\r\n                <tr>\r\n                    <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                    <th><abbr>#teamVsIdx</abbr></th>\r\n                    <th>L player</th>\r\n                    <th>score</th>\r\n                    <th>R player</th>\r\n                    <th>action</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==gameView.gameIdx?'is-selected':'']\">\r\n                    <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}}</a></th>\r\n                    <td> {{rec.teamVsIdx}} </td>\r\n                    <td> {{rec.name[0]}} </td>\r\n                    <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                    <td> {{rec.name[1]}} </td>\r\n                    <td>\r\n                        <div class=\"control\" v-if=\"rec.gameIdx==gameView.gameIdx\">\r\n                            <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                            <button class=\"button btn-setScore\" @click=\"onSetScore(rec.gameIdx)\">修改(提交)比分</button>\r\n                            <button class=\"button\" @click=\"onSetVS(rec.gameIdx,vsPlayer)\">修改对阵↑</button>\r\n                            <button class=\"button\" @click=\"onSetTeamVsIdx(rec.gameIdx)\">修改TeamVsIdx</button>\r\n                            <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                        </div>\r\n                    </td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n\r\n\r\n\r\n    <div class=\"level\">\r\n        <div class=\"level-left\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n        <div class=\"level-right\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n    </div>\r\n\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onDeleteDoc\">delete doc</button> {{updateTime}}\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n\r\n    <input type=\"file\" id=\"file\" accept=\"*.xlsx\" hidden>\r\n    <br>\r\n\r\n    <a href=\"/panel/#/ol/ob/0?panel=score&s4=1&world=1\">world panel</a>\r\n    <a href=\"/panel/#/ol/ob/0?panel=score&s4=1&world=1&bblood=1\">team blood</a>\r\n    <a href=\"/html/ww/blood.html?m=obs\">team blood obs</a>\r\n\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开本地配置</button>\r\n    <button class=\"button is-primary\" @click=\"onUploadPlayerMap\">上传playerMap</button>\r\n    <button class=\"button is-primary\" id=\"reload\" @click=\"onReload\">reload</button> 比分面板延时(秒)\r\n    <input class=\"input\" v-model=\"delay\" type=\"text\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onSetDelay(delay)\">设置</button>\r\n    <br>\r\n    <br>\r\n\r\n    <div class=\"control\">\r\n        vs player <input class=\"input\" v-model=\"vsPlayer\" type=\"text\" style=\"width: 100px;\">\r\n        <button class=\"button is-primary\" @click=\"onEmitGameInfo\">初始比赛</button>\r\n        <button class=\"button is-primary\" @click=\"onAddGame\">创建REC</button>\r\n        <button class=\"button is-primary\" @click=\"onCommitGame(gameIdx)\">提交比赛</button> teamVsIdx:\r\n        <input class=\"input\" v-model=\"teamVsIdx\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetBlood(teamVsIdx)\">设置初始血量</a>\r\n        <input class=\"input\" v-model=\"teamScore\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetTeamScore(teamScore)\">设置团队比分</a>\r\n        <a class=\"button is-warnning\" @click=\"onSetTimeOut(teamScore)\">设置团队暂停</a>\r\n        <a class=\"button\" @click=\"onShowKDA(true)\">显示kda</a>\r\n        <a class=\"button\" @click=\"onShowKDA(false)\">隐藏kda</a>\r\n        <hr> 比分面板\r\n        <a class=\"button\" @click=\"onShowPanel(true)\">显示</a>\r\n        <a class=\"button\" @click=\"onShowPanel(false)\">隐藏</a> title\r\n        <a class=\"button\" @click=\"onShowTitle(true)\">显示</a>\r\n        <a class=\"button\" @click=\"onShowTitle(false)\">隐藏</a>\r\n        <input class=\"input\" v-model=\"playerDots\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetPlayerDots(playerDots,false)\">设置团队剩余5 3</a>\r\n        <a class=\"button is-warnning\" @click=\"onSetPlayerDots(playerDots,true)\">on 打开状态</a>\r\n\r\n\r\n    </div>\r\n\r\n    <!-- Main container -->\r\n    <div class=\"level\">\r\n        <!-- Left side -->\r\n        <div class=\"level-left\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                    <a class=\"button is-info\" @click=\"pickPlayer(true,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <!-- Right side -->\r\n        <div class=\"level-right\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                    <a class=\"button is-danger\" @click=\"pickPlayer(false,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div id='table' class=\"table\"></div>\r\n    <BaseGame/>\r\n    <div style=\"overflow-y: scroll;height: 400px;\">\r\n        <table class=\"table is-striped is-bordered\">\r\n            <thead>\r\n                <tr>\r\n                    <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                    <th><abbr>#teamVsIdx</abbr></th>\r\n                    <th>L player</th>\r\n                    <th>score</th>\r\n                    <th>R player</th>\r\n                    <th>action</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==gameView.gameIdx?'is-selected':'']\">\r\n                    <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}}</a></th>\r\n                    <td> {{rec.teamVsIdx}} </td>\r\n                    <td> {{rec.name[0]}} </td>\r\n                    <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                    <td> {{rec.name[1]}} </td>\r\n                    <td>\r\n                        <div class=\"control\" v-if=\"rec.gameIdx==gameView.gameIdx\">\r\n                            <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                            <button class=\"button btn-setScore\" @click=\"onSetScore(rec.gameIdx)\">修改(提交)比分</button>\r\n                            <button class=\"button\" @click=\"onSetVS(rec.gameIdx,vsPlayer)\">修改对阵↑</button>\r\n                            <button class=\"button\" @click=\"onSetTeamVsIdx(rec.gameIdx)\">修改TeamVsIdx</button>\r\n                            <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                        </div>\r\n                    </td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n\r\n\r\n\r\n    <div class=\"level\">\r\n        <div class=\"level-left\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n        <div class=\"level-right\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n    </div>\r\n\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onDeleteDoc\">delete doc</button> {{updateTime}}\r\n</div>";
 
 /***/ },
 /* 39 */
@@ -4074,6 +4128,7 @@
 	var VueBase_1 = __webpack_require__(22);
 	var const_1 = __webpack_require__(27);
 	var Command_1 = __webpack_require__(28);
+	var HupuAPI_1 = __webpack_require__(24);
 	var opReq = function (cmdId, param) {
 	    param._ = null;
 	    $.ajax({
@@ -4096,7 +4151,6 @@
 	        this.color1 = VueBase_1.VueBase.PROP;
 	        this.color2 = VueBase_1.VueBase.PROP;
 	        this.color3 = VueBase_1.VueBase.PROP;
-	        this.colorArr = VueBase_1.VueBase.PROP;
 	        this.team1_1 = VueBase_1.VueBase.PROP;
 	        this.team1_2 = VueBase_1.VueBase.PROP;
 	        this.team1_3 = VueBase_1.VueBase.PROP;
@@ -4114,17 +4168,10 @@
 	                console.log('show');
 	                opReq(Command_1.CommandId.cs_showLowerThird, { data: lt, visible: visible });
 	            },
+	            onUpdatePlayerMap: function () {
+	                this.updataPlayerMap();
+	            },
 	            onSetColor: function () {
-	                if (this.colorArr[0] != this.colorArr[1]
-	                    && this.colorArr[1] != this.colorArr[2]
-	                    && this.colorArr[0] != this.colorArr[2]) {
-	                    opReq(Command_1.CommandId.cs_setTeamColor, {
-	                        colorArr: this.colorArr, visible: true
-	                    });
-	                }
-	                else {
-	                    alert('颜色相同');
-	                }
 	            },
 	            onShowPick: function (v) {
 	                if (v === void 0) { v = true; }
@@ -4157,7 +4204,6 @@
 	        this.color1 = '绿';
 	        this.color2 = '红';
 	        this.color3 = '白';
-	        this.colorArr = ['绿', '红', '白'];
 	        this.teamArr1 = [{ name: '1', playerId: 1 }];
 	        this.teamArr2 = [{ name: '2', playerId: 1 }];
 	        this.teamArr3 = [{ name: '3', playerId: 1 }];
@@ -4179,7 +4225,7 @@
 	            '朱春强',
 	            '杰夫'
 	        ];
-	        this.conf = [
+	        this.confType1_arr = [
 	            {
 	                "button": "盼盼 姜冕",
 	                "type": 1,
@@ -4211,10 +4257,41 @@
 	                "cont": ["鹅皇Gary_微博/抖音号：鹅皇Gary", "堂主_微博/抖音号：信堂堂主"]
 	            },
 	        ];
-	        for (var _i = 0, arr2_1 = arr2; _i < arr2_1.length; _i++) {
-	            var n = arr2_1[_i];
+	        this.conf = [];
+	        for (var _i = 0, _a = this.confType1_arr; _i < _a.length; _i++) {
+	            var n = _a[_i];
+	            this.conf.push(n);
+	        }
+	        for (var _b = 0, arr2_1 = arr2; _b < arr2_1.length; _b++) {
+	            var n = arr2_1[_b];
 	            this.conf.push({ "button": n, type: 2, cont: n });
 	        }
+	    };
+	    _PickTeamAdmin.prototype.mounted = function () {
+	        this.updataPlayerMap();
+	    };
+	    _PickTeamAdmin.prototype.updataPlayerMap = function () {
+	        var _this = this;
+	        HupuAPI_1.syncWorldWarPanel3(function (data) {
+	            var playerMap = JSON.parse(data.playerMap);
+	            var name_arr = [];
+	            for (var k in playerMap) {
+	                var p = playerMap[k];
+	                console.log('update playerMap:', p.name);
+	                if (p.name)
+	                    name_arr.push(p.name);
+	            }
+	            _this.conf = [];
+	            for (var _i = 0, _a = _this.confType1_arr; _i < _a.length; _i++) {
+	                var n = _a[_i];
+	                _this.conf.push(n);
+	            }
+	            for (var _b = 0, name_arr_1 = name_arr; _b < name_arr_1.length; _b++) {
+	                var n = name_arr_1[_b];
+	                _this.conf.push({ "button": n, type: 2, cont: n });
+	            }
+	            console.log('update playerMap:', playerMap);
+	        });
 	    };
 	    return _PickTeamAdmin;
 	}(VueBase_1.VueBase));
@@ -4226,7 +4303,7 @@
 /* 46 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <a href=\"/panel/#/lowerthird\">面板地址</a>\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onShowLowerThird({},false)\">隐藏</button>\r\n    <div style=\"width:680px\">\r\n        <button style=\"margin:5px;\" v-if=\"btn.type==1\" v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n        <br>\r\n        <button style=\"margin:5px;\" v-if=\"btn.type==2\" v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n    </div>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onShowPick(false)\">hide选人</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPick(true)\">emit选人</button>\r\n    <div style=\"display: inline-flex\">\r\n        队长：\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_4\" style=\"width: 180px;\">\r\n        </ul>\r\n    </div>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onSetColor()\">emit 颜色</button>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[0]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[1]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[2]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <a href=\"/panel/#/lowerthird\">面板地址</a>\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onShowLowerThird({},false)\">隐藏</button>\r\n    <button class=\"button is-primary\" @click=\"onUpdatePlayerMap()\">更新球员名单</button>\r\n    <div style=\"width:680px\">\r\n        <button style=\"margin:5px;\" v-if=\"btn.type==1\" v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n        <br>\r\n        <button style=\"margin:5px;\" v-if=\"btn.type==2\" v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n    </div>\r\n    <br>\r\n    <br>\r\n    <!-- <button class=\"button is-primary\" @click=\"onShowPick(false)\">hide选人</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPick(true)\">emit选人</button> -->\r\n    <!-- <div style=\"display: inline-flex\">\r\n        队长：\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_4\" style=\"width: 180px;\">\r\n        </ul>\r\n    </div> -->\r\n    <!-- <br>\r\n    <br> -->\r\n    <!-- <button class=\"button is-primary\" @click=\"onSetColor()\">emit 颜色</button> -->\r\n    <!-- <div class=\"select\">\r\n        <select v-model=\"colorArr[0]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[1]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[2]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div> -->\r\n</div>";
 
 /***/ }
 /******/ ]);

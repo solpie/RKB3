@@ -2,6 +2,7 @@
     <a href="/panel/#/lowerthird">面板地址</a>
     <hr>
     <button class="button is-primary" @click="onShowLowerThird({},false)">隐藏</button>
+    <button class="button is-primary" @click="onUpdatePlayerMap()">更新球员名单</button>
     <div style="width:680px">
         <button style="margin:5px;" v-if="btn.type==1" v-for="(btn,index) in conf" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
         <br>
@@ -9,9 +10,9 @@
     </div>
     <br>
     <br>
-    <button class="button is-primary" @click="onShowPick(false)">hide选人</button>
-    <button class="button is-primary" @click="onShowPick(true)">emit选人</button>
-    <div style="display: inline-flex">
+    <!-- <button class="button is-primary" @click="onShowPick(false)">hide选人</button>
+    <button class="button is-primary" @click="onShowPick(true)">emit选人</button> -->
+    <!-- <div style="display: inline-flex">
         队长：
         <ul style="width:200px;overflow:hidden;zoom:1;border:1px solid #ccc">
             <input class="input" type="text" v-model="team1_1" style="width: 180px;">
@@ -31,11 +32,11 @@
             <input class="input" type="text" v-model="team3_3" style="width: 180px;">
             <input class="input" type="text" v-model="team3_4" style="width: 180px;">
         </ul>
-    </div>
-    <br>
-    <br>
-    <button class="button is-primary" @click="onSetColor()">emit 颜色</button>
-    <div class="select">
+    </div> -->
+    <!-- <br>
+    <br> -->
+    <!-- <button class="button is-primary" @click="onSetColor()">emit 颜色</button> -->
+    <!-- <div class="select">
         <select v-model="colorArr[0]">
           <option>红</option>
           <option>白</option>
@@ -55,5 +56,5 @@
           <option>白</option>
           <option>绿</option>
         </select>
-    </div>
+    </div> -->
 </div>
