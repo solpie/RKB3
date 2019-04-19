@@ -4267,16 +4267,23 @@
 	                "type": 1,
 	                "cont": ["鹅皇Gary_微博/抖音号：鹅皇Gary", "堂主_微博/抖音号：信堂堂主"]
 	            },
+	            {
+	                "button": "赵德强",
+	                "type": 2,
+	                "cont": "国家级裁判：赵德强"
+	            },
+	            {
+	                "button": "岳强",
+	                "type": 2,
+	                "cont": "国家级裁判：岳强"
+	            },
+	            {
+	                "button": "席伟",
+	                "type": 2,
+	                "cont": "国家级裁判：席伟"
+	            },
 	        ];
 	        this.conf = [];
-	        for (var _i = 0, _a = this.confType1_arr; _i < _a.length; _i++) {
-	            var n = _a[_i];
-	            this.conf.push(n);
-	        }
-	        for (var _b = 0, arr2_1 = arr2; _b < arr2_1.length; _b++) {
-	            var n = arr2_1[_b];
-	            this.conf.push({ "button": n, type: 2, cont: n });
-	        }
 	    };
 	    _PickTeamAdmin.prototype.mounted = function () {
 	        this.updataPlayerMap();
