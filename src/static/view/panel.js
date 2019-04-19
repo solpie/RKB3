@@ -1646,6 +1646,8 @@
 	    sc_sync_buzzer: '',
 	    cs_scoreFoul_common: '',
 	    sc_scoreFoul_common: '',
+	    cs_showWW3PlayerInfo: '',
+	    sc_showWW3PlayerInfo: '',
 	    cs_showLowerThird: '',
 	    sc_showLowerThird: '',
 	    cs_showPickup: '',
@@ -2328,6 +2330,12 @@
 	        };
 	        this.methods = {
 	            onSetTimerEvent: function (event, param) {
+	                if (event == 'setting') {
+	                    var a = param.split('-');
+	                    if (a.length == 2) {
+	                        param = Number(a[0]) * 60 + Number(a[1]);
+	                    }
+	                }
 	                opReq(Command_1.CommandId.cs_timerEvent, { event: event, param: param });
 	            },
 	            onRestTeamScore: function () {
@@ -9860,11 +9868,11 @@
 	                .setAlignCenter(PixiEx_1._c(516));
 	            ns.fill = '#a9a9a9';
 	            _this.lTeam = TextFac_1.TextFac.new_(ns, _this)
-	                .setText('美国联队')
+	                .setText('韩国战队')
 	                .setY(352)
 	                .setAlignCenter(PixiEx_1._c(-325));
 	            _this.rTeam = TextFac_1.TextFac.new_(ns, _this)
-	                .setText('路人王队')
+	                .setText('路人王战队')
 	                .setY(_this.lTeam.y)
 	                .setAlignCenter(PixiEx_1._c(325));
 	        });

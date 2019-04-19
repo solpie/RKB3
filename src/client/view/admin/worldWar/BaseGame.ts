@@ -60,6 +60,12 @@ export class _baseGameView extends VueBase {
   };
   methods = {
     onSetTimerEvent(event, param?) {
+      if (event == 'setting') {
+        let a = param.split('-')
+        if (a.length == 2) {
+          param = Number(a[0]) * 60 + Number(a[1])
+        }
+      }
       opReq(CommandId.cs_timerEvent, { event: event, param: param });
     },
     onRestTeamScore() {
@@ -88,7 +94,7 @@ export class _baseGameView extends VueBase {
       opReq(CommandId.cs_setBlood, {
         isLeft: isLeft, score: score,
         lScore: baseGame.lScore, rScore: baseGame.rScore,
-        lPlayer:baseGame.lPlayerId,rPlayer:baseGame.rPlayerId
+        lPlayer: baseGame.lPlayerId, rPlayer: baseGame.rPlayerId
       });
       this.vueUpdate();
     },

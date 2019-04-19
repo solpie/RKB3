@@ -128,6 +128,8 @@ export const CommandId = {
     cs_scoreFoul_common: '',
     sc_scoreFoul_common: '',
     //
+    cs_showWW3PlayerInfo: '',//
+    sc_showWW3PlayerInfo: '',//
     cs_showLowerThird: '',//
     sc_showLowerThird: '',//
     cs_showPickup: '',//

@@ -205,10 +205,10 @@ class _worldWar extends VueBase {
         })
       }
     },
-    onSetPlayerDots(v,isOn) {
+    onSetPlayerDots(v, isOn) {
       let a = v.split(' ')
       if (a.length == 2) {
-        opReq(CommandId.cs_setPlayerDot, { playerDot_L: a[0], playerDot_R: a[1],isOn:isOn })
+        opReq(CommandId.cs_setPlayerDot, { playerDot_L: a[0], playerDot_R: a[1], isOn: isOn })
 
       }
     },
@@ -275,13 +275,12 @@ class _worldWar extends VueBase {
       console.log("load file");
       this.conf.onFile(e);
     },
-    onUploadPlayerMap()
-    {
+    onUploadPlayerMap() {
       // console.log('upload playerMap',this.gameView.playerMap)
       syncWorldWarPanel3(doc => {
         doc.playerMap = JSON.stringify(this.gameView.playerMap_data)
-      },true)
-      console.log('upload playerMap',this.gameView.playerMap_data)
+      }, true)
+      console.log('upload playerMap', this.gameView.playerMap_data)
     },
     onEmitGameInfo() {
       this.emitGameInfo();

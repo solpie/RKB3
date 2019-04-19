@@ -159,6 +159,9 @@ export class _PickTeamAdmin extends VueBase {
         })
     }
     methods = {
+        onShowWW3PlayerInfo(data, v) {
+            opReq(CommandId.cs_showWW3PlayerInfo, { playerArr: data, visible: v })
+        },
         onShowLowerThird(lt, visible?) {
             console.log('show')
             opReq(CommandId.cs_showLowerThird, { data: lt, visible: visible })

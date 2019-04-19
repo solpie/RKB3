@@ -2056,6 +2056,8 @@
 	    sc_sync_buzzer: '',
 	    cs_scoreFoul_common: '',
 	    sc_scoreFoul_common: '',
+	    cs_showWW3PlayerInfo: '',
+	    sc_showWW3PlayerInfo: '',
 	    cs_showLowerThird: '',
 	    sc_showLowerThird: '',
 	    cs_showPickup: '',
@@ -2738,6 +2740,12 @@
 	        };
 	        this.methods = {
 	            onSetTimerEvent: function (event, param) {
+	                if (event == 'setting') {
+	                    var a = param.split('-');
+	                    if (a.length == 2) {
+	                        param = Number(a[0]) * 60 + Number(a[1]);
+	                    }
+	                }
 	                opReq(Command_1.CommandId.cs_timerEvent, { event: event, param: param });
 	            },
 	            onRestTeamScore: function () {
@@ -4164,6 +4172,9 @@
 	        this.team3_3 = VueBase_1.VueBase.PROP;
 	        this.team3_4 = VueBase_1.VueBase.PROP;
 	        this.methods = {
+	            onShowWW3PlayerInfo: function (data, v) {
+	                opReq(Command_1.CommandId.cs_showWW3PlayerInfo, { playerArr: data, visible: v });
+	            },
 	            onShowLowerThird: function (lt, visible) {
 	                console.log('show');
 	                opReq(Command_1.CommandId.cs_showLowerThird, { data: lt, visible: visible });
@@ -4303,7 +4314,7 @@
 /* 46 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <a href=\"/panel/#/lowerthird\">面板地址</a>\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onShowLowerThird({},false)\">隐藏</button>\r\n    <button class=\"button is-primary\" @click=\"onUpdatePlayerMap()\">更新球员名单</button>\r\n    <div style=\"width:680px\">\r\n        <button style=\"margin:5px;\" v-if=\"btn.type==1\" v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n        <br>\r\n        <button style=\"margin:5px;\" v-if=\"btn.type==2\" v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n    </div>\r\n    <br>\r\n    <br>\r\n    <!-- <button class=\"button is-primary\" @click=\"onShowPick(false)\">hide选人</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPick(true)\">emit选人</button> -->\r\n    <!-- <div style=\"display: inline-flex\">\r\n        队长：\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_4\" style=\"width: 180px;\">\r\n        </ul>\r\n    </div> -->\r\n    <!-- <br>\r\n    <br> -->\r\n    <!-- <button class=\"button is-primary\" @click=\"onSetColor()\">emit 颜色</button> -->\r\n    <!-- <div class=\"select\">\r\n        <select v-model=\"colorArr[0]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[1]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[2]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div> -->\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <a href=\"/panel/#/lowerthird\">面板地址</a>\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onShowLowerThird({},false)\">隐藏</button>\r\n    <button class=\"button is-primary\" @click=\"onUpdatePlayerMap()\">更新球员名单</button>\r\n    <div style=\"width:680px\">\r\n        <button style=\"margin:5px;\" v-if=\"btn.type==1\" v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n        <br>\r\n        <button style=\"margin:5px;\" v-if=\"btn.type==2\" v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n    </div>\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onShowWW3PlayerInfo({},true)\">显示比分面板球员信息</button>\r\n    <button class=\"button is-primary\" @click=\"onShowWW3PlayerInfo({},false)\">隐藏</button>\r\n    <br>\r\n    <br>\r\n    <!-- <button class=\"button is-primary\" @click=\"onShowPick(false)\">hide选人</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPick(true)\">emit选人</button> -->\r\n    <!-- <div style=\"display: inline-flex\">\r\n        队长：\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_4\" style=\"width: 180px;\">\r\n        </ul>\r\n    </div> -->\r\n    <!-- <br>\r\n    <br> -->\r\n    <!-- <button class=\"button is-primary\" @click=\"onSetColor()\">emit 颜色</button> -->\r\n    <!-- <div class=\"select\">\r\n        <select v-model=\"colorArr[0]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[1]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[2]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div> -->\r\n</div>";
 
 /***/ }
 /******/ ]);

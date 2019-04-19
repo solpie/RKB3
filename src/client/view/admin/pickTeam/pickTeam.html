@@ -8,6 +8,9 @@
         <br>
         <button style="margin:5px;" v-if="btn.type==2" v-for="(btn,index) in conf" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
     </div>
+    <hr>
+    <button class="button is-primary" @click="onShowWW3PlayerInfo({},true)">显示比分面板球员信息</button>
+    <button class="button is-primary" @click="onShowWW3PlayerInfo({},false)">隐藏</button>
     <br>
     <br>
     <!-- <button class="button is-primary" @click="onShowPick(false)">hide选人</button>
