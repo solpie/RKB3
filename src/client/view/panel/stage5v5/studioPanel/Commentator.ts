@@ -117,12 +117,14 @@ export class Commentator extends PIXI.Container implements IPopup {
         })
     }
     _fillData4(data) {
+        console.log("fill data4")
         this.lName.visible =
             this.rName.visible =
             this.lInfo.visible =
             this.rInfo.visible = false
 
         imgLoader.loadTexArr(['/img/panel/studio/commentatorV2_mid.png'], _ => {
+            console.log("fill data4222")
             if (!this.bgV2) {
                 this.bgV2_mid = newBitmap({ url: '/img/panel/studio/commentatorV2_mid.png' })
                 this.addChildAt(this.bgV2_mid, 0)
