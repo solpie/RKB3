@@ -1,10 +1,6 @@
-import { loadImg, loadImgArr } from '../../../utils/JsFunc';
-import { groupPosMap, fitWidth } from './BracketGroup';
-import { TweenEx } from '../../../utils/TweenEx';
-import { blink2, delayCall } from '../../../utils/Fx';
 import { ViewConst } from '../../../const';
-import { imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
-import { BracketGroup2018 } from './BracketGroup2018';
+import { newBitmap } from '../../../utils/PixiEx';
+import { groupPosMap } from './BracketGroup';
 import { BracketPlayerV3 } from './BracketPlayerV3';
 
 

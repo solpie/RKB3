@@ -4,7 +4,7 @@ import { showPanel, BasePanel } from '../../base/BasePanel';
 import { BasePanelView } from '../../BasePanelView';
 import { PanelId, FontName } from '../../../const';
 import { newBitmap, _c } from '../../../utils/PixiEx';
-import { TextFac } from '../../../utils/TextFac';
+import { TextFac, Text2 } from '../../../utils/TextFac';
 import { BracketS5Team } from './BracketS5Team';
 
 let urlBg = '/img/panel/bracket/s5/bg_16.png'
@@ -12,6 +12,7 @@ let urlBg = '/img/panel/bracket/s5/bg_16.png'
 class BracketS5Final extends BasePanel {
     static cls = 'BracketS5Final'
     groupMap: any
+    finalScore: Text2
     create() {
         let imgArr = [urlBg
             // , urlFg
@@ -19,19 +20,19 @@ class BracketS5Final extends BasePanel {
         let x0 = 730, x1 = 421, x2 = 421 - 252
         let groupMap = {
             "1": { x: _c(-x0), y: 252 }
-            , "2": { x: _c(-x0), y: 383 }
-            , "3": { x: _c(-x0), y: 540 }
-            , "4": { x: _c(-x0), y: 671 }
+            , "3": { x: _c(-x0), y: 383 }
+            , "5": { x: _c(-x0), y: 540 }
+            , "7": { x: _c(-x0), y: 671 }
 
-            , "5": { x: _c(x0), y: 252 }
-            , "6": { x: _c(x0), y: 383 }
-            , "7": { x: _c(x0), y: 540 }
+            , "2": { x: _c(x0), y: 252 }
+            , "4": { x: _c(x0), y: 383 }
+            , "6": { x: _c(x0), y: 540 }
             , "8": { x: _c(x0), y: 671 }
 
             , "9": { x: _c(-x1), y: 318 }
-            , "10": { x: _c(-x1), y: 612 }
+            , "11": { x: _c(-x1), y: 612 }
 
-            , "11": { x: _c(x1), y: 318 }
+            , "10": { x: _c(x1), y: 318 }
             , "12": { x: _c(x1), y: 612 }
 
             , "13": { x: _c(-x2), y: 467 }
@@ -40,6 +41,29 @@ class BracketS5Final extends BasePanel {
             , "15": { x: 125, y: 1080 }
             , "16": { x: 125, y: 220 }
         }
+        // let groupMap = {
+        //     "1": { x: _c(-x0), y: 252 }
+        //     , "2": { x: _c(-x0), y: 383 }
+        //     , "3": { x: _c(-x0), y: 540 }
+        //     , "4": { x: _c(-x0), y: 671 }
+
+        //     , "5": { x: _c(x0), y: 252 }
+        //     , "6": { x: _c(x0), y: 383 }
+        //     , "7": { x: _c(x0), y: 540 }
+        //     , "8": { x: _c(x0), y: 671 }
+
+        //     , "9": { x: _c(-x1), y: 318 }
+        //     , "10": { x: _c(-x1), y: 612 }
+
+        //     , "11": { x: _c(x1), y: 318 }
+        //     , "12": { x: _c(x1), y: 612 }
+
+        //     , "13": { x: _c(-x2), y: 467 }
+        //     , "14": { x: _c(x2), y: 467 }
+
+        //     , "15": { x: 125, y: 1080 }
+        //     , "16": { x: 125, y: 220 }
+        // }
         this.groupMap = groupMap
         this.addChild(new PIXI.Graphics()
             .beginFill(0x000000)
@@ -69,9 +93,9 @@ class BracketS5Final extends BasePanel {
                     group.lName.setSize('43px')
                     group.rName.setSize('43px')
                     group.lName.setPos(group.x, group.y)
-                        .setAlignCenter(_c(group.x))
-                    group.rName.setPos(group.x, group.y)
                         .setAlignCenter(_c(-group.x))
+                    group.rName.setPos(group.x, group.y)
+                        .setAlignCenter(_c(group.x))
                 }
                 else {
                     group.lName.setPos(group.x, group.y)
@@ -80,6 +104,13 @@ class BracketS5Final extends BasePanel {
                         .setAlignCenter(group.x)
                 }
             }
+
+
+            this.finalScore = TextFac.new_(ns, this)
+                .setY(303)
+                .setSize("34px")
+                .setText('')
+                .setAlignCenter(_c(0))
         })
     }
     fillData(data) {
@@ -88,9 +119,9 @@ class BracketS5Final extends BasePanel {
             let group = this.groupMap[r.gameIdx]
             if (r.gameIdx > 14) {
                 group.lName.setText(r.player[0])
-                    .setAlignCenter(_c(group.x))
-                group.rName.setText(r.player[1])
                     .setAlignCenter(_c(-group.x))
+                group.rName.setText(r.player[1])
+                    .setAlignCenter(_c(group.x))
             }
             else {
                 group.lName.setText(r.player[0])
@@ -110,6 +141,11 @@ class BracketS5Final extends BasePanel {
                 else {
                     group.lName.alpha = 0.4
                 }
+            }
+
+            if (r.gameIdx == 16) {
+                this.finalScore.setText(lScore + ' - ' +rScore)
+                    .setAlignCenter(_c(0))
             }
         }
     }
