@@ -1,0 +1,139 @@
+{
+    "date": "2018-12-30",
+    "dbIdx": "worldwar",
+    "foulToHint": 4,
+    "dbUrl": "http://rtmp.icassi.us:8090/event?idx=0516_0",
+    "rank5": "p12_王晶",
+    "playerScore": {},
+    "gameTitle": "新人魔王晋级赛",
+    "gameTitleMap": {
+        "1": "",
+        "2": "",
+        "3": "",
+        "4": ""
+    },
+    "avatarUrlBase": "http://rtmp.icassi.us:8092/img/player/0516/",
+    "rec-show": 1,
+    "isShowPick": 0,
+    "group": {
+        "A": [
+            { "playerId": "p1" },
+            { "playerId": "p2" },
+            { "playerId": "p3" }
+        ],
+        "B": [
+            { "playerId": "p4" },
+            { "playerId": "p5" },
+            { "playerId": "p6" }
+        ],
+        "C": [
+            { "playerId": "p7" },
+            { "playerId": "p8" },
+            { "playerId": "p9" }
+        ],
+        "D": [
+            { "playerId": "p10" },
+            { "playerId": "p11" },
+            { "playerId": "p12" }
+        ]
+    },
+    "recMap": {
+        "_": "新人抽老人player#1 #2 填p0",
+        "#1": {
+            "rec": [
+                { "title": "新老对决16强晋级", "idx": "1#A1", "score": [1, 0], "player": ["p1", "p2"] },
+                { "title": "新老对决16强晋级", "idx": "1#A1", "score": [0, 0], "player": ["p3", "p4"] },
+                { "title": "新老对决16强晋级", "idx": "1#A1", "score": [0, 0], "player": ["p5", "p6"] },
+                { "title": "新老对决16强晋级", "idx": "1#A1", "score": [0, 0], "player": ["p7", "p8"] }
+            ]
+        },
+        "#2": {
+            "rec": [
+                { "title": "新老对决16强晋级", "idx": "1#A1", "score": [0, 0], "player": ["p0", "p0"] },
+                { "title": "新老对决16强晋级", "idx": "1#A1", "score": [0, 0], "player": ["p0", "p0"] },
+                { "title": "新老对决16强晋级", "idx": "1#A1", "score": [0, 0], "player": ["p0", "p0"] },
+                { "title": "新老对决16强晋级", "idx": "1#A1", "score": [0, 0], "player": ["p0", "p0"] }
+            ]
+        },
+        "#3": {
+            "rec": [
+                { "title": "新老对决8强晋级", "idx": "1#A1", "score": [0, 0], "player": ["p3", "p4"] },
+                { "title": "新老对决8强晋级", "idx": "1#A1", "score": [0, 0], "player": ["p5", "p1"] },
+                { "title": "新老对决8强晋级", "idx": "1#A1", "score": [0, 0], "player": ["p2", "p3"] },
+                { "title": "新老对决8强晋级", "idx": "1#A1", "score": [0, 0], "player": ["p4", "p5"] }
+            ]
+        },
+        "#4": {
+            "_": "决赛421",
+            "rec": [
+                { "title": "新老对决决赛", "idx": "1#A1", "score": [0, 0], "player": ["p3", "p4"] },
+                { "title": "新老对决决赛", "idx": "1#A1", "score": [0, 0], "player": ["p3", "p4"] },
+                { "title": "新老对决决赛", "idx": "1#A1", "score": [0, 0], "player": ["p5", "p1"] },
+                { "title": "新老对决决赛", "idx": "1#A1", "score": [-1, -1], "player": ["p1", "p1"] }
+            ]
+        }
+    },
+    "scoreRank": [
+        ["p1_叶凯帆", -1],
+        ["p2_塔拉甫", -1],
+        ["p3_马智飞", -1],
+        ["p4_陈国玺", -1],
+        ["p5_赵学志", -1],
+        ["p6_韩飞", -1],
+        ["p7_张铭辰", -1],
+        ["p8_陈杰", -1],
+        ["p9_毕博文", 0],
+        ["p10_乔翔泽", 0],
+        ["p11_杜超", 0],
+        ["p12_杜超", 0],
+        ["p13_杜超", 0],
+        ["p14_杜超", 0],
+        ["p15_杜超", 0],
+        ["p16_杜超", 0]
+    ],
+    "rank8": [{
+            "playerId": "p1",
+            "score": "40",
+            "beatPlayer": ["p2", "p2", "p2", "p2"]
+        },
+        {
+            "playerId": "p2",
+            "score": "30",
+            "beatPlayer": ["p2", "p3"]
+        },
+        {
+            "playerId": "p3",
+            "score": "25",
+            "beatPlayer": ["p2", "p3"]
+        },
+        {
+            "playerId": "p4",
+            "score": "25",
+            "beatPlayer": ["p2", "p3", "p3"]
+        },
+        {
+            "playerId": "p1",
+            "score": "20",
+            "beatPlayer": ["p2"]
+        },
+        {
+            "playerId": "p1",
+            "score": "20",
+            "beatPlayer": ["p2"]
+        },
+        {
+            "playerId": "p1",
+            "score": "20",
+            "beatPlayer": ["p2"]
+        },
+        {
+            "playerId": "p1",
+            "score": "20",
+            "beatPlayer": ["p2"]
+        }
+    ],
+    "rec": [
+
+    ],
+    "playerMap": { "p1": { "name": "郭凌川", "hwa": [190, 90, 24], "title": "路人王28冠怼派代言人大N", "playerId": "p1", "info": "路人王怼派代表之一，凭借出色的身体素质在路人王打出一片天地，进步神速，曾被视为路人王最快进步球员。" }, "p2": { "name": "项麒芸", "hwa": [190, 87, 31], "title": "路人王8冠王 最强特警", "playerId": "p2", "info": "路人王上海站、杭州站冠军。身体素质出色，精神属性强大，因职业是特警，被粉丝誉为最强特警。" }, "p3": { "name": "郑图腾", "hwa": [178, 80, 25], "title": "路人王厦门站5冠王", "playerId": "p3", "info": "" }, "p4": { "name": "刘树浩", "hwa": [185, 90, 25], "title": "路人王两冠王", "playerId": "p4", "info": "" }, "p5": { "name": "阿木戈龙", "hwa": [200, 100, 31], "title": "路人王乌鲁木齐站冠军\n", "playerId": "p5", "info": "" }, "p6": { "name": "李翰侨", "hwa": [183, 78, 27], "title": "路人王S6北京站冠军\n", "playerId": "p6", "info": "" }, "p7": { "name": "宣雨坤", "hwa": [183, 86, 22], "title": "路人王S6南京站冠军\n", "playerId": "p7", "info": "" }, "p8": { "name": "路佳兴", "hwa": [195, 95, 24], "title": "路人王S6太原站冠军\n", "playerId": "p8", "info": "" }, "p9": { "name": "王晶", "hwa": [196, 95, 40], "title": "前CBA名将", "playerId": "p9", "info": "前CBA东莞烈豹队长，40岁的他依然是路人王赛场上最出色的球员之一。拥有全面的进攻技巧和丰富的经验，精准的三分球是他的杀手锏。" }, "p10": { "name": "马克", "hwa": [187, 93, 24], "title": "路人王13冠王体能怪", "playerId": "p10", "info": "路人王实力榜第一人，有着出色的身体素质和优秀的体能，每一次大赛都能看到他越战越勇的表现。" }, "p11": { "name": "李豪", "hwa": [180, 82, 24], "title": "路人王6冠王 川渝霸主", "playerId": "p11", "info": "" }, "p12": { "name": "耿骁骐", "hwa": [193, 120, 28], "title": "路人王S5上海站冠军", "playerId": "p12", "info": "拥有超级内线一样BUG的体格，以及后卫般的运球和手感。" }, "p13": { "name": "张智扬", "hwa": [190, 80, 24], "title": "路人王S5总冠军\n实力榜第一", "playerId": "p13", "info": "" }, "p14": { "name": "陈凯涛", "hwa": [188, 78, 23], "title": "路人王12月冠军排位赛冠军", "playerId": "p14", "info": "CUBA山西大学核心，西北赛区MVP，拥有CUBA里顶级的外线防守能力和极快的速度。" }, "p15": { "name": "韩曙光", "hwa": [179, 74, 26], "title": "路人王4冠王武汉直升机\n", "playerId": "p15", "info": "" }, "p16": { "name": "宋流轩", "hwa": [183, 75, 21], "title": "路人王4冠王 变向狂魔", "playerId": "p16", "info": "路人王长沙站冠军，变向狂魔，拥有极快的速度和令人瞠目结舌的大幅度变向。" }, "p17": { "name": "威利-米勒", "hwa": [181, 90, 21], "title": "", "playerId": "p17", "info": "" }, "p18": { "name": "埃弗里-沙雷尔", "hwa": [188, 86, 21], "title": "", "playerId": "p18", "info": "" }, "p19": { "name": "尼克-德姆西斯", "hwa": [193, 90, 21], "title": "", "playerId": "p19", "info": "" }, "p20": { "name": "卡尔-德埃萨", "hwa": [188, 84, 21], "title": "", "playerId": "p20", "info": "" }, "p21": { "name": "纳尚-乔治", "hwa": [206, 91, 21], "title": "", "playerId": "p21", "info": "" }, "p0": { "name": "", "hwa": [0, 0, 0], "title": "", "playerId": "p0", "info": "" } }
+}
