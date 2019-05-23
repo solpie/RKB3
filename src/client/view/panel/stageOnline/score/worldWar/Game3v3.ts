@@ -34,10 +34,10 @@ export class Game3v3 extends BasePanel {
         this.load(imgArr, _ => {
             this.addChild(newBitmap({ url: urlBg }))
             this.lScore = TextFac.new_(ns, this)
-                .setPos(1786, 817)
+                .setPos(1786-50, 817+3)
                 .setText('0')
             this.rScore = TextFac.new_(ns, this)
-                .setPos(1782, 876)
+                .setPos(1782-50, 876+3)
                 .setText('0')
 
             this.lTeamName = TextFac.new_(ts, this)

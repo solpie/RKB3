@@ -222,7 +222,15 @@ function _putDoc(url, data, callback) {
         success: callback,
     })
 }
-export function syncWorldWarPanel3(cb, isSave=false) {
+export function getLowerthird(pid, callback) {
+    let docUrl = 'http://rtmp.icassi.us:8090/lowerthird?pid=' + pid
+    $.get(docUrl, res => {
+        if (res.length) callback(res[0]);
+        else callback(null);
+    });
+}
+
+export function syncWorldWarPanel3(cb, isSave = false) {
     let docUrl = "http://rtmp.icassi.us:8090/panel/?pid=ww3"
     const getDoc = callback => {
         $.get(docUrl, res => {
@@ -233,7 +241,7 @@ export function syncWorldWarPanel3(cb, isSave=false) {
     getDoc(doc => {
         cb(doc)
         if (isSave) {
-            let putUrl = 'http://rtmp.icassi.us:8090/panel/'+doc._id
+            let putUrl = 'http://rtmp.icassi.us:8090/panel/' + doc._id
             _putDoc(putUrl, doc, res => {
                 console.log(res)
             })

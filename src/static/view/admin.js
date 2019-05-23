@@ -1507,6 +1507,16 @@
 	        success: callback,
 	    });
 	}
+	function getLowerthird(pid, callback) {
+	    var docUrl = 'http://rtmp.icassi.us:8090/lowerthird?pid=' + pid;
+	    $.get(docUrl, function (res) {
+	        if (res.length)
+	            callback(res[0]);
+	        else
+	            callback(null);
+	    });
+	}
+	exports.getLowerthird = getLowerthird;
 	function syncWorldWarPanel3(cb, isSave) {
 	    if (isSave === void 0) { isSave = false; }
 	    var docUrl = "http://rtmp.icassi.us:8090/panel/?pid=ww3";
@@ -4220,24 +4230,6 @@
 	        this.teamArr1 = [{ name: '1', playerId: 1 }];
 	        this.teamArr2 = [{ name: '2', playerId: 1 }];
 	        this.teamArr3 = [{ name: '3', playerId: 1 }];
-	        var arr2 = [
-	            '周锐',
-	            '马克',
-	            '陈凯涛',
-	            '安云鹏',
-	            '王晶',
-	            '项麒芸',
-	            '刘宇',
-	            '陈泽文',
-	            '黄一鸣',
-	            '夏威',
-	            '李保兴',
-	            '刘涛',
-	            '蔺睿',
-	            '白晶',
-	            '朱春强',
-	            '杰夫'
-	        ];
 	        this.confType1_arr = [
 	            {
 	                "button": "盼盼 姜冕",
@@ -4269,21 +4261,6 @@
 	                "type": 1,
 	                "cont": ["鹅皇Gary_微博/抖音号：鹅皇Gary", "堂主_微博/抖音号：信堂堂主"]
 	            },
-	            {
-	                "button": "赵德强",
-	                "type": 2,
-	                "cont": "国家级裁判：赵德强"
-	            },
-	            {
-	                "button": "王深",
-	                "type": 2,
-	                "cont": "国家一级裁判：王深"
-	            },
-	            {
-	                "button": "吕文龙",
-	                "type": 2,
-	                "cont": "国家一级裁判：吕文龙"
-	            },
 	        ];
 	        this.conf = [];
 	    };
@@ -4310,6 +4287,48 @@
 	                var n = name_arr_1[_b];
 	                _this.conf.push({ "button": n, type: 2, cont: n });
 	            }
+	            HupuAPI_1.getLowerthird('ww3', function (data) {
+	                console.log('get lowerthird');
+	                console.log('referee', data.referee);
+	                console.log('commentator', data.commentator);
+	                _this.confType1_arr_8090 = [];
+	                for (var i = 0; i < data.commentator.length; i++) {
+	                    var c = data.commentator[i];
+	                    _this.confType1_arr_8090.push({
+	                        "button": c.name + ' ',
+	                        "type": 1,
+	                        "cont": ["鹅皇Gary_路人王官方主播", "堂主_路人王官方主播"]
+	                    });
+	                }
+	                if (data.commentator.length == 2) {
+	                    var c1 = data.commentator[0];
+	                    var c2 = data.commentator[1];
+	                    _this.confType1_arr_8090.push({
+	                        "button": c1.name + ' ' + c2.name,
+	                        "type": 1,
+	                        "cont": [c1.name + '_' + c1.info, c2.name + '_' + c2.info]
+	                    });
+	                }
+	                _this.confType2_arr_8090 = [];
+	                for (var i = 0; i < data.mc.length; i++) {
+	                    var mc = data.mc[i];
+	                    _this.confType2_arr_8090.push({
+	                        "button": mc.name,
+	                        "type": 2,
+	                        "cont": mc.info
+	                    });
+	                }
+	                for (var i = 0; i < data.referee.length; i++) {
+	                    var ref = data.referee[i];
+	                    _this.confType2_arr_8090.push({
+	                        "button": ref.name,
+	                        "type": 2,
+	                        "cont": ref.info
+	                    });
+	                }
+	                _this.conf = _this.conf.concat(_this.confType1_arr_8090)
+	                    .concat(_this.confType2_arr_8090);
+	            });
 	            console.log('update playerMap:', playerMap);
 	        });
 	    };

@@ -32,17 +32,18 @@
         <div class="container" style="height: 700px">
             [game3v3]
             <div>
-                <input v-model="lScoreInput" class="input" type="text" style="width: 80px;">
+                红队：
+                <input v-model="lScoreInput" class="input" type="text" style="width: 80px;"> 蓝队：
                 <input v-model="rScoreInput" class="input" type="text" style="width: 80px;">
                 <button class="button" @click="onSetScore(lScoreInput,rScoreInput)">设置比分</button>
-                <br>
+                <br> 时间：秒 分-秒
                 <input v-model="timerInput" class="input" type="text" style="width: 80px;">
                 <button class="button" @click="onSetTimer('start',scoreInput)">开始</button>
                 <button class="button" @click="onSetTimer('pause',scoreInput)">暂停</button>
                 <button class="button" @click="onSetTimer('setting',timerInput)">设置</button>
                 <button class="button" @click="onSetTimer('reset',scoreInput)">reset</button>
                 <br>
-                <input v-model="playerInput" class="input" type="text" style="width: 180px;">
+                <!-- <input v-model="playerInput" class="input" type="text" style="width: 180px;"> -->
                 <button class="button" @click="onSetPlayer(playerInput)">设置对阵</button>
 
             </div>

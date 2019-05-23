@@ -1097,6 +1097,16 @@
 	        success: callback,
 	    });
 	}
+	function getLowerthird(pid, callback) {
+	    var docUrl = 'http://rtmp.icassi.us:8090/lowerthird?pid=' + pid;
+	    $.get(docUrl, function (res) {
+	        if (res.length)
+	            callback(res[0]);
+	        else
+	            callback(null);
+	    });
+	}
+	exports.getLowerthird = getLowerthird;
 	function syncWorldWarPanel3(cb, isSave) {
 	    if (isSave === void 0) { isSave = false; }
 	    var docUrl = "http://rtmp.icassi.us:8090/panel/?pid=ww3";
@@ -10599,10 +10609,10 @@
 	        this.load(imgArr, function (_) {
 	            _this.addChild(PixiEx_1.newBitmap({ url: urlBg }));
 	            _this.lScore = TextFac_1.TextFac.new_(ns, _this)
-	                .setPos(1786, 817)
+	                .setPos(1786 - 50, 817 + 3)
 	                .setText('0');
 	            _this.rScore = TextFac_1.TextFac.new_(ns, _this)
-	                .setPos(1782, 876)
+	                .setPos(1782 - 50, 876 + 3)
 	                .setText('0');
 	            _this.lTeamName = TextFac_1.TextFac.new_(ts, _this)
 	                .setPos(1750, 817)
