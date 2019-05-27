@@ -441,6 +441,7 @@
 	            { title: "通用计分控制台", url: "/admin/#/com" },
 	            { title: "3v3计分", url: "/html/controls/game3v3.html" },
 	            { title: "3v3面板", url: "/panel/#/ol/ob/0?panel=score&s4=1&world=1&game3v3=1" },
+	            { title: "4v4面板（新）", url: "/cc/web-mobile/index.html?panel=3v3" },
 	        ];
 	    };
 	    HomeView.prototype.genQRCode = function () {
