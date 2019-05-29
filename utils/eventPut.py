@@ -20,5 +20,6 @@ with open('eventDoc.json', 'rb') as f:
     # print(event_json)
     print(event_json['playerMap'])
     doc['doc'] = event_jstr
+    # doc['playerMap'] = event_jstr
     put1 = requests.put(putUrl, doc)
     print(put1.status_code)

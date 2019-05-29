@@ -1,5 +1,5 @@
 import { BackendConf } from "../../BackendConf";
-import { CommandId } from "../../Command";
+import { CommandId } from '../../Command';
 import { PanelId } from "../../const";
 import { clone } from "../../utils/JsFunc";
 import { VueBase } from "../../utils/VueBase";
@@ -28,8 +28,10 @@ class _worldWar extends VueBase {
   vsPlayer = VueBase.PROP;
   vsPlayerArr = VueBase.PROP;
   redArr = VueBase.PROP;
+  redArr_2 = VueBase.PROP;
   blueArr = VueBase.PROP;
   recArr = VueBase.PROP;
+  blueArr_2 = VueBase.PROP;
   gameView: any;
   gameIdx: number;
   teamVsIdx = VueBase.PROP;
@@ -94,6 +96,9 @@ class _worldWar extends VueBase {
     let t2Idx = data.vs[1]
     this.blueArr = gameView.getTeamByIdx(t1Idx);
     this.redArr = gameView.getTeamByIdx(t2Idx);
+
+    this.blueArr_2 = gameView.getTeamByIdx(t1Idx, true);
+    this.redArr_2 = gameView.getTeamByIdx(t2Idx, true);
 
     opReq(CommandId.cs_bracketS5, data)
     syncDoc(data2 => {
@@ -264,6 +269,11 @@ class _worldWar extends VueBase {
       if (a.length == 2) {
         gameView.setVs(gameIdx, [a[0], a[1]]);
       }
+    },
+    onManualBlood(dtBlood, player) {
+      player.blood += dtBlood
+      console.log('onManualBlood', player)
+      opReq(CommandId.cs_manual_blood, { lTeam: this.blueArr_2, rTeam: this.redArr_2 });
     },
     pickPlayer(isLeft, playerId) {
       isLeft

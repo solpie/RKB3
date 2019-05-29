@@ -25,7 +25,7 @@ export const syncDoc = (cb, isSave = false) => {
 export class WWGame extends EventDispatcher {
   static InitDocView: "init doc view";
   playerMap: any;
-  playerMap_data:any//原数据
+  playerMap_data: any//原数据
   teamArr: any;
   gameIdx: number;
   teamVsRec: any;
@@ -104,12 +104,21 @@ export class WWGame extends EventDispatcher {
     }
     return bloodMapForShow;
   }
-  getTeamByIdx(idx): any {
+  getTeamByIdx(idx, isManual = false): any {
     let a = [];
     for (const t of this.teamArr) {
       if (t.idx == idx) {
         for (const pid of t.playerArr) {
-          a.push(this.playerMap[pid]);
+
+          if (isManual) {
+            let p = clone(this.playerMap[pid])
+            p.blood = 0
+            a.push(p);
+          }
+          else {
+            a.push(this.playerMap[pid]);
+
+          }
         }
       }
     }

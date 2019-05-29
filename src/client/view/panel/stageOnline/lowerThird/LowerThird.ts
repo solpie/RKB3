@@ -8,6 +8,7 @@ import { newBitmap, _c } from '../../../utils/PixiEx';
 import { BaseLowerThird } from './BaseLowerThird';
 // import { PickTeam } from '../pickTeam/PickTeam';
 import { TextType3 } from './TextType3';
+import { TextType4 } from './TextType4';
 
 class TextType1 extends BaseLowerThird {
     lName: Text2
@@ -83,20 +84,25 @@ class TextType2 extends BaseLowerThird {
         return this.lName.width
     }
 }
-let urlType_1, urlType_2, urlType_3;
+let urlType_1, urlType_2, urlType_3, urlType_4;
 // let pt: PickTeam
 class LowerThird extends BasePanel {
     static cls = 'LowerThird'
     t1: TextType1
     t2: TextType2
     t3: TextType3
+    t4: TextType4
     showOnlyMap: any
     create() {
         urlType_1 = '/img/panel/lowerThird/type_1.png'
         urlType_2 = '/img/panel/lowerThird/type_2.png'
         urlType_3 = '/img/panel/lowerThird/type_3.png'
-        this.load([urlType_1
+        urlType_4 = '/img/panel/lowerThird/type_4.png'
+        this.load([
+            urlType_1
             , urlType_2
+            , urlType_3
+            , urlType_4
         ], _ => {
             //on loaded.......
             this.showOnlyMap = {}
@@ -140,6 +146,13 @@ class LowerThird extends BasePanel {
                     this.showOnlyMap[2] = this.t2
                     this.showOnly(2)
                 }
+            }
+            else if (data.type == 4) {
+                if (!this.t4)
+                    this.t4 = new TextType4(this)
+                this.t4.fillData(data)
+                this.showOnlyMap[4] = this.t4
+                this.showOnly(4)
             }
         }
         this.p.addChild(this)

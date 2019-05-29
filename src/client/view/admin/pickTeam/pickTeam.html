@@ -8,15 +8,22 @@
         <button style="margin:5px;" v-if="btn.type==1" v-for="(btn,index) in conf" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
         <br> 单人人名条：
         <button style="margin:5px;" v-if="btn.type==2" v-for="(btn,index) in conf" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
-        <br>球员：
+        <br> 球员：
         <button style="margin:5px;" v-if="btn.type==2" v-for="(btn,index) in confType2_playerMap" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
         <br>
         <br><input type="text" v-model="lowerthirdText" style="width: 200px;">
-        <button class="button is-primary" @click="onShowLowerThirdCustom(lowerthirdText,2)">自定义人名条内容</button>
+        <button class="button is-primary" @click="onShowLowerThirdCustom(lowerthirdText,2)">自定义人名条内容（12个汉字最多）</button>
+    </div>
+    <br>
+    <br>
+
+    <div style="width:680px">
+        球员简介，环节简介：(图标 标题 内容)
+        <button style="margin:5px;" v-for="(btn,index) in confType4" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
     </div>
     <hr>
-    <button class="button is-primary" @click="onShowWW3PlayerInfo({},true)">显示比分面板球员信息</button>
-    <button class="button is-primary" @click="onShowWW3PlayerInfo({},false)">隐藏</button>
+    <!-- <button class="button is-primary" @click="onShowWW3PlayerInfo({},true)">显示比分面板球员信息</button>
+    <button class="button is-primary" @click="onShowWW3PlayerInfo({},false)">隐藏</button> -->
     <br>
     <br>
     <!-- <button class="button is-primary" @click="onShowPick(false)">hide选人</button>

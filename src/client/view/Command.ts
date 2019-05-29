@@ -224,6 +224,7 @@ export const CommandId = {
     cs_bracket: '',
     sc_bracketS5: '',
     cs_bracketS5: '',
+    cs_manual_blood: '',
     //vs info
     cs_vsInfo: '',
     sc_vsInfo: '',

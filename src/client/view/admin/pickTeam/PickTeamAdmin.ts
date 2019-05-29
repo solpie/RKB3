@@ -45,6 +45,8 @@ export class _PickTeamAdmin extends VueBase {
     confType1_arr_8090: any
     confType2_arr_8090: any
     confType2_playerMap = VueBase.PROP
+    confType4 = VueBase.PROP
+
     constructor() {
         super();
         VueBase.initProps(this);
@@ -92,6 +94,45 @@ export class _PickTeamAdmin extends VueBase {
 
             //  
         ]
+
+        this.confType4 = [
+            {
+                'button': '路人王介绍',
+                'type': 4,
+                'cont': [
+                    '路人王介绍：',
+                    '“路人王”篮球赛是目前全国最火的民间篮球单挑赛，1V1的赛制结合娱乐元素，令比赛更刺激、更具观赏性。这项全民可参与的赛事，致力于成为年轻人最爱的篮球IP。'
+                ],
+                'img': ''
+            },
+            {
+                'button': 'Round1： up主单挑赛规则',
+                'type': 4,
+                'cont': [
+                    'Round1： up主单挑赛规则',
+                    '单次进攻时间为20秒，全局限时3分钟，全程不停表。先拿5分的球员获胜。累计4次犯规后，对方罚球。'
+                ],
+                'img': ''
+            },
+            {
+                'button': 'Round2： 4V4比赛规则',
+                'type': 4,
+                'cont': [
+                    'Round2： 4V4比赛规则',
+                    '先得21分的球队获胜，每局限时15分钟，全程不停表。单次进攻时间24秒。全队第5次犯规，对手罚篮。'
+                ],
+                'img': ''
+            },
+            {
+                'button': 'Round3： 灌篮up主队vs路人王联队规则',
+                'type': 4,
+                'cont': [
+                    'Round3： 灌篮up主队vs路人王联队规则',
+                    '每队4人，队长6滴血，队员5滴血，全队21滴血。一分即对应为一滴血，当一方血量被打空时，则该队判负。某球员第3次犯规时，对方罚球，犯规达到8次则该员血量清零。'
+                ],
+                'img': ''
+            },
+        ]
         this.conf = []
         this.confType2_playerMap = []
     }
@@ -121,16 +162,6 @@ export class _PickTeamAdmin extends VueBase {
                     })
                 }
                 this.confType1_arr_8090 = []
-                for (let i = 0; i < data.commentator.length; i++) {
-                    let c = data.commentator[i];
-                    this.confType1_arr_8090.push(
-                        {
-                            "button": c.name + ' ',
-                            "type": 1,
-                            "cont": ["鹅皇Gary_路人王官方主播", "堂主_路人王官方主播"]
-                        }
-                    )
-                }
                 let doubleCommentator = (field) => {
                     if (data[field].length == 2) {
                         let c1 = data[field][0]

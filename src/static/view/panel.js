@@ -1744,6 +1744,7 @@
 	    cs_bracket: '',
 	    sc_bracketS5: '',
 	    cs_bracketS5: '',
+	    cs_manual_blood: '',
 	    cs_vsInfo: '',
 	    sc_vsInfo: '',
 	    cs_attack: '',
@@ -1950,8 +1951,10 @@
 	        this.vsPlayer = VueBase_1.VueBase.PROP;
 	        this.vsPlayerArr = VueBase_1.VueBase.PROP;
 	        this.redArr = VueBase_1.VueBase.PROP;
+	        this.redArr_2 = VueBase_1.VueBase.PROP;
 	        this.blueArr = VueBase_1.VueBase.PROP;
 	        this.recArr = VueBase_1.VueBase.PROP;
+	        this.blueArr_2 = VueBase_1.VueBase.PROP;
 	        this.teamVsIdx = VueBase_1.VueBase.PROP;
 	        this.teamScore = VueBase_1.VueBase.PROP;
 	        this.playerDots = VueBase_1.VueBase.PROP;
@@ -2053,6 +2056,11 @@
 	                    gameView.setVs(gameIdx, [a[0], a[1]]);
 	                }
 	            },
+	            onManualBlood: function (dtBlood, player) {
+	                player.blood += dtBlood;
+	                console.log('onManualBlood', player);
+	                opReq(Command_1.CommandId.cs_manual_blood, { lTeam: this.blueArr_2, rTeam: this.redArr_2 });
+	            },
 	            pickPlayer: function (isLeft, playerId) {
 	                isLeft
 	                    ? (this.vsPlayerArr[0] = playerId)
@@ -2143,6 +2151,8 @@
 	        var t2Idx = data.vs[1];
 	        this.blueArr = gameView.getTeamByIdx(t1Idx);
 	        this.redArr = gameView.getTeamByIdx(t2Idx);
+	        this.blueArr_2 = gameView.getTeamByIdx(t1Idx, true);
+	        this.redArr_2 = gameView.getTeamByIdx(t2Idx, true);
 	        opReq(Command_1.CommandId.cs_bracketS5, data);
 	        WWGame_1.syncDoc(function (data2) {
 	            _this.initDocView(data2.doc);
@@ -2532,14 +2542,22 @@
 	        }
 	        return bloodMapForShow;
 	    };
-	    WWGame.prototype.getTeamByIdx = function (idx) {
+	    WWGame.prototype.getTeamByIdx = function (idx, isManual) {
+	        if (isManual === void 0) { isManual = false; }
 	        var a = [];
 	        for (var _i = 0, _a = this.teamArr; _i < _a.length; _i++) {
 	            var t = _a[_i];
 	            if (t.idx == idx) {
 	                for (var _b = 0, _c = t.playerArr; _b < _c.length; _b++) {
 	                    var pid = _c[_b];
-	                    a.push(this.playerMap[pid]);
+	                    if (isManual) {
+	                        var p = JsFunc_1.clone(this.playerMap[pid]);
+	                        p.blood = 0;
+	                        a.push(p);
+	                    }
+	                    else {
+	                        a.push(this.playerMap[pid]);
+	                    }
 	                }
 	            }
 	        }
@@ -2721,7 +2739,7 @@
 /* 38 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n\r\n    <input type=\"file\" id=\"file\" accept=\"*.xlsx\" hidden>\r\n    <br>\r\n\r\n    <a href=\"/panel/#/ol/ob/0?panel=score&s4=1&world=1\">world panel</a>\r\n    <a href=\"/panel/#/ol/ob/0?panel=score&s4=1&world=1&bblood=1\">team blood</a>\r\n    <a href=\"/html/ww/blood.html?m=obs\">team blood obs</a>\r\n\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开本地配置</button>\r\n    <button class=\"button is-primary\" @click=\"onUploadPlayerMap\">上传playerMap</button>\r\n    <button class=\"button is-primary\" id=\"reload\" @click=\"onReload\">reload</button> 比分面板延时(秒)\r\n    <input class=\"input\" v-model=\"delay\" type=\"text\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onSetDelay(delay)\">设置</button>\r\n    <br>\r\n    <br>\r\n\r\n    <div class=\"control\">\r\n        vs player <input class=\"input\" v-model=\"vsPlayer\" type=\"text\" style=\"width: 100px;\">\r\n        <button class=\"button is-primary\" @click=\"onEmitGameInfo\">初始比赛</button>\r\n        <button class=\"button is-primary\" @click=\"onAddGame\">创建REC</button>\r\n        <button class=\"button is-primary\" @click=\"onCommitGame(gameIdx)\">提交比赛</button> teamVsIdx:\r\n        <input class=\"input\" v-model=\"teamVsIdx\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetBlood(teamVsIdx)\">设置初始血量</a>\r\n        <input class=\"input\" v-model=\"teamScore\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetTeamScore(teamScore)\">设置团队比分</a>\r\n        <a class=\"button is-warnning\" @click=\"onSetTimeOut(teamScore)\">设置团队暂停</a>\r\n        <a class=\"button\" @click=\"onShowKDA(true)\">显示kda</a>\r\n        <a class=\"button\" @click=\"onShowKDA(false)\">隐藏kda</a>\r\n        <hr> 比分面板\r\n        <a class=\"button\" @click=\"onShowPanel(true)\">显示</a>\r\n        <a class=\"button\" @click=\"onShowPanel(false)\">隐藏</a> title\r\n        <a class=\"button\" @click=\"onShowTitle(true)\">显示</a>\r\n        <a class=\"button\" @click=\"onShowTitle(false)\">隐藏</a>\r\n        <input class=\"input\" v-model=\"playerDots\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetPlayerDots(playerDots,false)\">设置团队剩余5 3</a>\r\n        <a class=\"button is-warnning\" @click=\"onSetPlayerDots(playerDots,true)\">on 打开状态</a>\r\n    </div>\r\n\r\n    <!-- Main container -->\r\n    <div class=\"level\">\r\n        <!-- Left side -->\r\n        <div class=\"level-left\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                    <a class=\"button is-info\" @click=\"pickPlayer(true,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <!-- Right side -->\r\n        <div class=\"level-right\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                    <a class=\"button is-danger\" @click=\"pickPlayer(false,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div id='table' class=\"table\"></div>\r\n    <BaseGame/>\r\n\r\n    <!-- 手动血量 -->\r\n    <div class=\"level\">\r\n        <div class=\"level-left\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>血量</th>\r\n                        <th>犯规</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>\r\n                            <input type=\"text\" v-model=\"item.blood\" style=\"width: 100px;\">\r\n                        </th>\r\n                        <th>\r\n                            <input type=\"text\" v-model=\"item.blood\" style=\"width: 100px;\">\r\n                        </th>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n        <div class=\"level-right\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>血量</th>\r\n                        <th>犯规</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>\r\n                            <input type=\"text\" v-model=\"item.blood\" style=\"width: 100px;\">\r\n                        </th>\r\n                        <th>\r\n                            <input type=\"text\" v-model=\"item.blood\" style=\"width: 100px;\">\r\n                        </th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n    </div>\r\n    <div style=\"overflow-y: scroll;height: 400px;\">\r\n        <table class=\"table is-striped is-bordered\">\r\n            <thead>\r\n                <tr>\r\n                    <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                    <th><abbr>#teamVsIdx</abbr></th>\r\n                    <th>L player</th>\r\n                    <th>score</th>\r\n                    <th>R player</th>\r\n                    <th>action</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==gameView.gameIdx?'is-selected':'']\">\r\n                    <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}}</a></th>\r\n                    <td> {{rec.teamVsIdx}} </td>\r\n                    <td> {{rec.name[0]}} </td>\r\n                    <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                    <td> {{rec.name[1]}} </td>\r\n                    <td>\r\n                        <div class=\"control\" v-if=\"rec.gameIdx==gameView.gameIdx\">\r\n                            <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                            <button class=\"button btn-setScore\" @click=\"onSetScore(rec.gameIdx)\">修改(提交)比分</button>\r\n                            <button class=\"button\" @click=\"onSetVS(rec.gameIdx,vsPlayer)\">修改对阵↑</button>\r\n                            <button class=\"button\" @click=\"onSetTeamVsIdx(rec.gameIdx)\">修改TeamVsIdx</button>\r\n                            <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                        </div>\r\n                    </td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n    <!-- <div class=\"level\">\r\n        <div class=\"level-left\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n        <div class=\"level-right\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n    </div> -->\r\n\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onDeleteDoc\">delete doc</button> {{updateTime}}\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n\r\n    <input type=\"file\" id=\"file\" accept=\"*.xlsx\" hidden>\r\n    <br>\r\n\r\n    <a href=\"/panel/#/ol/ob/0?panel=score&s4=1&world=1\">world panel</a>\r\n    <a href=\"/panel/#/ol/ob/0?panel=score&s4=1&world=1&bblood=1\">team blood</a>\r\n    <a href=\"/html/ww/blood.html?m=obs\">team blood obs</a>\r\n\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开本地配置</button>\r\n    <button class=\"button is-primary\" @click=\"onUploadPlayerMap\">上传playerMap</button>\r\n    <button class=\"button is-primary\" id=\"reload\" @click=\"onReload\">reload</button> 比分面板延时(秒)\r\n    <input class=\"input\" v-model=\"delay\" type=\"text\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onSetDelay(delay)\">设置</button>\r\n    <br>\r\n    <br>\r\n\r\n    <div class=\"control\">\r\n        vs player <input class=\"input\" v-model=\"vsPlayer\" type=\"text\" style=\"width: 100px;\">\r\n        <button class=\"button is-primary\" @click=\"onEmitGameInfo\">初始比赛</button>\r\n        <button class=\"button is-primary\" @click=\"onAddGame\">创建REC</button>\r\n        <button class=\"button is-primary\" @click=\"onCommitGame(gameIdx)\">提交比赛</button> teamVsIdx:\r\n        <input class=\"input\" v-model=\"teamVsIdx\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetBlood(teamVsIdx)\">设置初始血量</a>\r\n        <input class=\"input\" v-model=\"teamScore\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetTeamScore(teamScore)\">设置团队比分</a>\r\n        <a class=\"button is-warnning\" @click=\"onSetTimeOut(teamScore)\">设置团队暂停</a>\r\n        <a class=\"button\" @click=\"onShowKDA(true)\">显示kda</a>\r\n        <a class=\"button\" @click=\"onShowKDA(false)\">隐藏kda</a>\r\n        <hr> 比分面板\r\n        <a class=\"button\" @click=\"onShowPanel(true)\">显示</a>\r\n        <a class=\"button\" @click=\"onShowPanel(false)\">隐藏</a> title\r\n        <a class=\"button\" @click=\"onShowTitle(true)\">显示</a>\r\n        <a class=\"button\" @click=\"onShowTitle(false)\">隐藏</a>\r\n        <input class=\"input\" v-model=\"playerDots\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetPlayerDots(playerDots,false)\">设置团队剩余5 3</a>\r\n        <a class=\"button is-warnning\" @click=\"onSetPlayerDots(playerDots,true)\">on 打开状态</a>\r\n    </div>\r\n\r\n    <!-- Main container -->\r\n    <div class=\"level\">\r\n        <!-- Left side -->\r\n        <div class=\"level-left\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                    <a class=\"button is-info\" @click=\"pickPlayer(true,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <!-- Right side -->\r\n        <div class=\"level-right\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                    <a class=\"button is-danger\" @click=\"pickPlayer(false,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div id='table' class=\"table\"></div>\r\n    <BaseGame/>\r\n\r\n    <!-- 手动血量 -->\r\n    <div class=\"level\">\r\n        <div class=\"level-left\">\r\n            <table class=\"table is-striped is-bordered\" style=\"font-size:25px;\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>血量</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in blueArr_2\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>\r\n                            <input type=\"text\" v-model=\"item.blood\" style=\"width: 50px;\">\r\n                            <a class=\"button is-info\" v-if='vsPlayerArr[0]==item.playerId' @click=\"onManualBlood(1,item)\">+1</a>\r\n                            <a class=\"button is-info\" v-if='vsPlayerArr[0]==item.playerId' @click=\"onManualBlood(-1,item)\">-1</a>\r\n                        </th>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n        <div class=\"level-right\">\r\n            <table class=\"table is-striped is-bordered\" style=\"font-size:25px;\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>血量</th>\r\n\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in redArr_2\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>\r\n                            <input type=\"text\" v-model=\"item.blood\" style=\"width: 100px;\">\r\n                            <a class=\"button is-danger\" v-if='vsPlayerArr[1]==item.playerId' @click=\"onManualBlood(1,item)\">+1</a>\r\n                            <a class=\"button is-danger\" v-if='vsPlayerArr[1]==item.playerId' @click=\"onManualBlood(-1,item)\">-1</a>\r\n                        </th>\r\n\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n    </div>\r\n    <div style=\"overflow-y: scroll;height: 400px;\">\r\n        <table class=\"table is-striped is-bordered\">\r\n            <thead>\r\n                <tr>\r\n                    <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                    <th><abbr>#teamVsIdx</abbr></th>\r\n                    <th>L player</th>\r\n                    <th>score</th>\r\n                    <th>R player</th>\r\n                    <th>action</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==gameView.gameIdx?'is-selected':'']\">\r\n                    <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}}</a></th>\r\n                    <td> {{rec.teamVsIdx}} </td>\r\n                    <td> {{rec.name[0]}} </td>\r\n                    <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                    <td> {{rec.name[1]}} </td>\r\n                    <td>\r\n                        <div class=\"control\" v-if=\"rec.gameIdx==gameView.gameIdx\">\r\n                            <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                            <button class=\"button btn-setScore\" @click=\"onSetScore(rec.gameIdx)\">修改(提交)比分</button>\r\n                            <button class=\"button\" @click=\"onSetVS(rec.gameIdx,vsPlayer)\">修改对阵↑</button>\r\n                            <button class=\"button\" @click=\"onSetTeamVsIdx(rec.gameIdx)\">修改TeamVsIdx</button>\r\n                            <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                        </div>\r\n                    </td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n    <!-- <div class=\"level\">\r\n        <div class=\"level-left\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n        <div class=\"level-right\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n    </div> -->\r\n\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onDeleteDoc\">delete doc</button> {{updateTime}}\r\n</div>";
 
 /***/ },
 /* 39 */
@@ -11682,6 +11700,7 @@
 	var PixiEx_1 = __webpack_require__(56);
 	var BaseLowerThird_1 = __webpack_require__(111);
 	var TextType3_1 = __webpack_require__(117);
+	var TextType4_1 = __webpack_require__(118);
 	var TextType1 = (function (_super) {
 	    __extends(TextType1, _super);
 	    function TextType1(parent) {
@@ -11751,7 +11770,7 @@
 	    };
 	    return TextType2;
 	}(BaseLowerThird_1.BaseLowerThird));
-	var urlType_1, urlType_2, urlType_3;
+	var urlType_1, urlType_2, urlType_3, urlType_4;
 	var LowerThird = (function (_super) {
 	    __extends(LowerThird, _super);
 	    function LowerThird() {
@@ -11762,8 +11781,12 @@
 	        urlType_1 = '/img/panel/lowerThird/type_1.png';
 	        urlType_2 = '/img/panel/lowerThird/type_2.png';
 	        urlType_3 = '/img/panel/lowerThird/type_3.png';
-	        this.load([urlType_1,
-	            urlType_2
+	        urlType_4 = '/img/panel/lowerThird/type_4.png';
+	        this.load([
+	            urlType_1,
+	            urlType_2,
+	            urlType_3,
+	            urlType_4
 	        ], function (_) {
 	            _this.showOnlyMap = {};
 	        });
@@ -11807,6 +11830,13 @@
 	                    this.showOnlyMap[2] = this.t2;
 	                    this.showOnly(2);
 	                }
+	            }
+	            else if (data.type == 4) {
+	                if (!this.t4)
+	                    this.t4 = new TextType4_1.TextType4(this);
+	                this.t4.fillData(data);
+	                this.showOnlyMap[4] = this.t4;
+	                this.showOnly(4);
 	            }
 	        }
 	        this.p.addChild(this);
@@ -12844,6 +12874,58 @@
 	    return TextType3;
 	}(BaseLowerThird_1.BaseLowerThird));
 	exports.TextType3 = TextType3;
+
+
+/***/ },
+/* 118 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var BaseLowerThird_1 = __webpack_require__(111);
+	var TextFac_1 = __webpack_require__(60);
+	var PixiEx_1 = __webpack_require__(56);
+	var const_1 = __webpack_require__(27);
+	var JsFunc_1 = __webpack_require__(21);
+	var urlType_4 = '/img/panel/lowerThird/type_4.png';
+	var TextType4 = (function (_super) {
+	    __extends(TextType4, _super);
+	    function TextType4(parent) {
+	        _super.call(this, parent);
+	        this.addChild(PixiEx_1.newBitmap({ url: urlType_4 }));
+	        var ns = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: "28px",
+	            dropShadow: true,
+	            dropShadowColor: '#222222',
+	            dropShadowAngle: Math.PI * 1 / 3,
+	            dropShadowDistance: 3,
+	            fontWeight: "bold",
+	            fill: "#acacac"
+	        };
+	        this.lName = TextFac_1.TextFac.new_(ns, this)
+	            .setY(968 - 128)
+	            .setAlignCenter(PixiEx_1._c(0));
+	        ns.fontSize = '34px';
+	        this.lTitle = TextFac_1.TextFac.new_(ns, this)
+	            .setY(788)
+	            .setAlignCenter(PixiEx_1._c(0));
+	    }
+	    TextType4.prototype.fillData = function (data) {
+	        console.log('fill data type4', data);
+	        this.lTitle.setText(data.cont[0])
+	            .setX(687);
+	        this.lName.setText(JsFunc_1.cnWrap(data.cont[1], 44))
+	            .setX(687);
+	        return this.lName.width;
+	    };
+	    return TextType4;
+	}(BaseLowerThird_1.BaseLowerThird));
+	exports.TextType4 = TextType4;
 
 
 /***/ }
