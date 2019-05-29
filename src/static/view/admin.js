@@ -4185,6 +4185,7 @@
 	        this.team3_3 = VueBase_1.VueBase.PROP;
 	        this.team3_4 = VueBase_1.VueBase.PROP;
 	        this.lowerthirdText = VueBase_1.VueBase.PROP;
+	        this.confType2_playerMap = VueBase_1.VueBase.PROP;
 	        this.methods = {
 	            onShowWW3PlayerInfo: function (data, v) {
 	                opReq(Command_1.CommandId.cs_showWW3PlayerInfo, { playerArr: data, visible: v });
@@ -4273,6 +4274,7 @@
 	            },
 	        ];
 	        this.conf = [];
+	        this.confType2_playerMap = [];
 	    };
 	    _PickTeamAdmin.prototype.mounted = function () {
 	        this.updataPlayerMap();
@@ -4280,10 +4282,24 @@
 	    _PickTeamAdmin.prototype.updataPlayerMap = function () {
 	        var _this = this;
 	        HupuAPI_1.syncWorldWarPanel3(function (data) {
-	            HupuAPI_1.getLowerthird('ww3', function (data) {
-	                console.log('get lowerthird');
+	            HupuAPI_1.getLowerthird('lowerthird', function (data) {
+	                console.log('get lowerthird', data);
 	                console.log('referee', data.referee);
 	                console.log('commentator', data.commentator);
+	                _this.confType2_playerMap;
+	                var doc = JSON.parse(data.event_1.doc);
+	                console.log('playerMap', doc.playerMap);
+	                _this.confType2_playerMap = [];
+	                for (var pid in doc.playerMap) {
+	                    if (pid == 'p0')
+	                        continue;
+	                    var p = doc.playerMap[pid];
+	                    _this.confType2_playerMap.push({
+	                        "button": p.name + '-' + pid,
+	                        "type": 2,
+	                        "cont": p.name
+	                    });
+	                }
 	                _this.confType1_arr_8090 = [];
 	                for (var i = 0; i < data.commentator.length; i++) {
 	                    var c = data.commentator[i];
@@ -4293,15 +4309,27 @@
 	                        "cont": ["鹅皇Gary_路人王官方主播", "堂主_路人王官方主播"]
 	                    });
 	                }
-	                if (data.commentator.length == 2) {
-	                    var c1 = data.commentator[0];
-	                    var c2 = data.commentator[1];
-	                    _this.confType1_arr_8090.push({
-	                        "button": c1.name + ' ' + c2.name,
-	                        "type": 1,
-	                        "cont": [c1.name + '_' + c1.info, c2.name + '_' + c2.info]
-	                    });
-	                }
+	                var doubleCommentator = function (field) {
+	                    if (data[field].length == 2) {
+	                        var c1 = data[field][0];
+	                        var c2 = data[field][1];
+	                        _this.confType1_arr_8090.push({
+	                            "button": c1.name + ' ' + c2.name,
+	                            "type": 1,
+	                            "cont": [c1.name + '_' + c1.info, c2.name + '_' + c2.info]
+	                        });
+	                        var tmp = c1;
+	                        c1 = c2;
+	                        c2 = tmp;
+	                        _this.confType1_arr_8090.push({
+	                            "button": c1.name + ' ' + c2.name,
+	                            "type": 1,
+	                            "cont": [c1.name + '_' + c1.info, c2.name + '_' + c2.info]
+	                        });
+	                    }
+	                };
+	                doubleCommentator('double_1');
+	                doubleCommentator('double_2');
 	                _this.confType2_arr_8090 = [];
 	                for (var i = 0; i < data.mc.length; i++) {
 	                    var mc = data.mc[i];
@@ -4334,7 +4362,7 @@
 /* 46 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <a href=\"/panel/#/lowerthird\">面板地址</a>\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onShowLowerThird({},false)\">隐藏</button>\r\n    <button class=\"button is-primary\" @click=\"onUpdatePlayerMap()\">更新球员名单</button>\r\n    <div style=\"width:680px\">\r\n        MC双人人名条：\r\n        <button style=\"margin:5px;\" v-if=\"btn.type==1\" v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n        <br> 球员：\r\n        <button style=\"margin:5px;\" v-if=\"btn.type==2\" v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n        <br>\r\n        <br><input type=\"text\" v-model=\"lowerthirdText\" style=\"width: 200px;\">\r\n        <button class=\"button is-primary\" @click=\"onShowLowerThirdCustom(lowerthirdText,2)\">自定义人名条内容</button>\r\n    </div>\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onShowWW3PlayerInfo({},true)\">显示比分面板球员信息</button>\r\n    <button class=\"button is-primary\" @click=\"onShowWW3PlayerInfo({},false)\">隐藏</button>\r\n    <br>\r\n    <br>\r\n    <!-- <button class=\"button is-primary\" @click=\"onShowPick(false)\">hide选人</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPick(true)\">emit选人</button> -->\r\n    <!-- <div style=\"display: inline-flex\">\r\n        队长：\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_4\" style=\"width: 180px;\">\r\n        </ul>\r\n    </div> -->\r\n    <!-- <br>\r\n    <br> -->\r\n    <!-- <button class=\"button is-primary\" @click=\"onSetColor()\">emit 颜色</button> -->\r\n    <!-- <div class=\"select\">\r\n        <select v-model=\"colorArr[0]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[1]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[2]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div> -->\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    <a href=\"/panel/#/lowerthird\">面板地址</a>\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onShowLowerThird({},false)\">隐藏</button>\r\n    <button class=\"button is-primary\" @click=\"onUpdatePlayerMap()\">更新球员名单</button>\r\n    <div style=\"width:680px\">\r\n        MC双人人名条：\r\n        <button style=\"margin:5px;\" v-if=\"btn.type==1\" v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n        <br> 单人人名条：\r\n        <button style=\"margin:5px;\" v-if=\"btn.type==2\" v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n        <br>球员：\r\n        <button style=\"margin:5px;\" v-if=\"btn.type==2\" v-for=\"(btn,index) in confType2_playerMap\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n        <br>\r\n        <br><input type=\"text\" v-model=\"lowerthirdText\" style=\"width: 200px;\">\r\n        <button class=\"button is-primary\" @click=\"onShowLowerThirdCustom(lowerthirdText,2)\">自定义人名条内容</button>\r\n    </div>\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onShowWW3PlayerInfo({},true)\">显示比分面板球员信息</button>\r\n    <button class=\"button is-primary\" @click=\"onShowWW3PlayerInfo({},false)\">隐藏</button>\r\n    <br>\r\n    <br>\r\n    <!-- <button class=\"button is-primary\" @click=\"onShowPick(false)\">hide选人</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPick(true)\">emit选人</button> -->\r\n    <!-- <div style=\"display: inline-flex\">\r\n        队长：\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_4\" style=\"width: 180px;\">\r\n        </ul>\r\n    </div> -->\r\n    <!-- <br>\r\n    <br> -->\r\n    <!-- <button class=\"button is-primary\" @click=\"onSetColor()\">emit 颜色</button> -->\r\n    <!-- <div class=\"select\">\r\n        <select v-model=\"colorArr[0]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[1]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[2]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div> -->\r\n</div>";
 
 /***/ }
 /******/ ]);

@@ -44,6 +44,7 @@ export class _PickTeamAdmin extends VueBase {
     confType1_arr: any
     confType1_arr_8090: any
     confType2_arr_8090: any
+    confType2_playerMap = VueBase.PROP
     constructor() {
         super();
         VueBase.initProps(this);
@@ -57,16 +58,6 @@ export class _PickTeamAdmin extends VueBase {
         this.teamArr2 = [{ name: '2', playerId: 1 }]
         this.teamArr3 = [{ name: '3', playerId: 1 }]
         this.confType1_arr = [
-            // {
-            //     "button": "小易 余霜",
-            //     "type": 1,//ppd logo 
-            //     "cont": ["小易_MC小易", "余霜_英雄联盟官方主持"]
-            // },
-            // { 
-            //     "button": "余霜 小易 ",
-            //     "type": 1,//ppd logo 
-            //     "cont": ["余霜_英雄联盟官方主持", "小易_MC小易"]
-            // },
             //lowerthird
             {
                 "button": "盼盼 姜冕",
@@ -78,16 +69,6 @@ export class _PickTeamAdmin extends VueBase {
                 "type": 1,
                 "cont": ["姜冕_路人王官方主播", "盼盼_路人王官方主播"]
             },
-            // {
-            //     "button": "Gary 殳海",
-            //     "type": 1, 
-            //     "cont": ["鹅皇Gary_路人王官方主播", "殳海_腾讯NBA解说嘉宾"]
-            // },
-            // {
-            //     "button": "殳海 Gary",
-            //     "type": 1, 
-            //     "cont": ["殳海_腾讯NBA解说嘉宾", "鹅皇Gary_路人王官方主播"]
-            // },
             {
                 "button": "Gary 堂主",
                 "type": 1,
@@ -108,54 +89,37 @@ export class _PickTeamAdmin extends VueBase {
                 "type": 1,
                 "cont": ["鹅皇Gary_微博/抖音号：鹅皇Gary", "堂主_微博/抖音号：信堂堂主"]
             },
-            // {
-            //     "button": "赵德强",
-            //     "type": 2,
-            //     "cont": "国家级裁判：赵德强"
-            // },
-            // {
-            //     "button": "王深",
-            //     "type": 2,
-            //     "cont": "国家一级裁判：王深"
-            // },
-            // {
-            //     "button": "吕文龙",
-            //     "type": 2,
-            //     "cont": "国家一级裁判：吕文龙"
-            // },
 
-            //
+            //  
         ]
         this.conf = []
+        this.confType2_playerMap = []
     }
     mounted() {
         this.updataPlayerMap()
     }
     updataPlayerMap() {
         syncWorldWarPanel3(data => {
-            // let playerMap = JSON.parse(data.playerMap)
-            // let name_arr = []
-            // for (let k in playerMap) {
-            //     let p = playerMap[k]
-            //     console.log('update playerMap:', p.name)
-            //     if (p.name)
-            //         name_arr.push(p.name)
-            // }
-            // this.conf = []
-            // for (let n of this.confType1_arr) {
-            //     this.conf.push(n)
-            // }
-            // for (let n of name_arr) {
-            //     this.conf.push({ "button": n, type: 2, cont: n })
-            // }
-
-
             //主播 裁判 lowerthird   
-            getLowerthird('ww3', data => {
-                console.log('get lowerthird')
+            getLowerthird('lowerthird', data => {
+                console.log('get lowerthird', data)
                 console.log('referee', data.referee)
                 console.log('commentator', data.commentator)
-
+                this.confType2_playerMap
+                let doc = JSON.parse(data.event_1.doc)
+                // let doc = data.doc
+                console.log('playerMap', doc.playerMap)
+                this.confType2_playerMap = []
+                for (let pid in doc.playerMap) {
+                    if (pid == 'p0')
+                        continue;
+                    let p = doc.playerMap[pid]
+                    this.confType2_playerMap.push({
+                        "button": p.name + '-' + pid,
+                        "type": 2,
+                        "cont": p.name
+                    })
+                }
                 this.confType1_arr_8090 = []
                 for (let i = 0; i < data.commentator.length; i++) {
                     let c = data.commentator[i];
@@ -167,21 +131,36 @@ export class _PickTeamAdmin extends VueBase {
                         }
                     )
                 }
-                if (data.commentator.length == 2) {
-                    let c1 = data.commentator[0]
-                    let c2 = data.commentator[1]
-                    this.confType1_arr_8090.push(
-                        {
-                            "button": c1.name + ' ' + c2.name,
-                            "type": 1,
-                            "cont": [c1.name + '_' + c1.info, c2.name + '_' + c2.info]
-                        }
-                    )
+                let doubleCommentator = (field) => {
+                    if (data[field].length == 2) {
+                        let c1 = data[field][0]
+                        let c2 = data[field][1]
+                        this.confType1_arr_8090.push(
+                            {
+                                "button": c1.name + ' ' + c2.name,
+                                "type": 1,
+                                "cont": [c1.name + '_' + c1.info, c2.name + '_' + c2.info]
+                            }
+                        )
+                        let tmp = c1
+                        c1 = c2
+                        c2 = tmp
+                        this.confType1_arr_8090.push(
+                            {
+                                "button": c1.name + ' ' + c2.name,
+                                "type": 1,
+                                "cont": [c1.name + '_' + c1.info, c2.name + '_' + c2.info]
+                            }
+                        )
+                    }
                 }
+                doubleCommentator('double_1')
+                doubleCommentator('double_2')
+
+
                 this.confType2_arr_8090 = []
                 for (let i = 0; i < data.mc.length; i++) {
                     let mc = data.mc[i];
-
                     this.confType2_arr_8090.push(
                         {
                             "button": mc.name,
@@ -203,8 +182,6 @@ export class _PickTeamAdmin extends VueBase {
                 this.conf = this.conf.concat(this.confType1_arr_8090)
                     .concat(this.confType2_arr_8090)
             })
-
-            // console.log('update playerMap:', playerMap)
         })
 
     }
@@ -216,13 +193,13 @@ export class _PickTeamAdmin extends VueBase {
             console.log('show', lt)
             opReq(CommandId.cs_showLowerThird, { data: lt, visible: visible })
         },
-        onShowLowerThirdCustom(lt,type=1) {
+        onShowLowerThirdCustom(lt, type = 1) {
             this.onShowLowerThird({
                 "button": lt,
                 "type": type,
                 "cont": lt
             })
-        },  
+        },
         onUpdatePlayerMap() {
             this.updataPlayerMap()
         },

@@ -7,6 +7,7 @@ import { Text2, TextFac } from '../../../utils/TextFac';
 import { newBitmap, _c } from '../../../utils/PixiEx';
 import { BaseLowerThird } from './BaseLowerThird';
 // import { PickTeam } from '../pickTeam/PickTeam';
+import { TextType3 } from './TextType3';
 
 class TextType1 extends BaseLowerThird {
     lName: Text2
@@ -79,18 +80,21 @@ class TextType2 extends BaseLowerThird {
     fillData(data) {
         this.lName.setText(data.cont)
             .setAlignCenter()
+        return this.lName.width
     }
 }
-let urlType_1, urlType_2;
+let urlType_1, urlType_2, urlType_3;
 // let pt: PickTeam
 class LowerThird extends BasePanel {
     static cls = 'LowerThird'
     t1: TextType1
     t2: TextType2
+    t3: TextType3
     showOnlyMap: any
     create() {
         urlType_1 = '/img/panel/lowerThird/type_1.png'
         urlType_2 = '/img/panel/lowerThird/type_2.png'
+        urlType_3 = '/img/panel/lowerThird/type_3.png'
         this.load([urlType_1
             , urlType_2
         ], _ => {
@@ -110,6 +114,13 @@ class LowerThird extends BasePanel {
     }
     _show(param) {
         let data = param.data
+        let showOnly3 = (data) => {
+            if (!this.t3)
+                this.t3 = new TextType3(this)
+            this.t3.fillData(data)
+            this.showOnlyMap[3] = this.t3
+            this.showOnly(3)
+        }
         if (param.cid == CommandId.sc_showLowerThird) {
             if (data.type == 1) {
                 if (!this.t1)
@@ -121,9 +132,14 @@ class LowerThird extends BasePanel {
             else if (data.type == 2) {
                 if (!this.t2)
                     this.t2 = new TextType2(this)
-                this.t2.fillData(data)
-                this.showOnlyMap[2] = this.t2
-                this.showOnly(2)
+                let textWidth = this.t2.fillData(data)
+                if (textWidth > 392) {
+                    showOnly3(data)
+                }
+                else {
+                    this.showOnlyMap[2] = this.t2
+                    this.showOnly(2)
+                }
             }
         }
         this.p.addChild(this)
@@ -144,7 +160,7 @@ class LowerThird extends BasePanel {
         //     this.p.addChild(pt)
         // }
 
-       
+
     }
 }
 let canvasStage
@@ -154,7 +170,7 @@ class LowerThirdView extends VueBase {
         console.log('mouted LowerThirdView view');
         if (!canvasStage)
             canvasStage = BasePanelView.initPixi()
-        
+
         showPanel(LowerThird, { visible: true }, canvasStage)
         let localWs = io.connect(`/${PanelId.rkbPanel}`)
         localWs.on('connect', (msg) => {

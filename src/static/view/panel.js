@@ -11681,6 +11681,7 @@
 	var TextFac_1 = __webpack_require__(60);
 	var PixiEx_1 = __webpack_require__(56);
 	var BaseLowerThird_1 = __webpack_require__(111);
+	var TextType3_1 = __webpack_require__(117);
 	var TextType1 = (function (_super) {
 	    __extends(TextType1, _super);
 	    function TextType1(parent) {
@@ -11746,10 +11747,11 @@
 	    TextType2.prototype.fillData = function (data) {
 	        this.lName.setText(data.cont)
 	            .setAlignCenter();
+	        return this.lName.width;
 	    };
 	    return TextType2;
 	}(BaseLowerThird_1.BaseLowerThird));
-	var urlType_1, urlType_2;
+	var urlType_1, urlType_2, urlType_3;
 	var LowerThird = (function (_super) {
 	    __extends(LowerThird, _super);
 	    function LowerThird() {
@@ -11759,6 +11761,7 @@
 	        var _this = this;
 	        urlType_1 = '/img/panel/lowerThird/type_1.png';
 	        urlType_2 = '/img/panel/lowerThird/type_2.png';
+	        urlType_3 = '/img/panel/lowerThird/type_3.png';
 	        this.load([urlType_1,
 	            urlType_2
 	        ], function (_) {
@@ -11776,7 +11779,15 @@
 	        }
 	    };
 	    LowerThird.prototype._show = function (param) {
+	        var _this = this;
 	        var data = param.data;
+	        var showOnly3 = function (data) {
+	            if (!_this.t3)
+	                _this.t3 = new TextType3_1.TextType3(_this);
+	            _this.t3.fillData(data);
+	            _this.showOnlyMap[3] = _this.t3;
+	            _this.showOnly(3);
+	        };
 	        if (param.cid == Command_1.CommandId.sc_showLowerThird) {
 	            if (data.type == 1) {
 	                if (!this.t1)
@@ -11788,9 +11799,14 @@
 	            else if (data.type == 2) {
 	                if (!this.t2)
 	                    this.t2 = new TextType2(this);
-	                this.t2.fillData(data);
-	                this.showOnlyMap[2] = this.t2;
-	                this.showOnly(2);
+	                var textWidth = this.t2.fillData(data);
+	                if (textWidth > 392) {
+	                    showOnly3(data);
+	                }
+	                else {
+	                    this.showOnlyMap[2] = this.t2;
+	                    this.showOnly(2);
+	                }
 	            }
 	        }
 	        this.p.addChild(this);
@@ -12784,6 +12800,50 @@
 	    return BracketS5Team;
 	}(BasePanel_1.BasePanel));
 	exports.BracketS5Team = BracketS5Team;
+
+
+/***/ },
+/* 117 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var BaseLowerThird_1 = __webpack_require__(111);
+	var TextFac_1 = __webpack_require__(60);
+	var PixiEx_1 = __webpack_require__(56);
+	var const_1 = __webpack_require__(27);
+	var urlType_3 = '/img/panel/lowerThird/type_3.png';
+	var TextType3 = (function (_super) {
+	    __extends(TextType3, _super);
+	    function TextType3(parent) {
+	        _super.call(this, parent);
+	        this.addChild(PixiEx_1.newBitmap({ url: urlType_3 }));
+	        var ns = {
+	            fontFamily: const_1.FontName.MicrosoftYahei,
+	            fontSize: "42px",
+	            dropShadow: true,
+	            dropShadowColor: '#222222',
+	            dropShadowAngle: Math.PI * 1 / 3,
+	            dropShadowDistance: 3,
+	            fontWeight: "bold",
+	            fill: "#acacac"
+	        };
+	        this.lName = TextFac_1.TextFac.new_(ns, this)
+	            .setY(968)
+	            .setAlignCenter(PixiEx_1._c(0));
+	    }
+	    TextType3.prototype.fillData = function (data) {
+	        this.lName.setText(data.cont)
+	            .setAlignCenter();
+	        return this.lName.width;
+	    };
+	    return TextType3;
+	}(BaseLowerThird_1.BaseLowerThird));
+	exports.TextType3 = TextType3;
 
 
 /***/ }

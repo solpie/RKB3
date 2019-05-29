@@ -6,8 +6,10 @@
     <div style="width:680px">
         MC双人人名条：
         <button style="margin:5px;" v-if="btn.type==1" v-for="(btn,index) in conf" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
-        <br> 球员：
+        <br> 单人人名条：
         <button style="margin:5px;" v-if="btn.type==2" v-for="(btn,index) in conf" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
+        <br>球员：
+        <button style="margin:5px;" v-if="btn.type==2" v-for="(btn,index) in confType2_playerMap" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
         <br>
         <br><input type="text" v-model="lowerthirdText" style="width: 200px;">
         <button class="button is-primary" @click="onShowLowerThirdCustom(lowerthirdText,2)">自定义人名条内容</button>
