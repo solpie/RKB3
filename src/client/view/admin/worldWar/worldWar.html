@@ -35,8 +35,6 @@
         <input class="input" v-model="playerDots" type="text" style="width: 60px;">
         <a class="button is-warnning" @click="onSetPlayerDots(playerDots,false)">设置团队剩余5 3</a>
         <a class="button is-warnning" @click="onSetPlayerDots(playerDots,true)">on 打开状态</a>
-
-
     </div>
 
     <!-- Main container -->
@@ -66,6 +64,55 @@
 
     <div id='table' class="table"></div>
     <BaseGame/>
+
+    <!-- 手动血量 -->
+    <div class="level">
+        <div class="level-left">
+            <table class="table is-striped is-bordered">
+                <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>血量</th>
+                        <th>犯规</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,index) in blueArr" :key="item">
+                        <th>{{item.name}}</th>
+                        <th>
+                            <input type="text" v-model="item.blood" style="width: 100px;">
+                        </th>
+                        <th>
+                            <input type="text" v-model="item.blood" style="width: 100px;">
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="level-right">
+            <table class="table is-striped is-bordered">
+                <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>血量</th>
+                        <th>犯规</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,index) in redArr" :key="item">
+                        <th>{{item.name}}</th>
+                        <th>
+                            <input type="text" v-model="item.blood" style="width: 100px;">
+                        </th>
+                        <th>
+                            <input type="text" v-model="item.blood" style="width: 100px;">
+                        </th>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
     <div style="overflow-y: scroll;height: 400px;">
         <table class="table is-striped is-bordered">
             <thead>
@@ -101,7 +148,11 @@
 
 
 
-    <div class="level">
+
+
+
+
+    <!-- <div class="level">
         <div class="level-left">
             <table class="table is-striped is-bordered">
                 <thead>
@@ -148,7 +199,7 @@
 
             </table>
         </div>
-    </div>
+    </div> -->
 
     <hr>
     <button class="button is-primary" @click="onDeleteDoc">delete doc</button> {{updateTime}}

@@ -39,6 +39,7 @@ export class _PickTeamAdmin extends VueBase {
     team3_2 = VueBase.PROP
     team3_3 = VueBase.PROP
     team3_4 = VueBase.PROP
+    lowerthirdText = VueBase.PROP
 
     confType1_arr: any
     confType1_arr_8090: any
@@ -132,21 +133,21 @@ export class _PickTeamAdmin extends VueBase {
     }
     updataPlayerMap() {
         syncWorldWarPanel3(data => {
-            let playerMap = JSON.parse(data.playerMap)
-            let name_arr = []
-            for (let k in playerMap) {
-                let p = playerMap[k]
-                console.log('update playerMap:', p.name)
-                if (p.name)
-                    name_arr.push(p.name)
-            }
-            this.conf = []
-            for (let n of this.confType1_arr) {
-                this.conf.push(n)
-            }
-            for (let n of name_arr) {
-                this.conf.push({ "button": n, type: 2, cont: n })
-            }
+            // let playerMap = JSON.parse(data.playerMap)
+            // let name_arr = []
+            // for (let k in playerMap) {
+            //     let p = playerMap[k]
+            //     console.log('update playerMap:', p.name)
+            //     if (p.name)
+            //         name_arr.push(p.name)
+            // }
+            // this.conf = []
+            // for (let n of this.confType1_arr) {
+            //     this.conf.push(n)
+            // }
+            // for (let n of name_arr) {
+            //     this.conf.push({ "button": n, type: 2, cont: n })
+            // }
 
 
             //主播 裁判 lowerthird   
@@ -203,7 +204,7 @@ export class _PickTeamAdmin extends VueBase {
                     .concat(this.confType2_arr_8090)
             })
 
-            console.log('update playerMap:', playerMap)
+            // console.log('update playerMap:', playerMap)
         })
 
     }
@@ -212,9 +213,16 @@ export class _PickTeamAdmin extends VueBase {
             opReq(CommandId.cs_showWW3PlayerInfo, { playerArr: data, visible: v })
         },
         onShowLowerThird(lt, visible?) {
-            console.log('show')
+            console.log('show', lt)
             opReq(CommandId.cs_showLowerThird, { data: lt, visible: visible })
         },
+        onShowLowerThirdCustom(lt,type=1) {
+            this.onShowLowerThird({
+                "button": lt,
+                "type": type,
+                "cont": lt
+            })
+        },  
         onUpdatePlayerMap() {
             this.updataPlayerMap()
         },

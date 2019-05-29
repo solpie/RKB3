@@ -66,7 +66,8 @@ def excel_table_byindex(file='file.xls',num=0):
 def main():
     if len(sys.argv)>1:
         num = int(sys.argv[1])
-        print('num',num)
+        print('num', num)
+        
     tables = excel_table_byindex('player.xlsx',num=num)
     # for row in tables:
     #     print(row)

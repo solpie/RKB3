@@ -45,6 +45,8 @@
                 <br>
                 <!-- <input v-model="playerInput" class="input" type="text" style="width: 180px;"> -->
                 <button class="button" @click="onSetPlayer(playerInput)">设置对阵</button>
+                <button class="button" @click="onSet4v4(true)">设置4v4 icon</button>
+                <button class="button" @click="onSet4v4(false)">设置1v1 icon</button>
 
             </div>
         </div>
@@ -97,6 +99,11 @@
                             rScore: rScoreInput
                         })
                     }
+                },
+                onSet4v4: (is4V4) => {
+                    opReq('cs_set_4v4_icon', {
+                        is4v4: is4V4
+                    })
                 },
                 onSetTimer: (event, scoreInput) => {
                     let sec
