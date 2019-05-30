@@ -32,7 +32,7 @@ export class WWGame extends EventDispatcher {
   data: any; //json data
   loadConf(data) {
     dbUrl = data.dbUrl
-    console.log('loadConf',data)
+    console.log('loadConf', data)
     this.playerMap = data.playerMap;
     this.playerMap_data = clone(this.playerMap)
     this.teamArr = [
@@ -114,14 +114,17 @@ export class WWGame extends EventDispatcher {
       if (t.idx == idx) {
         for (const pid of t.playerArr) {
 
-          if (isManual) {
-            let p = clone(this.playerMap[pid.player_id])
-            p.blood = 0
-            a.push(p);
-          }
-          else {
-            a.push(this.playerMap[pid.player_id]);
-          }
+          // if (isManual) {
+          //   let p = clone(this.playerMap[pid.player_id])
+          //   p.blood = 0
+          //   a.push(p);
+          // }
+          // else {
+          let p = this.playerMap[pid.player_id]
+          p.blood = 0
+          p.initBlood = 0
+          a.push(this.playerMap[pid.player_id]);
+          // }
         }
       }
     }

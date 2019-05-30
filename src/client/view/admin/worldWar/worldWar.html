@@ -72,6 +72,7 @@
                 <thead>
                     <tr>
                         <th>name</th>
+                        <th>初始血量</th>
                         <th>血量
                             <a class="button is-info" @click="onManualBlood(0)">更新</a>
                         </th>
@@ -80,6 +81,9 @@
                 <tbody>
                     <tr v-for="(item,index) in blueArr_2" :key="item">
                         <th>{{item.name}}</th>
+                        <th>
+                            <input type="text" v-model="item.initBlood" style="width: 100px;">
+                        </th>
                         <th>
                             <input type="text" v-model="item.blood" style="width: 50px;">
                             <a class="button is-info" v-if='vsPlayerArr[0]==item.playerId' @click="onManualBlood(1,item)">+1</a>
@@ -94,6 +98,7 @@
                 <thead>
                     <tr>
                         <th>name</th>
+                        <th>初始血量</th>
                         <th>血量
                             <a class="button is-danger" @click="onManualBlood(0)">更新</a>
                         </th>
@@ -102,6 +107,9 @@
                 <tbody>
                     <tr v-for="(item,index) in redArr_2" :key="item">
                         <th>{{item.name}}</th>
+                        <th>
+                            <input type="text" v-model="item.initBlood" style="width: 100px;">
+                        </th>
                         <th>
                             <input type="text" v-model="item.blood" style="width: 100px;">
                             <a class="button is-danger" v-if='vsPlayerArr[1]==item.playerId' @click="onManualBlood(1,item)">+1</a>

@@ -9,7 +9,11 @@
         <br> 单人人名条：
         <button style="margin:5px;" v-if="btn.type==2" v-for="(btn,index) in conf" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
         <br> 球员：
-        <button style="margin:5px;" v-if="btn.type==2" v-for="(btn,index) in confType2_playerMap" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
+        <button style="margin:5px;" v-if="btn.type==2" v-for="(btn,index) in confType2_playerMap" :key="index" class="button is-primary" @click="onSetPlayer(btn,true)">{{btn.button}} </button>
+        <br>选中球员： {{selected_player.player.name|'-'}}
+        <br>
+        <button class="button is-primary" @click="onShowSelectedPlayerType(2)">只显示球员名字</button>
+        <button class="button is-primary" @click="onShowSelectedPlayerType(4)">只显示球员简介</button>
         <br>
         <br><input type="text" v-model="lowerthirdText" style="width: 200px;">
         <button class="button is-primary" @click="onShowLowerThirdCustom(lowerthirdText,2)">自定义人名条内容（12个汉字最多）</button>

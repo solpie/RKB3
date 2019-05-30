@@ -124,8 +124,8 @@ class _worldWar extends VueBase {
     let p2 = a[1];
     p1 = playerMap[p1];
     p2 = playerMap[p2];
-    p1.avatar = this.gameView.data.avatarUrlBase + p1.playerId + ".png";
-    p2.avatar = this.gameView.data.avatarUrlBase + p2.playerId + ".png";
+    // p1.avatar = this.gameView.data.avatarUrlBase + p1.playerId + ".png";
+    // p2.avatar = this.gameView.data.avatarUrlBase + p2.playerId + ".png";
     let gameTitle = "";
     // if (this.gameTitle)
     //     gameTitle = this.gameConf.gameTitle[this.gameTitle]
@@ -150,7 +150,7 @@ class _worldWar extends VueBase {
     let _ = (arr, scoreArr) => {
       for (let player of arr) {
         let p = clone(player)
-        p.avatar = this.gameView.data.avatarUrlBase + p.playerId + ".png";
+        // p.avatar = this.gameView.data.avatarUrlBase + p.playerId + ".png";
         p.isSmall = true
         p.score = p.blood
         scoreArr.push(p)
@@ -283,7 +283,12 @@ class _worldWar extends VueBase {
         player.blood = Number(player.blood) + dtBlood
         console.log('onManualBlood', player)
       }
-      opReq(CommandId.cs_manual_blood, { lTeam: this.blueArr_2, rTeam: this.redArr_2 });
+      opReq(CommandId.cs_manual_blood,
+        {
+          lTeam: this.blueArr_2
+          , rTeam: this.redArr_2
+          , vsPlayerArr: this.vsPlayerArr
+        });
     },
 
     pickPlayer(isLeft, playerId) {

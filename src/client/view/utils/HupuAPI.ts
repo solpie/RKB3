@@ -203,21 +203,21 @@ export function getPanelConf2(event_idx, callback) {
     let playerMap_url = 'http://rtmp.icassi.us:8090/playerMap'
     _get(proxy(playerMap_url), res => {
         let playerArr = res[0].player_all
-        let playerMap = {}
-        for (let p of playerArr) {
-            playerMap[p.player_id] = p
-            p.playerId = p.player_id
-        }
-        console.log('conf player_all', playerMap)
         _get(proxy(url), res2 => {
-            if (res2.lenght == 1) {
-                res2[0].playerMap = playerMap
-                callback(res2[0])
+            let playerMap = {}
+            for (let p of playerArr) {
+                playerMap[p.player_id] = p
+                p.playerId = p.player_id
+                p.avatar = res2.avatarUrl + p.player_id + '.png'
+                p.hwa = [p.height, p.weight, p.age]
             }
-            else {
-                res2.playerMap = playerMap
-                callback(res2)
-            }
+            console.log('conf player_all', playerMap)
+
+            res2.playerMap = playerMap
+            //tofix 
+            res2.dbUrl = 'http://rtmp.icassi.us:8090/event?idx=0602'
+            callback(res2)
+            // }
         })
     })
 }
@@ -248,6 +248,13 @@ function _putDoc(url, data, callback) {
 }
 export function getLowerthird(pid, callback) {
     let docUrl = 'http://rtmp.icassi.us:8090/lowerthird?pid=' + pid
+    $.get(docUrl, res => {
+        if (res.length) callback(res[0]);
+        else callback(null);
+    });
+}
+export function getPlayerMap(callback) {
+    let docUrl = 'http://rtmp.icassi.us:8090/playerMap'
     $.get(docUrl, res => {
         if (res.length) callback(res[0]);
         else callback(null);
