@@ -28,14 +28,18 @@ export class WWGame extends EventDispatcher {
   playerMap_data: any//原数据
   teamArr: any;
   gameIdx: number;
-  teamVsRec: any;
+  // teamVsRec: any;
   data: any; //json data
   loadConf(data) {
     dbUrl = data.dbUrl
+    console.log('loadConf',data)
     this.playerMap = data.playerMap;
-    this.playerMap_data = clone(data.playerMap)
-    this.teamArr = data.team;
-    this.teamVsRec = data.teamVsRec;
+    this.playerMap_data = clone(this.playerMap)
+    this.teamArr = [
+      { 'idx': 1, playerArr: data.team_player_L },
+      { 'idx': 2, playerArr: data.team_player_R },
+    ]
+    // this.teamVsRec = data.teamVsRec;
     this.data = data;
   }
   bloodBuilder(doc, teamVsIdx) {
@@ -111,13 +115,12 @@ export class WWGame extends EventDispatcher {
         for (const pid of t.playerArr) {
 
           if (isManual) {
-            let p = clone(this.playerMap[pid])
+            let p = clone(this.playerMap[pid.player_id])
             p.blood = 0
             a.push(p);
           }
           else {
-            a.push(this.playerMap[pid]);
-
+            a.push(this.playerMap[pid.player_id]);
           }
         }
       }

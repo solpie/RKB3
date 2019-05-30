@@ -36,6 +36,10 @@
                 <input v-model="lScoreInput" class="input" type="text" style="width: 80px;"> 蓝队：
                 <input v-model="rScoreInput" class="input" type="text" style="width: 80px;">
                 <button class="button" @click="onSetScore(lScoreInput,rScoreInput)">设置比分</button>
+                <br>红队：
+                <input v-model="lFoulInput" class="input" type="text" style="width: 80px;"> 蓝队：
+                <input v-model="rFoulInput" class="input" type="text" style="width: 80px;">
+                <button class="button" @click="onSetFoul(lFoulInput,rFoulInput)">设置犯规</button>
                 <br> 时间：秒 分-秒
                 <input v-model="timerInput" class="input" type="text" style="width: 80px;">
                 <button class="button" @click="onSetTimer('start',scoreInput)">开始</button>
@@ -43,7 +47,7 @@
                 <button class="button" @click="onSetTimer('setting',timerInput)">设置</button>
                 <button class="button" @click="onSetTimer('reset',scoreInput)">reset</button>
                 <br>
-                <!-- <input v-model="playerInput" class="input" type="text" style="width: 180px;"> -->
+                <input v-model="playerInput" class="input" type="text" style="width: 180px;">
                 <button class="button" @click="onSetPlayer(playerInput)">设置对阵</button>
                 <button class="button" @click="onSet4v4(true)">设置4v4 icon</button>
                 <button class="button" @click="onSet4v4(false)">设置1v1 icon</button>
@@ -70,6 +74,8 @@
                 scoreInput: '',
                 lScoreInput: '',
                 rScoreInput: '',
+                lFoulInput: '',
+                rFoulInput: '',
                 timerInput: '',
                 playerInput: '',
                 items: []
@@ -84,6 +90,12 @@
                         })
                         console.log('playerInput ', playerInput)
                     }
+                },
+                onSetFoul: (lFoul, rFoul) => {
+                    opReq('cs_updateFoul', {
+                        lFoul: Number(lFoul),
+                        rFoul: Number(rFoul)
+                    })
                 },
                 onSetScore: (scoreInput, rScoreInput) => {
                     let a = scoreInput.split(' ')

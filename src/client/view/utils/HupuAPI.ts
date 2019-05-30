@@ -193,9 +193,33 @@ export function getPlayerArr(player_idArr, callback) {
     recurGet(a)
 }
 
-export function getEventConf(event_id, callback) {
-    let url = 'http://rtmp.icassi.us:8090/event?event_id=' + event_id
+export function getEventConf(event_idx, callback) {
+    let url = 'http://rtmp.icassi.us:8090/event?idx=' + event_idx
     _get(proxy(url), callback)
+}
+
+export function getPanelConf2(event_idx, callback) {
+    let url = 'http://rtmp.icassi.us:8090/panel/5cb5467f3d09071728811ee5' //+ event_idx
+    let playerMap_url = 'http://rtmp.icassi.us:8090/playerMap'
+    _get(proxy(playerMap_url), res => {
+        let playerArr = res[0].player_all
+        let playerMap = {}
+        for (let p of playerArr) {
+            playerMap[p.player_id] = p
+            p.playerId = p.player_id
+        }
+        console.log('conf player_all', playerMap)
+        _get(proxy(url), res2 => {
+            if (res2.lenght == 1) {
+                res2[0].playerMap = playerMap
+                callback(res2[0])
+            }
+            else {
+                res2.playerMap = playerMap
+                callback(res2)
+            }
+        })
+    })
 }
 
 //国战

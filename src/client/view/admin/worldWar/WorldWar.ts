@@ -5,7 +5,7 @@ import { clone } from "../../utils/JsFunc";
 import { VueBase } from "../../utils/VueBase";
 import { BaseGameView, _baseGameView } from "./BaseGame";
 import { syncDoc, WWGame } from "./WWGame";
-import { syncWorldWarPanel3 } from '../../utils/HupuAPI';
+import { syncWorldWarPanel3, getEventConf, getPanelConf2 } from '../../utils/HupuAPI';
 declare let $;
 declare let io;
 let opReq = (cmdId: string, param: any) => {
@@ -57,8 +57,6 @@ class _worldWar extends VueBase {
     });
     this.gameView = gameView;
     baseGameView = window["BaseGameView"];
-    // console.log('baseGameView',window['BaseGameView'])
-    //332.3
   }
 
   initDocView(doc) {
@@ -92,8 +90,12 @@ class _worldWar extends VueBase {
   onInit(data) {
     console.log("on load conf", data);
     gameView.loadConf(data);
-    let t1Idx = data.vs[0]
-    let t2Idx = data.vs[1]
+    let t1Idx = 1, t2Idx = 2
+    if (data.vs) {
+      t1Idx = data.vs[0]
+      t2Idx = data.vs[1]
+    }
+
     this.blueArr = gameView.getTeamByIdx(t1Idx);
     this.redArr = gameView.getTeamByIdx(t2Idx);
 
@@ -239,6 +241,12 @@ class _worldWar extends VueBase {
     onDeleteGameRec(gameIdx) {
       gameView.deleteGameRec(gameIdx);
     },
+    onGet8090EventJson(idx) {
+      getPanelConf2(idx, res => {
+        console.log(res)
+        this.onInit(res)
+      })
+    },
     onShowKDA(v) {
       this.emitKDA(v)
     },
@@ -271,10 +279,13 @@ class _worldWar extends VueBase {
       }
     },
     onManualBlood(dtBlood, player) {
-      player.blood += dtBlood
-      console.log('onManualBlood', player)
+      if (dtBlood != 0) {
+        player.blood = Number(player.blood) + dtBlood
+        console.log('onManualBlood', player)
+      }
       opReq(CommandId.cs_manual_blood, { lTeam: this.blueArr_2, rTeam: this.redArr_2 });
     },
+
     pickPlayer(isLeft, playerId) {
       isLeft
         ? (this.vsPlayerArr[0] = playerId)

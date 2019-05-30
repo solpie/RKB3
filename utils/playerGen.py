@@ -23,7 +23,7 @@ def addToClipBoard(text):
     os.system(command)
 
 
-def excel_table_byindex(file='file.xls',num=0):
+def excel_table_byindex(file='file.xls', num=0):
     data = open_excel(file)
     by_index = 0
     table = data.sheets()[by_index]
@@ -60,15 +60,38 @@ def excel_table_byindex(file='file.xls',num=0):
     addToClipBoard(jstr)
     print(jstr)
     # print(plist_for_lowerthird)
-    return plist
+    return playerMap
+import requests
+
+
+def uploadTo8090():
+    player_url = 'http://rtmp.icassi.us:8090/player2/'
+    res = requests.get(player_url)
+    player_arr = res.json()
+    # print(player_arr)
+    return player_arr
 
 
 def main():
-    if len(sys.argv)>1:
+
+    if len(sys.argv) > 1:
         num = int(sys.argv[1])
         print('num', num)
-        
-    tables = excel_table_byindex('player.xlsx',num=num)
+
+    playerMap = excel_table_byindex('player.xlsx', num=num)
+    player_arr = uploadTo8090()
+    putUrl = 'http://rtmp.icassi.us:8090/player2/'
+    for p in player_arr:
+        if p['player_id'] in playerMap:
+            pdata = playerMap[p['player_id']]
+            p['name'] = pdata['name']
+            p['height'] = pdata['hwa'][0]
+            p['weight'] = pdata['hwa'][1]
+            p['age'] = pdata['hwa'][2]
+            p['title'] = pdata['title']
+            p['info'] = pdata['info']
+            put1_res = requests.put(putUrl + p['_id'], data=p)
+            print(p['name'], put1_res.status_code)
     # for row in tables:
     #     print(row)
 

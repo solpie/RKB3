@@ -108,7 +108,7 @@ class HomeView extends VueBase {
 
     mounted() {
         this.updateLinks(492);
-        this.actTab = 'tab1'
+        this.actTab = 'tab5'
     }
 
     updateLinks(gameId) {
