@@ -5,10 +5,8 @@
 
     <a href="/panel/#/ol/ob/0?panel=score&s4=1&world=1">world panel</a>
     <a href="/panel/#/ol/ob/0?panel=score&s4=1&world=1&bblood=1">team blood</a>
-    <a href="/html/ww/blood.html?m=obs">team blood obs</a>
 
-    <button class="button is-primary" @click="onFile">打开本地配置</button>
-    <button class="button is-primary" @click="onGet8090EventJson('0602')">获取event_json</button>
+    <button class="button is-primary" @click="onGet8090EventJson('0602')">获取配置</button>
     <button class="button is-primary" id="reload" @click="onReload">reload</button> 比分面板延时(秒)
     <input class="input" v-model="delay" type="text" style="width: 100px;">
     <button class="button is-primary" @click="onSetDelay(delay)">设置</button>

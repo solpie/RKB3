@@ -47,8 +47,10 @@
                 <button class="button" @click="onSetTimer('setting',timerInput)">设置</button>
                 <button class="button" @click="onSetTimer('reset',scoreInput)">reset</button> 1v1 3min 4v4 15min
                 <br>
-                <input v-model="playerInput" class="input" type="text" style="width: 180px;">
-                <button class="button" @click="onSetPlayer(playerInput)">设置对阵</button>
+                <br>
+                <input v-model="playerInput" class="input" type="text" style="width: 180px;"> vs
+                <input v-model="playerInput2" class="input" type="text" style="width: 180px;">
+                <button class="button" @click="onSetPlayer(playerInput,playerInput2)">设置对阵</button>
                 <button class="button" @click="onSet4v4(true)">设置4v4 icon</button>
                 <button class="button" @click="onSet4v4(false)">设置1v1 icon</button>
             </div>
@@ -114,19 +116,17 @@
                 rFoulInput: '',
                 timerInput: '',
                 playerInput: '',
+                playerInput2: '',
                 game4v4rec: [],
                 items: []
             },
             methods: {
-                onSetPlayer: (playerInput) => {
-                    let a = playerInput.split(' ')
-                    if (a.length == 2) {
-                        opReq('cs_setTeam', {
-                            lPlayer: a[0],
-                            rPlayer: a[1]
-                        })
-                        console.log('playerInput ', playerInput)
-                    }
+                onSetPlayer: (playerInput, playerInput2) => {
+                    opReq('cs_setTeam', {
+                        lPlayer: playerInput,
+                        rPlayer: playerInput2
+                    })
+                    console.log('playerInput ', playerInput, playerInput2)
                 },
                 onSetFoul: (lFoul, rFoul) => {
                     opReq('cs_updateFoul', {

@@ -107,8 +107,6 @@ class ScoreRank5 extends BasePanel {
                 dataPlayer.score = Number(dataPlayer.score)
             }
             let a = data.scoreArr.sort(descendingProp('score'))
-
-
             let hasScore = a[0].score != 0
             let noScore = (a[0].score == 0
                 && a[1].score == 0
