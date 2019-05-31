@@ -45,14 +45,50 @@
                 <button class="button" @click="onSetTimer('start',scoreInput)">开始</button>
                 <button class="button" @click="onSetTimer('pause',scoreInput)">暂停</button>
                 <button class="button" @click="onSetTimer('setting',timerInput)">设置</button>
-                <button class="button" @click="onSetTimer('reset',scoreInput)">reset</button>
+                <button class="button" @click="onSetTimer('reset',scoreInput)">reset</button> 1v1 3min 4v4 15min
                 <br>
                 <input v-model="playerInput" class="input" type="text" style="width: 180px;">
                 <button class="button" @click="onSetPlayer(playerInput)">设置对阵</button>
                 <button class="button" @click="onSet4v4(true)">设置4v4 icon</button>
                 <button class="button" @click="onSet4v4(false)">设置1v1 icon</button>
-
             </div>
+            <br>
+            <button class="button" @click="onGroup4v4(game4v4rec)">更新小组数据</button>
+            <button class="button" @click="onCalcRank(game4v4rec)">更新小组排名</button>
+            <table class="table is-striped is-bordered" style="font-size:20px;">
+                <thead>
+                    <tr>
+                        <th>#1</th>
+                        <th>胜场</th>
+                        <th>负场</th>
+                        <th>净胜</th>
+                        <th>总得分</th>
+                        <th>rank</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(team,index) in game4v4rec" :key="team.name">
+                        <th>
+                            {{team.name}}
+                        </th>
+                        <th>
+                            <input v-model="team.win" class="input" type="text" style="width: 80px;">
+                        </th>
+                        <th>
+                            <input v-model="team.lose" class="input" type="text" style="width: 80px;">
+                        </th>
+                        <th>
+                            <input v-model="team.score" class="input" type="text" style="width: 80px;">
+                        </th>
+                        <th>
+                            <input v-model="team.total_score" class="input" type="text" style="width: 80px;">
+                        </th>
+                        <th>
+                            <input v-model="team.rank" class="input" type="text" style="width: 80px;">
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <script>
@@ -78,6 +114,7 @@
                 rFoulInput: '',
                 timerInput: '',
                 playerInput: '',
+                game4v4rec: [],
                 items: []
             },
             methods: {
@@ -117,6 +154,24 @@
                         is4v4: is4V4
                     })
                 },
+                onGroup4v4(game4v4rec) {
+                    console.log('onGroup4v4', game4v4rec)
+                    opReq('cs_game4v4rec', {
+                        game4v4rec: game4v4rec
+                    })
+                },
+                onCalcRank(game4v4rec) {
+                    let a = game4v4rec.sort(
+                        function(a, b) {
+                            return Number(b['win']) - Number(a['win']);
+                        }
+                    )
+                    let i = 1
+                    for (let t of a) {
+                        t.rank = i++
+                    }
+                    this.game4v4rec = a
+                },
                 onSetTimer: (event, scoreInput) => {
                     let sec
                     if (scoreInput.search('-') > -1) {
@@ -132,8 +187,19 @@
                     })
                 }
             },
-            // mounted: function() {
             created: function() {
+                this.game4v4rec = []
+                let nameArr = ["LexBurner队", "杰里德Jared队", "老番茄队", "逍遥散人队"]
+                for (let i = 0; i < 4; i++) {
+                    this.game4v4rec.push({
+                        "name": nameArr[i],
+                        "win": 0,
+                        "lose": 0,
+                        "score": 0,
+                        "rank": -1,
+                        "total_score": 0
+                    })
+                }
                 // console.log(this);
                 // let localWs = io.connect('/rkb')
                 // localWs.on('connect', () => {
