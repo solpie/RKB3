@@ -4,44 +4,49 @@ import { newBitmap, _c } from '../../../utils/PixiEx';
 import { FontName } from '../../../const';
 import { cnWrap } from '../../../utils/JsFunc';
 import { imgLoader } from '../../../utils/ImgLoader';
+import { fitWidth } from '../bracket/BracketGroup';
 let urlType_4 = '/img/panel/lowerThird/type_4.png'
 
 export class TextType4 extends BaseLowerThird {
-    lName: Text2
+    lCont: Text2
     lTitle: Text2
     icon: PIXI.Sprite
     constructor(parent) {
         super(parent)
+        this.y = 60
+
+        this.icon = new PIXI.Sprite()
+        this.addChild(this.icon)
+        this.icon.x = 541+109
+        this.icon.y = 782
         this.addChild(newBitmap({ url: urlType_4 }))
         let ns = {
             fontFamily: FontName.MicrosoftYahei,
-            fontSize: "28px",
-            dropShadow: true,
-            dropShadowColor: '#222222',
+            fontSize: "20px",
+            dropShadow: false,
+            dropShadowColor: '#ffffff',
             dropShadowAngle: Math.PI * 1 / 3,
             dropShadowDistance: 3,
             fontWeight: "bold",
-            fill: "#acacac"
+            fill: "#bbbbbb"
         };
-        this.lName = TextFac.new_(ns, this)
-            .setY(968 - 128)
+        this.lCont = TextFac.new_(ns, this)
+            .setY(968 - 108)
             .setAlignCenter(_c(0))
-        ns.fontSize = '34px'
+        ns.fontSize = '30px'
         this.lTitle = TextFac.new_(ns, this)
             .setY(788)
             .setAlignCenter(_c(0))
-        .setFill('#a46a32')
-        this.icon = new PIXI.Sprite()
-        this.addChild(this.icon)
-        this.icon.x = 541
-        this.icon.y = 792
+            .setFill('#1a87df')
+
     }
     fillData(data) {
         console.log('fill data type4', data)
         this.lTitle.setText(data.cont[0])
-            .setX(687)
-        this.lName.setText(cnWrap(data.cont[1], 44))
-            .setX(687)
+            .setX(814)
+        fitWidth(this.lTitle,460,30)
+        this.lCont.setText(cnWrap(data.cont[1], 44))
+            .setX(814)
         if (data.icon) {
             imgLoader.loadTexRemote(data.icon, tex => {
                 console.log('textType4')
@@ -50,6 +55,6 @@ export class TextType4 extends BaseLowerThird {
                 this.icon.height = 136
             })
         }
-        return this.lName.width
+        return this.lCont.width
     }
 }

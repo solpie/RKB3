@@ -2,14 +2,53 @@
     <a href="/panel/#/lowerthird">面板地址</a>
     <hr>
     <button class="button is-primary" @click="onShowLowerThird({},false)">隐藏</button>
-    <button class="button is-primary" @click="onUpdatePlayerMap()">更新球员名单</button>
-    <div style="width:680px">
+    <!-- <button class="button is-primary" @click="onUpdatePlayerMap()">更新球员名单</button> -->
+    <div style="">
         MC双人人名条：
         <button style="margin:5px;" v-if="btn.type==1" v-for="(btn,index) in conf" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
         <br> 单人人名条：
         <button style="margin:5px;" v-if="btn.type==2" v-for="(btn,index) in conf" :key="index" class="button is-primary" @click="onShowLowerThird(btn,true)">{{btn.button}} </button>
         <br> 球员：
-        <button style="margin:5px;" v-if="btn.type==2" v-for="(btn,index) in confType2_playerMap" :key="index" class="button is-primary" @click="onSetPlayer(btn,true)">{{btn.button}} </button>
+        <table class="table is-striped is-bordered" style="font-size:20px;">
+            <thead>
+                <tr>
+                    <th>#1</th>
+                    <th>#2</th>
+                    <th>#3</th>
+                    <th>#4</th>
+                    <th>#5</th>
+                    <th>#6</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th v-if='index<6' v-for="(btn,index) in confType2_playerMap" :key="btn">
+                        <a @click="onSetPlayer(btn,true)">{{btn.player.name}}- {{btn.player.player_id}}</a>
+                    </th>
+                </tr>
+                <tr>
+                    <th v-if='index<12&&6<=index' v-for="(btn,index) in confType2_playerMap" :key="btn">
+                        <a @click="onSetPlayer(btn,true)">{{btn.player.name}}- {{btn.player.player_id}}</a>
+                    </th>
+                </tr>
+                <tr>
+                    <th v-if='index<18&&12<=index' v-for="(btn,index) in confType2_playerMap" :key="btn">
+                        <a @click="onSetPlayer(btn,true)">{{btn.player.name}}- {{btn.player.player_id}}</a>
+                    </th>
+                </tr>
+                <tr>
+                    <th v-if='index<24&&18<=index' v-for="(btn,index) in confType2_playerMap" :key="btn">
+                        <a @click="onSetPlayer(btn,true)">{{btn.player.name}}- {{btn.player.player_id}}</a>
+                    </th>
+                </tr>
+                <tr>
+                    <th v-if='index<30&&24<=index' v-for="(btn,index) in confType2_playerMap" :key="btn">
+                        <a @click="onSetPlayer(btn,true)">{{btn.player.name}}- {{btn.player.player_id}}</a>
+                    </th>
+                </tr>
+            </tbody>
+
+        </table>
         <br>选中球员： {{selected_player.player.name|'-'}}
         <br>
         <button class="button is-primary" @click="onShowSelectedPlayerType(2)">只显示球员名字</button>
@@ -30,6 +69,9 @@
     <button class="button is-primary" @click="onShowWW3PlayerInfo({},false)">隐藏</button> -->
     <br>
     <br>
+    <button class="button is-primary" @click="onShowLeftImage(true)">显示二维码</button>
+    <button class="button is-primary" @click="onShowLeftImage(false)">隐藏</button>
+
     <!-- <button class="button is-primary" @click="onShowPick(false)">hide选人</button>
     <button class="button is-primary" @click="onShowPick(true)">emit选人</button> -->
     <!-- <div style="display: inline-flex">

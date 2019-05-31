@@ -112,10 +112,10 @@ export class _PickTeamAdmin extends VueBase {
                 'icon': '/img/panel/lowerThird/icon_ku.png'
             },
             {
-                'button': 'Round1： Up主单挑赛规则',
+                'button': 'Round1： UP主单挑赛规则',
                 'type': 4,
                 'cont': [
-                    'Round1： Up主单挑赛规则',
+                    'Round1： UP主单挑赛规则',
                     '单次进攻时间为20秒，全局限时3分钟，全程不停表。先拿5分的球员获胜。累计4次犯规后，对方罚球。'
                 ],
                 'icon': '/img/panel/lowerThird/icon_ku.png'
@@ -130,10 +130,10 @@ export class _PickTeamAdmin extends VueBase {
                 'icon': '/img/panel/lowerThird/icon_ku.png'
             },
             {
-                'button': 'Round3： 灌篮Up主队vs路人王联队规则',
+                'button': 'Round3： 灌篮UP主队vs路人王联队规则',
                 'type': 4,
                 'cont': [
-                    'Round3： 灌篮Up主队vs路人王联队规则',
+                    'Round3： 灌篮UP主队vs路人王联队规则',
                     '每队4人，队长6滴血，队员5滴血，全队21滴血。一分即对应为一滴血，当一方血量被打空时，则该队判负。某球员第3次犯规时，对方罚球，犯规达到8次则该员血量清零。'
                 ],
                 // img\panel\lowerThird
@@ -228,6 +228,9 @@ export class _PickTeamAdmin extends VueBase {
 
     }
     methods = {
+        onShowLeftImage(visible) {
+            opReq(CommandId.cs_showLowerThird_left_image, { data: { type: 11 }, visible: visible })
+        },
         onSetPlayer(player) {
             this.selected_player = player
         },
@@ -236,7 +239,7 @@ export class _PickTeamAdmin extends VueBase {
             clonePlayer.type = type
             if (type == 4) {
                 clonePlayer.cont = [clonePlayer.player.name, clonePlayer.player.info]
-                clonePlayer.icon  = clonePlayer.player.avatar
+                clonePlayer.icon = clonePlayer.player.avatar
             }
             opReq(CommandId.cs_showLowerThird, { data: clonePlayer, visible: true })
         },

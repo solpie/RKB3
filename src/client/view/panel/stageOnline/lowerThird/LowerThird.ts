@@ -9,6 +9,10 @@ import { BaseLowerThird } from './BaseLowerThird';
 // import { PickTeam } from '../pickTeam/PickTeam';
 import { TextType3 } from './TextType3';
 import { TextType4 } from './TextType4';
+import { bottomMoveIn } from '../../../utils/Fx';
+import { TweenEx } from '../../../utils/TweenEx';
+import { imgLoader } from '../../../utils/ImgLoader';
+import { LeftImage } from './LeftImage';
 
 class TextType1 extends BaseLowerThird {
     lName: Text2
@@ -85,7 +89,10 @@ class TextType2 extends BaseLowerThird {
     }
 }
 let urlType_1, urlType_2, urlType_3, urlType_4;
+let img_left_url = '/img/panel/lowerThird/image_left.png'
+
 // let pt: PickTeam
+let lastType = -1
 class LowerThird extends BasePanel {
     static cls = 'LowerThird'
     t1: TextType1
@@ -93,6 +100,7 @@ class LowerThird extends BasePanel {
     t3: TextType3
     t4: TextType4
     showOnlyMap: any
+    leftImage: LeftImage
     create() {
         urlType_1 = '/img/panel/lowerThird/type_1.png'
         urlType_2 = '/img/panel/lowerThird/type_2.png'
@@ -103,14 +111,18 @@ class LowerThird extends BasePanel {
             , urlType_2
             , urlType_3
             , urlType_4
+            , img_left_url
         ], _ => {
             //on loaded.......
             this.showOnlyMap = {}
+            this.leftImage = new LeftImage(this)
         })
     }
     showOnly(type) {
+        lastType = type
+        // if (type == -1)//hide all
         for (let t in this.showOnlyMap) {
-            if (Number(t) == type) {
+            if (Number(t) == type && type != -1) {
                 this.showOnlyMap[t].show()
             }
             else {
@@ -150,10 +162,21 @@ class LowerThird extends BasePanel {
             else if (data.type == 4) {
                 if (!this.t4)
                     this.t4 = new TextType4(this)
-                this.t4.fillData(data)
-                this.showOnlyMap[4] = this.t4
-                this.showOnly(4)
+                imgLoader.loadTexRemote(data.icon, tex => {
+                    this.t4.fillData(data)
+                    this.showOnlyMap[4] = this.t4
+
+
+
+                    if (lastType != 4) {
+                        this.moveIn_type4(this.t4)
+                    }
+                    this.showOnly(4)
+                })
             }
+        }
+        else if (param.cid == CommandId.sc_showLowerThird_left_image) {
+            this.leftImage.showImage(param)
         }
         this.p.addChild(this)
         // if (param.cid == CommandId.sc_showPickup) {
@@ -174,6 +197,19 @@ class LowerThird extends BasePanel {
         // }
 
 
+    }
+    hide(data) {
+        if (data.cid == CommandId.sc_showLowerThird_left_image) {
+            this.leftImage.showImage(data)
+        }
+        else if (data.cid == CommandId.sc_showLowerThird) {
+            this.showOnly(-1)
+        }
+    }
+    moveIn_type4(ctn) {
+        ctn.y = 400
+        TweenEx.to(ctn, 200, { y: 60 }, _ => {
+        })
     }
 }
 let canvasStage
@@ -197,14 +233,15 @@ class LowerThirdView extends VueBase {
                 data.cid = event
                 if (data.visible == null)
                     data.visible = true
-                console.log(event, data)
+                console.log('_adept:', event, data)
                 showPanel(LowerThird, data, canvasStage)
             })
         }
         _adept(CommandId.sc_showLowerThird)
-        _adept(CommandId.sc_showPickup)
-        _adept(CommandId.sc_setTeamColor)
-        _adept(CommandId.sc_bracket)
+        _adept(CommandId.sc_showLowerThird_left_image)
+        // _adept(CommandId.sc_showPickup)
+        // _adept(CommandId.sc_setTeamColor)
+        // _adept(CommandId.sc_bracket)
 
         // pt = new PickTeam(canvasStage)
         // pt.visible = false

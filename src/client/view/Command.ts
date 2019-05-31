@@ -132,6 +132,8 @@ export const CommandId = {
     sc_showWW3PlayerInfo: '',//
     cs_showLowerThird: '',//
     sc_showLowerThird: '',//
+    cs_showLowerThird_left_image: '',//
+    sc_showLowerThird_left_image: '',//
     cs_showPickup: '',//
     sc_showPickup: '',//
     cs_setTeamColor: '',//

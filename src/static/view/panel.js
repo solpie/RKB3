@@ -1695,6 +1695,8 @@
 	    sc_showWW3PlayerInfo: '',
 	    cs_showLowerThird: '',
 	    sc_showLowerThird: '',
+	    cs_showLowerThird_left_image: '',
+	    sc_showLowerThird_left_image: '',
 	    cs_showPickup: '',
 	    sc_showPickup: '',
 	    cs_setTeamColor: '',
@@ -11744,6 +11746,9 @@
 	var BaseLowerThird_1 = __webpack_require__(111);
 	var TextType3_1 = __webpack_require__(117);
 	var TextType4_1 = __webpack_require__(118);
+	var TweenEx_1 = __webpack_require__(63);
+	var ImgLoader_1 = __webpack_require__(55);
+	var LeftImage_1 = __webpack_require__(119);
 	var TextType1 = (function (_super) {
 	    __extends(TextType1, _super);
 	    function TextType1(parent) {
@@ -11814,6 +11819,8 @@
 	    return TextType2;
 	}(BaseLowerThird_1.BaseLowerThird));
 	var urlType_1, urlType_2, urlType_3, urlType_4;
+	var img_left_url = '/img/panel/lowerThird/image_left.png';
+	var lastType = -1;
 	var LowerThird = (function (_super) {
 	    __extends(LowerThird, _super);
 	    function LowerThird() {
@@ -11829,14 +11836,17 @@
 	            urlType_1,
 	            urlType_2,
 	            urlType_3,
-	            urlType_4
+	            urlType_4,
+	            img_left_url
 	        ], function (_) {
 	            _this.showOnlyMap = {};
+	            _this.leftImage = new LeftImage_1.LeftImage(_this);
 	        });
 	    };
 	    LowerThird.prototype.showOnly = function (type) {
+	        lastType = type;
 	        for (var t in this.showOnlyMap) {
-	            if (Number(t) == type) {
+	            if (Number(t) == type && type != -1) {
 	                this.showOnlyMap[t].show();
 	            }
 	            else {
@@ -11877,12 +11887,33 @@
 	            else if (data.type == 4) {
 	                if (!this.t4)
 	                    this.t4 = new TextType4_1.TextType4(this);
-	                this.t4.fillData(data);
-	                this.showOnlyMap[4] = this.t4;
-	                this.showOnly(4);
+	                ImgLoader_1.imgLoader.loadTexRemote(data.icon, function (tex) {
+	                    _this.t4.fillData(data);
+	                    _this.showOnlyMap[4] = _this.t4;
+	                    if (lastType != 4) {
+	                        _this.moveIn_type4(_this.t4);
+	                    }
+	                    _this.showOnly(4);
+	                });
 	            }
 	        }
+	        else if (param.cid == Command_1.CommandId.sc_showLowerThird_left_image) {
+	            this.leftImage.showImage(param);
+	        }
 	        this.p.addChild(this);
+	    };
+	    LowerThird.prototype.hide = function (data) {
+	        if (data.cid == Command_1.CommandId.sc_showLowerThird_left_image) {
+	            this.leftImage.showImage(data);
+	        }
+	        else if (data.cid == Command_1.CommandId.sc_showLowerThird) {
+	            this.showOnly(-1);
+	        }
+	    };
+	    LowerThird.prototype.moveIn_type4 = function (ctn) {
+	        ctn.y = 400;
+	        TweenEx_1.TweenEx.to(ctn, 200, { y: 60 }, function (_) {
+	        });
 	    };
 	    LowerThird.cls = 'LowerThird';
 	    return LowerThird;
@@ -11907,14 +11938,12 @@
 	                data.cid = event;
 	                if (data.visible == null)
 	                    data.visible = true;
-	                console.log(event, data);
+	                console.log('_adept:', event, data);
 	                BasePanel_1.showPanel(LowerThird, data, canvasStage);
 	            });
 	        };
 	        _adept(Command_1.CommandId.sc_showLowerThird);
-	        _adept(Command_1.CommandId.sc_showPickup);
-	        _adept(Command_1.CommandId.sc_setTeamColor);
-	        _adept(Command_1.CommandId.sc_bracket);
+	        _adept(Command_1.CommandId.sc_showLowerThird_left_image);
 	    };
 	    return LowerThirdView;
 	}(VueBase_1.VueBase));
@@ -12935,42 +12964,45 @@
 	var const_1 = __webpack_require__(27);
 	var JsFunc_1 = __webpack_require__(21);
 	var ImgLoader_1 = __webpack_require__(55);
+	var BracketGroup_1 = __webpack_require__(61);
 	var urlType_4 = '/img/panel/lowerThird/type_4.png';
 	var TextType4 = (function (_super) {
 	    __extends(TextType4, _super);
 	    function TextType4(parent) {
 	        _super.call(this, parent);
+	        this.y = 60;
+	        this.icon = new PIXI.Sprite();
+	        this.addChild(this.icon);
+	        this.icon.x = 541 + 109;
+	        this.icon.y = 782;
 	        this.addChild(PixiEx_1.newBitmap({ url: urlType_4 }));
 	        var ns = {
 	            fontFamily: const_1.FontName.MicrosoftYahei,
-	            fontSize: "28px",
-	            dropShadow: true,
-	            dropShadowColor: '#222222',
+	            fontSize: "20px",
+	            dropShadow: false,
+	            dropShadowColor: '#ffffff',
 	            dropShadowAngle: Math.PI * 1 / 3,
 	            dropShadowDistance: 3,
 	            fontWeight: "bold",
-	            fill: "#acacac"
+	            fill: "#bbbbbb"
 	        };
-	        this.lName = TextFac_1.TextFac.new_(ns, this)
-	            .setY(968 - 128)
+	        this.lCont = TextFac_1.TextFac.new_(ns, this)
+	            .setY(968 - 108)
 	            .setAlignCenter(PixiEx_1._c(0));
-	        ns.fontSize = '34px';
+	        ns.fontSize = '30px';
 	        this.lTitle = TextFac_1.TextFac.new_(ns, this)
 	            .setY(788)
 	            .setAlignCenter(PixiEx_1._c(0))
-	            .setFill('#a46a32');
-	        this.icon = new PIXI.Sprite();
-	        this.addChild(this.icon);
-	        this.icon.x = 541;
-	        this.icon.y = 792;
+	            .setFill('#1a87df');
 	    }
 	    TextType4.prototype.fillData = function (data) {
 	        var _this = this;
 	        console.log('fill data type4', data);
 	        this.lTitle.setText(data.cont[0])
-	            .setX(687);
-	        this.lName.setText(JsFunc_1.cnWrap(data.cont[1], 44))
-	            .setX(687);
+	            .setX(814);
+	        BracketGroup_1.fitWidth(this.lTitle, 460, 30);
+	        this.lCont.setText(JsFunc_1.cnWrap(data.cont[1], 44))
+	            .setX(814);
 	        if (data.icon) {
 	            ImgLoader_1.imgLoader.loadTexRemote(data.icon, function (tex) {
 	                console.log('textType4');
@@ -12979,11 +13011,63 @@
 	                _this.icon.height = 136;
 	            });
 	        }
-	        return this.lName.width;
+	        return this.lCont.width;
 	    };
 	    return TextType4;
 	}(BaseLowerThird_1.BaseLowerThird));
 	exports.TextType4 = TextType4;
+
+
+/***/ },
+/* 119 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var BaseLowerThird_1 = __webpack_require__(111);
+	var PixiEx_1 = __webpack_require__(56);
+	var ImgLoader_1 = __webpack_require__(55);
+	var TweenEx_1 = __webpack_require__(63);
+	var img_left_url = '/img/panel/lowerThird/image_left.png';
+	var LeftImage = (function (_super) {
+	    __extends(LeftImage, _super);
+	    function LeftImage() {
+	        _super.apply(this, arguments);
+	        this.lastVisible = false;
+	    }
+	    LeftImage.prototype.showImage = function (data) {
+	        var _this = this;
+	        ImgLoader_1.imgLoader.loadTexRemote(img_left_url, function (tex) {
+	            if (data.visible) {
+	                if (!_this.leftImg1) {
+	                    _this.leftImg1 = PixiEx_1.newBitmap({ url: img_left_url });
+	                    _this.addChild(_this.leftImg1);
+	                }
+	                if (!_this.lastVisible) {
+	                    _this.moveIn_type4(_this);
+	                    _this.lastVisible = true;
+	                }
+	                _this.show();
+	            }
+	            else {
+	                _this.hide();
+	                _this.lastVisible = false;
+	            }
+	        });
+	    };
+	    LeftImage.prototype.moveIn_type4 = function (ctn) {
+	        console.log('move in type 4');
+	        ctn.x = -310;
+	        TweenEx_1.TweenEx.to(ctn, 200, { x: 0 }, function (_) {
+	        });
+	    };
+	    return LeftImage;
+	}(BaseLowerThird_1.BaseLowerThird));
+	exports.LeftImage = LeftImage;
 
 
 /***/ }
