@@ -134,6 +134,8 @@ class HomeView extends VueBase {
             { title: "3v3计分", url: `/html/controls/game3v3.html` },
             { title: "3v3面板", url: `/panel/#/ol/ob/0?panel=score&s4=1&world=1&game3v3=1` },
             { title: "4v4面板（新）", url: `/cc/web-mobile/index.html?panel=3v3` },
+            { title: "小组赛积分投屏（新）", url: `/cc/web-mobile/index.html?panel=group` },
+            { title: "团战血量投屏（新）", url: `/cc/web-mobile/index.html?panel=bblood` },
         ];
     }
 
