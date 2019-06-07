@@ -32,12 +32,12 @@
         <div class="container" style="height: 700px">
             [game3v3]
             <div>
-                红队：
-                <input v-model="lScoreInput" class="input" type="text" style="width: 80px;"> 蓝队：
+                蓝队：
+                <input v-model="lScoreInput" class="input" type="text" style="width: 80px;"> 红队：
                 <input v-model="rScoreInput" class="input" type="text" style="width: 80px;">
                 <button class="button" @click="onSetScore(lScoreInput,rScoreInput)">设置比分</button>
-                <br>红队：
-                <input v-model="lFoulInput" class="input" type="text" style="width: 80px;"> 蓝队：
+                <br>蓝队：
+                <input v-model="lFoulInput" class="input" type="text" style="width: 80px;"> 红队：
                 <input v-model="rFoulInput" class="input" type="text" style="width: 80px;">
                 <button class="button" @click="onSetFoul(lFoulInput,rFoulInput)">设置犯规</button>
                 <br> 时间：秒 分-秒
