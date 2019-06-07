@@ -184,23 +184,6 @@ export class ScoreV2 extends PIXI.Container {
 
     state = true
     toggleState(data) {
-        // if (data.visible) {
-
-        //     let a = ['攻', '守']
-        //     this.state = !this.state
-
-        //     if (data.isLeftPlayer != null) {
-        //         this.state = !data.isLeftPlayer
-        //     }
-        //     let idx = Number(this.state)
-        //     let idx2 = Number(!this.state)
-        //     this.lState.setText(a[idx])
-        //         .setAlignCenter(350)
-        //     this.rState.setText(a[idx2])
-        //         .setAlignCenter(1570)
-        // }
-        // else
-        //     this.lState.text = this.rState.text = ''
     }
 
     _isShowFoulHint(foulHintSp, foul) {
@@ -342,12 +325,12 @@ export class ScoreV2 extends PIXI.Container {
             let gameIdxNum2
             gameIdxNum2 = '第' + gameIdxNum + '场'
             if (this.to8.indexOf(gameIdx) > -1)
-                this.gameTitle.text = '大师赛八强'
+                this.gameTitle.text = '淘汰赛'
             gameIdx = Number(gameIdx)
             if (gameIdx == 5 || gameIdx == 6) {
-                this.gameTitle.text = '四强晋级赛'
+                this.gameTitle.text = '淘汰赛'
                 // gameIdxNum2 = '第' + paddy(gameIdx - 6, 2) + '场'
-                gameIdxNum = '第' + paddy(gameIdx - 4, 2) + '场'
+                gameIdxNum = '第' + paddy(gameIdx , 2) + '场'
             }
             else if (gameIdx == 7) {
                 this.gameTitle.text = '季军赛'
@@ -358,13 +341,13 @@ export class ScoreV2 extends PIXI.Container {
                 gameIdxNum = ''
             }
             else {
-                this.gameTitle.text = '八强晋级赛'
+                this.gameTitle.text = '淘汰赛'
                 gameIdxNum = '第' + paddy(gameIdx, 2) + '场'
 
             }
         }
         else if (type == 4) {
-            this.gameTitle.text = '席位战'
+            this.gameTitle.text = '小组赛'
             gameIdxNum = '第' + gameIdxNum + '场'
         }
         else if (type == 1) {
