@@ -159,14 +159,14 @@
                     <table class="table is-striped is-bordered" style="font-size:14px;">
                         <thead>
                             <tr>
-                                <th===公告历史==</th>
-                                    <th>#2</th>
+                                <th>===公告历史==</th>
+                                <th>#2</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(n,idx) in noticeHistory">
                                 <th>
-                                    <a @click="onClkNoticePresets(n.title,n.content)" style="font-size:35px;">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>
+                                    <a @click="onClkNoticePresets(n.title,n.content)">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>
                                 </th>
                                 <th>
                                     <a @click="onDelNoticePresets(n.content)">del</a>
