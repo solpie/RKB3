@@ -291,3 +291,53 @@ function updatePanelWorldWar3Doc(docData, callback) {
         success: callback,
     })
 }
+
+//game poster
+export function get_champion_player(gameId, callback) {
+    let playerMap_url = "http://test.liangle.com/api/passerbyking/champion/playerlist?game_id=" + gameId
+    _get(proxy(playerMap_url), res => {
+        // console.log(res.data)
+        let playerArr = res.data
+        callback(playerArr)
+    })
+}
+export function post_champion_rec(data, callback) {
+    let url_post = "http://test.liangle.com/api/passerbyking/champion/game/match"
+    // let data = {
+    //     'action': "match", data: {
+    //         "game_id": 765,
+    //         "left_player_id": 630,
+    //         "left_puid": 29604309,
+    //         "left_score": 0,
+    //         "right_player_id": 626,
+    //         "right_puid": 29576166,
+    //         "right_score": 2,
+    //         "left_foul": 0,
+    //         "right_foul": 0,
+    //         "num": 2,
+    //         "game_start": 1478245971,
+    //         "game_end": 1478245975,
+    //         "status": 2
+    //     }
+    // }
+    // (注:
+    //     game_id 路人王轮次id
+    //     left_puid 左边球员
+    //     left_player_id 当前左边球员id
+    //     right_puid  左边球员
+    //     right_player_id 右边球员球员id
+    //     left_score 左边得分
+    //     right_score  右边得分
+    //     left_foul  左边犯规
+    //     right_foul 右边犯规',
+    //     num 当前第几场
+    //     game_start  当前轮次比赛开始时间
+    //     game_end  当前轮次比赛结束时间
+    //     status 当前轮次比赛结果 1:红袖标胜 2:蓝袖标胜 3:红袖标弃权 4:蓝袖标弃权)
+    console.log(setClientDelay, data)
+    $post(proxy(url_post), data, callback)
+}
+export function post_champion_rank5(data, callback) {
+    let url_post = 'http://test.liangle.com/api/passerbyking/champion/game/match'
+    $post(proxy(url_post), data, callback)
+}

@@ -108,14 +108,13 @@ class HomeView extends VueBase {
 
     mounted() {
         this.updateLinks(492);
-        this.actTab = 'tab5'
+        this.actTab = 'tab6'
     }
 
     updateLinks(gameId) {
         this.links = [
             // { title: "比分面板（蓝色）", url: getScorePanelUrl(gameId, true) },
             { title: "比分面板（S4）", url: getScorePanelUrl(gameId, false) },
-            { title: "赛前轮播面板", url: `/panel/#/studio/ob?pre=1` },
             { title: "直播间面板", url: `/panel/#/studio/ob/` },
             { title: "线上控制台", url: getScorePanelUrl(gameId, false, false) },
             { title: "八强面板", url: `/panel/#/ol/ob/${gameId}?panel=bracket` },
@@ -132,7 +131,6 @@ class HomeView extends VueBase {
             { title: "移动端计时器控制", url: `/m/index.html` },
             { title: "通用计分控制台", url: `/admin/#/com` },
             { title: "3v3计分", url: `/html/controls/game3v3.html` },
-            { title: "3v3面板", url: `/panel/#/ol/ob/0?panel=score&s4=1&world=1&game3v3=1` },
             { title: "4v4面板（新）", url: `/cc/web-mobile/index.html?panel=3v3` },
             { title: "小组赛积分投屏（新）", url: `/cc/web-mobile/index.html?panel=group` },
             { title: "团战血量投屏（新）", url: `/cc/web-mobile/index.html?panel=bblood` },

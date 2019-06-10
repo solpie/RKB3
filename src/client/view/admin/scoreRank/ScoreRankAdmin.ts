@@ -1,9 +1,10 @@
 import { CommandId } from '../../Command';
 import { PanelId } from '../../const';
-import { updateWorldWarDoc, postRank16 } from '../../utils/HupuAPI';
+import { updateWorldWarDoc, postRank16, get_champion_player } from '../../utils/HupuAPI';
 import { descendingProp, clone } from '../../utils/JsFunc';
 import { VueBase } from '../../utils/VueBase';
 import { buildRec, newBracketRec1, newBracketRec2, newBracketRec3, rank16, newBracketRecFinal, postRank16_1020, postRank16_1130 } from './bracketRec';
+import { ChampionPoster } from './ChampionPoster';
 let confFile = null;
 let reader;
 let filesInput;
@@ -75,6 +76,8 @@ class _ScoreRankAdmin extends VueBase {
     rank5Player = VueBase.PROP
     rank5PlayerArr = VueBase.PROP
     rank16Arr = VueBase.PROP
+
+    cp: ChampionPoster
     constructor() {
         super();
         VueBase.initProps(this);
@@ -92,6 +95,7 @@ class _ScoreRankAdmin extends VueBase {
         this.bracketRec2 = newBracketRec2()
         this.bracketRec3 = newBracketRec3()
         this.bracketRecFinal = newBracketRecFinal()
+        this.cp = new ChampionPoster()
     }
     initGameRecTable(playerMap, data1?, callback?) {
         let _ = (data) => {
@@ -231,6 +235,19 @@ class _ScoreRankAdmin extends VueBase {
             // setClientDelay
             postRank16(data, _ => {
                 console.log(_)
+            })
+        },
+        onPostGame(gameIdx) {
+            let game_data = this.bracketRec16[gameIdx]
+            let cp: ChampionPoster = this.cp
+            cp.updatePlayerList()
+            console.log(game_data)
+        },
+        onSendRank5Winner(player_id) {
+            player_id = '623'
+            let cp: ChampionPoster = this.cp
+            cp.post_rank5(player_id, res => {
+                console.log(res)
             })
         },
         onEmitBracket(tab) {

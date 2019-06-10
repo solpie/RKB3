@@ -39,7 +39,6 @@ export function cloneMap(map) {
     return a
 }
 //转换唯一数组
-
 export function mapToArr(map, clone?) {
     let a = [];
     for (let k in map) {
@@ -48,6 +47,13 @@ export function mapToArr(map, clone?) {
     if (clone)
         a = JSON.parse(JSON.stringify(a));
     return a;
+}
+export function arrToMap(arr, key) {
+    let m = {}
+    for (let item of arr) {
+        m[item[key]] = item
+    }
+    return m
 }
 //数组相同元素个数
 export function arrCountSame(arrA: Array<any>, arrB: Array<any>) {

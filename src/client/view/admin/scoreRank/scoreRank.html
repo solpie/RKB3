@@ -32,8 +32,10 @@
         <br>抢五比分 rank5 playerId
         <button class="button is-primary" @click="onGetRank5Player()">获取球员</button>
         <div v-for="(p, index) in rank5PlayerArr" :key="p.name">
-            <button class="button is-primary" @click="onUpdateRank5Score(p.playerId,p.score)">{{p.name}}</button>
-            <input type="text" v-model="p.score" style="width: 100px;">
+            <button class="button is-primary" @click="onUpdateRank5Score(p.playerId,p.score)">{{p.name}}</button> 发送抢五胜出球员到APP
+            <input type="text" v-model="p.score" style="width: 100px;"> =============>
+            <button class="button is-primary" @click="onSendRank5Winner(p.playerId)">{{p.name+p.playerId}}</button>
+            <br>
         </div>
         <br>
         <div class="tabs  is-boxed">
@@ -43,7 +45,7 @@
                         <span>picker</span>
                     </a>
                 </li>
-                <li v-bind:class="{ 'is-active': actTab== 'tab11'}" @click='tab("tab11",1)'>
+                <!-- <li v-bind:class="{ 'is-active': actTab== 'tab11'}" @click='tab("tab11",1)'>
                     <a>
                         <span>bracket rec 1</span>
                     </a>
@@ -62,7 +64,7 @@
                     <a>
                         <span> final</span>
                     </a>
-                </li>
+                </li> -->
                 <li v-bind:class="{ 'is-active': actTab== 'tab3'}" @click='tab("tab3")'>
                     <a>
                         <span>rec</span>
@@ -76,7 +78,9 @@
                 </li>
             </ul>
         </div>
-        <div v-if='actTab=="tab11" ||actTab=="tab12"||actTab=="tab13"||actTab=="tab14"'>
+
+        <!-- <div v-if='actTab=="tab11" ||actTab=="tab12"||actTab=="tab13"||actTab=="tab14"'> -->
+        <!-- <div v-if='false'>
             <div v-if="1" class="control">
                 selected gameIdx:{{selGameIdx}}
                 <input id="bracketScoreInput" class="input" type="text" style="width: 80px;">
@@ -96,7 +100,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div v-if='actTab=="tab1"' class="level">
             <div class="level-left">
                 <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
@@ -115,6 +119,7 @@
         </div>
         <div v-if='actTab=="tab3"' style="overflow-y: scroll;height: 800px;">
             <button class="button" @click="onEmitBracket(actTab)">emit bracket rec</button>
+            <button class="button is-primary" @click="onPostGame(selGameIdx)">发送赛果到APP</button>
             <table class="table is-striped is-bordered">
                 <thead>
                     <tr>
