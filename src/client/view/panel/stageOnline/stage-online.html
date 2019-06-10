@@ -1,5 +1,5 @@
 <div>
-    <div v-if="isOp" id="opPanel" style="position: absolute;left: 100px;top:60px;width: 1000px;height:700px;overflow-y: scroll;overflow-x:hidden;">
+    <div v-if="isOp" id="opPanel" style="position: absolute;left: 100px;top:60px;width: 1500px;height:700px;overflow-y: scroll;overflow-x:hidden;">
         <div class="tabs  is-boxed">
             <ul>
                 <li v-if='!isRmOp' v-bind:class="{ 'is-active': actTab== 'tab1'}" @click='tab("tab1")'>
@@ -155,11 +155,27 @@
                 <br>
                 <button class="button" @click="onNoticePresets('network')">网络故障 模版</button>
                 <br>
-                <div v-for="(n,idx) in noticeHistory" style="position: absolute;left: 200px;top: 60px;">
-                    <a @click="onClkNoticePresets(n.title,n.content)" style="font-size:35px;">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>
-                    <a @click="onDelNoticePresets(n.content)">del</a>
-                </div>
+                <div style="position: absolute;left: 600px;top: 60px;">
+                    <table class="table is-striped is-bordered" style="font-size:14px;">
+                        <thead>
+                            <tr>
+                                <th===公告历史==</th>
+                                    <th>#2</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(n,idx) in noticeHistory">
+                                <th>
+                                    <a @click="onClkNoticePresets(n.title,n.content)" style="font-size:35px;">[{{n.title||'公告'}}] :{{n.content.substring(0,10)}}</a>
+                                </th>
+                                <th>
+                                    <a @click="onDelNoticePresets(n.content)">del</a>
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
 
+                </div>
                 滚动文字：
                 <br>
                 <input class="input" type="text" placeholder="公告" style="width: 280px;" v-model="inputRollText">

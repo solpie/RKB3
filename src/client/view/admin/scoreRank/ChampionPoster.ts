@@ -1,13 +1,14 @@
 import { get_champion_player, post_champion_rec, post_champion_rank5 } from '../../utils/HupuAPI';
 import { mapToArr, arrToMap } from '../../utils/JsFunc';
-import { post_rank5 } from './ChampionPoster';
 export class ChampionPoster {
     game_id = 765
     player_map: any
-    updatePlayerList() {
+    updatePlayerList(gameId, callback) {
+        this.game_id = gameId
         get_champion_player(this.game_id, player_arr => {
             this.player_map = arrToMap(player_arr, 'player_id')
             console.log('get player list', this.player_map)
+            callback(this.player_map)
         })
     }
 

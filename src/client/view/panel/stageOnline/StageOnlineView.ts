@@ -128,12 +128,6 @@ class StageOnlineView extends VueBase {
         else if (panel == "score") {
             this.showScore()
         }
-        else if (panel == "cj") {
-            // this.showScore()
-            let id = this.$route.query['id']
-            let k = this.$route.query['k']
-            this.showLottery(k, id)
-        }
         else if (panel == "group") {
             this.showGroup()
         }
@@ -155,8 +149,6 @@ class StageOnlineView extends VueBase {
                 this.showGroup(data)
             })
 
-    }
-    showLottery(k, id) {
     }
     groupSp: any
     showGroup(data?) {
@@ -193,7 +185,7 @@ class StageOnlineView extends VueBase {
         }
         this.showOnly(bracketView.name)
     }
-    
+
     _setLiveData(data?) {
         if (data == null)
             data = {
@@ -383,13 +375,21 @@ class StageOnlineView extends VueBase {
             let textPresets = { 'network': '当前直播网络略有波\n动,工作人员正在紧急\n处理,请大家稍作等待\n马上回到精彩赛事中!' }
             this.noticeContent = textPresets[key]
         },
-
         onClkNotice(visible, isLeft, isPreview?) {
             if (this.noticeContent) {
                 // noticeHistory
                 if (!this.noticeHistory)
                     this.noticeHistory = []
-                this.noticeHistory.push({ content: this.noticeContent, title: this.noticeTitle })
+                let hasHistory = false
+                for (let i = 0; i < this.noticeHistory.length; i++) {
+                    let n = this.noticeHistory[i];
+                    if (n.content == this.noticeContent && n.title == this.noticeTitle) {
+                        hasHistory = true
+                        break;
+                    }
+                }
+                if (!hasHistory)
+                    this.noticeHistory.push({ content: this.noticeContent, title: this.noticeTitle })
                 this.opReq(`${CommandId.cs_showNotice}`,
                     {
                         _: null,
@@ -502,11 +502,11 @@ class StageOnlineView extends VueBase {
         },
         showCommentator(v, style) {
             let commentatorArr = [this.liveConf.commentator1[0], this.liveConf.commentator2[0]]
-            this.opReq(`${WebDBCmd.cs_commentator}`, { _: null, visible: v, isInfo2:false,commentatorArr: commentatorArr, style: style })
+            this.opReq(`${WebDBCmd.cs_commentator}`, { _: null, visible: v, isInfo2: false, commentatorArr: commentatorArr, style: style })
         },
         showCommentatorInfoPage(v, idx) {
             let commentatorArr = [this.liveConf.commentator1[0], this.liveConf.commentator2[0]]
-            this.opReq(`${WebDBCmd.cs_commentator}`, { _: null, visible: v,isInfo2:true,commentatorArr: commentatorArr})
+            this.opReq(`${WebDBCmd.cs_commentator}`, { _: null, visible: v, isInfo2: true, commentatorArr: commentatorArr })
         },
         showStaticImage(v, imgId) {
             let imgMap = { 1: 'http://rtmp.icassi.us:8090/uploads/932b0a2eb5dc45399820871305ad2a1e.png' }

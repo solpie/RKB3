@@ -10,6 +10,7 @@ let reader;
 let filesInput;
 declare let $
 let dbUrl;
+let static_db = "http://rtmp.icassi.us:8090/event?idx="
 const getDoc = callback => {
     if (!dbUrl) {
         alert('no dbUrl')
@@ -77,6 +78,7 @@ class _ScoreRankAdmin extends VueBase {
     rank5PlayerArr = VueBase.PROP
     rank16Arr = VueBase.PROP
 
+    game_id_input = VueBase.PROP
     cp: ChampionPoster
     constructor() {
         super();
@@ -96,6 +98,7 @@ class _ScoreRankAdmin extends VueBase {
         this.bracketRec3 = newBracketRec3()
         this.bracketRecFinal = newBracketRecFinal()
         this.cp = new ChampionPoster()
+        this.game_id_input = 765
     }
     initGameRecTable(playerMap, data1?, callback?) {
         let _ = (data) => {
@@ -240,7 +243,7 @@ class _ScoreRankAdmin extends VueBase {
         onPostGame(gameIdx) {
             let game_data = this.bracketRec16[gameIdx]
             let cp: ChampionPoster = this.cp
-            cp.updatePlayerList()
+            cp.postRec(game_data)
             console.log(game_data)
         },
         onSendRank5Winner(player_id) {
@@ -248,6 +251,12 @@ class _ScoreRankAdmin extends VueBase {
             let cp: ChampionPoster = this.cp
             cp.post_rank5(player_id, res => {
                 console.log(res)
+            })
+        },
+        onGetPlayerList(gameId) {
+            let cp: ChampionPoster = this.cp
+            cp.updatePlayerList(gameId, playerMap => {
+
             })
         },
         onEmitBracket(tab) {

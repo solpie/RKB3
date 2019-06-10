@@ -1,6 +1,6 @@
 <div class="container">
-    <a href="/html/ww/rank8.html">rank8</a>
-    <a href="/panel/#/ol/ob/0?panel=score&s4=1&world=1&game3v3=1">3v3</a>
+    game id: <input type="text" v-model="game_id_input" style="width: 100px;">
+    <button class="button is-primary" @click="onGetPlayerList(game_id_input)">获取球员列表</button>
     <hr>
     <span class="select">
             <select v-model="selected" @change="onSelectGame">
@@ -9,7 +9,6 @@
                 </option>
             </select>
         </span>
-
     <input type="file" id="files" accept="*.json" hidden>
     <input type="text" v-model="vsPlayer" style="width: 100px;">
     <button class="button is-primary" @click="onInitGame">初始比赛</button>
@@ -19,6 +18,7 @@
     <br>
     <button class="button is-primary" @click="onFile">打开配置</button>
     <button class="button is-primary" id="reloadFile" @click="reloadFile">reload</button>
+
     <br>
 
     <div style="width: 900px;">
@@ -30,9 +30,9 @@
         <button class="button is-primary" @click="onShowScoreRank(false)">hide</button>
         <br>
         <br>抢五比分 rank5 playerId
-        <button class="button is-primary" @click="onGetRank5Player()">获取球员</button>
+        <button class="button is-primary" @click="onGetRank5Player()">获取球员</button> -----------发送抢五胜出球员到APP
         <div v-for="(p, index) in rank5PlayerArr" :key="p.name">
-            <button class="button is-primary" @click="onUpdateRank5Score(p.playerId,p.score)">{{p.name}}</button> 发送抢五胜出球员到APP
+            <button class="button is-primary" @click="onUpdateRank5Score(p.playerId,p.score)">{{p.name}}</button>
             <input type="text" v-model="p.score" style="width: 100px;"> =============>
             <button class="button is-primary" @click="onSendRank5Winner(p.playerId)">{{p.name+p.playerId}}</button>
             <br>
