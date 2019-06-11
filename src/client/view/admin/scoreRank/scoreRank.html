@@ -1,6 +1,7 @@
 <div class="container">
     game id: <input type="text" v-model="game_id_input" style="width: 100px;">
     <button class="button is-primary" @click="onGetPlayerList(game_id_input)">获取球员列表</button>
+    <button class="button is-primary" @click="onGetPlayerList(8090)">获取球员列表8090</button>
     <hr>
     <span class="select">
             <select v-model="selected" @change="onSelectGame">
@@ -13,7 +14,6 @@
     <input type="text" v-model="vsPlayer" style="width: 100px;">
     <button class="button is-primary" @click="onInitGame">初始比赛</button>
     <button class="button is-primary" @click="onCreateGame">创建比赛</button>
-    <button class="button is-primary" @click="onShowWinMap">战胜对手</button>
     <br>
     <br>
     <button class="button is-primary" @click="onFile">打开配置</button>
@@ -38,6 +38,8 @@
             <br>
         </div>
         <br>
+        <button class="button" @click="onEmitBracket(actTab)">emit bracket rec</button>
+        <br>
         <div class="tabs  is-boxed">
             <ul>
                 <li v-bind:class="{ 'is-active': actTab== 'tab1'}" @click='tab("tab1")'>
@@ -45,26 +47,6 @@
                         <span>picker</span>
                     </a>
                 </li>
-                <!-- <li v-bind:class="{ 'is-active': actTab== 'tab11'}" @click='tab("tab11",1)'>
-                    <a>
-                        <span>bracket rec 1</span>
-                    </a>
-                </li>
-                <li v-bind:class="{ 'is-active': actTab== 'tab12'}" @click='tab("tab12",2)'>
-                    <a>
-                        <span> rec 2</span>
-                    </a>
-                </li>
-                <li v-bind:class="{ 'is-active': actTab== 'tab13'}" @click='tab("tab13",3)'>
-                    <a>
-                        <span> 8-4</span>
-                    </a>
-                </li>
-                <li v-bind:class="{ 'is-active': actTab== 'tab14'}" @click='tab("tab14",4)'>
-                    <a>
-                        <span> final</span>
-                    </a>
-                </li> -->
                 <li v-bind:class="{ 'is-active': actTab== 'tab3'}" @click='tab("tab3")'>
                     <a>
                         <span>rec</span>
@@ -78,29 +60,6 @@
                 </li>
             </ul>
         </div>
-
-        <!-- <div v-if='actTab=="tab11" ||actTab=="tab12"||actTab=="tab13"||actTab=="tab14"'> -->
-        <!-- <div v-if='false'>
-            <div v-if="1" class="control">
-                selected gameIdx:{{selGameIdx}}
-                <input id="bracketScoreInput" class="input" type="text" style="width: 80px;">
-                <button class="button btn-setScore" @click="onSetScore(selGameIdx,'#bracketScoreInput')">修改比分</button>
-                <button class="button" @click="onSetVsPlayer(selGameIdx,vsPlayer)">修改对阵↑</button>
-                <button class="button" @click="onEmitBracket(actTab)">emit bracket rec</button>
-            </div>
-            <div v-for="(item, index) in bracketRec" :key="item.s">
-                <div v-if="item.gameIdx>0" :style='item.s+" position: absolute;"'>
-                    <div v-if="item.isH">
-                        <a @click="setGameIdx(item.gameIdx,item.playerId)">#{{item.gameIdx}} {{item.player[0]}}_{{item.playerId[0]}}  {{item.score[0]}}</a> ----
-                        <a @click="setGameIdx(item.gameIdx,item.playerId)">{{item.score[1]}} {{item.player[1]}}_{{item.playerId[1]}}  </a>
-                    </div>
-                    <div v-if="!item.isH">
-                        <a @click="setGameIdx(item.gameIdx,item.playerId)">#{{item.gameIdx}} {{item.player[0]}}_{{item.playerId[0]}}  {{item.score[0]}}</a> <br>| <br>
-                        <a @click="setGameIdx(item.gameIdx,item.playerId)">### {{item.player[1]}}_{{item.playerId[1]}}  {{item.score[1]}}</a>
-                    </div>
-                </div>
-            </div>
-        </div> -->
         <div v-if='actTab=="tab1"' class="level">
             <div class="level-left">
                 <ul style="width:400px;overflow:hidden;zoom:1;border:1px solid #ccc">
@@ -132,7 +91,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="(rec,index) in recArr" :key="index" v-bind:class="[rec.gameIdx==selGameIdx?'is-selected':'']">
-                        <th><a @click="setGameIdx(rec.gameIdx)">#####{{rec.gameIdx}} {{rec.isGroup}}</a></th>
+                        <th><a @click="setGameIdx(rec.gameIdx,rec.player)">#####{{rec.gameIdx}} {{rec.isGroup}}</a></th>
                         <td> {{rec.name[0]}} </td>
                         <td> {{rec.score[0]}} - {{rec.score[1]}} </td>
                         <td> {{rec.name[1]}} </td>
@@ -141,8 +100,7 @@
                                 <input class="input" :id="'scoreInput'+rec.gameIdx" type="text" style="width: 80px;">
                                 <button class="button btn-setScore" @click="onSetScore(rec.gameIdx)">修改比分</button>
                                 <button class="button btn-setScore" @click="onSetVsPlayer(rec.gameIdx,vsPlayer)">修改对阵</button>
-                                <button class="button" @click="onSetGroup(rec.gameIdx)">小组赛记录</button>
-                                <button class="button is-danger" @click="onDeleteGameRec(rec.gameIdx)">删除</button>
+                                <button class="button btn-setScore" @click="onSetGameEnd(rec.gameIdx)">设置比赛结束</button>
                             </div>
                         </td>
                     </tr>

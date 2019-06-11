@@ -224,7 +224,7 @@ export function getPanelConf2(event_idx, callback) {
 
 //国战
 
-export function updateWorldWarDoc(docData, callback) {
+export function update_event_data(docData, callback) {
     let strJson = JSON.stringify(docData)
     console.log('strJson', strJson);
     $.ajax('http://rtmp.icassi.us:8090/event/' + docData._id, {
@@ -301,6 +301,7 @@ export function get_champion_player(gameId, callback) {
         callback(playerArr)
     })
 }
+
 export function post_champion_rec(data, callback) {
     let url_post = "http://test.liangle.com/api/passerbyking/champion/game/match"
     // let data = {

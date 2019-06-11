@@ -7,15 +7,23 @@ export class ChampionPoster {
         this.game_id = gameId
         get_champion_player(this.game_id, player_arr => {
             this.player_map = arrToMap(player_arr, 'player_id')
+            for (let k in this.player_map) {
+                let p = this.player_map[k]
+                p.playerId = p.player_id
+            }
             console.log('get player list', this.player_map)
             callback(this.player_map)
         })
     }
 
     postRec(rec) {
-        let player_id_arr = rec.playerId
+        let player_id_arr = rec.player
         let score_arr = rec.score
         let foul_arr = [0, 0]//todo
+
+        console.log('rec', rec)
+        console.log('player_id_arr', player_id_arr)
+        console.log('post rec', this.player_map)
         let left_player = this.player_map[player_id_arr[0]]
         let right_player = this.player_map[player_id_arr[1]]
         let result_flag = 1;
@@ -40,8 +48,8 @@ export class ChampionPoster {
                 "left_foul": foul_arr[0],
                 "right_foul": foul_arr[1],
                 "num": rec.gameIdx,
-                "game_start": 1478245971,
-                "game_end": 1478245975,
+                "game_start": rec.start,
+                "game_end": rec.end,
                 "status": result_flag
             }
         }

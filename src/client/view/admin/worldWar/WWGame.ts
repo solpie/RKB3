@@ -1,5 +1,5 @@
 import { EventDispatcher } from "../../utils/EventDispatcher";
-import { updateWorldWarDoc } from "../../utils/HupuAPI";
+import { update_event_data } from "../../utils/HupuAPI";
 import { clone } from "../../utils/JsFunc";
 
 declare let $;
@@ -17,7 +17,7 @@ export const syncDoc = (cb, isSave = false) => {
   getDoc(data => {
     cb(data);
     if (isSave)
-      updateWorldWarDoc(data, res => {
+      update_event_data(data, res => {
         console.log(res);
       });
   });

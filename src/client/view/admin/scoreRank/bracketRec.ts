@@ -1,4 +1,4 @@
-import { cloneMap, mapToArr } from '../../utils/JsFunc';
+import { mapToArr, clone } from '../../utils/JsFunc';
 
 var _p = function (x, y) {
     return 'left:' + x + 'px;' + 'top:' + y + 'px;'
@@ -235,57 +235,45 @@ export function rank16(doc, playerMap, rank5Player) {
     }
     return a
 }
-export function postRank16_1130() {
-    let arr = [
-        46591,
-        15619,
-        574,
-        8066,
-        20250,
-        20597,
-        1754,
-        20375,
-        17392,
-        7435,
-        34224,
-        30907,
-        30830,
-        6487,
-        39262,
-        1900
-    ]
-    let postData = { "rank_idx": 2, "list": [] }
-    let rank = 0
-    for (let playerId of arr) {
-        rank++
-        postData.list.push({ "rank": rank, "player_id": playerId })
-    }
-    return postData
+export function get_now_sec_1970() {
+    return Math.floor((new Date()).getTime() / 1000)
 }
-export function postRank16_1020() {
-    let arr = [
-        20250,
-        20375,
-        30103,
-        16767,
-        46591,
-        20319,
-        9118,
-        1098,
-        17484,
-        7054,
-        30047,
-        34224,
-        30848,
-        15619,
-        20597,
-        22887
-    ]
-    let postData = { "rank_idx": 1, "list": [] }
-    let rank = 0
-    for (let playerId of arr) {
-        rank++
-        postData.list.push({ "rank": rank, "player_id": playerId })
+export function create_game_rec(data, p1, p2) {
+    if (!data.doc)
+        data.doc = { gameIdx: 0, rec: {} }
+    let doc = data.doc;
+    if (!doc.rec)
+        doc.rec = {}
+    doc.gameIdx++
+    let now_sec = get_now_sec_1970()
+    doc.rec[doc.gameIdx] = {
+        start: now_sec,
+        end: now_sec,
+        player: [p1, p2]
+        , playerId: [p1, p2]
+        , score: [0, 0]
     }
-    return postData
+    return data
+}
+
+export function get_rank5_player(data, playerMap) {
+    let gameIdxArr = [9, 10, 11, 12]
+    let loserArr = []
+    for (let gameIdx in data.doc.rec) {
+        let rec = data.doc.rec[gameIdx]
+        if (gameIdxArr.indexOf(Number(gameIdx)) > -1) {
+            let loser;
+            if (rec.score[0] > rec.score[1]) {
+                loser = clone(playerMap[rec.player[1]])
+            }
+            else {
+                loser = clone(playerMap[rec.player[0]])
+            }
+            loser.score = 0
+            if (this.gameConf)//todo avatar
+                loser.avatar = this.gameConf.avatarUrlBase + loser.playerId + '.png'
+            loserArr.push(loser)
+        }
+    }
+    return loserArr
 }

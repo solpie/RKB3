@@ -1106,7 +1106,7 @@
 	    });
 	}
 	exports.getPanelConf2 = getPanelConf2;
-	function updateWorldWarDoc(docData, callback) {
+	function update_event_data(docData, callback) {
 	    var strJson = JSON.stringify(docData);
 	    console.log('strJson', strJson);
 	    $.ajax('http://rtmp.icassi.us:8090/event/' + docData._id, {
@@ -1117,7 +1117,7 @@
 	        success: callback,
 	    });
 	}
-	exports.updateWorldWarDoc = updateWorldWarDoc;
+	exports.update_event_data = update_event_data;
 	function _putDoc(url, data, callback) {
 	    var strJson = JSON.stringify(data);
 	    console.log('strJson', strJson);
@@ -2537,7 +2537,7 @@
 	    getDoc(function (data) {
 	        cb(data);
 	        if (isSave)
-	            HupuAPI_1.updateWorldWarDoc(data, function (res) {
+	            HupuAPI_1.update_event_data(data, function (res) {
 	                console.log(res);
 	            });
 	    });
@@ -2831,11 +2831,11 @@
 	var VueBase_1 = __webpack_require__(22);
 	var bracketRec_1 = __webpack_require__(40);
 	var ChampionPoster_1 = __webpack_require__(41);
+	var Champion8090_1 = __webpack_require__(121);
 	var confFile = null;
 	var reader;
 	var filesInput;
 	var dbUrl;
-	var static_db = "http://rtmp.icassi.us:8090/event?idx=";
 	var getDoc = function (callback) {
 	    if (!dbUrl) {
 	        alert('no dbUrl');
@@ -2852,7 +2852,7 @@
 	    getDoc(function (data) {
 	        cb(data);
 	        if (isSave)
-	            HupuAPI_1.updateWorldWarDoc(data, function (res) {
+	            HupuAPI_1.update_event_data(data, function (res) {
 	                console.log(res);
 	            });
 	    });
@@ -2920,29 +2920,39 @@
 	                });
 	            },
 	            onPostRank16: function (rankIdx) {
-	                var data = bracketRec_1.postRank16_1130();
-	                console.log('post rank16', data);
-	                HupuAPI_1.postRank16(data, function (_) {
-	                    console.log(_);
-	                });
 	            },
 	            onPostGame: function (gameIdx) {
-	                var game_data = this.bracketRec16[gameIdx];
-	                var cp = this.cp;
-	                cp.postRec(game_data);
-	                console.log(game_data);
+	                for (var _i = 0, _a = this.recArr; _i < _a.length; _i++) {
+	                    var rec = _a[_i];
+	                    if (Number(rec.gameIdx) == Number(gameIdx)) {
+	                        var cp = this.cp;
+	                        cp.postRec(rec);
+	                        break;
+	                    }
+	                }
 	            },
 	            onSendRank5Winner: function (player_id) {
-	                player_id = '623';
 	                var cp = this.cp;
 	                cp.post_rank5(player_id, function (res) {
 	                    console.log(res);
 	                });
 	            },
 	            onGetPlayerList: function (gameId) {
-	                var cp = this.cp;
-	                cp.updatePlayerList(gameId, function (playerMap) {
-	                });
+	                var _this = this;
+	                if (gameId == 8090) {
+	                    dbUrl = 'http://rtmp.icassi.us:8090/event?idx=1';
+	                    var cp8090 = this.cp_8090;
+	                    cp8090.get_player_list(function (playerMap) {
+	                        _this.createOption({ dbUrl: dbUrl, playerMap: playerMap }, function (_) { });
+	                    });
+	                }
+	                else {
+	                    dbUrl = 'http://rtmp.icassi.us:8090/event?idx=0';
+	                    var cp = this.cp;
+	                    cp.updatePlayerList(gameId, function (playerMap) {
+	                        _this.createOption({ dbUrl: dbUrl, playerMap: playerMap }, function (_) { });
+	                    });
+	                }
 	            },
 	            onEmitBracket: function (tab) {
 	                var bracketPage = 1;
@@ -3005,6 +3015,16 @@
 	                    _this.initGameRecTable(_this.playerMap, data);
 	                }, true);
 	            },
+	            onSetGameEnd: function (gameIdx) {
+	                var _this = this;
+	                syncDoc(function (data) {
+	                    var doc = data.doc;
+	                    var game = doc.rec[gameIdx];
+	                    if (game)
+	                        game.end = bracketRec_1.get_now_sec_1970();
+	                    _this.initGameRecTable(_this.playerMap, data);
+	                }, true);
+	            },
 	            onSetGroup: function (gameIdx) {
 	                var _this = this;
 	                syncDoc(function (data) {
@@ -3060,16 +3080,7 @@
 	                var p2 = a[1];
 	                if (p1 && p2) {
 	                    syncDoc(function (data) {
-	                        if (!data.doc)
-	                            data.doc = { gameIdx: 0, rec: {} };
-	                        var doc = data.doc;
-	                        if (!doc.rec)
-	                            doc.rec = {};
-	                        doc.gameIdx++;
-	                        doc.rec[doc.gameIdx] = {
-	                            player: [p1, p2],
-	                            score: [0, 0]
-	                        };
+	                        bracketRec_1.create_game_rec(data, p1, p2);
 	                        console.log('create game', data);
 	                        _this.initGameRecTable(_this.playerMap, data);
 	                    }, true);
@@ -3106,31 +3117,12 @@
 	            onGetRank5Player: function () {
 	                var _this = this;
 	                syncDoc(function (data) {
-	                    console.log('onGetRank5Player', data.doc, _this.gameConf.playerMap);
-	                    var gameIdxArr = [9, 10, 11, 12];
-	                    var loserArr = [];
-	                    var m = _this.gameConf.playerMap;
-	                    for (var gameIdx in data.doc.rec) {
-	                        var rec = data.doc.rec[gameIdx];
-	                        if (gameIdxArr.indexOf(Number(gameIdx)) > -1) {
-	                            var loser = void 0;
-	                            if (rec.score[0] > rec.score[1]) {
-	                                loser = JsFunc_1.clone(m[rec.player[1]]);
-	                            }
-	                            else {
-	                                loser = JsFunc_1.clone(m[rec.player[0]]);
-	                            }
-	                            loser.score = 0;
-	                            loser.avatar = _this.gameConf.avatarUrlBase + loser.playerId + '.png';
-	                            loserArr.push(loser);
-	                        }
-	                    }
-	                    _this.rank5PlayerArr = loserArr;
+	                    _this.rank5PlayerArr = bracketRec_1.get_rank5_player(data, _this.playerMap);
 	                    opReq(Command_1.CommandId.cs_showScoreRank, {
 	                        visible: true,
-	                        scoreArr: loserArr
+	                        scoreArr: _this.rank5PlayerArr
 	                    });
-	                    console.log('loser arr', loserArr);
+	                    console.log('loser arr', _this.rank5PlayerArr);
 	                });
 	            },
 	            onUpdateRank5Score: function (playerId, score) {
@@ -3244,6 +3236,7 @@
 	        this.bracketRec3 = bracketRec_1.newBracketRec3();
 	        this.bracketRecFinal = bracketRec_1.newBracketRecFinal();
 	        this.cp = new ChampionPoster_1.ChampionPoster();
+	        this.cp_8090 = new Champion8090_1.Champion8090();
 	        this.game_id_input = 765;
 	    };
 	    _ScoreRankAdmin.prototype.initGameRecTable = function (playerMap, data1, callback) {
@@ -3294,17 +3287,8 @@
 	        this.options = a;
 	        this.gameConf = data;
 	        dbUrl = data.dbUrl;
-	        if (this.gameConf.scoreRank) {
-	            this.blueArr = [];
-	            this.redArr = [];
-	            for (var i = 0; i < this.gameConf.scoreRank.length; i++) {
-	                var a_2 = this.gameConf.scoreRank[i][0].split('_');
-	                var pn = a_2[0];
-	                var player = data.playerMap[pn];
-	                this.blueArr.push(player);
-	                this.redArr.push(player);
-	            }
-	        }
+	        this.blueArr = JsFunc_1.mapToArr(this.gameConf.playerMap);
+	        this.redArr = JsFunc_1.mapToArr(this.gameConf.playerMap);
 	        window['gameConf'] = this.gameConf;
 	        console.log('create gameConf ', this.gameConf);
 	        this.initGameRecTable(playerMap, null, function (_) {
@@ -3581,64 +3565,50 @@
 	    return a;
 	}
 	exports.rank16 = rank16;
-	function postRank16_1130() {
-	    var arr = [
-	        46591,
-	        15619,
-	        574,
-	        8066,
-	        20250,
-	        20597,
-	        1754,
-	        20375,
-	        17392,
-	        7435,
-	        34224,
-	        30907,
-	        30830,
-	        6487,
-	        39262,
-	        1900
-	    ];
-	    var postData = { "rank_idx": 2, "list": [] };
-	    var rank = 0;
-	    for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
-	        var playerId = arr_1[_i];
-	        rank++;
-	        postData.list.push({ "rank": rank, "player_id": playerId });
-	    }
-	    return postData;
+	function get_now_sec_1970() {
+	    return Math.floor((new Date()).getTime() / 1000);
 	}
-	exports.postRank16_1130 = postRank16_1130;
-	function postRank16_1020() {
-	    var arr = [
-	        20250,
-	        20375,
-	        30103,
-	        16767,
-	        46591,
-	        20319,
-	        9118,
-	        1098,
-	        17484,
-	        7054,
-	        30047,
-	        34224,
-	        30848,
-	        15619,
-	        20597,
-	        22887
-	    ];
-	    var postData = { "rank_idx": 1, "list": [] };
-	    var rank = 0;
-	    for (var _i = 0, arr_2 = arr; _i < arr_2.length; _i++) {
-	        var playerId = arr_2[_i];
-	        rank++;
-	        postData.list.push({ "rank": rank, "player_id": playerId });
-	    }
-	    return postData;
+	exports.get_now_sec_1970 = get_now_sec_1970;
+	function create_game_rec(data, p1, p2) {
+	    if (!data.doc)
+	        data.doc = { gameIdx: 0, rec: {} };
+	    var doc = data.doc;
+	    if (!doc.rec)
+	        doc.rec = {};
+	    doc.gameIdx++;
+	    var now_sec = get_now_sec_1970();
+	    doc.rec[doc.gameIdx] = {
+	        start: now_sec,
+	        end: now_sec,
+	        player: [p1, p2],
+	        playerId: [p1, p2],
+	        score: [0, 0]
+	    };
+	    return data;
 	}
-	exports.postRank16_1020 = postRank16_1020;
+	exports.create_game_rec = create_game_rec;
+	function get_rank5_player(data, playerMap) {
+	    var gameIdxArr = [9, 10, 11, 12];
+	    var loserArr = [];
+	    for (var gameIdx in data.doc.rec) {
+	        var rec = data.doc.rec[gameIdx];
+	        if (gameIdxArr.indexOf(Number(gameIdx)) > -1) {
+	            var loser = void 0;
+	            if (rec.score[0] > rec.score[1]) {
+	                loser = JsFunc_1.clone(playerMap[rec.player[1]]);
+	            }
+	            else {
+	                loser = JsFunc_1.clone(playerMap[rec.player[0]]);
+	            }
+	            loser.score = 0;
+	            if (this.gameConf)
+	                loser.avatar = this.gameConf.avatarUrlBase + loser.playerId + '.png';
+	            loserArr.push(loser);
+	        }
+	    }
+	    return loserArr;
+	}
+	exports.get_rank5_player = get_rank5_player;
 
 
 /***/ },
@@ -3657,14 +3627,21 @@
 	        this.game_id = gameId;
 	        HupuAPI_1.get_champion_player(this.game_id, function (player_arr) {
 	            _this.player_map = JsFunc_1.arrToMap(player_arr, 'player_id');
+	            for (var k in _this.player_map) {
+	                var p = _this.player_map[k];
+	                p.playerId = p.player_id;
+	            }
 	            console.log('get player list', _this.player_map);
 	            callback(_this.player_map);
 	        });
 	    };
 	    ChampionPoster.prototype.postRec = function (rec) {
-	        var player_id_arr = rec.playerId;
+	        var player_id_arr = rec.player;
 	        var score_arr = rec.score;
 	        var foul_arr = [0, 0];
+	        console.log('rec', rec);
+	        console.log('player_id_arr', player_id_arr);
+	        console.log('post rec', this.player_map);
 	        var left_player = this.player_map[player_id_arr[0]];
 	        var right_player = this.player_map[player_id_arr[1]];
 	        var result_flag = 1;
@@ -3686,8 +3663,8 @@
 	                "left_foul": foul_arr[0],
 	                "right_foul": foul_arr[1],
 	                "num": rec.gameIdx,
-	                "game_start": 1478245971,
-	                "game_end": 1478245975,
+	                "game_start": rec.start,
+	                "game_end": rec.end,
 	                "status": result_flag
 	            }
 	        };
@@ -3716,7 +3693,7 @@
 /* 42 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    game id: <input type=\"text\" v-model=\"game_id_input\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onGetPlayerList(game_id_input)\">获取球员列表</button>\r\n    <hr>\r\n    <span class=\"select\">\r\n            <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                    {{ option.text }}\r\n                </option>\r\n            </select>\r\n        </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <button class=\"button is-primary\" @click=\"onCreateGame\">创建比赛</button>\r\n    <button class=\"button is-primary\" @click=\"onShowWinMap\">战胜对手</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n\r\n    <br>\r\n\r\n    <div style=\"width: 900px;\">\r\n        <br> score rank:\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onReloadShow()\">reload show</button>\r\n        <button class=\"button is-primary\" @click=\"onSetPlayerDeactive()\">set player deactive</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <br>抢五比分 rank5 playerId\r\n        <button class=\"button is-primary\" @click=\"onGetRank5Player()\">获取球员</button> -----------发送抢五胜出球员到APP\r\n        <div v-for=\"(p, index) in rank5PlayerArr\" :key=\"p.name\">\r\n            <button class=\"button is-primary\" @click=\"onUpdateRank5Score(p.playerId,p.score)\">{{p.name}}</button>\r\n            <input type=\"text\" v-model=\"p.score\" style=\"width: 100px;\"> =============>\r\n            <button class=\"button is-primary\" @click=\"onSendRank5Winner(p.playerId)\">{{p.name+p.playerId}}</button>\r\n            <br>\r\n        </div>\r\n        <br>\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>picker</span>\r\n                    </a>\r\n                </li>\r\n                <!-- <li v-bind:class=\"{ 'is-active': actTab== 'tab11'}\" @click='tab(\"tab11\",1)'>\r\n                    <a>\r\n                        <span>bracket rec 1</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab12'}\" @click='tab(\"tab12\",2)'>\r\n                    <a>\r\n                        <span> rec 2</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab13'}\" @click='tab(\"tab13\",3)'>\r\n                    <a>\r\n                        <span> 8-4</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab14'}\" @click='tab(\"tab14\",4)'>\r\n                    <a>\r\n                        <span> final</span>\r\n                    </a>\r\n                </li> -->\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab3'}\" @click='tab(\"tab3\")'>\r\n                    <a>\r\n                        <span>rec</span>\r\n                    </a>\r\n                </li>\r\n\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab6'}\" @click='tab(\"tab6\")'>\r\n                    <a>\r\n                        <span>rank 16</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n\r\n        <!-- <div v-if='actTab==\"tab11\" ||actTab==\"tab12\"||actTab==\"tab13\"||actTab==\"tab14\"'> -->\r\n        <!-- <div v-if='false'>\r\n            <div v-if=\"1\" class=\"control\">\r\n                selected gameIdx:{{selGameIdx}}\r\n                <input id=\"bracketScoreInput\" class=\"input\" type=\"text\" style=\"width: 80px;\">\r\n                <button class=\"button btn-setScore\" @click=\"onSetScore(selGameIdx,'#bracketScoreInput')\">修改比分</button>\r\n                <button class=\"button\" @click=\"onSetVsPlayer(selGameIdx,vsPlayer)\">修改对阵↑</button>\r\n                <button class=\"button\" @click=\"onEmitBracket(actTab)\">emit bracket rec</button>\r\n            </div>\r\n            <div v-for=\"(item, index) in bracketRec\" :key=\"item.s\">\r\n                <div v-if=\"item.gameIdx>0\" :style='item.s+\" position: absolute;\"'>\r\n                    <div v-if=\"item.isH\">\r\n                        <a @click=\"setGameIdx(item.gameIdx,item.playerId)\">#{{item.gameIdx}} {{item.player[0]}}_{{item.playerId[0]}}  {{item.score[0]}}</a> ----\r\n                        <a @click=\"setGameIdx(item.gameIdx,item.playerId)\">{{item.score[1]}} {{item.player[1]}}_{{item.playerId[1]}}  </a>\r\n                    </div>\r\n                    <div v-if=\"!item.isH\">\r\n                        <a @click=\"setGameIdx(item.gameIdx,item.playerId)\">#{{item.gameIdx}} {{item.player[0]}}_{{item.playerId[0]}}  {{item.score[0]}}</a> <br>| <br>\r\n                        <a @click=\"setGameIdx(item.gameIdx,item.playerId)\">### {{item.player[1]}}_{{item.playerId[1]}}  {{item.score[1]}}</a>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div> -->\r\n        <div v-if='actTab==\"tab1\"' class=\"level\">\r\n            <div class=\"level-left\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in blueArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n            <div class=\"level-right\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in redArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab3\"' style=\"overflow-y: scroll;height: 800px;\">\r\n            <button class=\"button\" @click=\"onEmitBracket(actTab)\">emit bracket rec</button>\r\n            <button class=\"button is-primary\" @click=\"onPostGame(selGameIdx)\">发送赛果到APP</button>\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                        <th>L player</th>\r\n                        <th>score</th>\r\n                        <th>R player</th>\r\n                        <th>operation</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==selGameIdx?'is-selected':'']\">\r\n                        <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}} {{rec.isGroup}}</a></th>\r\n                        <td> {{rec.name[0]}} </td>\r\n                        <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                        <td> {{rec.name[1]}} </td>\r\n                        <td>\r\n                            <div class=\"control\" v-if=\"rec.gameIdx==selGameIdx\">\r\n                                <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                                <button class=\"button btn-setScore\" @click=\"onSetScore(rec.gameIdx)\">修改比分</button>\r\n                                <button class=\"button btn-setScore\" @click=\"onSetVsPlayer(rec.gameIdx,vsPlayer)\">修改对阵</button>\r\n                                <button class=\"button\" @click=\"onSetGroup(rec.gameIdx)\">小组赛记录</button>\r\n                                <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                            </div>\r\n                        </td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n            <button class=\"button is-danger\" @click=\"onInitDoc\">init doc</button>\r\n        </div>\r\n\r\n        <div v-if=\"actTab=='tab6'\">\r\n            rank 5 playerId<input type=\"text\" v-model=\"rank5Player\" style=\"width: 80px;\">\r\n            <button class=\"button is-primary\" @click=\"onGenRank16(rank5Player)\">rank16</button>\r\n            <br>\r\n            <button class=\"button is-primary\" @click=\"onPostRank16(1)\">rank16 1120</button>\r\n            <ul>\r\n                <li v-for=\"(player,index) in rank16Arr\" :key=\"player\" style=\"float:left;width:190px;padding:5px\">\r\n                    {{player.rank}} - {{player.name}}[{{player.rankScore}}]\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        {{p1WinMap}}\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    game id: <input type=\"text\" v-model=\"game_id_input\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onGetPlayerList(game_id_input)\">获取球员列表</button>\r\n    <button class=\"button is-primary\" @click=\"onGetPlayerList(8090)\">获取球员列表8090</button>\r\n    <hr>\r\n    <span class=\"select\">\r\n            <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                    {{ option.text }}\r\n                </option>\r\n            </select>\r\n        </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <button class=\"button is-primary\" @click=\"onCreateGame\">创建比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n\r\n    <br>\r\n\r\n    <div style=\"width: 900px;\">\r\n        <br> score rank:\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onReloadShow()\">reload show</button>\r\n        <button class=\"button is-primary\" @click=\"onSetPlayerDeactive()\">set player deactive</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <br>抢五比分 rank5 playerId\r\n        <button class=\"button is-primary\" @click=\"onGetRank5Player()\">获取球员</button> -----------发送抢五胜出球员到APP\r\n        <div v-for=\"(p, index) in rank5PlayerArr\" :key=\"p.name\">\r\n            <button class=\"button is-primary\" @click=\"onUpdateRank5Score(p.playerId,p.score)\">{{p.name}}</button>\r\n            <input type=\"text\" v-model=\"p.score\" style=\"width: 100px;\"> =============>\r\n            <button class=\"button is-primary\" @click=\"onSendRank5Winner(p.playerId)\">{{p.name+p.playerId}}</button>\r\n            <br>\r\n        </div>\r\n        <br>\r\n        <button class=\"button\" @click=\"onEmitBracket(actTab)\">emit bracket rec</button>\r\n        <br>\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>picker</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab3'}\" @click='tab(\"tab3\")'>\r\n                    <a>\r\n                        <span>rec</span>\r\n                    </a>\r\n                </li>\r\n\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab6'}\" @click='tab(\"tab6\")'>\r\n                    <a>\r\n                        <span>rank 16</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"' class=\"level\">\r\n            <div class=\"level-left\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in blueArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n            <div class=\"level-right\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in redArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab3\"' style=\"overflow-y: scroll;height: 800px;\">\r\n            <button class=\"button\" @click=\"onEmitBracket(actTab)\">emit bracket rec</button>\r\n            <button class=\"button is-primary\" @click=\"onPostGame(selGameIdx)\">发送赛果到APP</button>\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                        <th>L player</th>\r\n                        <th>score</th>\r\n                        <th>R player</th>\r\n                        <th>operation</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==selGameIdx?'is-selected':'']\">\r\n                        <th><a @click=\"setGameIdx(rec.gameIdx,rec.player)\">#####{{rec.gameIdx}} {{rec.isGroup}}</a></th>\r\n                        <td> {{rec.name[0]}} </td>\r\n                        <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                        <td> {{rec.name[1]}} </td>\r\n                        <td>\r\n                            <div class=\"control\" v-if=\"rec.gameIdx==selGameIdx\">\r\n                                <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                                <button class=\"button btn-setScore\" @click=\"onSetScore(rec.gameIdx)\">修改比分</button>\r\n                                <button class=\"button btn-setScore\" @click=\"onSetVsPlayer(rec.gameIdx,vsPlayer)\">修改对阵</button>\r\n                                <button class=\"button btn-setScore\" @click=\"onSetGameEnd(rec.gameIdx)\">设置比赛结束</button>\r\n                            </div>\r\n                        </td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n            <button class=\"button is-danger\" @click=\"onInitDoc\">init doc</button>\r\n        </div>\r\n\r\n        <div v-if=\"actTab=='tab6'\">\r\n            rank 5 playerId<input type=\"text\" v-model=\"rank5Player\" style=\"width: 80px;\">\r\n            <button class=\"button is-primary\" @click=\"onGenRank16(rank5Player)\">rank16</button>\r\n            <br>\r\n            <button class=\"button is-primary\" @click=\"onPostRank16(1)\">rank16 1120</button>\r\n            <ul>\r\n                <li v-for=\"(player,index) in rank16Arr\" :key=\"player\" style=\"float:left;width:190px;padding:5px\">\r\n                    {{player.rank}} - {{player.name}}[{{player.rankScore}}]\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        {{p1WinMap}}\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 43 */
@@ -12938,8 +12915,9 @@
 	                }
 	            }
 	            if (r.gameIdx == 16) {
-	                this.finalScore.setText(lScore + ' - ' + rScore)
-	                    .setAlignCenter(PixiEx_1._c(0));
+	                if (lScore >= 0 && rScore >= 0)
+	                    this.finalScore.setText(lScore + ' - ' + rScore)
+	                        .setAlignCenter(PixiEx_1._c(0));
 	            }
 	        }
 	    };
@@ -13192,6 +13170,33 @@
 	    return BracketS5Team;
 	}(BasePanel_1.BasePanel));
 	exports.BracketS5Team = BracketS5Team;
+
+
+/***/ },
+/* 121 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var HupuAPI_1 = __webpack_require__(24);
+	var JsFunc_1 = __webpack_require__(21);
+	var Champion8090 = (function () {
+	    function Champion8090() {
+	    }
+	    Champion8090.prototype.get_player_list = function (callback) {
+	        var _this = this;
+	        HupuAPI_1.getPlayerMap(function (data) {
+	            _this.player_map = JsFunc_1.arrToMap(data.player_all, 'player_id');
+	            for (var k in _this.player_map) {
+	                var p = _this.player_map[k];
+	                p.playerId = p.player_id;
+	            }
+	            console.log('get player list', _this.player_map);
+	            callback(_this.player_map);
+	        });
+	    };
+	    return Champion8090;
+	}());
+	exports.Champion8090 = Champion8090;
 
 
 /***/ }

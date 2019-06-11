@@ -144,8 +144,9 @@ class BracketS5Final extends BasePanel {
             }
 
             if (r.gameIdx == 16) {
-                this.finalScore.setText(lScore + ' - ' +rScore)
-                    .setAlignCenter(_c(0))
+                if (lScore >= 0 && rScore >= 0)
+                    this.finalScore.setText(lScore + ' - ' + rScore)
+                        .setAlignCenter(_c(0))
             }
         }
     }

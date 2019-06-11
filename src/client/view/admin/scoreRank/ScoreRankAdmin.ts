@@ -1,16 +1,16 @@
 import { CommandId } from '../../Command';
 import { PanelId } from '../../const';
-import { updateWorldWarDoc, postRank16, get_champion_player } from '../../utils/HupuAPI';
-import { descendingProp, clone } from '../../utils/JsFunc';
+import { update_event_data } from '../../utils/HupuAPI';
+import { clone, descendingProp, mapToArr } from '../../utils/JsFunc';
 import { VueBase } from '../../utils/VueBase';
-import { buildRec, newBracketRec1, newBracketRec2, newBracketRec3, rank16, newBracketRecFinal, postRank16_1020, postRank16_1130 } from './bracketRec';
+import { buildRec, newBracketRec1, newBracketRec2, newBracketRec3, newBracketRecFinal, rank16, create_game_rec, get_rank5_player, get_now_sec_1970 } from './bracketRec';
 import { ChampionPoster } from './ChampionPoster';
+import { Champion8090 } from './Champion8090';
 let confFile = null;
 let reader;
 let filesInput;
 declare let $
 let dbUrl;
-let static_db = "http://rtmp.icassi.us:8090/event?idx="
 const getDoc = callback => {
     if (!dbUrl) {
         alert('no dbUrl')
@@ -25,7 +25,7 @@ const syncDoc = (cb, isSave = false) => {
     getDoc(data => {
         cb(data);
         if (isSave)
-            updateWorldWarDoc(data, res => {
+            update_event_data(data, res => {
                 console.log(res);
             });
     });
@@ -80,6 +80,7 @@ class _ScoreRankAdmin extends VueBase {
 
     game_id_input = VueBase.PROP
     cp: ChampionPoster
+    cp_8090: Champion8090
     constructor() {
         super();
         VueBase.initProps(this);
@@ -98,6 +99,7 @@ class _ScoreRankAdmin extends VueBase {
         this.bracketRec3 = newBracketRec3()
         this.bracketRecFinal = newBracketRecFinal()
         this.cp = new ChampionPoster()
+        this.cp_8090 = new Champion8090()
         this.game_id_input = 765
     }
     initGameRecTable(playerMap, data1?, callback?) {
@@ -113,7 +115,6 @@ class _ScoreRankAdmin extends VueBase {
                 this.winMap = ret.winMap
                 this.totalScoreMap = ret.totalScoreMap
                 this.recArr = ret.recArr
-
             }
             if (callback) {
                 callback()
@@ -151,19 +152,9 @@ class _ScoreRankAdmin extends VueBase {
         dbUrl = data.dbUrl
         // let a = [];
 
-        if (this.gameConf.scoreRank) {
-            this.blueArr = []
-            this.redArr = []
-            for (var i = 0; i < this.gameConf.scoreRank.length; i++) {
-                let a = this.gameConf.scoreRank[i][0].split('_')
-                // if (this.gameConf.scoreRank[i][1]) {
-                let pn = a[0]
-                let player = data.playerMap[pn]
-                this.blueArr.push(player)
-                this.redArr.push(player)
-                // }
-            }
-        }
+        // if (this.gameConf.scoreRank) {
+        this.blueArr = mapToArr(this.gameConf.playerMap)
+        this.redArr = mapToArr(this.gameConf.playerMap)
         window['gameConf'] = this.gameConf
         console.log('create gameConf ', this.gameConf);
         this.initGameRecTable(playerMap, null, _ => {
@@ -229,35 +220,42 @@ class _ScoreRankAdmin extends VueBase {
             })
         },
         onPostRank16(rankIdx) {
-            let data = postRank16_1130()
-            console.log('post rank16', data)
-            // setClientDelay(this.gameId, t, (res) => {
-            //     console.log('setClientDelay', res)
-            //     this.onGetClientDelay()
+            // let data = postRank16_1130()
+            // console.log('post rank16', data)
+            // postRank16(data, _ => {
+            //     console.log(_)
             // })
-            // setClientDelay
-            postRank16(data, _ => {
-                console.log(_)
-            })
         },
         onPostGame(gameIdx) {
-            let game_data = this.bracketRec16[gameIdx]
-            let cp: ChampionPoster = this.cp
-            cp.postRec(game_data)
-            console.log(game_data)
+            for (let rec of this.recArr) {
+                if (Number(rec.gameIdx) == Number(gameIdx)) {
+                    let cp: ChampionPoster = this.cp
+                    cp.postRec(rec)
+                    break;
+                }
+            }
         },
         onSendRank5Winner(player_id) {
-            player_id = '623'
             let cp: ChampionPoster = this.cp
             cp.post_rank5(player_id, res => {
                 console.log(res)
             })
         },
         onGetPlayerList(gameId) {
-            let cp: ChampionPoster = this.cp
-            cp.updatePlayerList(gameId, playerMap => {
-
-            })
+            if (gameId == 8090) {
+                dbUrl = 'http://rtmp.icassi.us:8090/event?idx=1'
+                let cp8090: Champion8090 = this.cp_8090
+                cp8090.get_player_list(playerMap => {
+                    this.createOption({ dbUrl: dbUrl, playerMap: playerMap }, _ => { })
+                })
+            }
+            else {
+                dbUrl = 'http://rtmp.icassi.us:8090/event?idx=0'
+                let cp: ChampionPoster = this.cp
+                cp.updatePlayerList(gameId, playerMap => {
+                    this.createOption({ dbUrl: dbUrl, playerMap: playerMap }, _ => { })
+                })
+            }
         },
         onEmitBracket(tab) {
             let bracketPage = 1
@@ -318,6 +316,14 @@ class _ScoreRankAdmin extends VueBase {
                 this.initGameRecTable(this.playerMap, data)
             }, true);
         },
+        onSetGameEnd(gameIdx) {
+            syncDoc(data => {
+                let doc = data.doc;
+                let game = doc.rec[gameIdx];
+                if (game) game.end = get_now_sec_1970()
+                this.initGameRecTable(this.playerMap, data)
+            }, true);
+        },
         onSetGroup(gameIdx) {
             syncDoc(data => {
                 let doc = data.doc
@@ -369,16 +375,7 @@ class _ScoreRankAdmin extends VueBase {
             let p2 = a[1]
             if (p1 && p2) {
                 syncDoc(data => {
-                    if (!data.doc)
-                        data.doc = { gameIdx: 0, rec: {} }
-                    let doc = data.doc;
-                    if (!doc.rec)
-                        doc.rec = {}
-                    doc.gameIdx++
-                    doc.rec[doc.gameIdx] = {
-                        player: [p1, p2]
-                        , score: [0, 0]
-                    }
+                    create_game_rec(data, p1, p2)
                     console.log('create game', data)
                     this.initGameRecTable(this.playerMap, data)
                 }, true)
@@ -417,33 +414,12 @@ class _ScoreRankAdmin extends VueBase {
         },
         onGetRank5Player() {
             syncDoc(data => {
-                console.log('onGetRank5Player', data.doc, this.gameConf.playerMap)
-                let gameIdxArr = [9, 10, 11, 12]
-                let loserArr = []
-                let m = this.gameConf.playerMap
-                for (let gameIdx in data.doc.rec) {
-                    let rec = data.doc.rec[gameIdx]
-                    if (gameIdxArr.indexOf(Number(gameIdx)) > -1) {
-                        let loser;
-                        if (rec.score[0] > rec.score[1]) {
-                            loser = clone(m[rec.player[1]])
-                        }
-                        else {
-                            loser = clone(m[rec.player[0]])
-                        }
-                        loser.score = 0
-                        loser.avatar = this.gameConf.avatarUrlBase + loser.playerId + '.png'
-                        loserArr.push(loser)
-                    }
-                }
-
-                this.rank5PlayerArr = loserArr
+                this.rank5PlayerArr = get_rank5_player(data, this.playerMap)
                 opReq(CommandId.cs_showScoreRank, {
                     visible: true,
-                    scoreArr: loserArr
+                    scoreArr: this.rank5PlayerArr
                 })
-                // this.gameConf.playerMap[pn]
-                console.log('loser arr', loserArr)
+                console.log('loser arr', this.rank5PlayerArr)
             })
         },
         onUpdateRank5Score(playerId, score) {
