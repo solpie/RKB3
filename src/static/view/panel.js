@@ -11094,11 +11094,11 @@
 	            var gameIdxNum2 = void 0;
 	            gameIdxNum2 = '第' + gameIdxNum + '场';
 	            if (this.to8.indexOf(gameIdx) > -1)
-	                this.gameTitle.text = '淘汰赛';
+	                this.gameTitle.text = '大师赛八强';
 	            gameIdx = Number(gameIdx);
 	            if (gameIdx == 5 || gameIdx == 6) {
-	                this.gameTitle.text = '淘汰赛';
-	                gameIdxNum = '第' + JsFunc_1.paddy(gameIdx, 2) + '场';
+	                this.gameTitle.text = '四强晋级赛';
+	                gameIdxNum = '第' + JsFunc_1.paddy(gameIdx - 4, 2) + '场';
 	            }
 	            else if (gameIdx == 7) {
 	                this.gameTitle.text = '季军赛';
@@ -11109,7 +11109,7 @@
 	                gameIdxNum = '';
 	            }
 	            else {
-	                this.gameTitle.text = '淘汰赛';
+	                this.gameTitle.text = '八强晋级赛';
 	                gameIdxNum = '第' + JsFunc_1.paddy(gameIdx, 2) + '场';
 	            }
 	        }

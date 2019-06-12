@@ -325,12 +325,12 @@ export class ScoreV2 extends PIXI.Container {
             let gameIdxNum2
             gameIdxNum2 = '第' + gameIdxNum + '场'
             if (this.to8.indexOf(gameIdx) > -1)
-                this.gameTitle.text = '淘汰赛'
+                this.gameTitle.text = '大师赛八强'
             gameIdx = Number(gameIdx)
             if (gameIdx == 5 || gameIdx == 6) {
-                this.gameTitle.text = '淘汰赛'
+                this.gameTitle.text = '四强晋级赛'
                 // gameIdxNum2 = '第' + paddy(gameIdx - 6, 2) + '场'
-                gameIdxNum = '第' + paddy(gameIdx , 2) + '场'
+                gameIdxNum = '第' + paddy(gameIdx -4, 2) + '场'
             }
             else if (gameIdx == 7) {
                 this.gameTitle.text = '季军赛'
@@ -341,7 +341,7 @@ export class ScoreV2 extends PIXI.Container {
                 gameIdxNum = ''
             }
             else {
-                this.gameTitle.text = '淘汰赛'
+                this.gameTitle.text = '八强晋级赛'
                 gameIdxNum = '第' + paddy(gameIdx, 2) + '场'
 
             }
