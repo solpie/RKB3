@@ -214,18 +214,6 @@ class _ScoreRankAdmin extends VueBase {
             if (bracketRecIdx == 4)
                 this.bracketRec = this.bracketRecFinal
         },
-        onGenRank16(rank5Player) {
-            syncDoc(data => {
-                this.rank16Arr = rank16(data.doc, this.playerMap, rank5Player)
-            })
-        },
-        onPostRank16(rankIdx) {
-            // let data = postRank16_1130()
-            // console.log('post rank16', data)
-            // postRank16(data, _ => {
-            //     console.log(_)
-            // })
-        },
         onPostGame(gameIdx) {
             for (let rec of this.recArr) {
                 if (Number(rec.gameIdx) == Number(gameIdx)) {

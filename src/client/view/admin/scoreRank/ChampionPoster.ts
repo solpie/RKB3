@@ -34,24 +34,24 @@ export class ChampionPoster {
         else {
             result_flag = 1
         }
+        // escape
         let data = {
-            'action': "match", data: {
-                "game_id": this.game_id,
-                "left_player_id": left_player.player_id,
-                "left_puid": left_player.puid,
-                "left_score": score_arr[0],
+            "action": "match",
+            "game_id": this.game_id,
+            "left_player_id": left_player.player_id,
+            "left_puid": left_player.puid,
+            "left_score": score_arr[0],
 
-                "right_player_id": right_player.player_id,
-                "right_puid": right_player.puid,
-                "right_score": score_arr[1],
+            "right_player_id": right_player.player_id,
+            "right_puid": right_player.puid,
+            "right_score": score_arr[1],
 
-                "left_foul": foul_arr[0],
-                "right_foul": foul_arr[1],
-                "num": rec.gameIdx,
-                "game_start": rec.start,
-                "game_end": rec.end,
-                "status": result_flag
-            }
+            "left_foul": foul_arr[0],
+            "right_foul": foul_arr[1],
+            "num": rec.gameIdx,
+            "game_start": rec.start,
+            "game_end": rec.end,
+            "status": result_flag
         }
         post_champion_rec(data, res => {
             console.log('postChampionRec', res)
@@ -81,10 +81,8 @@ export class ChampionPoster {
 
         post_champion_rank5({
             action: '4choose1',
-            data: {
-                game_id: this.game_id,
-                player_id: player_id
-            }
+            game_id: this.game_id,
+            player_id: player_id
         }, _ => {
             console.log(_)
             callback()
