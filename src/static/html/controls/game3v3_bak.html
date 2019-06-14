@@ -53,42 +53,42 @@
                 <button class="button" @click="onSetPlayer(playerInput,playerInput2)">设置对阵</button>
             </div>
             <br>
-            <div style="overflow: scroll;height: 800px;">
-                16强淘汰赛
-                <button class="button" @click="onSyncFinalGameRec('page0')">更新赛程数据到投屏</button>
-                <table class="table is-striped is-bordered" style="font-size:20px;">
-                    <thead>
-                        <tr>
-                            <th>#1</th>
-                            <th>队伍1</th>
-                            <th>vs</th>
-                            <!-- <th>score</th> -->
-                            <th>队伍2</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(team,index) in game_rec" :key="team.name">
-                            <th>
-                                {{team.gameIdx}}
-                            </th>
-                            <th>
-                                <input onkeyup="value=value.replace(/[/W]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^/d]/g,''))" v-model="team.lPlayer" class="input" type="text" style="width: 220px;">
-                            </th>
-                            <th>
-                            </th>
-                            <!-- <th>
-                                <input v-model="team.lScore" class="input" type="text" style="width: 80px;">
-                            </th>
-                            <th>
-                                <input v-model="team.rScore" class="input" type="text" style="width: 80px;">
-                            </th> -->
-                            <th>
-                                <input onkeyup="value=value.replace(/[/W]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^/d]/g,''))" v-model="team.rPlayer" class="input" type="text" style="width: 220px;">
-                            </th>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <button class="button" @click="onGroup4v4(game4v4rec)">更新小组数据到投屏</button>
+            <button class="button" @click="onCalcRank(game4v4rec)">计算小组排名（胜场数）</button>
+            <table class="table is-striped is-bordered" style="font-size:20px;">
+                <thead>
+                    <tr>
+                        <th>#1</th>
+                        <th>胜场</th>
+                        <th>负场</th>
+                        <th>净胜</th>
+                        <th>总得分</th>
+                        <th>rank</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(team,index) in game4v4rec" :key="team.name">
+                        <th>
+                            {{team.name}}
+                        </th>
+                        <th>
+                            <input v-model="team.win" class="input" type="text" style="width: 80px;">
+                        </th>
+                        <th>
+                            <input v-model="team.lose" class="input" type="text" style="width: 80px;">
+                        </th>
+                        <th>
+                            <input v-model="team.score" class="input" type="text" style="width: 80px;">
+                        </th>
+                        <th>
+                            <input v-model="team.total_score" class="input" type="text" style="width: 80px;">
+                        </th>
+                        <th>
+                            <input v-model="team.rank" class="input" type="text" style="width: 80px;">
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <script>
@@ -116,19 +116,7 @@
                 playerInput: '',
                 playerInput2: '',
                 game4v4rec: [],
-                game_rec: [],
                 items: []
-            },
-            mounted: function() {
-                for (let i = 0; i < 15; i++) {
-                    this.game_rec.push({
-                        gameIdx: i + 1,
-                        lScore: 0,
-                        rScore: 0,
-                        lPlayer: '',
-                        rPlayer: ''
-                    })
-                }
             },
             methods: {
                 onSetPlayer: (playerInput, playerInput2) => {
@@ -194,12 +182,6 @@
                     opReq('cs_timerEvent', {
                         event: event,
                         param: sec
-                    })
-                },
-                onSyncFinalGameRec(page) {
-                    opReq('cs_group_list', {
-                        page: page,
-                        rec_arr: this.game_rec
                     })
                 }
             },

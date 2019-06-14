@@ -1,0 +1,163 @@
+<html>
+
+<head>
+    <style>
+        .bg {
+            position: static;
+            padding: 10px;
+        }
+        
+        .player {
+            position: absolute;
+            padding: 0px;
+            font-size: 40px;
+            color: #fff;
+            font-family: "微软雅黑"
+        }
+        
+        .blue {
+            color: #003da7;
+        }
+    </style>
+
+
+    <link type="text/css" rel="stylesheet" href="/css/bulma.min.css">
+
+    <script src="/js/vue.js"></script>
+    <script src="/js/jquery3.min.js"></script>
+</head>
+
+<body>
+    <div id='app'>
+        <div style="overflow: scroll;height: 600px;">
+            group matchs
+            <button class="button" @click="onSyncGameRec()">更新小组数据到投屏</button>
+            <table class="table is-striped is-bordered" style="font-size:20px;">
+                <thead>
+                    <tr>
+                        <th>#1</th>
+                        <th>Left player</th>
+                        <th>score</th>
+                        <th>score</th>
+                        <th>Right player</th>
+                        <th>比赛进程cursor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(team,index) in game_rec_group" :key="team.name">
+                        <th>
+                            {{team.gameIdx}}
+                        </th>
+                        <th>
+                            <input v-model="team.lPlayer" class="input" type="text" style="width: 220px;">
+                        </th>
+                        <th>
+                            <input v-model="team.lScore" class="input" type="text" style="width: 80px;">
+                        </th>
+                        <th>
+                            <input v-model="team.rScore" class="input" type="text" style="width: 80px;">
+                        </th>
+                        <th>
+                            <input v-model="team.rPlayer" class="input" type="text" style="width: 220px;">
+                        </th>
+                        <th>
+                            <button class="button" @click="onSyncGameRec(team.gameIdx)">cursor</button>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="overflow: scroll;height: 800px;">
+            <table class="table is-striped is-bordered" style="font-size:20px;">
+                <thead>
+                    <tr>
+                        <th>#1</th>
+                        <th>Left player</th>
+                        <th>score</th>
+                        <th>score</th>
+                        <th>Right player</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(team,index) in game_rec_final" :key="team.name">
+                        <th>
+                            {{team.gameIdx}}
+                        </th>
+                        <th>
+                            <input onkeyup="value=value.replace(/[/W]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^/d]/g,''))" v-model="team.lPlayer" class="input" type="text" style="width: 220px;">
+                        </th>
+                        <th>
+                            <input v-model="team.lScore" class="input" type="text" style="width: 80px;">
+                        </th>
+                        <th>
+                            <input v-model="team.rScore" class="input" type="text" style="width: 80px;">
+                        </th>
+                        <th>
+                            <input onkeyup="value=value.replace(/[/W]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^/d]/g,''))" v-model="team.rPlayer" class="input" type="text" style="width: 220px;">
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        let opReq = (cmdId, param) => {
+            param._ = null
+            $.ajax({
+                url: `/panel/online/${cmdId}`,
+                type: 'post',
+                data: JSON.stringify(param),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                dataType: 'json'
+            });
+        }
+        var app = new Vue({
+            el: '#app',
+            data: {
+                game_rec_group: [],
+                game_rec_final: [],
+                items: []
+            },
+            mounted: function() {
+                for (let i = 0; i < 24; i++) {
+                    this.game_rec_group.push({
+                        gameIdx: i + 1,
+                        lScore: 0,
+                        rScore: 0,
+                        lPlayer: '',
+                        rPlayer: ''
+                    })
+                }
+                for (let i = 0; i < 7; i++) {
+                    this.game_rec_final.push({
+                        gameIdx: i + 1,
+                        lScore: 0,
+                        rScore: 0,
+                        lPlayer: '',
+                        rPlayer: ''
+                    })
+                }
+            },
+            methods: {
+                onSyncGameRec(gameIdx = 2) {
+                    if (gameIdx < 2) {
+                        gameIdx = 2
+                    }
+                    opReq('cs_group_list', {
+                        page: 'page1',
+                        cursor: gameIdx,
+                        rec_arr: this.game_rec_group
+                    })
+                },
+                onSyncFinalGameRec(page) {
+                    opReq('cs_group_list', {
+                        page: page,
+                        rec_arr: this.game_rec_final
+                    })
+                }
+            }
+        })
+    </script>
+</body>
