@@ -131,6 +131,7 @@ class HomeView extends VueBase {
             { title: "移动端计时器控制", url: `/m/index.html` },
             { title: "通用计分控制台", url: `/admin/#/com` },
             { title: "3v3计分", url: `/html/controls/game3v3.html` },
+            { title: "ua城市赛晋级图", url: `/cc/web-mobile/index.html?panel=group8` },
             { title: "4v4面板（新）", url: `/cc/web-mobile/index.html?panel=3v3` },
             { title: "小组赛积分投屏（新）", url: `/cc/web-mobile/index.html?panel=group` },
             { title: "团战血量投屏（新）", url: `/cc/web-mobile/index.html?panel=bblood` },
