@@ -40,6 +40,8 @@
                 <input v-model="lFoulInput" class="input" type="text" style="width: 80px;"> 红队：
                 <input v-model="rFoulInput" class="input" type="text" style="width: 80px;">
                 <button class="button" @click="onSetFoul(lFoulInput,rFoulInput)">设置犯规</button>
+                <input v-model="delayInput" class="input" type="text" style="width: 80px;">
+                <button class="button" @click="onSetDelay(delayInput)">设置延时</button>
                 <br> 时间：秒 分-秒
                 <input v-model="timerInput" class="input" type="text" style="width: 80px;">
                 <button class="button" @click="onSetTimer('start',scoreInput)">开始</button>
@@ -113,6 +115,7 @@
                 lFoulInput: '',
                 rFoulInput: '',
                 timerInput: '',
+                delayInput: '',
                 playerInput: '',
                 playerInput2: '',
                 game4v4rec: [],
@@ -158,6 +161,11 @@
                             rScore: rScoreInput
                         })
                     }
+                },
+                onSetDelay: (delay) => {
+                    opReq('cs_set_4v4_delay', {
+                        delay: Number(delay)
+                    })
                 },
                 onSet4v4: (is4V4) => {
                     opReq('cs_set_4v4_icon', {
