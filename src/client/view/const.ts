@@ -14,6 +14,7 @@ export const PanelId = {
     worldwarTeamMateBlood: 'worldwarTeamMateBlood',
     worldwarKDA: 'worldwarKDAPanel',
     bottomNoticeAccount: 'bottomNoticeAccount',
+    notice_left_bottom: 'notice_left_bottom',
     playerPanel: 'player'
 };
 export const FontName = {

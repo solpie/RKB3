@@ -17,6 +17,7 @@ import { ScoreFx } from './ScoreFx';
 import { TagFx } from './TagFx';
 import { TopInfo } from './TopInfo';
 import { Winner } from './Winner';
+import { NoticeLeftBottom } from '../scoreV2/notice_left_bottom';
 
 export class Event2017 extends PIXI.Container {
     modal: PIXI.Graphics
@@ -150,11 +151,6 @@ export class Event2017 extends PIXI.Container {
         this.addChild(this.logoFx)
     }
 
-    // victory2: Victory2
-    // showWin2(player) {
-    //     this.victory2 = new Victory2()
-    //     this.addChild(this.victory2)
-    // }
 
     // fxX: number
     // fxY: number
@@ -214,14 +210,6 @@ export class Event2017 extends PIXI.Container {
 
     ranking: RankSection
     showRanking(data) {
-        // if (!this.ranking) {
-        //     this.ranking = new RankSection()
-        //     this.ranking.create(this, data)
-        // }
-        // data.visible ?
-        //     this.ranking.show(data)
-        //     : this.ranking.hide()
-
         showPanel(RankV2, data, this)
     }
 
@@ -280,9 +268,6 @@ export class Event2017 extends PIXI.Container {
     }
 
     showScoreFx2(data) {
-        // if (this.scoreRank) {
-        //     this.scoreRank.showScoreFx(data)
-        // }
     }
 
     showRollText(data) {
@@ -293,11 +278,10 @@ export class Event2017 extends PIXI.Container {
         // Pick8Layer.get(this).show(data)
     }
 
-    showVsList(data) {
-        // showPanel(VsListV2, data, this)
-    }
 
     showBottomNoticeAccount(data) {
         showPanel(BottomNotice, data, this)
     }
+
+   
 }

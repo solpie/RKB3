@@ -243,14 +243,14 @@ export class ScoreView extends BasePanelView {
             .on(`${CommandId.sc_showRanking}`, (data) => {
                 this.eventPanel.showRanking(data)
             })
-            .on(`${CommandId.sc_showBracketPage}`, (data) => {
-                console.log('sc_showBracket vs list', data)
-                this.eventPanel.showVsList(data)
-            })
             .on(`${CommandId.sc_showPanel}`, (data) => {
+                console.log('sc_showPanel', data)
                 if (data.panelId == PanelId.bottomNoticeAccount) {
                     this.eventPanel.showBottomNoticeAccount(data)
                 }
+                // else if (data.panelId == PanelId.notice_left_bottom) {
+                //     this.eventPanel.show_notice_left_bottom(data)
+                // }
             })
             //score fx
             .on(`${CommandId.sc_setFxPoint}`, (data) => {

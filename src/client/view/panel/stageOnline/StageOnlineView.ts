@@ -68,6 +68,7 @@ class StageOnlineView extends VueBase {
     //公告
     noticeTitle = VueBase.PROP
     noticeContent = VueBase.PROP
+    input_notice_left_bottom = VueBase.PROP
     isWrap = VueBase.PROP
     noticeHistory = VueBase.PROP
     inputRollText = VueBase.PROP
@@ -134,6 +135,8 @@ class StageOnlineView extends VueBase {
         else {
             this.showRank()
         }
+
+        this.input_notice_left_bottom = '本场赛事集锦'
         this.initIO()
         console.log('StageOnlineView mounted!')
     }
@@ -425,9 +428,6 @@ class StageOnlineView extends VueBase {
                 this.onGetClientDelay()
             })
         },
-        onShowRank(visible, page = 1, section = 1) {
-            this.opReq(`${CommandId.cs_showRanking}`, { _: null, visible: visible, page: page, section: section })
-        },
         onShowFx(visible, fxIdx = 1) {
             this.opReq(`${CommandId.cs_showBottle}`, { _: null, visible: visible, fxIdx: fxIdx })
         },
@@ -517,6 +517,9 @@ class StageOnlineView extends VueBase {
             if (v)
                 this.opReq(`${CommandId.cs_toggleScorePanel}`, { _: null, visible: !v, isBottom: true })
             this.opReq(CommandId.cs_showPanel, { panelId: PanelId.bottomNoticeAccount, idx: idx, visible: v })
+        },
+        onShowNoticeLeftBottom(cont, v) {
+            this.opReq(CommandId.cs_showPanel, { cont: cont, panelId: PanelId.notice_left_bottom, visible: v })
         },
         onClkLoadVsTitle() {
             if (this.vsTitleMap) {

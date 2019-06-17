@@ -86,17 +86,6 @@
             <button class="button" @click="onClkVsTitle(false,vsTitle)">隐藏</button>
             <!-- <button class="button" @click="onClkLoadVsTitle()">自动加载配置文件</button> -->
 
-            <label class="label">  赛区实力榜:</label><br>
-            <button class="button" @click="onShowRank(true,1,1)">东南</button>
-            <button class="button" @click="onShowRank(true,1,2)">东北</button>
-            <button class="button" @click="onShowRank(true,1,3)">西方</button>
-            <button class="button" @click="onShowRank(true,1,4)">南方</button>
-            <button class="button" @click="onShowRank(true,1,0)">总榜</button>
-            <button class="button" @click="onShowRank(true,1,-1)">首页</button>
-            <button class="button" @click="onShowRank(true,2,-1)">上一页</button>
-            <button class="button" @click="onShowRank(true,3,-1)">下一页</button>
-            <button class="button" @click="onShowRank(false,-1)">隐藏</button>
-
             <label class="label">  夺冠热门:</label><br>
             <input class="input" type="text" placeholder="1 3 4 6 10空格隔开比赛出场场次" style="width: 250px;" v-model="gameIdxArr">
             <button class="button" @click="onClkTop5(true,1,gameIdxArr)">p1</button>
@@ -184,6 +173,13 @@
                 <!-- <el-input v-model="inputRollText" style="width:250px"></el-input> -->
                 <button class="button" @click='showRollText(inputRollText,true)'>发送</button>
                 <button class="button" @click='showRollText(inputRollText,false)'>隐藏</button>
+                <br> 本场赛事集锦 （左下角通知面板）：
+                <br>
+                <input class="input" type="text" placeholder="4~8个汉字" style="width: 180px;" v-model="input_notice_left_bottom">
+                <br>
+                <button class="button" @click='onShowNoticeLeftBottom(input_notice_left_bottom,true)'>发送</button>
+                <button class="button" @click='onShowNoticeLeftBottom(input_notice_left_bottom,false)'>隐藏</button>
+
                 <br> 主播面板:
                 <br>
                 <!-- <button class="button" @click='showCommentator(true,1)'>显示主播</button> -->

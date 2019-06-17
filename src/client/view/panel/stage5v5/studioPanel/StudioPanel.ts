@@ -7,6 +7,10 @@ import { WebDBCmd } from "../../../WebDBCmd";
 import { Commentator } from "./Commentator";
 import { getAllPlayer, getCommentators, getLive } from '../../../utils/HupuAPI';
 import { LiveComing } from './LiveComing';
+import { CommandId } from '../../../Command';
+import { PanelId } from '../../../const';
+import { showPanel } from '../../base/BasePanel';
+import { NoticeLeftBottom } from '../../stageOnline/scoreV2/notice_left_bottom';
 
 export class StudioPanel extends PIXI.Container {
     p: any
@@ -96,7 +100,7 @@ export class StudioPanel extends PIXI.Container {
                 pv.show(Commentator, data)
             }
             else {
-                pv.hide(Commentator,data)
+                pv.hide(Commentator, data)
             }
         })
             .on(WebDBCmd.sc_staticImg, data => {
@@ -108,8 +112,15 @@ export class StudioPanel extends PIXI.Container {
                 // let isBlueLogo = this.$route.params.op == "rmop"
                 // console.log('is');
             })
+            .on(CommandId.sc_showPanel, data => {
+                if (data.panelId == PanelId.notice_left_bottom) {
+                    this.show_notice_left_bottom(data)
+                }
+            })
     }
-
+    show_notice_left_bottom(data) {
+        showPanel(NoticeLeftBottom, data, this)
+    }
     showStaticImg(data) {
         if (data.visible) {
             let url = data.url

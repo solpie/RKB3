@@ -55,8 +55,8 @@
 	__webpack_require__(18);
 	var home_1 = __webpack_require__(20);
 	var GameAdmin_1 = __webpack_require__(26);
-	var CommonGameAdmin_1 = __webpack_require__(44);
-	var PickTeamAdmin_1 = __webpack_require__(46);
+	var CommonGameAdmin_1 = __webpack_require__(45);
+	var PickTeamAdmin_1 = __webpack_require__(47);
 	var routes = [
 	    {
 	        path: '/', name: 'home',
@@ -620,7 +620,7 @@
 	    __extends(HomeView, _super);
 	    function HomeView() {
 	        _super.call(this);
-	        this.template = __webpack_require__(43);
+	        this.template = __webpack_require__(44);
 	        this.links = VueBase_1.VueBase.PROP;
 	        this.components = {
 	            "GameAdmin": GameAdmin_1.GameAdmin,
@@ -1977,6 +1977,7 @@
 	    worldwarTeamMateBlood: 'worldwarTeamMateBlood',
 	    worldwarKDA: 'worldwarKDAPanel',
 	    bottomNoticeAccount: 'bottomNoticeAccount',
+	    notice_left_bottom: 'notice_left_bottom',
 	    playerPanel: 'player'
 	};
 	exports.FontName = {
@@ -3242,7 +3243,7 @@
 	var VueBase_1 = __webpack_require__(22);
 	var bracketRec_1 = __webpack_require__(40);
 	var ChampionPoster_1 = __webpack_require__(41);
-	var Champion8090_1 = __webpack_require__(121);
+	var Champion8090_1 = __webpack_require__(42);
 	var confFile = null;
 	var reader;
 	var filesInput;
@@ -3284,7 +3285,7 @@
 	    __extends(_ScoreRankAdmin, _super);
 	    function _ScoreRankAdmin() {
 	        _super.call(this);
-	        this.template = __webpack_require__(42);
+	        this.template = __webpack_require__(43);
 	        this.actTab = VueBase_1.VueBase.PROP;
 	        this.selected = VueBase_1.VueBase.PROP;
 	        this.options = VueBase_1.VueBase.PROP;
@@ -4091,18 +4092,45 @@
 
 /***/ },
 /* 42 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = "<div class=\"container\">\r\n    game id: <input type=\"text\" v-model=\"game_id_input\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onGetPlayerList(game_id_input)\">获取球员列表</button>\r\n    <button class=\"button is-primary\" @click=\"onGetPlayerList(8090)\">获取球员列表8090</button>\r\n    <hr>\r\n    <span class=\"select\">\r\n            <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                    {{ option.text }}\r\n                </option>\r\n            </select>\r\n        </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <button class=\"button is-primary\" @click=\"onCreateGame\">创建比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n\r\n    <br>\r\n\r\n    <div style=\"width: 900px;\">\r\n        <br> score rank:\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onReloadShow()\">reload show</button>\r\n        <button class=\"button is-primary\" @click=\"onSetPlayerDeactive()\">set player deactive</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <br>抢五比分 rank5 playerId\r\n        <button class=\"button is-primary\" @click=\"onGetRank5Player()\">获取球员</button> -----------发送抢五胜出球员到APP\r\n        <div v-for=\"(p, index) in rank5PlayerArr\" :key=\"p.name\">\r\n            <button class=\"button is-primary\" @click=\"onUpdateRank5Score(p.playerId,p.score)\">{{p.name}}</button>\r\n            <input type=\"text\" v-model=\"p.score\" style=\"width: 100px;\"> =============>\r\n            <button class=\"button is-primary\" @click=\"onSendRank5Winner(p.playerId)\">{{p.name+p.playerId}}</button>\r\n            <br>\r\n        </div>\r\n        <br>\r\n        <button class=\"button\" @click=\"onEmitBracket(actTab)\">emit bracket rec</button>\r\n        <br>\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>picker</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab3'}\" @click='tab(\"tab3\")'>\r\n                    <a>\r\n                        <span>rec</span>\r\n                    </a>\r\n                </li>\r\n\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab6'}\" @click='tab(\"tab6\")'>\r\n                    <a>\r\n                        <span>rank 16</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"' class=\"level\">\r\n            <div class=\"level-left\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in blueArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n            <div class=\"level-right\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in redArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab3\"' style=\"overflow-y: scroll;height: 800px;\">\r\n            <button class=\"button\" @click=\"onEmitBracket(actTab)\">emit bracket rec</button>\r\n            <button class=\"button is-primary\" @click=\"onPostGame(selGameIdx)\">发送赛果到APP</button>\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                        <th>L player</th>\r\n                        <th>score</th>\r\n                        <th>R player</th>\r\n                        <th>operation</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==selGameIdx?'is-selected':'']\">\r\n                        <th><a @click=\"setGameIdx(rec.gameIdx,rec.player)\">#####{{rec.gameIdx}} {{rec.isGroup}}</a></th>\r\n                        <td> {{rec.name[0]}} </td>\r\n                        <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                        <td> {{rec.name[1]}} </td>\r\n                        <td>\r\n                            <div class=\"control\" v-if=\"rec.gameIdx==selGameIdx\">\r\n                                <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                                <button class=\"button btn-setScore\" @click=\"onSetScore(rec.gameIdx)\">修改比分</button>\r\n                                <button class=\"button btn-setScore\" @click=\"onSetVsPlayer(rec.gameIdx,vsPlayer)\">修改对阵</button>\r\n                                <button class=\"button btn-setScore\" @click=\"onSetGameEnd(rec.gameIdx)\">设置比赛结束</button>\r\n                            </div>\r\n                        </td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n            <button class=\"button is-danger\" @click=\"onInitDoc\">init doc</button>\r\n        </div>\r\n        {{p1WinMap}}\r\n    </div>\r\n</div>";
+	"use strict";
+	var HupuAPI_1 = __webpack_require__(24);
+	var JsFunc_1 = __webpack_require__(21);
+	var Champion8090 = (function () {
+	    function Champion8090() {
+	    }
+	    Champion8090.prototype.get_player_list = function (callback) {
+	        var _this = this;
+	        HupuAPI_1.getPlayerMap(function (data) {
+	            _this.player_map = JsFunc_1.arrToMap(data.player_all, 'player_id');
+	            for (var k in _this.player_map) {
+	                var p = _this.player_map[k];
+	                p.playerId = p.player_id;
+	            }
+	            console.log('get player list', _this.player_map);
+	            callback(_this.player_map);
+	        });
+	    };
+	    return Champion8090;
+	}());
+	exports.Champion8090 = Champion8090;
+
 
 /***/ },
 /* 43 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"container\">\r\n    <div class=\"tabs  is-boxed\">\r\n        <ul>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                <a>\r\n                    <span>home</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                <a>\r\n                    <span>热门球员编辑</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab3'}\" @click='tab(\"tab3\")'>\r\n                <a>\r\n                    <span>自定义比赛</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab5'}\" @click='tab(\"tab5\")'>\r\n                <a>\r\n                    <span>国战</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab6'}\" @click='tab(\"tab6\")'>\r\n                <a>\r\n                    <span>冠军排位赛</span>\r\n                </a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n    <div v-if='actTab==\"tab1\"'>\r\n        <nav class=\"panel\">\r\n            <p class=\"panel-heading\">\r\n                直播面板op入口 Game ID: {{ selected }}\r\n                <span class=\"select\">\r\n                            <select v-model=\"selected\">\r\n                                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                                    {{ option.text }}\r\n                                </option>\r\n                            </select>\r\n                        </span>\r\n            </p>\r\n            <div v-for=\"link in links\">\r\n                <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                    <span class=\"panel-icon\">\r\n                        <i class=\"fa fa-book\"></i>\r\n                        </span> {{link.url}}\r\n                    <br> {{link.title}}\r\n                </a>\r\n                <!--<button class=\"button\">复制地址</button>-->\r\n            </div>\r\n            <!-- <div>\r\n                抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n                <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n                <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n                           {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n                        </a>\r\n            </div> -->\r\n\r\n            <p>\r\n                command:\r\n                <br> /game/bracket/clear\r\n                <br>/game/clear/bracketIdx\r\n                <br>/git/pull\r\n        </nav>\r\n        播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n            <p>\r\n                播放地址2:<input type=\"text\" v-model=\"playUrl2\" style=\"width: 1000px\">\r\n                <p>\r\n                    推流地址2:<input type=\"text\" v-model=\"rmtpUrl2\" style=\"width: 1000px\">\r\n                    <!-- <p>\r\n                        <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n                        <div id=\"qrcode\"></div> -->\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <div class=\"panel\" style=\"width: 500px;\">\r\n            <p class=\"panel-heading\">\r\n                亮了网后台数据导入8090\r\n            </p>\r\n            球员编号player_id\r\n            <input type=\"text\" v-model=\"player_id\" style=\"width: 100px;\">\r\n            <button class=\"button is-primary\" @click=\"onViewPlayer(player_id)\">查看亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onSyncPlayerToStrapi(player_id)\">导入亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onPullPlayerData(player_id)\">编辑8090球员</button>\r\n            <!-- <input type=\"text\" v-model=\"playerArrStr\" style=\"width: 150px;\">\r\n            <button class=\"button is-primary\" @click=\"onSetStarPlayer(playerArrStr)\">设定热门球员</button> -->\r\n            <div v-if='playerInEdit'>\r\n                <div class=\"container\" style=\"height: 700px\">\r\n                    <h1>上传热门球员图片</h1>\r\n                    <button class=\"button is-primary\" @click=\"onUpload\">打开本地图片</button>\r\n                    <button class=\"button is-primary\" @click=\"onCrop(player_id)\">裁切上传</button>\r\n                    <input type=\"file\" class=\"sr-only\" id=\"input\" name=\"image\" @change='onImgLoaded' accept=\"image/*\" hidden>\r\n                    <div class='result'></div>\r\n                    <img id=\"imgToDownload\" style=\"max-width: 100%;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"panel\" style=\"width:250px;\">\r\n            <p class=\"panel-heading\">\r\n                预览\r\n            </p>\r\n            <div v-if='playerInEdit'>\r\n                <label style=\"font-size: 30px;\">{{ playerInEdit.player_id+playerInEdit.live_name}}</label>\r\n                <div class=\"preview\" style=\"width: 100px;\"></div>\r\n                <textarea v-model=\"playerInEdit.brief\" name=\"\" id=\"\" width=\"350\" height=\"150\"></textarea>\r\n                <input type=\"text\" v-model=\"playerInEdit.tag1\" style=\"width: 100px;\">\r\n                <input type=\"text\" v-model=\"playerInEdit.tag2\" style=\"width: 100px;\">\r\n                <br> level:\r\n                <input type=\"text\" v-model=\"playerInEdit.level\" style=\"width: 50px;\">1-6 S+ S A+ A B C\r\n                <br> <button class=\"button is-primary\" @click=\"onEditPlayer(player_id)\">更新</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div v-if='actTab==\"tab3\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <GameAdmin/>\r\n    </div>\r\n    <div v-if='actTab==\"tab4\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <Pick/>\r\n    </div>\r\n    <div v-if='actTab==\"tab5\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <WorldWar/>\r\n    </div>\r\n    <div v-if='actTab==\"tab6\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <ScoreRankAdmin/>\r\n    </div>\r\n</div>";
+	module.exports = "<div class=\"container\">\r\n    game id: <input type=\"text\" v-model=\"game_id_input\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onGetPlayerList(game_id_input)\">获取球员列表</button>\r\n    <button class=\"button is-primary\" @click=\"onGetPlayerList(8090)\">获取球员列表8090</button>\r\n    <hr>\r\n    <span class=\"select\">\r\n            <select v-model=\"selected\" @change=\"onSelectGame\">\r\n                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                    {{ option.text }}\r\n                </option>\r\n            </select>\r\n        </span>\r\n    <input type=\"file\" id=\"files\" accept=\"*.json\" hidden>\r\n    <input type=\"text\" v-model=\"vsPlayer\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onInitGame\">初始比赛</button>\r\n    <button class=\"button is-primary\" @click=\"onCreateGame\">创建比赛</button>\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onFile\">打开配置</button>\r\n    <button class=\"button is-primary\" id=\"reloadFile\" @click=\"reloadFile\">reload</button>\r\n\r\n    <br>\r\n\r\n    <div style=\"width: 900px;\">\r\n        <br> score rank:\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(true)\">show</button>\r\n        <button class=\"button is-primary\" @click=\"onReloadShow()\">reload show</button>\r\n        <button class=\"button is-primary\" @click=\"onSetPlayerDeactive()\">set player deactive</button>\r\n        <button class=\"button is-primary\" @click=\"onShowScoreRank(false)\">hide</button>\r\n        <br>\r\n        <br>抢五比分 rank5 playerId\r\n        <button class=\"button is-primary\" @click=\"onGetRank5Player()\">获取球员</button> -----------发送抢五胜出球员到APP\r\n        <div v-for=\"(p, index) in rank5PlayerArr\" :key=\"p.name\">\r\n            <button class=\"button is-primary\" @click=\"onUpdateRank5Score(p.playerId,p.score)\">{{p.name}}</button>\r\n            <input type=\"text\" v-model=\"p.score\" style=\"width: 100px;\"> =============>\r\n            <button class=\"button is-primary\" @click=\"onSendRank5Winner(p.playerId)\">{{p.name+p.playerId}}</button>\r\n            <br>\r\n        </div>\r\n        <br>\r\n        <button class=\"button\" @click=\"onEmitBracket(actTab)\">emit bracket rec</button>\r\n        <br>\r\n        <div class=\"tabs  is-boxed\">\r\n            <ul>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                    <a>\r\n                        <span>picker</span>\r\n                    </a>\r\n                </li>\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab3'}\" @click='tab(\"tab3\")'>\r\n                    <a>\r\n                        <span>rec</span>\r\n                    </a>\r\n                </li>\r\n\r\n                <li v-bind:class=\"{ 'is-active': actTab== 'tab6'}\" @click='tab(\"tab6\")'>\r\n                    <a>\r\n                        <span>rank 16</span>\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div v-if='actTab==\"tab1\"' class=\"level\">\r\n            <div class=\"level-left\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in blueArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(true,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n            <div class=\"level-right\">\r\n                <ul style=\"width:400px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n                    <li style=\"float:left;width:130px;padding:5px\" v-for=\"player in redArr\">\r\n                        <button class=\"button is-primary\" @click=\"onChangePlayer(false,player.playerId)\">{{player.name}}</button>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n        <div v-if='actTab==\"tab3\"' style=\"overflow-y: scroll;height: 800px;\">\r\n            <button class=\"button\" @click=\"onEmitBracket(actTab)\">emit bracket rec</button>\r\n            <button class=\"button is-primary\" @click=\"onPostGame(selGameIdx)\">发送赛果到APP</button>\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                        <th>L player</th>\r\n                        <th>score</th>\r\n                        <th>R player</th>\r\n                        <th>operation</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==selGameIdx?'is-selected':'']\">\r\n                        <th><a @click=\"setGameIdx(rec.gameIdx,rec.player)\">#####{{rec.gameIdx}} {{rec.isGroup}}</a></th>\r\n                        <td> {{rec.name[0]}} </td>\r\n                        <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                        <td> {{rec.name[1]}} </td>\r\n                        <td>\r\n                            <div class=\"control\" v-if=\"rec.gameIdx==selGameIdx\">\r\n                                <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                                <button class=\"button btn-setScore\" @click=\"onSetScore(rec.gameIdx)\">修改比分</button>\r\n                                <button class=\"button btn-setScore\" @click=\"onSetVsPlayer(rec.gameIdx,vsPlayer)\">修改对阵</button>\r\n                                <button class=\"button btn-setScore\" @click=\"onSetGameEnd(rec.gameIdx)\">设置比赛结束</button>\r\n                            </div>\r\n                        </td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n            <button class=\"button is-danger\" @click=\"onInitDoc\">init doc</button>\r\n        </div>\r\n        {{p1WinMap}}\r\n    </div>\r\n</div>";
 
 /***/ },
 /* 44 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"container\">\r\n    <div class=\"tabs  is-boxed\">\r\n        <ul>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab1'}\" @click='tab(\"tab1\")'>\r\n                <a>\r\n                    <span>home</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab2'}\" @click='tab(\"tab2\")'>\r\n                <a>\r\n                    <span>热门球员编辑</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab3'}\" @click='tab(\"tab3\")'>\r\n                <a>\r\n                    <span>自定义比赛</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab5'}\" @click='tab(\"tab5\")'>\r\n                <a>\r\n                    <span>国战</span>\r\n                </a>\r\n            </li>\r\n            <li v-bind:class=\"{ 'is-active': actTab== 'tab6'}\" @click='tab(\"tab6\")'>\r\n                <a>\r\n                    <span>冠军排位赛</span>\r\n                </a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n    <div v-if='actTab==\"tab1\"'>\r\n        <nav class=\"panel\">\r\n            <p class=\"panel-heading\">\r\n                直播面板op入口 Game ID: {{ selected }}\r\n                <span class=\"select\">\r\n                            <select v-model=\"selected\">\r\n                                <option v-for=\"option in options\" v-bind:value=\"option.value\">\r\n                                    {{ option.text }}\r\n                                </option>\r\n                            </select>\r\n                        </span>\r\n            </p>\r\n            <div v-for=\"link in links\">\r\n                <a class=\"panel-block\" :href=\"link.url\" target=\"_blank\">\r\n                    <span class=\"panel-icon\">\r\n                        <i class=\"fa fa-book\"></i>\r\n                        </span> {{link.url}}\r\n                    <br> {{link.title}}\r\n                </a>\r\n                <!--<button class=\"button\">复制地址</button>-->\r\n            </div>\r\n            <!-- <div>\r\n                抽奖id（编号）:<input type=\"text\" v-model=\"lotteryId\" style=\"width: 60px\"> 次序k:\r\n                <input type=\"text\" v-model=\"lotteryIdx\" style=\"width: 60px\">\r\n                <a v-if='lotteryId&&lotteryIdx' class=\"panel-block\" :href=\"'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx\" target=\"_blank\">\r\n                           {{'/panel/#/ol/ob/0?panel=cj&id='+lotteryId+'&k='+lotteryIdx}}\r\n                        </a>\r\n            </div> -->\r\n\r\n            <p>\r\n                command:\r\n                <br> /game/bracket/clear\r\n                <br>/game/clear/bracketIdx\r\n                <br>/git/pull\r\n        </nav>\r\n        播放地址:<input type=\"text\" v-model=\"playUrl\" style=\"width: 1000px\">\r\n        <p>\r\n            推流地址:<input type=\"text\" v-model=\"rmtpUrl\" style=\"width: 1000px\">\r\n            <p>\r\n                播放地址2:<input type=\"text\" v-model=\"playUrl2\" style=\"width: 1000px\">\r\n                <p>\r\n                    推流地址2:<input type=\"text\" v-model=\"rmtpUrl2\" style=\"width: 1000px\">\r\n                    <!-- <p>\r\n                        <button class=\"button is-primary\" @click=\"onClkQRCode\">生成IOS二维码</button> {{iosParam | json}}\r\n                        <div id=\"qrcode\"></div> -->\r\n    </div>\r\n\r\n    <div v-if='actTab==\"tab2\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <div class=\"panel\" style=\"width: 500px;\">\r\n            <p class=\"panel-heading\">\r\n                亮了网后台数据导入8090\r\n            </p>\r\n            球员编号player_id\r\n            <input type=\"text\" v-model=\"player_id\" style=\"width: 100px;\">\r\n            <button class=\"button is-primary\" @click=\"onViewPlayer(player_id)\">查看亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onSyncPlayerToStrapi(player_id)\">导入亮了网球员</button>\r\n            <button class=\"button is-primary\" @click=\"onPullPlayerData(player_id)\">编辑8090球员</button>\r\n            <!-- <input type=\"text\" v-model=\"playerArrStr\" style=\"width: 150px;\">\r\n            <button class=\"button is-primary\" @click=\"onSetStarPlayer(playerArrStr)\">设定热门球员</button> -->\r\n            <div v-if='playerInEdit'>\r\n                <div class=\"container\" style=\"height: 700px\">\r\n                    <h1>上传热门球员图片</h1>\r\n                    <button class=\"button is-primary\" @click=\"onUpload\">打开本地图片</button>\r\n                    <button class=\"button is-primary\" @click=\"onCrop(player_id)\">裁切上传</button>\r\n                    <input type=\"file\" class=\"sr-only\" id=\"input\" name=\"image\" @change='onImgLoaded' accept=\"image/*\" hidden>\r\n                    <div class='result'></div>\r\n                    <img id=\"imgToDownload\" style=\"max-width: 100%;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"panel\" style=\"width:250px;\">\r\n            <p class=\"panel-heading\">\r\n                预览\r\n            </p>\r\n            <div v-if='playerInEdit'>\r\n                <label style=\"font-size: 30px;\">{{ playerInEdit.player_id+playerInEdit.live_name}}</label>\r\n                <div class=\"preview\" style=\"width: 100px;\"></div>\r\n                <textarea v-model=\"playerInEdit.brief\" name=\"\" id=\"\" width=\"350\" height=\"150\"></textarea>\r\n                <input type=\"text\" v-model=\"playerInEdit.tag1\" style=\"width: 100px;\">\r\n                <input type=\"text\" v-model=\"playerInEdit.tag2\" style=\"width: 100px;\">\r\n                <br> level:\r\n                <input type=\"text\" v-model=\"playerInEdit.level\" style=\"width: 50px;\">1-6 S+ S A+ A B C\r\n                <br> <button class=\"button is-primary\" @click=\"onEditPlayer(player_id)\">更新</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div v-if='actTab==\"tab3\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <GameAdmin/>\r\n    </div>\r\n    <div v-if='actTab==\"tab4\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <Pick/>\r\n    </div>\r\n    <div v-if='actTab==\"tab5\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <WorldWar/>\r\n    </div>\r\n    <div v-if='actTab==\"tab6\"' class=\"ctn2\" style=\"display: inline-flex;\">\r\n        <ScoreRankAdmin/>\r\n    </div>\r\n</div>";
+
+/***/ },
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4145,7 +4173,7 @@
 	    __extends(_CommonGameAdmin, _super);
 	    function _CommonGameAdmin() {
 	        _super.call(this);
-	        this.template = __webpack_require__(45);
+	        this.template = __webpack_require__(46);
 	        this.timeInSec = VueBase_1.VueBase.PROP;
 	        this.buzzerTimeInSec = VueBase_1.VueBase.PROP;
 	        this.updateTime = VueBase_1.VueBase.PROP;
@@ -4283,13 +4311,13 @@
 
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"container\">\r\n    <a href=\"/panel/#/com\">计分板面板地址</a>\r\n    <table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n        <thead>\r\n        </thead>\r\n        <tbody>\r\n            <tr>\r\n                <th>\r\n                    <div hidden>{{updateTime}}</div>\r\n                </th>\r\n                <th>\r\n                    <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n                </th>\r\n                <th>蓝方球员</th>\r\n                <th> </th>\r\n                <th>红方球员</th>\r\n                <th>\r\n                </th>\r\n            </tr>\r\n            <tr>\r\n                <th style=\"font-size:25px;\">\r\n                    比分\r\n                    <a @click=\"onResetScore\"> 重置</a>\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n                </th>\r\n                <th>\r\n                    {{baseGame.lName}}\r\n                </th>\r\n                <th style=\"font-size:40px;\">\r\n                    <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n                </th>\r\n                <th>\r\n                    {{baseGame.rName}}\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n                </th>\r\n            </tr>\r\n            <tr>\r\n                <th style=\"font-size:25px;\">犯规\r\n                    <a @click=\"onResetFoul\"> 重置</a>\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n                </th>\r\n                <th>\r\n                    -\r\n                </th>\r\n                <th>\r\n                    <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n                </th>\r\n                <th>\r\n                    -\r\n                </th>\r\n                <th>\r\n                    <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                    <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n                </th>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n    <div style=\"font-size:30px;\">\r\n        比赛时间设置:<input class=\"input\" @keyup.enter=\"onSetTimerEvent('setting',timeInSec)\" v-model=\"timeInSec\" type=\"text\" style=\"width: 100px;\">\r\n        <!-- <a @click=\"onSetTimerEvent('start')\">开始  </a>\r\n        <a @click=\"onSetTimerEvent('pause')\">暂停  </a> -->\r\n        <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n        <a @click=\"onSetTimerEvent('setting','20-0')\">reset</a> 分钟-秒数 时间格式\"7-0\"，大于60秒不要加\".\"\"\r\n        <hr> 进攻时间设置:\r\n        <input class=\"input\" v-model=\"buzzerTimeInSec\" @keyup.enter=\"onSetBuzzer(buzzerTimeInSec)\" type=\"text\" style=\"width: 100px;\">\r\n        <a @click=\"onSetBuzzer(buzzerTimeInSec)\">设置</a>\r\n        <a @click=\"onSyncBuzzer()\">同步进攻时间</a>\r\n        <a @click=\"resetBuzzer\">reset</a>\r\n        <input id=\"buzzer\" maxlength=\"1\" class=\"input\" type=\"text\" style=\"width: 60px;\"> q 复位并暂停/开始 进攻时间 r复位进攻时间 空格暂停/开始比赛时间和进攻时间\r\n    </div>\r\n</div>";
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4317,7 +4345,7 @@
 	    __extends(_PickTeamAdmin, _super);
 	    function _PickTeamAdmin() {
 	        _super.call(this);
-	        this.template = __webpack_require__(47);
+	        this.template = __webpack_require__(48);
 	        this.teamArr1 = VueBase_1.VueBase.PROP;
 	        this.teamArr2 = VueBase_1.VueBase.PROP;
 	        this.teamArr3 = VueBase_1.VueBase.PROP;
@@ -4564,110 +4592,10 @@
 
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"container\">\r\n    <a href=\"/panel/#/lowerthird\">面板地址</a>\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onShowLowerThird({},false)\">隐藏人名条</button>\r\n    <!-- <button class=\"button is-primary\" @click=\"onUpdatePlayerMap()\">更新球员名单</button> -->\r\n    <div style=\"\">\r\n        MC双人人名条：\r\n        <button style=\"margin:5px;\" v-if=\"btn.type==1\" v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n        <br> 单人人名条：\r\n        <button style=\"margin:5px;\" v-if=\"btn.type==2\" v-for=\"(btn,index) in conf\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n        <br> 球员：\r\n        <table class=\"table is-striped is-bordered\" style=\"font-size:20px;\">\r\n            <thead>\r\n                <tr>\r\n                    <th>#1</th>\r\n                    <th>#2</th>\r\n                    <th>#3</th>\r\n                    <th>#4</th>\r\n                    <th>#5</th>\r\n                    <th>#6</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr>\r\n                    <th v-if='index<6' v-for=\"(btn,index) in confType2_playerMap\" :key=\"btn\">\r\n                        <a @click=\"onSetPlayer(btn,true)\">{{btn.player.name}}- {{btn.player.player_id}}</a>\r\n                    </th>\r\n                </tr>\r\n                <tr>\r\n                    <th v-if='index<12&&6<=index' v-for=\"(btn,index) in confType2_playerMap\" :key=\"btn\">\r\n                        <a @click=\"onSetPlayer(btn,true)\">{{btn.player.name}}- {{btn.player.player_id}}</a>\r\n                    </th>\r\n                </tr>\r\n                <tr>\r\n                    <th v-if='index<18&&12<=index' v-for=\"(btn,index) in confType2_playerMap\" :key=\"btn\">\r\n                        <a @click=\"onSetPlayer(btn,true)\">{{btn.player.name}}- {{btn.player.player_id}}</a>\r\n                    </th>\r\n                </tr>\r\n                <tr>\r\n                    <th v-if='index<24&&18<=index' v-for=\"(btn,index) in confType2_playerMap\" :key=\"btn\">\r\n                        <a @click=\"onSetPlayer(btn,true)\">{{btn.player.name}}- {{btn.player.player_id}}</a>\r\n                    </th>\r\n                </tr>\r\n                <tr>\r\n                    <th v-if='index<30&&24<=index' v-for=\"(btn,index) in confType2_playerMap\" :key=\"btn\">\r\n                        <a @click=\"onSetPlayer(btn,true)\">{{btn.player.name}}- {{btn.player.player_id}}</a>\r\n                    </th>\r\n                </tr>\r\n            </tbody>\r\n\r\n        </table>\r\n        <br>选中球员： {{selected_player.player.name|'-'}}\r\n        <br>\r\n        <button class=\"button is-primary\" @click=\"onShowSelectedPlayerType(2)\">只显示球员名字</button>\r\n        <button class=\"button is-primary\" @click=\"onShowSelectedPlayerType(4)\">只显示球员简介</button>\r\n        <br>\r\n        <br><input type=\"text\" v-model=\"lowerthirdText\" style=\"width: 200px;\">\r\n        <button class=\"button is-primary\" @click=\"onShowLowerThirdCustom(lowerthirdText,2)\">自定义人名条内容（12个汉字最多）</button>\r\n    </div>\r\n    <br>\r\n    <br>\r\n\r\n    <div style=\"width:680px\">\r\n        球员简介，环节简介：(图标 标题 内容)\r\n        <button style=\"margin:5px;\" v-for=\"(btn,index) in confType4\" :key=\"index\" class=\"button is-primary\" @click=\"onShowLowerThird(btn,true)\">{{btn.button}} </button>\r\n    </div>\r\n    <hr>\r\n    <!-- <button class=\"button is-primary\" @click=\"onShowWW3PlayerInfo({},true)\">显示比分面板球员信息</button>\r\n    <button class=\"button is-primary\" @click=\"onShowWW3PlayerInfo({},false)\">隐藏</button> -->\r\n    <br>\r\n    <br>\r\n    <button class=\"button is-primary\" @click=\"onShowLeftImage(true)\">显示二维码</button>\r\n    <button class=\"button is-primary\" @click=\"onShowLeftImage(false)\">隐藏</button>\r\n\r\n    <!-- <button class=\"button is-primary\" @click=\"onShowPick(false)\">hide选人</button>\r\n    <button class=\"button is-primary\" @click=\"onShowPick(true)\">emit选人</button> -->\r\n    <!-- <div style=\"display: inline-flex\">\r\n        队长：\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team1_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team2_4\" style=\"width: 180px;\">\r\n        </ul>\r\n        <ul style=\"width:200px;overflow:hidden;zoom:1;border:1px solid #ccc\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_1\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_2\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_3\" style=\"width: 180px;\">\r\n            <input class=\"input\" type=\"text\" v-model=\"team3_4\" style=\"width: 180px;\">\r\n        </ul>\r\n    </div> -->\r\n    <!-- <br>\r\n    <br> -->\r\n    <!-- <button class=\"button is-primary\" @click=\"onSetColor()\">emit 颜色</button> -->\r\n    <!-- <div class=\"select\">\r\n        <select v-model=\"colorArr[0]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[1]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div>\r\n    <div class=\"select\">\r\n        <select v-model=\"colorArr[2]\">\r\n          <option>红</option>\r\n          <option>白</option>\r\n          <option>绿</option>\r\n        </select>\r\n    </div> -->\r\n</div>";
-
-/***/ },
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */,
-/* 58 */,
-/* 59 */,
-/* 60 */,
-/* 61 */,
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */,
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */,
-/* 71 */,
-/* 72 */,
-/* 73 */,
-/* 74 */,
-/* 75 */,
-/* 76 */,
-/* 77 */,
-/* 78 */,
-/* 79 */,
-/* 80 */,
-/* 81 */,
-/* 82 */,
-/* 83 */,
-/* 84 */,
-/* 85 */,
-/* 86 */,
-/* 87 */,
-/* 88 */,
-/* 89 */,
-/* 90 */,
-/* 91 */,
-/* 92 */,
-/* 93 */,
-/* 94 */,
-/* 95 */,
-/* 96 */,
-/* 97 */,
-/* 98 */,
-/* 99 */,
-/* 100 */,
-/* 101 */,
-/* 102 */,
-/* 103 */,
-/* 104 */,
-/* 105 */,
-/* 106 */,
-/* 107 */,
-/* 108 */,
-/* 109 */,
-/* 110 */,
-/* 111 */,
-/* 112 */,
-/* 113 */,
-/* 114 */,
-/* 115 */,
-/* 116 */,
-/* 117 */,
-/* 118 */,
-/* 119 */,
-/* 120 */,
-/* 121 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var HupuAPI_1 = __webpack_require__(24);
-	var JsFunc_1 = __webpack_require__(21);
-	var Champion8090 = (function () {
-	    function Champion8090() {
-	    }
-	    Champion8090.prototype.get_player_list = function (callback) {
-	        var _this = this;
-	        HupuAPI_1.getPlayerMap(function (data) {
-	            _this.player_map = JsFunc_1.arrToMap(data.player_all, 'player_id');
-	            for (var k in _this.player_map) {
-	                var p = _this.player_map[k];
-	                p.playerId = p.player_id;
-	            }
-	            console.log('get player list', _this.player_map);
-	            callback(_this.player_map);
-	        });
-	    };
-	    return Champion8090;
-	}());
-	exports.Champion8090 = Champion8090;
-
 
 /***/ }
 /******/ ]);
