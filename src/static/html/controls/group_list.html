@@ -30,7 +30,7 @@
 <body>
     <div id='app'>
         <div style="overflow: scroll;height: 600px;">
-            group matchs
+            [小组赛阶段]<br>
             <button class="button" @click="onSyncGameRec()">更新小组数据到投屏</button>
             <table class="table is-striped is-bordered" style="font-size:20px;">
                 <thead>
@@ -68,6 +68,9 @@
             </table>
         </div>
         <div style="overflow: scroll;height: 800px;">
+            [淘汰赛阶段]<br>
+            <button class="button" @click="onSyncFinalGameRec('page2')">更新淘汰赛数据到投屏</button>
+            <button class="button" @click="onSyncFinalGameRec('page3')">更新决赛数据到投屏</button>
             <table class="table is-striped is-bordered" style="font-size:20px;">
                 <thead>
                     <tr>

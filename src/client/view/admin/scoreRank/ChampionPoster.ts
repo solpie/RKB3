@@ -20,7 +20,6 @@ export class ChampionPoster {
         let player_id_arr = rec.player
         let score_arr = rec.score
         let foul_arr = [0, 0]//todo
-
         console.log('rec', rec)
         console.log('player_id_arr', player_id_arr)
         console.log('post rec', this.player_map)
@@ -34,6 +33,7 @@ export class ChampionPoster {
         else {
             result_flag = 1
         }
+        
         // escape
         let data = {
             "action": "match",
