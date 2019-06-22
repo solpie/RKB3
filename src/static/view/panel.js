@@ -11331,6 +11331,9 @@
 	        this.score = l;
 	    }
 	    Row1.prototype.setData = function (data) {
+	        if (data.name == "我也不知道要弄什么名字") {
+	            data.name = "朱先生";
+	        }
 	        this.playerName.text = data.name;
 	        BracketGroup_1.fitWidth(this.playerName, 300, 50);
 	        this.winLose.setText(data.win + '/' + data.lose)

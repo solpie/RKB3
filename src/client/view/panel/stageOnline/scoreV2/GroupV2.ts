@@ -34,6 +34,9 @@ export class Row1 extends PIXI.Container {
         this.score = l
     }
     setData(data) {
+        if (data.name == "我也不知道要弄什么名字") {
+            data.name="朱先生"
+         }
         this.playerName.text = data.name
         fitWidth(this.playerName, 300, 50)
 
