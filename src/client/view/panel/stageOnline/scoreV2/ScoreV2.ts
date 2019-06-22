@@ -248,6 +248,9 @@ export class ScoreV2 extends PIXI.Container {
     setRightPlayer(rPlayer) {
         this.rTitle.setText(rPlayer.title)
             .setAlignCenter(_c(208))
+            if (rPlayer.name == "我也不知道要弄什么名字") {
+                rPlayer.name="朱先生"
+             }
         this.rName.setText(rPlayer.name)
             .setLimitWidth(260, 40)
             .setAlignCenter(_c(315))
@@ -265,7 +268,9 @@ export class ScoreV2 extends PIXI.Container {
     setLeftPlayer(lPlayer) {
         this.lTitle.setText(lPlayer.title)
             .setAlignCenter(_c(-208))
-
+        if (lPlayer.name == "我也不知道要弄什么名字") {
+            lPlayer.name="朱先生"
+         }
         this.lName.setText(lPlayer.name)
             .setLimitWidth(260, 40)
             .setAlignCenter(_c(-315))

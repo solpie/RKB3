@@ -11155,6 +11155,9 @@
 	    ScoreV2.prototype.setRightPlayer = function (rPlayer) {
 	        this.rTitle.setText(rPlayer.title)
 	            .setAlignCenter(PixiEx_1._c(208));
+	        if (rPlayer.name == "我也不知道要弄什么名字") {
+	            rPlayer.name = "朱先生";
+	        }
 	        this.rName.setText(rPlayer.name)
 	            .setLimitWidth(260, 40)
 	            .setAlignCenter(PixiEx_1._c(315));
@@ -11170,6 +11173,9 @@
 	    ScoreV2.prototype.setLeftPlayer = function (lPlayer) {
 	        this.lTitle.setText(lPlayer.title)
 	            .setAlignCenter(PixiEx_1._c(-208));
+	        if (lPlayer.name == "我也不知道要弄什么名字") {
+	            lPlayer.name = "朱先生";
+	        }
 	        this.lName.setText(lPlayer.name)
 	            .setLimitWidth(260, 40)
 	            .setAlignCenter(PixiEx_1._c(-315));
