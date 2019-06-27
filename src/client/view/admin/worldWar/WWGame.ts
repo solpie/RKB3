@@ -141,7 +141,7 @@ export class WWGame extends EventDispatcher {
     syncDoc(data => {
       let doc = data.doc;
       doc['timeOut'] = data1
-      this.emit(WWGame.InitDocView, doc);
+      // this.emit(WWGame.InitDocView, doc);
     }, true);
   }
   clearGameRec(doc?, playerMap?) {

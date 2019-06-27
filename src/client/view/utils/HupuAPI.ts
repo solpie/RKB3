@@ -261,6 +261,14 @@ export function getPlayerMap(callback) {
     });
 }
 
+export function getPlayer2(callback) {
+    let docUrl = 'http://rtmp.icassi.us:8090/player2'
+    $.get(docUrl, res => {
+        if (res.length) callback(res);
+        else callback(null);
+    });
+}
+
 export function syncWorldWarPanel3(cb, isSave = false) {
     let docUrl = "http://rtmp.icassi.us:8090/panel/?pid=ww3"
     const getDoc = callback => {
@@ -341,4 +349,10 @@ export function post_champion_rec(data, callback) {
 export function post_champion_rank5(data, callback) {
     let url_post = 'http://test.liangle.com/api/passerbyking/champion/game/match'
     $post(proxy(url_post), data, callback)
+}
+
+//base score
+export function update_base_score(data, callback) {
+    let url = 'http://rtmp.icassi.us:8090/basescore/5d12db245f2be80378b38782'
+    _put(url, data, callback)
 }

@@ -1,6 +1,6 @@
 import { CommandId } from '../../Command';
 import { PanelId } from '../../const';
-import { update_event_data } from '../../utils/HupuAPI';
+import { update_event_data, update_base_score } from '../../utils/HupuAPI';
 import { clone, descendingProp, mapToArr } from '../../utils/JsFunc';
 import { VueBase } from '../../utils/VueBase';
 import { buildRec, newBracketRec1, newBracketRec2, newBracketRec3, newBracketRecFinal, rank16, create_game_rec, get_rank5_player, get_now_sec_1970 } from './bracketRec';
@@ -379,14 +379,15 @@ class _ScoreRankAdmin extends VueBase {
             // cs_initGame
             let playerMap = this.gameConf.playerMap
             // let recArr = this.gameConf.rec
-
             let a = this.vsPlayer.split(' ')
             let p1 = a[0]
             let p2 = a[1]
             p1 = playerMap[p1]
             p2 = playerMap[p2]
-            p1.avatar = this.gameConf.avatarUrlBase + p1.playerId + '.png'
-            p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png'
+            if (!p1.avatar)
+                p1.avatar = this.gameConf.avatarUrlBase + p1.playerId + '.png'
+            if (!p2.avatar)
+                p2.avatar = this.gameConf.avatarUrlBase + p2.playerId + '.png'
             this.lPlayer = p1
             this.rPlayer = p2
             opReq(CommandId.cs_setPlayer, {
@@ -394,6 +395,21 @@ class _ScoreRankAdmin extends VueBase {
                 isRestFoul: true,
                 foulToHint: this.gameConf.foulToHint,
                 isRestTeamScore: true
+            })
+            update_base_score({
+                player_L: p1.name,
+                avatar_L: p1.avatar,
+                title_L: p1.title,
+                height_L: p1.height+' CM',
+                weight_L: p1.weight + ' KG',
+                
+                player_R: p2.name,
+                avatar_R: p2.avatar,
+                title_R: p2.title,
+                height_R: p2.height+' CM',
+                weight_R: p2.weight+' KG',
+            }, _ => {
+                console.log(_)
             })
         },
         onSetPlayerDeactive() {
@@ -458,7 +474,6 @@ class _ScoreRankAdmin extends VueBase {
                         scoreFxItem.scoreFx = scoreFx
                         scoreFxItem.isSmall = false
                         opReq(`${CommandId.cs_updateScore}`, { score: scoreFxItem.score, isLeft: false })
-
                     }
                     scoreArr.push(scoreFxItem)
                 }

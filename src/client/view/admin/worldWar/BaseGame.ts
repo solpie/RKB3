@@ -1,6 +1,7 @@
 import { VueBase } from "../../utils/VueBase";
 import { PanelId } from "../../const";
 import { CommandId } from "../../Command";
+import { update_base_score } from '../../utils/HupuAPI';
 let opReq = (cmdId: string, param: any) => {
   param._ = null;
   $.ajax({
@@ -21,6 +22,8 @@ export class BaseGame {
   lPlayerId: string = "";
   rPlayerId: string = "";
   constructor() { }
+
+  foul_to_hint = 4//final 5
 }
 const baseGame = new BaseGame();
 declare let $;
@@ -58,6 +61,8 @@ export class _baseGameView extends VueBase {
       console.log("lname", val);
     }
   };
+
+
   methods = {
     onSetTimerEvent(event, param?) {
       if (event == 'setting') {
@@ -96,14 +101,29 @@ export class _baseGameView extends VueBase {
         lScore: baseGame.lScore, rScore: baseGame.rScore,
         lPlayer: baseGame.lPlayerId, rPlayer: baseGame.rPlayerId
       });
+      update_base_score({ score_L: baseGame.lScore, score_R: baseGame.rScore }, _ => {
+        console.log(_)
+      })
       this.vueUpdate();
     },
+
     onSetFoul(isLeft, dtFoul) {
       isLeft ? (baseGame.lFoul += dtFoul) : (baseGame.rFoul += dtFoul);
       opReq(CommandId.cs_setFoul, {
         lFoul: baseGame.lFoul,
         rFoul: baseGame.rFoul
       });
+      // let hint_L, hint_R;
+      let hint_L = baseGame.lFoul >= baseGame.foul_to_hint ? 1 : 0;
+      let hint_R = baseGame.rFoul >= baseGame.foul_to_hint ? 1 : 0;
+      update_base_score({
+        hint_L: hint_L,
+        hint_R: hint_R,
+        foul_L: baseGame.lFoul,
+        foul_R: baseGame.rFoul
+      }, _ => {
+        console.log(_)
+      })
       this.vueUpdate();
     },
     onResetFoul() {

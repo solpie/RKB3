@@ -248,7 +248,7 @@ class _worldWar extends VueBase {
       })
     },
     onShowKDA(v) {
-      this.emitKDA(v)
+      // this.emitKDA(v)
     },
     onSetScore(gameIdx) {
       let scoreStr = $("#scoreInput" + gameIdx).val();

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import requests
+import os
 import xdrlib
 import sys
 import codecs
@@ -15,13 +17,12 @@ def open_excel(file='player.xls'):
 # 根据索引获取Excel表格中的数据   参数:file：Excel文件路径     colnameindex：表头列名所在行的所以
 # ，by_index：表的索引
 
-import os
-
 
 def addToClipBoard(text):
     command = 'echo ' + text.strip() + '| clip'
     os.system(command)
 
+avatar_url = 'http://rtmp.icassi.us:8092/img/player/0602/'
 
 def excel_table_byindex(file='file.xls', num=0):
     data = open_excel(file)
@@ -36,6 +37,7 @@ def excel_table_byindex(file='file.xls', num=0):
     if num > 0:
         playerNum = num
     playerMap = {}
+    avatar_url = table.cell(29, 0).value
     for i in range(0, playerNum):
         n = table.cell(row + i, 0).value
         # hupuID = table.cell(1 + i, 1).value
@@ -61,15 +63,16 @@ def excel_table_byindex(file='file.xls', num=0):
     print(jstr)
     # print(plist_for_lowerthird)
     return playerMap
-import requests
 
 
 def uploadTo8090():
     player_url = 'http://rtmp.icassi.us:8090/player2/'
     res = requests.get(player_url)
     player_arr = res.json()
-    # print(player_arr)
+    print(player_arr)
     return player_arr
+
+
 
 
 def main():
@@ -84,16 +87,22 @@ def main():
     for p in player_arr:
         if p['player_id'] in playerMap:
             pdata = playerMap[p['player_id']]
-            p['name'] = pdata['name']
-            p['height'] = pdata['hwa'][0]
-            p['weight'] = pdata['hwa'][1]
-            p['age'] = pdata['hwa'][2]
-            p['title'] = pdata['title']
-            p['info'] = pdata['info']
-            put1_res = requests.put(putUrl + p['_id'], data=p)
-            print(p['name'], put1_res.status_code)
+            p2  = {}
+            p2['name'] = pdata['name']
+            p2['height'] = pdata['hwa'][0]
+            p2['weight'] = pdata['hwa'][1]
+            p2['age'] = pdata['hwa'][2]
+            p2['title'] = pdata['title']
+            p2['info'] = pdata['info']
+            p2['avatar'] = avatar_url+p['player_id']+'.png'
+            put1_res = requests.put(putUrl + p['_id'], data=p2)
+            if put1_res.status_code==200:
+                print(p['name'], put1_res.status_code)
+            else:
+                print(p['name'], put1_res.text)
     # for row in tables:
     #     print(row)
+
 
 if __name__ == "__main__":
     main()
