@@ -34,7 +34,7 @@
         <div v-for="(p, index) in rank5PlayerArr" :key="p.name">
             <button class="button is-primary" @click="onUpdateRank5Score(p.playerId,p.score)">{{p.name}}</button>
             <input type="text" v-model="p.score" style="width: 100px;"> =============>
-            <button class="button is-primary" @click="onSendRank5Winner(p.playerId)">{{p.name+p.playerId}}</button>
+            <!-- <button class="button is-primary" @click="onSendRank5Winner(p.playerId)">{{p.name+p.playerId}}</button> -->
             <br>
         </div>
         <br>
@@ -101,6 +101,7 @@
                                 <button class="button btn-setScore" @click="onSetScore(rec.gameIdx)">修改比分</button>
                                 <button class="button btn-setScore" @click="onSetVsPlayer(rec.gameIdx,vsPlayer)">修改对阵</button>
                                 <button class="button btn-setScore" @click="onSetGameEnd(rec.gameIdx)">设置比赛结束</button>
+                                <button class="button btn-setScore" @click="selPlayerOnRec(rec.player)">选择球员</button>
                             </div>
                         </td>
                     </tr>

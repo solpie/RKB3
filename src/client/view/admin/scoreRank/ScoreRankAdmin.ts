@@ -295,15 +295,7 @@ class _ScoreRankAdmin extends VueBase {
             this.onShowScoreRank(true, dtScore, isLeft)
             opReq(`${CommandId.cs_updateScore}`, { dtScore: dtScore, isLeft: isLeft })
         },
-        onSetVsPlayer(gameIdx, vsplayer) {
-            syncDoc(data => {
-                let doc = data.doc;
-                let game = doc.rec[gameIdx];
-                let a = vsplayer.split(' ')
-                if (game) game.player = a;
-                this.initGameRecTable(this.playerMap, data)
-            }, true);
-        },
+
         onSetGameEnd(gameIdx) {
             syncDoc(data => {
                 let doc = data.doc;
@@ -348,6 +340,9 @@ class _ScoreRankAdmin extends VueBase {
         },
         setGameIdx(gameIdx, playerIdArr) {
             this.selGameIdx = gameIdx
+           
+        },
+        selPlayerOnRec(playerIdArr) {
             this.vsPlayerArr[1] = playerIdArr[1]
             this.vsPlayerArr[0] = playerIdArr[0]
             this.vsPlayer = this.vsPlayerArr.join(" ")
@@ -368,6 +363,22 @@ class _ScoreRankAdmin extends VueBase {
                     this.initGameRecTable(this.playerMap, data)
                 }, true)
             }
+        },
+        onSetVsPlayer(gameIdx, vsplayer) {
+            syncDoc(data => {
+                let doc = data.doc;
+                let game = doc.rec[gameIdx];
+                console.log('onSetVsPlayer', vsplayer, game)
+                let a = vsplayer.split(' ')
+                if (game) {
+                    game.player = a;
+                    game.playerId = a;
+                    game.name = [
+                        this.playerMap[a[0]].name,
+                        this.playerMap[a[1]].name]
+                }
+                this.initGameRecTable(this.playerMap, { _id: data._id, doc: doc })
+            }, true);
         },
         onInitDoc() {
             syncDoc(data => {
@@ -400,14 +411,14 @@ class _ScoreRankAdmin extends VueBase {
                 player_L: p1.name,
                 avatar_L: p1.avatar,
                 title_L: p1.title,
-                height_L: p1.height+' CM',
+                height_L: p1.height + ' CM',
                 weight_L: p1.weight + ' KG',
-                
+
                 player_R: p2.name,
                 avatar_R: p2.avatar,
                 title_R: p2.title,
-                height_R: p2.height+' CM',
-                weight_R: p2.weight+' KG',
+                height_R: p2.height + ' CM',
+                weight_R: p2.weight + ' KG',
             }, _ => {
                 console.log(_)
             })

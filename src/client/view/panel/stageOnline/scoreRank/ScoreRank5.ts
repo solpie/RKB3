@@ -89,7 +89,6 @@ class ScoreRank5 extends BasePanel {
                     player.avt.x = 760 + (i - 1) * 175
                     player.avt.y = 800 + 132
                 }
-
                 // player.avt.alpha = .5
                 // this.addChild(player.avt)
                 avtCtn.addChild(player.avt)
