@@ -2923,6 +2923,23 @@
 	                    }
 	                }
 	                opReq(Command_1.CommandId.cs_timerEvent, { event: event, param: param });
+	                var event1 = event;
+	                if (event1.search('setting') > -1) {
+	                    event1 += (new Date).getTime();
+	                }
+	                if (event1.search('start') > -1) {
+	                    event1 += (new Date).getTime();
+	                }
+	                if (event1.search('pause') > -1) {
+	                    event1 += (new Date).getTime();
+	                }
+	                if (event.search('reset') > -1) {
+	                    event1 = 'setting' + (new Date).getTime();
+	                    param = 0;
+	                }
+	                HupuAPI_1.update_base_score({ timer_state: event1, timer_param: param }, function (_) {
+	                    console.log(_);
+	                });
 	            },
 	            onRestTeamScore: function () {
 	                this.lTeamScore = this.rTeamScore = 0;

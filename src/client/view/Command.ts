@@ -10,9 +10,6 @@ export const CommandId = {
     cs_updateScore: '',
     sc_updateScore: '',
 
-    // cs_updateScore: '',
-    // sc_updateScore: '',
-
     cs_updateRightScore: '',
     sc_updateRightScore: '',
     cs_addLeftScore: '',//1000010

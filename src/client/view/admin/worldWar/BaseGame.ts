@@ -71,7 +71,26 @@ export class _baseGameView extends VueBase {
           param = Number(a[0]) * 60 + Number(a[1])
         }
       }
+
       opReq(CommandId.cs_timerEvent, { event: event, param: param });
+      let event1: string = event
+      if (event1.search('setting') > -1) {
+        event1 += (new Date).getTime()
+      }
+      if (event1.search('start') > -1) {
+        event1 += (new Date).getTime()
+      }
+      if (event1.search('pause') > -1) {
+        event1 += (new Date).getTime()
+      }
+      if (event.search('reset') > -1) {
+        event1 = 'setting' + (new Date).getTime()
+        param = 0
+      }
+    
+      update_base_score({ timer_state: event1, timer_param: param }, _ => {
+        console.log(_)
+      })
     },
     onRestTeamScore() {
       this.lTeamScore = this.rTeamScore = 0

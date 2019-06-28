@@ -181,6 +181,7 @@ export class WWGame extends EventDispatcher {
       this.emit(WWGame.InitDocView, doc);
     }, true);
   }
+
   setTeamVsIdx(gameIdx, teamVsIdx) {
     syncDoc(data => {
       let doc = data.doc;
