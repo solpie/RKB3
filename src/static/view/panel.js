@@ -2542,6 +2542,10 @@
 	                baseGame.lFoul = 0;
 	                baseGame.rFoul = 0;
 	                this.vueUpdate();
+	                opReq(Command_1.CommandId.cs_setBlood, {
+	                    lFoul: baseGame.lFoul, rFoul: baseGame.rFoul,
+	                    lScore: baseGame.lScore, rScore: baseGame.rScore,
+	                });
 	                HupuAPI_1.update_base_score({
 	                    score_L: baseGame.lScore,
 	                    score_R: baseGame.rScore,
