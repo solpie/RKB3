@@ -2,6 +2,7 @@ import { VueBase } from "../../utils/VueBase";
 import { PanelId } from "../../const";
 import { CommandId } from "../../Command";
 import { update_base_score } from '../../utils/HupuAPI';
+import { get_now_sec_1970 } from "../scoreRank/bracketRec";
 let opReq = (cmdId: string, param: any) => {
   param._ = null;
   $.ajax({
@@ -87,7 +88,7 @@ export class _baseGameView extends VueBase {
         event1 = 'setting' + (new Date).getTime()
         param = 0
       }
-    
+
       update_base_score({ timer_state: event1, timer_param: param }, _ => {
         console.log(_)
       })
@@ -95,6 +96,22 @@ export class _baseGameView extends VueBase {
     onRestTeamScore() {
       this.lTeamScore = this.rTeamScore = 0
       opReq(CommandId.cs_teamScore, { lScore: this.lTeamScore, rScore: this.rTeamScore });
+    },
+    onResetGame() {
+      baseGame.lScore = 0
+      baseGame.rScore = 0
+      baseGame.lFoul = 0
+      baseGame.rFoul = 0
+      this.vueUpdate();
+      update_base_score({
+        score_L: baseGame.lScore
+        , score_R: baseGame.rScore
+        , foul_L: baseGame.lFoul
+        , foul_R: baseGame.rFoul
+        , timer_state: get_now_sec_1970(), timer_param: 0
+      }, _ => {
+        console.log(_)
+      })
     },
     onSetTeamScore(isLeft, dtScore) {
       // isLeft ? (baseGame.lScore += dtScore) : (baseGame.rScore += dtScore);

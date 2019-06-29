@@ -2874,6 +2874,7 @@
 	var const_1 = __webpack_require__(27);
 	var Command_1 = __webpack_require__(28);
 	var HupuAPI_1 = __webpack_require__(24);
+	var bracketRec_1 = __webpack_require__(40);
 	var opReq = function (cmdId, param) {
 	    param._ = null;
 	    $.ajax({
@@ -2944,6 +2945,22 @@
 	            onRestTeamScore: function () {
 	                this.lTeamScore = this.rTeamScore = 0;
 	                opReq(Command_1.CommandId.cs_teamScore, { lScore: this.lTeamScore, rScore: this.rTeamScore });
+	            },
+	            onResetGame: function () {
+	                baseGame.lScore = 0;
+	                baseGame.rScore = 0;
+	                baseGame.lFoul = 0;
+	                baseGame.rFoul = 0;
+	                this.vueUpdate();
+	                HupuAPI_1.update_base_score({
+	                    score_L: baseGame.lScore,
+	                    score_R: baseGame.rScore,
+	                    foul_L: baseGame.lFoul,
+	                    foul_R: baseGame.rFoul,
+	                    timer_state: bracketRec_1.get_now_sec_1970(), timer_param: 0
+	                }, function (_) {
+	                    console.log(_);
+	                });
 	            },
 	            onSetTeamScore: function (isLeft, dtScore) {
 	                opReq(Command_1.CommandId.cs_teamScore, { dtScore: dtScore, isLeft: isLeft });
@@ -3026,7 +3043,7 @@
 /* 35 */
 /***/ (function(module, exports) {
 
-	module.exports = "<table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n    <thead>\r\n    </thead>\r\n    <tbody>\r\n        <tr>\r\n            <th>\r\n                <div hidden>{{updateTime}}</div>\r\n                秒:<input class=\"input\" v-model=\"timeInSec\" type=\"text\" style=\"width: 100px;\">\r\n                <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n                <a @click=\"onSetTimerEvent('reset')\">reset</a>\r\n            </th>\r\n            <th>\r\n                <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n                <button class=\"button\" @click=\"onSetTeamScore(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetTeamScore(true,-1)\">-1</button>\r\n            </th>\r\n            <th>L player</th>\r\n            <th>score</th>\r\n            <th>R player</th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetTeamScore(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetTeamScore(false,-1)\">-1</button>\r\n                <button class=\"button\" @click=\"onRestTeamScore()\">resetScore</button>\r\n\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th style=\"font-size:25px;\">\r\n                <a @click=\"onSetTimerEvent('start')\">开始  </a><a @click=\"onSetTimerEvent('pause')\">暂停  </a>\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                {{baseGame.lName}}\r\n            </th>\r\n            <th style=\"font-size:40px;\">\r\n                <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n            </th>\r\n            <th>\r\n                {{baseGame.rName}}\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th style=\"font-size:25px;\">foul\r\n                <a @click=\"onResetFoul\"> 重置</a>\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n    </tbody>\r\n</table>";
+	module.exports = "<table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n    <thead>\r\n    </thead>\r\n    <tbody>\r\n        <tr>\r\n            <th>\r\n                <div hidden>{{updateTime}}</div>\r\n                秒:<input class=\"input\" v-model=\"timeInSec\" type=\"text\" style=\"width: 100px;\">\r\n                <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n                <a @click=\"onSetTimerEvent('reset')\">reset</a>\r\n            </th>\r\n            <th>\r\n                <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n                <button class=\"button\" @click=\"onSetTeamScore(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetTeamScore(true,-1)\">-1</button>\r\n            </th>\r\n            <th>L player</th>\r\n            <th>score</th>\r\n            <th>R player</th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetTeamScore(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetTeamScore(false,-1)\">-1</button>\r\n                <button class=\"button\" @click=\"onResetGame()\">resetGame</button>\r\n\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th style=\"font-size:25px;\">\r\n                <a @click=\"onSetTimerEvent('start')\">开始  </a><a @click=\"onSetTimerEvent('pause')\">暂停  </a>\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                {{baseGame.lName}}\r\n            </th>\r\n            <th style=\"font-size:40px;\">\r\n                <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n            </th>\r\n            <th>\r\n                {{baseGame.rName}}\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th style=\"font-size:25px;\">foul\r\n                <a @click=\"onResetFoul\"> 重置</a>\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n    </tbody>\r\n</table>";
 
 /***/ }),
 /* 36 */

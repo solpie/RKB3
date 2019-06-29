@@ -340,7 +340,6 @@ class _ScoreRankAdmin extends VueBase {
         },
         setGameIdx(gameIdx, playerIdArr) {
             this.selGameIdx = gameIdx
-           
         },
         selPlayerOnRec(playerIdArr) {
             this.vsPlayerArr[1] = playerIdArr[1]
