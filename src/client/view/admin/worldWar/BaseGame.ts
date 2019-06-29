@@ -107,6 +107,9 @@ export class _baseGameView extends VueBase {
         lFoul: baseGame.lFoul, rFoul: baseGame.rFoul,
         lScore: baseGame.lScore, rScore: baseGame.rScore,
       });
+      opReq(CommandId.cs_setFoul, {
+        lFoul: baseGame.lFoul, rFoul: baseGame.rFoul
+      });
       update_base_score({
         score_L: baseGame.lScore
         , score_R: baseGame.rScore

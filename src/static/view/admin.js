@@ -2956,6 +2956,9 @@
 	                    lFoul: baseGame.lFoul, rFoul: baseGame.rFoul,
 	                    lScore: baseGame.lScore, rScore: baseGame.rScore,
 	                });
+	                opReq(Command_1.CommandId.cs_setFoul, {
+	                    lFoul: baseGame.lFoul, rFoul: baseGame.rFoul
+	                });
 	                HupuAPI_1.update_base_score({
 	                    score_L: baseGame.lScore,
 	                    score_R: baseGame.rScore,
