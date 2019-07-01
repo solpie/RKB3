@@ -628,7 +628,7 @@
 	var GameAdmin_1 = __webpack_require__(26);
 	var Pick_1 = __webpack_require__(30);
 	var WorldWar_1 = __webpack_require__(32);
-	var ScoreRankAdmin_1 = __webpack_require__(39);
+	var ScoreRankAdmin_1 = __webpack_require__(40);
 	var cropper;
 	function getScorePanelUrl(gameId, isDark, isOb) {
 	    if (isOb === void 0) { isOb = true; }
@@ -2470,7 +2470,7 @@
 	var JsFunc_1 = __webpack_require__(21);
 	var VueBase_1 = __webpack_require__(22);
 	var BaseGame_1 = __webpack_require__(34);
-	var WWGame_1 = __webpack_require__(36);
+	var WWGame_1 = __webpack_require__(37);
 	var HupuAPI_1 = __webpack_require__(24);
 	var opReq = function (cmdId, param) {
 	    param._ = null;
@@ -2488,7 +2488,7 @@
 	    __extends(_worldWar, _super);
 	    function _worldWar() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(38);
+	        _this.template = __webpack_require__(39);
 	        _this.components = { BaseGame: BaseGame_1.BaseGameView };
 	        _this.vsPlayer = VueBase_1.VueBase.PROP;
 	        _this.vsPlayerArr = VueBase_1.VueBase.PROP;
@@ -2874,7 +2874,7 @@
 	var const_1 = __webpack_require__(27);
 	var Command_1 = __webpack_require__(28);
 	var HupuAPI_1 = __webpack_require__(24);
-	var bracketRec_1 = __webpack_require__(40);
+	var bracketRec_1 = __webpack_require__(35);
 	var opReq = function (cmdId, param) {
 	    param._ = null;
 	    $.ajax({
@@ -2905,7 +2905,7 @@
 	    __extends(_baseGameView, _super);
 	    function _baseGameView() {
 	        var _this = _super.call(this) || this;
-	        _this.template = __webpack_require__(35);
+	        _this.template = __webpack_require__(36);
 	        _this.timeInSec = VueBase_1.VueBase.PROP;
 	        _this.updateTime = VueBase_1.VueBase.PROP;
 	        _this.lTeamScore = VueBase_1.VueBase.PROP;
@@ -3048,12 +3048,287 @@
 
 /***/ }),
 /* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var JsFunc_1 = __webpack_require__(21);
+	var _p = function (x, y) {
+	    return 'left:' + x + 'px;' + 'top:' + y + 'px;';
+	};
+	function newBracketRec1() {
+	    return [
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 13 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 15 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 14 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 16 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 21, isH: true },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 22, isH: true },
+	    ];
+	}
+	exports.newBracketRec1 = newBracketRec1;
+	function newBracketRec2() {
+	    return [
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 17 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 19 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 18 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 20 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 23, isH: true },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 24, isH: true },
+	    ];
+	}
+	exports.newBracketRec2 = newBracketRec2;
+	function newBracketRec3() {
+	    return [
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 21 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 23 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 22 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 24 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 25, isH: true },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 26, isH: true },
+	    ];
+	}
+	exports.newBracketRec3 = newBracketRec3;
+	function newBracketRecFinal() {
+	    return [
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 25 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: -1 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 26 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: -1 },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 27, isH: true },
+	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: -1, isH: true },
+	    ];
+	}
+	exports.newBracketRecFinal = newBracketRecFinal;
+	function newBracketRec16() {
+	    var a = [];
+	    for (var i = 0; i < 16; i++) {
+	        var gameIdx = i + 1;
+	        a.push({ playerId: ['', ''], score: [-1, -1], player: ["", ""], gameIdx: gameIdx });
+	    }
+	    return a;
+	}
+	exports.newBracketRec16 = newBracketRec16;
+	function buildRec(doc, playerMap) {
+	    var a = [];
+	    var winMap = {};
+	    var totalScoreMap = {};
+	    var bracketRec_1 = newBracketRec1();
+	    var bracketRec_2 = newBracketRec2();
+	    var bracketRec_3 = newBracketRec3();
+	    var bracketRec_final = newBracketRecFinal();
+	    var bracketRec_16 = newBracketRec16();
+	    var _loop_1 = function (idx) {
+	        var rec = doc.rec[idx];
+	        var p1 = rec.player[0];
+	        var p2 = rec.player[1];
+	        if (!winMap[p1]) {
+	            winMap[p1] = [];
+	            totalScoreMap[p1] = { score: 0, w: 0, l: 0 };
+	        }
+	        if (!winMap[p2]) {
+	            totalScoreMap[p2] = { score: 0, w: 0, l: 0 };
+	            winMap[p2] = [];
+	        }
+	        if (rec.isGroup) {
+	            totalScoreMap[p1].score += rec.score[0] - rec.score[1];
+	            totalScoreMap[p2].score -= rec.score[0] - rec.score[1];
+	        }
+	        if (rec.score[0] > rec.score[1]) {
+	            if (rec.isGroup) {
+	                totalScoreMap[p1].w += 1;
+	                totalScoreMap[p2].l += 1;
+	            }
+	            winMap[p1].push(p2);
+	        }
+	        else {
+	            if (rec.isGroup) {
+	                totalScoreMap[p2].w += 1;
+	                totalScoreMap[p1].l += 1;
+	            }
+	            winMap[p2].push(p1);
+	        }
+	        rec.name = [playerMap[p1].name, playerMap[p2].name];
+	        for (var _i = 0, bracketRec_1_1 = bracketRec_1; _i < bracketRec_1_1.length; _i++) {
+	            var b = bracketRec_1_1[_i];
+	            if (b.gameIdx == Number(idx)) {
+	                b.player = rec.name;
+	                b.playerId = [p1, p2];
+	                b.score = rec.score;
+	            }
+	        }
+	        for (var _a = 0, bracketRec_2_1 = bracketRec_2; _a < bracketRec_2_1.length; _a++) {
+	            var b = bracketRec_2_1[_a];
+	            if (b.gameIdx == Number(idx)) {
+	                b.player = rec.name;
+	                b.playerId = [p1, p2];
+	                b.score = rec.score;
+	            }
+	        }
+	        for (var _b = 0, bracketRec_3_1 = bracketRec_3; _b < bracketRec_3_1.length; _b++) {
+	            var b = bracketRec_3_1[_b];
+	            if (b.gameIdx == Number(idx)) {
+	                b.player = rec.name;
+	                b.playerId = [p1, p2];
+	                b.score = rec.score;
+	            }
+	        }
+	        for (var _c = 0, bracketRec_final_1 = bracketRec_final; _c < bracketRec_final_1.length; _c++) {
+	            var b = bracketRec_final_1[_c];
+	            if (b.gameIdx == Number(idx)) {
+	                b.player = rec.name;
+	                b.playerId = [p1, p2];
+	                b.score = rec.score;
+	            }
+	        }
+	        var fillBracketSection = function (section) {
+	            for (var _i = 0, section_1 = section; _i < section_1.length; _i++) {
+	                var b = section_1[_i];
+	                if (b.gameIdx == Number(idx)) {
+	                    b.player = rec.name;
+	                    b.playerId = [p1, p2];
+	                    b.score = rec.score;
+	                }
+	            }
+	        };
+	        fillBracketSection(bracketRec_16);
+	        rec.gameIdx = idx;
+	        a.push(rec);
+	    };
+	    for (var idx in doc.rec) {
+	        _loop_1(idx);
+	    }
+	    return {
+	        winMap: winMap,
+	        totalScoreMap: totalScoreMap,
+	        recArr: a,
+	        bracketRec1: bracketRec_1,
+	        bracketRec2: bracketRec_2,
+	        bracketRec3: bracketRec_3,
+	        bracketRec16: bracketRec_16,
+	        bracketRecFinal: bracketRec_final
+	    };
+	}
+	exports.buildRec = buildRec;
+	function rank16(doc, playerMap, rank5Player) {
+	    var rank16Map = {};
+	    var arr_6_8 = [];
+	    var arr_9_16 = [];
+	    for (var idx in doc.rec) {
+	        var rec = doc.rec[idx];
+	        var winner = void 0;
+	        var loser = void 0;
+	        if (rec.score[0] > rec.score[1]) {
+	            winner = rec.player[0];
+	            loser = rec.player[1];
+	        }
+	        else if (rec.score[0] < rec.score[1]) {
+	            winner = rec.player[1];
+	            loser = rec.player[0];
+	        }
+	        if (Number(idx) == 27) {
+	            rank16Map['1'] = winner;
+	            rank16Map['2'] = loser;
+	        }
+	        if (Number(idx) == 25) {
+	            rank16Map['3'] = loser;
+	        }
+	        if (Number(idx) == 26) {
+	            rank16Map['4'] = loser;
+	        }
+	        if ([21, 22, 23, 24].indexOf(Number(idx)) > -1) {
+	            if (loser != rank5Player)
+	                arr_6_8.push(loser);
+	        }
+	        if ([13, 14, 15, 16, 17, 18, 19, 20].indexOf(Number(idx)) > -1) {
+	            arr_9_16.push(loser);
+	        }
+	    }
+	    console.log('rank 16', rank16Map, arr_6_8, arr_9_16);
+	    var rank16Arr = JsFunc_1.mapToArr(rank16Map);
+	    rank16Arr.push(rank5Player);
+	    rank16Arr = rank16Arr.concat(arr_6_8).concat(arr_9_16);
+	    var rank = 0;
+	    var a = [];
+	    var rankScoreMap = {
+	        '1': 40, '2': 30, '3': 25, '4': 25, '5': 20,
+	        '6': 15, '7': 15, '8': 15, '16': 10
+	    };
+	    var playerScore = window['gameConf'].playerScore;
+	    for (var k in playerScore) {
+	        var a_1 = k.split('_');
+	        playerScore[a_1[0]] = playerScore[k];
+	    }
+	    for (var _i = 0, rank16Arr_1 = rank16Arr; _i < rank16Arr_1.length; _i++) {
+	        var playerId = rank16Arr_1[_i];
+	        var rankScore = 0;
+	        rank++;
+	        if (rank > 8)
+	            rankScore = rankScoreMap['16'];
+	        else if (rankScoreMap[rank])
+	            rankScore = rankScoreMap[rank];
+	        if (playerScore[playerId])
+	            rankScore += playerScore[playerId];
+	        console.log(rank, playerMap[playerId].name);
+	        a.push({ rank: rank, name: playerMap[playerId].name, rankScore: rankScore });
+	    }
+	    return a;
+	}
+	exports.rank16 = rank16;
+	function get_now_sec_1970() {
+	    return Math.floor((new Date()).getTime() / 1000);
+	}
+	exports.get_now_sec_1970 = get_now_sec_1970;
+	function create_game_rec(data, p1, p2) {
+	    if (!data.doc)
+	        data.doc = { gameIdx: 0, rec: {} };
+	    var doc = data.doc;
+	    if (!doc.rec)
+	        doc.rec = {};
+	    doc.gameIdx++;
+	    var now_sec = get_now_sec_1970();
+	    doc.rec[doc.gameIdx] = {
+	        start: now_sec,
+	        end: now_sec,
+	        player: [p1, p2],
+	        playerId: [p1, p2],
+	        score: [0, 0]
+	    };
+	    return data;
+	}
+	exports.create_game_rec = create_game_rec;
+	function get_rank5_player(data, playerMap) {
+	    var gameIdxArr = [9, 10, 11, 12];
+	    var loserArr = [];
+	    for (var gameIdx in data.doc.rec) {
+	        var rec = data.doc.rec[gameIdx];
+	        if (gameIdxArr.indexOf(Number(gameIdx)) > -1) {
+	            var loser = void 0;
+	            if (rec.score[0] > rec.score[1]) {
+	                loser = JsFunc_1.clone(playerMap[rec.player[1]]);
+	            }
+	            else {
+	                loser = JsFunc_1.clone(playerMap[rec.player[0]]);
+	            }
+	            loser.score = 0;
+	            if (this.gameConf)
+	                loser.avatar = this.gameConf.avatarUrlBase + loser.playerId + '.png';
+	            loserArr.push(loser);
+	        }
+	    }
+	    return loserArr;
+	}
+	exports.get_rank5_player = get_rank5_player;
+
+
+/***/ }),
+/* 36 */
 /***/ (function(module, exports) {
 
 	module.exports = "<table class=\"table is-striped is-bordered\" style=\"font-size:30px;\">\r\n    <thead>\r\n    </thead>\r\n    <tbody>\r\n        <tr>\r\n            <th>\r\n                <div hidden>{{updateTime}}</div>\r\n                秒:<input class=\"input\" v-model=\"timeInSec\" type=\"text\" style=\"width: 100px;\">\r\n                <a @click=\"onSetTimerEvent('setting',timeInSec)\">设置</a>\r\n                <a @click=\"onSetTimerEvent('reset')\">reset</a>\r\n            </th>\r\n            <th>\r\n                <a id=\"vudp\" @click=\"onVueUpdate\"></a>\r\n                <button class=\"button\" @click=\"onSetTeamScore(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetTeamScore(true,-1)\">-1</button>\r\n            </th>\r\n            <th>L player</th>\r\n            <th>score</th>\r\n            <th>R player</th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetTeamScore(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetTeamScore(false,-1)\">-1</button>\r\n                <button class=\"button\" @click=\"onResetGame()\">resetGame</button>\r\n\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th style=\"font-size:25px;\">\r\n                <a @click=\"onSetTimerEvent('start')\">开始  </a><a @click=\"onSetTimerEvent('pause')\">暂停  </a>\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                {{baseGame.lName}}\r\n            </th>\r\n            <th style=\"font-size:40px;\">\r\n                <span id=\"lScore\">{{baseGame.lScore}}</span> - <span id=\"rScore\">{{baseGame.rScore}}</span>\r\n            </th>\r\n            <th>\r\n                {{baseGame.rName}}\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetScore(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetScore(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n        <tr>\r\n            <th style=\"font-size:25px;\">foul\r\n                <a @click=\"onResetFoul\"> 重置</a>\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(true,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(true,-1)\">-1</button>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <span id=\"lFoul\">{{baseGame.lFoul}}</span> - <span id=\"rFoul\">{{baseGame.rFoul}}</span>\r\n            </th>\r\n            <th>\r\n                -\r\n            </th>\r\n            <th>\r\n                <button class=\"button\" @click=\"onSetFoul(false,1)\">+1</button>\r\n                <button class=\"button\" @click=\"onSetFoul(false,-1)\">-1</button>\r\n            </th>\r\n        </tr>\r\n    </tbody>\r\n</table>";
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3068,7 +3343,7 @@
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var EventDispatcher_1 = __webpack_require__(37);
+	var EventDispatcher_1 = __webpack_require__(38);
 	var HupuAPI_1 = __webpack_require__(24);
 	var JsFunc_1 = __webpack_require__(21);
 	var dbUrl;
@@ -3304,7 +3579,7 @@
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -3358,13 +3633,13 @@
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class=\"container\">\r\n\r\n    <input type=\"file\" id=\"file\" accept=\"*.xlsx\" hidden>\r\n    <br>\r\n\r\n    <a href=\"/panel/#/ol/ob/0?panel=score&s4=1&world=1\">world panel</a>\r\n    <a href=\"/panel/#/ol/ob/0?panel=score&s4=1&world=1&bblood=1\">team blood</a>\r\n\r\n    <button class=\"button is-primary\" @click=\"onGet8090EventJson('0602')\">获取配置</button>\r\n    <button class=\"button is-primary\" id=\"reload\" @click=\"onReload\">reload</button> 比分面板延时(秒)\r\n    <input class=\"input\" v-model=\"delay\" type=\"text\" style=\"width: 100px;\">\r\n    <button class=\"button is-primary\" @click=\"onSetDelay(delay)\">设置</button>\r\n    <br>\r\n    <br>\r\n\r\n    <div class=\"control\">\r\n        vs player <input class=\"input\" v-model=\"vsPlayer\" type=\"text\" style=\"width: 100px;\">\r\n        <button class=\"button is-primary\" @click=\"onEmitGameInfo\">初始比赛</button>\r\n        <button class=\"button is-primary\" @click=\"onAddGame\">创建REC</button>\r\n        <button class=\"button is-primary\" @click=\"onCommitGame(gameIdx)\">提交比赛</button> teamVsIdx:\r\n        <input class=\"input\" v-model=\"teamVsIdx\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetBlood(teamVsIdx)\">设置初始血量</a>\r\n        <input class=\"input\" v-model=\"teamScore\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetTeamScore(teamScore)\">设置团队比分</a>\r\n        <a class=\"button is-warnning\" @click=\"onSetTimeOut(teamScore)\">设置团队暂停</a>\r\n        <!-- <a class=\"button\" @click=\"onShowKDA(true)\">显示kda</a>\r\n        <a class=\"button\" @click=\"onShowKDA(false)\">隐藏kda</a> -->\r\n        <hr> 比分面板\r\n        <a class=\"button\" @click=\"onShowPanel(true)\">显示</a>\r\n        <a class=\"button\" @click=\"onShowPanel(false)\">隐藏</a> title\r\n        <a class=\"button\" @click=\"onShowTitle(true)\">显示</a>\r\n        <a class=\"button\" @click=\"onShowTitle(false)\">隐藏</a>\r\n        <input class=\"input\" v-model=\"playerDots\" type=\"text\" style=\"width: 60px;\">\r\n        <a class=\"button is-warnning\" @click=\"onSetPlayerDots(playerDots,false)\">设置团队剩余5 3</a>\r\n        <a class=\"button is-warnning\" @click=\"onSetPlayerDots(playerDots,true)\">on 打开状态</a>\r\n    </div>\r\n\r\n    <!-- Main container -->\r\n    <div class=\"level\">\r\n        <!-- Left side -->\r\n        <div class=\"level-left\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                    <a class=\"button is-info\" @click=\"pickPlayer(true,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <!-- Right side -->\r\n        <div class=\"level-right\">\r\n            <div class=\"columns\">\r\n                <div class=\"column\" v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                    <a class=\"button is-danger\" @click=\"pickPlayer(false,item.playerId)\">{{item.name}} [{{item.blood}}]</a>\r\n                    <br>\r\n                    <input class=\"input blood\" :id=\"'blood'+item.playerId\" type=\"text\" style=\"width: 50px;\">\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div id='table' class=\"table\"></div>\r\n    <BaseGame/>\r\n\r\n    <!-- 手动血量 -->\r\n    <div class=\"level\">\r\n        <div class=\"level-left\">\r\n            <table class=\"table is-striped is-bordered\" style=\"font-size:25px;\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>初始血量</th>\r\n                        <th>血量\r\n                            <a class=\"button is-info\" @click=\"onManualBlood(0)\">更新</a>\r\n                        </th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in blueArr_2\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>\r\n                            <input type=\"text\" v-model=\"item.initBlood\" style=\"width: 100px;\">\r\n                        </th>\r\n                        <th>\r\n                            <input type=\"text\" v-model=\"item.blood\" style=\"width: 50px;\">\r\n                            <a class=\"button is-info\" v-if='vsPlayerArr[0]==item.playerId' @click=\"onManualBlood(1,item)\">+1</a>\r\n                            <a class=\"button is-info\" v-if='vsPlayerArr[0]==item.playerId' @click=\"onManualBlood(-1,item)\">-1</a>\r\n                        </th>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n        <div class=\"level-right\">\r\n            <table class=\"table is-striped is-bordered\" style=\"font-size:25px;\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>初始血量</th>\r\n                        <th>血量\r\n                            <a class=\"button is-danger\" @click=\"onManualBlood(0)\">更新</a>\r\n                        </th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in redArr_2\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>\r\n                            <input type=\"text\" v-model=\"item.initBlood\" style=\"width: 100px;\">\r\n                        </th>\r\n                        <th>\r\n                            <input type=\"text\" v-model=\"item.blood\" style=\"width: 100px;\">\r\n                            <a class=\"button is-danger\" v-if='vsPlayerArr[1]==item.playerId' @click=\"onManualBlood(1,item)\">+1</a>\r\n                            <a class=\"button is-danger\" v-if='vsPlayerArr[1]==item.playerId' @click=\"onManualBlood(-1,item)\">-1</a>\r\n                        </th>\r\n\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n    </div>\r\n    <div style=\"overflow-y: scroll;height: 400px;\">\r\n        <table class=\"table is-striped is-bordered\">\r\n            <thead>\r\n                <tr>\r\n                    <th><abbr title=\"Position\">#gameIdx</abbr></th>\r\n                    <th><abbr>#teamVsIdx</abbr></th>\r\n                    <th>L player</th>\r\n                    <th>score</th>\r\n                    <th>R player</th>\r\n                    <th>action</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr v-for=\"(rec,index) in recArr\" :key=\"index\" v-bind:class=\"[rec.gameIdx==gameView.gameIdx?'is-selected':'']\">\r\n                    <th><a @click=\"setGameIdx(rec.gameIdx)\">#####{{rec.gameIdx}}</a></th>\r\n                    <td> {{rec.teamVsIdx}} </td>\r\n                    <td> {{rec.name[0]}} </td>\r\n                    <td> {{rec.score[0]}} - {{rec.score[1]}} </td>\r\n                    <td> {{rec.name[1]}} </td>\r\n                    <td>\r\n                        <div class=\"control\" v-if=\"rec.gameIdx==gameView.gameIdx\">\r\n                            <input class=\"input\" :id=\"'scoreInput'+rec.gameIdx\" type=\"text\" style=\"width: 80px;\">\r\n                            <button class=\"button btn-setScore\" @click=\"onSetScore(rec.gameIdx)\">修改(提交)比分</button>\r\n                            <button class=\"button\" @click=\"onSetVS(rec.gameIdx,vsPlayer)\">修改对阵↑</button>\r\n                            <button class=\"button\" @click=\"onSetTeamVsIdx(rec.gameIdx)\">修改TeamVsIdx</button>\r\n                            <button class=\"button is-danger\" @click=\"onDeleteGameRec(rec.gameIdx)\">删除</button>\r\n                        </div>\r\n                    </td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n    <!-- <div class=\"level\">\r\n        <div class=\"level-left\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in blueArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n        <div class=\"level-right\">\r\n            <table class=\"table is-striped is-bordered\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>name</th>\r\n                        <th>score</th>\r\n                        <th>kill</th>\r\n                        <th>death</th>\r\n                        <th>assist</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr v-for=\"(item,index) in redArr\" :key=\"item\">\r\n                        <th>{{item.name}}</th>\r\n                        <th>{{item.score}}</th>\r\n                        <th>{{item.k}}</th>\r\n                        <th>{{item.d}}</th>\r\n                        <th>{{item.a}}</th>\r\n                    </tr>\r\n                </tbody>\r\n\r\n            </table>\r\n        </div>\r\n    </div> -->\r\n\r\n    <hr>\r\n    <button class=\"button is-primary\" @click=\"onDeleteDoc\">delete doc</button> {{updateTime}}\r\n</div>";
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3384,7 +3659,7 @@
 	var HupuAPI_1 = __webpack_require__(24);
 	var JsFunc_1 = __webpack_require__(21);
 	var VueBase_1 = __webpack_require__(22);
-	var bracketRec_1 = __webpack_require__(40);
+	var bracketRec_1 = __webpack_require__(35);
 	var ChampionPoster_1 = __webpack_require__(41);
 	var Champion8090_1 = __webpack_require__(42);
 	var confFile = null;
@@ -3908,281 +4183,6 @@
 	    return _ScoreRankAdmin;
 	}(VueBase_1.VueBase));
 	exports.ScoreRankAdmin = new _ScoreRankAdmin();
-
-
-/***/ }),
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	Object.defineProperty(exports, "__esModule", { value: true });
-	var JsFunc_1 = __webpack_require__(21);
-	var _p = function (x, y) {
-	    return 'left:' + x + 'px;' + 'top:' + y + 'px;';
-	};
-	function newBracketRec1() {
-	    return [
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 13 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 15 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 14 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 16 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 21, isH: true },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 22, isH: true },
-	    ];
-	}
-	exports.newBracketRec1 = newBracketRec1;
-	function newBracketRec2() {
-	    return [
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 17 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 19 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 18 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 20 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 23, isH: true },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 24, isH: true },
-	    ];
-	}
-	exports.newBracketRec2 = newBracketRec2;
-	function newBracketRec3() {
-	    return [
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 21 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: 23 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 22 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: 24 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 25, isH: true },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: 26, isH: true },
-	    ];
-	}
-	exports.newBracketRec3 = newBracketRec3;
-	function newBracketRecFinal() {
-	    return [
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 373), gameIdx: 25 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(0, 473), gameIdx: -1 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 373), gameIdx: 26 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(450, 473), gameIdx: -1 },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 398), gameIdx: 27, isH: true },
-	        { playerId: ['', ''], score: [-1, -1], player: ["", ""], s: _p(160, 498), gameIdx: -1, isH: true },
-	    ];
-	}
-	exports.newBracketRecFinal = newBracketRecFinal;
-	function newBracketRec16() {
-	    var a = [];
-	    for (var i = 0; i < 16; i++) {
-	        var gameIdx = i + 1;
-	        a.push({ playerId: ['', ''], score: [-1, -1], player: ["", ""], gameIdx: gameIdx });
-	    }
-	    return a;
-	}
-	exports.newBracketRec16 = newBracketRec16;
-	function buildRec(doc, playerMap) {
-	    var a = [];
-	    var winMap = {};
-	    var totalScoreMap = {};
-	    var bracketRec_1 = newBracketRec1();
-	    var bracketRec_2 = newBracketRec2();
-	    var bracketRec_3 = newBracketRec3();
-	    var bracketRec_final = newBracketRecFinal();
-	    var bracketRec_16 = newBracketRec16();
-	    var _loop_1 = function (idx) {
-	        var rec = doc.rec[idx];
-	        var p1 = rec.player[0];
-	        var p2 = rec.player[1];
-	        if (!winMap[p1]) {
-	            winMap[p1] = [];
-	            totalScoreMap[p1] = { score: 0, w: 0, l: 0 };
-	        }
-	        if (!winMap[p2]) {
-	            totalScoreMap[p2] = { score: 0, w: 0, l: 0 };
-	            winMap[p2] = [];
-	        }
-	        if (rec.isGroup) {
-	            totalScoreMap[p1].score += rec.score[0] - rec.score[1];
-	            totalScoreMap[p2].score -= rec.score[0] - rec.score[1];
-	        }
-	        if (rec.score[0] > rec.score[1]) {
-	            if (rec.isGroup) {
-	                totalScoreMap[p1].w += 1;
-	                totalScoreMap[p2].l += 1;
-	            }
-	            winMap[p1].push(p2);
-	        }
-	        else {
-	            if (rec.isGroup) {
-	                totalScoreMap[p2].w += 1;
-	                totalScoreMap[p1].l += 1;
-	            }
-	            winMap[p2].push(p1);
-	        }
-	        rec.name = [playerMap[p1].name, playerMap[p2].name];
-	        for (var _i = 0, bracketRec_1_1 = bracketRec_1; _i < bracketRec_1_1.length; _i++) {
-	            var b = bracketRec_1_1[_i];
-	            if (b.gameIdx == Number(idx)) {
-	                b.player = rec.name;
-	                b.playerId = [p1, p2];
-	                b.score = rec.score;
-	            }
-	        }
-	        for (var _a = 0, bracketRec_2_1 = bracketRec_2; _a < bracketRec_2_1.length; _a++) {
-	            var b = bracketRec_2_1[_a];
-	            if (b.gameIdx == Number(idx)) {
-	                b.player = rec.name;
-	                b.playerId = [p1, p2];
-	                b.score = rec.score;
-	            }
-	        }
-	        for (var _b = 0, bracketRec_3_1 = bracketRec_3; _b < bracketRec_3_1.length; _b++) {
-	            var b = bracketRec_3_1[_b];
-	            if (b.gameIdx == Number(idx)) {
-	                b.player = rec.name;
-	                b.playerId = [p1, p2];
-	                b.score = rec.score;
-	            }
-	        }
-	        for (var _c = 0, bracketRec_final_1 = bracketRec_final; _c < bracketRec_final_1.length; _c++) {
-	            var b = bracketRec_final_1[_c];
-	            if (b.gameIdx == Number(idx)) {
-	                b.player = rec.name;
-	                b.playerId = [p1, p2];
-	                b.score = rec.score;
-	            }
-	        }
-	        var fillBracketSection = function (section) {
-	            for (var _i = 0, section_1 = section; _i < section_1.length; _i++) {
-	                var b = section_1[_i];
-	                if (b.gameIdx == Number(idx)) {
-	                    b.player = rec.name;
-	                    b.playerId = [p1, p2];
-	                    b.score = rec.score;
-	                }
-	            }
-	        };
-	        fillBracketSection(bracketRec_16);
-	        rec.gameIdx = idx;
-	        a.push(rec);
-	    };
-	    for (var idx in doc.rec) {
-	        _loop_1(idx);
-	    }
-	    return {
-	        winMap: winMap,
-	        totalScoreMap: totalScoreMap,
-	        recArr: a,
-	        bracketRec1: bracketRec_1,
-	        bracketRec2: bracketRec_2,
-	        bracketRec3: bracketRec_3,
-	        bracketRec16: bracketRec_16,
-	        bracketRecFinal: bracketRec_final
-	    };
-	}
-	exports.buildRec = buildRec;
-	function rank16(doc, playerMap, rank5Player) {
-	    var rank16Map = {};
-	    var arr_6_8 = [];
-	    var arr_9_16 = [];
-	    for (var idx in doc.rec) {
-	        var rec = doc.rec[idx];
-	        var winner = void 0;
-	        var loser = void 0;
-	        if (rec.score[0] > rec.score[1]) {
-	            winner = rec.player[0];
-	            loser = rec.player[1];
-	        }
-	        else if (rec.score[0] < rec.score[1]) {
-	            winner = rec.player[1];
-	            loser = rec.player[0];
-	        }
-	        if (Number(idx) == 27) {
-	            rank16Map['1'] = winner;
-	            rank16Map['2'] = loser;
-	        }
-	        if (Number(idx) == 25) {
-	            rank16Map['3'] = loser;
-	        }
-	        if (Number(idx) == 26) {
-	            rank16Map['4'] = loser;
-	        }
-	        if ([21, 22, 23, 24].indexOf(Number(idx)) > -1) {
-	            if (loser != rank5Player)
-	                arr_6_8.push(loser);
-	        }
-	        if ([13, 14, 15, 16, 17, 18, 19, 20].indexOf(Number(idx)) > -1) {
-	            arr_9_16.push(loser);
-	        }
-	    }
-	    console.log('rank 16', rank16Map, arr_6_8, arr_9_16);
-	    var rank16Arr = JsFunc_1.mapToArr(rank16Map);
-	    rank16Arr.push(rank5Player);
-	    rank16Arr = rank16Arr.concat(arr_6_8).concat(arr_9_16);
-	    var rank = 0;
-	    var a = [];
-	    var rankScoreMap = {
-	        '1': 40, '2': 30, '3': 25, '4': 25, '5': 20,
-	        '6': 15, '7': 15, '8': 15, '16': 10
-	    };
-	    var playerScore = window['gameConf'].playerScore;
-	    for (var k in playerScore) {
-	        var a_1 = k.split('_');
-	        playerScore[a_1[0]] = playerScore[k];
-	    }
-	    for (var _i = 0, rank16Arr_1 = rank16Arr; _i < rank16Arr_1.length; _i++) {
-	        var playerId = rank16Arr_1[_i];
-	        var rankScore = 0;
-	        rank++;
-	        if (rank > 8)
-	            rankScore = rankScoreMap['16'];
-	        else if (rankScoreMap[rank])
-	            rankScore = rankScoreMap[rank];
-	        if (playerScore[playerId])
-	            rankScore += playerScore[playerId];
-	        console.log(rank, playerMap[playerId].name);
-	        a.push({ rank: rank, name: playerMap[playerId].name, rankScore: rankScore });
-	    }
-	    return a;
-	}
-	exports.rank16 = rank16;
-	function get_now_sec_1970() {
-	    return Math.floor((new Date()).getTime() / 1000);
-	}
-	exports.get_now_sec_1970 = get_now_sec_1970;
-	function create_game_rec(data, p1, p2) {
-	    if (!data.doc)
-	        data.doc = { gameIdx: 0, rec: {} };
-	    var doc = data.doc;
-	    if (!doc.rec)
-	        doc.rec = {};
-	    doc.gameIdx++;
-	    var now_sec = get_now_sec_1970();
-	    doc.rec[doc.gameIdx] = {
-	        start: now_sec,
-	        end: now_sec,
-	        player: [p1, p2],
-	        playerId: [p1, p2],
-	        score: [0, 0]
-	    };
-	    return data;
-	}
-	exports.create_game_rec = create_game_rec;
-	function get_rank5_player(data, playerMap) {
-	    var gameIdxArr = [9, 10, 11, 12];
-	    var loserArr = [];
-	    for (var gameIdx in data.doc.rec) {
-	        var rec = data.doc.rec[gameIdx];
-	        if (gameIdxArr.indexOf(Number(gameIdx)) > -1) {
-	            var loser = void 0;
-	            if (rec.score[0] > rec.score[1]) {
-	                loser = JsFunc_1.clone(playerMap[rec.player[1]]);
-	            }
-	            else {
-	                loser = JsFunc_1.clone(playerMap[rec.player[0]]);
-	            }
-	            loser.score = 0;
-	            if (this.gameConf)
-	                loser.avatar = this.gameConf.avatarUrlBase + loser.playerId + '.png';
-	            loserArr.push(loser);
-	        }
-	    }
-	    return loserArr;
-	}
-	exports.get_rank5_player = get_rank5_player;
 
 
 /***/ }),

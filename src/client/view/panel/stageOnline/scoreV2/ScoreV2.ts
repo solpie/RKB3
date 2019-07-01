@@ -220,7 +220,7 @@ export class ScoreV2 extends PIXI.Container {
             .setAlignCenter(_c(82))
     }
 
-    foulHint = 4
+    foulHint = 3
     setLeftFoul(data) {
         let foul = Number(data || 0)
         this.lFoul.setText((data || 0))
@@ -325,7 +325,7 @@ export class ScoreV2 extends PIXI.Container {
         console.log('gameIdx22', gameIdx, 'type', type)
         let gameIdxNum = '' + paddy(gameIdx, 2)
         // this.gameIdxTxt.text = '四强'
-        this.foulHint = 4
+        this.foulHint = 3
         if (type == 2) {
             let gameIdxNum2
             gameIdxNum2 = '第' + gameIdxNum + '场'
@@ -361,7 +361,7 @@ export class ScoreV2 extends PIXI.Container {
         else if (type == 3) {
             this.gameTitle.text = '决赛'
             gameIdxNum = ''
-            this.foulHint = 5
+            this.foulHint = 4
         }
 
         // this.gameTitle.text
