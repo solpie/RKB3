@@ -546,8 +546,8 @@ class StageOnlineView extends VueBase {
                 })
             }
         },
-        showRollText(text, v) {
-            this.opReq(`${CommandId.cs_showRollText}`, { _: null, visible: v, text: text })
+        showRollText(text, v, style = 1) {
+            this.opReq(`${CommandId.cs_showRollText}`, { _: null, visible: v, text: text, style: style })
         },
         onAddScore(isLeft, v) {
             this.opReq(`${CommandId.cs_updateScore}`, { _: null, dtScore: v, isLeft: isLeft })

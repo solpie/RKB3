@@ -4,17 +4,21 @@ import { Text2, TextFac } from '../../../utils/TextFac';
 import { TweenEx } from '../../../utils/TweenEx';
 import { BasePanel } from '../../base/BasePanel';
 import { bottomMoveIn } from '../../../utils/Fx';
+import { imgLoader } from '../../../utils/ImgLoader';
 let urlBg1 = '/img/panel/score2018v2/bottomADV2.png'
+let urlBg2 = '/img/panel/score2018v2/bottomADV2_cuilian.png'
 // urlBg1 = '/img/panel/notice/bottomAD.png'
 const textRectLeft = 580
 const textRectWidth = 940
 export class ScrollTextV2 extends BasePanel {
     static cls = 'ScrollTextV2'
     rollText: Text2
+    bg: PIXI.Sprite
     create() {
         console.log('scroll text creat1e');
         let imgArr = []
         imgArr.push(urlBg1)
+        imgArr.push(urlBg2)
         this.load(imgArr, _ => {
             console.log('scroll text loaded');
             let ts = {
@@ -30,7 +34,8 @@ export class ScrollTextV2 extends BasePanel {
             texBlack.beginFill(0xeeeeee)
                 .drawRect(textRectLeft, 944, textRectWidth, 100)
             texBlack.mask = this.rollText
-            let bg = newBitmap({ url: urlBg1 })
+            let bg = new PIXI.Sprite()
+            this.bg = bg
             // bg.y = this.rollText.y - 10
             this.addChild(bg)
             this.addChild(texBlack)
@@ -39,6 +44,12 @@ export class ScrollTextV2 extends BasePanel {
     }
     _show(data) {
         if (data.visible) {
+            if (data.style == 2) {
+                this.bg.texture = imgLoader.getTex(urlBg2)
+            }
+            else {
+                this.bg.texture = imgLoader.getTex(urlBg1)
+            }
             this.p.addChild(this)
             bottomMoveIn(this, _ => {
                 // TweenEx.to(this, 50, { alpha: 1 })
