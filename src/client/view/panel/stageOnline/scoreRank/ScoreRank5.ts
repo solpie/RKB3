@@ -122,6 +122,8 @@ class ScoreRank5 extends BasePanel {
                     let restArr = []
                     let updatePlayer
                     for (let p of a) {
+                        if (!p.playerId)
+                            p.playerId = p.player_id
                         if (p.playerId != data.updatePlayerId) {
                             restArr.push(p)
                         }

@@ -38,8 +38,8 @@ class BracketS5Final extends BasePanel {
             , "13": { x: _c(-x2), y: 467 }
             , "14": { x: _c(x2), y: 467 }
 
-            , "15": { x: 125, y: 1080 }
-            , "16": { x: 125, y: 220 }
+            // , "15": { x: 125, y: 1080 }
+            , "15": { x: 125, y: 220 }
         }
         // let groupMap = {
         //     "1": { x: _c(-x0), y: 252 }
@@ -118,15 +118,15 @@ class BracketS5Final extends BasePanel {
         for (let r of rec) {
             let group = this.groupMap[r.gameIdx]
             if (r.gameIdx > 14) {
-                group.lName.setText(r.player[0])
+                group.lName.setText(r.name[0])
                     .setAlignCenter(_c(-group.x))
-                group.rName.setText(r.player[1])
+                group.rName.setText(r.name[1])
                     .setAlignCenter(_c(group.x))
             }
             else {
-                group.lName.setText(r.player[0])
+                group.lName.setText(r.name[0])
                     .setAlignCenter(group.x)
-                group.rName.setText(r.player[1])
+                group.rName.setText(r.name[1])
                     .setAlignCenter(group.x)
             }
 
@@ -143,7 +143,7 @@ class BracketS5Final extends BasePanel {
                 }
             }
 
-            if (r.gameIdx == 16) {
+            if (r.gameIdx == 15) {
                 if (lScore >= 0 && rScore >= 0)
                     this.finalScore.setText(lScore + ' - ' + rScore)
                         .setAlignCenter(_c(0))
@@ -170,6 +170,8 @@ class Bracket16View extends VueBase {
         let localWs = io.connect(`/${PanelId.rkbPanel}`)
         localWs.on('connect', (msg) => {
             console.log('connect', window.location.host)
+
+            
         })
             .on(CommandId.sc_bracketS5, data => {
                 data.cid = CommandId.sc_bracketS5

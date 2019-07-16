@@ -105,7 +105,6 @@ def proxy():
             fd = json.loads(request.data.decode("utf-8"))
             print(fd)
             m = MultipartEncoder(fields={'player_list': ('filename', open('1130.json', 'rb'), 'text/plain')})
-            url = 'http://127.0.0.2/test'
             r = requests.post(url, data=m,
                               headers={'Content-Type':m.content_type})
             r.close()

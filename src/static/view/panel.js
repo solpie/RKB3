@@ -454,11 +454,9 @@
 	            { title: "八强面板", url: "/panel/#/ol/ob/" + gameId + "?panel=bracket" },
 	            { title: "对阵球员信息面板", url: "/panel/#/vsInfo?game_id=" + gameId },
 	            { title: "-----线下操作面板-----", url: "" },
-	            { title: "邀请赛LowerThird", url: "/admin/#/pick" },
 	            { title: "邀请赛比分面板（新）", url: "/cc/web-mobile/index.html?panel=ww3" },
 	            { title: "邀请赛比分面板", url: "/panel/#/ol/ob/0?panel=score&s4=1&world=1" },
 	            { title: "邀请赛血量图", url: "/panel/#/ol/ob/0?panel=score&s4=1&world=1&bblood=1" },
-	            { title: "魔王挑战赛晋级图", url: "/panel/#/bracket8" },
 	            { title: "冠军排位赛晋级图", url: "/panel/#/brackets5" },
 	            { title: "冠军排位赛抢五面板", url: "/panel/#/rank5" },
 	            { title: "移动端计时器控制", url: "/m/index.html" },
@@ -13601,6 +13599,8 @@
 	                    var updatePlayer = void 0;
 	                    for (var _i = 0, a_1 = a; _i < a_1.length; _i++) {
 	                        var p = a_1[_i];
+	                        if (!p.playerId)
+	                            p.playerId = p.player_id;
 	                        if (p.playerId != data.updatePlayerId) {
 	                            restArr.push(p);
 	                        }
@@ -13712,8 +13712,7 @@
 	            "12": { x: PixiEx_1._c(x1), y: 612 },
 	            "13": { x: PixiEx_1._c(-x2), y: 467 },
 	            "14": { x: PixiEx_1._c(x2), y: 467 },
-	            "15": { x: 125, y: 1080 },
-	            "16": { x: 125, y: 220 }
+	            "15": { x: 125, y: 220 }
 	        };
 	        this.groupMap = groupMap;
 	        this.addChild(new PIXI.Graphics()
@@ -13766,15 +13765,15 @@
 	            var r = rec_1[_i];
 	            var group = this.groupMap[r.gameIdx];
 	            if (r.gameIdx > 14) {
-	                group.lName.setText(r.player[0])
+	                group.lName.setText(r.name[0])
 	                    .setAlignCenter(PixiEx_1._c(-group.x));
-	                group.rName.setText(r.player[1])
+	                group.rName.setText(r.name[1])
 	                    .setAlignCenter(PixiEx_1._c(group.x));
 	            }
 	            else {
-	                group.lName.setText(r.player[0])
+	                group.lName.setText(r.name[0])
 	                    .setAlignCenter(group.x);
-	                group.rName.setText(r.player[1])
+	                group.rName.setText(r.name[1])
 	                    .setAlignCenter(group.x);
 	            }
 	            var lScore = r.score[0], rScore = r.score[1];
@@ -13788,7 +13787,7 @@
 	                    group.lName.alpha = 0.4;
 	                }
 	            }
-	            if (r.gameIdx == 16) {
+	            if (r.gameIdx == 15) {
 	                if (lScore >= 0 && rScore >= 0)
 	                    this.finalScore.setText(lScore + ' - ' + rScore)
 	                        .setAlignCenter(PixiEx_1._c(0));
