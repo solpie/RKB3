@@ -13776,10 +13776,10 @@
 	                group.rName.setText(r.name[1])
 	                    .setAlignCenter(group.x);
 	            }
-	            var lScore = r.score[0], rScore = r.score[1];
+	            var lScore = Number(r.score[0]), rScore = Number(r.score[1]);
 	            group.lName.alpha =
 	                group.rName.alpha = 1;
-	            if (r.score[0] != 0 || r.score[1] != 0) {
+	            if (lScore != 0 || rScore != 0) {
 	                if (lScore > rScore) {
 	                    group.rName.alpha = 0.4;
 	                }
