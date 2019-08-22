@@ -9,8 +9,8 @@ import { BracketS5Team } from './BracketS5Team';
 
 let urlBg = '/img/panel/bracket/s5/bg_16.png'
 
-class BracketS5Final extends BasePanel {
-    static cls = 'BracketS5Final'
+class BracketS5_16 extends BasePanel {
+    static cls = 'BracketS5_16'
     groupMap: any
     finalScore: Text2
     create() {
@@ -165,7 +165,7 @@ class Bracket16View extends VueBase {
         console.log('mouted Bracket16View view');
         if (!canvasStage)
             canvasStage = BasePanelView.initPixi()
-        showPanel(BracketS5Final, { visible: true }, canvasStage)
+        showPanel(BracketS5_16, { visible: true }, canvasStage)
         // showPanel(BracketS5Team, { visible: true }, canvasStage)
         let localWs = io.connect(`/${PanelId.rkbPanel}`)
         localWs.on('connect', (msg) => {
@@ -183,7 +183,7 @@ class Bracket16View extends VueBase {
                 data.cid = event
                 data.visible = true
                 console.log(event, data)
-                showPanel(BracketS5Final, data, canvasStage)
+                showPanel(BracketS5_16, data, canvasStage)
             })
         }
         _adept(CommandId.sc_bracket)

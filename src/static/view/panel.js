@@ -13687,12 +13687,12 @@
 	var TextFac_1 = __webpack_require__(62);
 	var BracketS5Team_1 = __webpack_require__(123);
 	var urlBg = '/img/panel/bracket/s5/bg_16.png';
-	var BracketS5Final = (function (_super) {
-	    __extends(BracketS5Final, _super);
-	    function BracketS5Final() {
+	var BracketS5_16 = (function (_super) {
+	    __extends(BracketS5_16, _super);
+	    function BracketS5_16() {
 	        return _super !== null && _super.apply(this, arguments) || this;
 	    }
-	    BracketS5Final.prototype.create = function () {
+	    BracketS5_16.prototype.create = function () {
 	        var _this = this;
 	        var imgArr = [urlBg
 	        ];
@@ -13759,7 +13759,7 @@
 	                .setAlignCenter(PixiEx_1._c(0));
 	        });
 	    };
-	    BracketS5Final.prototype.fillData = function (data) {
+	    BracketS5_16.prototype.fillData = function (data) {
 	        var rec = data.bracketRec16;
 	        for (var _i = 0, rec_1 = rec; _i < rec_1.length; _i++) {
 	            var r = rec_1[_i];
@@ -13794,14 +13794,14 @@
 	            }
 	        }
 	    };
-	    BracketS5Final.prototype._show = function (data) {
+	    BracketS5_16.prototype._show = function (data) {
 	        if (data.cid == Command_1.CommandId.sc_bracket) {
 	            this.fillData(data);
 	        }
 	        this.p.addChild(this);
 	    };
-	    BracketS5Final.cls = 'BracketS5Final';
-	    return BracketS5Final;
+	    BracketS5_16.cls = 'BracketS5_16';
+	    return BracketS5_16;
 	}(BasePanel_1.BasePanel));
 	var canvasStage;
 	var Bracket16View = (function (_super) {
@@ -13810,10 +13810,10 @@
 	        return _super !== null && _super.apply(this, arguments) || this;
 	    }
 	    Bracket16View.prototype.mounted = function () {
-	        console.log('mouted BracketS5FinalView view');
+	        console.log('mouted Bracket16View view');
 	        if (!canvasStage)
 	            canvasStage = BasePanelView_1.BasePanelView.initPixi();
-	        BasePanel_1.showPanel(BracketS5Final, { visible: true }, canvasStage);
+	        BasePanel_1.showPanel(BracketS5_16, { visible: true }, canvasStage);
 	        var localWs = io.connect("/" + const_1.PanelId.rkbPanel);
 	        localWs.on('connect', function (msg) {
 	            console.log('connect', window.location.host);
@@ -13828,7 +13828,7 @@
 	                data.cid = event;
 	                data.visible = true;
 	                console.log(event, data);
-	                BasePanel_1.showPanel(BracketS5Final, data, canvasStage);
+	                BasePanel_1.showPanel(BracketS5_16, data, canvasStage);
 	            });
 	        };
 	        _adept(Command_1.CommandId.sc_bracket);
