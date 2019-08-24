@@ -48,12 +48,17 @@ export class StudioPanel extends PIXI.Container {
                 console.log('inti live conf', conf);
                 this.rotLogo()
             })
+
         }
     }
 
     rotLogo() {
         if (this.liveConf.mizone_logo) {
             let col = this.liveConf.mizone_logo
+            if (col == '3logo') {
+                this.rot3logo(col)
+                return;
+            }
             console.log('isblue', this.$route);
             let m2l = new FramesFx(`/img/fx/logo/${col}/m2l/m2l_`, 0, 12)
             this.fx = m2l
@@ -91,7 +96,50 @@ export class StudioPanel extends PIXI.Container {
         }
 
     }
+    rot3logo(col) {
+        console.log('rot3logo', this.$route);
+        let logo1 = new FramesFx(`/img/fx/logo/${col}/logo1/m2l_`, 0, 12)
+        this.fx = logo1
+        logo1.setSpeed(0.28)
+        this.addChild(logo1)
 
+        let logo2 = new FramesFx(`/img/fx/logo/${col}/logo2/l2m_`, 0, 15)
+        logo2.setSpeed(0.28)
+        this.addChild(logo2)
+
+        let logo3 = new FramesFx(`/img/fx/logo/${col}/logo3/l2m_`, 0, 15)
+        logo3.setSpeed(0.28)
+        this.addChild(logo3)
+        // l2m.show()
+        logo2.visible = false
+        logo3.visible = false
+        logo1.visible = false
+        let isLogo1 = 0
+        let turn = () => {
+            isLogo1 = (isLogo1 + 1) % 3 + 1
+            if (isLogo1 == 1) {
+                logo3.visible = false
+                logo2.visible = false
+                logo1.visible = true
+                logo1.playOnce()
+            }
+            else if (isLogo1 == 2) {
+                logo3.visible = false
+                logo2.visible = true
+                logo1.visible = false
+                logo2.playOnce()
+            } else if (isLogo1 == 3) {
+                logo3.visible = true
+                logo2.visible = false
+                logo1.visible = false
+                logo3.playOnce()
+            }
+        }
+        turn()
+        setInterval(_ => {
+            turn()
+        }, 10000)
+    }
     initLocalWS(io) {
         let pv = this.popupView
 

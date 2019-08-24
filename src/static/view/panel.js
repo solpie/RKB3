@@ -4179,6 +4179,10 @@
 	    StudioPanel.prototype.rotLogo = function () {
 	        if (this.liveConf.mizone_logo) {
 	            var col = this.liveConf.mizone_logo;
+	            if (col == '3logo') {
+	                this.rot3logo(col);
+	                return;
+	            }
 	            console.log('isblue', this.$route);
 	            var m2l_1 = new FrameFx_1.FramesFx("/img/fx/logo/" + col + "/m2l/m2l_", 0, 12);
 	            this.fx = m2l_1;
@@ -4211,6 +4215,48 @@
 	        }
 	        else {
 	        }
+	    };
+	    StudioPanel.prototype.rot3logo = function (col) {
+	        console.log('rot3logo', this.$route);
+	        var logo1 = new FrameFx_1.FramesFx("/img/fx/logo/" + col + "/logo1/m2l_", 0, 12);
+	        this.fx = logo1;
+	        logo1.setSpeed(0.28);
+	        this.addChild(logo1);
+	        var logo2 = new FrameFx_1.FramesFx("/img/fx/logo/" + col + "/logo2/l2m_", 0, 15);
+	        logo2.setSpeed(0.28);
+	        this.addChild(logo2);
+	        var logo3 = new FrameFx_1.FramesFx("/img/fx/logo/" + col + "/logo3/l2m_", 0, 15);
+	        logo3.setSpeed(0.28);
+	        this.addChild(logo3);
+	        logo2.visible = false;
+	        logo3.visible = false;
+	        logo1.visible = false;
+	        var isLogo1 = 0;
+	        var turn = function () {
+	            isLogo1 = (isLogo1 + 1) % 3 + 1;
+	            if (isLogo1 == 1) {
+	                logo3.visible = false;
+	                logo2.visible = false;
+	                logo1.visible = true;
+	                logo1.playOnce();
+	            }
+	            else if (isLogo1 == 2) {
+	                logo3.visible = false;
+	                logo2.visible = true;
+	                logo1.visible = false;
+	                logo2.playOnce();
+	            }
+	            else if (isLogo1 == 3) {
+	                logo3.visible = true;
+	                logo2.visible = false;
+	                logo1.visible = false;
+	                logo3.playOnce();
+	            }
+	        };
+	        turn();
+	        setInterval(function (_) {
+	            turn();
+	        }, 10000);
 	    };
 	    StudioPanel.prototype.initLocalWS = function (io) {
 	        var _this = this;
