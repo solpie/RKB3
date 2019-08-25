@@ -11878,9 +11878,6 @@
 	    ScoreV2.prototype.setRightPlayer = function (rPlayer) {
 	        this.rTitle.setText(rPlayer.title)
 	            .setAlignCenter(PixiEx_1._c(208));
-	        if (rPlayer.name == "我也不知道要弄什么名字") {
-	            rPlayer.name = "朱先生";
-	        }
 	        this.rName.setText(rPlayer.name)
 	            .setLimitWidth(260, 40)
 	            .setAlignCenter(PixiEx_1._c(315));
@@ -11896,9 +11893,6 @@
 	    ScoreV2.prototype.setLeftPlayer = function (lPlayer) {
 	        this.lTitle.setText(lPlayer.title)
 	            .setAlignCenter(PixiEx_1._c(-208));
-	        if (lPlayer.name == "我也不知道要弄什么名字") {
-	            lPlayer.name = "朱先生";
-	        }
 	        this.lName.setText(lPlayer.name)
 	            .setLimitWidth(260, 40)
 	            .setAlignCenter(PixiEx_1._c(-315));
@@ -11939,6 +11933,7 @@
 	        var gameIdxNum = '' + JsFunc_1.paddy(gameIdx, 2);
 	        this.foulHint = 3;
 	        if (type == 2) {
+	            this.foulHint = 4;
 	            var gameIdxNum2 = void 0;
 	            gameIdxNum2 = '第' + gameIdxNum + '场';
 	            if (this.to8.indexOf(gameIdx) > -1)
@@ -11971,7 +11966,7 @@
 	        else if (type == 3) {
 	            this.gameTitle.text = '决赛';
 	            gameIdxNum = '';
-	            this.foulHint = 4;
+	            this.foulHint = 5;
 	        }
 	        this.gameTitle2.setText(gameIdxNum)
 	            .setAlignCenter(960);

@@ -248,9 +248,9 @@ export class ScoreV2 extends PIXI.Container {
     setRightPlayer(rPlayer) {
         this.rTitle.setText(rPlayer.title)
             .setAlignCenter(_c(208))
-            if (rPlayer.name == "我也不知道要弄什么名字") {
-                rPlayer.name="朱先生"
-             }
+        // if (rPlayer.name == "我也不知道要弄什么名字") {
+        //     rPlayer.name="朱先生"
+        //  }
         this.rName.setText(rPlayer.name)
             .setLimitWidth(260, 40)
             .setAlignCenter(_c(315))
@@ -268,9 +268,9 @@ export class ScoreV2 extends PIXI.Container {
     setLeftPlayer(lPlayer) {
         this.lTitle.setText(lPlayer.title)
             .setAlignCenter(_c(-208))
-        if (lPlayer.name == "我也不知道要弄什么名字") {
-            lPlayer.name="朱先生"
-         }
+        // if (lPlayer.name == "我也不知道要弄什么名字") {
+        //     lPlayer.name="朱先生"
+        //  }
         this.lName.setText(lPlayer.name)
             .setLimitWidth(260, 40)
             .setAlignCenter(_c(-315))
@@ -327,6 +327,7 @@ export class ScoreV2 extends PIXI.Container {
         // this.gameIdxTxt.text = '四强'
         this.foulHint = 3
         if (type == 2) {
+            this.foulHint = 4
             let gameIdxNum2
             gameIdxNum2 = '第' + gameIdxNum + '场'
             if (this.to8.indexOf(gameIdx) > -1)
@@ -335,7 +336,7 @@ export class ScoreV2 extends PIXI.Container {
             if (gameIdx == 5 || gameIdx == 6) {
                 this.gameTitle.text = '四强晋级赛'
                 // gameIdxNum2 = '第' + paddy(gameIdx - 6, 2) + '场'
-                gameIdxNum = '第' + paddy(gameIdx -4, 2) + '场'
+                gameIdxNum = '第' + paddy(gameIdx - 4, 2) + '场'
             }
             else if (gameIdx == 7) {
                 this.gameTitle.text = '季军赛'
@@ -361,7 +362,7 @@ export class ScoreV2 extends PIXI.Container {
         else if (type == 3) {
             this.gameTitle.text = '决赛'
             gameIdxNum = ''
-            this.foulHint = 4
+            this.foulHint = 5
         }
 
         // this.gameTitle.text
