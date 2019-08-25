@@ -327,7 +327,7 @@ export class ScoreV2 extends PIXI.Container {
         // this.gameIdxTxt.text = '四强'
         this.foulHint = 3
         if (type == 2) {
-            this.foulHint = 4
+            // this.foulHint = 4
             let gameIdxNum2
             gameIdxNum2 = '第' + gameIdxNum + '场'
             if (this.to8.indexOf(gameIdx) > -1)
@@ -362,7 +362,7 @@ export class ScoreV2 extends PIXI.Container {
         else if (type == 3) {
             this.gameTitle.text = '决赛'
             gameIdxNum = ''
-            this.foulHint = 5
+            this.foulHint = 4
         }
 
         // this.gameTitle.text
