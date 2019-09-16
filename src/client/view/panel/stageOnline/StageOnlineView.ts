@@ -72,6 +72,7 @@ class StageOnlineView extends VueBase {
     isWrap = VueBase.PROP
     noticeHistory = VueBase.PROP
     inputRollText = VueBase.PROP
+    inputRollTextCount =  VueBase.PROP
     vsPlayer = VueBase.PROP
     gameTitleType = VueBase.PROP
     gamePlayerArr: any
@@ -99,6 +100,7 @@ class StageOnlineView extends VueBase {
         this.isRmOp = this.$route.params.op == "rmop"
         this.isOp = this.$route.params.op == "op" || (this.isRmOp)
         this.gameId = this.$route.params.game_id
+        this.inputRollTextCount = 2
         if (this.isRmOp) {
             this.actTab = 'tab2'
             dynamicLoading.css('/css/bulma.min.css')
@@ -546,8 +548,8 @@ class StageOnlineView extends VueBase {
                 })
             }
         },
-        showRollText(text, v, style = 1) {
-            this.opReq(`${CommandId.cs_showRollText}`, { _: null, visible: v, text: text, style: style })
+        showRollText(text, loop,v, style = 1) {
+            this.opReq(`${CommandId.cs_showRollText}`, { _: null, visible: v, loop:Number(loop),text: text, style: style })
         },
         onAddScore(isLeft, v) {
             this.opReq(`${CommandId.cs_updateScore}`, { _: null, dtScore: v, isLeft: isLeft })

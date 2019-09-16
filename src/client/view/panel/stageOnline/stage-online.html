@@ -167,13 +167,13 @@
                 </div>
                 滚动文字：
                 <br>
-                <input class="input" type="text" placeholder="公告" style="width: 280px;" v-model="inputRollText">
+                <input class="input" type="text" placeholder="公告" style="width: 380px;" v-model="inputRollText">
+                <input class="input" type="text" placeholder="次数" style="width: 80px;" v-model="inputRollTextCount">
                 <br>
 
                 <!-- <el-input v-model="inputRollText" style="width:250px"></el-input> -->
-                <button class="button" @click='showRollText(inputRollText,true)'>发送</button>
-                <button class="button" @click='showRollText(inputRollText,false)'>隐藏</button>
-                <button class="button" @click='showRollText(inputRollText,true,2)'>发送(淬炼工厂logo)</button>
+                <button class="button" @click='showRollText(inputRollText,inputRollTextCount,true)'>发送</button>
+                <button class="button" @click='showRollText(inputRollText,inputRollTextCount,false)'>隐藏</button>
                 <br> 本场赛事集锦 （左下角通知面板）：
                 <br>
                 <input class="input" type="text" placeholder="4~8个汉字" style="width: 180px;" v-model="input_notice_left_bottom">
