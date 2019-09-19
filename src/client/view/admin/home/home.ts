@@ -68,7 +68,7 @@ class HomeView extends VueBase {
             for (var i = 0; i < gameDataArr.length; i++) {
                 // var gameData = gameDataArr[i];
                 var gameData = gameDataArr[gameDataArr.length - 1 - i];
-                if (Number(gameData.id) > 800) {
+                if (Number(gameData.id) > 930) {
                     gameData.text = "[" + gameData.id + "]:" + gameData.title;
                     gameData.value = gameData.id;
                     this.gameDataArr.push(gameData);
@@ -108,7 +108,7 @@ class HomeView extends VueBase {
 
     mounted() {
         this.updateLinks(492);
-        this.actTab = 'tab6'
+        this.actTab = 'tab1'
     }
 
     updateLinks(gameId) {
@@ -120,12 +120,11 @@ class HomeView extends VueBase {
             { title: "八强面板", url: `/panel/#/ol/ob/${gameId}?panel=bracket` },
             { title: "对阵球员信息面板", url: `/panel/#/vsInfo?game_id=${gameId}` },
             { title: "-----线下操作面板-----", url: `` },
-            { title: "邀请赛比分面板（新）", url: `/cc/web-mobile/index.html?panel=ww3` },
-            { title: "邀请赛比分面板", url: `/panel/#/ol/ob/0?panel=score&s4=1&world=1` },
-            { title: "邀请赛血量图", url: `/panel/#/ol/ob/0?panel=score&s4=1&world=1&bblood=1` },
-            { title: "冠军排位赛晋级图", url: `/panel/#/brackets5` },
-            { title: "冠军排位赛抢五面板", url: `/panel/#/rank5` },
-
+            // { title: "邀请赛比分面板（新）", url: `/cc/web-mobile/index.html?panel=ww3` },
+            // { title: "邀请赛比分面板", url: `/panel/#/ol/ob/0?panel=score&s4=1&world=1` },
+            // { title: "邀请赛血量图", url: `/panel/#/ol/ob/0?panel=score&s4=1&world=1&bblood=1` },
+            // { title: "冠军排位赛晋级图", url: `/panel/#/brackets5` },
+            // { title: "冠军排位赛抢五面板", url: `/panel/#/rank5` },
             { title: "移动端计时器控制", url: `/m/index.html` },
             { title: "通用计分控制台", url: `/admin/#/com` },
             { title: "3v3计分", url: `/html/controls/game3v3.html` },

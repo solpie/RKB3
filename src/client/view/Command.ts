@@ -192,6 +192,8 @@ export const CommandId = {
     sc_showNotice: '',
     cs_showRollText: ``,//roll公告
     sc_showRollText: ``,
+    cs_showPlayerPopInfo:'',
+    sc_showPlayerPopInfo:'',
     cs_showChampion: '',
     sc_showChampion: '',
     //实力榜

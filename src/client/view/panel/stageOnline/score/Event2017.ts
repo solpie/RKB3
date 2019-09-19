@@ -282,6 +282,9 @@ export class Event2017 extends PIXI.Container {
     showBottomNoticeAccount(data) {
         showPanel(BottomNotice, data, this)
     }
-
+    showPlayerPopInfo(data)
+    {
+        showPanel(BottomNotice,data,this)
+    }
    
 }

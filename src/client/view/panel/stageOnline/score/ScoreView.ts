@@ -235,11 +235,20 @@ export class ScoreView extends BasePanelView {
                         this.eventPanel.showNotice(data)
                     }
                 }
-                else {
+                else
                     this.eventPanel.showNotice(data)
-                }
-
             })
+
+            .on(`${CommandId.sc_showPlayerPopInfo}`, (data) => {
+                if (data.isPreview) {
+                    if (this.isOP || this.isRmOP) {
+                        this.eventPanel.showNotice(data)
+                    }
+                }
+                else
+                    this.eventPanel.showNotice(data)
+            })
+            
             .on(`${CommandId.sc_showRanking}`, (data) => {
                 this.eventPanel.showRanking(data)
             })
