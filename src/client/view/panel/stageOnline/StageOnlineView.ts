@@ -72,7 +72,15 @@ class StageOnlineView extends VueBase {
     isWrap = VueBase.PROP
     noticeHistory = VueBase.PROP
     inputRollText = VueBase.PROP
-    inputPlayerPopInfo = VueBase.PROP
+
+    inputPlayerPopInfo_win_L = VueBase.PROP
+    inputPlayerPopInfo_score_L = VueBase.PROP
+    inputPlayerPopInfo_rank_L = VueBase.PROP
+
+    inputPlayerPopInfo_win_R = VueBase.PROP
+    inputPlayerPopInfo_score_R = VueBase.PROP
+    inputPlayerPopInfo_rank_R = VueBase.PROP
+
     inputRollTextCount = VueBase.PROP
     vsPlayer = VueBase.PROP
     gameTitleType = VueBase.PROP
@@ -356,11 +364,6 @@ class StageOnlineView extends VueBase {
             if (this.liveData)
                 scoreView.setScoreFoul(this.liveData)
         },
-
-        onTogglePlayerState(v, isLeftPlayer = null) {
-            this.opReq(`${CommandId.cs_togglePlayerState}`, { _: null, visible: v, isLeftPlayer: isLeftPlayer })
-        },
-
         onClkNoticePresets(title, content) {
             if (content) {
                 this.noticeContent = content
@@ -549,8 +552,8 @@ class StageOnlineView extends VueBase {
                 })
             }
         },
-        onShowPlayerPopInfo(isPrev, v, text) {
-            this.opReq(`${CommandId.cs_showPlayerPopInfo}`, { _: null, visible: v, isPrev: isPrev, text: text })
+        onShowPlayerPopInfo(isPrev,v, isLeft,win,score,rank) {
+            this.opReq(`${CommandId.cs_showPlayerPopInfo}`, { _: null, visible: v, isPrev: isPrev, win: win,score:score,rank:rank,isLeft:isLeft })
         },
         showRollText(text, loop, v, style = 1) {
             this.opReq(`${CommandId.cs_showRollText}`, { _: null, visible: v, loop: Number(loop), text: text, style: style })

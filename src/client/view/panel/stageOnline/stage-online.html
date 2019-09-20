@@ -46,16 +46,16 @@
             <button class="button" @click="onClkResetTimer">重置</button>
             <button class="button" @click="onClkSetPanelTime(panelTime2Set)">设定时间(秒)</button>
 
-            <p class="control">
+            <!-- <p class="control">
                 <input class="input" type="text" onkeypress='var c = event.charCode;
                 return c >= 48 && c <= 57 ||c==46' placeholder="" style="width: 50px;" v-model="panelTime2Set">
-            </p>
-            比分控制:
+            </p> -->
+            <br>
+            比分控制:   <input class="input" type="text" onkeypress='var c = event.charCode;
+            return c >= 48 && c <= 57 ||c==46' placeholder="" style="width: 50px;" v-model="panelTime2Set">
             <br>
             <button class="button" @click="onUpdateScore(true ,panelTime2Set)">蓝方比分</button>
             <button class="button" @click="onUpdateScore(false,panelTime2Set)">红方比分</button>
-            <button class="button" @click="onTogglePlayerState(true)">切换攻守</button>
-            <button class="button" @click="onTogglePlayerState(false)">隐藏</button>
             <br>
 
             <button class="button" @click="onUpdateFoul(true ,panelTime2Set)">蓝方犯规</button>
@@ -107,7 +107,7 @@
             <button class="button" @click="onClkToggleChampionPanel(true)">显示</button>
             <button class="button" @click="onClkToggleChampionPanel(false)">隐藏</button>
             <br>
-            <div class='column is-one-quarter' style="position: fixed;top: 260px;right: 10px;">
+            <div class='column is-one-quarter' style="position: fixed;top: 260px;right: 20px;">
                 <input class="input" type="text" style="width: 30px;" v-model="gameTitleType">1 '8进4' 2 '4进2' 3 '2进1'
                 <br>
                 <input class="input" type="text" placeholder="蓝方名字-红方名字" style="width: 300px;" v-model="vsPlayer">
@@ -117,6 +117,70 @@
                 <br><br> <button class="button" @click="onAddFoul(true,-1)">-1</button>-----
                 <button class="button" @click="onAddFoul(true,1)">+1</button> 犯规
                 <button class="button" @click="onAddFoul(false,+1)">+1</button>-----<button class="button" @click="onAddFoul(false,-1)">-1</button>
+                <label class="label"> 球员弹框信息:</label><br>
+                <table class="table is-striped is-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>胜率</th>
+                            <th>净胜球</th>
+                            <th>实力榜</th>
+                            <th>#</th>
+                            <th>#</th>
+                            <th>#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>
+                                蓝方
+                            </th>
+                            <th>
+                                <input class="input" type="text" style="width: 80px;" v-model="inputPlayerPopInfo_win_L">
+                            </th>
+                            <th>
+                                <input class="input" type="text" style="width: 80px;" v-model="inputPlayerPopInfo_score_L">
+                            </th>
+                            <th>
+                                <input class="input" type="text" style="width: 80px;" v-model="inputPlayerPopInfo_rank_L">
+                            </th>
+                            <th>
+                                <button class="button" @click='onShowPlayerPopInfo(true,true,true,inputPlayerPopInfo_win_L,inputPlayerPopInfo_score_L,inputPlayerPopInfo_rank_L)'>预览</button>
+                            </th>
+                            <th>
+                                <button class="button" @click='onShowPlayerPopInfo(false,true,true,inputPlayerPopInfo_win_L,inputPlayerPopInfo_score_L,inputPlayerPopInfo_rank_L)'>显示</button>
+                            </th>
+                            <th>
+                                <button class="button" @click='onShowPlayerPopInfo(false,false,true,inputPlayerPopInfo_win_L,inputPlayerPopInfo_score_L,inputPlayerPopInfo_rank_L)'>隐藏</button>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                                红方
+                            </th>
+                            <th>
+                                <input class="input" type="text" style="width: 80px;" v-model="inputPlayerPopInfo_win_R">
+                            </th>
+                            <th>
+                                <input class="input" type="text" style="width: 80px;" v-model="inputPlayerPopInfo_score_R">
+                            </th>
+                            <th>
+                                <input class="input" type="text" style="width: 80px;" v-model="inputPlayerPopInfo_rank_R">
+                            </th>
+                            <th>
+                                <button class="button" @click='onShowPlayerPopInfo(true,true,false,inputPlayerPopInfo_win_R,inputPlayerPopInfo_score_R,inputPlayerPopInfo_rank_R)'>预览</button>
+                            </th>
+                            <th>
+                                <button class="button" @click='onShowPlayerPopInfo(false,true,false,inputPlayerPopInfo_win_R,inputPlayerPopInfo_score_R,inputPlayerPopInfo_rank_R)'>显示</button>
+                            </th>
+                            <th>
+                                <button class="button" @click='onShowPlayerPopInfo(false,false,false,inputPlayerPopInfo_win_R,inputPlayerPopInfo_score_R,inputPlayerPopInfo_rank_R)'>隐藏</button>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            
+            
             </div>
         </div>
         <div v-if='actTab=="tab2"'>
@@ -168,7 +232,7 @@
                 滚动文字：
                 <br>
                 <input class="input" type="text" placeholder="公告" style="width: 380px;" v-model="inputRollText">
-                <input class="input" type="text" placeholder="次数" style="width: 80px;" v-model="inputRollTextCount">
+                次数<input class="input" type="text" placeholder="次数" style="width: 80px;" v-model="inputRollTextCount">
                 <br>
 
                 <!-- <el-input v-model="inputRollText" style="width:250px"></el-input> -->
@@ -203,10 +267,7 @@
                 <button class="button" @click="onShowAccount(6,true)">腾讯视频 YouTube</button>
                 <button class="button" @click="onShowAccount(7,true)">知乎 网易新闻</button>
                 <button class="button" @click="onShowAccount(1,false)">隐藏</button> -->
-                <label class="label"> 球员弹框信息:</label><br>
-                <input class="input" type="text" style="width: 380px;" v-model="inputPlayerPopInfo">
-                <button class="button" @click='onShowPlayerPopInfo()'>预览</button>
-                <button class="button" @click='onShowPlayerPopInfo()'>显示</button>
+              
 
                 <label class="label">自动开题延时(秒){{clientDelayTimeSrv}}</label>
                 <p class="control">
