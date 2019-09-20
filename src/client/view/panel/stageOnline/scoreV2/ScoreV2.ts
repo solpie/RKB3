@@ -6,11 +6,12 @@ import { paddy } from '../../../utils/JsFunc';
 import { TextTimer } from '../../../utils/TextTimer';
 // import { BaseAvatar } from '../../base/BaseAvatar';
 import { imgLoader } from '../../../utils/ImgLoader';
+import { ScoreV2SidePopup } from './ScoreV2SidePopup';
 const loadAvt = (avtSp, url, left) => {
     console.log('loadAvt', url);
     imgLoader.loadTexArr([url], tex2 => {
         let tex = imgLoader.getTex(url)
-        let s = 86 / tex.height
+        let s = 105 / tex.height
         avtSp.texture = tex
         // avtSp.texture = tex2
         avtSp.x = left
@@ -51,17 +52,19 @@ export class ScoreV2 extends PIXI.Container {
     avtCtn: PIXI.Container
     titleCtn: PIXI.Container
     bottomCtn: PIXI.Container
+    popup: ScoreV2SidePopup
     constructor(parent) {
         super()
         parent.addChild(this)
         this.bottomCtn = new PIXI.Container()
         this.addChild(this.bottomCtn)
-        let bg = newBitmap({ url: '/img/panel/score2018v2/scoreBottom.png' })
+        let bg = newBitmap({ url: '/img/panel/score2018v2/scoreBottom2.3.png' })
         bg.y = 8
         this.avtCtn = new PIXI.Container()
         this.avtCtn.y = bg.y
-        this.bottomCtn.addChild(this.avtCtn)
+        this.popup = new ScoreV2SidePopup(this.bottomCtn)
         this.bottomCtn.addChild(bg)
+        this.bottomCtn.addChild(this.avtCtn)
 
         let top = newBitmap({ url: '/img/panel/score2018v2/scoreTop.png' })
         this.addChild(top)
@@ -262,7 +265,7 @@ export class ScoreV2 extends PIXI.Container {
         this.rHW.setText(rPlayer.height + 'CM  ' + rPlayer.weight + 'KG  ' + age)
             .setAlignCenter(_c(319))
         this.rAvtUrl = rPlayer.avatar
-        loadAvt(this.rAvt, rPlayer.avatar, 1045 + 15)
+        loadAvt(this.rAvt, rPlayer.avatar, 1045 + 12)
     }
 
     setLeftPlayer(lPlayer) {
@@ -282,7 +285,7 @@ export class ScoreV2 extends PIXI.Container {
         this.lHW.setText(lPlayer.height + 'CM  ' + lPlayer.weight + 'KG  ' + age)
             .setAlignCenter(_c(-319))
         this.lAvtUrl = lPlayer.avatar
-        loadAvt(this.lAvt, lPlayer.avatar, 788 - 14)
+        loadAvt(this.lAvt, lPlayer.avatar, 788 - 26)
     }
 
     resetTimer() {
@@ -302,6 +305,9 @@ export class ScoreV2 extends PIXI.Container {
         this.bottomCtn.visible = true
 
         this.visible = true
+    }
+    showPopup(data) {
+        this.popup.set_data(data)
     }
     hide(data?) {
         if (data) {

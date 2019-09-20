@@ -179,6 +179,10 @@
                         </tr>
                     </tbody>
                 </table>
+                <button class="button" @click='onShowPlayerPopInfo(false,true,false,inputPlayerPopInfo_win_R,inputPlayerPopInfo_score_R,inputPlayerPopInfo_rank_R);onShowPlayerPopInfo(false,true,true,inputPlayerPopInfo_win_L,inputPlayerPopInfo_score_L,inputPlayerPopInfo_rank_L)'>同时显示</button>
+                <button class="button" @click='onShowPlayerPopInfo(false,false,false,inputPlayerPopInfo_win_R,inputPlayerPopInfo_score_R,inputPlayerPopInfo_rank_R);onShowPlayerPopInfo(false,false,true,inputPlayerPopInfo_win_L,inputPlayerPopInfo_score_L,inputPlayerPopInfo_rank_L)'>隐藏</button>
+                <!-- <button class="button" @click='onShowPlayerPopInfo(false,false,false,inputPlayerPopInfo_win_R,inputPlayerPopInfo_score_R,inputPlayerPopInfo_rank_R);onShowPlayerPopInfo(false,false,false,inputPlayerPopInfo_win_L,inputPlayerPopInfo_score_L,inputPlayerPopInfo_rank_L)'>同时隐藏</button> -->
+
             
             
             </div>

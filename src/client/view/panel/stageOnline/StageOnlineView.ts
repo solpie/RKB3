@@ -553,7 +553,7 @@ class StageOnlineView extends VueBase {
             }
         },
         onShowPlayerPopInfo(isPrev,v, isLeft,win,score,rank) {
-            this.opReq(`${CommandId.cs_showPlayerPopInfo}`, { _: null, visible: v, isPrev: isPrev, win: win,score:score,rank:rank,isLeft:isLeft })
+            this.opReq(`${CommandId.cs_showPlayerPopInfo}`, { _: null, visible: v, isPreview: isPrev, win: win,score:score,rank:rank,isLeft:isLeft })
         },
         showRollText(text, loop, v, style = 1) {
             this.opReq(`${CommandId.cs_showRollText}`, { _: null, visible: v, loop: Number(loop), text: text, style: style })
