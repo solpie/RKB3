@@ -15,7 +15,7 @@ class PanelCtn extends PIXI.Container {
         super()
         let ns = {
             fontFamily: FontName.dinCondensedC,
-            fontSize: '30px', fill: "#222",
+            fontSize: '30px', fill: "#eee",
         }
         let url_bg = isLeft ? url_bg_L : url_bg_R;
 

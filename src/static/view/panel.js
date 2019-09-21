@@ -14171,7 +14171,7 @@
 	        _this.pos_hide = 0;
 	        var ns = {
 	            fontFamily: const_1.FontName.dinCondensedC,
-	            fontSize: '30px', fill: "#222",
+	            fontSize: '30px', fill: "#eee",
 	        };
 	        var url_bg = isLeft ? url_bg_L : url_bg_R;
 	        var bg = PixiEx_1.newBitmap({ url: url_bg });
