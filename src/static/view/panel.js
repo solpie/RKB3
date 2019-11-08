@@ -11178,6 +11178,7 @@
 	var ImgLoader_1 = __webpack_require__(57);
 	var ScoreV2SidePopup_1 = __webpack_require__(109);
 	var HupuAPI_1 = __webpack_require__(24);
+	var TweenEx_1 = __webpack_require__(65);
 	var loadAvt = function (avtSp, url, left) {
 	    console.log('loadAvt', url);
 	    ImgLoader_1.imgLoader.loadTexArr([url], function (tex2) {
@@ -11385,11 +11386,13 @@
 	            var is_benxi = Number(playerInfo.raid_player) == 1;
 	            if (is_sign) {
 	                _this.tag_R.texture = ImgLoader_1.imgLoader.getTex(url_sign_R);
-	                _this.tag_R.alpha = 1;
+	                _this.tag_R.alpha = 0;
+	                TweenEx_1.TweenEx.to(_this.tag_R, 200, { alpha: 1 });
 	            }
 	            else if (is_benxi) {
 	                _this.tag_R.texture = ImgLoader_1.imgLoader.getTex(url_benxi_R);
-	                _this.tag_R.alpha = 1;
+	                _this.tag_R.alpha = 0;
+	                TweenEx_1.TweenEx.to(_this.tag_R, 200, { alpha: 1 });
 	            }
 	            else {
 	                _this.tag_R.alpha = 0;
@@ -11418,11 +11421,13 @@
 	            var is_benxi = Number(playerInfo.raid_player) == 1;
 	            if (is_sign) {
 	                _this.tag_L.texture = ImgLoader_1.imgLoader.getTex(url_sign_L);
-	                _this.tag_L.alpha = 1;
+	                _this.tag_L.alpha = 0;
+	                TweenEx_1.TweenEx.to(_this.tag_L, 200, { alpha: 1 });
 	            }
 	            else if (is_benxi) {
 	                _this.tag_L.texture = ImgLoader_1.imgLoader.getTex(url_benxi_L);
-	                _this.tag_L.alpha = 1;
+	                _this.tag_L.alpha = 0;
+	                TweenEx_1.TweenEx.to(_this.tag_L, 200, { alpha: 1 });
 	            }
 	            else {
 	                _this.tag_L.alpha = 0;

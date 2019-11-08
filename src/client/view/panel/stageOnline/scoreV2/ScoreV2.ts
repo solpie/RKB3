@@ -8,6 +8,7 @@ import { TextTimer } from '../../../utils/TextTimer';
 import { imgLoader } from '../../../utils/ImgLoader';
 import { ScoreV2SidePopup } from './ScoreV2SidePopup';
 import { getPlayerInfoFromLiangle, getPlayer_baseinfo } from '../../../utils/HupuAPI';
+import { TweenEx } from '../../../utils/TweenEx';
 const loadAvt = (avtSp, url, left) => {
     console.log('loadAvt', url);
     imgLoader.loadTexArr([url], tex2 => {
@@ -284,14 +285,17 @@ export class ScoreV2 extends PIXI.Container {
             console.log('tag_R', playerInfo)
             let is_sign = Number(playerInfo.sign_player) == 1
             let is_benxi = Number(playerInfo.raid_player) == 1
-
+            //test 
+            // is_benxi = true
             if (is_sign) {
                 this.tag_R.texture = imgLoader.getTex(url_sign_R)
-                this.tag_R.alpha = 1
+                this.tag_R.alpha = 0
+                TweenEx.to(this.tag_R, 200, { alpha: 1 })
             }
             else if (is_benxi) {
                 this.tag_R.texture = imgLoader.getTex(url_benxi_R)
-                this.tag_R.alpha = 1
+                this.tag_R.alpha = 0
+                TweenEx.to(this.tag_R, 200, { alpha: 1 })
             }
             else {
                 this.tag_R.alpha = 0
@@ -320,14 +324,16 @@ export class ScoreV2 extends PIXI.Container {
             console.log('tag_L', playerInfo)
             let is_sign = Number(playerInfo.sign_player) == 1
             let is_benxi = Number(playerInfo.raid_player) == 1
-
+            // is_sign = true
             if (is_sign) {
                 this.tag_L.texture = imgLoader.getTex(url_sign_L)
-                this.tag_L.alpha = 1
+                this.tag_L.alpha = 0
+                TweenEx.to(this.tag_L, 200, { alpha: 1 })
             }
             else if (is_benxi) {
                 this.tag_L.texture = imgLoader.getTex(url_benxi_L)
-                this.tag_L.alpha = 1
+                this.tag_L.alpha = 0
+                TweenEx.to(this.tag_L, 200, { alpha: 1 })
             }
             else {
                 this.tag_L.alpha = 0
