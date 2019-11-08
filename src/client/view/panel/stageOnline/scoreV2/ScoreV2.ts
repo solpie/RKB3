@@ -290,12 +290,14 @@ export class ScoreV2 extends PIXI.Container {
             if (is_sign) {
                 this.tag_R.texture = imgLoader.getTex(url_sign_R)
                 this.tag_R.alpha = 0
-                TweenEx.to(this.tag_R, 200, { alpha: 1 })
+                this.tag_R.x = 1580
+                TweenEx.to(this.tag_R, 200, { alpha: 1, x: 1480 })
             }
             else if (is_benxi) {
                 this.tag_R.texture = imgLoader.getTex(url_benxi_R)
                 this.tag_R.alpha = 0
-                TweenEx.to(this.tag_R, 200, { alpha: 1 })
+                this.tag_R.x = 1580
+                TweenEx.to(this.tag_R, 200, { alpha: 1, x: 1480 })
             }
             else {
                 this.tag_R.alpha = 0
@@ -328,12 +330,15 @@ export class ScoreV2 extends PIXI.Container {
             if (is_sign) {
                 this.tag_L.texture = imgLoader.getTex(url_sign_L)
                 this.tag_L.alpha = 0
-                TweenEx.to(this.tag_L, 200, { alpha: 1 })
+                // 284
+                this.tag_L.x = 180
+                TweenEx.to(this.tag_L, 200, { alpha: 1, x: 284 })
             }
             else if (is_benxi) {
                 this.tag_L.texture = imgLoader.getTex(url_benxi_L)
                 this.tag_L.alpha = 0
-                TweenEx.to(this.tag_L, 200, { alpha: 1 })
+                this.tag_L.x = 180
+                TweenEx.to(this.tag_L, 200, { alpha: 1, x: 284 })
             }
             else {
                 this.tag_L.alpha = 0
@@ -373,7 +378,6 @@ export class ScoreV2 extends PIXI.Container {
     show(data) {
         // if (data.isBottom)
         this.bottomCtn.visible = true
-
         this.visible = true
     }
     showPopup(data) {

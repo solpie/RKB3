@@ -11387,12 +11387,14 @@
 	            if (is_sign) {
 	                _this.tag_R.texture = ImgLoader_1.imgLoader.getTex(url_sign_R);
 	                _this.tag_R.alpha = 0;
-	                TweenEx_1.TweenEx.to(_this.tag_R, 200, { alpha: 1 });
+	                _this.tag_R.x = 1580;
+	                TweenEx_1.TweenEx.to(_this.tag_R, 200, { alpha: 1, x: 1480 });
 	            }
 	            else if (is_benxi) {
 	                _this.tag_R.texture = ImgLoader_1.imgLoader.getTex(url_benxi_R);
 	                _this.tag_R.alpha = 0;
-	                TweenEx_1.TweenEx.to(_this.tag_R, 200, { alpha: 1 });
+	                _this.tag_R.x = 1580;
+	                TweenEx_1.TweenEx.to(_this.tag_R, 200, { alpha: 1, x: 1480 });
 	            }
 	            else {
 	                _this.tag_R.alpha = 0;
@@ -11422,12 +11424,14 @@
 	            if (is_sign) {
 	                _this.tag_L.texture = ImgLoader_1.imgLoader.getTex(url_sign_L);
 	                _this.tag_L.alpha = 0;
-	                TweenEx_1.TweenEx.to(_this.tag_L, 200, { alpha: 1 });
+	                _this.tag_L.x = 180;
+	                TweenEx_1.TweenEx.to(_this.tag_L, 200, { alpha: 1, x: 284 });
 	            }
 	            else if (is_benxi) {
 	                _this.tag_L.texture = ImgLoader_1.imgLoader.getTex(url_benxi_L);
 	                _this.tag_L.alpha = 0;
-	                TweenEx_1.TweenEx.to(_this.tag_L, 200, { alpha: 1 });
+	                _this.tag_L.x = 180;
+	                TweenEx_1.TweenEx.to(_this.tag_L, 200, { alpha: 1, x: 284 });
 	            }
 	            else {
 	                _this.tag_L.alpha = 0;
