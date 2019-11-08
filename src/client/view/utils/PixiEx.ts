@@ -20,7 +20,7 @@ function makeSprite(parameters): PIXI.Sprite {
 }
 export const _c = v => {
     return 960 + v;
-  };
+};
 export function loadRes(url: string, callback, isCrossOrigin?: boolean) {
     if (isCrossOrigin) {
         let req = new XMLHttpRequest();
@@ -33,6 +33,16 @@ export function loadRes(url: string, callback, isCrossOrigin?: boolean) {
     else {
         loadImg(url, callback);
     }
+}
+
+export function loadJson(url: string, callback) {
+    let req = new XMLHttpRequest();
+    req.open('GET', proxy(url), true);
+    req.onload = function (res) {
+        let json = JSON.parse(req.responseText)
+        callback(json)
+    };
+    req.send();
 }
 
 let _nullTex = imgToTex(null);
@@ -84,7 +94,7 @@ export class BitmapText extends PIXI.Container {
     private _frameHeight: number
     private _digiWidth: number
     private _digiCtn: PIXI.Container
-    public ofs:number = 0
+    public ofs: number = 0
     constructor(options: { img?: string, texture?: PIXI.Texture, text: string, frames: Array<Array<number>>, animations: any }) {
         super()
         let text = options.text
@@ -134,7 +144,7 @@ export class BitmapText extends PIXI.Container {
                 let digiFrame = this.digis[digiIdx]
                 digiFrame.visible = true
 
-                digiFrame.x = digiIdx * (this._frameWidth+this.ofs)
+                digiFrame.x = digiIdx * (this._frameWidth + this.ofs)
                 digiFrame['idx'] = digiIdx
                 digiFrame['sp'].x = - ofsX
                 digiFrame['sp'].y = - ofsY

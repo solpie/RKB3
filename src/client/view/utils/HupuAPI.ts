@@ -75,8 +75,14 @@ export function getRankSection(section, callback) {
     let url = 'http://api.liangle.com/api/division/power/rank/' + section
     _get(proxy(url), callback)
 }
+
+
 export function getPlayerInfoFromLiangle(player_id, callback) {
     let url = 'http://api.liangle.com/api/passerbyking/player/info/' + player_id
+    _get(proxy(url), callback)
+}
+export function getPlayer_baseinfo(player_id, callback) {
+    let url = 'http://www.liangle.com/api/passerbyking/player/baseinfo/' + player_id
     _get(proxy(url), callback)
 }
 

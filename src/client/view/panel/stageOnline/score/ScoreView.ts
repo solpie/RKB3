@@ -336,10 +336,6 @@ export class ScoreView extends BasePanelView {
                     game_id: this.gameId,
                     page: 'score'
                 })
-                // TweenEx.delayedCall(3000, () => {
-                //     if (!isRunning)
-                //         this.initDefaultPlayer()
-                // });
             });
 
             remoteIO.on('wall', (data: any) => {
@@ -368,7 +364,6 @@ export class ScoreView extends BasePanelView {
                         this.scorePanelV3.toggleTimer(TimerState.RUNNING);
                     }
                     else if (data.status == 2) {
-
                         this.scorePanelV3.toggleTimer(TimerState.PAUSE);
                         this.scorePanelV3.resetTimer();
                     }

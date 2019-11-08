@@ -1,4 +1,4 @@
-import { newBitmap, setScale, _c } from '../../../utils/PixiEx';
+import { newBitmap, setScale, _c, loadJson } from '../../../utils/PixiEx';
 import { TextFac, Text2 } from '../../../utils/TextFac';
 import { FontName } from '../../../const';
 import { fitWidth } from '../bracket/BracketGroup';
@@ -7,6 +7,7 @@ import { TextTimer } from '../../../utils/TextTimer';
 // import { BaseAvatar } from '../../base/BaseAvatar';
 import { imgLoader } from '../../../utils/ImgLoader';
 import { ScoreV2SidePopup } from './ScoreV2SidePopup';
+import { getPlayerInfoFromLiangle, getPlayer_baseinfo } from '../../../utils/HupuAPI';
 const loadAvt = (avtSp, url, left) => {
     console.log('loadAvt', url);
     imgLoader.loadTexArr([url], tex2 => {
@@ -18,7 +19,11 @@ const loadAvt = (avtSp, url, left) => {
         setScale(avtSp, s)
     }, true)
 }
+let url_sign_L = '/img/panel/score2018v2/tag_sign_L.png'
+let url_sign_R = '/img/panel/score2018v2/tag_sign_R.png'
 
+let url_benxi_L = '/img/panel/score2018v2/tag_benxi_L.png'
+let url_benxi_R = '/img/panel/score2018v2/tag_benxi_R.png'
 export class ScoreV2 extends PIXI.Container {
     lName: Text2
     rName: Text2
@@ -53,9 +58,28 @@ export class ScoreV2 extends PIXI.Container {
     titleCtn: PIXI.Container
     bottomCtn: PIXI.Container
     popup: ScoreV2SidePopup
+
+
+    tag_sign_L: PIXI.Sprite
+    tag_sign_R: PIXI.Sprite
+
+    tag_L: PIXI.Sprite
+    tag_R: PIXI.Sprite
+
     constructor(parent) {
         super()
         parent.addChild(this)
+
+        imgLoader.loadTexArr([
+            url_sign_L,
+            url_sign_R,
+            url_benxi_L,
+            url_benxi_R,
+        ], _ => {
+            // this.tag_L.texture = imgLoader.getTex(url_benxi_L)
+            // this.tag_R.texture = imgLoader.getTex(url_benxi_R)
+        })
+
         this.bottomCtn = new PIXI.Container()
         this.addChild(this.bottomCtn)
         let bg = newBitmap({ url: '/img/panel/score2018v2/scoreBottom2.3.png' })
@@ -172,11 +196,16 @@ export class ScoreV2 extends PIXI.Container {
 
         this.lAvt.y = this.rAvt.y = 937 - 8
         this.resetScore()
-        this.toggleState({ visible: true })
 
-        this.todo()
-    }
-    todo() {
+        this.tag_L = new PIXI.Sprite()
+        this.tag_L.x = 284
+        this.tag_L.y = 942
+        this.bottomCtn.addChild(this.tag_L)
+
+        this.tag_R = new PIXI.Sprite()
+        this.tag_R.x = 1480
+        this.tag_R.y = this.tag_L.y
+        this.bottomCtn.addChild(this.tag_R)
     }
     resetScore() {
         this.setLeftFoul(0)
@@ -186,8 +215,6 @@ export class ScoreV2 extends PIXI.Container {
     }
 
     state = true
-    toggleState(data) {
-    }
 
     _isShowFoulHint(foulHintSp, foul) {
         foulHintSp.visible = (foul >= this.foulHint)
@@ -237,7 +264,6 @@ export class ScoreV2 extends PIXI.Container {
         this.rFoul.setText((data || 0))
             .setAlignCenter(_c(205))
         this._isShowFoulHint(this.rFoulHint, Number(this.rFoul.text))
-
     }
 
     _setHWA(playerData) {
@@ -251,9 +277,27 @@ export class ScoreV2 extends PIXI.Container {
     setRightPlayer(rPlayer) {
         this.rTitle.setText(rPlayer.title)
             .setAlignCenter(_c(208))
-        // if (rPlayer.name == "我也不知道要弄什么名字") {
-        //     rPlayer.name="朱先生"
-        //  }
+
+        let playerId = rPlayer.player_id
+        getPlayer_baseinfo(playerId, res => {
+            let playerInfo = res.data
+            console.log('tag_R', playerInfo)
+            let is_sign = Number(playerInfo.sign_player) == 1
+            let is_benxi = Number(playerInfo.raid_player) == 1
+
+            if (is_sign) {
+                this.tag_R.texture = imgLoader.getTex(url_sign_R)
+                this.tag_R.alpha = 1
+            }
+            else if (is_benxi) {
+                this.tag_R.texture = imgLoader.getTex(url_benxi_R)
+                this.tag_R.alpha = 1
+            }
+            else {
+                this.tag_R.alpha = 0
+            }
+        })
+
         this.rName.setText(rPlayer.name)
             .setLimitWidth(260, 40)
             .setAlignCenter(_c(315))
@@ -269,6 +313,26 @@ export class ScoreV2 extends PIXI.Container {
     }
 
     setLeftPlayer(lPlayer) {
+        console.log(lPlayer)
+        let playerId = lPlayer.player_id
+        getPlayer_baseinfo(playerId, res => {
+            let playerInfo = res.data
+            console.log('tag_L', playerInfo)
+            let is_sign = Number(playerInfo.sign_player) == 1
+            let is_benxi = Number(playerInfo.raid_player) == 1
+
+            if (is_sign) {
+                this.tag_L.texture = imgLoader.getTex(url_sign_L)
+                this.tag_L.alpha = 1
+            }
+            else if (is_benxi) {
+                this.tag_L.texture = imgLoader.getTex(url_benxi_L)
+                this.tag_L.alpha = 1
+            }
+            else {
+                this.tag_L.alpha = 0
+            }
+        })
         this.lTitle.setText(lPlayer.title)
             .setAlignCenter(_c(-208))
         // if (lPlayer.name == "我也不知道要弄什么名字") {

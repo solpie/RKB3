@@ -1,7 +1,6 @@
 import { FontName } from "../../../const";
 import { getGroupData, getHupuWS } from "../../../utils/HupuAPI";
-import { imgLoader } from "../../../utils/ImgLoader";
-import { BitmapText, newBitmap, loadRes, imgToTex } from '../../../utils/PixiEx';
+import { BitmapText, imgToTex, loadRes, newBitmap } from '../../../utils/PixiEx';
 import { Text2, TextFac } from '../../../utils/TextFac';
 import { firstBy } from "../../../utils/thenBy";
 import { fitWidth } from '../bracket/BracketGroup';
