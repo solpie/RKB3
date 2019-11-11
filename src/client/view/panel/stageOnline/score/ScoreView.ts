@@ -286,7 +286,7 @@ export class ScoreView extends BasePanelView {
             })
             .on(`${CommandId.sc_togglePlayerState}`, (data) => {
                 console.log('sc_togglePlayerState', data);
-                this.scorePanelV3.toggleState(data)
+                // this.scorePanelV3.toggleState(data)
             })
 
             .on(CommandId.sc_showScoreRank, (data) => {

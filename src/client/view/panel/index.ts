@@ -2,7 +2,8 @@
 require(`script!./../../libs/pixi.min.js`);
 require(`script!./../../libs/Tween.min.js`);
 require(`script!./../../libs/jquery.min.js`);
-
+require(`script!./../../libs/jszip.min.js`);
+require(`script!./../../libs/jszip-utils.min.js`);
 require(`script!./../../libs/socket.io-1.4.5.min.js`);
 require(`script!./../../libs/vue/vue.min.js`);
 require(`script!./../../libs/vue/vue-router.min.js`);

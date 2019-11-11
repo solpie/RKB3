@@ -148,7 +148,7 @@ export class Score2018v3 extends PIXI.Container {
 
         this.lAvt.y = this.rAvt.y = 954
         this.resetScore()
-        this.toggleState({ visible: true })
+        // this.toggleState({ visible: true })
     }
 
     resetScore() {
