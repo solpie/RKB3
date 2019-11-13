@@ -84,11 +84,13 @@ export class ScoreV2 extends PIXI.Container {
     tag_sign_L_Fx: FramesFx
     tag_sign_R_Fx: FramesFx
 
+    load_count = 0
     constructor(parent) {
         super()
         parent.addChild(this)
         let benxi_fx = []
 
+        this.load_count++
         imgLoader.get_texture_from_zip(url_benxi_L_fx_zip, texture_map => {
             let ff = FramesFx.new_from_texture_map(texture_map, '{x}.png', 0, 114, 3)
             ff.y = 564
@@ -97,8 +99,11 @@ export class ScoreV2 extends PIXI.Container {
             btmCtn.addChild(ff)
             ff.alpha = 0
             this.tag_benxi_L_Fx = ff
+            this.load_count--
+            this._later_set_player()
         })
 
+        this.load_count++
         imgLoader.get_texture_from_zip(url_benxi_R_fx_zip, texture_map => {
             let ff = FramesFx.new_from_texture_map(texture_map, '{x}.png', 0, 114, 3)
             ff.y = 564
@@ -108,7 +113,13 @@ export class ScoreV2 extends PIXI.Container {
             ff.alpha = 0
             // ff.playOnce()
             this.tag_benxi_R_Fx = ff
+
+            this.load_count--
+
+            this._later_set_player()
+
         })
+        this.load_count++
         imgLoader.get_texture_from_zip(url_sign_L_fx_zip, texture_map => {
             let ff = FramesFx.new_from_texture_map(texture_map, '{x}.png', 0, 114, 3)
             ff.y = 564
@@ -118,7 +129,10 @@ export class ScoreV2 extends PIXI.Container {
             ff.alpha = 0
             // ff.playOnce()
             this.tag_sign_L_Fx = ff
+            this.load_count--
+            this._later_set_player()
         })
+        this.load_count++
         imgLoader.get_texture_from_zip(url_sign_R_fx_zip, texture_map => {
             let ff = FramesFx.new_from_texture_map(texture_map, '{x}.png', 0, 114, 3)
             ff.y = 564
@@ -128,6 +142,8 @@ export class ScoreV2 extends PIXI.Container {
             ff.alpha = 0
             // ff.playOnce()
             this.tag_sign_R_Fx = ff
+            this.load_count--
+            this._later_set_player()
         })
 
 
@@ -269,6 +285,20 @@ export class ScoreV2 extends PIXI.Container {
 
     state = true
 
+
+    _later_set_player() {
+        if (this.load_count > 0) return
+        if (this.cache_player_R) {
+            this.setRightPlayer(this.cache_player_R)
+            this.cache_player_R = null
+        }
+
+
+        if (this.cache_player_L) {
+            this.setLeftPlayer(this.cache_player_L)
+            this.cache_player_L = null
+        }
+    }
     _isShowFoulHint(foulHintSp, foul) {
         foulHintSp.visible = (foul >= this.foulHint)
     }
@@ -329,37 +359,43 @@ export class ScoreV2 extends PIXI.Container {
     tag_L_Fx: FramesFx
     tag_R_Fx: FramesFx
 
+    cache_player_L = null
+    cache_player_R = null
     setRightPlayer(rPlayer) {
         this.rTitle.setText(rPlayer.title)
             .setAlignCenter(_c(208))
 
         let playerId = rPlayer.player_id
-        getPlayer_baseinfo(playerId, res => {
-            let playerInfo = res.data
-            console.log('tag_R', playerInfo)
-            let is_sign = Number(playerInfo.sign_player) == 1
-            let is_benxi = Number(playerInfo.raid_player) == 1
-            //test 
-            // is_sign = true
-            if (this.tag_sign_R_Fx)
-                this.tag_sign_R_Fx.alpha = 0
-            if (this.tag_benxi_R_Fx)
-                this.tag_benxi_R_Fx.alpha = 0
-            if (is_sign) {
-                this.tag_R_Fx = this.tag_sign_R_Fx
-            }
-            else if (is_benxi) {
-                this.tag_R_Fx = this.tag_benxi_R_Fx
-            }
-            if (is_benxi || is_sign) {
-                if (this.tag_R_Fx) {
-                    this.tag_R_Fx.alpha =0
-                    this.tag_R_Fx.x = 1250
-                    this.tag_R_Fx.playOnce()
-                    TweenEx.to(this.tag_R_Fx, 200, { alpha: 1, x: 1150 })
+        if (this.load_count == 0)
+            getPlayer_baseinfo(playerId, res => {
+                let playerInfo = res.data
+                console.log('tag_R', playerInfo)
+                let is_sign = Number(playerInfo.sign_player) == 1
+                let is_benxi = Number(playerInfo.raid_player) == 1
+                //test 
+                // is_sign = true
+                if (this.tag_sign_R_Fx)
+                    this.tag_sign_R_Fx.alpha = 0
+                if (this.tag_benxi_R_Fx)
+                    this.tag_benxi_R_Fx.alpha = 0
+                if (is_sign) {
+                    this.tag_R_Fx = this.tag_sign_R_Fx
                 }
-            }
-        })
+                else if (is_benxi) {
+                    this.tag_R_Fx = this.tag_benxi_R_Fx
+                }
+                if (is_benxi || is_sign) {
+                    if (this.tag_R_Fx) {
+                        this.tag_R_Fx.alpha = 0
+                        this.tag_R_Fx.x = 1250
+                        this.tag_R_Fx.playOnce()
+                        TweenEx.to(this.tag_R_Fx, 200, { alpha: 1, x: 1150 })
+                    }
+                }
+            })
+        else {
+            this.cache_player_R = rPlayer
+        }
 
         this.rName.setText(rPlayer.name)
             .setLimitWidth(260, 40)
@@ -376,34 +412,41 @@ export class ScoreV2 extends PIXI.Container {
     }
 
     setLeftPlayer(lPlayer) {
+
         console.log(lPlayer)
         let playerId = lPlayer.player_id
-        getPlayer_baseinfo(playerId, res => {
-            let playerInfo = res.data
-            console.log('tag_L', playerInfo)
-            let is_sign = Number(playerInfo.sign_player) == 1
-            let is_benxi = Number(playerInfo.raid_player) == 1
 
-            // is_benxi = true
-            if (this.tag_sign_L_Fx)
-                this.tag_sign_L_Fx.alpha = 0
-            if (this.tag_benxi_L_Fx)
-                this.tag_benxi_L_Fx.alpha = 0
-            if (is_sign) {
-                this.tag_L_Fx = this.tag_sign_L_Fx
-            }
-            else if (is_benxi) {
-                this.tag_L_Fx = this.tag_benxi_L_Fx
-            }
-            if (is_benxi || is_sign) {
-                if (this.tag_L_Fx) {
-                    this.tag_L_Fx.alpha =0
-                    this.tag_L_Fx.x = -35 - 100
-                    this.tag_L_Fx.playOnce()
-                    TweenEx.to(this.tag_L_Fx, 200, { alpha: 1, x:-35})
+        if (this.load_count == 0)
+
+            getPlayer_baseinfo(playerId, res => {
+                let playerInfo = res.data
+                console.log('tag_L', playerInfo)
+                let is_sign = Number(playerInfo.sign_player) == 1
+                let is_benxi = Number(playerInfo.raid_player) == 1
+
+                // is_benxi = true
+                if (this.tag_sign_L_Fx)
+                    this.tag_sign_L_Fx.alpha = 0
+                if (this.tag_benxi_L_Fx)
+                    this.tag_benxi_L_Fx.alpha = 0
+                if (is_sign) {
+                    this.tag_L_Fx = this.tag_sign_L_Fx
                 }
-            }
-        })
+                else if (is_benxi) {
+                    this.tag_L_Fx = this.tag_benxi_L_Fx
+                }
+                if (is_benxi || is_sign) {
+                    if (this.tag_L_Fx) {
+                        this.tag_L_Fx.alpha = 0
+                        this.tag_L_Fx.x = -35 - 100
+                        this.tag_L_Fx.playOnce()
+                        TweenEx.to(this.tag_L_Fx, 200, { alpha: 1, x: -35 })
+                    }
+                }
+            })
+        else {
+            this.cache_player_L = lPlayer
+        }
         this.lTitle.setText(lPlayer.title)
             .setAlignCenter(_c(-208))
         // if (lPlayer.name == "我也不知道要弄什么名字") {
