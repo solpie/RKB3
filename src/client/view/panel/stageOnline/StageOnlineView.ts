@@ -84,6 +84,7 @@ class StageOnlineView extends VueBase {
     inputRollTextCount = VueBase.PROP
     vsPlayer = VueBase.PROP
     gameTitleType = VueBase.PROP
+    gameSubTitle = VueBase.PROP
     gamePlayerArr: any
     liveConf: any
     opReq = (cmdId: string, param: any, callback: any) => {
@@ -469,7 +470,7 @@ class StageOnlineView extends VueBase {
                 }
             })
         },
-        emitPlayer(playerArr, gameTitle?) {
+        emitPlayer(playerArr, gameTitle?, gameSubTitle?) {
             let lp, rp
             for (let p of this.gamePlayerArr) {
                 if (p.name == playerArr[0]) {
@@ -478,10 +479,10 @@ class StageOnlineView extends VueBase {
                 if (p.name == playerArr[1])
                     rp = p
             }
-            this.opReq(`${CommandId.cs_setPlayer}`, { _: null, leftPlayer: lp, rightPlayer: rp, gameTitle: gameTitle })
+            this.opReq(`${CommandId.cs_setPlayer}`, { _: null, leftPlayer: lp, rightPlayer: rp, gameTitle: gameTitle, gameSubTitle: gameSubTitle })
 
         },
-        onSetPlayer(vsPlayer, gameTitleType?) {
+        onSetPlayer(vsPlayer, gameTitleType?, gameSubTitle?) {
             let a = vsPlayer.split('-')
             // let titleMap = { 1: '八进四', 2: '四进二', 3: '决赛' }
             let gameTitle = gameTitleType
@@ -490,11 +491,11 @@ class StageOnlineView extends VueBase {
                     getAllPlayer(this.gameId, data => {
                         console.log('get player', data);
                         this.gamePlayerArr = data.data
-                        this.emitPlayer(a, gameTitle)
+                        this.emitPlayer(a, gameTitle, gameSubTitle)
                     })
                 }
                 else
-                    this.emitPlayer(a, gameTitle)
+                    this.emitPlayer(a, gameTitle, gameSubTitle)
             }
         },
         onClkTop5(v, idx, g) {
@@ -552,8 +553,8 @@ class StageOnlineView extends VueBase {
                 })
             }
         },
-        onShowPlayerPopInfo(isPrev,v, isLeft,win,score,rank) {
-            this.opReq(`${CommandId.cs_showPlayerPopInfo}`, { _: null, visible: v, isPreview: isPrev, win: win,score:score,rank:rank,isLeft:isLeft })
+        onShowPlayerPopInfo(isPrev, v, isLeft, win, score, rank) {
+            this.opReq(`${CommandId.cs_showPlayerPopInfo}`, { _: null, visible: v, isPreview: isPrev, win: win, score: score, rank: rank, isLeft: isLeft })
         },
         showRollText(text, loop, v, style = 1) {
             this.opReq(`${CommandId.cs_showRollText}`, { _: null, visible: v, loop: Number(loop), text: text, style: style })

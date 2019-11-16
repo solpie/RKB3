@@ -108,10 +108,12 @@
             <button class="button" @click="onClkToggleChampionPanel(false)">隐藏</button>
             <br>
             <div class='column is-one-quarter' style="position: fixed;top: 260px;right: 20px;">
-                <input class="input" type="text" style="width: 120px;" v-model="gameTitleType">小组赛 '8进4'  '4进2'  '2进1'
+                <input class="input" type="text" style="width: 120px;" v-model="gameTitleType">小组赛 主标题
+                <br>
+                <input class="input" type="text" style="width: 120px;" v-model="gameSubTitle">第x场 副标题
                 <br>
                 <input class="input" type="text" placeholder="蓝方名字-红方名字" style="width: 300px;" v-model="vsPlayer">
-                <button class="button" @click="onSetPlayer(vsPlayer,gameTitleType)">设置球员</button>
+                <button class="button" @click="onSetPlayer(vsPlayer,gameTitleType,gameSubTitle)">设置球员</button>
                 <br> <button class="button" @click="onAddScore(true,-1)">-1</button>蓝方: <button class="button" @click="onAddScore(true,1)">+1</button> 比分
                 <button class="button" @click="onAddScore(false,1)">+1</button>:红方<button class="button" @click="onAddScore(false,-1)">-1</button>
                 <br><br> <button class="button" @click="onAddFoul(true,-1)">-1</button>-----

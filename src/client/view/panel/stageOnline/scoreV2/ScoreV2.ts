@@ -554,8 +554,10 @@ export class ScoreV2 extends PIXI.Container {
         this.gameTitle.setAlignCenter(960)
     }
 
-    setGameTitle(str) {
+    setGameTitle(str, subTitle) {
         this.gameTitle.setText(str)
+            .setAlignCenter(960)
+        this.gameTitle2.setText(subTitle)
             .setAlignCenter(960)
     }
 
