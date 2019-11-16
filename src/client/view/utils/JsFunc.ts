@@ -137,6 +137,7 @@ export function combineArr(arr, num) {
     })([], arr, num);
     return r;
 }
+
 export function formatSecond(sec, isSecOnly = false, minStr = ":", secStr = "") {
     let min = Math.floor(sec / 60);
     let s = sec % 60;
@@ -150,6 +151,7 @@ export function formatSecond(sec, isSecOnly = false, minStr = ":", secStr = "") 
         return strSec
     return strMin + minStr + strSec + secStr;
 }
+
 export function format10ms(ms10, isSecOnly = false, minStr = ":", secStr = "") {
     let sec = Math.floor(ms10 / 100)
     let min = Math.floor(sec / 60);

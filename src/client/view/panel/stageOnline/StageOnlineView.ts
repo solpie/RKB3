@@ -483,8 +483,8 @@ class StageOnlineView extends VueBase {
         },
         onSetPlayer(vsPlayer, gameTitleType?) {
             let a = vsPlayer.split('-')
-            let titleMap = { 1: '八进四', 2: '四进二', 3: '决赛' }
-            let gameTitle = titleMap[gameTitleType]
+            // let titleMap = { 1: '八进四', 2: '四进二', 3: '决赛' }
+            let gameTitle = gameTitleType
             if (a.length == 2) {
                 if (!this.gamePlayerArr) {
                     getAllPlayer(this.gameId, data => {
