@@ -317,11 +317,11 @@ export class ScoreV2 extends PIXI.Container {
     setDtScore(data) {
         if (data.isLeft) {
             this.lScore.setAddNum(data.dtScore)
-                .setAlignCenter(855)
+                .setAlignCenter(_c(-82))
         }
         else {
             this.rScore.setAddNum(data.dtScore)
-                .setAlignCenter(1068)
+                .setAlignCenter(_c(82))
         }
     }
     setLeftScore(score) {

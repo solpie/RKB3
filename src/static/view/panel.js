@@ -12077,11 +12077,11 @@
 	    ScoreV2.prototype.setDtScore = function (data) {
 	        if (data.isLeft) {
 	            this.lScore.setAddNum(data.dtScore)
-	                .setAlignCenter(855);
+	                .setAlignCenter(PixiEx_1._c(-82));
 	        }
 	        else {
 	            this.rScore.setAddNum(data.dtScore)
-	                .setAlignCenter(1068);
+	                .setAlignCenter(PixiEx_1._c(82));
 	        }
 	    };
 	    ScoreV2.prototype.setLeftScore = function (score) {
