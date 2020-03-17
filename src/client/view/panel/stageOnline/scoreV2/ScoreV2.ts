@@ -396,7 +396,11 @@ export class ScoreV2 extends PIXI.Container {
         else {
             this.cache_player_R = rPlayer
         }
-
+        if(rPlayer.name.search(' ')>-1)
+        {
+            let a = rPlayer.name.split(' ')
+            rPlayer.name = a.pop()
+        }
         this.rName.setText(rPlayer.name)
             .setLimitWidth(260, 40)
             .setAlignCenter(_c(315))
@@ -452,6 +456,11 @@ export class ScoreV2 extends PIXI.Container {
         // if (lPlayer.name == "我也不知道要弄什么名字") {
         //     lPlayer.name="朱先生"
         //  }
+        if(lPlayer.name.search(' ')>-1)
+        {
+            let a = lPlayer.name.split(' ')
+            lPlayer.name = a.pop()
+        }
         this.lName.setText(lPlayer.name)
             .setLimitWidth(260, 40)
             .setAlignCenter(_c(-315))
